@@ -88,12 +88,14 @@
     },
     {
       "label": "start (functions)",
-      "type": "func",
+      "type": "process",
       "dependsOn": "build (functions)",
+      "command": "dotnet run",
       "options": {
         "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Debug/net6.0"
       },
-      "command": "host start",
+      // This task runs in the background to keep the host running while allowing other tasks to execute simultaneously.
+      // Running in the background ensures that the host remains active without blocking the execution of subsequent tasks.
       "isBackground": true,
       "problemMatcher": "$func-dotnet-watch"
     },

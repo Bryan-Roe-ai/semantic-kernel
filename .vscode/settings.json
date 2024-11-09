@@ -107,5 +107,11 @@
   "azureFunctions.preDeployTask": "publish (functions)",
   "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build",
   "intelliphp.inlineSuggestionsEnabled": true,
-  "python.analysis.autoImportCompletions": true
+  "python.analysis.autoImportCompletions": true,
+  "netbeans.jdkhome": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+  "netbeans.project.jdkhome": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+    "PATH": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot\\bin;${env:PATH}"
+  }
 }
