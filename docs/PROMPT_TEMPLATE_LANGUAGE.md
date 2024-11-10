@@ -331,3 +331,80 @@ Hello, how are you?
 Generate a response to the email, to say: I am doing well, thank you!
 Include the original email quoted after the response.
 ```
+
+### Example 5: Generating a Personalized Greeting with Additional Information
+
+```csharp
+string template = "Hello {{$name}}, welcome to Semantic Kernel! Your role is {{$role}}.";
+var variables = new Dictionary<string, string> { { "name", "John" }, { "role", "Developer" } };
+string result = SemanticKernel.Render(template, variables);
+Console.WriteLine(result); // Output: Hello John, welcome to Semantic Kernel! Your role is Developer.
+```
+
+### Example 6: Fetching Weather Forecast with Location
+
+```csharp
+string template = "The weather today in {{$location}} is {{weather.getForecast $location}}.";
+var variables = new Dictionary<string, string> { { "location", "San Francisco" } };
+var functions = new Dictionary<string, Func<string, string>> { { "weather.getForecast", location => location == "San Francisco" ? "foggy" : "unknown" } };
+string result = SemanticKernel.Render(template, variables, functions);
+Console.WriteLine(result); // Output: The weather today in San Francisco is foggy.
+```
+
+### Example 7: Using Function Parameters with Default Values
+
+```csharp
+string template = "The weather today in {{$city}} is {{weather.getForecast $city}}.";
+var variables = new Dictionary<string, string> { { "city", "Los Angeles" } };
+var functions = new Dictionary<string, Func<string, string>> { { "weather.getForecast", city => city == "Los Angeles" ? "sunny" : "unknown" } };
+string result = SemanticKernel.Render(template, variables, functions);
+Console.WriteLine(result); // Output: The weather today in Los Angeles is sunny.
+```
+
+### Example 8: Creating a Response Email with Additional Information
+
+```csharp
+string template = @"
+My name: {{msgraph.GetMyName}}
+My email: {{msgraph.GetMyEmailAddress}}
+My hobbies: {{memory.recall 'my hobbies'}}
+Recipient: {{$recipient}}
+Email to reply to:
+=========
+{{$sourceEmail}}
+=========
+Generate a response to the email, to say: {{$input}}
+Include the original email quoted after the response.
+Additional information: {{$additionalInfo}}";
+var variables = new Dictionary<string, string>
+{
+    { "recipient", "Jane" },
+    { "sourceEmail", "Hello, how are you?" },
+    { "input", "I am doing well, thank you!" },
+    { "additionalInfo", "Looking forward to our meeting next week." }
+};
+var functions = new Dictionary<string, Func<string>>
+{
+    { "msgraph.GetMyName", () => "John Doe" },
+    { "msgraph.GetMyEmailAddress", () => "john.doe@example.com" },
+    { "memory.recall", key => key == "my hobbies" ? "reading, hiking" : "unknown" }
+};
+string result = SemanticKernel.Render(template, variables, functions);
+Console.WriteLine(result);
+```
+
+This will produce:
+
+```
+My name: John Doe
+My email: john.doe@example.com
+My hobbies: reading, hiking
+Recipient: Jane
+Email to reply to:
+=========
+Hello, how are you?
+=========
+Generate a response to the email, to say: I am doing well, thank you!
+Include the original email quoted after the response.
+Additional information: Looking forward to our meeting next week.
+```

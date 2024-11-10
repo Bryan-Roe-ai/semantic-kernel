@@ -63,6 +63,38 @@ result = plan.execute()
 print(result)
 ```
 
+### Example 4: Plan with Error Handling
+
+```python
+from semantic_kernel import Planner
+
+# Define a plan with error handling
+plan = Planner()
+plan.add_step("Generate text", service="OpenAI", model="text-davinci-003", prompt="Write a short story about a robot.")
+plan.add_step("Summarize text", service="OpenAI", model="text-davinci-003", prompt="Summarize the following text: {generated_text}")
+plan.add_error_handler("Summarize text", handler="Handle error", service="OpenAI", model="text-davinci-003", prompt="An error occurred while summarizing the text. Please try again.")
+
+# Execute the plan
+result = plan.execute()
+print(result)
+```
+
+### Example 5: Plan with Multiple AI Services
+
+```python
+from semantic_kernel import Planner
+
+# Define a plan that uses multiple AI services
+plan = Planner()
+plan.add_step("Generate text", service="OpenAI", model="text-davinci-003", prompt="Write a short story about a robot.")
+plan.add_step("Translate text", service="Azure OpenAI", model="translation", prompt="Translate the following text to French: {generated_text}")
+plan.add_step("Summarize text", service="Hugging Face", model="summarization", prompt="Summarize the following text: {translated_text}")
+
+# Execute the plan
+result = plan.execute()
+print(result)
+```
+
 ## Use Cases
 
 The planner module can be used in various scenarios, including:
