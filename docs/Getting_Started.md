@@ -9,6 +9,8 @@ Before you begin, ensure you have the following installed on your system:
 - Git
 - Node.js (version 14 or higher)
 - npm (Node Package Manager)
+- Python (version 3.8 or higher)
+- Docker (optional, for containerized deployment)
 
 ## Installation
 
@@ -23,6 +25,12 @@ Before you begin, ensure you have the following installed on your system:
 
    ```bash
    npm install
+   ```
+
+3. **Install Python dependencies** (if applicable):
+
+   ```bash
+   pip install -r requirements.txt
    ```
 
 ## Configuration
@@ -83,6 +91,16 @@ async function postData() {
 }
 
 postData();
+```
+
+### Example 3: Running the API in a Docker Container
+
+```bash
+# Build the Docker image
+docker build -t sk-api .
+
+# Run the Docker container
+docker run -p 3000:3000 sk-api
 ```
 
 ## Troubleshooting

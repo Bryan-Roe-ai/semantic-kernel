@@ -256,3 +256,78 @@ For example:
 is rendered to:
 
     nothing special about these sequences: \0 \n \t \r \foo
+
+## Examples and Use Cases
+
+### Example 1: Generating a Personalized Greeting
+
+```csharp
+string template = "Hello {{$name}}, welcome to Semantic Kernel!";
+var variables = new Dictionary<string, string> { { "name", "John" } };
+string result = SemanticKernel.Render(template, variables);
+Console.WriteLine(result); // Output: Hello John, welcome to Semantic Kernel!
+```
+
+### Example 2: Fetching Weather Forecast
+
+```csharp
+string template = "The weather today is {{weather.getForecast}}.";
+var functions = new Dictionary<string, Func<string>> { { "weather.getForecast", () => "sunny" } };
+string result = SemanticKernel.Render(template, functions: functions);
+Console.WriteLine(result); // Output: The weather today is sunny.
+```
+
+### Example 3: Using Function Parameters
+
+```csharp
+string template = "The weather today in {{$city}} is {{weather.getForecast $city}}.";
+var variables = new Dictionary<string, string> { { "city", "New York" } };
+var functions = new Dictionary<string, Func<string, string>> { { "weather.getForecast", city => city == "New York" ? "rainy" : "unknown" } };
+string result = SemanticKernel.Render(template, variables, functions);
+Console.WriteLine(result); // Output: The weather today in New York is rainy.
+```
+
+### Example 4: Creating a Response Email
+
+```csharp
+string template = @"
+My name: {{msgraph.GetMyName}}
+My email: {{msgraph.GetMyEmailAddress}}
+My hobbies: {{memory.recall 'my hobbies'}}
+Recipient: {{$recipient}}
+Email to reply to:
+=========
+{{$sourceEmail}}
+=========
+Generate a response to the email, to say: {{$input}}
+Include the original email quoted after the response.";
+var variables = new Dictionary<string, string>
+{
+    { "recipient", "Jane" },
+    { "sourceEmail", "Hello, how are you?" },
+    { "input", "I am doing well, thank you!" }
+};
+var functions = new Dictionary<string, Func<string>>
+{
+    { "msgraph.GetMyName", () => "John Doe" },
+    { "msgraph.GetMyEmailAddress", () => "john.doe@example.com" },
+    { "memory.recall", key => key == "my hobbies" ? "reading, hiking" : "unknown" }
+};
+string result = SemanticKernel.Render(template, variables, functions);
+Console.WriteLine(result);
+```
+
+This will produce:
+
+```
+My name: John Doe
+My email: john.doe@example.com
+My hobbies: reading, hiking
+Recipient: Jane
+Email to reply to:
+=========
+Hello, how are you?
+=========
+Generate a response to the email, to say: I am doing well, thank you!
+Include the original email quoted after the response.
+```
