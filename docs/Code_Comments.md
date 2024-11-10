@@ -104,4 +104,34 @@ public int multiply(int a, int b) {
 }
 ```
 
+### C# Example
+
+```csharp
+/// <summary>
+/// Multiply two numbers and return the result.
+/// </summary>
+/// <param name="a">The first number.</param>
+/// <param name="b">The second number.</param>
+/// <returns>The product of the two numbers.</returns>
+public int Multiply(int a, int b)
+{
+    return a * b;
+}
+```
+
+### JavaScript Example
+
+```javascript
+/**
+ * Multiply two numbers and return the result.
+ *
+ * @param {number} a - The first number.
+ * @param {number} b - The second number.
+ * @returns {number} The product of the two numbers.
+ */
+function multiply(a, b) {
+    return a * b;
+}
+```
+
 By following these guidelines and best practices, we can ensure that the code in this repository is well-documented and easy to understand for all developers.

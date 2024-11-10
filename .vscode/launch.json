@@ -2,25 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Attach to .NET Functions",
-      "type": "coreclr",
+      "name": "C#: Attach to .NET Functions",
+      "type": "dotnet",
       "request": "attach",
-      "processId": "${command:azureFunctions.pickProcess}"
-      "request": "launch",
       "preLaunchTask": "build (Concepts)",
       // If you have changed target frameworks, make sure to update the program path.
       "program": "${workspaceFolder}/dotnet/samples/Concepts/bin/Debug/net6.0/Concepts.dll",
-      "args": [
-        /*"example0"*/
-      ],
-      "cwd": "${workspaceFolder}/dotnet/samples/Concepts",
+      "args": []
+      // The debug type is not recognized. Make sure that you have a corresponding debug extension installed and that it is enabled.
       // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
-      "console": "internalConsole",
-      "stopAtEntry": false
     },
     {
       "name": ".NET Core Attach",
-      "type": "coreclr",
+      "type": "dotnet",
       "request": "attach"
     },
     {
@@ -35,25 +29,23 @@
       "name": "C#: HuggingFaceImageToText Demo",
       "type": "dotnet",
       "request": "launch",
-      "projectPath": "${workspaceFolder}\\dotnet\\samples\\Demos\\HuggingFaceImageToText.csproj",
-      "launchConfigurationId": "TargetFramework=;HuggingFaceImageToText"
+      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll"
     },
     {
       "name": "C#: GettingStarted Samples",
       "type": "dotnet",
       "request": "launch",
-      "projectPath": "${workspaceFolder}\\dotnet\\samples\\GettingStarted\\GettingStarted.csproj",
-      "launchConfigurationId": "TargetFramework=;GettingStarted"
+      "program": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll"
     },
     {
       "name": "C#: Process with Dapr",
-      "type": "coreclr",
+      "type": "dotnet",
       "request": "launch",
       "program": "${workspaceFolder}\\dotnet\\samples\\Demos\\ProcessWithDapr\\bin\\Debug\\net8.0\\ProcessWithDapr.dll",
       "preLaunchTask": "daprd-debug",
       "postDebugTask": "dapr-down",
       "env": {
-        "ASPNETCORE_ENVIRONMENT" : "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   ]

@@ -46,3 +46,38 @@ We encourage the use of GitHub Discussions to come up with solutions to problems
 - **General Questions**: Use discussions to ask general questions about the repository, its usage, or best practices. Share your knowledge and help others by answering their questions.
 
 For more detailed guidelines on using discussions, refer to the `DISCUSSIONS.md` file in the root directory of the repository.
+
+## Contributing Guidelines
+
+We welcome contributions from the community! To contribute to this project, please follow the guidelines below:
+
+1. **Fork the repository**: Click on the "Fork" button at the top right corner of the repository page to create a copy of the repository in your GitHub account.
+
+2. **Clone the repository**: Clone the forked repository to your local machine using the following command:
+   ```bash
+   git clone https://github.com/yourusername/semantic-kernel.git
+   cd semantic-kernel
+   ```
+
+3. **Create a new branch**: Create a new branch for your contribution using the following command:
+   ```bash
+   git checkout -b your-branch-name
+   ```
+
+4. **Make your changes**: Make the necessary changes to the codebase. Ensure that your changes adhere to the coding standards and guidelines of the project.
+
+5. **Commit your changes**: Commit your changes with a descriptive commit message using the following command:
+   ```bash
+   git commit -m "Description of your changes"
+   ```
+
+6. **Push your changes**: Push your changes to your forked repository using the following command:
+   ```bash
+   git push origin your-branch-name
+   ```
+
+7. **Create a pull request**: Go to the original repository on GitHub and click on the "New Pull Request" button. Provide a clear and concise description of your changes and submit the pull request.
+
+8. **Review process**: Your pull request will be reviewed by the project maintainers. Please be responsive to any feedback or requests for changes. Once your pull request is approved, it will be merged into the main branch.
+
+Thank you for your contributions!

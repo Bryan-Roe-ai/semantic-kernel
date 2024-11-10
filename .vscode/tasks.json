@@ -9,8 +9,7 @@
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "label": "setup (contributing-R#)",
-      "detail": "",
+      "detail": "Install ReSharper Global Tools",
       "group": "build",
       "dependsOn": ["new tool-manifest", "# Setup"],
       "dependsOrder": "sequence"
@@ -20,7 +19,7 @@
       "detail": "Install ReSharper Global Tools",
       "command": "dotnet",
       "type": "process",
-      "args": ["new", "tool-manifest"],
+      "args": ["new", "tool-manifest", "/consoleloggerparameters:NoSummary"],
       "options": {
         "cwd": "${workspaceFolder}/dotnet"
       }
@@ -65,7 +64,6 @@
         "/consoleloggerparameters:NoSummary"
       ],
       "type": "process",
-      "args": ["test", "SemanticKernel.UnitTests.csproj"],
       "problemMatcher": "$msCompile",
       "options": {
         "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
@@ -89,28 +87,25 @@
       }
     },
     {
-      "type": "func",
+      "label": "start (functions)",
+      "type": "process",
       "dependsOn": "build (functions)",
+      "command": "dotnet run",
       "options": {
         "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Debug/net6.0"
       },
-      "command": "host start",
+      // This task runs in the background to keep the host running while allowing other tasks to execute simultaneously.
+      // Running in the background ensures that the host remains active without blocking the execution of subsequent tasks.
       "isBackground": true,
       "problemMatcher": "$func-dotnet-watch"
-      "options": {
-        "cwd": "${workspaceFolder}/dotnet/src/IntegrationTests/"
-      }
     },
-    // ****************
-    // Samples (dotnet)
-    // ****************
-    // Kernel Syntax Examples
     {
-      "label": "build (Concepts)",
+      "label": "build (concepts)",
       "command": "dotnet",
       "type": "process",
       "args": [
-        "build",
+        // Ensures that the debug information is portable across different platforms
+        "/property:DebugType=portable",
         "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary",
@@ -171,7 +166,7 @@
       "logLevel": "debug",
       "appPort": 5000,
       "httpPort": 3500,
-      "dependsOn":["build (ProcessWithDapr)"]
+      "dependsOn": ["build (ProcessWithDapr)"]
     },
     {
       "label": "dapr-down",

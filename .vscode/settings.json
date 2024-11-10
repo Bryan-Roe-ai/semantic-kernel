@@ -5,13 +5,14 @@
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "[csharp]": {
-    "editor.defaultFormatter": "ms-dotnettools.csharp",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit"
     }
   },
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "python.formatting.provider": "autopep8",
   "python.formatting.autopep8Args": ["--max-line-length=120"],
   "notebook.output.textLineLimit": 500,
@@ -66,14 +67,14 @@
   },
   "cSpell.words": [
     "autogen",
-    "Partitioner"
-    "Dapr",
-    "Partitioner",
-    "Pregel",
-    "Prompty",
-    "SKEXP",
+    "partitioner",
+    "dapr",
+    "partitioner",
+    "pregel",
+    "prompty",
+    "skexp",
     "superstep",
-    "Supersteps",
+    "supersteps",
     "typeref",
     "uninstantiated"
   ],
@@ -103,9 +104,14 @@
   "azureFunctions.projectLanguage": "C#",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
-  "azureFunctions.preDeployTask": "publish (functions)"
   "azureFunctions.preDeployTask": "publish (functions)",
-  "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build"
-}
-  "python.testing.pytestEnabled": true
+  "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build",
+  "intelliphp.inlineSuggestionsEnabled": true,
+  "python.analysis.autoImportCompletions": true,
+  "netbeans.jdkhome": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+  "netbeans.project.jdkhome": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+    "PATH": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot\\bin;${env:PATH}"
+  }
 }

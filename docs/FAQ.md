@@ -35,6 +35,15 @@ npm start
 
 After starting the server, you can access the API by navigating to `http://localhost:3000` in your web browser.
 
+### How do I automate tasks during runtime without using GitHub?
+
+To automate tasks during runtime without using GitHub, you can use various tools and libraries that support runtime automation. Some popular options include:
+- **Cron Jobs**: Schedule tasks to run at specific intervals using cron jobs.
+- **Task Schedulers**: Use task schedulers like `node-schedule` or `agenda` to automate tasks within your Node.js application.
+- **Workflow Automation Tools**: Utilize workflow automation tools like `n8n` or `Apache Airflow` to create and manage automated workflows.
+
+Refer to the `docs/automate_runtime.md` file for more detailed information and examples on how to automate tasks during runtime.
+
 ## Troubleshooting
 
 ### What should I do if I encounter issues during the setup process?

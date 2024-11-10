@@ -1,6 +1,6 @@
-# SK Api
+# semantic-kernel
 
-This repository contains the SK Api, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly.
+This repository contains the semantic-kernel, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly.
 
 ## Features
 
@@ -14,13 +14,13 @@ This repository contains the SK Api, a powerful tool designed to facilitate seam
 
 ## Getting Started
 
-To start using the SK Api, follow these steps:
+To start using the semantic-kernel, follow these steps:
 
 1. **Installation**: Clone the repository and install the necessary dependencies.
 
    ```bash
-   git clone https://github.com/yourusername/sk-api.git
-   cd sk-api
+   git clone https://github.com/Bryan-Roe/semantic-kernel.git
+   cd semantic-kernel
    npm install
    ```
 
@@ -34,7 +34,7 @@ To start using the SK Api, follow these steps:
 
 4. **Testing**
 ---
-title: SK Api
+title: semantic-kernel
 emoji: 🚀
 colorFrom: indigo
 colorTo: blue
@@ -55,8 +55,8 @@ metrics:
 - accuracy
 - code_eval
 base_model:
-- Bryan-Roe/SK-api
-new_version: Bryan-Roe/SK-api
+- Bryan-Roe/semantic-kernel
+new_version: Bryan-Roe/semantic-kernel
 ---
 # Model Card for Model ID
 
@@ -636,3 +636,39 @@ We encourage the use of GitHub Discussions to come up with solutions to problems
 - **General Questions**: Use discussions to ask general questions about the repository, its usage, or best practices. Share your knowledge and help others by answering their questions.
 
 For more detailed guidelines on using discussions, refer to the `DISCUSSIONS.md` file in the root directory of the repository.
+
+## Contributing Guidelines
+
+We welcome contributions from the community! To contribute to this project, please follow these guidelines:
+
+1. **Fork the repository**: Create a fork of the repository to work on your changes.
+
+2. **Create a branch**: Create a new branch for your changes.
+
+   ```bash
+   git checkout -b my-feature-branch
+   ```
+
+3. **Make your changes**: Implement your changes in the new branch.
+
+4. **Test your changes**: Ensure that your changes do not break any existing functionality and pass all tests.
+
+5. **Commit your changes**: Commit your changes with a descriptive commit message.
+
+   ```bash
+   git commit -m "Add new feature"
+   ```
+
+6. **Push your changes**: Push your changes to your forked repository.
+
+   ```bash
+   git push origin my-feature-branch
+   ```
+
+7. **Create a pull request**: Open a pull request to merge your changes into the main repository.
+
+8. **Review and feedback**: Address any feedback or comments from the maintainers during the review process.
+
+9. **Merge**: Once your pull request is approved, it will be merged into the main repository.
+
+Thank you for your contributions!

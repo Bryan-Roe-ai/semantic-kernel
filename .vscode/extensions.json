@@ -8,6 +8,9 @@
     "ms-semantic-kernel.semantic-kernel",
     "emeraldwalk.RunOnSave",
     "ms-java.vscode-java-pack",
-    "ms-azuretools.vscode-dapr"
+    "ms-azuretools.vscode-dapr",
+    "ms-dotnettools.csdevkit",
+    "d-biehl.robotcode",
+    "google.cros-ide"
   ]
 }
