@@ -47,6 +47,27 @@ This information will help us triage your report more quickly.
 
 If you are reporting for a bug bounty, more complete reports can contribute to a higher bounty award. Please visit our [Microsoft Bug Bounty Program](https://www.microsoft.com/en-us/msrc/bounty?rtc=2) page for more details about our active programs.
 
+## Preferred Languages
+
+We prefer all communications to be in English.
+
+## Policy
+
+Microsoft follows the principle of [Coordinated Vulnerability Disclosure](https://www.microsoft.com/en-us/msrc/cvd?rtc=2).
+
+## Verifying Third-Party Actions
+
+All third-party actions used in workflows are verified and certified by GitHub. This ensures that the actions meet the necessary security standards and are safe to use in the repository.
+
+## Replacing Deprecated or Outdated Security Tools
+
+Any deprecated or outdated security tools are replaced with their latest versions. This ensures that the repository is always using the most up-to-date and secure tools available.
+
+## Monitoring for New Vulnerabilities
+
+A new workflow has been added to monitor and alert for any new security vulnerabilities in dependencies. This workflow runs daily and uses a certified GitHub action for dependency vulnerability scanning.
+
+<!-- END MICROSOFT SECURITY.MD BLOCK -->
 If you prefer to submit without logging in, send email to [secure@microsoft.com](mailto:secure@microsoft.com). If possible, encrypt your message with our PGP key; please download it from the [Microsoft Security Response Center PGP Key page](https://aka.ms/opensource/security/pgpkey).
 
 You should receive a response within 24 hours. If for some reason you do not, please follow up via email to ensure we received your original message. Additional information can be found at [microsoft.com/msrc](https://aka.ms/opensource/security/msrc).

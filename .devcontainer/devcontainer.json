@@ -28,6 +28,58 @@
 			]
 		}
 	},
+	"postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet",
+"features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/aws-cli:1": {}
+}
+}
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/dotnet:2.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1.1": {
+      "version": "8"
+    },
+    "ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.dotnet-interactive-vscode",
+        "ms-semantic-kernel.semantic-kernel",
+        "esbenp.prettier-vscode",
+        "oracle-labs-graalvm.graalvm",
+        "geequlim.godot-tools",
+        "ms-vscode.powershell",
+        "ivanhofer.git-assistant",
+        "ms-pyright.pyright",
+        "Maimonator.gpu-monitor"
+      ]
+    }
+  },
+  "postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet" // avoids needing to run as 'sudo' when starting KernelHttpServer
+},
+"customizations": {
+	"vscode": {
+		"extensions": [
+			"ms-semantic-kernel.semantic-kernel"
+		]
+	}
+}
+}
+}
+},
+"tasks": {
+  "test": "1. For Python:\n```\npython -m unittest discover\n```\n2. For Java (using Maven):\n```\nmvn test\n```\n3. For .NET:\n```\ndotnet test\n```\n4. For Node.js:\n```\nnpm test\n```\n5. For Ruby (using RSpec):\n```\nbundle exec rspec\n```\n6. For PHP (using PHPUnit):\n```\nvendor/bin/phpunit\n```\n7. For Rust:\n```\ncargo test\n```\n8. For Scala (using sbt):\n```\nsbt test\n```\n9. For Go:\n```\ngo test ./...\n```\n10. For C++ (using Makefile):\n```\nmake test\n```",
+  "build": "npm install && npm run build",
+  "test": "2. For .NET:\n```\ndotnet test\n```\n2. For Python:\n```\npytest\n```\n3. For Java:\n```\nmvn test\n```\n4. For Node.js:\n```\nnpm test\n```",
+  "build": "dotnet restore && dotnet build && pip install -r requirements.txt && mvn clean install && npm install",
+  "launch": "pip install -r requirements.txt && python app.py"
+}
   "postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet",
   "tasks": {
     "test": "pytest && dotnet test && mvn test && npm test",
