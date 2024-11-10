@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 
+using System;
+
 namespace Microsoft.SemanticKernel;
 
 /// <summary>
@@ -30,6 +32,9 @@ public sealed class ProcessEdgeBuilder
     {
         this._source = source;
         this._eventId = eventId;
+        Verify.NotNull(source, nameof(source));
+        Verify.NotNullOrWhiteSpace(eventId, nameof(eventId));
+
         this.Source = source;
         this.EventId = eventId;
     }
@@ -37,20 +42,32 @@ public sealed class ProcessEdgeBuilder
     /// <summary>
     /// Sends the output of the source step to the specified target when the associated event fires.
     /// </summary>
-<<<<<<< main
     /// <param name="outputTarget">The output target.</param>
     public void SendEventTo(ProcessStepEdgeBuilder outputTarget)
     {
         this._source.LinkTo(this._eventId, outputTarget);
     public void SendEventTo(ProcessFunctionTargetBuilder target)
-=======
     public ProcessEdgeBuilder SendEventTo(ProcessFunctionTargetBuilder target)
->>>>>>> upstream/main
     {
+        if (this.Target is not null)
+        {
+            throw new InvalidOperationException("An output target has already been set.");
+        }
+
         this.Target = target;
         ProcessStepEdgeBuilder edgeBuilder = new(this.Source, this.EventId) { Target = this.Target };
         this.Source.LinkTo(this.EventId, edgeBuilder);
 
         return new ProcessEdgeBuilder(this.Source, this.EventId);
+    }
+
+    /// <summary>
+    /// Sends the output of the source step to the specified map when the associated event fires.
+    /// </summary>
+    /// <param name="mapTarget">The output target.</param>
+    /// <returns>A fresh builder instance for fluid definition</returns>
+    public ProcessEdgeBuilder SendEventTo(ProcessMapBuilder mapTarget)
+    {
+        return this.SendEventTo(new ProcessFunctionTargetBuilder(mapTarget));
     }
 }

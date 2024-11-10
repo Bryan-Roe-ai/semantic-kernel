@@ -13,6 +13,8 @@ The root directory contains the main configuration files and directories for the
 - `python/`: Contains the Python implementation of the Semantic Kernel.
 - `.gitignore`: Specifies files and directories that should be ignored by Git.
 - `LICENSE`: The license file for the project.
+- `scripts/`: Contains scripts for automating various tasks and processes.
+- `tests/`: Contains test cases and testing infrastructure for the project.
 
 ## `docs/` Directory
 
@@ -22,6 +24,9 @@ The `docs/` directory contains detailed documentation for each major component o
 - `FAQ.md`: Addresses common questions and issues that users may encounter.
 - `Repository_Structure.md`: Explains the structure of the repository and the purpose of each directory and file.
 - `Code_Comments.md`: Provides guidelines for adding comments to the code to explain the purpose and functionality of each function and class.
+- `PLANNERS.md`: Describes the planner module and provides examples and use cases.
+- `PLUGINS.md`: Describes the plugins module and provides examples and use cases.
+- `PROMPT_TEMPLATE_LANGUAGE.md`: Describes the prompt template language and provides examples and use cases.
 
 ## `java/` Directory
 

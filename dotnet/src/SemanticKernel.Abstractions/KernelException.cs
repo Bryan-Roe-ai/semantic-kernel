@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 
@@ -34,6 +34,66 @@ public class KernelException : Exception
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
     public KernelException(string? message, Exception? innerException) : base(message, innerException)
+    {
+    }
+}
+
+/// <summary>
+/// Represents an exception that occurs when a function invocation is canceled.
+/// </summary>
+public class KernelFunctionCanceledException : KernelException
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="KernelFunctionCanceledException"/> class.
+    /// </summary>
+    public KernelFunctionCanceledException()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="KernelFunctionCanceledException"/> class with a specified error message.
+    /// </summary>
+    /// <param name="message">The error message that explains the reason for the exception.</param>
+    public KernelFunctionCanceledException(string? message) : base(message)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="KernelFunctionCanceledException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.
+    /// </summary>
+    /// <param name="message">The error message that explains the reason for the exception.</param>
+    /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
+    public KernelFunctionCanceledException(string? message, Exception? innerException) : base(message, innerException)
+    {
+    }
+}
+
+/// <summary>
+/// Represents an exception that occurs when a function invocation fails.
+/// </summary>
+public class KernelFunctionInvocationException : KernelException
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="KernelFunctionInvocationException"/> class.
+    /// </summary>
+    public KernelFunctionInvocationException()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="KernelFunctionInvocationException"/> class with a specified error message.
+    /// </summary>
+    /// <param name="message">The error message that explains the reason for the exception.</param>
+    public KernelFunctionInvocationException(string? message) : base(message)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="KernelFunctionInvocationException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.
+    /// </summary>
+    /// <param name="message">The error message that explains the reason for the exception.</param>
+    /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
+    public KernelFunctionInvocationException(string? message, Exception? innerException) : base(message, innerException)
     {
     }
 }

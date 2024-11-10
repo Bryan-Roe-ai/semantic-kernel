@@ -54,3 +54,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: bandit-results.sarif
+
+      - name: Trigger Ensure Success Workflow
+        run: |
+          gh workflow run ensure-success.yml

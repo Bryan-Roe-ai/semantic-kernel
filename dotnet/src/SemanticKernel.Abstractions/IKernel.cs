@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Threading;
@@ -197,4 +197,10 @@ public interface IKernel
     /// <typeparam name="T">Service type</typeparam>
     /// <returns>Instance of T</returns>
     T GetService<T>(string? name = null) where T : IAIService;
+
+    /// <summary>
+    /// Handles errors and logs them.
+    /// </summary>
+    /// <param name="exception">The exception to handle.</param>
+    void HandleError(Exception exception);
 }

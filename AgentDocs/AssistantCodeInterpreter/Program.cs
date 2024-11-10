@@ -12,6 +12,10 @@ using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
 using OpenAI.Files;
 using Microsoft.SemanticKernel.Agents;
+using Azure.Storage.Blobs;
+using Azure.AI.TextAnalytics;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Hosting;
 
 namespace AgentsSample;
 
@@ -43,6 +47,25 @@ public static class Program
         FileClient fileClient = clientProvider.Client.GetFileClient();
         OpenAIFileInfo fileDataCountryDetail = await fileClient.UploadFileAsync("PopulationByAdmin1.csv", FileUploadPurpose.Assistants);
         OpenAIFileInfo fileDataCountryList = await fileClient.UploadFileAsync("PopulationByCountry.csv", FileUploadPurpose.Assistants);
+
+        // Azure Blob Storage integration
+        BlobServiceClient blobServiceClient = new BlobServiceClient(new Uri(settings.AzureBlobStorage.Endpoint), new AzureCliCredential());
+        BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient("your-container-name");
+        await containerClient.CreateIfNotExistsAsync();
+        BlobClient blobClient = containerClient.GetBlobClient("PopulationByAdmin1.csv");
+        await blobClient.UploadAsync("PopulationByAdmin1.csv", true);
+        blobClient = containerClient.GetBlobClient("PopulationByCountry.csv");
+        await blobClient.UploadAsync("PopulationByCountry.csv", true);
+
+        // Azure Cognitive Services integration
+        TextAnalyticsClient textAnalyticsClient = new TextAnalyticsClient(new Uri(settings.AzureCognitiveServices.Endpoint), new AzureCliCredential());
+
+        // Azure Functions integration
+        var host = new HostBuilder()
+            .ConfigureFunctionsWorkerDefaults()
+            .Build();
+
+        await host.RunAsync();
 
         Console.WriteLine("Defining agent...");
         OpenAIAssistantAgent agent =

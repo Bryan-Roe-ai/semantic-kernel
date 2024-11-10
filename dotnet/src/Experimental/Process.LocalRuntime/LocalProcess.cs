@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -9,13 +9,18 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel.Process;
+using Microsoft.SemanticKernel.Process.Internal;
+using Microsoft.SemanticKernel.Process.Runtime;
 using Microsoft.VisualStudio.Threading;
 
 namespace Microsoft.SemanticKernel;
 
+internal delegate bool ProcessEventFilter(KernelProcessEvent processEvent);
+
 internal sealed class LocalProcess : LocalStep, IDisposable
 {
     private const string EndProcessId = "Microsoft.SemanticKernel.Process.EndStep";
+
     private readonly JoinableTaskFactory _joinableTaskFactory;
     private readonly JoinableTaskContext _joinableTaskContext;
     private readonly Channel<KernelProcessEvent> _externalEventChannel;
@@ -26,7 +31,9 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     internal readonly KernelProcess _process;
     internal readonly Kernel _kernel;
 
-    private readonly ILogger _logger;
+    private ILogger? _logger; // Note: Use the Logger property to access this field.
+    private ILogger Logger => this._logger ??= this.LoggerFactory?.CreateLogger<LocalProcess>() ?? NullLogger<LocalProcess>.Instance;
+
     private JoinableTask? _processTask;
     private CancellationTokenSource? _processCancelSource;
 
@@ -35,10 +42,11 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// </summary>
     /// <param name="process">The <see cref="KernelProcess"/> instance.</param>
     /// <param name="kernel">An instance of <see cref="Kernel"/></param>
+    internal LocalProcess(KernelProcess process, Kernel kernel)
+        : base(process, kernel)
     /// <param name="parentProcessId">Optional. The Id of the parent process if one exists, otherwise null.</param>
-    /// <param name="loggerFactory">Optional. A <see cref="ILoggerFactory"/>.</param>
-    internal LocalProcess(KernelProcess process, Kernel kernel, string? parentProcessId = null, ILoggerFactory? loggerFactory = null)
-        : base(process, kernel, parentProcessId, loggerFactory)
+    internal LocalProcess(KernelProcess process, Kernel kernel, string? parentProcessId = null)
+        : base(process, kernel, parentProcessId)
     {
         Verify.NotNull(process);
         Verify.NotNull(process.Steps);
@@ -51,7 +59,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
         this._externalEventChannel = Channel.CreateUnbounded<KernelProcessEvent>();
         this._joinableTaskContext = new JoinableTaskContext();
         this._joinableTaskFactory = new JoinableTaskFactory(this._joinableTaskContext);
-        this._logger = this.LoggerFactory?.CreateLogger(this.Name) ?? new NullLogger<LocalStep>();
+        this._logger = this._kernel.LoggerFactory?.CreateLogger(this.Name) ?? new NullLogger<LocalStep>();
     }
 
     /// <summary>
@@ -80,6 +88,11 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     internal async Task RunOnceAsync(KernelProcessEvent? processEvent, Kernel? kernel = null)
     {
         Verify.NotNull(processEvent);
+        await Task.Yield(); // Ensure that the process has an opportunity to run in a different synchronization context.
+        Verify.NotNull(processEvent, nameof(processEvent));
+        Verify.NotNull(processEvent, nameof(processEvent));
+
+        await Task.Yield(); // Ensure that the process has an opportunity to run in a different synchronization context.
         await this._externalEventChannel.Writer.WriteAsync(processEvent).ConfigureAwait(false);
         await this.StartAsync(kernel, keepAlive: false).ConfigureAwait(false);
         await this._processTask!.JoinAsync().ConfigureAwait(false);
@@ -120,20 +133,22 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// <param name="processEvent">Required. The <see cref="KernelProcessEvent"/> to start the process with.</param>
     /// <param name="kernel">Optional. A <see cref="Kernel"/> to use when executing the process.</param>
     /// <returns>A <see cref="Task"/></returns>
-    internal async Task SendMessageAsync(KernelProcessEvent processEvent, Kernel? kernel = null)
+    internal Task SendMessageAsync(KernelProcessEvent processEvent, Kernel? kernel = null)
     {
         Verify.NotNull(processEvent);
-        await this._externalEventChannel.Writer.WriteAsync(processEvent).ConfigureAwait(false);
+        Verify.NotNull(processEvent, nameof(processEvent));
+        return this._externalEventChannel.Writer.WriteAsync(processEvent).AsTask();
     }
 
     /// <summary>
     /// Gets the process information.
     /// </summary>
     /// <returns>An instance of <see cref="KernelProcess"/></returns>
-    internal async Task<KernelProcess> GetProcessInfoAsync()
+    internal Task<KernelProcess> GetProcessInfoAsync()
     {
-        return await this.ToKernelProcessAsync().ConfigureAwait(false);
+        return this.ToKernelProcessAsync();
     }
+    internal Task<KernelProcess> GetProcessInfoAsync() => this.ToKernelProcessAsync();
 
     /// <summary>
     /// Handles a <see cref="LocalMessage"/> that has been sent to the process. This happens only in the case
@@ -148,8 +163,9 @@ internal sealed class LocalProcess : LocalStep, IDisposable
         if (string.IsNullOrWhiteSpace(message.TargetEventId))
         {
             string errorMessage = "Internal Process Error: The target event id must be specified when sending a message to a step.";
-            this._logger.LogError("{ErrorMessage}", errorMessage);
+            this.Logger.LogError("{ErrorMessage}", errorMessage);
             throw new KernelException(errorMessage);
+            throw new KernelException("Internal Process Error: The target event id must be specified when sending a message to a step.").Log(this._logger);
         }
 
         string eventId = message.TargetEventId!;
@@ -183,21 +199,35 @@ internal sealed class LocalProcess : LocalStep, IDisposable
             // The current step should already have a name.
             Verify.NotNull(step.State?.Name);
 
-            if (step is KernelProcess kernelStep)
+            if (step is KernelProcess processStep)
             {
                 // The process will only have an Id if its already been executed.
-                if (string.IsNullOrWhiteSpace(kernelStep.State.Id))
+                if (string.IsNullOrWhiteSpace(processStep.State.Id))
                 {
-                    kernelStep = kernelStep with { State = kernelStep.State with { Id = Guid.NewGuid().ToString() } };
+                    processStep = processStep with { State = processStep.State with { Id = Guid.NewGuid().ToString() } };
                 }
 
+                localStep =
+                    new LocalProcess(processStep, this._kernel)
+                    {
+                        ParentProcessId = this.Id,
+                        LoggerFactory = this.LoggerFactory,
+                        EventFilter = this.EventFilter,
+                    };
+            }
+            else if (step is KernelProcessMap mapStep)
+            {
+                localStep =
+                    new LocalMap(mapStep, this._kernel)
+                    {
+                        ParentProcessId = this.Id,
+                        LoggerFactory = this.LoggerFactory,
+                    };
                 var process = new LocalProcess(
                     process: kernelStep,
                     kernel: this._kernel,
-                    parentProcessId: this.Id,
-                    loggerFactory: this.LoggerFactory);
+                    parentProcessId: this.Id);
 
-                //await process.StartAsync(kernel: this._kernel, keepAlive: true).ConfigureAwait(false);
                 localStep = process;
             }
             else
@@ -205,11 +235,17 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                 // The current step should already have an Id.
                 Verify.NotNull(step.State?.Id);
 
+                localStep =
+                    new LocalStep(step, this._kernel)
+                    {
+                        ParentProcessId = this.Id,
+                        LoggerFactory = this.LoggerFactory,
+                        EventFilter = this.EventFilter,
+                    };
                 localStep = new LocalStep(
                     stepInfo: step,
                     kernel: this._kernel,
-                    parentProcessId: this.Id,
-                    loggerFactory: this.LoggerFactory);
+                    parentProcessId: this.Id);
             }
 
             this._steps.Add(localStep);
@@ -251,11 +287,11 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                 }
 
                 // Complete the writing side, indicating no more messages in this superstep.
-                var messagesToProcess = messageChannel.ToList();
+                var messagesToProcess = messageChannel.ToArray();
                 messageChannel.Clear();
 
                 // If there are no messages to process, wait for an external event.
-                if (messagesToProcess.Count == 0)
+                if (messagesToProcess.Length == 0)
                 {
                     if (!keepAlive || !await this._externalEventChannel.Reader.WaitToReadAsync(cancellationToken).ConfigureAwait(false))
                     {
@@ -268,7 +304,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                 foreach (var message in messagesToProcess)
                 {
                     // Check for end condition
-                    if (message.DestinationId.Equals(EndProcessId, StringComparison.OrdinalIgnoreCase))
+                    if (message.DestinationId.Equals(ProcessConstants.EndStepName, StringComparison.OrdinalIgnoreCase))
                     {
                         this._processCancelSource?.Cancel();
                         break;
@@ -286,7 +322,8 @@ internal sealed class LocalProcess : LocalStep, IDisposable
         }
         catch (Exception ex)
         {
-            this._logger?.LogError("An error occurred while running the process: {ErrorMessage}.", ex.Message);
+            this.Logger?.LogError("An error occurred while running the process: {ErrorMessage}.", ex.Message);
+            this._logger?.LogError(ex, "An error occurred while running the process.");
             throw;
         }
         finally
@@ -331,7 +368,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     private void EnqueueStepMessages(LocalStep step, Queue<LocalMessage> messageChannel)
     {
         var allStepEvents = step.GetAllEvents();
-        foreach (var stepEvent in allStepEvents)
+        foreach (ProcessEvent stepEvent in allStepEvents)
         {
             // Emit the event out of the process (this one) if it's visibility is public.
             if (stepEvent.Visibility == KernelProcessEventVisibility.Public)
@@ -340,10 +377,25 @@ internal sealed class LocalProcess : LocalStep, IDisposable
             }
 
             // Get the edges for the event and queue up the messages to be sent to the next steps.
-            foreach (var edge in step.GetEdgeForEvent(stepEvent.Id!))
+            bool foundEdge = false;
+            foreach (KernelProcessEdge edge in step.GetEdgeForEvent(stepEvent.Id))
             {
                 LocalMessage message = LocalMessageFactory.CreateFromEdge(edge, stepEvent.Data);
                 messageChannel.Enqueue(message);
+                foundEdge = true;
+            }
+
+            // Error event was raised with no edge to handle it, send it to an edge defined as the global error target.
+            if (!foundEdge && stepEvent.IsError)
+            {
+                if (this._outputEdges.TryGetValue(ProcessConstants.GlobalErrorEventId, out List<KernelProcessEdge>? edges))
+                {
+                    foreach (KernelProcessEdge edge in edges)
+                    {
+                        ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, stepEvent.Data);
+                        messageChannel.Enqueue(message);
+                    }
+                }
             }
         }
     }

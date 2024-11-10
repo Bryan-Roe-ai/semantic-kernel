@@ -92,3 +92,7 @@ jobs:
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{matrix.language}}"
+
+      - name: Trigger Ensure Success Workflow
+        run: |
+          gh workflow run ensure-success.yml

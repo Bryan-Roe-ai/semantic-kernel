@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace Microsoft.SemanticKernel;
 
 /// <summary>
-/// Represents the state of a process.
+/// Represents the state of a <see cref="KernelProcess"/>.
 /// </summary>
 public sealed class KernelProcessState : KernelProcessStepState
 [DataContract]

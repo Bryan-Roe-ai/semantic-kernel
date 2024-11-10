@@ -1,4 +1,4 @@
-﻿namespace Microsoft.DevSkim.CLI;
+namespace Microsoft.DevSkim.CLI;
 
 public enum ExitCode
 {

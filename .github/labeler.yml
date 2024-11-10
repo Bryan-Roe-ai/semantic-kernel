@@ -85,3 +85,7 @@ issue-labels:
       - '**/*.net*'
       - '**/*csharp*'
       - '**/*C#*'
+
+# Add 'discussion' label to any issue related to discussions
+discussion:
+  - '**/*discussion*'

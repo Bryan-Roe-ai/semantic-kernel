@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,4 +23,6 @@ public interface IEventBuffer : IActor
     /// </summary>
     /// <returns>A <see cref="List{T}"/> where T is <see cref="DaprEvent"/></returns>
     Task<List<DaprEvent>> DequeueAllAsync();
+    /// <returns>A <see cref="List{T}"/> where T is <see cref="ProcessEvent"/></returns>
+    Task<IList<ProcessEvent>> DequeueAllAsync();
 }

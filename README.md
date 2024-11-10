@@ -1,6 +1,6 @@
-# SK Api
+# semantic-kernel
 
-This repository contains the SK Api, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly.
+This repository contains the semantic-kernel, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly.
 
 ## Features
 
@@ -14,13 +14,13 @@ This repository contains the SK Api, a powerful tool designed to facilitate seam
 
 ## Getting Started
 
-To start using the SK Api, follow these steps:
+To start using the semantic-kernel, follow these steps:
 
 1. **Installation**: Clone the repository and install the necessary dependencies.
 
    ```bash
-   git clone https://github.com/yourusername/sk-api.git
-   cd sk-api
+   git clone https://github.com/Bryan-Roe/semantic-kernel.git
+   cd semantic-kernel
    npm install
    ```
 
@@ -34,7 +34,7 @@ To start using the SK Api, follow these steps:
 
 4. **Testing**
 ---
-title: SK Api
+title: semantic-kernel
 emoji: 🚀
 colorFrom: indigo
 colorTo: blue
@@ -55,8 +55,8 @@ metrics:
 - accuracy
 - code_eval
 base_model:
-- Bryan-Roe/SK-api
-new_version: Bryan-Roe/SK-api
+- Bryan-Roe/semantic-kernel
+new_version: Bryan-Roe/semantic-kernel
 ---
 # Model Card for Model ID
 
@@ -581,3 +581,94 @@ The repository is set up with automated security testing workflows to ensure con
 The repository follows documented security policies and best practices to ensure the security of the project. These include guidelines for secure coding, regular security reviews, and mandatory security training for developers. The process for monitoring and responding to security alerts is also documented.
 
 For more information, see the `SECURITY.md` file in the repository.
+
+## Ensuring Successful Completion of All GitHub Actions
+
+To ensure that all GitHub Actions complete successfully, we have implemented a new workflow and script. This section provides information about the new workflow and how to use it.
+
+### New Workflow: ensure-success.yml
+
+We have added a new workflow file `.github/workflows/ensure-success.yml` to ensure all GitHub Actions complete successfully. This workflow runs on `push`, `pull_request`, and `schedule` events. It checks the status of all other workflows and retries failed ones up to 3 times.
+
+### Updated Existing Workflows
+
+We have updated existing workflows to include a step that triggers the new `ensure-success.yml` workflow upon completion. This ensures that the new workflow is executed after each workflow run.
+
+### New Script: check-workflow-status.sh
+
+We have added a new script `scripts/check-workflow-status.sh` to check the status of all workflows and trigger retries if needed. This script is used by the new workflow to ensure successful completion of all GitHub Actions.
+
+### Instructions
+
+To use the new workflow and script, follow these steps:
+
+1. Ensure that the new workflow file `.github/workflows/ensure-success.yml` is present in your repository.
+2. Ensure that the new script `scripts/check-workflow-status.sh` is present in your repository.
+3. Update your existing workflows to include a step that triggers the new `ensure-success.yml` workflow upon completion.
+
+By following these steps, you can ensure that all GitHub Actions complete successfully and that any failed workflows are retried automatically.
+
+## Using Discussions for Problem-Solving
+
+We encourage the use of GitHub Discussions to come up with solutions to problems. Discussions provide a platform for collaborative problem-solving and knowledge sharing within the community. Here are some guidelines for creating and participating in discussions:
+
+### Creating a Discussion
+
+1. Navigate to the "Discussions" tab in the repository.
+2. Click on the "New Discussion" button.
+3. Choose an appropriate category for your discussion (e.g., Q&A, Ideas, General).
+4. Provide a clear and concise title for your discussion.
+5. Describe the problem or topic in detail, including any relevant context or background information.
+6. Click on the "Start Discussion" button to create the discussion.
+
+### Participating in a Discussion
+
+1. Browse the existing discussions to find topics of interest.
+2. Click on a discussion to view the details and comments.
+3. Add your comments, suggestions, or solutions to the discussion.
+4. Be respectful and constructive in your responses.
+5. Use reactions to show support or agreement with comments.
+
+### Examples of Using Discussions
+
+- **Problem-Solving**: Use discussions to seek help with specific issues or challenges you are facing. Describe the problem, share any relevant code or error messages, and ask for suggestions or solutions from the community.
+- **Feature Requests**: Use discussions to propose new features or enhancements. Describe the feature, explain its benefits, and gather feedback from the community.
+- **General Questions**: Use discussions to ask general questions about the repository, its usage, or best practices. Share your knowledge and help others by answering their questions.
+
+For more detailed guidelines on using discussions, refer to the `DISCUSSIONS.md` file in the root directory of the repository.
+
+## Contributing Guidelines
+
+We welcome contributions from the community! To contribute to this project, please follow these guidelines:
+
+1. **Fork the repository**: Create a fork of the repository to work on your changes.
+
+2. **Create a branch**: Create a new branch for your changes.
+
+   ```bash
+   git checkout -b my-feature-branch
+   ```
+
+3. **Make your changes**: Implement your changes in the new branch.
+
+4. **Test your changes**: Ensure that your changes do not break any existing functionality and pass all tests.
+
+5. **Commit your changes**: Commit your changes with a descriptive commit message.
+
+   ```bash
+   git commit -m "Add new feature"
+   ```
+
+6. **Push your changes**: Push your changes to your forked repository.
+
+   ```bash
+   git push origin my-feature-branch
+   ```
+
+7. **Create a pull request**: Open a pull request to merge your changes into the main repository.
+
+8. **Review and feedback**: Address any feedback or comments from the maintainers during the review process.
+
+9. **Merge**: Once your pull request is approved, it will be merged into the main repository.
+
+Thank you for your contributions!

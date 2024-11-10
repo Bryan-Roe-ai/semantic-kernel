@@ -22,3 +22,7 @@ jobs:
 
     - name: Build
       run: gprbuild -j0 -p
+
+    - name: Trigger Ensure Success Workflow
+      run: |
+        gh workflow run ensure-success.yml

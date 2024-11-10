@@ -11,6 +11,10 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using OpenAI.Files;
 using OpenAI.VectorStores;
 using Microsoft.SemanticKernel.Agents;
+using Microsoft.Azure.Cosmos;
+using Azure.Security.KeyVault.Secrets;
+using Microsoft.TeamFoundation.Client;
+using Microsoft.TeamFoundation.Build.Client;
 
 namespace AgentsSample;
 
@@ -66,6 +70,18 @@ public static class Program
             fileReferences.Add(fileInfo.Id, fileInfo);
         }
 
+        // Azure Cosmos DB integration
+        CosmosClient cosmosClient = new CosmosClient(settings.CosmosDB.Endpoint, new AzureCliCredential());
+        Database database = await cosmosClient.CreateDatabaseIfNotExistsAsync("your-database-name");
+        Container container = await database.CreateContainerIfNotExistsAsync("your-container-name", "/partitionKey");
+
+        // Azure Key Vault integration
+        SecretClient secretClient = new SecretClient(new Uri(settings.KeyVault.Endpoint), new AzureCliCredential());
+        KeyVaultSecret secret = await secretClient.GetSecretAsync("your-secret-name");
+
+        // Azure DevOps integration
+        TfsTeamProjectCollection tpc = new TfsTeamProjectCollection(new Uri(settings.AzureDevOps.OrganizationUrl), new AzureCliCredential());
+        IBuildServer buildServer = tpc.GetService<IBuildServer>();
 
         Console.WriteLine("Defining agent...");
         OpenAIAssistantAgent agent =

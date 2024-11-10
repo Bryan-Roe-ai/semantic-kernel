@@ -10,8 +10,11 @@ namespace Microsoft.SemanticKernel;
 /// <summary>
 /// Contains information about a Step in a Dapr Process including it's state and edges.
 /// </summary>
+[KnownType(typeof(DaprProcessInfo))] // HACK: Where should this be defined?
+[KnownType(typeof(DaprMapInfo))] // HACK: Where should this be defined?
 [KnownType(typeof(KernelProcessEdge))]
 [KnownType(typeof(KernelProcessStepState))]
+[KnownType(typeof(DaprProcessInfo))]
 public record DaprStepInfo
 {
     /// <summary>
@@ -51,7 +54,8 @@ public record DaprStepInfo
     /// <returns>An instance of <see cref="DaprStepInfo"/></returns>
     public static DaprStepInfo FromKernelStepInfo(KernelProcessStepInfo kernelStepInfo)
     {
-        Verify.NotNull(kernelStepInfo);
+        Verify.NotNull(kernelStepInfo, nameof(kernelStepInfo));
+
         return new DaprStepInfo
         {
             InnerStepDotnetType = kernelStepInfo.InnerStepType.AssemblyQualifiedName!,

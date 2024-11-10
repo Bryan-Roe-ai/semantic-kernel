@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -311,12 +311,14 @@ public sealed class Kernel
         KernelFunction function,
         KernelArguments arguments,
         FunctionResult functionResult,
+        bool isStreaming,
         Func<FunctionInvocationContext, Task> functionCallback,
         CancellationToken cancellationToken)
     {
         FunctionInvocationContext context = new(this, function, arguments, functionResult)
         {
-            CancellationToken = cancellationToken
+            CancellationToken = cancellationToken,
+            IsStreaming = isStreaming
         };
 
         await InvokeFilterOrFunctionAsync(this._functionInvocationFilters, functionCallback, context).ConfigureAwait(false);
@@ -351,12 +353,14 @@ public sealed class Kernel
     internal async Task<PromptRenderContext> OnPromptRenderAsync(
         KernelFunction function,
         KernelArguments arguments,
+        bool isStreaming,
         Func<PromptRenderContext, Task> renderCallback,
         CancellationToken cancellationToken)
     {
         PromptRenderContext context = new(this, function, arguments)
         {
-            CancellationToken = cancellationToken
+            CancellationToken = cancellationToken,
+            IsStreaming = isStreaming
         };
 
         await InvokeFilterOrPromptRenderAsync(this._promptRenderFilters, renderCallback, context).ConfigureAwait(false);
@@ -404,27 +408,8 @@ public sealed class Kernel
     /// <remarks>
     /// This behaves identically to invoking the specified <paramref name="function"/> with this <see cref="Kernel"/> as its <see cref="Kernel"/> argument.
     /// </remarks>
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
     [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-
     public Task<FunctionResult> InvokeAsync(
         KernelFunction function,
         KernelArguments? arguments = null,
@@ -450,32 +435,6 @@ public sealed class Kernel
     /// This behaves identically to using <see cref="KernelPluginExtensions.GetFunction"/> to find the desired <see cref="KernelFunction"/> and then
     /// invoking it with this <see cref="Kernel"/> as its <see cref="Kernel"/> argument.
     /// </remarks>
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> Stashed changes
-=======
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> Stashed changes
-=======
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
     [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
     public Task<FunctionResult> InvokeAsync(
@@ -505,49 +464,8 @@ public sealed class Kernel
     /// <remarks>
     /// This behaves identically to invoking the specified <paramref name="function"/> with this <see cref="Kernel"/> as its <see cref="Kernel"/> argument.
     /// </remarks>
-<<<<<<< Updated upstream
     [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public async Task<TResult?> InvokeAsync<TResult>(
         KernelFunction function,
         KernelArguments? arguments = null,
@@ -574,49 +492,8 @@ public sealed class Kernel
     /// This behaves identically to using <see cref="KernelPluginExtensions.GetFunction"/> to find the desired <see cref="KernelFunction"/> and then
     /// invoking it with this <see cref="Kernel"/> as its <see cref="Kernel"/> argument.
     /// </remarks>
-<<<<<<< Updated upstream
     [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public async Task<TResult?> InvokeAsync<TResult>(
         string? pluginName,
         string functionName,
@@ -642,49 +519,8 @@ public sealed class Kernel
     /// The function will not be invoked until an enumerator is retrieved from the returned <see cref="IAsyncEnumerable{T}"/>
     /// and its iteration initiated via an initial call to <see cref="IAsyncEnumerator{T}.MoveNextAsync"/>.
     /// </remarks>
-<<<<<<< Updated upstream
     [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public IAsyncEnumerable<StreamingKernelContent> InvokeStreamingAsync(
         KernelFunction function,
         KernelArguments? arguments = null,
@@ -710,49 +546,8 @@ public sealed class Kernel
     /// The function will not be invoked until an enumerator is retrieved from the returned <see cref="IAsyncEnumerable{T}"/>
     /// and its iteration initiated via an initial call to <see cref="IAsyncEnumerator{T}.MoveNextAsync"/>.
     /// </remarks>
-<<<<<<< Updated upstream
     [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public IAsyncEnumerable<StreamingKernelContent> InvokeStreamingAsync(
         string? pluginName,
         string functionName,
@@ -778,49 +573,8 @@ public sealed class Kernel
     /// The function will not be invoked until an enumerator is retrieved from the returned <see cref="IAsyncEnumerable{T}"/>
     /// and its iteration initiated via an initial call to <see cref="IAsyncEnumerator{T}.MoveNextAsync"/>.
     /// </remarks>
-<<<<<<< Updated upstream
     [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public IAsyncEnumerable<T> InvokeStreamingAsync<T>(
         KernelFunction function,
         KernelArguments? arguments = null,
@@ -846,49 +600,8 @@ public sealed class Kernel
     /// The function will not be invoked until an enumerator is retrieved from the returned <see cref="IAsyncEnumerable{T}"/>
     /// and its iteration initiated via an initial call to <see cref="IAsyncEnumerator{T}.MoveNextAsync"/>.
     /// </remarks>
-<<<<<<< Updated upstream
     [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    [RequiresUnreferencedCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection if the function is created with a non-AOT compatible constructor, making it incompatible with AOT scenarios.")]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
     public IAsyncEnumerable<T> InvokeStreamingAsync<T>(
         string? pluginName,
         string functionName,
@@ -993,4 +706,14 @@ public sealed class Kernel
     }
 
     #endregion
+
+    /// <summary>
+    /// Handles errors and logs them.
+    /// </summary>
+    /// <param name="exception">The exception to handle.</param>
+    private void HandleError(Exception exception)
+    {
+        var logger = this.LoggerFactory.CreateLogger<Kernel>();
+        logger.LogError(exception, "An error occurred in the Kernel.");
+    }
 }

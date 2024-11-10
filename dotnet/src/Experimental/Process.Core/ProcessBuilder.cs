@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.SemanticKernel.Process.Internal;
+using Microsoft.SemanticKernel.Process.Models;
 
 namespace Microsoft.SemanticKernel;
 
@@ -87,11 +89,44 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// <summary>
     /// Builds the step.
     /// </summary>
+    /// <param name="stateMetadata">State to apply to the step on the build process</param>
     /// <returns></returns>
+    internal override KernelProcessStepInfo BuildStep(KernelProcessStepStateMetadata<object>? stateMetadata)
+    {
+        // The step is a, process so we can return the step info directly.
+        if (stateMetadata is KernelProcessStateMetadata processState)
+        {
+            return this.BuildStep(processState);
+        }
+
+        return this.BuildStep();
+    }
+
+    /// <summary>
+    /// Build the subprocess step
+    /// </summary>
+    /// <param name="stateMetadata">State to apply to the step on the build process</param>
+    /// <returns></returns>
+    private KernelProcess BuildStep(KernelProcessStateMetadata? stateMetadata)
+    {
+        // The step is a process so we can return the step info directly.
+        return this.Build(stateMetadata);
+    }
+
     internal override KernelProcessStepInfo BuildStep()
     {
-        // The process is a step so we can return the step info directly.
-        return this.Build();
+        return this.Build(null);
+    }
+
+    /// <summary>
+    /// Add the provided step builder to the process.
+    /// </summary>
+    /// <remarks>
+    /// Utilized by <see cref="ProcessMapBuilder"/> only.
+    /// </remarks>
+    internal void AddStepFromBuilder(ProcessStepBuilder stepBuilder)
+    {
+        this._steps.Add(stepBuilder);
     }
 
     #region Public Interface
@@ -125,7 +160,7 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// <returns>An instance of <see cref="ProcessStepBuilder"/></returns>
     public ProcessStepBuilder AddStepFromType<TStep, TState>(TState initialState, string? name = null) where TStep : KernelProcessStep<TState> where TState : class, new()
     {
-        var stepBuilder = new ProcessStepBuilder<TStep>(name, initialState);
+        var stepBuilder = new ProcessStepBuilder<TStep>(name, initialState: initialState);
         this._steps.Add(stepBuilder);
 
         return stepBuilder;
@@ -144,6 +179,21 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     }
 
     /// <summary>
+    /// Adds a map operation to the process that accepts an enumerable input parameter and
+    /// processes each individual parameter value by the specified map operation (TStep).
+    /// Results are coalesced into a result set of the same dimension as the input set.
+    /// </summary>
+    /// <param name="target">The target for the map operation</param>
+    /// <returns>An instance of <see cref="ProcessMapBuilder"/></returns>
+    public ProcessMapBuilder AddMapForTarget(ProcessFunctionTargetBuilder target)
+    {
+        var mapBuilder = new ProcessMapBuilder(target);
+        this._steps.Add(mapBuilder);
+
+        return mapBuilder;
+    }
+
+    /// <summary>
     /// Provides an instance of <see cref="ProcessStepEdgeBuilder"/> for defining an edge to a
     /// step inside the process for a given external event.
     /// </summary>
@@ -156,6 +206,19 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     public ProcessEdgeBuilder OnInputEvent(string eventId)
     {
         return new ProcessEdgeBuilder(this, eventId);
+    }
+
+    /// <summary>
+    /// Provides an instance of <see cref="ProcessStepEdgeBuilder"/> for defining an edge to a
+    /// step that responds to an unhandled process error.
+    /// </summary>
+    /// <returns>An instance of <see cref="ProcessStepEdgeBuilder"/></returns>
+    /// <remarks>
+    /// To target a specific error source, use the <see cref="ProcessStepBuilder.OnFunctionError"/> on the step.
+    /// </remarks>
+    public ProcessEdgeBuilder OnError()
+    {
+        return new ProcessEdgeBuilder(this, ProcessConstants.GlobalErrorEventId);
     }
 
     /// <summary>
@@ -183,14 +246,24 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// </summary>
     /// <returns>An instance of <see cref="KernelProcess"/></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public KernelProcess Build()
+    public KernelProcess Build(KernelProcessStateMetadata? stateMetadata = null)
     {
         var process = new KernelProcess(this.Name, this._steps.Select(step => step.BuildStep()).ToList());
         // Build the edges first
         var builtEdges = this.Edges.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Select(e => e.Build()).ToList());
 
-        // Build the steps
-        var builtSteps = this._steps.Select(step => step.BuildStep()).ToList();
+        // Build the steps and injecting initial state if any is provided
+        List<KernelProcessStepInfo> builtSteps = [];
+        this._steps.ForEach(step =>
+        {
+            if (stateMetadata != null && stateMetadata.StepsState != null && stateMetadata.StepsState.TryGetValue(step.Name, out var stepStateObject) && stepStateObject != null)
+            {
+                builtSteps.Add(step.BuildStep(stepStateObject));
+                return;
+            }
+
+            builtSteps.Add(step.BuildStep());
+        });
 
         // Create the process
         var state = new KernelProcessState(this.Name, id: this.HasParentProcess ? this.Id : null);
