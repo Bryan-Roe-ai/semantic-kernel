@@ -1,6 +1,6 @@
 # semantic-kernel
 
-This repository contains the SK Api, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly.
+This repository contains the semantic-kernel, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly.
 
 ## Features
 
@@ -14,7 +14,7 @@ This repository contains the SK Api, a powerful tool designed to facilitate seam
 
 ## Getting Started
 
-To start using the SK Api, follow these steps:
+To start using the semantic-kernel, follow these steps:
 
 1. **Installation**: Clone the repository and install the necessary dependencies.
 
