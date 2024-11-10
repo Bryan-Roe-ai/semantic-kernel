@@ -1,4 +1,4 @@
-# SK Api
+# semantic-kernel
 
 This repository contains the SK Api, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly.
 
@@ -19,8 +19,8 @@ To start using the SK Api, follow these steps:
 1. **Installation**: Clone the repository and install the necessary dependencies.
 
    ```bash
-   git clone https://github.com/yourusername/sk-api.git
-   cd sk-api
+   git clone https://github.com/Bryan-Roe/semantic-kernel.git
+   cd semantic-kernel
    npm install
    ```
 
@@ -34,7 +34,7 @@ To start using the SK Api, follow these steps:
 
 4. **Testing**
 ---
-title: SK Api
+title: semantic-kernel
 emoji: 🚀
 colorFrom: indigo
 colorTo: blue
@@ -55,8 +55,8 @@ metrics:
 - accuracy
 - code_eval
 base_model:
-- Bryan-Roe/SK-api
-new_version: Bryan-Roe/SK-api
+- Bryan-Roe/semantic-kernel
+new_version: Bryan-Roe/semantic-kernel
 ---
 # Model Card for Model ID
 
