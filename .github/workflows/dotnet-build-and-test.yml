@@ -30,6 +30,7 @@ jobs:
       dotnetChanges: ${{ steps.filter.outputs.dotnet }}
     steps:
       - uses: actions/checkout@v4
+
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -68,10 +69,12 @@ jobs:
     environment: ${{ matrix.environment }}
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup dotnet ${{ matrix.dotnet }}
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet }}
+
       - name: Build dotnet solutions
         shell: bash
         run: |

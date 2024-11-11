@@ -36,6 +36,11 @@
     "ghcr.io/devcontainers/features/python:1": {},
     "ghcr.io/devcontainers/features/node:1": {},
     "ghcr.io/devcontainers/features/aws-cli:1": {}
+},
+"tasks": {
+  "test": "# For Python\npip install -r requirements.txt && pytest\n\n# For .NET\ndotnet test\n\n# For Java\nmvn test\n\n# For Node.js\nnpm install && npm test",
+  "build": "npm install",
+  "launch": "npm install && npm start"
 }
 }
   "image": "mcr.microsoft.com/devcontainers/universal:2",
