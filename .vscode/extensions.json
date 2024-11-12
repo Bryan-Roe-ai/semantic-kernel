@@ -10,7 +10,6 @@
     "ms-java.vscode-java-pack",
     "ms-azuretools.vscode-dapr",
     "d-biehl.robotcode",
-    "google.cros-ide",
-    "ms-dotnettools.csdevkit"
+    "google.cros-ide"
   ]
 }
