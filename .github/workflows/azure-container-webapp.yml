@@ -57,6 +57,13 @@ jobs:
       - name: Lowercase the repo name and username
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
+      - name: Run tests
+        run: |
+          echo "Running tests..."
+          # Add your test commands here
+          npm install
+          npm test
+
       - name: Build and push container image to registry
         uses: docker/build-push-action@v2
         with:
@@ -89,3 +96,9 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           images: 'ghcr.io/${{ env.REPO }}:${{ github.sha }}'
+
+      - name: Deploy to additional Azure services
+        run: |
+          echo "Deploying to additional Azure services..."
+          # Add your deployment commands for other Azure services here
+          az webapp deployment source config-zip --resource-group myResourceGroup --name ${{ env.AZURE_WEBAPP_NAME }} --src myApp.zip

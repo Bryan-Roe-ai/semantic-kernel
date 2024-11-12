@@ -8,9 +8,29 @@ jobs:
       - image: cimg/node:16.8.0-browsers
     steps:
       - checkout
-      - run: echo "Running example step, please edit this file"
+      - run: echo "Running tests using Node.js and browsers"
+      - run: npm install
+      - run: npm test
+
+  build:
+    docker:
+      - image: cimg/node:16.8.0
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run build
+
+  deploy:
+    docker:
+      - image: cimg/node:16.8.0
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run deploy
 
 workflows:
   test-flow:
     jobs:
       - test
+      - build
+      - deploy
