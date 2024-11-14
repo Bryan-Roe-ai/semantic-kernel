@@ -17,7 +17,10 @@
 				"micoloth.reactive-jupyter",
 				"ms-vscode-remote.remote-containers",
 				"ms-dotnettools.csdevkit",
-				"emeraldwalk.RunOnSave"
+				"emeraldwalk.RunOnSave",
+				"d-biehl.robotcode",
+				"Ionide.Ionide-fsharp",
+				"Google.cros-ide"
 			]
 		}
 	},
