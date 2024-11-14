@@ -48,26 +48,29 @@
     },
     {
       "name": "C#: HuggingFaceImageToText Demo",
-      "path": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll",
+      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll",
       "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/HuggingFaceImageToText.csproj",
       "request": "launch",
       "type": "dotnet"
     },
     {
       "name": "C#: GettingStarted Samples",
-      "path": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll",
+      "program": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll",
       "projectPath": "${workspaceFolder}/dotnet/samples/GettingStarted/GettingStarted.csproj",
       "request": "launch",
       "type": "dotnet"
     },
     {
       "name": "C#: Process with Dapr",
-      "path": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
+      "program": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
       "projectPath": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/ProcessWithDapr.csproj",
       "request": "launch",
-      "type": "dotnet",
+      "type": "coreclr",
       "preLaunchTask": "daprd-debug",
-      "postDebugTask": "dapr-down"
+      "postDebugTask": "dapr-down",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   ]
 }
