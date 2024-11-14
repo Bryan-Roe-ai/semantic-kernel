@@ -11,6 +11,7 @@
     "ms-azuretools.vscode-dapr",
     "d-biehl.robotcode",
     "google.cros-ide",
-    "ionide.ionide-fsharp"
+    "ionide.ionide-fsharp",
+    "ms-dotnettools.csdevkit"
   ]
 }
