@@ -1,5 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System.Text.Json;
+<<<<<<< HEAD
+=======
+using Microsoft.Extensions.VectorData;
+using Microsoft.SemanticKernel.Connectors.InMemory;
+>>>>>>> main
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
@@ -8,21 +14,38 @@ using Resources;
 namespace Memory;
 
 /// <summary>
+<<<<<<< HEAD
 /// Sample showing how to create a <see cref="VolatileVectorStore"/> collection from a list of strings
 /// and then save it to disk so that it can be reloaded later.
 /// </summary>
 public class VolatileVectorStore_LoadData(ITestOutputHelper output) : BaseTest(output)
+=======
+/// Sample showing how to create an <see cref="InMemoryVectorStore"/> collection from a list of strings
+/// and then save it to disk so that it can be reloaded later.
+/// </summary>
+public class InMemoryVectorStore_LoadData(ITestOutputHelper output) : BaseTest(output)
+>>>>>>> main
 {
     [Fact]
-    public async Task LoadRecordCollectionAndSearchAsync()
+    public async Task LoadStringListAndSearchAsync()
     {
+        // Create a logging handler to output HTTP requests and responses
+        var handler = new LoggingHandler(new HttpClientHandler(), this.Output);
+        var httpClient = new HttpClient(handler);
+
         // Create an embedding generation service.
         var embeddingGenerationService = new OpenAITextEmbeddingGenerationService(
                 modelId: TestConfiguration.OpenAI.EmbeddingModelId,
-                apiKey: TestConfiguration.OpenAI.ApiKey);
+                apiKey: TestConfiguration.OpenAI.ApiKey,
+                httpClient: httpClient);
 
+<<<<<<< HEAD
         // Construct a volatile vector store.
         var vectorStore = new VolatileVectorStore();
+=======
+        // Construct an InMemory vector store.
+        var vectorStore = new InMemoryVectorStore();
+>>>>>>> main
         var collectionName = "records";
 
         // Path to the file where the record collection will be saved to and loaded from.
@@ -63,12 +86,76 @@ public class VolatileVectorStore_LoadData(ITestOutputHelper output) : BaseTest(o
             // Search the collection using a vector search.
             var searchString = "What is the Semantic Kernel?";
             var searchVector = await embeddingGenerationService.GenerateEmbeddingAsync(searchString);
-            var searchResult = await vectorSearch!.VectorizedSearchAsync(searchVector, new() { Limit = 1 }).ToListAsync();
+<<<<<<< HEAD
+            var searchResult = await vectorSearch!.VectorizedSearchAsync(searchVector, new() { Top = 1 }).ToListAsync();
 
             Console.WriteLine("Search string: " + searchString);
             Console.WriteLine("Result: " + searchResult.First().Record.Text);
+=======
+            var searchResult = await vectorSearch!.VectorizedSearchAsync(searchVector, new() { Top = 1 });
+            var resultRecords = await searchResult.Results.ToListAsync();
+
+            Console.WriteLine("Search string: " + searchString);
+            Console.WriteLine("Result: " + resultRecords.First().Record.Text);
+>>>>>>> main
             Console.WriteLine();
         }
+    }
+
+    [Fact]
+    public async Task LoadTextSearchResultsAndSearchAsync()
+    {
+        // Create an embedding generation service.
+        var embeddingGenerationService = new OpenAITextEmbeddingGenerationService(
+                modelId: TestConfiguration.OpenAI.EmbeddingModelId,
+                apiKey: TestConfiguration.OpenAI.ApiKey);
+
+<<<<<<< HEAD
+        // Construct a volatile vector store.
+        var vectorStore = new VolatileVectorStore();
+=======
+        // Construct an InMemory vector store.
+        var vectorStore = new InMemoryVectorStore();
+>>>>>>> main
+        var collectionName = "records";
+
+        // Read a list of text strings from a file, to load into a new record collection.
+        var searchResultsJson = EmbeddedResource.Read("what-is-semantic-kernel.json");
+        var searchResults = JsonSerializer.Deserialize<List<TextSearchResult>>(searchResultsJson!);
+
+        // Delegate which will create a record.
+        static DataModel CreateRecord(TextSearchResult searchResult, ReadOnlyMemory<float> embedding)
+        {
+            return new()
+            {
+                Key = Guid.NewGuid(),
+                Title = searchResult.Name,
+                Text = searchResult.Value ?? string.Empty,
+                Link = searchResult.Link,
+                Embedding = embedding
+            };
+        }
+
+        // Create a record collection from a list of strings using the provided delegate.
+        var vectorSearch = await vectorStore.CreateCollectionFromTextSearchResultsAsync<Guid, DataModel>(
+            collectionName, searchResults!, embeddingGenerationService, CreateRecord);
+
+        // Search the collection using a vector search.
+        var searchString = "What is the Semantic Kernel?";
+        var searchVector = await embeddingGenerationService.GenerateEmbeddingAsync(searchString);
+<<<<<<< HEAD
+        var searchResult = await vectorSearch!.VectorizedSearchAsync(searchVector, new() { Top = 1 }).ToListAsync();
+
+        Console.WriteLine("Search string: " + searchString);
+        Console.WriteLine("Result: " + searchResult.First().Record.Text);
+=======
+        var searchResult = await vectorSearch!.VectorizedSearchAsync(searchVector, new() { Top = 1 });
+        var resultRecords = await searchResult.Results.ToListAsync();
+
+        Console.WriteLine("Search string: " + searchString);
+        Console.WriteLine("Result: " + resultRecords.First().Record.Text);
+>>>>>>> main
+        Console.WriteLine();
     }
 
     /// <summary>
@@ -84,7 +171,13 @@ public class VolatileVectorStore_LoadData(ITestOutputHelper output) : BaseTest(o
         public Guid Key { get; init; }
 
         [VectorStoreRecordData]
+        public string? Title { get; init; }
+
+        [VectorStoreRecordData]
         public string Text { get; init; }
+
+        [VectorStoreRecordData]
+        public string? Link { get; init; }
 
         [VectorStoreRecordVector(1536)]
         public ReadOnlyMemory<float> Embedding { get; init; }

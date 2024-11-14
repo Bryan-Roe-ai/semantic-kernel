@@ -67,6 +67,14 @@ public class AgentChannelTests
             throw new NotImplementedException();
         }
 
+        protected internal override string Serialize()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    private sealed class NextAgent : TestAgent;
+
         protected internal override Task ResetAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
@@ -78,5 +86,16 @@ public class AgentChannelTests
         await Assert.ThrowsAsync<KernelException>(() => channel.InvokeAgentAsync(mockAgent.Object).ToArrayAsync().AsTask());
         // Assert
         Assert.Equal(1, channel.InvokeCount);
+    }
+
+        protected internal override IEnumerable<string> GetChannelKeys()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected internal override Task<AgentChannel> RestoreChannelAsync(string channelState, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

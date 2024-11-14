@@ -120,6 +120,9 @@ class MistralAITextEmbedding(MistralAIBase, EmbeddingGeneratorBase):
         try:
 
             embedding_response: EmbeddingResponse = await self.client.embeddings(
+
+            embedding_response: EmbeddingResponse = await self.client.embeddings(
+
             embedding_response: EmbeddingResponse = await self.async_client.embeddings(
                 model=self.ai_model_id, input=texts
             )

@@ -1,4 +1,5 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
+
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -20,6 +21,12 @@ public class Step11_AssistantTool_FileSearch(ITestOutputHelper output) : BaseAge
         OpenAIClientProvider provider = this.GetClientProvider();
         OpenAIAssistantAgent agent =
             await OpenAIAssistantAgent.CreateAsync(
+                kernel: new(),
+                clientProvider: this.GetClientProvider(),
+                new(this.Model)
+                kernel: new(),
+                clientProvider: this.GetClientProvider(),
+                new(this.Model)
                 clientProvider: this.GetClientProvider(),
                 definition: new OpenAIAssistantDefinition(this.Model)
                 {
@@ -27,6 +34,13 @@ public class Step11_AssistantTool_FileSearch(ITestOutputHelper output) : BaseAge
                     Metadata = AssistantSampleMetadata,
                 },
                 kernel: new Kernel());
+                kernel: new(),
+                clientProvider: this.GetClientProvider(),
+                definition: new OpenAIAssistantDefinition(this.Model)
+                {
+                    EnableFileSearch = true,
+                    Metadata = AssistantSampleMetadata,
+                });
 
         // Upload file - Using a table of fictional employees.
         FileClient fileClient = provider.Client.GetFileClient();
@@ -40,6 +54,22 @@ public class Step11_AssistantTool_FileSearch(ITestOutputHelper output) : BaseAge
                 new VectorStoreCreationOptions()
                 {
                     FileIds = [fileInfo.Id],
+                },
+                kernel: new Kernel());
+
+        // Upload file - Using a table of fictional employees.
+        OpenAIFileClient fileClient = provider.Client.GetOpenAIFileClient();
+        await using Stream stream = EmbeddedResource.ReadStream("employees.pdf")!;
+        OpenAIFile fileInfo = await fileClient.UploadFileAsync(stream, "employees.pdf", FileUploadPurpose.Assistants);
+
+        // Create a vector-store
+        VectorStoreClient vectorStoreClient = provider.Client.GetVectorStoreClient();
+        CreateVectorStoreOperation result =
+            await vectorStoreClient.CreateVectorStoreAsync(waitUntilCompleted: false,
+                new VectorStoreCreationOptions()
+                {
+                    FileIds = { fileInfo.Id },
+                    FileIds = { fileInfo.Id },
                     Metadata = { { AssistantSampleMetadataKey, bool.TrueString } }
                 });
 
@@ -49,6 +79,9 @@ public class Step11_AssistantTool_FileSearch(ITestOutputHelper output) : BaseAge
                 new OpenAIThreadCreationOptions
                 {
                     VectorStoreId = vectorStore.Id,
+                    VectorStoreId = vectorStore.Id,
+                    VectorStoreId = result.VectorStoreId,
+                    VectorStoreId = result.VectorStoreId,
                     Metadata = AssistantSampleMetadata,
                 });
 
@@ -62,12 +95,14 @@ public class Step11_AssistantTool_FileSearch(ITestOutputHelper output) : BaseAge
         finally
         {
             await agent.DeleteThreadAsync(threadId);
-<<<<<<< HEAD
             await agent.DeleteAsync(CancellationToken.None);
-=======
             await agent.DeleteAsync();
->>>>>>> main
             await vectorStoreClient.DeleteVectorStoreAsync(vectorStore);
+            await agent.DeleteAsync(CancellationToken.None);
+            await agent.DeleteAsync();
+            await agent.DeleteAsync(CancellationToken.None);
+            await vectorStoreClient.DeleteVectorStoreAsync(vectorStore);
+            await vectorStoreClient.DeleteVectorStoreAsync(result.VectorStoreId);
             await fileClient.DeleteFileAsync(fileInfo.Id);
         }
 

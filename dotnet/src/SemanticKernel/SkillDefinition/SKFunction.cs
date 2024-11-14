@@ -1,15 +1,13 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.SemanticKernel.AI;
 using Microsoft.SemanticKernel.AI.TextCompletion;
 using Microsoft.SemanticKernel.Diagnostics;
 using Microsoft.SemanticKernel.Orchestration;
@@ -293,6 +291,7 @@ public sealed class SKFunction : ISKFunction, IDisposable
     private ITextCompletion? _aiService = null;
     private CompleteRequestSettings _aiRequestSettings = new();
     private readonly IPromptTemplate _promptTemplate;
+    private JsonObject _aiServiceSettings = new();
 
     private struct MethodDetails
     {
@@ -371,7 +370,6 @@ public sealed class SKFunction : ISKFunction, IDisposable
     /// <summary>
     /// Throw an exception if the function is not semantic, use this method when some logic makes sense only for semantic functions.
     /// </summary>
-    /// <exception cref="KernelException"></exception>
     private void VerifyIsSemantic()
     {
         if (this.IsSemantic) { return; }

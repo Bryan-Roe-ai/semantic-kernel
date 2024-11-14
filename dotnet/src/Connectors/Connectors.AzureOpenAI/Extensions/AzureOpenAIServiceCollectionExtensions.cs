@@ -1,9 +1,80 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using Azure;
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+using Azure;
+=======
+using System.ClientModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+using System.ClientModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+using System.ClientModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Net.Http;
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
 using Azure.AI.OpenAI;
 using Azure.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +108,7 @@ public static class AzureOpenAIServiceCollectionExtensions
     /// <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
     /// <param name="serviceId">A local identifier for the given AI service</param>
     /// <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+    /// <param name="apiVersion">Optional Azure OpenAI API version, see available here <see cref="AzureOpenAIClientOptions.ServiceVersion"/></param>
     /// <returns>The same instance as <paramref name="services"/>.</returns>
     public static IServiceCollection AddAzureOpenAIChatCompletion(
         this IServiceCollection services,
@@ -44,7 +116,8 @@ public static class AzureOpenAIServiceCollectionExtensions
         string endpoint,
         string apiKey,
         string? serviceId = null,
-        string? modelId = null)
+        string? modelId = null,
+        string? apiVersion = null)
     {
         Verify.NotNull(services);
         Verify.NotNullOrWhiteSpace(endpoint);
@@ -54,8 +127,78 @@ public static class AzureOpenAIServiceCollectionExtensions
         {
             AzureOpenAIClient client = CreateAzureOpenAIClient(
                 endpoint,
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 new AzureKeyCredential(apiKey),
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+                new AzureKeyCredential(apiKey),
+=======
+                new ApiKeyCredential(apiKey),
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+                new ApiKeyCredential(apiKey),
+<<<<<<< main
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+                new ApiKeyCredential(apiKey),
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
                 HttpClientProvider.GetHttpClient(serviceProvider));
+=======
+                HttpClientProvider.GetHttpClient(serviceProvider),
+                apiVersion);
+>>>>>>> upstream/main
 
             return new(deploymentName, client, modelId, serviceProvider.GetService<ILoggerFactory>());
         };
@@ -75,6 +218,7 @@ public static class AzureOpenAIServiceCollectionExtensions
     /// <param name="credentials">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
     /// <param name="serviceId">A local identifier for the given AI service</param>
     /// <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+    /// <param name="apiVersion">Optional Azure OpenAI API version, see available here <see cref="AzureOpenAIClientOptions.ServiceVersion"/></param>
     /// <returns>The same instance as <paramref name="services"/>.</returns>
     public static IServiceCollection AddAzureOpenAIChatCompletion(
         this IServiceCollection services,
@@ -82,7 +226,8 @@ public static class AzureOpenAIServiceCollectionExtensions
         string endpoint,
         TokenCredential credentials,
         string? serviceId = null,
-        string? modelId = null)
+        string? modelId = null,
+        string? apiVersion = null)
     {
         Verify.NotNull(services);
         Verify.NotNullOrWhiteSpace(endpoint);
@@ -93,7 +238,8 @@ public static class AzureOpenAIServiceCollectionExtensions
             AzureOpenAIClient client = CreateAzureOpenAIClient(
                 endpoint,
                 credentials,
-                HttpClientProvider.GetHttpClient(serviceProvider));
+                HttpClientProvider.GetHttpClient(serviceProvider),
+                apiVersion);
 
             return new(deploymentName, client, modelId, serviceProvider.GetService<ILoggerFactory>());
         };
@@ -146,6 +292,7 @@ public static class AzureOpenAIServiceCollectionExtensions
     /// <param name="serviceId">A local identifier for the given AI service</param>
     /// <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
     /// <param name="dimensions">The number of dimensions the resulting output embeddings should have. Only supported in "text-embedding-3" and later models.</param>
+    /// <param name="apiVersion">Optional Azure OpenAI API version, see available here <see cref="AzureOpenAIClientOptions.ServiceVersion"/></param>
     /// <returns>The same instance as <paramref name="services"/>.</returns>
     [Experimental("SKEXP0010")]
     public static IServiceCollection AddAzureOpenAITextEmbeddingGeneration(
@@ -155,7 +302,8 @@ public static class AzureOpenAIServiceCollectionExtensions
         string apiKey,
         string? serviceId = null,
         string? modelId = null,
-        int? dimensions = null)
+        int? dimensions = null,
+        string? apiVersion = null)
     {
         Verify.NotNull(services);
 
@@ -167,7 +315,8 @@ public static class AzureOpenAIServiceCollectionExtensions
                 modelId,
                 HttpClientProvider.GetHttpClient(serviceProvider),
                 serviceProvider.GetService<ILoggerFactory>(),
-                dimensions));
+                dimensions,
+                apiVersion));
     }
 
     /// <summary>
@@ -180,6 +329,7 @@ public static class AzureOpenAIServiceCollectionExtensions
     /// <param name="serviceId">A local identifier for the given AI service</param>
     /// <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
     /// <param name="dimensions">The number of dimensions the resulting output embeddings should have. Only supported in "text-embedding-3" and later models.</param>
+    /// <param name="apiVersion">Optional Azure OpenAI API version, see available here <see cref="AzureOpenAIClientOptions.ServiceVersion"/></param>
     /// <returns>The same instance as <paramref name="services"/>.</returns>
     [Experimental("SKEXP0010")]
     public static IServiceCollection AddAzureOpenAITextEmbeddingGeneration(
@@ -189,7 +339,8 @@ public static class AzureOpenAIServiceCollectionExtensions
         TokenCredential credential,
         string? serviceId = null,
         string? modelId = null,
-        int? dimensions = null)
+        int? dimensions = null,
+        string? apiVersion = null)
     {
         Verify.NotNull(services);
         Verify.NotNull(credential);
@@ -202,7 +353,8 @@ public static class AzureOpenAIServiceCollectionExtensions
                 modelId,
                 HttpClientProvider.GetHttpClient(serviceProvider),
                 serviceProvider.GetService<ILoggerFactory>(),
-                dimensions));
+                dimensions,
+                apiVersion));
     }
 
     /// <summary>
@@ -249,6 +401,7 @@ public static class AzureOpenAIServiceCollectionExtensions
     /// <param name="serviceId">A local identifier for the given AI service</param>
     /// <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
     /// <param name="httpClient">The HttpClient to use with this service.</param>
+    /// <param name="apiVersion">Optional Azure OpenAI API version, see available here <see cref="AzureOpenAIClientOptions.ServiceVersion"/></param>
     /// <returns>The same instance as <paramref name="services"/>.</returns>
     [Experimental("SKEXP0010")]
     public static IServiceCollection AddAzureOpenAITextToAudio(
@@ -258,7 +411,8 @@ public static class AzureOpenAIServiceCollectionExtensions
         string apiKey,
         string? serviceId = null,
         string? modelId = null,
-        HttpClient? httpClient = null)
+        HttpClient? httpClient = null,
+        string? apiVersion = null)
     {
         Verify.NotNull(services);
         Verify.NotNullOrWhiteSpace(deploymentName);
@@ -272,7 +426,8 @@ public static class AzureOpenAIServiceCollectionExtensions
                 apiKey,
                 modelId,
                 HttpClientProvider.GetHttpClient(serviceProvider),
-                serviceProvider.GetService<ILoggerFactory>()));
+                serviceProvider.GetService<ILoggerFactory>(),
+                apiVersion));
     }
 
     #endregion
@@ -288,7 +443,7 @@ public static class AzureOpenAIServiceCollectionExtensions
     /// <param name="credentials">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
     /// <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
     /// <param name="serviceId">A local identifier for the given AI service</param>
-    /// <param name="apiVersion">Azure OpenAI API version</param>
+    /// <param name="apiVersion">Optional Azure OpenAI API version, see available here <see cref="AzureOpenAIClientOptions.ServiceVersion"/></param>
     /// <returns>The same instance as <paramref name="services"/>.</returns>
     [Experimental("SKEXP0010")]
     public static IServiceCollection AddAzureOpenAITextToImage(
@@ -325,6 +480,7 @@ public static class AzureOpenAIServiceCollectionExtensions
     /// <param name="serviceId">A local identifier for the given AI service</param>
     /// <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
     /// <param name="maxRetryCount">Maximum number of attempts to retrieve the text to image operation result.</param>
+    /// <param name="apiVersion">Optional Azure OpenAI API version, see available here <see cref="AzureOpenAIClientOptions.ServiceVersion"/></param>
     /// <returns>The same instance as <paramref name="services"/>.</returns>
     [Experimental("SKEXP0010")]
     public static IServiceCollection AddAzureOpenAITextToImage(
@@ -334,7 +490,8 @@ public static class AzureOpenAIServiceCollectionExtensions
         string apiKey,
         string? serviceId = null,
         string? modelId = null,
-        int maxRetryCount = 5)
+        int maxRetryCount = 5,
+        string? apiVersion = null)
     {
         Verify.NotNull(services);
         Verify.NotNullOrWhiteSpace(endpoint);
@@ -347,7 +504,8 @@ public static class AzureOpenAIServiceCollectionExtensions
                 apiKey,
                 modelId,
                 HttpClientProvider.GetHttpClient(serviceProvider),
-                serviceProvider.GetService<ILoggerFactory>()));
+                serviceProvider.GetService<ILoggerFactory>(),
+                apiVersion));
     }
 
     /// <summary>
@@ -391,6 +549,7 @@ public static class AzureOpenAIServiceCollectionExtensions
     /// <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
     /// <param name="serviceId">A local identifier for the given AI service</param>
     /// <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+    /// <param name="apiVersion">Optional Azure OpenAI API version, see available here <see cref="AzureOpenAIClientOptions.ServiceVersion"/></param>
     /// <returns>The same instance as <paramref name="services"/>.</returns>
     [Experimental("SKEXP0010")]
     public static IServiceCollection AddAzureOpenAIAudioToText(
@@ -399,7 +558,8 @@ public static class AzureOpenAIServiceCollectionExtensions
         string endpoint,
         string apiKey,
         string? serviceId = null,
-        string? modelId = null)
+        string? modelId = null,
+        string? apiVersion = null)
     {
         Verify.NotNull(services);
         Verify.NotNullOrWhiteSpace(deploymentName);
@@ -410,8 +570,78 @@ public static class AzureOpenAIServiceCollectionExtensions
         {
             AzureOpenAIClient client = CreateAzureOpenAIClient(
                 endpoint,
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 new AzureKeyCredential(apiKey),
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+                new AzureKeyCredential(apiKey),
+=======
+                new ApiKeyCredential(apiKey),
+<<<<<<< main
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+                new ApiKeyCredential(apiKey),
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+                new ApiKeyCredential(apiKey),
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
                 HttpClientProvider.GetHttpClient(serviceProvider));
+=======
+                HttpClientProvider.GetHttpClient(serviceProvider),
+                apiVersion);
+>>>>>>> upstream/main
             return new(deploymentName, client, modelId, serviceProvider.GetService<ILoggerFactory>());
         };
 
@@ -429,6 +659,7 @@ public static class AzureOpenAIServiceCollectionExtensions
     /// <param name="credentials">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
     /// <param name="serviceId">A local identifier for the given AI service</param>
     /// <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+    /// <param name="apiVersion">Optional Azure OpenAI API version, see available here <see cref="AzureOpenAIClientOptions.ServiceVersion"/></param>
     /// <returns>The same instance as <paramref name="services"/>.</returns>
     [Experimental("SKEXP0010")]
     public static IServiceCollection AddAzureOpenAIAudioToText(
@@ -437,7 +668,8 @@ public static class AzureOpenAIServiceCollectionExtensions
         string endpoint,
         TokenCredential credentials,
         string? serviceId = null,
-        string? modelId = null)
+        string? modelId = null,
+        string? apiVersion = null)
     {
         Verify.NotNull(services);
         Verify.NotNullOrWhiteSpace(deploymentName);
@@ -449,7 +681,8 @@ public static class AzureOpenAIServiceCollectionExtensions
             AzureOpenAIClient client = CreateAzureOpenAIClient(
                 endpoint,
                 credentials,
-                HttpClientProvider.GetHttpClient(serviceProvider));
+                HttpClientProvider.GetHttpClient(serviceProvider),
+                apiVersion);
             return new(deploymentName, client, modelId, serviceProvider.GetService<ILoggerFactory>());
         };
 
@@ -488,9 +721,77 @@ public static class AzureOpenAIServiceCollectionExtensions
 
     #endregion
 
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private static AzureOpenAIClient CreateAzureOpenAIClient(string endpoint, AzureKeyCredential credentials, HttpClient? httpClient) =>
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+    private static AzureOpenAIClient CreateAzureOpenAIClient(string endpoint, AzureKeyCredential credentials, HttpClient? httpClient) =>
+=======
+    private static AzureOpenAIClient CreateAzureOpenAIClient(string endpoint, ApiKeyCredential credentials, HttpClient? httpClient) =>
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+    private static AzureOpenAIClient CreateAzureOpenAIClient(string endpoint, ApiKeyCredential credentials, HttpClient? httpClient) =>
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+    private static AzureOpenAIClient CreateAzureOpenAIClient(string endpoint, ApiKeyCredential credentials, HttpClient? httpClient) =>
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
         new(new Uri(endpoint), credentials, AzureClientCore.GetAzureOpenAIClientOptions(httpClient));
+=======
+    private static AzureOpenAIClient CreateAzureOpenAIClient(string endpoint, ApiKeyCredential credentials, HttpClient? httpClient, string? apiVersion) =>
+        new(new Uri(endpoint), credentials, AzureClientCore.GetAzureOpenAIClientOptions(httpClient, apiVersion));
+>>>>>>> upstream/main
 
-    private static AzureOpenAIClient CreateAzureOpenAIClient(string endpoint, TokenCredential credentials, HttpClient? httpClient) =>
-        new(new Uri(endpoint), credentials, AzureClientCore.GetAzureOpenAIClientOptions(httpClient));
+    private static AzureOpenAIClient CreateAzureOpenAIClient(string endpoint, TokenCredential credentials, HttpClient? httpClient, string? apiVersion) =>
+        new(new Uri(endpoint), credentials, AzureClientCore.GetAzureOpenAIClientOptions(httpClient, apiVersion));
 }

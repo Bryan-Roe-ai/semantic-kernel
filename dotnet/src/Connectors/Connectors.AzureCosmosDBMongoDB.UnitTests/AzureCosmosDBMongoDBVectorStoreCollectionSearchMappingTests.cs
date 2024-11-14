@@ -2,8 +2,13 @@
 
 using System;
 using System.Collections.Generic;
+<<<<<<< HEAD
 using Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
 using Microsoft.SemanticKernel.Data;
+=======
+using Microsoft.Extensions.VectorData;
+using Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
+>>>>>>> main
 using MongoDB.Bson;
 using Xunit;
 

@@ -2,7 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+<<<<<<< HEAD
 using Microsoft.SemanticKernel.Data;
+=======
+using Microsoft.Extensions.VectorData;
+>>>>>>> main
 using Qdrant.Client.Grpc;
 
 namespace Microsoft.SemanticKernel.Connectors.Qdrant;
@@ -19,7 +23,7 @@ internal static class QdrantVectorStoreCollectionSearchMapping
     /// <param name="storagePropertyNames">A mapping of data model property names to the names under which they are stored.</param>
     /// <returns>The Qdrant <see cref="Filter"/>.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the provided filter contains unsupported types, values or unknown properties.</exception>
-    public static Filter BuildFilter(VectorSearchFilter? basicVectorSearchFilter, Dictionary<string, string> storagePropertyNames)
+    public static Filter BuildFilter(VectorSearchFilter? basicVectorSearchFilter, IReadOnlyDictionary<string, string> storagePropertyNames)
     {
         var filter = new Filter();
 
@@ -85,7 +89,6 @@ internal static class QdrantVectorStoreCollectionSearchMapping
     /// <param name="operationName">The type of database operation being run.</param>
     /// <returns>The mapped <see cref="VectorSearchResult{TRecord}"/>.</returns>
     public static VectorSearchResult<TRecord> MapScoredPointToVectorSearchResult<TRecord>(ScoredPoint point, IVectorStoreRecordMapper<TRecord, PointStruct> mapper, bool includeVectors, string databaseSystemName, string collectionName, string operationName)
-        where TRecord : class
     {
         // Since the mapper doesn't know about scored points, we need to convert the scored point to a point struct first.
         var pointStruct = new PointStruct

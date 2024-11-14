@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 using System;
+using System.ClientModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
@@ -40,7 +41,19 @@ public sealed class OpenAIAssistantAgentTests
 
         await this.ExecuteAgentAsync(
             OpenAIClientProvider.ForOpenAI(openAISettings.ApiKey),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
             openAISettings.ChatModelId!,
+            OpenAIClientProvider.ForOpenAI(openAISettings.ApiKey),
+            openAISettings.ChatModelId!,
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
+            openAISettings.ChatModelId!,
+            openAISettings.ModelId,
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
+            openAISettings.ChatModelId!,
+            openAISettings.ModelId,
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
+            openAISettings.ChatModelId!,
+            openAISettings.ModelId,
             input,
             expectedAnswerContains);
     }
@@ -50,6 +63,10 @@ public sealed class OpenAIAssistantAgentTests
     /// and targeting Azure OpenAI services.
     /// </summary>
     [RetryTheory(typeof(HttpOperationException))]
+    [Theory/*(Skip = "No supported endpoint configured.")*/]
+    [Theory/*(Skip = "No supported endpoint configured.")*/]
+    [Theory/*(Skip = "No supported endpoint configured.")*/]
+    [Theory/*(Skip = "No supported endpoint configured.")*/]
     [InlineData("What is the special soup?", "Clam Chowder")]
     public async Task AzureOpenAIAssistantAgentAsync(string input, string expectedAnswerContains)
     {
@@ -57,9 +74,10 @@ public sealed class OpenAIAssistantAgentTests
         Assert.NotNull(azureOpenAIConfiguration);
 
         await this.ExecuteAgentAsync(
-<<<<<<< main
             OpenAIClientProvider.ForAzureOpenAI(azureOpenAIConfiguration.ApiKey, new Uri(azureOpenAIConfiguration.Endpoint)),
-=======
+            OpenAIClientProvider.ForAzureOpenAI(azureOpenAIConfiguration.ApiKey, new Uri(azureOpenAIConfiguration.Endpoint)),
+            OpenAIClientProvider.ForAzureOpenAI(azureOpenAIConfiguration.ApiKey, new Uri(azureOpenAIConfiguration.Endpoint)),
+            OpenAIClientProvider.ForAzureOpenAI(azureOpenAIConfiguration.ApiKey, new Uri(azureOpenAIConfiguration.Endpoint)),
             OpenAIClientProvider.ForAzureOpenAI(new AzureCliCredential(), new Uri(azureOpenAIConfiguration.Endpoint)),
             azureOpenAIConfiguration.ChatDeploymentName!,
             input,
@@ -79,6 +97,10 @@ public sealed class OpenAIAssistantAgentTests
 
         await this.ExecuteStreamingAgentAsync(
             OpenAIClientProvider.ForOpenAI(openAISettings.ApiKey),
+            OpenAIClientProvider.ForOpenAI(openAISettings.ApiKey),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
             openAISettings.ModelId,
             input,
             expectedAnswerContains);
@@ -97,7 +119,9 @@ public sealed class OpenAIAssistantAgentTests
 
         await this.ExecuteStreamingAgentAsync(
             OpenAIClientProvider.ForAzureOpenAI(new AzureCliCredential(), new Uri(azureOpenAIConfiguration.Endpoint)),
->>>>>>> upstream/main
+            OpenAIClientProvider.ForAzureOpenAI(azureOpenAIConfiguration.ApiKey, new Uri(azureOpenAIConfiguration.Endpoint)),
+            OpenAIClientProvider.ForAzureOpenAI(azureOpenAIConfiguration.ApiKey, new Uri(azureOpenAIConfiguration.Endpoint)),
+            OpenAIClientProvider.ForAzureOpenAI(azureOpenAIConfiguration.ApiKey, new Uri(azureOpenAIConfiguration.Endpoint)),
             azureOpenAIConfiguration.ChatDeploymentName!,
             input,
             expectedAnswerContains);
@@ -111,18 +135,24 @@ public sealed class OpenAIAssistantAgentTests
     {
         // Arrange
         Kernel kernel = new();
-<<<<<<< main
-=======
 
         KernelPlugin plugin = KernelPluginFactory.CreateFromType<MenuPlugin>();
         kernel.Plugins.Add(plugin);
 
         OpenAIAssistantAgent agent =
             await OpenAIAssistantAgent.CreateAsync(
+                kernel,
+                kernel,
+                kernel,
+                kernel,
                 config,
                 new(modelName)
                 {
                     Instructions = "Answer questions about the menu.",
+                });
+                });
+                },
+                kernel);
                 },
                 kernel);
 
@@ -140,6 +170,10 @@ public sealed class OpenAIAssistantAgentTests
 
             // Assert
             Assert.Contains(expected, builder.ToString(), StringComparison.OrdinalIgnoreCase);
+            await foreach (var message in chat.GetChatMessagesAsync())
+            {
+                AssertMessageValid(message);
+            }
         }
         finally
         {
@@ -155,31 +189,43 @@ public sealed class OpenAIAssistantAgentTests
     {
         // Arrange
         Kernel kernel = new();
->>>>>>> upstream/main
 
         KernelPlugin plugin = KernelPluginFactory.CreateFromType<MenuPlugin>();
         kernel.Plugins.Add(plugin);
 
         OpenAIAssistantAgent agent =
             await OpenAIAssistantAgent.CreateAsync(
+                kernel,
+                kernel,
+                kernel,
+                kernel,
                 config,
                 new(modelName)
                 {
                     Instructions = "Answer questions about the menu.",
                 },
                 kernel);
+                },
+                kernel);
+                });
 
         AgentGroupChat chat = new();
         chat.Add(new ChatMessageContent(AuthorRole.User, input));
 
         // Act
         StringBuilder builder = new();
-<<<<<<< main
         await foreach (var message in chat.InvokeAsync(agent))
         try
-=======
         await foreach (var message in chat.InvokeStreamingAsync(agent))
->>>>>>> upstream/main
+        await foreach (var message in chat.InvokeAsync(agent))
+        try
+        await foreach (var message in chat.InvokeStreamingAsync(agent))
+        await foreach (var message in chat.InvokeAsync(agent))
+        try
+        await foreach (var message in chat.InvokeStreamingAsync(agent))
+        await foreach (var message in chat.InvokeAsync(agent))
+        try
+        await foreach (var message in chat.InvokeStreamingAsync(agent))
         {
             AgentGroupChat chat = new();
             chat.AddChatMessage(new ChatMessageContent(AuthorRole.User, input));
@@ -198,14 +244,28 @@ public sealed class OpenAIAssistantAgentTests
         {
             await agent.DeleteAsync();
         }
-<<<<<<< main
-=======
 
         // Assert
         ChatMessageContent[] history = await chat.GetChatMessagesAsync().ToArrayAsync();
         Assert.Contains(expected, builder.ToString(), StringComparison.OrdinalIgnoreCase);
         Assert.Contains(expected, history.First().Content, StringComparison.OrdinalIgnoreCase);
->>>>>>> upstream/main
+    }
+
+    private static void AssertMessageValid(ChatMessageContent message)
+    {
+        if (message.Items.OfType<FunctionResultContent>().Any())
+        {
+            Assert.Equal(AuthorRole.Tool, message.Role);
+            return;
+        }
+
+        if (message.Items.OfType<FunctionCallContent>().Any())
+        {
+            Assert.Equal(AuthorRole.Assistant, message.Role);
+            return;
+        }
+
+        Assert.Equal(string.IsNullOrEmpty(message.AuthorName) ? AuthorRole.User : AuthorRole.Assistant, message.Role);
     }
 
     public sealed class MenuPlugin

@@ -18,8 +18,68 @@ from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.kernel import Kernel
 from tests.integration.completions.chat_completion_test_base import (
     ChatCompletionTestBase,
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+    anthropic_setup,
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+    anthropic_setup,
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+    anthropic_setup,
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+    anthropic_setup,
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
     google_ai_setup,
     mistral_ai_setup,
+    ollama_tool_call_setup,
     vertex_ai_setup,
 )
 from tests.integration.completions.completion_test_base import ServiceType
@@ -52,6 +112,7 @@ class FunctionChoiceTestTypes(str, Enum):
 pytestmark = pytest.mark.parametrize(
     "service_id, execution_settings_kwargs, inputs, kwargs",
     [
+        # region OpenAI
         pytest.param(
             "openai",
             {
@@ -140,6 +201,8 @@ pytestmark = pytest.mark.parametrize(
             {"test_type": FunctionChoiceTestTypes.AUTO},
             id="openai_tool_call_auto_complex_return_type",
         ),
+        # endregion
+        # region Azure
         pytest.param(
             "azure",
             {"function_choice_behavior": FunctionChoiceBehavior.Auto(filters={"excluded_plugins": ["task_plugin"]})},
@@ -233,6 +296,8 @@ pytestmark = pytest.mark.parametrize(
             {"test_type": FunctionChoiceTestTypes.AUTO},
             id="azure_tool_call_auto_complex_return_type",
         ),
+        # endregion
+        # region Azure AI Inference
         pytest.param(
             "azure_ai_inference",
             {
@@ -324,6 +389,8 @@ pytestmark = pytest.mark.parametrize(
             ),
             id="azure_ai_inference_tool_call_auto_complex_return_type",
         ),
+        # endregion
+        # region Mistral AI
         pytest.param(
             "mistral_ai",
             {
@@ -392,7 +459,149 @@ pytestmark = pytest.mark.parametrize(
             marks=pytest.mark.skipif(not mistral_ai_setup, reason="Mistral AI Environment Variables not set"),
             id="mistral_ai_tool_call_flow",
         ),
+        # endregion
+        # region Anthropic
         pytest.param(
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+            "anthropic",
+            {
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=True, filters={"excluded_plugins": ["task_plugin"]}
+                ),
+                "max_tokens": 256,
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.SYSTEM,
+                        items=[TextContent(text="You're very bad at math. Don't attempt to do it yourself.")],
+                    ),
+                    ChatMessageContent(role=AuthorRole.USER, items=[TextContent(text="What is 345 + 3?")]),
+                ]
+            ],
+            {"test_type": FunctionChoiceTestTypes.AUTO},
+            marks=pytest.mark.skipif(not anthropic_setup, reason="Anthropic Environment Variables not set"),
+            id="anthropic_tool_call_auto",
+        ),
+        pytest.param(
+            "anthropic",
+            {
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=False, filters={"excluded_plugins": ["task_plugin"]}
+                )
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.SYSTEM,
+                        items=[TextContent(text="You're very bad at math. Don't attempt to do it yourself.")],
+                    ),
+                    ChatMessageContent(role=AuthorRole.USER, items=[TextContent(text="What is 345 + 3?")]),
+                ]
+            ],
+            {"test_type": FunctionChoiceTestTypes.NON_AUTO},
+            marks=pytest.mark.skipif(not anthropic_setup, reason="Anthropic Environment Variables not set"),
+            id="anthropic_tool_call_non_auto",
+        ),
+        pytest.param(
+            "anthropic",
+            {},
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.USER,
+                        items=[TextContent(text="What was our 2024 revenue?")],
+                    ),
+                    ChatMessageContent(
+                        role=AuthorRole.ASSISTANT,
+                        items=[
+                            FunctionCallContent(
+                                id="123456789", name="finance-search", arguments='{"company": "contoso", "year": 2024}'
+                            )
+                        ],
+                    ),
+                    ChatMessageContent(
+                        role=AuthorRole.TOOL,
+                        items=[FunctionResultContent(id="123456789", name="finance-search", result="1.2B")],
+                    ),
+                ],
+            ],
+            {"test_type": FunctionChoiceTestTypes.FLOW},
+            marks=pytest.mark.skipif(not anthropic_setup, reason="Anthropic Environment Variables not set"),
+            id="anthropic_tool_call_flow",
+        ),
+        # endregion
+        # region Google AI
+        pytest.param(
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
             "google_ai",
             {
                 "function_choice_behavior": FunctionChoiceBehavior.Auto(
@@ -479,6 +688,8 @@ pytestmark = pytest.mark.parametrize(
             marks=pytest.mark.skipif(not google_ai_setup, reason="Google AI Environment Variables not set"),
             id="google_ai_tool_call_auto_complex_return_type",
         ),
+        # endregion
+        # region Vertex AI
         pytest.param(
             "vertex_ai",
             {
@@ -566,6 +777,248 @@ pytestmark = pytest.mark.parametrize(
             marks=pytest.mark.skipif(not vertex_ai_setup, reason="Vertex AI Environment Variables not set"),
             id="vertex_ai_tool_call_auto_complex_return_type",
         ),
+        # endregion
+        # region Ollama
+        pytest.param(
+            "ollama_tool_call",
+            {
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=True, filters={"excluded_plugins": ["task_plugin"]}
+                ),
+                "max_tokens": 256,
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.SYSTEM,
+                        items=[TextContent(text="You're very bad at math. Don't attempt to do it yourself.")],
+                    ),
+                    ChatMessageContent(role=AuthorRole.USER, items=[TextContent(text="What is 345 + 3?")]),
+                ]
+            ],
+            {
+                "test_type": FunctionChoiceTestTypes.AUTO,
+                "streaming": False,  # Streaming tool calls are not supported by Ollama
+            },
+            marks=pytest.mark.skipif(not ollama_tool_call_setup, reason="Need local Ollama setup"),
+            id="ollama_tool_call_auto",
+        ),
+        pytest.param(
+            "ollama_tool_call",
+            {
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=False, filters={"excluded_plugins": ["task_plugin"]}
+                )
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.SYSTEM,
+                        items=[TextContent(text="You're very bad at math. Don't attempt to do it yourself.")],
+                    ),
+                    ChatMessageContent(role=AuthorRole.USER, items=[TextContent(text="What is 345 + 3?")]),
+                ]
+            ],
+            {
+                "test_type": FunctionChoiceTestTypes.NON_AUTO,
+                "streaming": False,  # Streaming tool calls are not supported by Ollama
+            },
+            marks=pytest.mark.skipif(not ollama_tool_call_setup, reason="Need local Ollama setup"),
+            id="ollama_tool_call_non_auto",
+        ),
+        pytest.param(
+            "ollama_tool_call",
+            {},
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.USER,
+                        items=[TextContent(text="What was our 2024 revenue?")],
+                    ),
+                    ChatMessageContent(
+                        role=AuthorRole.ASSISTANT,
+                        items=[
+                            FunctionCallContent(
+                                id="fin", name="finance-search", arguments='{"company": "contoso", "year": 2024}'
+                            )
+                        ],
+                    ),
+                    ChatMessageContent(
+                        role=AuthorRole.TOOL,
+                        items=[FunctionResultContent(id="fin", name="finance-search", result="1.2B")],
+                    ),
+                ],
+            ],
+            {
+                "test_type": FunctionChoiceTestTypes.FLOW,
+                "streaming": False,  # Streaming tool calls are not supported by Ollama
+            },
+            marks=pytest.mark.skipif(not ollama_tool_call_setup, reason="Need local Ollama setup"),
+            id="ollama_tool_call_flow",
+        ),
+        pytest.param(
+            "ollama_tool_call",
+            {
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=True, filters={"excluded_plugins": ["task_plugin"]}
+                )
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.USER,
+                        items=[TextContent(text="Find the person whose id is 9b3f6e40.")],
+                    ),
+                ]
+            ],
+            {
+                "test_type": FunctionChoiceTestTypes.AUTO,
+                "streaming": False,  # Streaming tool calls are not supported by Ollama
+            },
+            marks=pytest.mark.skipif(not ollama_tool_call_setup, reason="Need local Ollama setup"),
+            id="ollama_tool_call_auto_complex_return_type",
+        ),
+        # endregion
+        # region Bedrock Anthropic Claude
+        pytest.param(
+            "bedrock_anthropic_claude",
+            {
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=False, filters={"excluded_plugins": ["task_plugin"]}
+                )
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.SYSTEM,
+                        items=[TextContent(text="You're very bad at math. Don't attempt to do it yourself.")],
+                    ),
+                    ChatMessageContent(role=AuthorRole.USER, items=[TextContent(text="What is 345 + 3?")]),
+                ]
+            ],
+            {"test_type": FunctionChoiceTestTypes.NON_AUTO},
+            id="bedrock_anthropic_claude_tool_call_non_auto",
+        ),
+        pytest.param(
+            "bedrock_anthropic_claude",
+            {
+                # This is required for Bedrock to have the tool config set when messages contain tool calls.
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=False, filters={"excluded_plugins": ["task_plugin"]}
+                )
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.USER,
+                        items=[TextContent(text="What was our 2024 revenue?")],
+                    ),
+                    ChatMessageContent(
+                        role=AuthorRole.ASSISTANT,
+                        items=[
+                            FunctionCallContent(
+                                id="fin", name="finance-search", arguments='{"company": "contoso", "year": 2024}'
+                            )
+                        ],
+                    ),
+                    ChatMessageContent(
+                        role=AuthorRole.TOOL,
+                        items=[FunctionResultContent(id="fin", name="finance-search", result="1.2B")],
+                    ),
+                ],
+            ],
+            {"test_type": FunctionChoiceTestTypes.FLOW},
+            id="bedrock_anthropic_claude_tool_call_flow",
+        ),
+        pytest.param(
+            "bedrock_anthropic_claude",
+            {
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=True, filters={"excluded_plugins": ["task_plugin"]}
+                )
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.USER,
+                        items=[TextContent(text="Find the person whose id is 9b3f6e40.")],
+                    ),
+                ]
+            ],
+            {"test_type": FunctionChoiceTestTypes.AUTO},
+            id="bedrock_anthropic_claude_tool_call_auto_complex_return_type",
+        ),
+        # endregion
+        # region Bedrock Cohere
+        pytest.param(
+            "bedrock_cohere_command",
+            {
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=False, filters={"excluded_plugins": ["task_plugin"]}
+                )
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.SYSTEM,
+                        items=[TextContent(text="You're very bad at math. Don't attempt to do it yourself.")],
+                    ),
+                    ChatMessageContent(role=AuthorRole.USER, items=[TextContent(text="What is 345 + 3?")]),
+                ]
+            ],
+            {"test_type": FunctionChoiceTestTypes.NON_AUTO},
+            id="bedrock_cohere_command_tool_call_non_auto",
+        ),
+        pytest.param(
+            "bedrock_cohere_command",
+            {
+                # This is required for Bedrock to have the tool config set when messages contain tool calls.
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=False, filters={"excluded_plugins": ["task_plugin"]}
+                )
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.USER,
+                        items=[TextContent(text="What was our 2024 revenue?")],
+                    ),
+                    ChatMessageContent(
+                        role=AuthorRole.ASSISTANT,
+                        items=[
+                            FunctionCallContent(
+                                id="fin", name="finance-search", arguments='{"company": "contoso", "year": 2024}'
+                            )
+                        ],
+                    ),
+                    ChatMessageContent(
+                        role=AuthorRole.TOOL,
+                        items=[FunctionResultContent(id="fin", name="finance-search", result="1.2B")],
+                    ),
+                ],
+            ],
+            {"test_type": FunctionChoiceTestTypes.FLOW},
+            id="bedrock_cohere_command_tool_call_flow",
+        ),
+        pytest.param(
+            "bedrock_cohere_command",
+            {
+                "function_choice_behavior": FunctionChoiceBehavior.Auto(
+                    auto_invoke=True, filters={"excluded_plugins": ["task_plugin"]}
+                )
+            },
+            [
+                [
+                    ChatMessageContent(
+                        role=AuthorRole.USER,
+                        items=[TextContent(text="Find the person whose id is 9b3f6e40.")],
+                    ),
+                ]
+            ],
+            {"test_type": FunctionChoiceTestTypes.AUTO},
+            id="bedrock_cohere_command_tool_call_auto_complex_return_type",
+        ),
+        # endregion
     ],
 )
 
@@ -604,6 +1057,9 @@ class TestChatCompletionWithFunctionCalling(ChatCompletionTestBase):
         inputs: list[str | ChatMessageContent | list[ChatMessageContent]],
         kwargs: dict[str, Any],
     ):
+        if "streaming" in kwargs and not kwargs["streaming"]:
+            pytest.skip("Skipping streaming test")
+
         await self._test_helper(
             kernel,
             service_id,

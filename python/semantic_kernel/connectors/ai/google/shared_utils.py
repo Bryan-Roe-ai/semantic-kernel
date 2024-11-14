@@ -5,6 +5,7 @@ import logging
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
+<<<<<<< main
 from semantic_kernel.connectors.ai.function_choice_behavior import (
     FunctionChoiceBehavior,
     FunctionChoiceType,
@@ -25,6 +26,13 @@ if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.google.vertex_ai.vertex_ai_prompt_execution_settings import (
         VertexAIChatPromptExecutionSettings,
     )
+=======
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
+from semantic_kernel.const import DEFAULT_FULLY_QUALIFIED_NAME_SEPARATOR
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.exceptions.service_exceptions import ServiceInvalidRequestError
+>>>>>>> upstream/main
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -89,6 +97,7 @@ FUNCTION_CHOICE_TYPE_TO_GOOGLE_FUNCTION_CALLING_MODE = {
 GEMINI_FUNCTION_NAME_SEPARATOR = "_"
 
 
+<<<<<<< main
 def format_function_result_content_name_to_gemini_function_name(
     function_result_content: FunctionResultContent,
 ) -> str:
@@ -120,6 +129,13 @@ def format_gemini_function_name_to_kernel_function_fully_qualified_name(
             GEMINI_FUNCTION_NAME_SEPARATOR, 1
         )
         return f"{plugin_name}-{function_name}"
+=======
+def format_gemini_function_name_to_kernel_function_fully_qualified_name(gemini_function_name: str) -> str:
+    """Format the Gemini function name to the kernel function fully qualified name."""
+    if GEMINI_FUNCTION_NAME_SEPARATOR in gemini_function_name:
+        plugin_name, function_name = gemini_function_name.split(GEMINI_FUNCTION_NAME_SEPARATOR, 1)
+        return f"{plugin_name}{DEFAULT_FULLY_QUALIFIED_NAME_SEPARATOR}{function_name}"
+>>>>>>> upstream/main
     return gemini_function_name
 
 

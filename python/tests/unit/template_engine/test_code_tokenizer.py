@@ -2,7 +2,89 @@
 
 from pytest import mark, raises
 
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 from semantic_kernel.exceptions import CodeBlockSyntaxError
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+from semantic_kernel.exceptions import CodeBlockSyntaxError
+=======
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+>>>>>>> origin/main
+=======
+<<<<<<< main
+from semantic_kernel.exceptions import CodeBlockSyntaxError
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+from semantic_kernel.exceptions import CodeBlockSyntaxError
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< main
+from semantic_kernel.exceptions import CodeBlockSyntaxError
+=======
+from semantic_kernel.template_engine.blocks.block_errors import CodeBlockSyntaxError
+>>>>>>> ms/small_fixes
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> origin/main
+>>>>>>> head
 from semantic_kernel.template_engine.blocks.block_types import BlockTypes
 from semantic_kernel.template_engine.code_tokenizer import CodeTokenizer
 

@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Docker.DotNet;
 using Docker.DotNet.Models;
-using Microsoft.SemanticKernel.Data;
+using Microsoft.Extensions.VectorData;
 using NRedisStack.RedisStackCommands;
 using NRedisStack.Search;
 using NRedisStack.Search.Literals.Enums;
@@ -88,6 +88,46 @@ public class RedisVectorStoreFixture : IAsyncLifetime
         ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("localhost:6379,connectTimeout=60000,connectRetry=5");
         this.Database = redis.GetDatabase();
 
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
+=======
+>>>>>>> upstream/main
         // Create a JSON index.
         var jsonSchema = new Schema();
         jsonSchema.AddTagField(new FieldName("$.HotelName", "HotelName"));
@@ -96,12 +136,156 @@ public class RedisVectorStoreFixture : IAsyncLifetime
         jsonSchema.AddTagField(new FieldName("$.Tags", "Tags"));
         jsonSchema.AddTextField(new FieldName("$.FTSTags", "FTSTags"));
         jsonSchema.AddVectorField(new FieldName("$.DescriptionEmbedding", "DescriptionEmbedding"), Schema.VectorField.VectorAlgo.HNSW, new Dictionary<string, object>()
+<<<<<<< main
+=======
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
+        // Create a schema for the vector store.
+        var schema = new Schema();
+        schema.AddTextField(new FieldName("$.HotelName", "HotelName"));
+        schema.AddNumericField(new FieldName("$.HotelCode", "HotelCode"));
+        schema.AddTextField(new FieldName("$.Description", "Description"));
+        schema.AddVectorField(new FieldName("$.DescriptionEmbedding", "DescriptionEmbedding"), Schema.VectorField.VectorAlgo.HNSW, new Dictionary<string, object>()
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
         {
             ["TYPE"] = "FLOAT32",
             ["DIM"] = "4",
             ["DISTANCE_METRIC"] = "L2"
         });
         var jsonCreateParams = new FTCreateParams().AddPrefix("jsonhotels:").On(IndexDataType.JSON);
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
         await this.Database.FT().CreateAsync("jsonhotels", jsonCreateParams, jsonSchema);
 
         // Create a hashset index.
@@ -118,6 +302,126 @@ public class RedisVectorStoreFixture : IAsyncLifetime
 
         var hashsetCreateParams = new FTCreateParams().AddPrefix("hashhotels:").On(IndexDataType.HASH);
         await this.Database.FT().CreateAsync("hashhotels", hashsetCreateParams, hashSchema);
+=======
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
+        await this.Database.FT().CreateAsync("jsonhotels", jsonCreateParams, schema);
+=======
+        await this.Database.FT().CreateAsync("jsonhotels", jsonCreateParams, jsonSchema);
+>>>>>>> upstream/main
+
+        // Create a hashset index.
+        var hashSchema = new Schema();
+        hashSchema.AddTagField(new FieldName("HotelName", "HotelName"));
+        hashSchema.AddNumericField(new FieldName("HotelCode", "HotelCode"));
+        hashSchema.AddTextField(new FieldName("Description", "Description"));
+        hashSchema.AddVectorField(new FieldName("DescriptionEmbedding", "DescriptionEmbedding"), Schema.VectorField.VectorAlgo.HNSW, new Dictionary<string, object>()
+        {
+            ["TYPE"] = "FLOAT32",
+            ["DIM"] = "4",
+            ["DISTANCE_METRIC"] = "L2"
+        });
+
+        var hashsetCreateParams = new FTCreateParams().AddPrefix("hashhotels:").On(IndexDataType.HASH);
+<<<<<<< main
+        await this.Database.FT().CreateAsync("hashhotels", hashsetCreateParams, schema);
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+        await this.Database.FT().CreateAsync("hashhotels", hashsetCreateParams, hashSchema);
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
 
         // Create some test data.
         var address = new HotelAddress { City = "Seattle", Country = "USA" };
@@ -142,7 +446,92 @@ public class RedisVectorStoreFixture : IAsyncLifetime
         await this.Database.JSON().SetAsync("jsonhotels:BaseSet-4-Invalid", "$", new { HotelId = "AnotherId", HotelName = "My Invalid Hotel", HotelCode = 4, Description = "This is an invalid hotel.", DescriptionEmbedding = embedding, parking_is_included = false });
 
         // Add hashset test data.
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+        await this.Database.HashSetAsync("hashhotels:BaseSet-1", new HashEntry[]
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+        await this.Database.HashSetAsync("hashhotels:BaseSet-1", new HashEntry[]
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-1", new HashEntry[]
+=======
+>>>>>>> Stashed changes
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-1", new HashEntry[]
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
         await this.Database.HashSetAsync("hashhotels:HBaseSet-1", new HashEntry[]
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-1", new HashEntry[]
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+        await this.Database.HashSetAsync("hashhotels:HBaseSet-1", new HashEntry[]
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
         {
             new("HotelName", "My Hotel 1"),
             new("HotelCode", 1),
@@ -151,7 +540,92 @@ public class RedisVectorStoreFixture : IAsyncLifetime
             new("parking_is_included", true),
             new("Rating", 3.6)
         });
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+        await this.Database.HashSetAsync("hashhotels:BaseSet-2", new HashEntry[]
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+        await this.Database.HashSetAsync("hashhotels:BaseSet-2", new HashEntry[]
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-2", new HashEntry[]
+=======
+>>>>>>> Stashed changes
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-2", new HashEntry[]
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
         await this.Database.HashSetAsync("hashhotels:HBaseSet-2", new HashEntry[]
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-2", new HashEntry[]
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+        await this.Database.HashSetAsync("hashhotels:HBaseSet-2", new HashEntry[]
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
         {
             new("HotelName", "My Hotel 2"),
             new("HotelCode", 2),
@@ -159,7 +633,92 @@ public class RedisVectorStoreFixture : IAsyncLifetime
             new("DescriptionEmbedding", MemoryMarshal.AsBytes(new ReadOnlySpan<float>(embedding)).ToArray()),
             new("parking_is_included", false),
         });
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+        await this.Database.HashSetAsync("hashhotels:BaseSet-3", new HashEntry[]
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+        await this.Database.HashSetAsync("hashhotels:BaseSet-3", new HashEntry[]
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-3", new HashEntry[]
+=======
+>>>>>>> Stashed changes
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-3", new HashEntry[]
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
         await this.Database.HashSetAsync("hashhotels:HBaseSet-3", new HashEntry[]
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-3", new HashEntry[]
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+        await this.Database.HashSetAsync("hashhotels:HBaseSet-3", new HashEntry[]
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
         {
             new("HotelName", "My Hotel 3"),
             new("HotelCode", 3),
@@ -167,7 +726,92 @@ public class RedisVectorStoreFixture : IAsyncLifetime
             new("DescriptionEmbedding", MemoryMarshal.AsBytes(new ReadOnlySpan<float>(embedding)).ToArray()),
             new("parking_is_included", false),
         });
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+        await this.Database.HashSetAsync("hashhotels:BaseSet-4-Invalid", new HashEntry[]
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+        await this.Database.HashSetAsync("hashhotels:BaseSet-4-Invalid", new HashEntry[]
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-4-Invalid", new HashEntry[]
+=======
+>>>>>>> Stashed changes
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-4-Invalid", new HashEntry[]
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
         await this.Database.HashSetAsync("hashhotels:HBaseSet-4-Invalid", new HashEntry[]
+=======
+        await this.Database.HashSetAsync("hashhotels:BaseSet-4-Invalid", new HashEntry[]
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+        await this.Database.HashSetAsync("hashhotels:HBaseSet-4-Invalid", new HashEntry[]
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
         {
             new("HotelId", "AnotherId"),
             new("HotelName", "My Invalid Hotel"),
@@ -214,15 +858,187 @@ public class RedisVectorStoreFixture : IAsyncLifetime
             {
                 PortBindings = new Dictionary<string, IList<PortBinding>>
                 {
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+                    {"6379", new List<PortBinding> {new() {HostPort = "6379"}}}
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+                    {"6379", new List<PortBinding> {new() {HostPort = "6379"}}}
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+                    {"6379", new List<PortBinding> {new() {HostPort = "6379"}}}
+=======
+>>>>>>> Stashed changes
+=======
+                    {"6379", new List<PortBinding> {new() {HostPort = "6379"}}}
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
                     {"6379", new List<PortBinding> {new() {HostPort = "6379"}}},
                     {"8001", new List<PortBinding> {new() {HostPort = "8001"}}}
+=======
+                    {"6379", new List<PortBinding> {new() {HostPort = "6379"}}}
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+                    {"6379", new List<PortBinding> {new() {HostPort = "6379"}}},
+                    {"8001", new List<PortBinding> {new() {HostPort = "8001"}}}
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
                 },
                 PublishAllPorts = true
             },
             ExposedPorts = new Dictionary<string, EmptyStruct>
             {
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+                { "6379", default }
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+                { "6379", default }
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+                { "6379", default }
+=======
+>>>>>>> Stashed changes
+=======
+                { "6379", default }
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
                 { "6379", default },
                 { "8001", default }
+=======
+                { "6379", default }
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+                { "6379", default },
+                { "8001", default }
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
             },
         });
 
@@ -230,8 +1046,89 @@ public class RedisVectorStoreFixture : IAsyncLifetime
             container.ID,
             new ContainerStartParameters());
 
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
         await Task.Delay(1000);
 
+=======
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+        await Task.Delay(1000);
+
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
         return container.ID;
     }
 
@@ -289,7 +1186,92 @@ public class RedisVectorStoreFixture : IAsyncLifetime
     /// <summary>
     /// A test model for the vector store that only uses basic types as supported by HashSets Redis mode.
     /// </summary>
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+    public class BasicHotel
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+    public class BasicHotel
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+    public class BasicHotel
+=======
+>>>>>>> Stashed changes
+=======
+    public class BasicHotel
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
     public class BasicHotel<TVectorElement>
+=======
+    public class BasicHotel
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+    public class BasicHotel<TVectorElement>
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
     {
         [VectorStoreRecordKey]
         public string HotelId { get; init; }
@@ -304,7 +1286,92 @@ public class RedisVectorStoreFixture : IAsyncLifetime
         public string Description { get; init; }
 
         [VectorStoreRecordVector(4)]
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+        public ReadOnlyMemory<float>? DescriptionEmbedding { get; init; }
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+        public ReadOnlyMemory<float>? DescriptionEmbedding { get; init; }
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+        public ReadOnlyMemory<float>? DescriptionEmbedding { get; init; }
+=======
+>>>>>>> Stashed changes
+=======
+        public ReadOnlyMemory<float>? DescriptionEmbedding { get; init; }
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
         public ReadOnlyMemory<TVectorElement>? DescriptionEmbedding { get; init; }
+=======
+        public ReadOnlyMemory<float>? DescriptionEmbedding { get; init; }
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+        public ReadOnlyMemory<TVectorElement>? DescriptionEmbedding { get; init; }
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
 
         [JsonPropertyName("parking_is_included")]
         [VectorStoreRecordData(StoragePropertyName = "parking_is_included")]
@@ -313,6 +1380,46 @@ public class RedisVectorStoreFixture : IAsyncLifetime
         [VectorStoreRecordData]
         public double Rating { get; init; }
     }
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
+=======
+>>>>>>> upstream/main
 
     /// <summary>
     /// A test model for the vector store that only uses basic types as supported by HashSets Redis mode.
@@ -327,5 +1434,47 @@ public class RedisVectorStoreFixture : IAsyncLifetime
     public class BasicFloat64Hotel : BasicHotel<double>
     {
     }
+<<<<<<< main
+=======
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

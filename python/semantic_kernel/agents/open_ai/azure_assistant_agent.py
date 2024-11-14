@@ -67,6 +67,65 @@ class AzureAssistantAgent(OpenAIAssistantBase):
         max_prompt_tokens: int | None = None,
         parallel_tool_calls_enabled: bool | None = True,
         truncation_message_count: int | None = None,
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+        token_endpoint: str | None = None,
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+        token_endpoint: str | None = None,
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+        token_endpoint: str | None = None,
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+        token_endpoint: str | None = None,
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
         **kwargs: Any,
     ) -> None:
         """Initialize an Azure OpenAI Assistant Agent.
@@ -100,6 +159,65 @@ class AzureAssistantAgent(OpenAIAssistantBase):
             max_prompt_tokens: The maximum prompt tokens. (optional)
             parallel_tool_calls_enabled: Enable parallel tool calls. (optional)
             truncation_message_count: The truncation message count. (optional)
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+            token_endpoint: The Azure AD token endpoint. (optional)
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+            token_endpoint: The Azure AD token endpoint. (optional)
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+            token_endpoint: The Azure AD token endpoint. (optional)
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+            token_endpoint: The Azure AD token endpoint. (optional)
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
             **kwargs: Additional keyword arguments.
 
         Raises:
@@ -112,6 +230,65 @@ class AzureAssistantAgent(OpenAIAssistantBase):
             api_version=api_version,
             env_file_path=env_file_path,
             env_file_encoding=env_file_encoding,
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+            token_endpoint=token_endpoint,
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+            token_endpoint=token_endpoint,
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+            token_endpoint=token_endpoint,
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+            token_endpoint=token_endpoint,
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
         )
 
         if not azure_openai_settings.chat_deployment_name:
@@ -123,13 +300,129 @@ class AzureAssistantAgent(OpenAIAssistantBase):
             raise AgentInitializationError(
                 "Please provide either api_key, ad_token or ad_token_provider."
             )
+<<<<<<< HEAD
+<<<<<<< div
+=======
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 =======
             raise AgentInitializationException("The Azure OpenAI chat_deployment_name is required.")
 
         if not azure_openai_settings.api_key and not ad_token and not ad_token_provider:
             raise AgentInitializationException("Please provide either api_key, ad_token or ad_token_provider.")
 >>>>>>> Stashed changes
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+            raise AgentInitializationException("The Azure OpenAI chat_deployment_name is required.")
+
+        if (
+            client is None
+            and azure_openai_settings.api_key is None
+            and ad_token_provider is None
+            and ad_token is None
+            and azure_openai_settings.token_endpoint
+        ):
+            ad_token = azure_openai_settings.get_azure_openai_auth_token(
+                token_endpoint=azure_openai_settings.token_endpoint
+            )
+
+        if not client and not azure_openai_settings.api_key and not ad_token and not ad_token_provider:
+            raise AgentInitializationException("Please provide either api_key, ad_token or ad_token_provider.")
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
 
         client = self._create_client(
             api_key=(
@@ -143,6 +436,85 @@ class AzureAssistantAgent(OpenAIAssistantBase):
             ad_token_provider=ad_token_provider,
             default_headers=default_headers,
         )
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+        if not client:
+            client = self._create_client(
+                api_key=azure_openai_settings.api_key.get_secret_value() if azure_openai_settings.api_key else None,
+                endpoint=azure_openai_settings.endpoint,
+                api_version=azure_openai_settings.api_version,
+                ad_token=ad_token,
+                ad_token_provider=ad_token_provider,
+                default_headers=default_headers,
+            )
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
         service_id = service_id if service_id else DEFAULT_SERVICE_NAME
 
         args: dict[str, Any] = {
@@ -197,8 +569,10 @@ class AzureAssistantAgent(OpenAIAssistantBase):
         name: str | None = None,
         enable_code_interpreter: bool | None = None,
         code_interpreter_filenames: list[str] | None = None,
+        code_interpreter_file_ids: list[str] | None = None,
         enable_file_search: bool | None = None,
         vector_store_filenames: list[str] | None = None,
+        vector_store_file_ids: list[str] | None = None,
         enable_json_response: bool | None = None,
         temperature: float | None = None,
         top_p: float | None = None,
@@ -231,8 +605,10 @@ class AzureAssistantAgent(OpenAIAssistantBase):
             name: The Agent name. (optional)
             enable_code_interpreter: Enable the code interpreter. (optional)
             code_interpreter_filenames: The filenames/paths to use with the code interpreter. (optional)
+            code_interpreter_file_ids: The existing file IDs to use with the code interpreter. (optional)
             enable_file_search: Enable the file search. (optional)
             vector_store_filenames: The filenames/paths for files to use with file search. (optional)
+            vector_store_file_ids: The existing file IDs to use with file search. (optional)
             enable_json_response: Enable the JSON response. (optional)
             temperature: The temperature. (optional)
             top_p: The top p. (optional)
@@ -280,33 +656,44 @@ class AzureAssistantAgent(OpenAIAssistantBase):
 
         assistant_create_kwargs: dict[str, Any] = {}
 
+        code_interpreter_file_ids_combined: list[str] = []
+
+        if code_interpreter_file_ids is not None:
+            code_interpreter_file_ids_combined.extend(code_interpreter_file_ids)
+
         if code_interpreter_filenames is not None:
-            code_interpreter_file_ids: list[str] = []
             for file_path in code_interpreter_filenames:
                 try:
                     file_id = await agent.add_file(file_path=file_path, purpose="assistants")
-                    code_interpreter_file_ids.append(file_id)
+                    code_interpreter_file_ids_combined.append(file_id)
                 except FileNotFoundError as ex:
                     logger.error(
                         f"Failed to upload code interpreter file with path: `{file_path}` with exception: {ex}"
                     )
                     raise AgentInitializationException("Failed to upload code interpreter files.", ex) from ex
-            agent.code_interpreter_file_ids = code_interpreter_file_ids
-            assistant_create_kwargs["code_interpreter_file_ids"] = code_interpreter_file_ids
+
+        if code_interpreter_file_ids_combined:
+            agent.code_interpreter_file_ids = code_interpreter_file_ids_combined
+            assistant_create_kwargs["code_interpreter_file_ids"] = code_interpreter_file_ids_combined
+
+        vector_store_file_ids_combined: list[str] = []
+
+        if vector_store_file_ids is not None:
+            vector_store_file_ids_combined.extend(vector_store_file_ids)
 
         if vector_store_filenames is not None:
-            file_search_file_ids: list[str] = []
             for file_path in vector_store_filenames:
                 try:
                     file_id = await agent.add_file(file_path=file_path, purpose="assistants")
-                    file_search_file_ids.append(file_id)
+                    vector_store_file_ids_combined.append(file_id)
                 except FileNotFoundError as ex:
-                    logger.error(f"Failed to upload file search file with path: `{file_path}` with exception: {ex}")
-                    raise AgentInitializationException("Failed to upload file search files.", ex) from ex
+                    logger.error(f"Failed to upload vector store file with path: `{file_path}` with exception: {ex}")
+                    raise AgentInitializationException("Failed to upload vector store files.", ex) from ex
 
+        if vector_store_file_ids_combined:
+            agent.file_search_file_ids = vector_store_file_ids_combined
             if enable_file_search or agent.enable_file_search:
-                vector_store_id = await agent.create_vector_store(file_ids=file_search_file_ids)
-                agent.file_search_file_ids = file_search_file_ids
+                vector_store_id = await agent.create_vector_store(file_ids=vector_store_file_ids_combined)
                 agent.vector_store_id = vector_store_id
                 assistant_create_kwargs["vector_store_id"] = vector_store_id
 
@@ -363,6 +750,65 @@ class AzureAssistantAgent(OpenAIAssistantBase):
         api_version: str | None = None,
         env_file_path: str | None = None,
         env_file_encoding: str | None = None,
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+        token_endpoint: str | None = None,
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+        token_endpoint: str | None = None,
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+        token_endpoint: str | None = None,
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+        token_endpoint: str | None = None,
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
     ) -> AzureOpenAISettings:
         """Create the Azure OpenAI settings.
 
@@ -373,6 +819,65 @@ class AzureAssistantAgent(OpenAIAssistantBase):
             api_version: The Azure OpenAI API version.
             env_file_path: The environment file path.
             env_file_encoding: The environment file encoding.
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+            token_endpoint: The Azure AD token endpoint.
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+            token_endpoint: The Azure AD token endpoint.
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+            token_endpoint: The Azure AD token endpoint.
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+            token_endpoint: The Azure AD token endpoint.
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
 
         Returns:
             An instance of the AzureOpenAISettings.
@@ -385,16 +890,172 @@ class AzureAssistantAgent(OpenAIAssistantBase):
                 api_version=api_version,
                 env_file_path=env_file_path,
                 env_file_encoding=env_file_encoding,
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+                token_endpoint=token_endpoint,
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+                token_endpoint=token_endpoint,
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+                token_endpoint=token_endpoint,
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+                token_endpoint=token_endpoint,
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
             )
         except ValidationError as ex:
             raise AgentInitializationError(
                 "Failed to create Azure OpenAI settings.", ex
             ) from ex
+<<<<<<< HEAD
+<<<<<<< div
+=======
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
             raise AgentInitializationException("Failed to create Azure OpenAI settings.", ex) from ex
 =======
             raise AgentInitializationException("Failed to create Azure OpenAI settings.", ex) from ex
 >>>>>>> Stashed changes
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+            raise AgentInitializationException("Failed to create Azure OpenAI settings.", ex) from ex
+            raise AgentInitializationException("Failed to create Azure OpenAI settings.", ex) from ex
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+            raise AgentInitializationException("Failed to create Azure OpenAI settings.", ex) from ex
+            raise AgentInitializationException("Failed to create Azure OpenAI settings.", ex) from ex
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+            raise AgentInitializationException("Failed to create Azure OpenAI settings.", ex) from ex
+            raise AgentInitializationException("Failed to create Azure OpenAI settings.", ex) from ex
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
 
         return azure_openai_settings
 
@@ -406,7 +1067,70 @@ class AzureAssistantAgent(OpenAIAssistantBase):
         """
         assistants = await self.client.beta.assistants.list(order="desc")
         for assistant in assistants.data:
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             yield self._create_open_ai_assistant_definition(assistant)
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+            yield self._create_open_ai_assistant_definition(assistant)
+=======
+            yield OpenAIAssistantBase._create_open_ai_assistant_definition(assistant)
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+            yield OpenAIAssistantBase._create_open_ai_assistant_definition(assistant)
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+            yield OpenAIAssistantBase._create_open_ai_assistant_definition(assistant)
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
 
     @classmethod
     async def retrieve(
@@ -458,7 +1182,41 @@ class AzureAssistantAgent(OpenAIAssistantBase):
             raise AgentInitializationError(
                 "Please provide either api_key, ad_token or ad_token_provider."
             )
+<<<<<<< HEAD
+<<<<<<< div
+=======
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
             raise AgentInitializationException("The Azure OpenAI chat_deployment_name is required.")
         if not azure_openai_settings.api_key and not ad_token and not ad_token_provider:
             raise AgentInitializationException("Please provide either api_key, ad_token or ad_token_provider.")
@@ -467,6 +1225,82 @@ class AzureAssistantAgent(OpenAIAssistantBase):
         if not azure_openai_settings.api_key and not ad_token and not ad_token_provider:
             raise AgentInitializationException("Please provide either api_key, ad_token or ad_token_provider.")
 >>>>>>> Stashed changes
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+            raise AgentInitializationException("The Azure OpenAI chat_deployment_name is required.")
+        if not azure_openai_settings.api_key and not ad_token and not ad_token_provider:
+            raise AgentInitializationException("Please provide either api_key, ad_token or ad_token_provider.")
+            raise AgentInitializationException("The Azure OpenAI chat_deployment_name is required.")
+        if not azure_openai_settings.api_key and not ad_token and not ad_token_provider:
+            raise AgentInitializationException("Please provide either api_key, ad_token or ad_token_provider.")
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
 
         if not client:
             client = AzureAssistantAgent._create_client(
@@ -482,5 +1316,68 @@ class AzureAssistantAgent(OpenAIAssistantBase):
             assistant
         )
         return AzureAssistantAgent(kernel=kernel, **assistant_definition)
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+        assistant_definition = OpenAIAssistantBase._create_open_ai_assistant_definition(assistant)
+        return AzureAssistantAgent(kernel=kernel, assistant=assistant, **assistant_definition)
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+        assistant_definition = OpenAIAssistantBase._create_open_ai_assistant_definition(assistant)
+        return AzureAssistantAgent(kernel=kernel, assistant=assistant, **assistant_definition)
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
 
     # endregion

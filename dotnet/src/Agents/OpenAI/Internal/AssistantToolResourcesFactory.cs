@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System.Collections.Generic;
 using OpenAI.Assistants;
 
@@ -44,6 +44,37 @@ internal static class AssistantToolResourcesFactory
                             } :
                             null,
                 };
+            FileSearchToolResources? fileSearch =
+                hasVectorStore ?
+                    new()
+                    {
+                        VectorStoreIds = { vectorStoreId! }
+                    } :
+                    null;
+
+            CodeInterpreterToolResources? codeInterpreter =
+                hasCodeInterpreterFiles ?
+                    new() :
+                    null;
+            codeInterpreter?.FileIds.AddRange(codeInterpreterFileIds!);
+
+            var fileSearch = hasVectorStore
+                ? new FileSearchToolResources
+                {
+                    VectorStoreIds = { vectorStoreId! }
+                }
+                : null;
+
+            var codeInterpreter = hasCodeInterpreterFiles
+                ? new CodeInterpreterToolResources()
+                : null;
+
+            codeInterpreter?.FileIds.AddRange(codeInterpreterFileIds!);
+            toolResources = new ToolResources
+            {
+                FileSearch = fileSearch,
+                CodeInterpreter = codeInterpreter
+            };
         }
 
         return toolResources;

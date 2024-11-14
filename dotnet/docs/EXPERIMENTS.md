@@ -4,13 +4,18 @@ The following capabilities are marked experimental in the .NET SDK. Once the API
 
 You can use the following diagnostic IDs to ignore warnings or errors for a particular experimental feature. For example, to ignore warnings for the embedding services, add `SKEXP0001` to your list of ignored warnings in your .NET project file as well as the ID for the embedding service you want to use. For example:
 
-<<<<<<< main
 ```xml {"id":"01J6KNVXZHXHYS15JPS6S743K4"}
-=======
 ```xml {"id":"01J60JDT3YV637KKDXXWHNG3JR"}
->>>>>>> origin/Bryan-Roe/issue389
 <PropertyGroup>
   <NoWarn>SKEXP0001,SKEXP0010</NoWarn>
+```xml {"id":"01J6KNVXZHXHYS15JPS6S743K4"}
+```xml {"id":"01J60JDT3YV637KKDXXWHNG3JR"}
+<PropertyGroup>
+  <NoWarn>$(NoWarn);SKEXP0001,SKEXP0010</NoWarn>
+```xml {"id":"01J6KNVXZHXHYS15JPS6S743K4"}
+```xml {"id":"01J60JDT3YV637KKDXXWHNG3JR"}
+<PropertyGroup>
+  <NoWarn>$(NoWarn);SKEXP0001,SKEXP0010</NoWarn>
 </PropertyGroup>
 ```
 
@@ -26,6 +31,23 @@ You can use the following diagnostic IDs to ignore warnings or errors for a part
 | SKEXP0060 | Planners                          |
 | SKEXP0070 | AI connectors                     |
 | SKEXP0100 | Advanced Semantic Kernel features |
+| SKEXP0100 | Advanced Semantic Kernel features |
+| SKEXP0100 | Advanced Semantic Kernel features |
+| SKEXP0100 | Advanced Semantic Kernel features |
+| SKEX| SKEXP​ | Experimental Features Category​​ |
+| SKEXP | Experimental Features Category |
+|-------|--------------------------------|
+| SKEXP0001 | Semantic Kernel core features |
+| SKEXP0010 | OpenAI and Azure OpenAI services |
+| SKEXP0020 | Memory connectors |
+| SKEXP0040 | Function types |
+| SKEXP0050 | Out-of-the-box plugins |
+| SKEXP0060 | Planners |
+| SKEXP0070 | AI connectors |
+| SKEXP0080 | Processes |
+| Advanced Semantic Kernel features |
+| SKEXP0100 | Advanced Semantic Kernel features |
+| SKEXP0110 | Semantic Kernel Agents |
 
 ## Experimental Features Tracking
 
@@ -81,6 +103,12 @@ You can use the following diagnostic IDs to ignore warnings or errors for a part
 | SKEXP0101 | Experiment with Assistants          |            |              |           |          |                  |
 | SKEXP0101 | Experiment with Flow Orchestration  |            |              |           |          |                  |
 | SKEXP​ | Features​​ |
+| SKEXP0100 | Advanced Semantic Kernel features |
+| SKEXP0110 | Semantic Kernel Agents |
+
+## Experimental Features Tracking
+
+| SKEXP | Features |
 |-------|----------|
 | SKEXP0001 | Embedding services |
 | SKEXP0001 | Image services |
@@ -124,13 +152,23 @@ You can use the following diagnostic IDs to ignore warnings or errors for a part
 | SKEXP0060 | Handlebars planner |
 | SKEXP0060 | OpenAI Stepwise planner |
 | | | | | | | |
-| SKEXP0070 | Ollama AI connector |
-| SKEXP0070 | Gemini AI connector |
-| SKEXP0070 | Mistral AI connector |
-| SKEXP0070 | ONNX AI connector |
+| SKEXP0070 | Ollama AI connector | | | | | |
+| SKEXP0070 | Gemini AI connector | | | | | |
+| SKEXP0070 | Mistral AI connector | | | | | |
+| SKEXP0070 | ONNX AI connector | | | | | |
+| SKEXP0070 | Hugging Face AI connector | | | | | |
+| SKEXP0070 | Amazon AI connector | | | | | |
+| | | | | | | |
 | SKEXP0070 | Hugging Face AI connector |
+| | | | | | | |
+| SKEXP0070 | Assembly AI connector               |            |              |           |          |                  |
+| SKEXP0070 | Hugging Face AI connector |
+| | | | | | | |
+| SKEXP0080 | Process Framework |
 | | | | | | | |
 | SKEXP0101 | Experiment with Assistants |
 | SKEXP0101 | Experiment with Flow Orchestration |
 | | | | | | | |
 | SKEXP0110 | Agent Framework |
+| | | | | | | |
+| SKEXP0120 | Native-AOT |

@@ -1,31 +1,52 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-    
-        {
-            "name": "Docker .NET Attach (Preview)",
-            "type": "docker",
-            "request": "attach",
-            "platform": "netCore",
-            "sourceFileMap": {
-                "/src": "${workspaceFolder}"
-            }
-        },
-        {
-            "name": "Python Debugger: Current File",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
-        },
-        {
-            "name": "Attach to .NET Functions",
-            "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:azureFunctions.pickProcess}"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C#: Attach to .NET Functions",
+      "type": "dotnet",
+      "request": "attach",
+      "preLaunchTask": "build (Concepts)",
+      // If you have changed target frameworks, make sure to update the program path.
+      "program": "${workspaceFolder}/dotnet/samples/Concepts/bin/Debug/net6.0/Concepts.dll",
+      "args": []
+      // The debug type is not recognized. Make sure that you have a corresponding debug extension installed and that it is enabled.
+      // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+    },
+    {
+      "name": ".NET Core Attach",
+      "type": "dotnet",
+      "request": "attach"
+    },
+    {
+      "cwd": "${workspaceFolder}/python",
+      "name": "Python: Test Module",
+      "type": "python",
+      "request": "launch",
+      "module": "pytest",
+      "args": ["${file}"]
+    },
+    {
+      "name": "C#: HuggingFaceImageToText Demo",
+      "type": "dotnet",
+      "request": "launch",
+      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll"
+    },
+    {
+      "name": "C#: GettingStarted Samples",
+      "type": "dotnet",
+      "request": "launch",
+      "program": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll"
+    },
+    {
+      "name": "C#: Process with Dapr",
+      "type": "dotnet",
+      "request": "launch",
+      "program": "${workspaceFolder}\\dotnet\\samples\\Demos\\ProcessWithDapr\\bin\\Debug\\net8.0\\ProcessWithDapr.dll",
+      "preLaunchTask": "daprd-debug",
+      "postDebugTask": "dapr-down",
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  ]
 }

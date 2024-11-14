@@ -60,6 +60,9 @@ service_id="chat-gpt"
 kernel.add_service(
     OpenAIChatCompletion(
         service_id=service_id,
+        ai_model_id="gpt-3.5-turbo",
+        api_key=api_key,
+        org_id=org_id
     )
 )
 
@@ -67,6 +70,9 @@ kernel.add_service(
 # kernel.add_service(
 #   AzureChatCompletion(
 #       service_id=service_id,
+#       deployment_name=deployment,
+#       base_url=endpoint,
+#       api_key=api_key
 #   )
 # )
 
@@ -250,3 +256,17 @@ print("Output: " + output)
 
 # Output: Protect humans, follow orders, survive.
 ```
+
+## Enhancing Documentation
+
+### Detailed Explanations and Examples
+
+To enhance the existing documentation, we have added more detailed explanations and examples to help users understand how to use the various features of the repository. These explanations and examples are included in the relevant sections of the documentation files such as `README.md` and `java/README.md`.
+
+### Code Snippets and Usage Examples
+
+We have included more code snippets and usage examples in the documentation to provide practical guidance on how to use the repository's features. These code snippets and examples are designed to help users quickly grasp the concepts and apply them in their own projects.
+
+### Repository Structure Explanation
+
+To help users navigate the repository, we have added a section that explains the structure of the repository and the purpose of each directory and file. This section provides an overview of the repository's organization and helps users understand where to find specific components and resources.

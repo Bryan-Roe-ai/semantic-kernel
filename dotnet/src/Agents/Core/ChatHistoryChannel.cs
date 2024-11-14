@@ -1,10 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Agents.Extensions;
+using Microsoft.SemanticKernel.Agents.History;
+using Microsoft.SemanticKernel.Agents.Serialization;
 using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace Microsoft.SemanticKernel.Agents;
@@ -13,6 +16,7 @@ namespace Microsoft.SemanticKernel.Agents;
 /// A <see cref="AgentChannel"/> specialization for that acts upon a <see cref="ChatHistoryKernelAgent"/>.
 /// </summary>
 public sealed class ChatHistoryChannel : AgentChannel
+internal sealed class ChatHistoryChannel : AgentChannel
 {
     private readonly ChatHistory _history;
 
@@ -121,6 +125,16 @@ public sealed class ChatHistoryChannel : AgentChannel
 
         return Task.CompletedTask;
     }
+    protected override string Serialize()
+        => JsonSerializer.Serialize(ChatMessageReference.Prepare(this._history));
+    protected override string Serialize()
+        => JsonSerializer.Serialize(ChatMessageReference.Prepare(this._history));
+    protected override string Serialize()
+        => JsonSerializer.Serialize(ChatMessageReference.Prepare(this._history));
+
+    /// <inheritdoc/>
+    protected override string Serialize()
+        => JsonSerializer.Serialize(ChatMessageReference.Prepare(this._history));
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ChatHistoryChannel"/> class.
@@ -128,5 +142,14 @@ public sealed class ChatHistoryChannel : AgentChannel
     public ChatHistoryChannel()
     {
         this._history = [];
+    public ChatHistoryChannel(ChatHistory? history = null)
+    {
+        this._history = history ?? [];
+    public ChatHistoryChannel(ChatHistory? history = null)
+    {
+        this._history = history ?? [];
+    public ChatHistoryChannel(ChatHistory? history = null)
+    {
+        this._history = history ?? [];
     }
 }

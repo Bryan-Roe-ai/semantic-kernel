@@ -6,7 +6,9 @@ name: "CodeQL"
 
 on:
   push:
-    branches: ["*"]
+    branches: ["main", "experimental*", "feature*", "*-development"]
+  pull_request:
+    branches: ["main", "experimental*", "feature*", "*-development"]
   schedule:
     - cron: "17 11 * * 2"
 
@@ -22,7 +24,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
+        language: [ "cpp", "csharp", "go", "java", "javascript", "python", "ruby" ]
+        
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
         # Use only 'java' to analyze code written in Java, Kotlin or both
         # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
@@ -60,7 +63,21 @@ jobs:
         uses: github/codeql-action/autobuild@v4
       - name: Autobuild
         if: ${{ matrix.language != 'C' }}
+        
         uses: github/codeql-action/autobuild@v4
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        if: ${{ matrix.language == 'java' }}
+        with:
+          java-version: 21
+          distribution: microsoft
+          cache: maven
+
+      - name: Build Java
+        if: ${{ matrix.language == 'java' }}
+        run: ./mvnw -B -DskipTests -Pcompile-jdk21 clean install --file pom.xml
+        working-directory: java
+        
       # ℹ️ Command-line programs to run using the OS shell.
       # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
 
@@ -75,3 +92,7 @@ jobs:
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{matrix.language}}"
+
+      - name: Trigger Ensure Success Workflow
+        run: |
+          gh workflow run ensure-success.yml

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -29,6 +29,13 @@ public sealed class OpenAIChatCompletionTests : BaseIntegrationTest
     public async Task ItCanUseOpenAiChatForTextGenerationAsync()
     {
         // 
+    public async Task ItCanUseOpenAiChatForTextGenerationAsync()
+    {
+        // Arrange
+    public async Task ItCanUseOpenAiChatForTextGenerationAsync()
+    {
+        // Arrange
+        //
         var kernel = this.CreateAndInitializeKernel();
 
         var func = kernel.CreateFunctionFromPrompt(
@@ -48,6 +55,11 @@ public sealed class OpenAIChatCompletionTests : BaseIntegrationTest
     public async Task OpenAIStreamingTestAsync()
     {
         // 
+        // 
+        // Arrange
+        // Arrange
+        // Arrange
+        //
         var kernel = this.CreateAndInitializeKernel();
 
         var plugins = TestHelpers.ImportSamplePlugins(kernel, "ChatPlugin");
@@ -70,6 +82,11 @@ public sealed class OpenAIChatCompletionTests : BaseIntegrationTest
     public async Task OpenAIHttpRetryPolicyTestAsync()
     {
         // 
+        // 
+        // Arrange
+        // Arrange
+        // Arrange
+        //
         List<HttpStatusCode?> statusCodes = [];
 
         var openAIConfiguration = this._configuration.GetSection("OpenAI").Get<OpenAIConfiguration>();
@@ -114,6 +131,10 @@ public sealed class OpenAIChatCompletionTests : BaseIntegrationTest
     public async Task OpenAIShouldReturnMetadataAsync()
     {
         // 
+        // 
+        // Arrange
+        // Arrange
+        //
         var kernel = this.CreateAndInitializeKernel();
 
         var plugins = TestHelpers.ImportSamplePlugins(kernel, "FunPlugin");
@@ -134,6 +155,16 @@ public sealed class OpenAIChatCompletionTests : BaseIntegrationTest
         Assert.NotEqual(0, promptTokens);
 
         Assert.True(jsonObject.TryGetProperty("OutputTokens", out JsonElement completionTokensJson));
+        Assert.True(jsonObject.TryGetProperty("InputTokenCount", out JsonElement promptTokensJson));
+        Assert.True(promptTokensJson.TryGetInt32(out int promptTokens));
+        Assert.NotEqual(0, promptTokens);
+
+        Assert.True(jsonObject.TryGetProperty("OutputTokenCount", out JsonElement completionTokensJson));
+        Assert.True(jsonObject.TryGetProperty("InputTokenCount", out JsonElement promptTokensJson));
+        Assert.True(promptTokensJson.TryGetInt32(out int promptTokens));
+        Assert.NotEqual(0, promptTokens);
+
+        Assert.True(jsonObject.TryGetProperty("OutputTokenCount", out JsonElement completionTokensJson));
         Assert.True(completionTokensJson.TryGetInt32(out int completionTokens));
         Assert.NotEqual(0, completionTokens);
     }
@@ -144,6 +175,10 @@ public sealed class OpenAIChatCompletionTests : BaseIntegrationTest
     public async Task CompletionWithDifferentLineEndingsAsync(string lineEnding)
     {
         // 
+        // 
+        // Arrange
+        // Arrange
+        //
         var prompt =
             "Given a json input and a request. Apply the request on the json input and return the result. " +
             $"Put the result in between <result></result> tags{lineEnding}" +
@@ -164,6 +199,11 @@ public sealed class OpenAIChatCompletionTests : BaseIntegrationTest
     public async Task ChatSystemPromptIsNotIgnoredAsync()
     {
         // 
+        // 
+        // Arrange
+        // Arrange
+        // Arrange
+        //
         var kernel = this.CreateAndInitializeKernel();
 
         var settings = new OpenAIPromptExecutionSettings { ChatSystemPrompt = "Reply \"I don't know\" to every question." };
@@ -179,6 +219,11 @@ public sealed class OpenAIChatCompletionTests : BaseIntegrationTest
     public async Task SemanticKernelVersionHeaderIsSentAsync()
     {
         // 
+        // 
+        // Arrange
+        // Arrange
+        // Arrange
+        //
         using var defaultHandler = new HttpClientHandler();
         using var httpHeaderHandler = new HttpHeaderHandler(defaultHandler);
         using var httpClient = new HttpClient(httpHeaderHandler);
@@ -202,6 +247,10 @@ public sealed class OpenAIChatCompletionTests : BaseIntegrationTest
     public async Task LogProbsDataIsReturnedWhenRequestedAsync(bool? logprobs, int? topLogprobs)
     {
         // 
+        // 
+        // Arrange
+        // Arrange
+        //
         var settings = new OpenAIPromptExecutionSettings { Logprobs = logprobs, TopLogprobs = topLogprobs };
 
         var kernel = this.CreateAndInitializeKernel();
@@ -210,6 +259,10 @@ public sealed class OpenAIChatCompletionTests : BaseIntegrationTest
         var result = await kernel.InvokePromptAsync("Hi, can you help me today?", new(settings));
 
         var logProbabilityInfo = result.Metadata?["ContentTokenLogProbabilities"] as IReadOnlyList<ChatTokenLogProbabilityInfo>;
+        var logProbabilityInfo = result.Metadata?["ContentTokenLogProbabilities"] as IReadOnlyList<ChatTokenLogProbabilityInfo>;
+        var logProbabilityInfo = result.Metadata?["ContentTokenLogProbabilities"] as IReadOnlyList<ChatTokenLogProbabilityDetails>;
+        var logProbabilityInfo = result.Metadata?["ContentTokenLogProbabilities"] as IReadOnlyList<ChatTokenLogProbabilityDetails>;
+        var logProbabilityInfo = result.Metadata?["ContentTokenLogProbabilities"] as IReadOnlyList<ChatTokenLogProbabilityDetails>;
 
         // Assert
         Assert.NotNull(logProbabilityInfo);

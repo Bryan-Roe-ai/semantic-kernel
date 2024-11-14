@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -20,6 +22,7 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
 {
     private readonly string _modelId;
     private readonly string _modelPath;
+    private readonly JsonSerializerOptions? _jsonSerializerOptions;
     private Model? _model;
     private Tokenizer? _tokenizer;
 
@@ -31,17 +34,19 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
     /// <param name="modelId">The name of the model.</param>
     /// <param name="modelPath">The generative AI ONNX model path for the chat completion service.</param>
     /// <param name="loggerFactory">Optional logger factory to be used for logging.</param>
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for various aspects of serialization and deserialization required by the service.</param>
     public OnnxRuntimeGenAIChatCompletionService(
         string modelId,
         string modelPath,
-        ILoggerFactory? loggerFactory = null)
+        ILoggerFactory? loggerFactory = null,
+        JsonSerializerOptions? jsonSerializerOptions = null)
     {
         Verify.NotNullOrWhiteSpace(modelId);
         Verify.NotNullOrWhiteSpace(modelPath);
 
         this._modelId = modelId;
         this._modelPath = modelPath;
-
+        this._jsonSerializerOptions = jsonSerializerOptions;
         this.AttributesInternal.Add(AIServiceExtensions.ModelIdKey, this._modelId);
     }
 
@@ -82,7 +87,7 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
 
     private async IAsyncEnumerable<string> RunInferenceAsync(ChatHistory chatHistory, PromptExecutionSettings? executionSettings, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        OnnxRuntimeGenAIPromptExecutionSettings onnxPromptExecutionSettings = OnnxRuntimeGenAIPromptExecutionSettings.FromExecutionSettings(executionSettings);
+        OnnxRuntimeGenAIPromptExecutionSettings onnxPromptExecutionSettings = this.GetOnnxPromptExecutionSettingsSettings(executionSettings);
 
         var prompt = this.GetPrompt(chatHistory, onnxPromptExecutionSettings);
         var tokens = this.GetTokenizer().Encode(prompt);
@@ -93,6 +98,65 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
 
         using var generator = new Generator(this.GetModel(), generatorParams);
 
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+        bool removeNextTokenStartingWithSpace = true;
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+        bool removeNextTokenStartingWithSpace = true;
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+        bool removeNextTokenStartingWithSpace = true;
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+        bool removeNextTokenStartingWithSpace = true;
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
         while (!generator.IsDone())
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -104,7 +168,88 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
 
                 var outputTokens = generator.GetSequence(0);
                 var newToken = outputTokens.Slice(outputTokens.Length - 1, 1);
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 var output = this.GetTokenizer().Decode(newToken);
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+                var output = this.GetTokenizer().Decode(newToken);
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+                var output = this.GetTokenizer().Decode(newToken);
+=======
+>>>>>>> Stashed changes
+=======
+                var output = this.GetTokenizer().Decode(newToken);
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+                string output = this.GetTokenizer().Decode(newToken);
+
+                if (removeNextTokenStartingWithSpace && output[0] == ' ')
+                {
+                    removeNextTokenStartingWithSpace = false;
+                    output = output.TrimStart();
+                }
+
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
                 return output;
             }, cancellationToken).ConfigureAwait(false);
         }
@@ -180,6 +325,18 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
         {
             generatorParams.SetSearchOption("diversity_penalty", onnxRuntimeGenAIPromptExecutionSettings.DiversityPenalty.Value);
         }
+    }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "JSOs are required only in cases where the supplied settings are not Onnx-specific. For these cases, JSOs can be provided via the class constructor.")]
+    [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "JSOs are required only in cases where the supplied settings are not Onnx-specific. For these cases, JSOs can be provided via class constructor.")]
+    private OnnxRuntimeGenAIPromptExecutionSettings GetOnnxPromptExecutionSettingsSettings(PromptExecutionSettings? executionSettings)
+    {
+        if (this._jsonSerializerOptions is not null)
+        {
+            return OnnxRuntimeGenAIPromptExecutionSettings.FromExecutionSettings(executionSettings, this._jsonSerializerOptions);
+        }
+
+        return OnnxRuntimeGenAIPromptExecutionSettings.FromExecutionSettings(executionSettings);
     }
 
     /// <inheritdoc/>

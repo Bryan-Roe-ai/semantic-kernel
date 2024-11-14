@@ -25,6 +25,10 @@ public partial class ClientCoreTests
         // Act
         var logger = new Mock<ILogger<ClientCoreTests>>().Object;
         var openAIClient = new OpenAIClient("key");
+        var openAIClient = new OpenAIClient("key");
+        var openAIClient = new OpenAIClient(new ApiKeyCredential("key"));
+        var openAIClient = new OpenAIClient(new ApiKeyCredential("key"));
+        var openAIClient = new OpenAIClient(new ApiKeyCredential("key"));
 
         var clientCoreModelConstructor = new ClientCore("model1", "apiKey");
         var clientCoreOpenAIClientConstructor = new ClientCore("model1", openAIClient, logger: logger);
@@ -135,11 +139,11 @@ public partial class ClientCoreTests
     }
 
     [Fact]
-<<<    public async Task ItDoNotAddSemanticKernelHeadersWhenOpenAIClientIsProvidedAsync()
->>>>>>>+HEAD
-====
+    public async Task ItDoNotAddSemanticKernelHeadersWhenOpenAIClientIsProvidedAsync()
     public async Task ItDoesNotAddSemanticKernelHeadersWhenOpenAIClientIsProvidedAsync()
->>>>>>> main
+    public async Task ItDoNotAddSemanticKernelHeadersWhenOpenAIClientIsProvidedAsync()
+    public async Task ItDoNotAddSemanticKernelHeadersWhenOpenAIClientIsProvidedAsync()
+    public async Task ItDoNotAddSemanticKernelHeadersWhenOpenAIClientIsProvidedAsync()
     {
         using HttpMessageHandlerStub handler = new();
         using HttpClient client = new(handler);
@@ -150,6 +154,10 @@ public partial class ClientCoreTests
             modelId: "model",
             openAIClient: new OpenAIClient(
                 "test",
+                "test",
+                new ApiKeyCredential("test"),
+                new ApiKeyCredential("test"),
+                new ApiKeyCredential("test"),
                 new OpenAIClientOptions()
                 {
                     Transport = new HttpClientPipelineTransport(client),
@@ -175,6 +183,10 @@ public partial class ClientCoreTests
     [InlineData("value")]
     public void ItAddAttributesButDoesNothingIfNullOrEmpty(string? value)
     public void ItAddsAttributesButDoesNothingIfNullOrEmpty(string? value)
+    public void ItAddsAttributesButDoesNothingIfNullOrEmpty(string? value)
+    public void ItAddsAttributesButDoesNothingIfNullOrEmpty(string? value)
+    public void ItAddsAttributesButDoesNothingIfNullOrEmpty(string? value)
+    public void ItAddsAttributesButDoesNothingIfNullOrEmpty(string? value)
     {
         // Arrange
         var clientCore = new ClientCore("model", "apikey");
@@ -197,6 +209,10 @@ public partial class ClientCoreTests
     [Fact]
     public void ItAddModelIdAttributeAsExpected()
     public void ItAddsModelIdAttributeAsExpected()
+    public void ItAddsModelIdAttributeAsExpected()
+    public void ItAddsModelIdAttributeAsExpected()
+    public void ItAddsModelIdAttributeAsExpected()
+    public void ItAddsModelIdAttributeAsExpected()
     {
         // Arrange
         var expectedModelId = "modelId";
@@ -204,6 +220,11 @@ public partial class ClientCoreTests
         // Act
         var clientCore = new ClientCore(expectedModelId, "apikey");
         var clientCoreBreakingGlass = new ClientCore(expectedModelId, new OpenAIClient(" "));
+        var clientCoreBreakingGlass = new ClientCore(expectedModelId, new OpenAIClient(" "));
+        var clientCoreBreakingGlass = new ClientCore(expectedModelId, new OpenAIClient(new ApiKeyCredential(" ")));
+        var clientCoreBreakingGlass = new ClientCore(expectedModelId, new OpenAIClient(new ApiKeyCredential(" ")));
+        var clientCoreBreakingGlass = new ClientCore(expectedModelId, new OpenAIClient(new ApiKeyCredential(" ")));
+        var clientCoreBreakingGlass = new ClientCore(expectedModelId, new OpenAIClient(new ApiKeyCredential(" ")));
 
         // Assert
         Assert.True(clientCore.Attributes.ContainsKey(AIServiceExtensions.ModelIdKey));

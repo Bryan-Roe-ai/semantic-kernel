@@ -1,7 +1,9 @@
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -92,4 +94,7 @@ internal sealed class AggregatorChannel(AgentChat chat) : AgentChannel<Aggregato
     /// <inheritdoc/>
     protected internal override Task ResetAsync(CancellationToken cancellationToken = default) =>
         this._chat.ResetAsync(cancellationToken);
+
+    protected internal override string Serialize() =>
+        JsonSerializer.Serialize(this._chat.Serialize());
 }

@@ -26,8 +26,19 @@
         "aeiou",
         "azuredocindex",
         "azuredocs",
+        "boto",
         "contentvector",
         "dotenv",
+<<<<<<< main
+=======
+        "endregion",
+        "genai",
+        "generativeai",
+        "hnsw",
+        "httpx",
+        "huggingface",
+        "kernelfunction",
+>>>>>>> upstream/main
         "logit",
         "logprobs",
         "mongocluster",
@@ -42,6 +53,7 @@
         "skprompt",
         "templating",
         "vectordb",
+<<<<<<< main
         "generativeai",
         "genai",
         "protos",
@@ -57,7 +69,96 @@
         "contoso",
         "opentelemetry",
         "SEMANTICKERNEL",
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "OTEL",
         "mistralai"
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+        "OTEL",
+        "mistralai"
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+        "OTEL",
+        "mistralai"
+=======
+>>>>>>> Stashed changes
+=======
+        "OTEL",
+        "mistralai"
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< main
+        "OTEL",
+        "mistralai"
+        "vectorizable"
+=======
+        "OTEL"
+>>>>>>> ms/features/bugbash-prep
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
+=======
+        "vectorizer",
+        "vectorstoremodel",
+        "vertexai",
+        "Weaviate"
+>>>>>>> upstream/main
     ]
 }

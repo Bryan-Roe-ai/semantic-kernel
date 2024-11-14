@@ -1,4 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+using System.Runtime.CompilerServices;
+=======
+
+using Microsoft.Extensions.VectorData;
+using Microsoft.SemanticKernel.Connectors.InMemory;
+>>>>>>> main
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
@@ -6,24 +13,36 @@ using Microsoft.SemanticKernel.Embeddings;
 namespace Search;
 
 /// <summary>
-/// This example shows how to create and use a <see cref="VectorStoreTextSearch{TRecord}"/>.
+/// This example shows how to create and use a <see cref="VectorStoreTextSearch{TRecord}"/> instance.
 /// </summary>
 public class VectorStore_TextSearch(ITestOutputHelper output) : BaseTest(output)
 {
     /// <summary>
     /// Show how to create a <see cref="VectorStoreTextSearch{TRecord}"/> and use it to perform a text search
+<<<<<<< HEAD
     /// on top of the <see cref="VolatileVectorStore"/>.
     /// </summary>
     [Fact]
     public async Task UsingVolatileVectorStoreRecordTextSearchAsync()
+=======
+    /// on top of the <see cref="InMemoryVectorStore"/>.
+    /// </summary>
+    [Fact]
+    public async Task UsingInMemoryVectorStoreRecordTextSearchAsync()
+>>>>>>> main
     {
         // Create an embedding generation service.
         var textEmbeddingGeneration = new OpenAITextEmbeddingGenerationService(
                 modelId: TestConfiguration.OpenAI.EmbeddingModelId,
                 apiKey: TestConfiguration.OpenAI.ApiKey);
 
+<<<<<<< HEAD
         // Construct a volatile vector store.
         var vectorStore = new VolatileVectorStore();
+=======
+        // Construct an InMemory vector store.
+        var vectorStore = new InMemoryVectorStore();
+>>>>>>> main
         var collectionName = "records";
 
         // Delegate which will create a record.
@@ -47,15 +66,34 @@ public class VectorStore_TextSearch(ITestOutputHelper output) : BaseTest(output)
         var vectorizedSearch = await CreateCollectionFromListAsync<Guid, DataModel>(
             vectorStore, collectionName, lines, textEmbeddingGeneration, CreateRecord);
 
+<<<<<<< HEAD
         // Create a text search instance using the volatile vector store.
         var stringMapper = new DataModelTextSearchStringMapper();
         var resultMapper = new DataModelTextSearchResultMapper();
         var textSearch = new VectorStoreTextSearch<DataModel>(vectorizedSearch, textEmbeddingGeneration, stringMapper, resultMapper);
+        await ExecuteSearchesAsync(textSearch);
 
+        // Create a text search instance using a vectorized search wrapper around the volatile vector store.
+        IVectorizableTextSearch<DataModel> vectorizableTextSearch = new VectorizedSearchWrapper<DataModel>(vectorizedSearch, textEmbeddingGeneration);
+        textSearch = new VectorStoreTextSearch<DataModel>(vectorizableTextSearch, stringMapper, resultMapper);
+=======
+        // Create a text search instance using the InMemory vector store.
+        var textSearch = new VectorStoreTextSearch<DataModel>(vectorizedSearch, textEmbeddingGeneration);
+        await ExecuteSearchesAsync(textSearch);
+
+        // Create a text search instance using a vectorized search wrapper around the InMemory vector store.
+        IVectorizableTextSearch<DataModel> vectorizableTextSearch = new VectorizedSearchWrapper<DataModel>(vectorizedSearch, textEmbeddingGeneration);
+        textSearch = new VectorStoreTextSearch<DataModel>(vectorizableTextSearch);
+>>>>>>> main
+        await ExecuteSearchesAsync(textSearch);
+    }
+
+    private async Task ExecuteSearchesAsync(VectorStoreTextSearch<DataModel> textSearch)
+    {
         var query = "What is the Semantic Kernel?";
 
         // Search and return results as a string items
-        KernelSearchResults<string> stringResults = await textSearch.SearchAsync(query, new() { Count = 2, Offset = 0 });
+        KernelSearchResults<string> stringResults = await textSearch.SearchAsync(query, new() { Top = 2, Skip = 0 });
         Console.WriteLine("--- String Results ---\n");
         await foreach (string result in stringResults.Results)
         {
@@ -64,7 +102,7 @@ public class VectorStore_TextSearch(ITestOutputHelper output) : BaseTest(output)
         }
 
         // Search and return results as TextSearchResult items
-        KernelSearchResults<TextSearchResult> textResults = await textSearch.GetTextSearchResultsAsync(query, new() { Count = 2, Offset = 0 });
+        KernelSearchResults<TextSearchResult> textResults = await textSearch.GetTextSearchResultsAsync(query, new() { Top = 2, Skip = 0 });
         Console.WriteLine("\n--- Text Search Results ---\n");
         await foreach (TextSearchResult result in textResults.Results)
         {
@@ -75,7 +113,7 @@ public class VectorStore_TextSearch(ITestOutputHelper output) : BaseTest(output)
         }
 
         // Search and returns results as DataModel items
-        KernelSearchResults<object> fullResults = await textSearch.GetSearchResultsAsync(query, new() { Count = 2, Offset = 0 });
+        KernelSearchResults<object> fullResults = await textSearch.GetSearchResultsAsync(query, new() { Top = 2, Skip = 0 });
         Console.WriteLine("\n--- DataModel Results ---\n");
         await foreach (DataModel result in fullResults.Results)
         {
@@ -87,6 +125,7 @@ public class VectorStore_TextSearch(ITestOutputHelper output) : BaseTest(output)
     }
 
     /// <summary>
+<<<<<<< HEAD
     /// String mapper which converts a DataModel to a string.
     /// </summary>
     private sealed class DataModelTextSearchStringMapper : ITextSearchStringMapper
@@ -119,15 +158,21 @@ public class VectorStore_TextSearch(ITestOutputHelper output) : BaseTest(output)
     }
 
     /// <summary>
+=======
+>>>>>>> main
     /// Delegate to create a record.
     /// </summary>
     /// <typeparam name="TKey">Type of the record key.</typeparam>
     /// <typeparam name="TRecord">Type of the record.</typeparam>
-    internal delegate TRecord CreateRecord<TKey, TRecord>(string text, ReadOnlyMemory<float> vector) where TKey : notnull where TRecord : class;
+    internal delegate TRecord CreateRecord<TKey, TRecord>(string text, ReadOnlyMemory<float> vector) where TKey : notnull;
 
     /// <summary>
     /// Create a <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> from a list of strings by:
+<<<<<<< HEAD
     /// 1. Creating an instance of <see cref="VolatileVectorStoreRecordCollection{TKey, TRecord}"/>
+=======
+    /// 1. Creating an instance of <see cref="InMemoryVectorStoreRecordCollection{TKey, TRecord}"/>
+>>>>>>> main
     /// 2. Generating embeddings for each string.
     /// 3. Creating a record with a valid key for each string and it's embedding.
     /// 4. Insert the records into the collection.
@@ -144,7 +189,6 @@ public class VectorStore_TextSearch(ITestOutputHelper output) : BaseTest(output)
         ITextEmbeddingGenerationService embeddingGenerationService,
         CreateRecord<TKey, TRecord> createRecord)
         where TKey : notnull
-        where TRecord : class
     {
         // Get and create collection if it doesn't exist.
         var collection = vectorStore.GetCollection<TKey, TRecord>(collectionName);
@@ -162,6 +206,31 @@ public class VectorStore_TextSearch(ITestOutputHelper output) : BaseTest(output)
     }
 
     /// <summary>
+    /// Decorator for a <see cref="IVectorizedSearch{TRecord}"/> that generates embeddings for text search queries.
+    /// </summary>
+    private sealed class VectorizedSearchWrapper<TRecord>(IVectorizedSearch<TRecord> vectorizedSearch, ITextEmbeddingGenerationService textEmbeddingGeneration) : IVectorizableTextSearch<TRecord>
+    {
+        /// <inheritdoc/>
+<<<<<<< HEAD
+        public async IAsyncEnumerable<VectorSearchResult<TRecord>> VectorizableTextSearchAsync(string searchText, VectorSearchOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var vectorizedQuery = await textEmbeddingGeneration!.GenerateEmbeddingAsync(searchText, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            await foreach (var result in vectorizedSearch.VectorizedSearchAsync(vectorizedQuery, options, cancellationToken))
+            {
+                yield return result;
+            }
+=======
+        public async Task<VectorSearchResults<TRecord>> VectorizableTextSearchAsync(string searchText, VectorSearchOptions? options = null, CancellationToken cancellationToken = default)
+        {
+            var vectorizedQuery = await textEmbeddingGeneration!.GenerateEmbeddingAsync(searchText, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            return await vectorizedSearch.VectorizedSearchAsync(vectorizedQuery, options, cancellationToken);
+>>>>>>> main
+        }
+    }
+
+    /// <summary>
     /// Sample model class that represents a record entry.
     /// </summary>
     /// <remarks>
@@ -171,9 +240,17 @@ public class VectorStore_TextSearch(ITestOutputHelper output) : BaseTest(output)
     private sealed class DataModel
     {
         [VectorStoreRecordKey]
+<<<<<<< HEAD
         public Guid Key { get; init; }
 
         [VectorStoreRecordData]
+=======
+        [TextSearchResultName]
+        public Guid Key { get; init; }
+
+        [VectorStoreRecordData]
+        [TextSearchResultValue]
+>>>>>>> main
         public string Text { get; init; }
 
         [VectorStoreRecordVector(1536)]

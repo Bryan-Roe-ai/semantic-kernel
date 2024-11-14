@@ -61,7 +61,98 @@ class AgentChannel(ABC):
             agent: The agent to interact with.
 
         Returns:
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             A async iterable of a bool, ChatMessageContent.
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+            A async iterable of a bool, ChatMessageContent.
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+            A async iterable of a bool, ChatMessageContent.
+=======
+>>>>>>> Stashed changes
+=======
+            A async iterable of a bool, ChatMessageContent.
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+            An async iterable of a bool, ChatMessageContent.
+        """
+        ...
+
+    @abstractmethod
+    def invoke_stream(
+        self,
+        agent: "Agent",
+        history: "list[ChatMessageContent]",
+    ) -> AsyncIterable["ChatMessageContent"]:
+        """Perform a discrete incremental stream interaction between a single Agent and AgentChat.
+
+        Args:
+            agent: The agent to interact with.
+            history: The history of messages in the conversation.
+
+        Returns:
+            An async iterable ChatMessageContent.
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
         """
         ...
 

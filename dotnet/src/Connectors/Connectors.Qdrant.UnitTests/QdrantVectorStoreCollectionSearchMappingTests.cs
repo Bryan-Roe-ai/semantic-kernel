@@ -3,7 +3,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+<<<<<<< HEAD
 using Microsoft.SemanticKernel.Data;
+=======
+using Microsoft.Extensions.VectorData;
+>>>>>>> main
 using Moq;
 using Qdrant.Client.Grpc;
 using Xunit;

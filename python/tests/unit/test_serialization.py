@@ -22,6 +22,38 @@ from semantic_kernel.functions.kernel_function import KernelFunction
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
 from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
 from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
+)
+from semantic_kernel.core_plugins.http_plugin import HttpPlugin
+from semantic_kernel.core_plugins.math_plugin import MathPlugin
+from semantic_kernel.core_plugins.text_memory_plugin import TextMemoryPlugin
+from semantic_kernel.core_plugins.text_plugin import TextPlugin
+from semantic_kernel.core_plugins.time_plugin import TimePlugin
+from semantic_kernel.core_plugins.wait_plugin import WaitPlugin
+from semantic_kernel.core_plugins.web_search_engine_plugin import WebSearchEnginePlugin
+from semantic_kernel.functions.kernel_arguments import KernelArguments
+from semantic_kernel.functions.kernel_function import KernelFunction
+from semantic_kernel.functions.kernel_function_decorator import kernel_function
+from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
+from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
+from semantic_kernel.functions.kernel_plugin_collection import (
+    KernelPluginCollection,
+)
+)
+from semantic_kernel.core_plugins.http_plugin import HttpPlugin
+from semantic_kernel.core_plugins.math_plugin import MathPlugin
+from semantic_kernel.core_plugins.text_memory_plugin import TextMemoryPlugin
+from semantic_kernel.core_plugins.text_plugin import TextPlugin
+from semantic_kernel.core_plugins.time_plugin import TimePlugin
+from semantic_kernel.core_plugins.wait_plugin import WaitPlugin
+from semantic_kernel.core_plugins.web_search_engine_plugin import WebSearchEnginePlugin
+from semantic_kernel.functions.kernel_arguments import KernelArguments
+from semantic_kernel.functions.kernel_function import KernelFunction
+from semantic_kernel.functions.kernel_function_decorator import kernel_function
+from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
+from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
+from semantic_kernel.functions.kernel_plugin_collection import (
+    KernelPluginCollection,
+)
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.memory.null_memory import NullMemory
 from semantic_kernel.memory.semantic_text_memory_base import SemanticTextMemoryBase
@@ -33,6 +65,8 @@ from semantic_kernel.template_engine.blocks.named_arg_block import NamedArgBlock
 from semantic_kernel.template_engine.blocks.text_block import TextBlock
 from semantic_kernel.template_engine.blocks.val_block import ValBlock
 from semantic_kernel.template_engine.blocks.var_block import VarBlock
+
+# from semantic_kernel.template_engine.prompt_template_engine import PromptTemplateEngine
 
 KernelBaseModelFieldT = t.TypeVar("KernelBaseModelFieldT", bound=KernelBaseModel)
 
@@ -61,10 +95,21 @@ def kernel_factory() -> t.Callable[[t.Type[_Serializable]], _Serializable]:
         def my_function(arguments: KernelArguments) -> str:
             return f"F({arguments['input']})"
 
+        @kernel_function(name="function")
+        def my_function(arguments: KernelArguments) -> str:
+            return f"F({arguments['input']})"
+
         return KernelFunction.from_method(
             plugin_name="plugin",
             method=my_function,
         )
+
+    def create_chat_history() -> ChatHistory:
+        return ChatHistory()
+        return KernelFunction.from_native_method(my_function, "plugin")
+
+    def create_chat_history() -> ChatHistory:
+        return ChatHistory()
 
     def create_chat_history() -> ChatHistory:
         return ChatHistory()
@@ -105,6 +150,23 @@ def kernel_factory() -> t.Callable[[t.Type[_Serializable]], _Serializable]:
             is_asynchronous=False,
         ),
         ChatHistory: create_chat_history(),
+        ),
+        ChatHistory: create_chat_history(),
+        ),
+        ChatHistory: create_chat_history(),
+            type="string",
+            required=True,
+        ),
+        KernelFunctionMetadata: KernelFunctionMetadata(
+            name="foo",
+            plugin_name="bar",
+            description="baz",
+            parameters=[KernelParameterMetadata(name="qux", description="bar", default_value="baz")],
+            is_prompt=True,
+            is_asynchronous=False,
+        ),
+        ChatHistory: create_chat_history(),
+        KernelPluginCollection: create_plugin_collection(),
         NullMemory: NullMemory(),
         KernelFunction: create_kernel_function(),
     }
@@ -120,6 +182,9 @@ PROTOCOLS = [
     pytest.param(
         ConversationSummaryPlugin, marks=pytest.mark.xfail(reason="Contains data")
     ),
+    pytest.param(
+        ConversationSummaryPlugin, marks=pytest.mark.xfail(reason="Contains data")
+    ),
     HttpPlugin,
     MathPlugin,
     TextMemoryPlugin,
@@ -129,6 +194,25 @@ PROTOCOLS = [
     pytest.param(
         WebSearchEnginePlugin, marks=pytest.mark.xfail(reason="Contains data")
     ),
+    ),
+    pytest.param(ConversationSummaryPlugin, marks=pytest.mark.xfail(reason="Contains data")),
+    pytest.param(
+        ConversationSummaryPlugin, marks=pytest.mark.xfail(reason="Contains data")
+    ),
+    pytest.param(ConversationSummaryPlugin, marks=pytest.mark.xfail(reason="Contains data")),
+    HttpPlugin,
+    MathPlugin,
+    TextMemoryPlugin,
+    TextPlugin,
+    TimePlugin,
+    WaitPlugin,
+    pytest.param(
+        WebSearchEnginePlugin, marks=pytest.mark.xfail(reason="Contains data")
+    ),
+    pytest.param(
+        WebSearchEnginePlugin, marks=pytest.mark.xfail(reason="Contains data")
+    ),
+    pytest.param(WebSearchEnginePlugin, marks=pytest.mark.xfail(reason="Contains data")),
 ]
 
 BASE_CLASSES = [
@@ -136,6 +220,7 @@ BASE_CLASSES = [
 ]
 
 STATELESS_CLASSES = [
+    # PromptTemplateEngine,
     NullMemory,
 ]
 
@@ -153,6 +238,7 @@ PYDANTIC_MODELS = [
     NamedArgBlock,
     KernelParameterMetadata,
     KernelFunctionMetadata,
+    KernelPluginCollection,
     ChatHistory,
     pytest.param(
         KernelFunction,

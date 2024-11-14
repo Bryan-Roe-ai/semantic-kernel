@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Diagnostics;
 using System.Text.Json;
@@ -85,6 +85,21 @@ public class FunctionResult_StronglyTyped(ITestOutputHelper output) : BaseTest(o
                 completionTokens: usage?.OutputTokens ?? 0,
                 promptTokens: usage?.InputTokens ?? 0,
                 totalTokens: usage?.TotalTokens ?? 0);
+                completionTokens: usage?.OutputTokens ?? 0,
+                promptTokens: usage?.InputTokens ?? 0,
+                totalTokens: usage?.TotalTokens ?? 0);
+                completionTokens: usage?.OutputTokenCount ?? 0,
+                promptTokens: usage?.InputTokenCount ?? 0,
+                totalTokens: usage?.TotalTokenCount ?? 0);
+                completionTokens: usage?.OutputTokenCount ?? 0,
+                promptTokens: usage?.InputTokenCount ?? 0,
+                totalTokens: usage?.TotalTokenCount ?? 0);
+                completionTokens: usage?.OutputTokenCount ?? 0,
+                promptTokens: usage?.InputTokenCount ?? 0,
+                totalTokens: usage?.TotalTokenCount ?? 0);
+                completionTokens: usage?.OutputTokenCount ?? 0,
+                promptTokens: usage?.InputTokenCount ?? 0,
+                totalTokens: usage?.TotalTokenCount ?? 0);
         }
 
         private static readonly JsonSerializerOptions s_jsonSerializerOptions = new()

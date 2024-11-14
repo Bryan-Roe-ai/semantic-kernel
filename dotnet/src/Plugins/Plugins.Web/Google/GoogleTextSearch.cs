@@ -9,6 +9,10 @@ using Google.Apis.CustomSearchAPI.v1;
 using Google.Apis.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+<<<<<<< HEAD
+=======
+using Microsoft.Extensions.VectorData;
+>>>>>>> main
 using Microsoft.SemanticKernel.Data;
 
 namespace Microsoft.SemanticKernel.Plugins.Web.Google;
@@ -135,8 +139,8 @@ public sealed class GoogleTextSearch : ITextSearch, IDisposable
     /// <exception cref="NotSupportedException"></exception>
     private async Task<global::Google.Apis.CustomSearchAPI.v1.Data.Search> ExecuteSearchAsync(string query, TextSearchOptions searchOptions, CancellationToken cancellationToken)
     {
-        var count = searchOptions.Count;
-        var offset = searchOptions.Offset;
+        var count = searchOptions.Top;
+        var offset = searchOptions.Skip;
 
         if (count is <= 0 or > MaxCount)
         {
@@ -291,7 +295,11 @@ public sealed class GoogleTextSearch : ITextSearch, IDisposable
                 throw new ArgumentException("Result must be a Google Result", nameof(result));
             }
 
+<<<<<<< HEAD
             return new TextSearchResult(googleResult.Title, googleResult.Snippet, googleResult.Link);
+=======
+            return new TextSearchResult(googleResult.Snippet) { Name = googleResult.Title, Link = googleResult.Link };
+>>>>>>> main
         }
     }
     #endregion

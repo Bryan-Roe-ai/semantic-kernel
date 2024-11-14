@@ -2,7 +2,11 @@
 
 using System;
 using System.Collections.Generic;
+<<<<<<< HEAD
 using Microsoft.SemanticKernel.Data;
+=======
+using Microsoft.Extensions.VectorData;
+>>>>>>> main
 using MongoDB.Bson;
 
 namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
@@ -21,7 +25,7 @@ internal static class AzureCosmosDBMongoDBVectorStoreCollectionCreateMapping
     /// <param name="numLists">Number of clusters that the inverted file (IVF) index uses to group the vector data.</param>
     /// <param name="efConstruction">The size of the dynamic candidate list for constructing the graph.</param>
     public static BsonArray GetVectorIndexes(
-        List<VectorStoreRecordVectorProperty> vectorProperties,
+        IReadOnlyList<VectorStoreRecordVectorProperty> vectorProperties,
         Dictionary<string, string> storagePropertyNames,
         HashSet<string?> uniqueIndexes,
         int numLists,
@@ -72,7 +76,7 @@ internal static class AzureCosmosDBMongoDBVectorStoreCollectionCreateMapping
     /// <param name="storagePropertyNames">A dictionary that maps from a property name to the storage name.</param>
     /// <param name="uniqueIndexes">Collection of unique existing indexes to avoid creating duplicates.</param>
     public static BsonArray GetFilterableDataIndexes(
-        List<VectorStoreRecordDataProperty> dataProperties,
+        IReadOnlyList<VectorStoreRecordDataProperty> dataProperties,
         Dictionary<string, string> storagePropertyNames,
         HashSet<string?> uniqueIndexes)
     {
@@ -112,7 +116,13 @@ internal static class AzureCosmosDBMongoDBVectorStoreCollectionCreateMapping
     /// </summary>
     private static string GetIndexKind(string? indexKind, string vectorPropertyName)
     {
+<<<<<<< HEAD
         return indexKind switch
+=======
+        var vectorPropertyIndexKind = AzureCosmosDBMongoDBVectorStoreCollectionSearchMapping.GetVectorPropertyIndexKind(indexKind);
+
+        return vectorPropertyIndexKind switch
+>>>>>>> main
         {
             IndexKind.Hnsw => "vector-hnsw",
             IndexKind.IvfFlat => "vector-ivf",
@@ -125,7 +135,13 @@ internal static class AzureCosmosDBMongoDBVectorStoreCollectionCreateMapping
     /// </summary>
     private static string GetDistanceFunction(string? distanceFunction, string vectorPropertyName)
     {
+<<<<<<< HEAD
         return distanceFunction switch
+=======
+        var vectorPropertyDistanceFunction = AzureCosmosDBMongoDBVectorStoreCollectionSearchMapping.GetVectorPropertyDistanceFunction(distanceFunction);
+
+        return vectorPropertyDistanceFunction switch
+>>>>>>> main
         {
             DistanceFunction.CosineDistance => "COS",
             DistanceFunction.DotProductSimilarity => "IP",

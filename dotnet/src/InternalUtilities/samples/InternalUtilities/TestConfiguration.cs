@@ -44,6 +44,7 @@ public sealed class TestConfiguration
     public static ChatGPTRetrievalPluginConfig ChatGPTRetrievalPlugin => LoadSection<ChatGPTRetrievalPluginConfig>();
     public static MsGraphConfiguration MSGraph => LoadSection<MsGraphConfiguration>();
     public static MistralAIConfig MistralAI => LoadSection<MistralAIConfig>();
+    public static AnthropicAIConfig AnthropicAI => LoadSection<AnthropicAIConfig>();
     public static GoogleAIConfig GoogleAI => LoadSection<GoogleAIConfig>();
     public static VertexAIConfig VertexAI => LoadSection<VertexAIConfig>();
     public static AzureCosmosDbMongoDbConfig AzureCosmosDbMongoDb => LoadSection<AzureCosmosDbMongoDbConfig>();
@@ -155,7 +156,72 @@ public sealed class TestConfiguration
 
     public class BingConfig
     {
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
         public string Endpoint { get; set; } = "https://api.bing.microsoft.com/v7.0/search";
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+        public string Endpoint { get; set; } = "https://api.bing.microsoft.com/v7.0/search";
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+        public string Endpoint { get; set; } = "https://api.bing.microsoft.com/v7.0/search";
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+        public string Endpoint { get; set; } = "https://api.bing.microsoft.com/v7.0/search";
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+        public string Endpoint { get; set; } = "https://api.bing.microsoft.com/v7.0/search";
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
         public string ApiKey { get; set; }
     }
 
@@ -212,6 +278,12 @@ public sealed class TestConfiguration
         public string ApiKey { get; set; }
         public string ChatModelId { get; set; }
         public string EmbeddingModelId { get; set; }
+    }
+
+    public class AnthropicAIConfig
+    {
+        public string ApiKey { get; set; }
+        public string ModelId { get; set; }
     }
 
     public class GoogleAIConfig

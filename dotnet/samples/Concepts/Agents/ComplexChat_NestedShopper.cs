@@ -1,8 +1,4 @@
-<<<<<<< main
 // Copyright (c) Microsoft. All rights reserved.
-=======
-﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> upstream/main
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Chat;
@@ -11,6 +7,12 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 using OpenAI.Chat;
 using Resources;
 
+using OpenAI.Chat;
+using Resources;
+
+using Resources;
+
+using ChatResponseFormat = OpenAI.Chat.ChatResponseFormat;
 namespace Agents;
 
 /// <summary>
@@ -99,9 +101,15 @@ public class ComplexChat_NestedShopper(ITestOutputHelper output) : BaseAgentsTes
     public async Task NestedChatWithAggregatorAgentAsync()
     {
         Console.WriteLine($"! {Model}");
-
         OpenAIPromptExecutionSettings jsonSettings = new() { ResponseFormat = ChatResponseFormat.JsonObject };
         OpenAIPromptExecutionSettings autoInvokeSettings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() };
+        OpenAIPromptExecutionSettings autoInvokeSettings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() };
+        OpenAIPromptExecutionSettings jsonSettings = new() { ResponseFormat = ChatResponseFormat.CreateJsonObjectFormat() };
+        OpenAIPromptExecutionSettings autoInvokeSettings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() };
+        OpenAIPromptExecutionSettings autoInvokeSettings = new() { ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions };
+        OpenAIPromptExecutionSettings jsonSettings = new() { ResponseFormat = ChatResponseFormat.CreateJsonObjectFormat() };
+        OpenAIPromptExecutionSettings autoInvokeSettings = new() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() };
+        OpenAIPromptExecutionSettings autoInvokeSettings = new() { ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions };
 
         ChatCompletionAgent internalLeaderAgent = CreateAgent(InternalLeaderName, InternalLeaderInstructions);
         ChatCompletionAgent internalGiftIdeaAgent = CreateAgent(InternalGiftIdeaAgentName, InternalGiftIdeaAgentInstructions);
@@ -163,12 +171,18 @@ public class ComplexChat_NestedShopper(ITestOutputHelper output) : BaseAgentsTes
 
         async Task InvokeChatAsync(string input)
         {
-<<<<<<< main
             chat.Add(new ChatMessageContent(AuthorRole.User, input));
 
             Console.WriteLine($"# {AuthorRole.User}: '{input}'");
-=======
->>>>>>> upstream/main
+
+            chat.Add(new ChatMessageContent(AuthorRole.User, input));
+
+            Console.WriteLine($"# {AuthorRole.User}: '{input}'");
+
+            chat.Add(new ChatMessageContent(AuthorRole.User, input));
+
+            Console.WriteLine($"# {AuthorRole.User}: '{input}'");
+
             ChatMessageContent message = new(AuthorRole.User, input);
             chat.AddChatMessage(message);
             this.WriteAgentChatMessage(message);

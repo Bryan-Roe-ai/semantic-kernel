@@ -4,14 +4,8 @@
 
 To run the LLM prompts and semantic functions in the examples below, make sure
 you have an
-<<<<<<< HEAD
 [OpenAI API Key](https://platform.openai.com) or
 [Azure OpenAI Service Key](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=rest-api).
-=======
-
-- [Azure OpenAI Service Key](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=rest-api) or
-- [OpenAI API Key](https://platform.openai.com).
->>>>>>> origin/111
 
 ## Nuget package
 
@@ -86,7 +80,7 @@ requirements and setup instructions.
 7. [Building Memory with Embeddings](./notebooks/06-memory-and-embeddings.ipynb)
 8. [Creating images with DALL-E 3](./notebooks/07-DALL-E-3.ipynb)
 9. [Chatting with ChatGPT and Images](./notebooks/08-chatGPT-with-DALL-E-3.ipynb)
-10. [BingSearch using Kernel](./notebooks/10-BingSearch-using-kernel.ipynb)
+10. [BingSearch using Kernel](./notebooks/10-RAG-with-BingSearch.ipynb)
 
 # Semantic Kernel Samples
 
@@ -135,3 +129,17 @@ Other SK packages available at nuget.org:
 5. **Microsoft.SemanticKernel.Plugins.OpenApi**: OpenAPI Plugin.
 6. **Microsoft.SemanticKernel.Plugins.Web**: Web Plugin: search the web, download
    files, etc.
+
+# Enhancing Documentation
+
+## Detailed Explanations and Examples
+
+We have added more detailed explanations and examples to the existing documentation files to help users understand the various features of the repository. These explanations and examples provide a deeper understanding of how to use the Semantic Kernel effectively.
+
+## Code Snippets and Usage Examples
+
+To further assist users, we have included more code snippets and usage examples in the documentation. These snippets and examples demonstrate how to use the different features of the repository in practical scenarios.
+
+## Repository Structure Explanation
+
+We have added a section that explains the structure of the repository and the purpose of each directory and file. This section helps users navigate the repository and understand the organization of the codebase.

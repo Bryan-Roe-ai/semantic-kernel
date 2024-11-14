@@ -35,6 +35,8 @@ public sealed class AgentGroupChat : AgentChat
     /// </summary>
     public IReadOnlyList<Agent> Agents => this._agents.AsReadOnly();
 
+    public override IReadOnlyList<Agent> Agents => this._agents.AsReadOnly();
+
     /// <summary>
     /// Add a <see cref="Agent"/> to the chat.
     /// </summary>
@@ -62,6 +64,8 @@ public sealed class AgentGroupChat : AgentChat
         this.EnsureCompletionStatus();
 
         this.Logger.LogAgentGroupChatInvokingAgents(nameof(InvokeAsync), this.Agents);
+
+        bool isComplete = false;
 
         for (int index = 0; index < this.ExecutionSettings.TerminationStrategy.MaximumIterations; index++)
         {
@@ -111,10 +115,29 @@ public sealed class AgentGroupChat : AgentChat
             }
 
             if (this.IsComplete)
+
+                if (message.Role == AuthorRole.Assistant)
+                {
+                    var task = this.ExecutionSettings.TerminationStrategy.ShouldTerminateAsync(agent, this.History, cancellationToken);
+                    isComplete = await task.ConfigureAwait(false);
+                }
+
+                yield return message;
+            }
+
+            if (isComplete)
+
+                yield return message;
+            }
+
+            if (this.IsComplete)
+
             {
                 break;
             }
         }
+
+        this.IsComplete = isComplete;
 
         this.Logger.LogAgentGroupChatYield(nameof(InvokeAsync), this.IsComplete);
     }
@@ -136,21 +159,11 @@ public sealed class AgentGroupChat : AgentChat
 
         this.Logger.LogAgentGroupChatInvokingAgent(nameof(InvokeAsync), agent.GetType(), agent.Id);
 
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
         if (isJoining)
         {
             this.Add(agent);
         }
-<<<<<<< main
         this.AddAgent(agent);
-=======
-=======
-        this.AddAgent(agent);
->>>>>>> upstream/main
->>>>>>> origin/main
 
         await foreach (ChatMessageContent message in base.InvokeAgentAsync(agent, cancellationToken).ConfigureAwait(false))
         {

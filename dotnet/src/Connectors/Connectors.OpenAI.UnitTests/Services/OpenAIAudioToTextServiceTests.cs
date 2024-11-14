@@ -1,6 +1,7 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.ClientModel;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -34,6 +35,10 @@ public sealed class OpenAIAudioToTextServiceTests : IDisposable
     public void ConstructorWithApiKeyWorksCorrectly(bool includeLoggerFactory)
     {
         // Arrange & Act
+        var service = includeLoggerFactory ? new OpenAIAudioToTextService("model-id", "api-key", "organization", loggerFactory: this._mockLoggerFactory.Object) : new OpenAIAudioToTextService("model-id", "api-key", "organization");
+        var service = includeLoggerFactory ? new OpenAIAudioToTextService("model-id", "api-key", "organization", loggerFactory: this._mockLoggerFactory.Object) : new OpenAIAudioToTextService("model-id", "api-key", "organization");
+        var service = includeLoggerFactory ? new OpenAIAudioToTextService("model-id", "api-key", "organization", loggerFactory: this._mockLoggerFactory.Object) : new OpenAIAudioToTextService("model-id", "api-key", "organization");
+        var service = includeLoggerFactory ? new OpenAIAudioToTextService("model-id", "api-key", "organization", loggerFactory: this._mockLoggerFactory.Object) : new OpenAIAudioToTextService("model-id", "api-key", "organization");
         var service = includeLoggerFactory ?
             new OpenAIAudioToTextService("model-id", "api-key", "organization", loggerFactory: this._mockLoggerFactory.Object) :
             new OpenAIAudioToTextService("model-id", "api-key", "organization");
@@ -49,10 +54,17 @@ public sealed class OpenAIAudioToTextServiceTests : IDisposable
         // Act & Assert
         Assert.Throws<ArgumentException>(() => new OpenAIAudioToTextService(" ", "apikey"));
         Assert.Throws<ArgumentException>(() => new OpenAIAudioToTextService(" ", openAIClient: new("apikey")));
+        Assert.Throws<ArgumentException>(() => new OpenAIAudioToTextService(" ", openAIClient: new(new ApiKeyCredential("apikey"))));
         Assert.Throws<ArgumentException>(() => new OpenAIAudioToTextService("", "apikey"));
-        Assert.Throws<ArgumentException>(() => new OpenAIAudioToTextService("", openAIClient: new("apikey")));
+        Assert.Throws<ArgumentException>(() => new OpenAIAudioToTextService("", openAIClient: new(new ApiKeyCredential("apikey"))));
         Assert.Throws<ArgumentNullException>(() => new OpenAIAudioToTextService(null!, "apikey"));
         Assert.Throws<ArgumentNullException>(() => new OpenAIAudioToTextService(null!, openAIClient: new("apikey")));
+        Assert.Throws<ArgumentException>(() => new OpenAIAudioToTextService(" ", openAIClient: new(new ApiKeyCredential("apikey"))));
+        Assert.Throws<ArgumentException>(() => new OpenAIAudioToTextService("", "apikey"));
+        Assert.Throws<ArgumentException>(() => new OpenAIAudioToTextService("", openAIClient: new(new ApiKeyCredential("apikey"))));
+        Assert.Throws<ArgumentNullException>(() => new OpenAIAudioToTextService(null!, "apikey"));
+        Assert.Throws<ArgumentNullException>(() => new OpenAIAudioToTextService(null!, openAIClient: new(new ApiKeyCredential("apikey"))));
+        Assert.Throws<ArgumentNullException>(() => new OpenAIAudioToTextService(null!, openAIClient: new(new ApiKeyCredential("apikey"))));
     }
 
     [Theory]
@@ -62,6 +74,13 @@ public sealed class OpenAIAudioToTextServiceTests : IDisposable
     {
         // Arrange & Act
         var client = new OpenAIClient("key");
+        var service = includeLoggerFactory ? new OpenAIAudioToTextService("model-id", client, loggerFactory: this._mockLoggerFactory.Object) : new OpenAIAudioToTextService("model-id", client);
+        var client = new OpenAIClient(new ApiKeyCredential("key"));
+        var service = includeLoggerFactory ? new OpenAIAudioToTextService("model-id", client, loggerFactory: this._mockLoggerFactory.Object) : new OpenAIAudioToTextService("model-id", client);
+        var client = new OpenAIClient(new ApiKeyCredential("key"));
+        var service = includeLoggerFactory ? new OpenAIAudioToTextService("model-id", client, loggerFactory: this._mockLoggerFactory.Object) : new OpenAIAudioToTextService("model-id", client);
+        var client = new OpenAIClient(new ApiKeyCredential("key"));
+        var client = new OpenAIClient(new ApiKeyCredential("key"));
         var service = includeLoggerFactory ?
             new OpenAIAudioToTextService("model-id", client, loggerFactory: this._mockLoggerFactory.Object) :
             new OpenAIAudioToTextService("model-id", client);

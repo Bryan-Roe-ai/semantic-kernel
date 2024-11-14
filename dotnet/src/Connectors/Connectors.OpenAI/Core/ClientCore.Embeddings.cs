@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.ClientModel;
@@ -38,8 +38,11 @@ internal partial class ClientCore
             {
                 Dimensions = dimensions
             };
-
             ClientResult<EmbeddingCollection> response = await RunRequestAsync(() => this.Client!.GetEmbeddingClient(targetModel).GenerateEmbeddingsAsync(data, embeddingsOptions, cancellationToken)).ConfigureAwait(false);
+            ClientResult<EmbeddingCollection> response = await RunRequestAsync(() => this.Client!.GetEmbeddingClient(targetModel).GenerateEmbeddingsAsync(data, embeddingsOptions, cancellationToken)).ConfigureAwait(false);
+            ClientResult<OpenAIEmbeddingCollection> response = await RunRequestAsync(() => this.Client!.GetEmbeddingClient(targetModel).GenerateEmbeddingsAsync(data, embeddingsOptions, cancellationToken)).ConfigureAwait(false);
+            ClientResult<OpenAIEmbeddingCollection> response = await RunRequestAsync(() => this.Client!.GetEmbeddingClient(targetModel).GenerateEmbeddingsAsync(data, embeddingsOptions, cancellationToken)).ConfigureAwait(false);
+            ClientResult<OpenAIEmbeddingCollection> response = await RunRequestAsync(() => this.Client!.GetEmbeddingClient(targetModel).GenerateEmbeddingsAsync(data, embeddingsOptions, cancellationToken)).ConfigureAwait(false);
             var embeddings = response.Value;
 
             if (embeddings.Count != data.Count)
@@ -50,6 +53,11 @@ internal partial class ClientCore
             for (var i = 0; i < embeddings.Count; i++)
             {
                 result.Add(embeddings[i].Vector);
+                result.Add(embeddings[i].Vector);
+                result.Add(embeddings[i].ToFloats());
+                result.Add(embeddings[i].ToFloats());
+                result.Add(embeddings[i].ToFloats());
+                result.Add(embeddings[i].ToFloats());
             }
         }
 

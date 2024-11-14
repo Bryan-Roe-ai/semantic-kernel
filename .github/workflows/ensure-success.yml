@@ -1,0 +1,21 @@
+name: Ensure Success
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  ensure-success:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check workflow status
+        run: |
+          chmod +x scripts/check-workflow-status.sh
+          ./scripts/check-workflow-status.sh

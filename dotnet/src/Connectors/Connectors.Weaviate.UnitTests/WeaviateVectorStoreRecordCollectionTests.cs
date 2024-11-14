@@ -8,8 +8,8 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.Weaviate;
-using Microsoft.SemanticKernel.Data;
 using Moq;
 using Xunit;
 
@@ -336,7 +336,70 @@ public sealed class WeaviateVectorStoreRecordCollectionTests : IDisposable
 
         jsonObject["properties"]!["hotel_name"] = "Test Name from Mapper";
 
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         var mockMapper = new Mock<IVectorStoreRecordMapper<WeaviateHotel, JsonNode>>();
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+        var mockMapper = new Mock<IVectorStoreRecordMapper<WeaviateHotel, JsonNode>>();
+=======
+        var mockMapper = new Mock<IVectorStoreRecordMapper<WeaviateHotel, JsonObject>>();
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+        var mockMapper = new Mock<IVectorStoreRecordMapper<WeaviateHotel, JsonObject>>();
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+        var mockMapper = new Mock<IVectorStoreRecordMapper<WeaviateHotel, JsonObject>>();
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
 
         mockMapper
             .Setup(l => l.MapFromDataToStorageModel(It.IsAny<WeaviateHotel>()))
@@ -352,7 +415,72 @@ public sealed class WeaviateVectorStoreRecordCollectionTests : IDisposable
         var sut = new WeaviateVectorStoreRecordCollection<WeaviateHotel>(
             this._mockHttpClient,
             "Collection",
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             new() { JsonNodeCustomMapper = mockMapper.Object });
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+            new() { JsonNodeCustomMapper = mockMapper.Object });
+=======
+            new() { JsonObjectCustomMapper = mockMapper.Object });
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+            new() { JsonObjectCustomMapper = mockMapper.Object });
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+            new() { JsonObjectCustomMapper = mockMapper.Object });
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
 
         // Act
         var result = await sut.UpsertAsync(hotel);
@@ -384,16 +512,184 @@ public sealed class WeaviateVectorStoreRecordCollectionTests : IDisposable
             Content = new StringContent(JsonSerializer.Serialize(jsonObject))
         };
 
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
         var mockMapper = new Mock<IVectorStoreRecordMapper<WeaviateHotel, JsonNode>>();
 
         mockMapper
             .Setup(l => l.MapFromStorageToDataModel(It.IsAny<JsonNode>(), It.IsAny<StorageToDataModelMapperOptions>()))
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+        var mockMapper = new Mock<IVectorStoreRecordMapper<WeaviateHotel, JsonObject>>();
+
+        mockMapper
+            .Setup(l => l.MapFromStorageToDataModel(It.IsAny<JsonObject>(), It.IsAny<StorageToDataModelMapperOptions>()))
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
             .Returns(new WeaviateHotel { HotelId = id, HotelName = "Test Name from mapper" });
 
         var sut = new WeaviateVectorStoreRecordCollection<WeaviateHotel>(
             this._mockHttpClient,
             "Collection",
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             new() { JsonNodeCustomMapper = mockMapper.Object });
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+            new() { JsonNodeCustomMapper = mockMapper.Object });
+=======
+            new() { JsonObjectCustomMapper = mockMapper.Object });
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+            new() { JsonObjectCustomMapper = mockMapper.Object });
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
 
         // Act
         var result = await sut.GetAsync(id);
@@ -429,6 +725,212 @@ public sealed class WeaviateVectorStoreRecordCollectionTests : IDisposable
         Assert.Equal(expectedHeader, headers?.Authorization?.ToString());
     }
 
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task VectorizedSearchReturnsValidRecordAsync(bool includeVectors)
+    {
+        // Arrange
+        const string CollectionName = "VectorizedSearchCollection";
+        var id = new Guid("55555555-5555-5555-5555-555555555555");
+        var vector = new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]);
+
+        var jsonObject = new JsonObject
+        {
+            ["data"] = new JsonObject
+            {
+                ["Get"] = new JsonObject
+                {
+                    [CollectionName] = new JsonArray
+                    {
+                        new JsonObject
+                        {
+                            ["_additional"] = new JsonObject
+                            {
+                                ["distance"] = 0.5,
+                                ["id"] = id.ToString(),
+                                ["vectors"] = new JsonObject
+                                {
+                                    ["descriptionEmbedding"] = new JsonArray(new List<float> {30, 31, 32, 33}.Select(l => (JsonNode)l).ToArray())
+                                }
+                            },
+                            ["description"] = "This is a great hotel.",
+                            ["hotelCode"] = 42,
+                            ["hotelName"] = "My Hotel",
+                            ["hotelRating"] = 4.5,
+                            ["parking_is_included"] = true,
+                            ["tags"] = new JsonArray(new List<string> { "t1", "t2" }.Select(l => (JsonNode)l).ToArray()),
+                            ["timestamp"] = "2024-08-28T10:11:12-07:00"
+                        }
+                    }
+                }
+            }
+        };
+
+        this._messageHandlerStub.ResponseToReturn = new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(JsonSerializer.Serialize(jsonObject))
+        };
+
+        var sut = new WeaviateVectorStoreRecordCollection<WeaviateHotel>(this._mockHttpClient, CollectionName);
+
+        // Act
+<<<<<<< main
+        var results = await sut.VectorizedSearchAsync(vector, new()
+        {
+            IncludeVectors = includeVectors
+        }).ToListAsync();
+
+        // Assert
+=======
+        var actual = await sut.VectorizedSearchAsync(vector, new()
+        {
+            IncludeVectors = includeVectors
+        });
+
+        // Assert
+        var results = await actual.Results.ToListAsync();
+>>>>>>> upstream/main
+        Assert.Single(results);
+
+        var score = results[0].Score;
+        var record = results[0].Record;
+
+        Assert.Equal(0.5, score);
+
+        Assert.Equal(id, record.HotelId);
+        Assert.Equal("My Hotel", record.HotelName);
+        Assert.Equal("This is a great hotel.", record.Description);
+        Assert.Equal(42, record.HotelCode);
+        Assert.Equal(4.5f, record.HotelRating);
+        Assert.True(record.ParkingIncluded);
+        Assert.Equal(["t1", "t2"], record.Tags);
+        Assert.Equal(new DateTimeOffset(new DateTime(2024, 8, 28, 10, 11, 12), TimeSpan.FromHours(-7)), record.Timestamp);
+
+        if (includeVectors)
+        {
+            Assert.True(record.DescriptionEmbedding.HasValue);
+            Assert.Equal(vector.ToArray(), record.DescriptionEmbedding.Value.ToArray());
+        }
+        else
+        {
+            Assert.False(record.DescriptionEmbedding.HasValue);
+        }
+    }
+
+    [Fact]
+    public async Task VectorizedSearchWithUnsupportedVectorTypeThrowsExceptionAsync()
+    {
+        // Arrange
+        var sut = new WeaviateVectorStoreRecordCollection<WeaviateHotel>(this._mockHttpClient, "Collection");
+
+        // Act & Assert
+        await Assert.ThrowsAsync<NotSupportedException>(async () =>
+<<<<<<< main
+            await sut.VectorizedSearchAsync(new List<double>([1, 2, 3])).ToListAsync());
+=======
+            await (await sut.VectorizedSearchAsync(new List<double>([1, 2, 3]))).Results.ToListAsync());
+>>>>>>> upstream/main
+    }
+
+    [Fact]
+    public async Task VectorizedSearchWithNonExistentVectorPropertyNameThrowsExceptionAsync()
+    {
+        // Arrange
+        var sut = new WeaviateVectorStoreRecordCollection<WeaviateHotel>(this._mockHttpClient, "Collection");
+
+        var searchOptions = new VectorSearchOptions { VectorPropertyName = "non-existent-property" };
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+<<<<<<< main
+            await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([1f, 2f, 3f]), searchOptions).ToListAsync());
+    }
+
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+            await (await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([1f, 2f, 3f]), searchOptions)).Results.ToListAsync());
+    }
+
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
     public void Dispose()
     {
         this._mockHttpClient.Dispose();

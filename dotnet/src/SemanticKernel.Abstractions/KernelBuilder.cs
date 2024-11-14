@@ -34,4 +34,16 @@ internal sealed class KernelBuilder : IKernelBuilder, IKernelBuilderPlugins
 
     /// <summary>Gets a builder for plugins to be built as services into the <see cref="Kernel"/>.</summary>
     public IKernelBuilderPlugins Plugins => this;
+
+    /// <summary>
+    /// Builds the <see cref="Kernel"/> with the configured services and plugins.
+    /// </summary>
+    /// <returns>A new instance of <see cref="Kernel"/>.</returns>
+    public Kernel Build()
+    {
+        // Ensure error handling setup
+        this.Services.AddSingleton<KernelExceptionHandler>();
+
+        return new Kernel(this.Services.BuildServiceProvider(), new KernelPluginCollection());
+    }
 }

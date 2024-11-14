@@ -5,8 +5,6 @@ title: ''
 labels: ''
 assignees: ''
 
----
-
 **Describe the bug**
 A clear and concise description of what the bug is.
 
@@ -37,3 +35,36 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+
+**Steps to Reproduce (Detailed)**
+Please provide detailed steps to reproduce the issue. Include any specific configurations or settings that may be relevant.
+
+**Logs and Error Messages**
+If applicable, please include any logs or error messages that were generated when the issue occurred.
+
+**Environment Information**
+Provide any additional information about your environment that may be relevant to the issue. This can include hardware specifications, network configurations, etc.
+
+**Possible Solution**
+If you have any ideas for a possible solution or workaround, please share them here.
+
+**Impact**
+Describe the impact of the issue on your work or project. This can help prioritize the issue.
+
+**Reproducibility**
+Indicate how often the issue occurs. Is it consistent or intermittent?
+
+**Related Issues**
+If there are any related issues or pull requests, please link to them here.
+
+**Best Practices Adherence**
+Please confirm that the code changes adhere to the best practices outlined in the repository's documentation.
+
+**Approval Status**
+Indicate whether the resolved issue has been reviewed and approved by a trusted person. Provide the name of the approver if applicable.
+
+**Additional Information**
+Any other information that may be helpful in diagnosing and resolving the issue.
+
+**Check Discussions**
+Before submitting a bug report, please check the [Discussions](https://github.com/Bryan-Roe/semantic-kernel/discussions) page for existing solutions or ongoing discussions related to your issue.

@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft. All rights reserved.
 using System;
+using System.ClientModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Identity;
@@ -43,6 +45,11 @@ public sealed class MixedAgentTests
         await this.VerifyAgentExecutionAsync(
             this.CreateChatCompletionKernel(openAISettings),
             OpenAIClientProvider.ForOpenAI(openAISettings.ApiKey),
+            OpenAIClientProvider.ForOpenAI(openAISettings.ApiKey),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
             openAISettings.ChatModelId!,
             useNewFunctionCallingModel);
     }
@@ -82,25 +89,38 @@ public sealed class MixedAgentTests
             new OpenAIPromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() } :
             new OpenAIPromptExecutionSettings() { ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions };
 
-        // Configure chat agent with the plugin.
+        // Chat agent doesn't need plug-in since it has access to the shared function result.
         ChatCompletionAgent chatAgent =
             new()
             {
+                Name = "Chat",
                 Kernel = chatCompletionKernel,
                 Instructions = "Answer questions about the menu.",
                 Arguments = new(executionSettings),
             };
         chatAgent.Kernel.Plugins.Add(plugin);
 
-        // Assistant doesn't need plug-in since it has access to the shared function result.
+        // Configure assistant agent with the plugin.
         OpenAIAssistantAgent assistantAgent =
             await OpenAIAssistantAgent.CreateAsync(
+                kernel: new(),
+                kernel: new(),
+                kernel: new(),
+                kernel: new(),
                 config,
                 new(modelName)
                 {
+                    Name = "Assistant",
                     Instructions = "Answer questions about the menu."
+                });
+                });
                 },
                 new Kernel());
+                },
+                new Kernel());
+                },
+                new Kernel());
+        assistantAgent.Kernel.Plugins.Add(plugin);
 
         // Act & Assert
         try
@@ -128,6 +148,27 @@ public sealed class MixedAgentTests
 
         // Assert
         Assert.Contains(expected, builder.ToString(), StringComparison.OrdinalIgnoreCase);
+        await foreach (var message in chat.GetChatMessagesAsync())
+        {
+            AssertMessageValid(message);
+        }
+    }
+
+    private static void AssertMessageValid(ChatMessageContent message)
+    {
+        if (message.Items.OfType<FunctionResultContent>().Any())
+        {
+            Assert.Equal(AuthorRole.Tool, message.Role);
+            return;
+        }
+
+        if (message.Items.OfType<FunctionCallContent>().Any())
+        {
+            Assert.Equal(AuthorRole.Assistant, message.Role);
+            return;
+        }
+
+        Assert.Equal(string.IsNullOrEmpty(message.AuthorName) ? AuthorRole.User : AuthorRole.Assistant, message.Role);
     }
 
     private Kernel CreateChatCompletionKernel(AzureOpenAIConfiguration configuration)

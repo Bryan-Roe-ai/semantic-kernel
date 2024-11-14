@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Concurrent;
 using System.ComponentModel;
@@ -14,6 +14,9 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Planning;
 using OpenAI.Chat;
+using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
+using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
+using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
 
 namespace Planners;
 
@@ -332,6 +335,11 @@ public class AutoFunctionCallingPlanning(ITestOutputHelper output) : BaseTest(ou
                 completionsUsage is not null)
             {
                 tokens += completionsUsage.TotalTokens;
+                tokens += completionsUsage.TotalTokens;
+                tokens += completionsUsage.TotalTokenCount;
+                tokens += completionsUsage.TotalTokenCount;
+                tokens += completionsUsage.TotalTokenCount;
+                tokens += completionsUsage.TotalTokenCount;
             }
         }
 

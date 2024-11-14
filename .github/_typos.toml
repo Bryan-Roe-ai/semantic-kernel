@@ -16,9 +16,57 @@ extend-exclude = [
     "test_code_tokenizer.py",
     "*response.json",
     "test_content.txt",
-    "google_what_is_the_semantic_kernel.json",
     "serializedChatHistoryV1_15_1.json",
     "MultipleFunctionsVsParameters.cs"
+    "serializedChatHistoryV1_15_1.json",
+    "MultipleFunctionsVsParameters.cs"
+    "serializedChatHistoryV1_15_1.json",
+    "MultipleFunctionsVsParameters.cs"
+    "google_what_is_the_semantic_kernel.json",
+    "what-is-semantic-kernel.json",
+    "serializedChatHistoryV1_15_1.json",
+    "MultipleFunctionsVsParameters.cs"
+    "serializedChatHistoryV1_15_1.json"
+    "MultipleFunctionsVsParameters.cs",
+    "PopulationByCountry.csv",
+    "PopulationByAdmin1.csv",
+]
+
+[default.extend-words]
+ACI = "ACI"               # Azure Container Instance
+exercize = "exercize"     # test typos
+gramatical = "gramatical" # test typos
+Guid = "Guid"             # Globally Unique Identifier
+HD = "HD"                 # Test header value
+EOF = "EOF"               # End of File
+ans = "ans"               # Short for answers
+arange = "arange"         # Method in Python numpy package
+prompty = "prompty"       # prompty is a format name.
+ist = "ist"               # German language
+dall = "dall"             # OpenAI model name
+
+"google_what_is_the_semantic_kernel.json",
+    "what-is-semantic-kernel.json",
+    "serializedChatHistoryV1_15_1.json",
+    "MultipleFunctionsVsParameters.cs",
+    "PopulationByCountry.csv",
+    "PopulationByAdmin1.csv",
+    "WomensSuffrage.txt",
+]
+
+[default.extend-words]
+ACI = "ACI"               # Azure Container Instance
+exercize = "exercize"     # test typos
+gramatical = "gramatical" # test typos
+Guid = "Guid"             # Globally Unique Identifier
+HD = "HD"                 # Test header value
+EOF = "EOF"               # End of File
+ans = "ans"               # Short for answers
+arange = "arange"         # Method in Python numpy package
+prompty = "prompty"       # prompty is a format name.
+ist = "ist"               # German language
+dall = "dall"             # OpenAI model name
+    "SK-dotnet.sln.DotSettings"
 ]
 
 [default.extend-words]
@@ -45,4 +93,8 @@ extend-ignore-re = [
 [type.msbuild]
 extend-ignore-re = [
     'Version=".*"', # ignore package version numbers
+]
+]
+]
+]
 ]

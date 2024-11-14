@@ -11,6 +11,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+<<<<<<< HEAD
+=======
+using Microsoft.Extensions.VectorData;
+>>>>>>> main
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Http;
 
@@ -120,10 +124,7 @@ public sealed class BingTextSearch : ITextSearch
     /// <returns>A <see cref="HttpResponseMessage"/> representing the response from the request.</returns>
     private async Task<HttpResponseMessage> SendGetRequestAsync(string query, TextSearchOptions searchOptions, CancellationToken cancellationToken = default)
     {
-        var count = searchOptions.Count;
-        var offset = searchOptions.Offset;
-
-        if (count is <= 0 or > 50)
+        if (searchOptions.Top is <= 0 or > 50)
         {
             throw new ArgumentOutOfRangeException(nameof(searchOptions), searchOptions, $"{nameof(searchOptions)} count value must be greater than 0 and have a maximum value of 50.");
         }
@@ -239,7 +240,11 @@ public sealed class BingTextSearch : ITextSearch
                 throw new ArgumentException("Result must be a BingWebPage", nameof(result));
             }
 
+<<<<<<< HEAD
             return new TextSearchResult(webPage.Name, webPage.Snippet, webPage.Url);
+=======
+            return new TextSearchResult(webPage.Snippet ?? string.Empty) { Name = webPage.Name, Link = webPage.Url };
+>>>>>>> main
         }
     }
 
@@ -278,7 +283,7 @@ public sealed class BingTextSearch : ITextSearch
             }
         }
 
-        fullQuery.Append($"&count={searchOptions.Count}&offset={searchOptions.Offset}{queryParams}");
+        fullQuery.Append($"&count={searchOptions.Top}&offset={searchOptions.Skip}{queryParams}");
 
         return fullQuery.ToString();
     }

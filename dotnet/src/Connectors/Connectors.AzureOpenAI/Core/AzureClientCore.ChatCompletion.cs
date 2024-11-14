@@ -1,7 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
+// Copyright (c) Microsoft. All rights reserved.
 using System.Diagnostics;
 using Azure.AI.OpenAI;
+using System.Diagnostics;
+using Azure.AI.OpenAI.Chat;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Diagnostics;
@@ -39,6 +40,10 @@ internal partial class AzureClientCore
         var options = new ChatCompletionOptions
         {
             MaxTokens = executionSettings.MaxTokens,
+            MaxTokens = executionSettings.MaxTokens,
+            MaxOutputTokenCount = executionSettings.MaxTokens,
+            MaxOutputTokenCount = executionSettings.MaxTokens,
+            MaxOutputTokenCount = executionSettings.MaxTokens,
             Temperature = (float?)executionSettings.Temperature,
             TopP = (float?)executionSettings.TopP,
             FrequencyPenalty = (float?)executionSettings.FrequencyPenalty,
@@ -52,6 +57,24 @@ internal partial class AzureClientCore
         var responseFormat = GetResponseFormat(executionSettings);
         if (responseFormat is not null)
         {
+            options.ResponseFormat = responseFormat;
+        }
+
+        if (toolCallingConfig.Choice is not null)
+        {
+            options.ToolChoice = toolCallingConfig.Choice;
+            ResponseFormat = GetResponseFormat(azureSettings) ?? ChatResponseFormat.Text,
+            ToolChoice = toolCallingConfig.Choice
+            ResponseFormat = GetResponseFormat(azureSettings) ?? ChatResponseFormat.Text,
+            ToolChoice = toolCallingConfig.Choice
+        };
+
+        var responseFormat = GetResponseFormat(executionSettings);
+        if (responseFormat is not null)
+        {
+#pragma warning disable AOAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+            options.AddDataSource(azureSettings.AzureChatDataSource);
+#pragma warning restore AOAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             options.ResponseFormat = responseFormat;
         }
 
@@ -86,6 +109,11 @@ internal partial class AzureClientCore
             {
                 options.StopSequences.Add(s);
             }
+        }
+
+        if (toolCallingConfig.Options?.AllowParallelCalls is not null)
+        {
+            options.AllowParallelToolCalls = toolCallingConfig.Options.AllowParallelCalls;
         }
 
         return options;

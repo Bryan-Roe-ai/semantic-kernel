@@ -2,10 +2,98 @@
 
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Azure.Identity;
 using Memory.VectorStoreFixtures;
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+using Microsoft.Extensions.VectorData;
+>>>>>>> upstream/main
+=======
+>>>>>>> Stashed changes
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+=======
+>>>>>>> Stashed changes
+=======
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< main
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+=======
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+>>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
+=======
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+>>>>>>> ms/features/bugbash-prep
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
 using Microsoft.SemanticKernel.Connectors.Redis;
-using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 using StackExchange.Redis;
 
@@ -58,7 +146,7 @@ public class VectorStore_DataIngestion_CustomMapper(ITestOutputHelper output, Ve
         var textEmbeddingGenerationService = new AzureOpenAITextEmbeddingGenerationService(
                 TestConfiguration.AzureOpenAIEmbeddings.DeploymentName,
                 TestConfiguration.AzureOpenAIEmbeddings.Endpoint,
-                TestConfiguration.AzureOpenAIEmbeddings.ApiKey);
+                new AzureCliCredential());
 
         // Initiate the docker container and construct the vector store using the custom factory for creating collections.
         await redisFixture.ManualInitializeAsync();
@@ -135,7 +223,6 @@ public class VectorStore_DataIngestion_CustomMapper(ITestOutputHelper output, Ve
     {
         public IVectorStoreRecordCollection<TKey, TRecord> CreateVectorStoreRecordCollection<TKey, TRecord>(IDatabase database, string name, VectorStoreRecordDefinition? vectorStoreRecordDefinition)
             where TKey : notnull
-            where TRecord : class
         {
             // If the record definition is the glossary definition and the record type is the generic data model, inject the custom mapper into the collection options.
             if (vectorStoreRecordDefinition == s_glossaryDefinition && typeof(TRecord) == typeof(GenericDataModel))

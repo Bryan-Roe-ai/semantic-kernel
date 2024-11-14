@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -108,6 +108,12 @@ public sealed class ToolCallBehaviorTests
         // Assert
         Assert.Equal(ChatToolChoice.Auto, options.Choice);
 
+        Assert.Equal(ChatToolChoice.Auto, options.Choice);
+
+        Assert.NotNull(options.Choice);
+        Assert.NotNull(options.Choice);
+        Assert.NotNull(options.Choice);
+        Assert.NotNull(options.Choice);
         this.AssertTools(options.Tools);
     }
 
@@ -169,6 +175,12 @@ public sealed class ToolCallBehaviorTests
         // Assert
         Assert.Equal(ChatToolChoice.Auto, options.Choice);
 
+        Assert.Equal(ChatToolChoice.Auto, options.Choice);
+
+        Assert.NotNull(options.Choice);
+        Assert.NotNull(options.Choice);
+        Assert.NotNull(options.Choice);
+        Assert.NotNull(options.Choice);
         this.AssertTools(options.Tools);
     }
 

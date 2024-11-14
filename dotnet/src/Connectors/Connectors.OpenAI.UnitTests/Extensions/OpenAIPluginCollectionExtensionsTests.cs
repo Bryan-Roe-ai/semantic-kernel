@@ -1,5 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using OpenAI.Chat;
@@ -20,6 +23,16 @@ public sealed class OpenAIPluginCollectionExtensionsTests
         var plugins = new KernelPluginCollection([plugin]);
 
         var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin_MyFunction", string.Empty);
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+        var plugin = KernelPluginFactory.CreateFromFunctions("MyPlugin");
+        var plugins = new KernelPluginCollection([plugin]);
+
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin_MyFunction", BinaryData.FromString(args));
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+        var plugin = KernelPluginFactory.CreateFromFunctions("MyPlugin");
+        var plugins = new KernelPluginCollection([plugin]);
+
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin_MyFunction", args);
 
         // Act
         var result = plugins.TryGetFunctionAndArguments(toolCall, out var actualFunction, out var actualArguments);
@@ -34,11 +47,21 @@ public sealed class OpenAIPluginCollectionExtensionsTests
     public void TryGetFunctionAndArgumentsWithoutArgumentsReturnsTrue()
     {
         // Arrange
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
         var function = KernelFunctionFactory.CreateFromMethod(() => "Result", "MyFunction");
         var plugin = KernelPluginFactory.CreateFromFunctions("MyPlugin", [function]);
 
         var plugins = new KernelPluginCollection([plugin]);
         var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin-MyFunction", string.Empty);
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin-MyFunction", string.Empty);
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin-MyFunction", BinaryData.FromString(args));
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin-MyFunction", BinaryData.FromString(args));
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin-MyFunction", BinaryData.FromString(args));
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin-MyFunction", args);
 
         // Act
         var result = plugins.TryGetFunctionAndArguments(toolCall, out var actualFunction, out var actualArguments);
@@ -47,6 +70,11 @@ public sealed class OpenAIPluginCollectionExtensionsTests
         Assert.True(result);
         Assert.Equal(function.Name, actualFunction?.Name);
         Assert.Null(actualArguments);
+        Assert.Null(actualArguments);
+        Assert.Empty(actualArguments!);
+        Assert.Empty(actualArguments!);
+        Assert.Empty(actualArguments!);
+        Assert.Empty(actualArguments!);
     }
 
     [Fact]
@@ -58,6 +86,9 @@ public sealed class OpenAIPluginCollectionExtensionsTests
 
         var plugins = new KernelPluginCollection([plugin]);
         var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin-MyFunction", "{\n \"location\": \"San Diego\",\n \"max_price\": 300\n,\n \"null_argument\": null\n}");
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin-MyFunction", "{\n \"location\": \"San Diego\",\n \"max_price\": 300\n,\n \"null_argument\": null\n}");
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin-MyFunction", BinaryData.FromString("{\n \"location\": \"San Diego\",\n \"max_price\": 300\n,\n \"null_argument\": null\n}"));
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin-MyFunction", BinaryData.FromString("{\n \"location\": \"San Diego\",\n \"max_price\": 300\n,\n \"null_argument\": null\n}"));
 
         // Act
         var result = plugins.TryGetFunctionAndArguments(toolCall, out var actualFunction, out var actualArguments);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
@@ -21,10 +21,13 @@ public class ChatHistoryChannelTests
     public async Task VerifyAgentWithoutIChatHistoryHandlerAsync()
     {
         // Arrange
-        Mock<Agent> agent = new(); // Not a IChatHistoryHandler
+        Mock<Agent> agent = new(); // Not a ChatHistoryKernelAgent
         ChatHistoryChannel channel = new(); // Requires IChatHistoryHandler
 
         // Act & Assert
+        Mock<Agent> agent = new(); // Not a IChatHistoryHandler
+        ChatHistoryChannel channel = new(); // Requires IChatHistoryHandler
+
         await Assert.ThrowsAsync<KernelException>(() => channel.InvokeAsync(agent.Object).ToArrayAsync().AsTask());
     }
 }

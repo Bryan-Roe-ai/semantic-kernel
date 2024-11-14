@@ -133,6 +133,101 @@ async def test_invoke_agent(agent_chat, agent, chat_message):
 
 
 @pytest.mark.asyncio
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+async def test_invoke_streaming_agent(agent_chat, agent, chat_message):
+    mock_channel = mock.MagicMock(spec=AgentChannel)
+
+    async def mock_invoke(*args, **kwargs):
+        yield chat_message
+
+    mock_channel.invoke_stream.side_effect = mock_invoke
+
+    with (
+        patch(
+            "semantic_kernel.agents.group_chat.agent_chat.AgentChat._get_or_create_channel", return_value=mock_channel
+        ),
+        patch(
+            "semantic_kernel.agents.group_chat.broadcast_queue.BroadcastQueue.enqueue",
+            return_value=AsyncMock(),
+        ),
+    ):
+        async for _ in agent_chat.invoke_agent_stream(agent):
+            pass
+
+    mock_channel.invoke_stream.assert_called_once_with(agent, [])
+    await agent_chat.reset()
+
+
+@pytest.mark.asyncio
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
 async def test_synchronize_channel_with_existing_channel(agent_chat):
     mock_channel = MagicMock(spec=AgentChannel)
     channel_key = "test_channel_key"
