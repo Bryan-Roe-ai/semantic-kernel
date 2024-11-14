@@ -11,10 +11,7 @@
       ],
       "detail": "Install ReSharper Global Tools",
       "group": "build",
-      "dependsOn": [
-        "new tool-manifest",
-        "# Setup"
-      ],
+      "dependsOn": ["new tool-manifest", "# Setup"],
       "dependsOrder": "sequence"
     },
     {
@@ -22,11 +19,7 @@
       "detail": "Install ReSharper Global Tools",
       "command": "dotnet",
       "type": "process",
-      "args": [
-        "new",
-        "tool-manifest",
-        "/consoleloggerparameters:NoSummary"
-      ],
+      "args": ["new", "tool-manifest", "/consoleloggerparameters:NoSummary"],
       "options": {
         "cwd": "${workspaceFolder}/dotnet"
       }
@@ -170,16 +163,12 @@
       "logLevel": "debug",
       "appPort": 5000,
       "httpPort": 3500,
-      "dependsOn": [
-        "build (ProcessWithDapr)"
-      ]
+      "dependsOn": ["build (ProcessWithDapr)"]
     },
     {
       "label": "dapr-down",
       "type": "shell",
-      "command": [
-        "dapr stop --app-id processwithdapr"
-      ],
+      "command": ["dapr stop --app-id processwithdapr"],
       "presentation": {
         "clear": true,
         "close": true,
@@ -188,10 +177,14 @@
     },
     {
       "type": "markdownlint",
-      "problemMatcher": [
-        "$markdownlint"
-      ],
+      "problemMatcher": ["$markdownlint"],
       "label": "markdownlint: Lint all Markdown files in the workspace with markdownlint"
+    },
+    {
+      "type": "func",
+      "command": "host start",
+      "problemMatcher": ["$func-dotnet-watch"],
+      "label": "func: host start"
     }
   ],
   "inputs": [
