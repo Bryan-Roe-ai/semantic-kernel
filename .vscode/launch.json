@@ -68,6 +68,13 @@
       "type": "dotnet",
       "preLaunchTask": "daprd-debug",
       "postDebugTask": "dapr-down"
+    },
+    {
+      "type": "semantic-kernel.skprompt.debugger",
+      "request": "launch",
+      "name": "Semantic Kernel Function Launch",
+      "workspaceFolder": "${workspaceFolder}",
+      "program": "${relativeFile}"
     }
   ]
 }
