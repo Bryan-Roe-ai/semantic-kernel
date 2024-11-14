@@ -48,33 +48,26 @@
     },
     {
       "name": "C#: HuggingFaceImageToText Demo",
-      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll",
+      "path": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll",
       "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/HuggingFaceImageToText.csproj",
       "request": "launch",
       "type": "dotnet"
     },
     {
       "name": "C#: GettingStarted Samples",
-      "programPath": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll",
+      "path": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll",
       "projectPath": "${workspaceFolder}/dotnet/samples/GettingStarted/GettingStarted.csproj",
       "request": "launch",
       "type": "dotnet"
     },
     {
       "name": "C#: Process with Dapr",
-      "programPath": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
+      "path": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
       "projectPath": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/ProcessWithDapr.csproj",
       "request": "launch",
       "type": "dotnet",
       "preLaunchTask": "daprd-debug",
       "postDebugTask": "dapr-down"
-    },
-    {
-      "type": "semantic-kernel.skprompt.debugger",
-      "request": "launch",
-      "name": "Semantic Kernel Function Launch",
-      "workspaceFolder": "${workspaceFolder}",
-      "program": "${relativeFile}"
     }
   ]
 }
