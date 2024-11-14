@@ -2,6 +2,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Python: FastAPI",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "args": ["run", "--host", "0.0.0.0", "--port", "8000"],
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env.local.template"
+    },
+    {
       "type": "semantic-kernel.skprompt.debugger",
       "request": "launch",
       "name": "Semantic Kernel Function Launch",
