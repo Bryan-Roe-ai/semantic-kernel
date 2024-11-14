@@ -2,6 +2,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Docker .NET Attach (Preview)",
+      "type": "docker",
+      "request": "attach",
+      "platform": "netCore",
+      "sourceFileMap": {
+        "/src": "${workspaceFolder}"
+      }
+    },
+    {
       "name": "Python: FastAPI",
       "type": "debugpy",
       "request": "launch",
@@ -39,7 +48,7 @@
     },
     {
       "name": "C#: HuggingFaceImageToText Demo",
-      "programPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll",
+      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll",
       "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/HuggingFaceImageToText.csproj",
       "request": "launch",
       "type": "dotnet"
