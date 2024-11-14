@@ -1,54 +1,55 @@
 {
+  "version": "0.2.0",
   "configurations": [
     {
-      "args": [],
-      // The debug type is not recognized. Make sure that you have a corresponding debug extension installed and that it is enabled.
-      // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+      "type": "semantic-kernel.skprompt.debugger",
+      "request": "launch",
+      "name": "Semantic Kernel Function Launch",
+      "workspaceFolder": "${workspaceFolder}",
+      "program": "${relativeFile}"
+    },
+    {
       "name": "C#: Attach to .NET Functions",
       "preLaunchTask": "build (Concepts)",
-      // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/dotnet/samples/Concepts/bin/Debug/net6.0/Concepts.dll",
+      "processId": "${command:pickProcess}",
       "request": "attach",
-      "type": "dotnet"
+      "type": "coreclr"
     },
     {
       "name": ".NET Core Attach",
       "request": "attach",
-      "type": "dotnet"
+      "type": "node"
     },
     {
-      "args": [
-        "${file}"
-      ],
-      "cwd": "${workspaceFolder}/python",
-      "module": "pytest",
       "name": "Python: Test Module",
+      "type": "debugpy",
       "request": "launch",
-      "type": "python"
+      "module": "pytest",
+      "args": ["${file}"],
+      "cwd": "${workspaceFolder}/python"
     },
     {
       "name": "C#: HuggingFaceImageToText Demo",
-      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll",
+      "programPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll",
+      "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/HuggingFaceImageToText.csproj",
       "request": "launch",
       "type": "dotnet"
     },
     {
       "name": "C#: GettingStarted Samples",
-      "program": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll",
+      "programPath": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll",
+      "projectPath": "${workspaceFolder}/dotnet/samples/GettingStarted/GettingStarted.csproj",
       "request": "launch",
       "type": "dotnet"
     },
     {
-      "env": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
       "name": "C#: Process with Dapr",
-      "postDebugTask": "dapr-down",
-      "preLaunchTask": "daprd-debug",
-      "program": "${workspaceFolder}\\dotnet\\samples\\Demos\\ProcessWithDapr\\bin\\Debug\\net8.0\\ProcessWithDapr.dll",
+      "programPath": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
+      "projectPath": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/ProcessWithDapr.csproj",
       "request": "launch",
-      "type": "dotnet"
+      "type": "dotnet",
+      "preLaunchTask": "daprd-debug",
+      "postDebugTask": "dapr-down"
     }
-  ],
-  "version": "0.2.0"
+  ]
 }
