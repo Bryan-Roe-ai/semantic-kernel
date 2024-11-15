@@ -17,6 +17,8 @@
     "salesforce.salesforcedx-vscode-core",
     "asf.apache-netbeans-java",
     "georgewfraser.vscode-javac",
-    "vscjava.vscode-gradle"
+    "vscjava.vscode-gradle",
+    "paiqo.databricks-vscode",
+    "github.codespaces"
   ]
 }

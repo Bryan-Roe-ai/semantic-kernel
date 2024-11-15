@@ -23,7 +23,8 @@
 				"ms-azuretools.vscode-dapr",
 				"ms-dotnettools.csharp",
 				"dbaeumer.vscode-eslint",
-				"ms-azuretools.vscode-azurefunctions"
+				"ms-azuretools.vscode-azurefunctions",
+				"asf.apache-netbeans-java"
 			]
 		}
 	},
