@@ -117,8 +117,7 @@
   "dbt.dbtIntegration": "cloud",
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
-  "dbt.dbtIntegration": "cloud",
+  },
   "[git-commit]": {
     "editor.defaultFormatter": "Google.cros-ide"
   },
