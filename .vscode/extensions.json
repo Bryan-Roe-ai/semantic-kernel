@@ -11,6 +11,12 @@
     "ms-azuretools.vscode-dapr",
     "d-biehl.robotcode",
     "google.cros-ide",
-    "ionide.ionide-fsharp"
+    "ionide.ionide-fsharp",
+    "ms-dotnettools.dotnet-maui",
+    "huggingface.huggingface-vscode",
+    "salesforce.salesforcedx-vscode-core",
+    "asf.apache-netbeans-java",
+    "georgewfraser.vscode-javac",
+    "vscjava.vscode-gradle"
   ]
 }
