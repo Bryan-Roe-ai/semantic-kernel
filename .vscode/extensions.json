@@ -19,6 +19,7 @@
     "georgewfraser.vscode-javac",
     "vscjava.vscode-gradle",
     "paiqo.databricks-vscode",
-    "github.codespaces"
+    "github.codespaces",
+    "ms-python.python"
   ]
 }

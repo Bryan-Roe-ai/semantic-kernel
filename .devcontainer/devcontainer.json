@@ -24,7 +24,8 @@
 				"ms-dotnettools.csharp",
 				"dbaeumer.vscode-eslint",
 				"ms-azuretools.vscode-azurefunctions",
-				"asf.apache-netbeans-java"
+				"asf.apache-netbeans-java",
+				"ms-python.python"
 			]
 		}
 	},
