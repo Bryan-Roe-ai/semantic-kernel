@@ -55,7 +55,6 @@
     },
     {
       "name": "C#: HuggingFaceImageToText Demo",
-      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll",
       "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/HuggingFaceImageToText.csproj",
       "request": "launch",
       "type": "dotnet"
