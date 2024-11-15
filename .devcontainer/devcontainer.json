@@ -1,67 +1,41 @@
 {
-	"image": "mcr.microsoft.com/devcontainers/universal:2",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"ms-dotnettools.dotnet-interactive-vscode",
-				"ms-semantic-kernel.semantic-kernel",
-				"esbenp.prettier-vscode",
-				"vscjava.vscode-gradle",
-				"GitHub.copilot-chat",
-				"GitHub.copilot",
-				"franneck94.c-cpp-runner",
-				"ms-python.debugpy",
-				"atariq11700.debugpy-old",
-				"ms-vscode.powershell",
-				"hangxingliu.vscode-coding-tracker",
-				"micoloth.reactive-jupyter",
-				"ms-vscode-remote.remote-containers",
-				"ms-dotnettools.csdevkit",
-				"emeraldwalk.RunOnSave",
-				"d-biehl.robotcode",
-				"Ionide.Ionide-fsharp",
-				"Google.cros-ide"
-			]
-		}
-	},
-	"postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet",
-	"features": {
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
-		"ghcr.io/devcontainers/features/git:1": {},
-		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers/features/python:1": {},
-		"ghcr.io/devcontainers/features/node:1": {},
-		"ghcr.io/devcontainers/features/aws-cli:1": {}
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.dotnet-interactive-vscode",
+        "ms-semantic-kernel.semantic-kernel",
+        "esbenp.prettier-vscode",
+        "vscjava.vscode-gradle",
+        "GitHub.copilot-chat",
+        "GitHub.copilot",
+        "franneck94.c-cpp-runner",
+        "ms-python.debugpy",
+        "atariq11700.debugpy-old",
+        "ms-vscode.powershell",
+        "hangxingliu.vscode-coding-tracker",
+        "micoloth.reactive-jupyter",
+        "ms-vscode-remote.remote-containers",
+        "ms-dotnettools.csdevkit",
+        "emeraldwalk.RunOnSave",
+        "d-biehl.robotcode",
+        "Ionide.Ionide-fsharp",
+        "Google.cros-ide",
+        "ms-azuretools.vscode-dapr",
+        "ms-dotnettools.csharp",
+        "dbaeumer.vscode-eslint",
+        "ms-azuretools.vscode-azurefunctions"
+      ]
+    }
   },
-  "tasks": {
-    "test": "dotnet test --no-build --verbosity normal && python -m pytest && ./mvnw -B -Pbug-check -Pcompile-jdk${{ matrix.java-versions }} test --file pom.xml && npm test",
-    "build": "# For .NET\ndotnet restore\n\n# For Python\npip install -r requirements.txt\n\n# For Java\nmvn install\n\n# For Node.js\nnpm install",
-    "launch": "pip install -r requirements.txt && python app.py"
-  }
-	"features": {
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
-		"ghcr.io/devcontainers/features/git:1": {},
-		"ghcr.io/devcontainers/features/github-cli:1": {},
-		"ghcr.io/devcontainers/features/python:1": {},
-		"ghcr.io/devcontainers/features/node:1": {},
-		"ghcr.io/devcontainers/features/aws-cli:1": {}
-	},
-	"tasks": {
-		"test": "# For Python\npip install -r requirements.txt && pytest\n\n# For .NET\ndotnet test\n\n# For Java\nmvn test\n\n# For Node.js\nnpm install && npm test",
-		"build": "npm install",
-		"launch": "npm install && npm start"
-	}
-"features": {
-	"ghcr.io/devcontainers/features/docker-in-docker:2": {},
-	"ghcr.io/devcontainers/features/git:1": {},
-	"ghcr.io/devcontainers/features/github-cli:1": {},
-	"ghcr.io/devcontainers/features/python:1": {},
-	"ghcr.io/devcontainers/features/node:1": {},
-	"ghcr.io/devcontainers/features/aws-cli:1": {}
-},
-"postStartCommand": "dotnet restore && pip install -r requirements.txt && mvn install && npm install",
-"postAttachCommand": {
-	"test": "dotnet test --no-build --verbosity normal && python -m pytest && ./mvnw -B -Pbug-check -Pcompile-jdk${{ matrix.java-versions }} test --file pom.xml && npm test",
-	"launch": "python app.py"
-}
+  "features": {
+    "ghcr.io/devcontainers/features/aws-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/python:1": {}
+  },
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet",
+  "postStartCommand": "dotnet restore && pip install -r requirements.txt && mvn install && npm install"
 }
