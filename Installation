@@ -1,21 +1,17 @@
 
-# Semantic Kernel Installation Guide
-
-
+# Installation Guide
 
 ## Prerequisites
 
-- Java 11 or later
+- Python 3.7 or later
 
-- Maven or Gradle
+- pip
 
+## Maven Package Installation
 
+## Gradle Package Installation
 
-## Maven Installation
-
-Add the following dependency to your `pom.xml`:
-
-
+Install the package using pip:
 
 ```xml
 
@@ -28,6 +24,14 @@ Add the following dependency to your `pom.xml`:
     <version>[latest-version]</version>
 
 </dependency>
+
+```
+
+## Python Package Installation
+
+Install the package using pip:
+
+```groovy
 
 dependencies {
 
