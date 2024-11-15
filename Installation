@@ -1,0 +1,36 @@
+
+# Semantic Kernel Installation Guide
+
+
+
+## Prerequisites
+
+- Java 11 or later
+
+- Maven or Gradle
+
+
+
+## Maven Installation
+
+Add the following dependency to your `pom.xml`:
+
+
+
+```xml
+
+<dependency>
+
+    <groupId>com.microsoft.semantic-kernel</groupId>
+
+    <artifactId>semantickernel-core</artifactId>
+
+    <version>[latest-version]</version>
+
+</dependency>
+
+dependencies {
+
+    implementation 'com.microsoft.semantic-kernel:semantickernel-core:[latest-version]'
+
+}
