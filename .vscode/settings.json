@@ -114,5 +114,12 @@
     "JAVA_HOME": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
     "PATH": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot\\bin;${env:PATH}"
   },
-  "dbt.dbtIntegration": "cloud"
+  "dbt.dbtIntegration": "cloud",
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[git-commit]": {
+    "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "maven.view": "flat"
 }

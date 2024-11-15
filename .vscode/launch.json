@@ -2,46 +2,76 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "C#: Attach to .NET Functions",
-      "type": "dotnet",
+      "name": "Python Debugger: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Docker .NET Attach (Preview)",
+      "type": "docker",
       "request": "attach",
+      "platform": "netCore",
+      "sourceFileMap": {
+        "/src": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Python: FastAPI",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "args": ["run", "--host", "0.0.0.0", "--port", "8000"],
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env.local.template"
+    },
+    {
+      "type": "semantic-kernel.skprompt.debugger",
+      "request": "launch",
+      "name": "Semantic Kernel Function Launch",
+      "workspaceFolder": "${workspaceFolder}",
+      "program": "${relativeFile}"
+    },
+    {
+      "name": "C#: Attach to .NET Functions",
       "preLaunchTask": "build (Concepts)",
-      // If you have changed target frameworks, make sure to update the program path.
-      "program": "${workspaceFolder}/dotnet/samples/Concepts/bin/Debug/net6.0/Concepts.dll",
-      "args": []
-      // The debug type is not recognized. Make sure that you have a corresponding debug extension installed and that it is enabled.
-      // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
+      "processId": "${command:pickProcess}",
+      "request": "attach",
+      "type": "coreclr"
     },
     {
       "name": ".NET Core Attach",
-      "type": "dotnet",
-      "request": "attach"
+      "request": "attach",
+      "type": "node"
     },
     {
-      "cwd": "${workspaceFolder}/python",
       "name": "Python: Test Module",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "module": "pytest",
-      "args": ["${file}"]
+      "args": ["${file}"],
+      "cwd": "${workspaceFolder}/python"
     },
     {
       "name": "C#: HuggingFaceImageToText Demo",
-      "type": "dotnet",
+      "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/HuggingFaceImageToText.csproj",
       "request": "launch",
-      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net6.0/HuggingFaceImageToText.dll"
+      "type": "dotnet"
     },
     {
       "name": "C#: GettingStarted Samples",
-      "type": "dotnet",
+      "program": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll",
+      "projectPath": "${workspaceFolder}/dotnet/samples/GettingStarted/GettingStarted.csproj",
       "request": "launch",
-      "program": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll"
+      "type": "dotnet"
     },
     {
       "name": "C#: Process with Dapr",
-      "type": "dotnet",
+      "program": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
+      "projectPath": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/ProcessWithDapr.csproj",
       "request": "launch",
-      "program": "${workspaceFolder}\\dotnet\\samples\\Demos\\ProcessWithDapr\\bin\\Debug\\net8.0\\ProcessWithDapr.dll",
+      "type": "coreclr",
       "preLaunchTask": "daprd-debug",
       "postDebugTask": "dapr-down",
       "env": {

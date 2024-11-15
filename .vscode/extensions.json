@@ -10,6 +10,16 @@
     "ms-java.vscode-java-pack",
     "ms-azuretools.vscode-dapr",
     "d-biehl.robotcode",
-    "google.cros-ide"
+    "google.cros-ide",
+    "ionide.ionide-fsharp",
+    "ms-dotnettools.dotnet-maui",
+    "huggingface.huggingface-vscode",
+    "salesforce.salesforcedx-vscode-core",
+    "asf.apache-netbeans-java",
+    "georgewfraser.vscode-javac",
+    "vscjava.vscode-gradle",
+    "paiqo.databricks-vscode",
+    "github.codespaces",
+    "ms-python.python"
   ]
 }
