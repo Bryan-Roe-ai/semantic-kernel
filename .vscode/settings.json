@@ -108,8 +108,8 @@
   "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build",
   "intelliphp.inlineSuggestionsEnabled": true,
   "python.analysis.autoImportCompletions": true,
-  "netbeans.jdkhome": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
-  "netbeans.project.jdkhome": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+  "netbeans.jdkhome": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
+  "netbeans.project.jdkhome": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
   "terminal.integrated.env.windows": {
     "JAVA_HOME": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
     "PATH": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot\\bin;${env:PATH}"
@@ -121,5 +121,16 @@
   "[git-commit]": {
     "editor.defaultFormatter": "Google.cros-ide"
   },
-  "maven.view": "flat"
+  "maven.view": "flat",
+  "java.jdt.ls.java.home": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
+  "terminal.integrated.env.linux": {
+    "JAVA_HOME": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
+    "PATH": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23/bin:${env:PATH}"
+  },
+  "maven.terminal.customEnv": [
+    {
+      "environmentVariable": "JAVA_HOME",
+      "value": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23"
+    }
+  ]
 }
