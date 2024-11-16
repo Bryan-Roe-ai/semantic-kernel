@@ -369,5 +369,36 @@ public sealed class Kernel : IKernel, IDisposable
             .FirstOrDefault(s => !string.IsNullOrEmpty(s.ModelId) && this.Config.TextCompletionServices.ContainsKey(s.ModelId));
     }
 
+    private void HandleMergeRequestComments(SKContext context)
+    {
+        if (context.Variables.TryGetValue("mergeRequestComments", out string? comments))
+        {
+            // Process the comments and determine if the file needs optimization or merge
+            bool needsOptimization = ProcessCommentsForOptimization(comments);
+            bool needsMerge = ProcessCommentsForMerge(comments);
+
+            if (needsOptimization)
+            {
+                context.Variables.Set("fileStatus", "needsOptimization");
+            }
+            else if (needsMerge)
+            {
+                context.Variables.Set("fileStatus", "needsMerge");
+            }
+        }
+    }
+
+    private bool ProcessCommentsForOptimization(string comments)
+    {
+        // Implement logic to determine if the file needs optimization based on comments
+        return comments.Contains("optimize");
+    }
+
+    private bool ProcessCommentsForMerge(string comments)
+    {
+        // Implement logic to determine if the file needs merge based on comments
+        return comments.Contains("merge");
+    }
+
     #endregion
 }
