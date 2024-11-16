@@ -708,3 +708,4 @@ swa-cli.config.json
 
 !/python/.env.example
 
+/semantic-kernel
