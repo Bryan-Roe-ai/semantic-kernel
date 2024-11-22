@@ -28,7 +28,8 @@
 				"ms-python.python",
 				"DavidAnson.vscode-markdownlint",
 				"ms-edgedevtools.vscode-edge-devtools",
-				"platformio.platformio-ide"
+				"platformio.platformio-ide",
+				"MetalBear.mirrord"
 			]
 		}
 	},
