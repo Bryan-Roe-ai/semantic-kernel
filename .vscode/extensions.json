@@ -24,6 +24,7 @@
     "metalbear.mirrord",
     "micoloth.reactive-jupyter",
     "davidanson.vscode-markdownlint",
-    "ms-edgedevtools.vscode-edge-devtools"
+    "ms-edgedevtools.vscode-edge-devtools",
+    "ms-dotnettools.csdevkit"
   ]
 }
