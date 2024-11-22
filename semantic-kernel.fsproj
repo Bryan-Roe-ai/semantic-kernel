@@ -10,6 +10,9 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
 
+  <Target Name="CopyFiles" AfterTargets="Build">
+    <Copy SourceFiles="@(Compile)" DestinationFolder="$(OutputPath)" />
+  </Target>
   <ItemGroup>
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.0.1" />
     <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.0.1" />
