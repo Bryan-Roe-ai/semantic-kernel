@@ -2,27 +2,28 @@
   "configurations": [
     {
       "name": "Launch Java App",
-      "type": "java",
       "request": "launch",
+      "type": "java"
     },
     {
+      "args": [
+        "start"
+      ],
       "name": "Run npm start",
-      "type": "node",
+      "program": "${workspaceFolder}/index.js",
       "request": "launch",
-      "program": "${file}",
-      "args": ["start"],
-      "cwd": "${workspaceFolder}"
+      "type": "node"
     },
     {
-      "name": "Python Debugger: Current File",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${file}",
       "console": "integratedTerminal",
-      "justMyCode": true
+      "justMyCode": true,
+      "name": "Python Debugger: Current File",
+      "program": "${file}",
+      "request": "launch",
+      "type": "debugpy"
     },
-    // Docker configuration for .NET Core applications
     {
+      "containerName": "dotnet-app",
       "name": "Docker: .NET Attach (Preview)",
       "platform": "netCore",
       "request": "attach",
@@ -32,17 +33,23 @@
       "type": "docker"
     },
     {
-      "args": ["run", "--host", "0.0.0.0", "--port", "8000"],
+      "args": [
+        "run",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ],
       "console": "integratedTerminal",
-      "envFile": "${workspaceFolder}/.env.local.template",
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": true,
       "name": "Python: FastAPI",
       "program": "${workspaceFolder}/app.py",
       "request": "launch",
-      "type": "debugpy",
-      "justMyCode": true
+      "type": "debugpy"
     },
     {
-      "name": "Semantic Kernel: Specific Function Launch",
+      "name": "Semantic Kernel: Launch Specific Function",
       "program": "${relativeFile}",
       "request": "launch",
       "type": "semantic-kernel.skprompt.debugger",
@@ -56,12 +63,15 @@
       "type": "coreclr"
     },
     {
-      "name": ".NET Core Attach",
+      "name": "C#: Attach to .NET Core",
+      "processId": "${command:pickProcess}",
       "request": "attach",
       "type": "coreclr"
     },
     {
-      "args": ["${file}"],
+      "args": [
+        "${file}"
+      ],
       "cwd": "${workspaceFolder}/python",
       "module": "pytest",
       "name": "Python: Test Module",
@@ -69,33 +79,65 @@
       "type": "debugpy"
     },
     {
+      "cwd": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText",
       "name": "C#: HuggingFaceImageToText Demo",
-      "type": "dotnet",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net8.0/HuggingFaceImageToText.dll",
       "request": "launch",
-      "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/HuggingFaceImageToText.csproj"
+      "type": "coreclr"
     },
     {
+      "cwd": "${workspaceFolder}/dotnet/samples/GettingStarted",
       "name": "C#: GettingStarted Samples",
-      "type": "dotnet",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net8.0/GettingStarted.dll",
       "request": "launch",
-      "projectPath": "${workspaceFolder}/dotnet/samples/GettingStarted/GettingStarted.csproj"
+      "type": "coreclr"
     },
     {
+      "cwd": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr",
       "name": "C#: Process with Dapr",
-      "type": "coreclr",
-      "request": "launch",
-      "program": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
+      "postDebugTask": "dapr-down",
       "preLaunchTask": "daprd-debug",
-      "postDebugTask": "dapr-down"
+      "program": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
+      "request": "launch",
+      "type": "coreclr"
     },
     {
-      "name": "Run Web Server",
-      "type": "node",
-      "request": "launch",
-      "args": ["run", "--host", "0.0.0.0", "--port", "8000"],
+      "args": [
+        "run",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "3000"
+      ],
       "console": "integratedTerminal",
-      "envFile": "${workspaceFolder}/.env.local",
-      "skipFiles": ["<node_internals>/**"]
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "name": "Run Node.js Web Server",
+      "program": "${workspaceFolder}/index.js",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    },
+    {
+      "args": [
+        "run",
+        "--host",
+        "0.0.0.0", // Allows external connections
+        // Default web server port
+        "--port",
+        "3000",
+        "3000" // Default web server port
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "name": "Launch Web Server",
+      "program": "${workspaceFolder}/server.js", // Assuming Node.js server
+      "request": "launch",
+      "type": "node"
     }
   ],
   "version": "0.2.0"
