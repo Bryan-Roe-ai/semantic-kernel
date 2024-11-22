@@ -9,4 +9,4 @@ WRITE THIS CHAPTER CONTINUING STORY, USING [CONTEXT] AND CHAPTER SYNOPSIS BELOW.
 
 {{$input}}
 
-Chapter {{$chapterIndex}}
+Chapter {{$chapter_number}}
