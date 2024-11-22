@@ -10,12 +10,18 @@ const app = express();
 // Configure rate limiting
 const limiter = expressRateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many requests from this IP, please try again later'
 });
 
 // Add middleware
 app.use(limiter);
-app.use(expressCompression());
+app.use(expressCompression({
+  level: 6,
+  threshold: 100 * 1024
+}));
 
 // Add request logging
 app.use((req, res, next) => {
@@ -23,16 +29,39 @@ app.use((req, res, next) => {
   next();
 });
 
+// Add request timeout
+app.use((req, res, next) => {
+  req.setTimeout(5000);
+  res.setTimeout(5000);
+  next();
+});
+
 // Configure middleware with enhanced security
 app.use(helmet({
-  contentSecurityPolicy: true,
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'"],
+      imgSrc: ["'self'"]
+    }
+  },
   crossOriginEmbedderPolicy: true,
   crossOriginOpenerPolicy: true,
   crossOriginResourcePolicy: true,
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
 }));
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Basic health check route
 app.get('/health', (req, res) => {
