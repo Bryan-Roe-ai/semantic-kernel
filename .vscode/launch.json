@@ -9,7 +9,7 @@
       "name": "Run npm start",
       "type": "node",
       "request": "launch",
-      "program": "npm",
+      "program": "${file}",
       "args": ["start"]
     },
     {
@@ -17,10 +17,13 @@
       "name": "Python Debugger: Current File",
       "program": "${file}",
       "request": "launch",
-      "type": "debugpy"
+      "type": "debugpy",
+      "justMyCode": true
     },
     {
       "name": "Docker: .NET Attach (Preview)",
+      // The platform attribute specifies the target platform for the Docker container.
+      // Valid values: "netCore"
       "platform": "netCore",
       "request": "attach",
       "sourceFileMap": {
@@ -29,22 +32,17 @@
       "type": "docker"
     },
     {
-      "args": [
-        "run",
-        "--host",
-        "0.0.0.0",
-        "--port",
-        "8000"
-      ],
+      "args": ["run", "--host", "0.0.0.0", "--port", "8000"],
       "console": "integratedTerminal",
       "envFile": "${workspaceFolder}/.env.local.template",
       "name": "Python: FastAPI",
       "program": "${workspaceFolder}/app.py",
       "request": "launch",
-      "type": "debugpy"
+      "type": "debugpy",
+      "justMyCode": true
     },
     {
-      "name": "Semantic Kernel Function Launch",
+      "name": "Semantic Kernel: Specific Function Launch",
       "program": "${relativeFile}",
       "request": "launch",
       "type": "semantic-kernel.skprompt.debugger",
@@ -63,9 +61,7 @@
       "type": "coreclr"
     },
     {
-      "args": [
-        "${file}"
-      ],
+      "args": ["${file}"],
       "cwd": "${workspaceFolder}/python",
       "module": "pytest",
       "name": "Python: Test Module",
