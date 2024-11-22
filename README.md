@@ -40,7 +40,8 @@ To start using the semantic-kernel, follow these steps:
 
 ## emoji: 🚀
 
-colorFrom: indigo
+## colorFrom: indigo
+
 colorTo: blue
 sdk: docker
 pinned: false
@@ -128,22 +129,19 @@ feature parity between our currently supported languages.
 <table width=100%>
   <tbody>
     <tr>
-      <td>
+      |
         ![C# Logo](https://user-images.githubusercontent.com/371009/230673036-fad1e8e6-5d48-49b1-a9c1-6f9834e0d165.png)
-        <div>
           <a href="dotnet/README.md">Using Semantic Kernel in C#</a> &nbsp<br/>
         </div>
       </td>
       <td>
         <img align="left" width=52px src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg">
-        <div>
           <a href="python/README.md">Using Semantic Kernel in Python</a>
         </div>
       </td>
       <td>
-        <img align="left" width=52px height=52px src="https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg" alt="Java logo">
-        <div>
-          <a href="https://github.com/microsoft/semantic-kernel/blob/main/java/README.md">Using Semantic Kernel in Java</a>
+        ![Java logo](https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg)
+          [Using Semantic Kernel in Java](https://github.com/microsoft/semantic-kernel/blob/main/java/README.md)
         </div>
       </td>
     </tr>
@@ -178,7 +176,7 @@ the [semantic-kernel-java](https://github.com/microsoft/semantic-kernel-java) re
 
 This modelcard aims to be a base template for new models. It has been generated using [this raw template](https://github.com/huggingface/huggingface_hub/blob/main/src/huggingface_hub/templates/modelcard_template.md?plain=1).
 
-## Model Details
+### Model Details
 
 ### Technical Model Description
 
@@ -186,7 +184,7 @@ This modelcard aims to be a base template for new models. It has been generated 
 
 This modelcard aims to be a base template for new models. It has been generated using [this raw template](https://github.com/huggingface/huggingface_hub/blob/main/src/huggingface_hub/templates/modelcard_template.md?plain=1).
 
-## Model Details
+## Technical Model Details
 
 ### Model Description
 
@@ -308,11 +306,11 @@ Use the code below to get started with the model.
 
 <!-- This relates heavily to the Technical Specifications. Content here should link to that section when it is relevant to the training procedure. -->
 
-#### Preprocessing [optional]
+#### Data Preprocessing [optional]
 
 [More Information Needed]
 
-#### Training Hyperparameters
+#### Model Training Parameters
 
 - **Training regime:** [More Information Needed] <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
 
@@ -322,37 +320,37 @@ Use the code below to get started with the model.
 
 [More Information Needed]
 
-## Evaluation
+## Model Evaluation Results
 
 <!-- This section describes the evaluation protocols and provides the results. -->
 
 ### Testing Data, Factors & Metrics
 
-#### Testing Data
+#### Test Dataset Analysis
 
 <!-- This should link to a Dataset Card if possible. -->
 
 [More Information Needed]
 
-#### Factors
+#### Evaluation Factors
 
 <!-- These are the things the evaluation is disaggregating by, e.g., subpopulations or domains. -->
 
 [More Information Needed]
 
-#### Metrics
+#### Performance Metrics
 
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
 
 [More Information Needed]
 
-### Results
+### Evaluation Results
 
 [More Information Needed]
 
-#### Summary
+#### Results Summary
 
-## Model Examination [optional]
+## Model Examination Results [optional]
 
 <!-- Relevant interpretability work for the model goes here -->
 
@@ -442,7 +440,7 @@ Use the code below to get started with the model.
 
 <!-- This section describes the evaluation protocols and provides the results. -->
 
-### Testing Data, Factors & Metrics
+### Test Data, Metrics & Evaluation Factors
 
 #### Testing Data
 
