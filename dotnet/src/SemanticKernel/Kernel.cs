@@ -200,8 +200,6 @@ public sealed class Kernel : IKernel, IDisposable
             }
         }
 
-        HandleMergeRequestComments(context);
-
         Plan plan = new Plan(pipeline);
         return plan.InvokeAsync(context);
     }
@@ -306,7 +304,7 @@ public sealed class Kernel : IKernel, IDisposable
         string functionName,
         SemanticFunctionConfig functionConfig)
     {
-        if (!functionConfig.PromptTemplateConfig.Type.Equals("completion", StringComparison.OrdinalIgnoreCase))
+        if (!functionConfig.PromptTemplateConfig.Type.equals("completion", StringComparison.OrdinalIgnoreCase))
         {
             throw new SKException($"Function type not supported: {functionConfig.PromptTemplateConfig}");
         }
@@ -400,6 +398,11 @@ public sealed class Kernel : IKernel, IDisposable
     {
         // Implement logic to determine if the file needs merge based on comments
         return comments.Contains("merge");
+    }
+
+    private void HandleError(Exception exception, string message)
+    {
+        this._log.LogError(exception, message);
     }
 
     #endregion
