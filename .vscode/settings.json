@@ -143,5 +143,9 @@
   },
   "[xml]": {
     "editor.defaultFormatter": "Google.cros-ide"
-  }
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.acceptSuggestionOnEnter": "on"
 }

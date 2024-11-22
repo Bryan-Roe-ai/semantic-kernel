@@ -1,4 +1,4 @@
-# semantic-kernel
+# About Semantic Kernel
 
 This repository contains the semantic-kernel, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly.
 
@@ -33,21 +33,32 @@ To start using the semantic-kernel, follow these steps:
    ```
 
 4. **Testing**
+
 ---
-title: semantic-kernel
-emoji: 🚀
-colorFrom: indigo
-colorTo: blue
-sdk: docker
-pinned: false
-app_port: 3000
-suggested_hardware: a10g-small
+
+## Project Details
+
+## emoji: 🚀
+
+## colorFrom: indigo
+
+## colorTo: blue
+
+## sdk: docker
+
+## pinned: false
+
+## app_port: 3000
+
+## suggested_hardware: a10g-small
+
 license: other
 ---
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+Check out the configuration reference at <https://huggingface.co/docs/hub/spaces-config-reference>
 license: apache-2.0
 datasets:
+
 - Bryan-Roe/Dataset
 language:
 - en
@@ -57,21 +68,26 @@ metrics:
 base_model:
 - Bryan-Roe/semantic-kernel
 new_version: Bryan-Roe/semantic-kernel
----
-# Model Card for Model ID
 
-runme:
-  id: 01J0BYQX0015D3BH4FX0NPA9QQ
-  version: v3
 ---
 
-# Semantic Kernel
+## Model Card for Model ID
+
+## runme
+
+### id: 01J0BYQX0015D3BH4FX0NPA9QQ
+
+### version: v3
+
+---
+
+## Semantic Kernel
 
 ## Status
 
-- Python <br/>
+- Python  
   [![Python package](https://img.shields.io/pypi/v/semantic-kernel)](https://pypi.org/project/semantic-kernel/)
-- .NET <br/>
+- .NET
   [![Nuget package](https://img.shields.io/nuget/vpre/Microsoft.SemanticKernel)](https://www.nuget.org/packages/Microsoft.SemanticKernel/)[![dotnet Docker](https://github.com/microsoft/semantic-kernel/actions/workflows/dotnet-ci-docker.yml/badge.svg?branch=main)](https://github.com/microsoft/semantic-kernel/actions/workflows/dotnet-ci-docker.yml)[![dotnet Windows](https://github.com/microsoft/semantic-kernel/actions/workflows/dotnet-ci-windows.yml/badge.svg?branch=main)](https://github.com/microsoft/semantic-kernel/actions/workflows/dotnet-ci-windows.yml)
 
 ## Overview
@@ -97,7 +113,7 @@ Semantic Kernel will execute the plan for the user.
 
 It provides:
 
-#### Please star the repo to show your support for this project
+### Key Features and Functionality
 
 - abstractions for AI services (such as chat, text to images, audio to text, etc.) and memory stores
 - implementations of those abstractions for services from [OpenAI](https://platform.openai.com/docs/introduction), [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service), [Hugging Face](https://huggingface.co/), local models, and more, and for a multitude of vector databases, such as those from [Chroma](https://docs.trychroma.com/getting-started), [Qdrant](https://qdrant.tech/), [Milvus](https://milvus.io/), and [Azure](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search)
@@ -109,7 +125,7 @@ It provides:
 Semantic Kernel is utilized by enterprises due to its flexibility, modularity and observability. Backed with security enhancing capabilities like telemetry support, and hooks and filters so you’ll feel confident you’re delivering responsible AI solutions at scale.
 Semantic Kernel was designed to be future proof, easily connecting your code to the latest AI models evolving with the technology as it advances. When new models are released, you’ll simply swap them out without needing to rewrite your entire codebase.
 
-#### Please star the repo to show your support for this project!
+#### Please star the repo to show your support for this project
 
 ![Enterprise-ready](https://learn.microsoft.com/en-us/semantic-kernel/media/enterprise-ready.png)
 
@@ -118,30 +134,9 @@ Semantic Kernel was designed to be future proof, easily connecting your code to 
 The Semantic Kernel SDK is available in C#, Python, and Java. To get started, choose your preferred language below. See the [Feature Matrix](https://learn.microsoft.com/en-us/semantic-kernel/get-started/supported-languages) for a breakdown of
 feature parity between our currently supported languages.
 
-<table width=100%>
-  <tbody>
-    <tr>
-      <td>
-        <img align="left" width=52px src="https://user-images.githubusercontent.com/371009/230673036-fad1e8e6-5d48-49b1-a9c1-6f9834e0d165.png">
-        <div>
-          <a href="dotnet/README.md">Using Semantic Kernel in C#</a> &nbsp<br/>
-        </div>
-      </td>
-      <td>
-        <img align="left" width=52px src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg">
-        <div>
-          <a href="python/README.md">Using Semantic Kernel in Python</a>
-        </div>
-      </td>
-      <td>
-        <img align="left" width=52px height=52px src="https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg" alt="Java logo">
-        <div>
-          <a href="https://github.com/microsoft/semantic-kernel/blob/main/java/README.md">Using Semantic Kernel in Java</a>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+| | | |
+|---|---|---|
+| ![C# Logo](https://user-images.githubusercontent.com/371009/230673036-fad1e8e6-5d48-49b1-a9c1-6f9834e0d165.png)<br>[Using Semantic Kernel in C#](dotnet/README.md) | ![Python Logo](https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg)<br>[Using Semantic Kernel in Python](python/README.md) | ![Java logo](https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg)<br>[Using Semantic Kernel in Java](https://github.com/microsoft/semantic-kernel/blob/main/java/README.md) |
 
 The quickest way to get started with the basics is to get an API key
 from either OpenAI or Azure OpenAI and to run one of the C#, Python, and Java console applications/scripts below.
@@ -171,15 +166,15 @@ the [semantic-kernel-java](https://github.com/microsoft/semantic-kernel-java) re
 
 This modelcard aims to be a base template for new models. It has been generated using [this raw template](https://github.com/huggingface/huggingface_hub/blob/main/src/huggingface_hub/templates/modelcard_template.md?plain=1).
 
-## Model Details
+### Model Details
 
-### Model Description
+### Technical Model Description
 
 <!-- Provide a quick summary of what the model is/does. -->
 
 This modelcard aims to be a base template for new models. It has been generated using [this raw template](https://github.com/huggingface/huggingface_hub/blob/main/src/huggingface_hub/templates/modelcard_template.md?plain=1).
 
-## Model Details
+## Technical Model Details
 
 ### Model Description
 
@@ -189,8 +184,11 @@ This modelcard aims to be a base template for new models. It has been generated 
 2. Follow the instructions [here](https://github.com/microsoft/semantic-kernel/blob/main/java/samples/sample-code/README.md)
 
 ## Learning how to use Semantic Kernel
-To learn how to use the Semantic Kernel, you can explore various resources and tutorials available in the repository. The Semantic Kernel is a versatile tool designed to facilitate the integration of semantic understanding into applications. It provides a range of functionalities that enable developers to build more intelligent and context-aware systems.                                                                                                                                                      
+
+To learn how to use the Semantic Kernel, you can explore various resources and tutorials available in the repository. The Semantic Kernel is a versatile tool designed to facilitate the integration of semantic understanding into applications. It provides a range of functionalities that enable developers to build more intelligent and context-aware systems.
+
 ### Key Features
+
 - **Semantic
 <!-- Provide a longer summary of what this model is. -->
 
@@ -228,7 +226,7 @@ To learn how to use the Semantic Kernel, you can explore various resources and t
 1. 📖 [Getting Started](https://learn.microsoft.com/en-us/semantic-kernel/get-started/quick-start-guide)
 1. 🔌 [Detailed Samples](https://learn.microsoft.com/en-us/semantic-kernel/get-started/detailed-samples)
 1. 💡 [Concepts](https://learn.microsoft.com/en-us/semantic-kernel/concepts/agents)
-2. 8. 📊 [Integrating with external data sources](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/external-data-integration)                                                                                                                                                      
+1. 📊 [Integrating with external data sources](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/external-data-integration)
 
 ### Model Sources [optional]
 
@@ -246,112 +244,109 @@ To learn how to use the Semantic Kernel, you can explore various resources and t
 - **Paper [optional]:** [More Information Needed]
 - **Demo [optional]:** [More Information Needed]
 
-## Uses
+## Model Uses and Applications
 
 <!-- Address questions around how the model is intended to be used, including the foreseeable users of the model and those affected by the model. -->
 
-### Direct Use
+### Direct Model Use
 
 <!-- This section is for the model use without fine-tuning or plugging into a larger ecosystem/app. -->
 
 [More Information Needed]
 
-### Downstream Use [optional]
+### Downstream Applications [optional]
 
 <!-- This section is for the model use when fine-tuned for a task, or when plugged into a larger ecosystem/app -->
 
 [More Information Needed]
 
-### Out-of-Scope Use
+### Out-of-Scope Applications and Limitations
 
 <!-- This section addresses misuse, malicious use, and uses that the model will not work well for. -->
 
 [More Information Needed]
 
-## Bias, Risks, and Limitations
+## Known Limitations and Risks
 
 <!-- This section is meant to convey both technical and sociotechnical limitations. -->
 
 [More Information Needed]
 
-### Recommendations
+### Implementation Recommendations
 
 <!-- This section is meant to convey recommendations with respect to the bias, risk, and technical limitations. -->
 
 Users (both direct and downstream) should be made aware of the risks, biases and limitations of the model. More information needed for further recommendations.
 
-## How to Get Started with the Model
+## Getting Started with Model Implementation
 
 Use the code below to get started with the model.
 
 [More Information Needed]
 
-## Training Details
+## Model Training
 
-### Training Data
+### Model Training Data
 
 <!-- This should link to a Dataset Card, perhaps with a short stub of information on what the training data is all about as well as documentation related to data pre-processing or additional filtering. -->
 
 [More Information Needed]
 
-### Training Procedure
+### Model Training Procedure
 
 <!-- This relates heavily to the Technical Specifications. Content here should link to that section when it is relevant to the training procedure. -->
 
-#### Preprocessing [optional]
+#### Data Preprocessing [optional]
 
 [More Information Needed]
 
-
-#### Training Hyperparameters
+#### Model Training Parameters
 
 - **Training regime:** [More Information Needed] <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
 
-#### Speeds, Sizes, Times [optional]
+#### Performance Metrics [optional]
 
 <!-- This section provides information about throughput, start/end time, checkpoint size if relevant, etc. -->
 
 [More Information Needed]
 
-## Evaluation
+## Model Evaluation Results
 
 <!-- This section describes the evaluation protocols and provides the results. -->
 
 ### Testing Data, Factors & Metrics
 
-#### Testing Data
+#### Test Dataset Analysis
 
 <!-- This should link to a Dataset Card if possible. -->
 
 [More Information Needed]
 
-#### Factors
+#### Evaluation Factors
 
 <!-- These are the things the evaluation is disaggregating by, e.g., subpopulations or domains. -->
 
 [More Information Needed]
 
-#### Metrics
+#### Performance Metrics
 
 <!-- These are the evaluation metrics being used, ideally with a description of why. -->
 
 [More Information Needed]
 
-### Results
+### Evaluation Results
 
 [More Information Needed]
 
-#### Summary
+#### Results Summary
 
-
-
-## Model Examination [optional]
+## Model Examination Results [optional]
 
 <!-- Relevant interpretability work for the model goes here -->
 
 [More Information Needed]
 
-## Environmental Impact
+## Environmental Impact Assessment
 
 <!-- Total emissions (in grams of CO2eq) and additional considerations, such as electricity usage, go here. Edit the suggested text below accordingly -->
 
@@ -421,7 +416,6 @@ Use the code below to get started with the model.
 
 [More Information Needed]
 
-
 #### Training Hyperparameters
 
 - **Training regime:** [More Information Needed] <!--fp32, fp16 mixed precision, bf16 mixed precision, bf16 non-mixed precision, fp16 non-mixed precision, fp8 mixed precision -->
@@ -436,7 +430,7 @@ Use the code below to get started with the model.
 
 <!-- This section describes the evaluation protocols and provides the results. -->
 
-### Testing Data, Factors & Metrics
+### Test Data, Metrics & Evaluation Factors
 
 #### Testing Data
 
@@ -462,8 +456,6 @@ Use the code below to get started with the model.
 
 #### Summary
 
-
-
 ## Model Examination [optional]
 
 <!-- Relevant interpretability work for the model goes here -->
@@ -479,7 +471,9 @@ Carbon emissions can be estimated using the [Machine Learning Impact calculator]
 - [C# API reference](https://learn.microsoft.com/en-us/dotnet/api/microsoft.semantickernel?view=semantic-kernel-dotnet)
 - [Python API reference](https://learn.microsoft.com/en-us/python/api/semantic-kernel/semantic_kernel?view=semantic-kernel-python)
 - Java API reference (coming soon)
+
 ## Visual Studio Code extension: design semantic functions with ease
+
 The Semantic Kernel extension for Visual Studio Code makes it easy to design and test semantic functions. The extension provides an interface for designing semantic functions and allows you to test them with the push of a button with your existing models and data.
 
 ## Join the community
@@ -561,20 +555,20 @@ For more information, see the [Frogbot documentation](https://github.com/jfrog/f
 
 To further enhance security, the repository integrates additional security linters:
 
-* **ESLint**: For JavaScript/TypeScript code, ESLint helps identify and report on patterns found in ECMAScript/JavaScript code. The repository includes an ESLint workflow in `.github/workflows/eslint.yml`.
-* **Bandit**: For Python code, Bandit is a security linter designed to find common security issues. The repository includes a Bandit workflow in `.github/workflows/bandit.yml`.
-* **DevSkim**: A security linter for various languages, DevSkim helps identify potential security issues early in the development process. The repository includes a DevSkim workflow in `.github/workflows/devskim.yml`.
-* **PHPMD**: For PHP code, PHPMD is a tool that looks for several potential problems within the source code. The repository includes a PHPMD workflow in `.github/workflows/phpmd.yml`.
-* **rust-clippy**: For Rust code, rust-clippy is a tool that runs a bunch of lints to catch common mistakes and help improve Rust code. The repository includes a rust-clippy workflow in `.github/workflows/rust-clippy.yml`.
-* **lintr**: For R code, lintr provides static code analysis, checking for adherence to a given style, identifying syntax errors, and possible semantic issues. The repository includes a lintr workflow in `.github/workflows/lintr.yml`.
+- **ESLint**: For JavaScript/TypeScript code, ESLint helps identify and report on patterns found in ECMAScript/JavaScript code. The repository includes an ESLint workflow in `.github/workflows/eslint.yml`.
+- **Bandit**: For Python code, Bandit is a security linter designed to find common security issues. The repository includes a Bandit workflow in `.github/workflows/bandit.yml`.
+- **DevSkim**: A security linter for various languages, DevSkim helps identify potential security issues early in the development process. The repository includes a DevSkim workflow in `.github/workflows/devskim.yml`.
+- **PHPMD**: For PHP code, PHPMD is a tool that looks for several potential problems within the source code. The repository includes a PHPMD workflow in `.github/workflows/phpmd.yml`.
+- **rust-clippy**: For Rust code, rust-clippy is a tool that runs a bunch of lints to catch common mistakes and help improve Rust code. The repository includes a rust-clippy workflow in `.github/workflows/rust-clippy.yml`.
+- **lintr**: For R code, lintr provides static code analysis, checking for adherence to a given style, identifying syntax errors, and possible semantic issues. The repository includes a lintr workflow in `.github/workflows/lintr.yml`.
 
 ### Automated Security Testing
 
 The repository is set up with automated security testing workflows to ensure continuous security validation:
 
-* **EthicalCheck**: For API security testing, the repository includes an EthicalCheck workflow in `.github/workflows/ethicalcheck.yml`.
-* **Mayhem for API**: For API fuzz testing, the repository includes a Mayhem for API workflow in `.github/workflows/mayhem-for-api.yml`.
-* **OSSAR**: For open source static analysis, the repository includes an OSSAR workflow in `.github/workflows/ossar.yml`.
+- **EthicalCheck**: For API security testing, the repository includes an EthicalCheck workflow in `.github/workflows/ethicalcheck.yml`.
+- **Mayhem for API**: For API fuzz testing, the repository includes a Mayhem for API workflow in `.github/workflows/mayhem-for-api.yml`.
+- **OSSAR**: For open source static analysis, the repository includes an OSSAR workflow in `.github/workflows/ossar.yml`.
 
 ### Security Policies and Best Practices
 
@@ -701,52 +695,52 @@ You can then reference these secrets in your GitHub Actions workflows using the 
 
 You can customize the existing workflows to fit your project's needs. Here are some ways to do it:
 
-* Modify the existing workflows in the `.github/workflows` directory to suit your specific requirements. For example, you can adjust the triggers, add or remove steps, and change the configuration settings.
-* Add new workflows to automate additional tasks, such as deploying to different environments, running additional tests, or integrating with other services.
-* Use secrets to securely store sensitive information, such as API keys and credentials, and reference them in your workflows using the `${{ secrets.SECRET_NAME }}` syntax.
-* Leverage the existing workflows as templates and create variations for different branches, environments, or project components.
-* Utilize GitHub Actions marketplace to find and integrate additional actions that can help you achieve your CI/CD goals.
+- Modify the existing workflows in the `.github/workflows` directory to suit your specific requirements. For example, you can adjust the triggers, add or remove steps, and change the configuration settings.
+- Add new workflows to automate additional tasks, such as deploying to different environments, running additional tests, or integrating with other services.
+- Use secrets to securely store sensitive information, such as API keys and credentials, and reference them in your workflows using the `${{ secrets.SECRET_NAME }}` syntax.
+- Leverage the existing workflows as templates and create variations for different branches, environments, or project components.
+- Utilize GitHub Actions marketplace to find and integrate additional actions that can help you achieve your CI/CD goals.
 
 #### Troubleshooting Issues in GitHub Actions Workflows
 
 To troubleshoot issues in GitHub Actions workflows, follow these steps:
 
-* Check the workflow logs for errors and warnings. You can find the logs in the "Actions" tab of your repository.
-* Verify that the secrets used in the workflows are correctly configured. For example, ensure that `AZURE_WEBAPP_PUBLISH_PROFILE` and `GITHUB_TOKEN` are set up correctly in the repository settings.
-* Ensure that the syntax and structure of the workflow files in the `.github/workflows` directory are correct. For example, check the syntax of `.github/workflows/dotnet-build-and-test.yml` and `.github/workflows/azure-container-webapp.yml`.
-* Confirm that the required permissions are set correctly in the workflow files. For example, the `permissions` section in `.github/workflows/Auto-merge.yml` and `.github/workflows/docker-image.yml` should have the appropriate permissions.
-* Verify that the necessary dependencies and actions are correctly specified in the workflow files. For example, ensure that the `actions/checkout@v4` and `docker/setup-buildx-action@v3.0.0` actions are used correctly in the workflows.
-* Check for any conditional statements in the workflows that might be causing issues. For example, the `if` conditions in `.github/workflows/Auto-merge.yml` and `.github/workflows/dotnet-build-and-test.yml` should be evaluated correctly.
-* Ensure that the environment variables and secrets are correctly referenced in the workflows. For example, the `${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}` and `${{ secrets.GITHUB_TOKEN }}` references should be accurate.
-* Review the documentation and examples for the actions used in the workflows. For example, refer to the documentation for `azure/webapps-deploy@v2` and `docker/build-push-action@v5.0.0` to ensure they are used correctly.
+- Check the workflow logs for errors and warnings. You can find the logs in the "Actions" tab of your repository.
+- Verify that the secrets used in the workflows are correctly configured. For example, ensure that `AZURE_WEBAPP_PUBLISH_PROFILE` and `GITHUB_TOKEN` are set up correctly in the repository settings.
+- Ensure that the syntax and structure of the workflow files in the `.github/workflows` directory are correct. For example, check the syntax of `.github/workflows/dotnet-build-and-test.yml` and `.github/workflows/azure-container-webapp.yml`.
+- Confirm that the required permissions are set correctly in the workflow files. For example, the `permissions` section in `.github/workflows/Auto-merge.yml` and `.github/workflows/docker-image.yml` should have the appropriate permissions.
+- Verify that the necessary dependencies and actions are correctly specified in the workflow files. For example, ensure that the `actions/checkout@v4` and `docker/setup-buildx-action@v3.0.0` actions are used correctly in the workflows.
+- Check for any conditional statements in the workflows that might be causing issues. For example, the `if` conditions in `.github/workflows/Auto-merge.yml` and `.github/workflows/dotnet-build-and-test.yml` should be evaluated correctly.
+- Ensure that the environment variables and secrets are correctly referenced in the workflows. For example, the `${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}` and `${{ secrets.GITHUB_TOKEN }}` references should be accurate.
+- Review the documentation and examples for the actions used in the workflows. For example, refer to the documentation for `azure/webapps-deploy@v2` and `docker/build-push-action@v5.0.0` to ensure they are used correctly.
 
 #### Best Practices for Managing Secrets in GitHub Actions
 
 Here are some best practices for managing secrets in GitHub Actions:
 
-* **Use GitHub Secrets:** Store sensitive information such as API keys, credentials, and tokens in GitHub Secrets. Navigate to the repository's "Settings" tab, click on "Secrets and variables" and then "Actions", and add your secrets there. Reference these secrets in your workflows using the `${{ secrets.SECRET_NAME }}` syntax.
-* **Limit Secret Access:** Only provide access to secrets to workflows and jobs that require them. For example, in the `.github/workflows/azure-container-webapp.yml` workflow, the `AZURE_WEBAPP_PUBLISH_PROFILE` secret is only used in the deploy step.
-* **Use Environment Variables:** Use environment variables to manage secrets and configuration settings. For example, in the `.github/workflows/dotnet-build-and-test.yml` workflow, environment variables are used to store API keys and other sensitive information.
-* **Rotate Secrets Regularly:** Regularly update and rotate secrets to minimize the risk of unauthorized access. Ensure that old secrets are removed from the repository settings.
-* **Audit Secret Usage:** Regularly review and audit the usage of secrets in your workflows. Check the workflow logs and ensure that secrets are only used where necessary.
-* **Use Least Privilege Principle:** Grant the minimum necessary permissions to secrets. For example, in the `.github/workflows/Auto-merge.yml` workflow, the `GITHUB_TOKEN` secret is used with limited permissions to enable auto-merge for Dependabot PRs.
-* **Avoid Hardcoding Secrets:** Never hardcode secrets directly in your workflow files. Always use GitHub Secrets to securely store and reference them.
-* **Monitor for Leaks:** Use tools and services to monitor for potential secret leaks in your repository. GitHub provides secret scanning to detect and alert you about exposed secrets.
+- **Use GitHub Secrets:** Store sensitive information such as API keys, credentials, and tokens in GitHub Secrets. Navigate to the repository's "Settings" tab, click on "Secrets and variables" and then "Actions", and add your secrets there. Reference these secrets in your workflows using the `${{ secrets.SECRET_NAME }}` syntax.
+- **Limit Secret Access:** Only provide access to secrets to workflows and jobs that require them. For example, in the `.github/workflows/azure-container-webapp.yml` workflow, the `AZURE_WEBAPP_PUBLISH_PROFILE` secret is only used in the deploy step.
+- **Use Environment Variables:** Use environment variables to manage secrets and configuration settings. For example, in the `.github/workflows/dotnet-build-and-test.yml` workflow, environment variables are used to store API keys and other sensitive information.
+- **Rotate Secrets Regularly:** Regularly update and rotate secrets to minimize the risk of unauthorized access. Ensure that old secrets are removed from the repository settings.
+- **Audit Secret Usage:** Regularly review and audit the usage of secrets in your workflows. Check the workflow logs and ensure that secrets are only used where necessary.
+- **Use Least Privilege Principle:** Grant the minimum necessary permissions to secrets. For example, in the `.github/workflows/Auto-merge.yml` workflow, the `GITHUB_TOKEN` secret is used with limited permissions to enable auto-merge for Dependabot PRs.
+- **Avoid Hardcoding Secrets:** Never hardcode secrets directly in your workflow files. Always use GitHub Secrets to securely store and reference them.
+- **Monitor for Leaks:** Use tools and services to monitor for potential secret leaks in your repository. GitHub provides secret scanning to detect and alert you about exposed secrets.
 
 #### Integrating Additional Services Using GitHub Actions Marketplace
 
 To integrate additional services into the workflows, you can follow these steps:
 
-* Identify the service you want to integrate and find the corresponding GitHub Action in the GitHub Actions marketplace.
-* Add the necessary steps to the relevant workflow file in the `.github/workflows` directory. For example, if you want to integrate a security scan service, you can add a step to run the security scan action.
-* Configure any required secrets for the service in the repository settings. For example, if the service requires an API key, add it as a secret in the repository settings and reference it in the workflow using the `${{ secrets.SECRET_NAME }}` syntax.
-* Ensure that the workflow has the necessary permissions to access the service. For example, if the service requires access to the repository contents, add the appropriate permissions in the workflow file.
+- Identify the service you want to integrate and find the corresponding GitHub Action in the GitHub Actions marketplace.
+- Add the necessary steps to the relevant workflow file in the `.github/workflows` directory. For example, if you want to integrate a security scan service, you can add a step to run the security scan action.
+- Configure any required secrets for the service in the repository settings. For example, if the service requires an API key, add it as a secret in the repository settings and reference it in the workflow using the `${{ secrets.SECRET_NAME }}` syntax.
+- Ensure that the workflow has the necessary permissions to access the service. For example, if the service requires access to the repository contents, add the appropriate permissions in the workflow file.
 
 For example, to integrate a security scan service like Codacy, you can follow these steps:
 
-* Add the Codacy security scan action to the relevant workflow file, such as `.github/workflows/codacy.yml`.
-* Configure the required secrets, such as `CODACY_PROJECT_TOKEN`, in the repository settings.
-* Ensure that the workflow has the necessary permissions to upload the SARIF results to GitHub Security tab.
+- Add the Codacy security scan action to the relevant workflow file, such as `.github/workflows/codacy.yml`.
+- Configure the required secrets, such as `CODACY_PROJECT_TOKEN`, in the repository settings.
+- Ensure that the workflow has the necessary permissions to upload the SARIF results to GitHub Security tab.
 
 ### Azure Pipelines
 
@@ -756,7 +750,7 @@ The repository includes an Azure Pipelines configuration file at `.github/workfl
 
 GitHub Actions is a powerful tool for automating your CI/CD pipelines. This section provides instructions on setting up GitHub Actions for CI/CD in this repository.
 
-### Configuring Secrets for GitHub Actions
+### Managing GitHub Actions Secrets
 
 To configure secrets for GitHub Actions workflows, follow these steps:
 
@@ -770,53 +764,53 @@ To configure secrets for GitHub Actions workflows, follow these steps:
 
 You can then reference these secrets in your GitHub Actions workflows using the `${{ secrets.SECRET_NAME }}` syntax. For example, in the `.github/workflows/azure-container-webapp.yml` workflow, the secret `AZURE_WEBAPP_PUBLISH_PROFILE` is referenced as `${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}`. Similarly, in the `.github/workflows/Auto-merge.yml` workflow, the secret `GITHUB_TOKEN` is referenced as `${{ secrets.GITHUB_TOKEN }}`.
 
-### Customizing Workflows for Specific Project Needs
+### Project-Specific Workflow Customization
 
 You can customize the existing workflows to fit your project's needs. Here are some ways to do it:
 
-* Modify the existing workflows in the `.github/workflows` directory to suit your specific requirements. For example, you can adjust the triggers, add or remove steps, and change the configuration settings.
-* Add new workflows to automate additional tasks, such as deploying to different environments, running additional tests, or integrating with other services.
-* Use secrets to securely store sensitive information, such as API keys and credentials, and reference them in your workflows using the `${{ secrets.SECRET_NAME }}` syntax.
-* Leverage the existing workflows as templates and create variations for different branches, environments, or project components.
-* Utilize GitHub Actions marketplace to find and integrate additional actions that can help you achieve your CI/CD goals.
+- Modify the existing workflows in the `.github/workflows` directory to suit your specific requirements. For example, you can adjust the triggers, add or remove steps, and change the configuration settings.
+- Add new workflows to automate additional tasks, such as deploying to different environments, running additional tests, or integrating with other services.
+- Use secrets to securely store sensitive information, such as API keys and credentials, and reference them in your workflows using the `${{ secrets.SECRET_NAME }}` syntax.
+- Leverage the existing workflows as templates and create variations for different branches, environments, or project components.
+- Utilize GitHub Actions marketplace to find and integrate additional actions that can help you achieve your CI/CD goals.
 
-### Troubleshooting Issues in GitHub Actions Workflows
+### Resolving Issues in GitHub Actions Workflows
 
 To troubleshoot issues in GitHub Actions workflows, follow these steps:
 
-* Check the workflow logs for errors and warnings. You can find the logs in the "Actions" tab of your repository.
-* Verify that the secrets used in the workflows are correctly configured. For example, ensure that `AZURE_WEBAPP_PUBLISH_PROFILE` and `GITHUB_TOKEN` are set up correctly in the repository settings.
-* Ensure that the syntax and structure of the workflow files in the `.github/workflows` directory are correct. For example, check the syntax of `.github/workflows/dotnet-build-and-test.yml` and `.github/workflows/azure-container-webapp.yml`.
-* Confirm that the required permissions are set correctly in the workflow files. For example, the `permissions` section in `.github/workflows/Auto-merge.yml` and `.github/workflows/docker-image.yml` should have the appropriate permissions.
-* Verify that the necessary dependencies and actions are correctly specified in the workflow files. For example, ensure that the `actions/checkout@v4` and `docker/setup-buildx-action@v3.0.0` actions are used correctly in the workflows.
-* Check for any conditional statements in the workflows that might be causing issues. For example, the `if` conditions in `.github/workflows/Auto-merge.yml` and `.github/workflows/dotnet-build-and-test.yml` should be evaluated correctly.
-* Ensure that the environment variables and secrets are correctly referenced in the workflows. For example, the `${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}` and `${{ secrets.GITHUB_TOKEN }}` references should be accurate.
-* Review the documentation and examples for the actions used in the workflows. For example, refer to the documentation for `azure/webapps-deploy@v2` and `docker/build-push-action@v5.0.0` to ensure they are used correctly.
+- Check the workflow logs for errors and warnings. You can find the logs in the "Actions" tab of your repository.
+- Verify that the secrets used in the workflows are correctly configured. For example, ensure that `AZURE_WEBAPP_PUBLISH_PROFILE` and `GITHUB_TOKEN` are set up correctly in the repository settings.
+- Ensure that the syntax and structure of the workflow files in the `.github/workflows` directory are correct. For example, check the syntax of `.github/workflows/dotnet-build-and-test.yml` and `.github/workflows/azure-container-webapp.yml`.
+- Confirm that the required permissions are set correctly in the workflow files. For example, the `permissions` section in `.github/workflows/Auto-merge.yml` and `.github/workflows/docker-image.yml` should have the appropriate permissions.
+- Verify that the necessary dependencies and actions are correctly specified in the workflow files. For example, ensure that the `actions/checkout@v4` and `docker/setup-buildx-action@v3.0.0` actions are used correctly in the workflows.
+- Check for any conditional statements in the workflows that might be causing issues. For example, the `if` conditions in `.github/workflows/Auto-merge.yml` and `.github/workflows/dotnet-build-and-test.yml` should be evaluated correctly.
+- Ensure that the environment variables and secrets are correctly referenced in the workflows. For example, the `${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}` and `${{ secrets.GITHUB_TOKEN }}` references should be accurate.
+- Review the documentation and examples for the actions used in the workflows. For example, refer to the documentation for `azure/webapps-deploy@v2` and `docker/build-push-action@v5.0.0` to ensure they are used correctly.
 
-### Best Practices for Managing Secrets in GitHub Actions
+### Guidelines for Secret Management in GitHub Actions
 
 Here are some best practices for managing secrets in GitHub Actions:
 
-* **Use GitHub Secrets:** Store sensitive information such as API keys, credentials, and tokens in GitHub Secrets. Navigate to the repository's "Settings" tab, click on "Secrets and variables" and then "Actions", and add your secrets there. Reference these secrets in your workflows using the `${{ secrets.SECRET_NAME }}` syntax.
-* **Limit Secret Access:** Only provide access to secrets to workflows and jobs that require them. For example, in the `.github/workflows/azure-container-webapp.yml` workflow, the `AZURE_WEBAPP_PUBLISH_PROFILE` secret is only used in the deploy step.
-* **Use Environment Variables:** Use environment variables to manage secrets and configuration settings. For example, in the `.github/workflows/dotnet-build-and-test.yml` workflow, environment variables are used to store API keys and other sensitive information.
-* **Rotate Secrets Regularly:** Regularly update and rotate secrets to minimize the risk of unauthorized access. Ensure that old secrets are removed from the repository settings.
-* **Audit Secret Usage:** Regularly review and audit the usage of secrets in your workflows. Check the workflow logs and ensure that secrets are only used where necessary.
-* **Use Least Privilege Principle:** Grant the minimum necessary permissions to secrets. For example, in the `.github/workflows/Auto-merge.yml` workflow, the `GITHUB_TOKEN` secret is used with limited permissions to enable auto-merge for Dependabot PRs.
-* **Avoid Hardcoding Secrets:** Never hardcode secrets directly in your workflow files. Always use GitHub Secrets to securely store and reference them.
-* **Monitor for Leaks:** Use tools and services to monitor for potential secret leaks in your repository. GitHub provides secret scanning to detect and alert you about exposed secrets.
+- **Use GitHub Secrets:** Store sensitive information such as API keys, credentials, and tokens in GitHub Secrets. Navigate to the repository's "Settings" tab, click on "Secrets and variables" and then "Actions", and add your secrets there. Reference these secrets in your workflows using the `${{ secrets.SECRET_NAME }}` syntax.
+- **Limit Secret Access:** Only provide access to secrets to workflows and jobs that require them. For example, in the `.github/workflows/azure-container-webapp.yml` workflow, the `AZURE_WEBAPP_PUBLISH_PROFILE` secret is only used in the deploy step.
+- **Use Environment Variables:** Use environment variables to manage secrets and configuration settings. For example, in the `.github/workflows/dotnet-build-and-test.yml` workflow, environment variables are used to store API keys and other sensitive information.
+- **Rotate Secrets Regularly:** Regularly update and rotate secrets to minimize the risk of unauthorized access. Ensure that old secrets are removed from the repository settings.
+- **Audit Secret Usage:** Regularly review and audit the usage of secrets in your workflows. Check the workflow logs and ensure that secrets are only used where necessary.
+- **Use Least Privilege Principle:** Grant the minimum necessary permissions to secrets. For example, in the `.github/workflows/Auto-merge.yml` workflow, the `GITHUB_TOKEN` secret is used with limited permissions to enable auto-merge for Dependabot PRs.
+- **Avoid Hardcoding Secrets:** Never hardcode secrets directly in your workflow files. Always use GitHub Secrets to securely store and reference them.
+- **Monitor for Leaks:** Use tools and services to monitor for potential secret leaks in your repository. GitHub provides secret scanning to detect and alert you about exposed secrets.
 
-### Integrating Additional Services Using GitHub Actions Marketplace
+### Adding Third-Party Services via GitHub Actions Marketplace
 
 To integrate additional services into the workflows, you can follow these steps:
 
-* Identify the service you want to integrate and find the corresponding GitHub Action in the GitHub Actions marketplace.
-* Add the necessary steps to the relevant workflow file in the `.github/workflows` directory. For example, if you want to integrate a security scan service, you can add a step to run the security scan action.
-* Configure any required secrets for the service in the repository settings. For example, if the service requires an API key, add it as a secret in the repository settings and reference it in the workflow using the `${{ secrets.SECRET_NAME }}` syntax.
-* Ensure that the workflow has the necessary permissions to access the service. For example, if the service requires access to the repository contents, add the appropriate permissions in the workflow file.
+- Identify the service you want to integrate and find the corresponding GitHub Action in the GitHub Actions marketplace.
+- Add the necessary steps to the relevant workflow file in the `.github/workflows` directory. For example, if you want to integrate a security scan service, you can add a step to run the security scan action.
+- Configure any required secrets for the service in the repository settings. For example, if the service requires an API key, add it as a secret in the repository settings and reference it in the workflow using the `${{ secrets.SECRET_NAME }}` syntax.
+- Ensure that the workflow has the necessary permissions to access the service. For example, if the service requires access to the repository contents, add the appropriate permissions in the workflow file.
 
 For example, to integrate a security scan service like Codacy, you can follow these steps:
 
-* Add the Codacy security scan action to the relevant workflow file, such as `.github/workflows/codacy.yml`.
-* Configure the required secrets, such as `CODACY_PROJECT_TOKEN`, in the repository settings.
-* Ensure that the workflow has the necessary permissions to upload the SARIF results to GitHub Security tab.
+- Add the Codacy security scan action to the relevant workflow file, such as `.github/workflows/codacy.yml`.
+- Configure the required secrets, such as `CODACY_PROJECT_TOKEN`, in the repository settings.
+- Ensure that the workflow has the necessary permissions to upload the SARIF results to GitHub Security tab.

@@ -55,4 +55,4 @@ Here is a valid example of how to call a function "Name3" with multiple inputs:
 
 Begin!
 
-<goal>{{$input}}</goal>
+<goal>$INPUT</goal>

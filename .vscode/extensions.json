@@ -25,6 +25,7 @@
     "micoloth.reactive-jupyter",
     "davidanson.vscode-markdownlint",
     "ms-edgedevtools.vscode-edge-devtools",
-    "ms-dotnettools.csdevkit"
+    "ms-dotnettools.csdevkit",
+    "platformio.platformio-ide"
   ]
 }

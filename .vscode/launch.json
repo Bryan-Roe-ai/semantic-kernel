@@ -2,47 +2,48 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "java+",
+      "name": "Node.js Web Server",
+      "type": "node",
       "request": "launch",
-      "name": "Launch Java App"
-    },
-    {
-      "command": "npm start",
-      "name": "Run npm start",
-      "request": "launch",
-      "type": "node-terminal"
-    },
-    {
-      "name": "Python Debugger: Current File",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${file}",
-      "console": "integratedTerminal"
-    },
-    {
-      "name": "Docker .NET Attach (Preview)",
-      "type": "docker",
-      "request": "attach",
-      "platform": "netCore",
-      "sourceFileMap": {
-        "/src": "${workspaceFolder}"
-      }
-    },
-    {
-      "name": "Python: FastAPI",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${workspaceFolder}/app.py",
-      "args": ["run", "--host", "0.0.0.0", "--port", "8000"],
+      "program": "${workspaceFolder}/server.js",
+      "args": ["--host", "0.0.0.0", "--port", "3000"],
       "console": "integratedTerminal",
-      "envFile": "${workspaceFolder}/.env.local.template"
+      "envFile": "${workspaceFolder}/.env",
+      "cwd": "${workspaceFolder}"
     },
     {
-      "type": "semantic-kernel.skprompt.debugger",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "name": "Python Debugger: Current File",
+      "program": "${file}",
       "request": "launch",
-      "name": "Semantic Kernel Function Launch",
-      "workspaceFolder": "${workspaceFolder}",
-      "program": "${relativeFile}"
+      "type": "debugpy"
+    },
+    {
+      "args": [
+        "run",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000"
+      ],
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env",
+      "justMyCode": true,
+      "name": "Python: FastAPI",
+      "program": "${workspaceFolder}/app.py",
+      "request": "launch",
+      "type": "debugpy"
+    },
+    {
+      "args": [
+        "${file}"
+      ],
+      "cwd": "${workspaceFolder}/python",
+      "module": "pytest",
+      "name": "Python: Test Module",
+      "request": "launch",
+      "type": "debugpy"
     },
     {
       "name": "C#: Attach to .NET Functions",
@@ -52,40 +53,52 @@
       "type": "coreclr"
     },
     {
-      "name": ".NET Core Attach",
+      "name": "C#: Attach to .NET Core",
+      "processId": "${command:pickProcess}",
       "request": "attach",
-      "type": "node"
+      "type": "coreclr"
     },
     {
-      "name": "Python: Test Module",
-      "type": "debugpy",
-      "request": "launch",
-      "module": "pytest",
-      "args": ["${file}"],
-      "cwd": "${workspaceFolder}/python"
-    },
-    {
+      "cwd": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText",
       "name": "C#: HuggingFaceImageToText Demo",
-      "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/HuggingFaceImageToText.csproj",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net8.0/HuggingFaceImageToText.dll",
       "request": "launch",
-      "type": "dotnet"
+      "type": "coreclr"
     },
     {
+      "cwd": "${workspaceFolder}/dotnet/samples/GettingStarted",
       "name": "C#: GettingStarted Samples",
-      "projectPath": "${workspaceFolder}/dotnet/samples/GettingStarted/GettingStarted.csproj",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net8.0/GettingStarted.dll",
       "request": "launch",
-      "type": "dotnet"
+      "type": "coreclr"
     },
     {
+      "cwd": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr",
       "name": "C#: Process with Dapr",
+      "postDebugTask": "dapr-down",
+      "preLaunchTask": "daprd-debug",
       "program": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
       "request": "launch",
-      "type": "coreclr",
-      "preLaunchTask": "daprd-debug",
-      "postDebugTask": "dapr-down",
-      "env": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      "type": "coreclr"
+    },
+    {
+      "containerName": "dotnet-app",
+      "name": "Docker: .NET Attach (Preview)",
+      "platform": "netCore",
+      "request": "attach",
+      "sourceFileMap": {
+        "/src": "${workspaceFolder}"
+      },
+      "type": "docker"
+    },
+    {
+      "name": "Semantic Kernel: Launch Specific Function",
+      "program": "${relativeFile}",
+      "request": "launch",
+      "type": "semantic-kernel.skprompt.debugger",
+      "workspaceFolder": "${workspaceFolder}"
     }
   ]
 }

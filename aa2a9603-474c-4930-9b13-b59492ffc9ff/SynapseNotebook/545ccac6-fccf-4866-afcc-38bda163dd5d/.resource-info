@@ -1,1 +1,8 @@
-[]
+{
+  "resources": [],
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "",
+    "description": "Resource information tracking file"
+  }
+}

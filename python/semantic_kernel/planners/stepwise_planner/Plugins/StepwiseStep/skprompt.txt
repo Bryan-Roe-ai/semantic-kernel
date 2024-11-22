@@ -8,7 +8,7 @@ The function definitions below are in the following format:
     - <parameterName>: <parameterDescription>
     - ...
 
-{{$function_descriptions}}
+{{function_descriptions}}
 [END AVAILABLE FUNCTIONS]
 
 [USAGE INSTRUCTIONS]
@@ -63,5 +63,5 @@ Let's break down the problem step by step and think about the best approach. Que
 Begin!
 
 [QUESTION]
-{{$question}}
-{{$agent_scratch_pad}}
+{{input}}
+{{scratch_pad}}

@@ -1,0 +1,14 @@
+
+    return result.flatMap(skContext -> {
+
+        if (skContext.getError() != null) {
+
+            return Mono.error(new RuntimeException(skContext.getError().getMessage()));
+
+        }
+
+        return Mono.just(skContext.getResult());
+
+    });
+
+}
