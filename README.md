@@ -44,10 +44,14 @@ To start using the semantic-kernel, follow these steps:
 
 ## colorTo: blue
 
-sdk: docker
-pinned: false
-app_port: 3000
-suggested_hardware: a10g-small
+## sdk: docker
+
+## pinned: false
+
+## app_port: 3000
+
+## suggested_hardware: a10g-small
+
 license: other
 ---
 
@@ -74,7 +78,6 @@ new_version: Bryan-Roe/semantic-kernel
 ### id: 01J0BYQX0015D3BH4FX0NPA9QQ
 
 ### version: v3
-
 
 ---
 
