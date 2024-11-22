@@ -2,7 +2,7 @@ Create an XML plan step by step, to satisfy the goal given, with the available f
 
 [AVAILABLE FUNCTIONS]
 
-{{$available_functions}}
+{{$available_functions_json}}
 
 [END AVAILABLE FUNCTIONS]
 
@@ -55,4 +55,4 @@ Here is a valid example of how to call a function "Name3" with multiple inputs:
 
 Begin!
 
-<goal>{{$input}}</goal>
+<goal>$INPUT</goal>

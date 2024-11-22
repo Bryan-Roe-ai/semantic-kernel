@@ -1,1 +1,3 @@
-{{$chat_history}}{{$user_input}}
+{{$input}}
+
+// Handle user greetings

@@ -1,11 +1,17 @@
-I want to write a {{$chapterCount}} chapter novella about:
-{{$input}}
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Create an XML plan step by step, to satisfy the goal given, with the available functions. -->
 
-There MUST BE {{$chapterCount}} CHAPTERS.
+[AVAILABLE FUNCTIONS]
+$input
+[END AVAILABLE FUNCTIONS]
 
-INVENT CHARACTERS AS YOU SEE FIT. BE HIGHLY CREATIVE AND/OR FUNNY.
-WRITE SYNOPSIS FOR EACH CHAPTER. INCLUDE INFORMATION ABOUT CHARACTERS ETC. SINCE EACH
-CHAPTER WILL BE WRITTEN BY A DIFFERENT WRITER, YOU MUST INCLUDE ALL PERTINENT INFORMATION
-IN EACH SYNOPSIS
-
-YOU MUST END EACH SYNOPSIS WITH {{$endMarker}}
+<plan_template>
+    To create a plan, follow these steps:
+    0. The plan should be as short as possible.
+    1. Create a plan in this format:
+       <goal>Goal description here</goal>
+       <plan>
+         <function.FunctionName input="$INPUT" output="$variableName" />
+         <function.AnotherFunction input="$variableName" output="$result" />
+       </plan>
+</plan_template>
