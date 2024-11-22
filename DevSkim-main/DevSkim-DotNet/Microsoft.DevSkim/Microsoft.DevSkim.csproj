@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Microsoft</Authors>
-    <copyright>© Microsoft Corporation. All rights reserved.</copyright> 
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright> 
     <Description>DevSkim is a framework and language analyzer that provides inline security analysis. This is a library package. For the Dotnet Tool package, see Microsoft.CST.DevSkim.CLI.</Description>
     <PackageIcon>devskim-icon-128.png</PackageIcon>
     <PackageProjectUrl>https://github.com/Microsoft/DevSkim</PackageProjectUrl>
