@@ -9,4 +9,8 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
 
+  <Target Name="CopyFiles" AfterTargets="Build">
+    <Copy SourceFiles="@(Compile)" DestinationFolder="$(OutputPath)" />
+  </Target>
+
 </Project>
