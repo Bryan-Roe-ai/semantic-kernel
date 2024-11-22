@@ -5,50 +5,50 @@ F.R.I.D.A.Y. = Female Replacement Intelligent Digital Assistant Youth.
 # Mirror to check what's behind
 B.A.R.F. = Binary Augmented Retro-Framing.
 # Pair of powerful glasses created by a genius that is now dead
-E.D.I.T.H. = Even Dead I’m The Hero.
+E.D.I.T.H. = Even Dead I'm The Hero.
 # A company building and selling computers
 I.B.M. = Intelligent Business Machine.
-# A super computer that is sentient.
-H.A.L = Heuristically programmed ALgorithmic computer.
-# an intelligent bot that helps with productivity.
+# A super computer that is sentient
+H.A.L. = Heuristically programmed ALgorithmic computer.
+# An intelligent bot that helps with productivity
 C.O.R.E. = Central Optimization Routines and Efficiency.
-# an intelligent bot that helps with productivity.
+# An intelligent personal assistant
 P.A.L. = Personal Assistant Light.
-# an intelligent bot that helps with productivity.
+# A digital assistant with AI capabilities
 A.I.D.A. = Artificial Intelligence Digital Assistant.
-# an intelligent bot that helps with productivity.
+# A human-like recognition system
 H.E.R.A. = Human Emulation and Recognition Algorithm.
-# an intelligent bot that helps with productivity.
+# An automation control system
 I.C.A.R.U.S. = Intelligent Control and Automation of Research and Utility Systems.
-# an intelligent bot that helps with productivity.
+# A networked processing system
 N.E.M.O. = Networked Embedded Multiprocessor Orchestration.
-# an intelligent bot that helps with productivity.
+# A productivity enhancement system
 E.P.I.C. = Enhanced Productivity and Intelligence through Computing.
-# an intelligent bot that helps with productivity.
+# A multipurpose AI system
 M.A.I.A. = Multipurpose Artificial Intelligence Assistant.
-# an intelligent bot that helps with productivity.
+# An artificial reasoning system
 A.R.I.A. = Artificial Reasoning and Intelligent Assistant.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# A mathematical optimization entity
 O.M.E.G.A. = Optimized Mathematical Entity for Generalized Artificial intelligence.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# A heuristic optimization system
 P.Y.T.H.O.N. = Precise Yet Thorough Heuristic Optimization Network.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# An adaptive learning system
 A.P.O.L.L.O. = Adaptive Probabilistic Optimization Learning Library for Online Applications.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# A self-organizing database
 S.O.L.I.D. = Self-Organizing Logical Intelligent Data-base.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# A dynamic prediction system
 D.E.E.P. = Dynamic Estimation and Prediction.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# A biologically-inspired AI
 B.R.A.I.N. = Biologically Realistic Artificial Intelligence Network.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# A computational intelligence toolkit
 C.O.G.N.I.T.O. = COmputational and Generalized INtelligence TOolkit.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# A symbolic reasoning engine
 S.A.G.E. = Symbolic Artificial General Intelligence Engine.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# A quantum computing system
 Q.U.A.R.K. = Quantum Universal Algorithmic Reasoning Kernel.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# A sophisticated logic system
 S.O.L.V.E. = Sophisticated Operational Logic and Versatile Expertise.
-# An incredibly smart entity developed with complex math, that helps me being more productive.
+# An advanced computing unit
 C.A.L.C.U.L.U.S. = Cognitively Advanced Logic and Computation Unit for Learning and Understanding Systems.
 
 # {{input}}
