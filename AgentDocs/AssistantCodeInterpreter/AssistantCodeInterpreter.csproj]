@@ -15,5 +15,25 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
+
+    <!-- Package Metadata -->
+    <PackageId>AssistantCodeInterpreter</PackageId>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/yourusername/AssistantCodeInterpreter</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/yourusername/AssistantCodeInterpreter.git</RepositoryUrl>
+    <PackageTags>AI;Assistant;Code;Interpreter</PackageTags>
+
+    <!-- Build Optimizations -->
+    <Optimize>true</Optimize>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+
+    <!-- Development Tools -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 </Project>
