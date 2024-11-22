@@ -200,6 +200,8 @@ public sealed class Kernel : IKernel, IDisposable
             }
         }
 
+        HandleMergeRequestComments(context);
+
         Plan plan = new Plan(pipeline);
         return plan.InvokeAsync(context);
     }

@@ -88,6 +88,8 @@ public static class Program
                 },
                 new Kernel());
 
+        HandleMergeRequestComments();
+
         Console.WriteLine("Creating thread...");
         string threadId = await agent.CreateThreadAsync();
 
@@ -190,5 +192,10 @@ public static class Program
                     });
             }
         }
+    }
+
+    private static void HandleMergeRequestComments()
+    {
+        // Implement logic to process comments for optimization or merge
     }
 }
