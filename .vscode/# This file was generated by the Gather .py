@@ -9,7 +9,3 @@
 # Please let us know if you are satisfied with what was gathered here:
 # https://aka.ms/gatherfeedback
 # Thanks
-
-undefined
-Gather internal error
-Could not analyze this code
