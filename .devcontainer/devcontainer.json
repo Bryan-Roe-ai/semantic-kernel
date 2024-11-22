@@ -48,6 +48,7 @@
   "postStartCommand": "dotnet restore && pip install -r requirements.txt && mvn install && npm install",
   "tasks": {
     "build": "dotnet restore && dotnet build && pip install -r requirements.txt && mvn clean install && npm install",
-    "launch": "npm start"
+    "launch": "npm start",
+    "test": "dotnet test --no-build --verbosity normal && cd python && pytest && cd .. && cd java && ./mvnw test --file pom.xml && cd .. && npm test"
   }
 }
