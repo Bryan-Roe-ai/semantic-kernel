@@ -2,28 +2,28 @@
   "configurations": [
     {
       "name": "Launch Java App",
+      "type": "java",
       "request": "launch",
-      "type": "java"
     },
     {
       "name": "Run npm start",
       "type": "node",
       "request": "launch",
       "program": "${file}",
-      "args": ["start"]
+      "args": ["start"],
+      "cwd": "${workspaceFolder}"
     },
     {
-      "console": "integratedTerminal",
       "name": "Python Debugger: Current File",
-      "program": "${file}",
-      "request": "launch",
       "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
       "justMyCode": true
     },
+    // Docker configuration for .NET Core applications
     {
       "name": "Docker: .NET Attach (Preview)",
-      // The platform attribute specifies the target platform for the Docker container.
-      // Valid values: "netCore"
       "platform": "netCore",
       "request": "attach",
       "sourceFileMap": {
@@ -70,23 +70,32 @@
     },
     {
       "name": "C#: HuggingFaceImageToText Demo",
-      "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/HuggingFaceImageToText.csproj",
+      "type": "dotnet",
       "request": "launch",
-      "type": "dotnet"
+      "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/HuggingFaceImageToText.csproj"
     },
     {
       "name": "C#: GettingStarted Samples",
-      "projectPath": "${workspaceFolder}/dotnet/samples/GettingStarted/GettingStarted.csproj",
+      "type": "dotnet",
       "request": "launch",
-      "type": "dotnet"
+      "projectPath": "${workspaceFolder}/dotnet/samples/GettingStarted/GettingStarted.csproj"
     },
     {
       "name": "C#: Process with Dapr",
-      "postDebugTask": "dapr-down",
-      "preLaunchTask": "daprd-debug",
-      "program": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
+      "type": "coreclr",
       "request": "launch",
-      "type": "coreclr"
+      "program": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
+      "preLaunchTask": "daprd-debug",
+      "postDebugTask": "dapr-down"
+    },
+    {
+      "name": "Run Web Server",
+      "type": "node",
+      "request": "launch",
+      "args": ["run", "--host", "0.0.0.0", "--port", "8000"],
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env.local",
+      "skipFiles": ["<node_internals>/**"]
     }
   ],
   "version": "0.2.0"
