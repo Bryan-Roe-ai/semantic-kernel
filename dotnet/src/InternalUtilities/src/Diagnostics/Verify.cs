@@ -1,49 +1,4 @@
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 ﻿// Copyright (c) Microsoft. All rights reserved.
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
-// Copyright (c) Microsoft. All rights reserved.
-<<<<<<< Updated upstream
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 using System;
 using System.Collections.Generic;
@@ -75,6 +30,17 @@ internal static partial class Verify
     /// <summary>
     /// Equivalent of ArgumentNullException.ThrowIfNull
     /// </summary>
+    /// <summary>
+    /// Ensures that the provided string is not null or composed entirely of whitespace.
+    /// Throws an ArgumentException if the string is null or whitespace.
+    /// </summary>
+    /// <param name="str">The string to validate.</param>
+    /// <param name="paramName">The name of the parameter being validated.</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    /// Throws an ArgumentNullException if the provided object is null.
+    /// </summary>
+    /// <param name="obj">The object to check for null.</param>
+    /// <param name="paramName">The name of the parameter being checked.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static void NotNull([NotNull] object? obj, [CallerArgumentExpression(nameof(obj))] string? paramName = null)
     {
@@ -349,11 +315,11 @@ internal static partial class Verify
 
     [DoesNotReturn]
     internal static void ThrowArgumentNullException(string? paramName) =>
-        throw new ArgumentNullException(paramName);
+        throw new ArgumentNullException(paramName, $"Value cannot be null. (Parameter '{paramName}')");
 
     [DoesNotReturn]
     internal static void ThrowArgumentWhiteSpaceException(string? paramName) =>
-        throw new ArgumentException("The value cannot be an empty string or composed entirely of whitespace.", paramName);
+        throw new ArgumentException($"The value of '{paramName}' cannot be an empty string or composed entirely of whitespace.", paramName);
 
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRangeException<T>(string? paramName, T actualValue, string message) =>
