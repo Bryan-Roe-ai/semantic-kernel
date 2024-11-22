@@ -6,10 +6,11 @@
       "type": "java"
     },
     {
-      "command": "npm start",
       "name": "Run npm start",
+      "type": "node",
       "request": "launch",
-      "type": "node-terminal"
+      "program": "npm",
+      "args": ["start"]
     },
     {
       "console": "integratedTerminal",
