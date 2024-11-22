@@ -1,4 +1,4 @@
-# semantic-kernel
+# About Semantic Kernel
 
 This repository contains the semantic-kernel, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly.
 
@@ -42,7 +42,8 @@ To start using the semantic-kernel, follow these steps:
 
 ## colorFrom: indigo
 
-colorTo: blue
+## colorTo: blue
+
 sdk: docker
 pinned: false
 app_port: 3000
@@ -68,16 +69,20 @@ new_version: Bryan-Roe/semantic-kernel
 
 ## Model Card for Model ID
 
-runme:
-  id: 01J0BYQX0015D3BH4FX0NPA9QQ
-  version: v3
+## runme
+
+### id: 01J0BYQX0015D3BH4FX0NPA9QQ
+
+### version: v3
+
+
 ---
 
-# Semantic Kernel
+## Semantic Kernel
 
 ## Status
 
-- Python <br/>
+- Python  
   [![Python package](https://img.shields.io/pypi/v/semantic-kernel)](https://pypi.org/project/semantic-kernel/)
 - .NET
   [![Nuget package](https://img.shields.io/nuget/vpre/Microsoft.SemanticKernel)](https://www.nuget.org/packages/Microsoft.SemanticKernel/)[![dotnet Docker](https://github.com/microsoft/semantic-kernel/actions/workflows/dotnet-ci-docker.yml/badge.svg?branch=main)](https://github.com/microsoft/semantic-kernel/actions/workflows/dotnet-ci-docker.yml)[![dotnet Windows](https://github.com/microsoft/semantic-kernel/actions/workflows/dotnet-ci-windows.yml/badge.svg?branch=main)](https://github.com/microsoft/semantic-kernel/actions/workflows/dotnet-ci-windows.yml)
@@ -105,7 +110,7 @@ Semantic Kernel will execute the plan for the user.
 
 It provides:
 
-#### Please star the repo to show your support for this project
+### Key Features and Functionality
 
 - abstractions for AI services (such as chat, text to images, audio to text, etc.) and memory stores
 - implementations of those abstractions for services from [OpenAI](https://platform.openai.com/docs/introduction), [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service), [Hugging Face](https://huggingface.co/), local models, and more, and for a multitude of vector databases, such as those from [Chroma](https://docs.trychroma.com/getting-started), [Qdrant](https://qdrant.tech/), [Milvus](https://milvus.io/), and [Azure](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search)
@@ -126,27 +131,9 @@ Semantic Kernel was designed to be future proof, easily connecting your code to 
 The Semantic Kernel SDK is available in C#, Python, and Java. To get started, choose your preferred language below. See the [Feature Matrix](https://learn.microsoft.com/en-us/semantic-kernel/get-started/supported-languages) for a breakdown of
 feature parity between our currently supported languages.
 
-<table width=100%>
-  <tbody>
-    <tr>
-      |
-        ![C# Logo](https://user-images.githubusercontent.com/371009/230673036-fad1e8e6-5d48-49b1-a9c1-6f9834e0d165.png)
-          <a href="dotnet/README.md">Using Semantic Kernel in C#</a> &nbsp<br/>
-        </div>
-      </td>
-      <td>
-        <img align="left" width=52px src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg">
-          <a href="python/README.md">Using Semantic Kernel in Python</a>
-        </div>
-      </td>
-      <td>
-        ![Java logo](https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg)
-          [Using Semantic Kernel in Java](https://github.com/microsoft/semantic-kernel/blob/main/java/README.md)
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+| | | |
+|---|---|---|
+| ![C# Logo](https://user-images.githubusercontent.com/371009/230673036-fad1e8e6-5d48-49b1-a9c1-6f9834e0d165.png)<br>[Using Semantic Kernel in C#](dotnet/README.md) | ![Python Logo](https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg)<br>[Using Semantic Kernel in Python](python/README.md) | ![Java logo](https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg)<br>[Using Semantic Kernel in Java](https://github.com/microsoft/semantic-kernel/blob/main/java/README.md) |
 
 The quickest way to get started with the basics is to get an API key
 from either OpenAI or Azure OpenAI and to run one of the C#, Python, and Java console applications/scripts below.
@@ -760,7 +747,7 @@ The repository includes an Azure Pipelines configuration file at `.github/workfl
 
 GitHub Actions is a powerful tool for automating your CI/CD pipelines. This section provides instructions on setting up GitHub Actions for CI/CD in this repository.
 
-### Configuring Secrets for GitHub Actions
+### Managing GitHub Actions Secrets
 
 To configure secrets for GitHub Actions workflows, follow these steps:
 
@@ -774,7 +761,7 @@ To configure secrets for GitHub Actions workflows, follow these steps:
 
 You can then reference these secrets in your GitHub Actions workflows using the `${{ secrets.SECRET_NAME }}` syntax. For example, in the `.github/workflows/azure-container-webapp.yml` workflow, the secret `AZURE_WEBAPP_PUBLISH_PROFILE` is referenced as `${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}`. Similarly, in the `.github/workflows/Auto-merge.yml` workflow, the secret `GITHUB_TOKEN` is referenced as `${{ secrets.GITHUB_TOKEN }}`.
 
-### Customizing Workflows for Specific Project Needs
+### Project-Specific Workflow Customization
 
 You can customize the existing workflows to fit your project's needs. Here are some ways to do it:
 
@@ -784,7 +771,7 @@ You can customize the existing workflows to fit your project's needs. Here are s
 - Leverage the existing workflows as templates and create variations for different branches, environments, or project components.
 - Utilize GitHub Actions marketplace to find and integrate additional actions that can help you achieve your CI/CD goals.
 
-### Troubleshooting Issues in GitHub Actions Workflows
+### Resolving Issues in GitHub Actions Workflows
 
 To troubleshoot issues in GitHub Actions workflows, follow these steps:
 
@@ -797,7 +784,7 @@ To troubleshoot issues in GitHub Actions workflows, follow these steps:
 - Ensure that the environment variables and secrets are correctly referenced in the workflows. For example, the `${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}` and `${{ secrets.GITHUB_TOKEN }}` references should be accurate.
 - Review the documentation and examples for the actions used in the workflows. For example, refer to the documentation for `azure/webapps-deploy@v2` and `docker/build-push-action@v5.0.0` to ensure they are used correctly.
 
-### Best Practices for Managing Secrets in GitHub Actions
+### Guidelines for Secret Management in GitHub Actions
 
 Here are some best practices for managing secrets in GitHub Actions:
 
@@ -810,7 +797,7 @@ Here are some best practices for managing secrets in GitHub Actions:
 - **Avoid Hardcoding Secrets:** Never hardcode secrets directly in your workflow files. Always use GitHub Secrets to securely store and reference them.
 - **Monitor for Leaks:** Use tools and services to monitor for potential secret leaks in your repository. GitHub provides secret scanning to detect and alert you about exposed secrets.
 
-### Integrating Additional Services Using GitHub Actions Marketplace
+### Adding Third-Party Services via GitHub Actions Marketplace
 
 To integrate additional services into the workflows, you can follow these steps:
 
