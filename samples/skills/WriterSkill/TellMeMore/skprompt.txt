@@ -1,4 +1,4 @@
 >>>>>The following is part of a text.
-{{$input}}
+{{$text}}
 
 >>>>>In 250 words or less, write a verbose and detailed overview focusing solely on "{{$focusarea}}".
