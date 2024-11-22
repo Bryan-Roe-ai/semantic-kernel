@@ -61,7 +61,6 @@
     },
     {
       "name": "C#: GettingStarted Samples",
-      "program": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net6.0/GettingStarted.dll",
       "projectPath": "${workspaceFolder}/dotnet/samples/GettingStarted/GettingStarted.csproj",
       "request": "launch",
       "type": "dotnet"
@@ -69,7 +68,6 @@
     {
       "name": "C#: Process with Dapr",
       "program": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
-      "projectPath": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/ProcessWithDapr.csproj",
       "request": "launch",
       "type": "coreclr",
       "preLaunchTask": "daprd-debug",
