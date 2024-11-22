@@ -3,9 +3,33 @@ const cors = require('cors');
 const helmet = require('helmet');
 const expressRateLimit = require('express-rate-limit');
 const expressCompression = require('compression');
+const morgan = require('morgan');
+require('dotenv').config();
 
 // Create Express app
 const app = express();
+
+// Trust proxy if behind reverse proxy
+app.set('trust proxy', 1);
+
+// Configure security middleware
+app.use(helmet({
+  contentSecurityPolicy: true,
+  crossOriginEmbedderPolicy: true
+}));
+
+// Configure CORS
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Configure compression
+app.use(expressCompression());
+
+// Configure request logging
+app.use(morgan('combined'));
 
 // Configure rate limiting
 const limiter = expressRateLimit({
@@ -16,91 +40,49 @@ const limiter = expressRateLimit({
   message: 'Too many requests from this IP, please try again later'
 });
 
-// Add middleware
+// Apply rate limiting to all routes
 app.use(limiter);
-app.use(expressCompression({
-  level: 6,
-  threshold: 100 * 1024
-}));
 
-// Add request logging
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} ${req.method} ${req.url}`);
-  next();
-});
+// Parse JSON payloads
+app.use(express.json({ limit: '10kb' }));
 
-// Add request timeout
-app.use((req, res, next) => {
-  req.setTimeout(5000);
-  res.setTimeout(5000);
-  next();
-});
-
-// Configure middleware with enhanced security
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],
-      styleSrc: ["'self'"],
-      imgSrc: ["'self'"]
-    }
-  },
-  crossOriginEmbedderPolicy: true,
-  crossOriginOpenerPolicy: true,
-  crossOriginResourcePolicy: true,
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true
-  }
-}));
-app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-app.use(express.json({ limit: '1mb' }));
-app.use(express.urlencoded({ extended: true, limit: '1mb' }));
-
-// Basic health check route
+// Health check endpoint
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK' });
+  res.status(200).json({ status: 'healthy' });
 });
 
-// Improve error handling middleware
+// Handle 404 errors
+app.use((req, res) => {
+  res.status(404).json({
+    status: 'error',
+    message: 'Route not found'
+  });
+});
+
+// Global error handler
 app.use((err, req, res, next) => {
-  const statusCode = err.status || 500;
-  const message = err.message || 'Internal Server Error';
-  console.error(`[Error] ${statusCode}: ${message}\n`, err.stack);
-  res.status(statusCode).json({ error: message });
+  console.error(err.stack);
+  res.status(500).json({
+    status: 'error',
+    message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message
+  });
 });
 
-// Port configuration
-const port = process.env.PORT || 3000;
+// Configure port
+const PORT = process.env.PORT || 3000;
 
-// Create server instance for graceful shutdown
-const server = app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-}).on('error', (err) => {
-  console.error('Failed to start server:', err);
-  process.exit(1);
+// Start server with graceful shutdown
+const server = app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
-// Handle graceful shutdown
-process.on('SIGTERM', gracefulShutdown);
-process.on('SIGINT', gracefulShutdown);
-
-function gracefulShutdown() {
-  console.log('Received shutdown signal, closing server...');
+// Graceful shutdown handling
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received. Shutting down gracefully...');
   server.close(() => {
-    console.log('Server closed');
+    console.log('Process terminated');
     process.exit(0);
   });
-  
-  // Force close after 10s
-  setTimeout(() => {
-    console.error('Could not close connections in time, forcefully shutting down');
-    process.exit(1);
-  }, 10000);
-}
+});
+
+module.exports = app;
