@@ -20,6 +20,7 @@
     "vscjava.vscode-gradle",
     "paiqo.databricks-vscode",
     "github.codespaces",
-    "ms-python.python"
+    "ms-python.python",
+    "metalbear.mirrord"
   ]
 }
