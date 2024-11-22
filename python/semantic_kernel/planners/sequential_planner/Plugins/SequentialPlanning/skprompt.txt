@@ -2,7 +2,7 @@ Create an XML plan step by step, to satisfy the goal given, with the available f
 
 [AVAILABLE FUNCTIONS]
 
-{{$available_functions_json}}
+{{$input.variables.available_functions}}
 
 [END AVAILABLE FUNCTIONS]
 

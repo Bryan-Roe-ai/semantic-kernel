@@ -1,18 +1,15 @@
 {
+  "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Java App",
+      "name": "Node.js Web Server",
+      "type": "node",
       "request": "launch",
-      "type": "java"
-    },
-    {
-      "args": [
-        "start"
-      ],
-      "name": "Run npm start",
-      "program": "${workspaceFolder}/index.js",
-      "request": "launch",
-      "type": "node"
+      "program": "${workspaceFolder}/server.js",
+      "args": ["--host", "0.0.0.0", "--port", "3000"],
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env",
+      "cwd": "${workspaceFolder}"
     },
     {
       "console": "integratedTerminal",
@@ -21,16 +18,6 @@
       "program": "${file}",
       "request": "launch",
       "type": "debugpy"
-    },
-    {
-      "containerName": "dotnet-app",
-      "name": "Docker: .NET Attach (Preview)",
-      "platform": "netCore",
-      "request": "attach",
-      "sourceFileMap": {
-        "/src": "${workspaceFolder}"
-      },
-      "type": "docker"
     },
     {
       "args": [
@@ -49,11 +36,14 @@
       "type": "debugpy"
     },
     {
-      "name": "Semantic Kernel: Launch Specific Function",
-      "program": "${relativeFile}",
+      "args": [
+        "${file}"
+      ],
+      "cwd": "${workspaceFolder}/python",
+      "module": "pytest",
+      "name": "Python: Test Module",
       "request": "launch",
-      "type": "semantic-kernel.skprompt.debugger",
-      "workspaceFolder": "${workspaceFolder}"
+      "type": "debugpy"
     },
     {
       "name": "C#: Attach to .NET Functions",
@@ -67,16 +57,6 @@
       "processId": "${command:pickProcess}",
       "request": "attach",
       "type": "coreclr"
-    },
-    {
-      "args": [
-        "${file}"
-      ],
-      "cwd": "${workspaceFolder}/python",
-      "module": "pytest",
-      "name": "Python: Test Module",
-      "request": "launch",
-      "type": "debugpy"
     },
     {
       "cwd": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText",
@@ -104,41 +84,21 @@
       "type": "coreclr"
     },
     {
-      "args": [
-        "run",
-        "--host",
-        "0.0.0.0",
-        "--port",
-        "3000"
-      ],
-      "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}",
-      "envFile": "${workspaceFolder}/.env",
-      "name": "Run Node.js Web Server",
-      "program": "${workspaceFolder}/index.js",
-      "request": "launch",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "type": "node"
+      "containerName": "dotnet-app",
+      "name": "Docker: .NET Attach (Preview)",
+      "platform": "netCore",
+      "request": "attach",
+      "sourceFileMap": {
+        "/src": "${workspaceFolder}"
+      },
+      "type": "docker"
     },
     {
-      "args": [
-        "run",
-        "--host",
-        "0.0.0.0", // Allows external connections
-        // Default web server port
-        "--port",
-        "3000",
-        "3000" // Default web server port
-      ],
-      "console": "integratedTerminal",
-      "cwd": "${workspaceFolder}",
-      "name": "Launch Web Server",
-      "program": "${workspaceFolder}/server.js", // Assuming Node.js server
+      "name": "Semantic Kernel: Launch Specific Function",
+      "program": "${relativeFile}",
       "request": "launch",
-      "type": "node"
+      "type": "semantic-kernel.skprompt.debugger",
+      "workspaceFolder": "${workspaceFolder}"
     }
-  ],
-  "version": "0.2.0"
+  ]
 }
