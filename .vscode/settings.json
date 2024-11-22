@@ -12,7 +12,7 @@
   },
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "vscode.markdown-math",
   "python.formatting.provider": "autopep8",
   "python.formatting.autopep8Args": ["--max-line-length=120"],
   "notebook.output.textLineLimit": 500,
@@ -132,5 +132,7 @@
       "environmentVariable": "JAVA_HOME",
       "value": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23"
     }
-  ]
+  ],
+  "notebook.defaultFormatter": "GitHub.copilot",
+  "databricks.sensitiveValueStore": "VSCodeSettings"
 }

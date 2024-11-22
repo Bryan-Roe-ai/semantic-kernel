@@ -25,7 +25,9 @@
 				"dbaeumer.vscode-eslint",
 				"ms-azuretools.vscode-azurefunctions",
 				"asf.apache-netbeans-java",
-				"ms-python.python"
+				"ms-python.python",
+				"DavidAnson.vscode-markdownlint",
+				"ms-edgedevtools.vscode-edge-devtools"
 			]
 		}
 	},

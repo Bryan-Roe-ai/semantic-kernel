@@ -21,6 +21,9 @@
     "paiqo.databricks-vscode",
     "github.codespaces",
     "ms-python.python",
-    "metalbear.mirrord"
+    "metalbear.mirrord",
+    "micoloth.reactive-jupyter",
+    "davidanson.vscode-markdownlint",
+    "ms-edgedevtools.vscode-edge-devtools"
   ]
 }
