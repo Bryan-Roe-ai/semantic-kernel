@@ -14,19 +14,21 @@
     // not defined variables. For more information see
     // https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/Strict_mode
     // Note: This option just activates the strict linting for vscode. You still have
-    //       to extend your scripts with "use strict;" to activate strict mode in the
-    //       Javascript engine
-    // "alwaysStrict": true,
-
-    // This option should be enabled if you want to get code completion for ES6 features
-    // like 'for ... of' and Maps. Be aware that not all ES6 features are supported from
-    // the DOCUMENTS-server
-    "target": "es2016",
-
-    // This option removes the default lib.dom.d.ts. It should be enabled to avoid conflicts
-    // with the 'Dom' and 'File' classes.
-    "lib": ["es2016"]
+    "strict": true,
+    "module": "commonjs",
+    "target": "es6",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "baseUrl": "."
   },
-  "include": ["src/**/*.js", "typings/**/*.d.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "./**/*.js",
+    "./**/*.ts",
+    "./**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

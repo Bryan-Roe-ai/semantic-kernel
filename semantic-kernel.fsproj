@@ -3,10 +3,18 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>semantic_kernel</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="Program.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.0.1" />
+    <PackageReference Include="Microsoft.SemanticKernel.Abstractions" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
 </Project>
