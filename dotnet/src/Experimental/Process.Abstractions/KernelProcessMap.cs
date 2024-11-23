@@ -17,6 +17,7 @@ public sealed record KernelProcessMap : KernelProcessStepInfo
     /// <summary>
     /// The map operation.
     /// </summary>
+    public KernelProcessStepInfo Operation { get; }
     public KernelProcess Operation { get; }
 =======
     /// The map operation.
@@ -30,6 +31,7 @@ public sealed record KernelProcessMap : KernelProcessStepInfo
     /// <param name="state">The process state.</param>
     /// <param name="operation">The map operation.</param>
     /// <param name="edges">The edges for the map.</param>
+    public KernelProcessMap(KernelProcessMapState state, KernelProcessStepInfo operation, Dictionary<string, List<KernelProcessEdge>> edges)
 <<<<<<< HEAD
     public KernelProcessMap(KernelProcessMapState state, KernelProcess operation, Dictionary<string, List<KernelProcessEdge>> edges)
 =======

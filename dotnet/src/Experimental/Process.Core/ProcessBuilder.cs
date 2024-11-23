@@ -153,10 +153,64 @@ public sealed class ProcessBuilder : ProcessStepBuilder
         this._steps.Add(stepBuilder);
     }
 
-    #region Public Interface
+    /// <summary>
+    /// Check to ensure stepName is not used yet in another step
+    /// </summary>
+    private bool StepNameAlreadyExists(string stepName)
+    {
+        return this._steps.Select(step => step.Name).Contains(stepName);
+    }
 
     /// <summary>
-    /// A read-only collection of steps in the process.
+    /// Verify step is unique and add to the process.
+    /// </summary>
+    private TBuilder AddStep<TBuilder>(TBuilder builder, IReadOnlyList<string>? aliases) where TBuilder : ProcessStepBuilder
+    {
+        if (this.StepNameAlreadyExists(builder.Name))
+        {
+            throw new InvalidOperationException($"Step name {builder.Name} is already used, assign a different name for step");
+        }
+
+        if (aliases != null && aliases.Count > 0)
+        {
+            builder.Aliases = aliases;
+        }
+
+        this._steps.Add(builder);
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Check to ensure stepName is not used yet in another step
+    /// </summary>
+    private bool StepNameAlreadyExists(string stepName)
+    {
+        return this._steps.Select(step => step.Name).Contains(stepName);
+    }
+
+    /// <summary>
+    /// Verify step is unique and add to the process.
+    /// </summary>
+    private TBuilder AddStep<TBuilder>(TBuilder builder, IReadOnlyList<string>? aliases) where TBuilder : ProcessStepBuilder
+    {
+        if (this.StepNameAlreadyExists(builder.Name))
+        {
+            throw new InvalidOperationException($"Step name {builder.Name} is already used, assign a different name for step");
+        }
+
+        if (aliases != null && aliases.Count > 0)
+        {
+            builder.Aliases = aliases;
+        }
+
+        this._steps.Add(builder);
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Add the provided step builder to the process.
     /// </summary>
     public IReadOnlyList<ProcessStepBuilder> Steps => this._steps.AsReadOnly();
 
@@ -168,9 +222,12 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
     /// <returns>An instance of <see cref="ProcessStepBuilder"/></returns>
     public ProcessStepBuilder AddStepFromType<TStep>(string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep
+    public ProcessStepBuilder AddStepFromType<TStep>(string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep
     {
         ProcessStepBuilder<TStep> stepBuilder = new(name);
+        ProcessStepBuilder<TStep> stepBuilder = new(name);
 
+        return this.AddStep(stepBuilder, aliases);
         return this.AddStep(stepBuilder, aliases);
     }
 
@@ -184,7 +241,11 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
     /// <returns>An instance of <see cref="ProcessStepBuilder"/></returns>
     public ProcessStepBuilder AddStepFromType<TStep, TState>(TState initialState, string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep<TState> where TState : class, new()
+    public ProcessStepBuilder AddStepFromType<TStep, TState>(TState initialState, string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep<TState> where TState : class, new()
     {
+        ProcessStepBuilder<TStep> stepBuilder = new(name, initialState: initialState);
+
+        return this.AddStep(stepBuilder, aliases);
         ProcessStepBuilder<TStep> stepBuilder = new(name, initialState: initialState);
 
         return this.AddStep(stepBuilder, aliases);
@@ -197,8 +258,45 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
     /// <returns>An instance of <see cref="ProcessStepBuilder"/></returns>
     public ProcessBuilder AddStepFromProcess(ProcessBuilder kernelProcess, IReadOnlyList<string>? aliases = null)
+    public ProcessBuilder AddStepFromProcess(ProcessBuilder kernelProcess, IReadOnlyList<string>? aliases = null)
     {
         kernelProcess.HasParentProcess = true;
+
+        return this.AddStep(kernelProcess, aliases);
+    }
+
+    /// <summary>
+    /// Adds a step to the process.
+    /// </summary>
+    /// <typeparam name="TStep">The step Type.</typeparam>
+    /// <param name="name">The name of the step. This parameter is optional.</param>
+    /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
+    /// <returns>An instance of <see cref="ProcessMapBuilder"/></returns>
+    public ProcessMapBuilder AddMapStepFromType<TStep>(string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep
+    {
+        ProcessStepBuilder<TStep> stepBuilder = new(name);
+
+        ProcessMapBuilder mapBuilder = new(stepBuilder);
+
+        return this.AddStep(mapBuilder, aliases);
+    }
+
+    /// <summary>
+    /// Adds a step to the process and define it's initial user-defined state.
+    /// </summary>
+    /// <typeparam name="TStep">The step Type.</typeparam>
+    /// <typeparam name="TState">The state Type.</typeparam>
+    /// <param name="initialState">The initial state of the step.</param>
+    /// <param name="name">The name of the step. This parameter is optional.</param>
+    /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
+    /// <returns>An instance of <see cref="ProcessMapBuilder"/></returns>
+    public ProcessMapBuilder AddMapStepFromType<TStep, TState>(TState initialState, string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep<TState> where TState : class, new()
+    {
+        ProcessStepBuilder<TStep> stepBuilder = new(name, initialState: initialState);
+
+        ProcessMapBuilder mapBuilder = new(stepBuilder);
+
+        return this.AddStep(mapBuilder, aliases);
 
         return this.AddStep(kernelProcess, aliases);
     }
@@ -259,14 +357,16 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// processes each individual parameter value by the specified map operation (TStep).
     /// Results are coalesced into a result set of the same dimension as the input set.
     /// </summary>
-    /// <param name="target">The target for the map operation</param>
+    /// <param name="process">The target for the map operation</param>
+    /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
     /// <returns>An instance of <see cref="ProcessMapBuilder"/></returns>
-    public ProcessMapBuilder AddMapForTarget(ProcessFunctionTargetBuilder target)
+    public ProcessMapBuilder AddMapStepFromProcess(ProcessBuilder process, IReadOnlyList<string>? aliases = null)
     {
-        var mapBuilder = new ProcessMapBuilder(target);
-        this._steps.Add(mapBuilder);
+        process.HasParentProcess = true;
 
-        return mapBuilder;
+        ProcessMapBuilder mapBuilder = new(process);
+
+        return this.AddStep(mapBuilder, aliases);
     }
 
     /// <summary>
@@ -305,6 +405,7 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// <exception cref="KernelException"></exception>
     public ProcessFunctionTargetBuilder WhereInputEventIs(string eventId)
     {
+        Verify.NotNullOrWhiteSpace(eventId, nameof(eventId));
         Verify.NotNullOrWhiteSpace(eventId, nameof(eventId));
 
         if (!this._externalEventTargetMap.TryGetValue(eventId, out var target))

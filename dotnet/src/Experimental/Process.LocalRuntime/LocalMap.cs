@@ -55,21 +55,24 @@ internal sealed class LocalMap : LocalStep
     /// <inheritdoc/>
     internal override async Task HandleMessageAsync(ProcessMessage message)
     {
+        // Initialize the current operation
+        (IEnumerable inputValues, KernelProcess mapOperation, string startEventId) = this._map.Initialize(message, this._logger);
         IEnumerable values = message.GetMapInput(this._logger);
 <<<<<<< HEAD
         IEnumerable values = message.GetMapInput(this.Logger);
 
+        // Prepare state for map execution
         int index = 0;
         List<(Task Task, LocalKernelProcessContext ProcessContext, MapOperationContext Context)> mapOperations = [];
         ConcurrentDictionary<string, Type> capturedEvents = [];
-
         try
         {
-            foreach (var value in values)
+            // Execute the map operation for each value
+            foreach (var value in inputValues)
             {
                 ++index;
 
-                KernelProcess process = this._map.Operation.CloneProcess(this._logger);
+                KernelProcess process = mapOperation.CloneProcess(this._logger);
                 MapOperationContext context = new(this._mapEvents, capturedEvents);
                 KernelProcess process = this._map.Operation.CloneProcess(this.Logger);
                 MapOperationContext context = new(index, this._mapEvents, capturedEvents);
@@ -97,6 +100,7 @@ internal sealed class LocalMap : LocalStep
                     processContext.StartWithEventAsync(
                         new KernelProcessEvent
                         {
+                            Id = startEventId,
                             Id = ProcessConstants.MapEventId,
 <<<<<<< HEAD
                             Id = KernelProcessMap.MapEventId,

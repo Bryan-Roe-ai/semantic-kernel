@@ -84,6 +84,7 @@ internal static class KernelProcessStateMetadataExtension
                             }
                             else if (step is ProcessMapBuilder mapBuilder)
                             {
+                                KernelProcessStateMetadata sanitizedStepState = SanitizeProcessStateMetadata((KernelProcessStateMetadata)savedStateMetadata, [mapBuilder.MapOperation]);
                                 KernelProcessStateMetadata sanitizedStepState = SanitizeProcessStateMetadata((KernelProcessStateMetadata)savedStateMetadata, mapBuilder.MapOperation.Steps);
                                 KernelProcessStateMetadata sanitizedStepState = SanitizeProcessStateMetadata((KernelProcessStateMetadata)savedStateMetadata, subprocessBuilder.Steps);
                                 sanitizedStateMetadata.StepsState[step.Name] = sanitizedStepState;
