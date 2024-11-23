@@ -122,7 +122,8 @@ You can use the following diagnostic IDs to ignore warnings or errors for a part
 | SKEXP0040 | GRPC functions |
 | SKEXP0040 | Markdown functions |
 | SKEXP0040 | OpenAPI functions |
-| SKEXP0040 | OpenAPI function extensions |
+| SKEXP0040 | OpenAPI function extensions - API Manifest |
+| SKEXP0040 | OpenAPI function extensions - Copilot Agent Plugin |
 | SKEXP0040 | Prompty Format support |
 | | |
 | SKEXP0050 | Core plugins |
@@ -144,5 +145,9 @@ You can use the following diagnostic IDs to ignore warnings or errors for a part
 | SKEXP0101 | Experiment with Flow Orchestration |
 | | |
 | SKEXP0110 | Agent Framework |
+<<<<<<< HEAD
 | | |
+=======
+| | | | | | | |
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 | SKEXP0120 | Native-AOT |

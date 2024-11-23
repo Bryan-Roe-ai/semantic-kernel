@@ -16,7 +16,7 @@ This connector uses [MongoDB Atlas Vector Search](https://www.mongodb.com/produc
     "fields": {
       "embedding": {
         "dimension": 1024,
-        "similarity": "cosine",
+        "similarity": "cosine_similarity",
         "type": "knnVector"
       }
     }

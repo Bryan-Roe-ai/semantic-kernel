@@ -10,7 +10,11 @@ namespace Microsoft.SemanticKernel.Agents.Serialization;
 /// Present a <see cref="ChatMessageContent"/> for serialization without metadata.
 /// </summary>
 /// <param name="message">The referenced message</param>
+<<<<<<< HEAD
 public sealed class ChatMessageReference(ChatMessageContent message) // %%% SCOPE
+=======
+public sealed class ChatMessageReference(ChatMessageContent message)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 {
     /// <summary>
     /// The referenced <see cref="ChatMessageContent.AuthorName"/> property.

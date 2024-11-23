@@ -62,7 +62,10 @@ public sealed class AzureOpenAIChatCompletionStreamingTests : BaseIntegrationTes
 
             foreach (var key in update.Metadata!.Keys)
             {
-                metadata[key] = update.Metadata[key];
+                if (!metadata.TryGetValue(key, out object? value) || value is null)
+                {
+                    metadata[key] = update.Metadata[key];
+                }
             }
         }
 
@@ -188,7 +191,10 @@ public sealed class AzureOpenAIChatCompletionStreamingTests : BaseIntegrationTes
 
             foreach (var key in update.Metadata!.Keys)
             {
-                metadata[key] = update.Metadata[key];
+                if (!metadata.TryGetValue(key, out object? value) || value is null)
+                {
+                    metadata[key] = update.Metadata[key];
+                }
             }
         }
 

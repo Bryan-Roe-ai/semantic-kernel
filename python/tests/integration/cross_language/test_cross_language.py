@@ -11,10 +11,14 @@ import pytest
 from openai import AsyncOpenAI
 
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+<<<<<<< HEAD
 from semantic_kernel.connectors.ai.open_ai.settings.open_ai_settings import (
     OpenAISettings,
 )
 from semantic_kernel.connectors.openapi_plugin import OpenAPIFunctionExecutionParameters
+=======
+from semantic_kernel.connectors.ai.open_ai.settings.open_ai_settings import OpenAISettings
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.functions.kernel_function import KernelFunction
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
@@ -994,9 +998,15 @@ async def test_yaml_prompt(
 
 
 async def setup_openapi_function_call(kernel, function_name, arguments):
+<<<<<<< HEAD
     openapi_spec_file = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json"
     )
+=======
+    from semantic_kernel.connectors.openapi_plugin import OpenAPIFunctionExecutionParameters
+
+    openapi_spec_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json")
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     request_details = None
 

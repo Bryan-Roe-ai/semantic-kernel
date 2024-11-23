@@ -1,5 +1,9 @@
 ---
+<<<<<<< HEAD
 consulted: null
+=======
+status: superseded by [ADR-0062](0062-open-api-payload.md)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 contact: SergeyMenshykh
 date: 2023-08-15T00:00:00Z
 deciders: shawncal

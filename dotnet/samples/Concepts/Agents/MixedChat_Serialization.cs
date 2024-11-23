@@ -7,8 +7,13 @@ using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace Agents;
 /// <summary>
+<<<<<<< HEAD
 /// Demonstrate that two different agent types are able to participate in the same conversation.
 /// In this case a <see cref="ChatCompletionAgent"/> and <see cref="OpenAIAssistantAgent"/> participate.
+=======
+/// Demonstrate the serialization of <see cref="AgentGroupChat"/> with a <see cref="ChatCompletionAgent"/>
+/// and an <see cref="OpenAIAssistantAgent"/>.
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 /// </summary>
 public class MixedChat_Serialization(ITestOutputHelper output) : BaseAgentsTest(output)
 {
@@ -56,6 +61,7 @@ public class MixedChat_Serialization(ITestOutputHelper output) : BaseAgentsTest(
         chat.AddChatMessage(input);
         this.WriteAgentChatMessage(input);
 
+<<<<<<< HEAD
         Console.WriteLine("============= Source Chat ==============");
         await InvokeAgents(chat);
 
@@ -73,6 +79,19 @@ public class MixedChat_Serialization(ITestOutputHelper output) : BaseAgentsTest(
         await InvokeAgents(copy);
 
         Console.WriteLine("\n============ Full History ==============");
+=======
+        Console.WriteLine("============= Dynamic Agent Chat - Primary (prior to serialization) ==============");
+        await InvokeAgents(chat);
+
+        AgentGroupChat copy = CreateGroupChat();
+        Console.WriteLine("\n=========== Serialize and restore the Agent Chat into a new instance ============");
+        await CloneChatAsync(chat, copy);
+
+        Console.WriteLine("\n============ Continue with the dynamic Agent Chat (after deserialization) ===============");
+        await InvokeAgents(copy);
+
+        Console.WriteLine("\n============ The entire Agent Chat (includes messages prior to serialization and those after deserialization) ==============");
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         await foreach (ChatMessageContent content in copy.GetChatMessagesAsync())
         {
             this.WriteAgentChatMessage(content);

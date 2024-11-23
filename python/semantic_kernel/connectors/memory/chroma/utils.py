@@ -123,8 +123,6 @@ def chroma_compute_similarity_scores(
             )
     else:
         raise ValueError(
-            f"Invalid vectors, cannot compute cosine similarity scores"
-            f"for zero vectors"
-            f"{embedding_array} or {embedding}"
+            f"Invalid vectors, cannot compute cosine similarity scoresfor zero vectors{embedding_array} or {embedding}"
         )
     return similarity_scores

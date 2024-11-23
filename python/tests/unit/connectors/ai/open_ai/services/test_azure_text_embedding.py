@@ -74,6 +74,7 @@ from semantic_kernel.connectors.ai.open_ai.services.azure_text_embedding import 
 =======
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import EmbeddingGeneratorBase
 from semantic_kernel.connectors.ai.open_ai.services.azure_text_embedding import AzureTextEmbedding
+<<<<<<< HEAD
 from semantic_kernel.connectors.ai.open_ai.settings.azure_open_ai_settings import AzureOpenAISettings
 >>>>>>> main
 <<<<<<< Updated upstream
@@ -113,6 +114,8 @@ from semantic_kernel.connectors.ai.open_ai.settings.azure_open_ai_settings impor
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError
 
 
@@ -747,10 +750,9 @@ async def test_azure_text_embedding_calls_with_parameters(
 def test_azure_text_embedding_generates_no_token_with_api_key_in_env(azure_openai_unit_test_env) -> None:
     with (
         patch(
-            f"{AzureOpenAISettings.__module__}.{AzureOpenAISettings.__qualname__}.get_azure_openai_auth_token",
+            "semantic_kernel.utils.authentication.entra_id_authentication.get_entra_auth_token",
         ) as mock_get_token,
     ):
-        mock_get_token.return_value = "test_token"
         azure_text_embedding = AzureTextEmbedding()
 
         assert azure_text_embedding.client is not None

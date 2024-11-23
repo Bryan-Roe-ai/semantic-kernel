@@ -1,13 +1,16 @@
 // Copyright (c) Microsoft. All rights reserved.
 
+<<<<<<< HEAD
 using System.Diagnostics.CodeAnalysis;
+=======
+using System.Text.Json.Serialization;
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 namespace Microsoft.SemanticKernel;
 
 /// <summary>
 /// Represents the options for a function choice behavior. At the moment this is empty but it is being included for future use.
 /// </summary>
-[Experimental("SKEXP0001")]
 public sealed class FunctionChoiceBehaviorOptions
 {
     /// <summary>

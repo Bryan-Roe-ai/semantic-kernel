@@ -5,12 +5,16 @@ import copy
 import pytest
 from pytest import mark, param
 
+<<<<<<< HEAD
 from samples.concepts.auto_function_calling.azure_python_code_interpreter_function_calling import (
     main as azure_python_code_interpreter_function_calling,
 )
 from samples.concepts.auto_function_calling.chat_gpt_api_function_calling import (
     main as chat_gpt_api_function_calling,
 )
+=======
+from samples.concepts.auto_function_calling.chat_gpt_api_function_calling import main as chat_gpt_api_function_calling
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from samples.concepts.auto_function_calling.functions_defined_in_json_prompt import (
     main as function_defined_in_json_prompt,
 )
@@ -102,6 +106,7 @@ from tests.samples.samples_utils import retry
 from tests.samples.test_samples_utils import retry
 
 concepts = [
+<<<<<<< HEAD
     param(
         azure_python_code_interpreter_function_calling,
         ["print('Hello, World!')", "exit"],
@@ -115,6 +120,10 @@ concepts = [
     param(
         azure_chat_gpt_api, ["Why is the sky blue?", "exit"], id="azure_chat_gpt_api"
     ),
+=======
+    param(chat_gpt_api_function_calling, ["What is 3+3?", "exit"], id="chat_gpt_api_function_calling"),
+    param(azure_chat_gpt_api, ["Why is the sky blue?", "exit"], id="azure_chat_gpt_api"),
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     param(chat_gpt_api, ["What is life?", "exit"], id="chat_gpt_api"),
     param(chat_streaming, ["Why is the sun hot?", "exit"], id="chat_streaming"),
     param(openai_logit_bias, [], id="openai_logit_bias"),

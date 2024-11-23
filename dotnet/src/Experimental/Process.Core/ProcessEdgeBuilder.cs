@@ -2,6 +2,8 @@
 
 using System;
 
+using System;
+
 namespace Microsoft.SemanticKernel;
 
 /// <summary>
@@ -30,8 +32,11 @@ public sealed class ProcessEdgeBuilder
     /// <param name="eventId">The Id of the event.</param>
     internal ProcessEdgeBuilder(ProcessBuilder source, string eventId)
     {
+<<<<<<< HEAD
         this._source = source;
         this._eventId = eventId;
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         Verify.NotNull(source, nameof(source));
         Verify.NotNullOrWhiteSpace(eventId, nameof(eventId));
 

@@ -148,14 +148,15 @@ else:
 >>>>>>> Stashed changes
 >>>>>>> head
 
-from mistralai.async_client import MistralAsyncClient
-from mistralai.models.chat_completion import (
+from mistralai import Mistral
+from mistralai.models import (
+    AssistantMessage,
+    ChatCompletionChoice,
     ChatCompletionResponse,
-    ChatCompletionResponseChoice,
-    ChatCompletionResponseStreamChoice,
-    ChatCompletionStreamResponse,
-    ChatMessage,
+    CompletionChunk,
+    CompletionResponseStreamChoice,
     DeltaMessage,
+    ToolCall,
 )
 from pydantic import ValidationError
 
@@ -512,22 +513,22 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
         ai_model_id: str | None = None,
         service_id: str | None = None,
         api_key: str | None = None,
-        async_client: MistralAsyncClient | None = None,
+        async_client: Mistral | None = None,
         env_file_path: str | None = None,
         env_file_encoding: str | None = None,
     ) -> None:
         """Initialize an MistralAIChatCompletion service.
 
         Args:
-            ai_model_id (str): MistralAI model name, see
+            ai_model_id : MistralAI model name, see
                 https://docs.mistral.ai/getting-started/models/
-            service_id (str | None): Service ID tied to the execution settings.
-            api_key (str | None): The optional API key to use. If provided will override,
+            service_id : Service ID tied to the execution settings.
+            api_key : The optional API key to use. If provided will override,
                 the env vars or .env file value.
-            async_client (MistralAsyncClient | None) : An existing client to use.
-            env_file_path (str | None): Use the environment settings file as a fallback
+            async_client : An existing client to use.
+            env_file_path : Use the environment settings file as a fallback
                 to environment variables.
-            env_file_encoding (str | None): The encoding of the environment settings file.
+            env_file_encoding : The encoding of the environment settings file.
         """
         try:
             mistralai_settings = MistralAISettings.create(
@@ -546,7 +547,7 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
             raise ServiceInitializationError("The MistralAI chat model ID is required.")
 
         if not async_client:
-            async_client = MistralAsyncClient(
+            async_client = Mistral(
                 api_key=mistralai_settings.api_key.get_secret_value(),
             )
 
@@ -729,13 +730,14 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
         settings.messages = self._prepare_chat_history_for_request(chat_history)
 
         try:
-            response = await self.async_client.chat(**settings.prepare_settings_dict())
+            response = await self.async_client.chat.complete_async(**settings.prepare_settings_dict())
         except Exception as ex:
             raise ServiceResponseException(
                 f"{type(self)} service failed to complete the prompt",
                 ex,
             ) from ex
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -897,6 +899,17 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+        if isinstance(response, ChatCompletionResponse):
+            response_metadata = self._get_metadata_from_response(response)
+            # If there are no choices, return an empty list
+            if isinstance(response.choices, list) and len(response.choices) > 0:
+                return [
+                    self._create_chat_message_content(response, choice, response_metadata)
+                    for choice in response.choices
+                ]
+        return []
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     @override
     async def _inner_get_streaming_chat_message_contents(
@@ -912,12 +925,13 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
         settings.messages = self._prepare_chat_history_for_request(chat_history)
 
         try:
-            response = self.async_client.chat_stream(**settings.prepare_settings_dict())
+            response = await self.async_client.chat.stream_async(**settings.prepare_settings_dict())
         except Exception as ex:
             raise ServiceResponseException(
                 f"{type(self)} service failed to complete the prompt",
                 ex,
             ) from ex
+<<<<<<< HEAD
         async for chunk in response:
             if len(chunk.choices) == 0:
                 continue
@@ -928,16 +942,33 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
                 )
                 for choice in chunk.choices
             ]
+=======
+
+        # If there is no response end the generator
+        if isinstance(response, AsyncGenerator):
+            async for chunk in response:
+                if len(chunk.data.choices) == 0:
+                    continue
+                chunk_metadata = self._get_metadata_from_response(chunk.data)
+                yield [
+                    self._create_streaming_chat_message_content(chunk.data, choice, chunk_metadata)
+                    for choice in chunk.data.choices
+                ]
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     # endregion
 
     # region content conversion to SK
 
     def _create_chat_message_content(
+<<<<<<< HEAD
         self,
         response: ChatCompletionResponse,
         choice: ChatCompletionResponseChoice,
         response_metadata: dict[str, Any],
+=======
+        self, response: ChatCompletionResponse, choice: ChatCompletionChoice, response_metadata: dict[str, Any]
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ) -> "ChatMessageContent":
         """Create a chat message content object from a choice."""
         metadata = self._get_metadata_from_chat_choice(choice)
@@ -961,8 +992,8 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
 
     def _create_streaming_chat_message_content(
         self,
-        chunk: ChatCompletionStreamResponse,
-        choice: ChatCompletionResponseStreamChoice,
+        chunk: CompletionChunk,
+        choice: CompletionResponseStreamChoice,
         chunk_metadata: dict[str, Any],
     ) -> StreamingChatMessageContent:
         """Create a streaming chat message content object from a choice."""
@@ -994,9 +1025,7 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
             items=items,
         )
 
-    def _get_metadata_from_response(
-        self, response: ChatCompletionResponse | ChatCompletionStreamResponse
-    ) -> dict[str, Any]:
+    def _get_metadata_from_response(self, response: ChatCompletionResponse | CompletionChunk) -> dict[str, Any]:
         """Get metadata from a chat response."""
         metadata: dict[str, Any] = {
             "id": response.id,
@@ -1009,7 +1038,7 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
         return metadata
 
     def _get_metadata_from_chat_choice(
-        self, choice: ChatCompletionResponseChoice | ChatCompletionResponseStreamChoice
+        self, choice: ChatCompletionChoice | CompletionResponseStreamChoice
     ) -> dict[str, Any]:
         """Get metadata from a chat choice."""
         return {
@@ -1017,9 +1046,10 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
         }
 
     def _get_tool_calls_from_chat_choice(
-        self, choice: ChatCompletionResponseChoice | ChatCompletionResponseStreamChoice
+        self, choice: ChatCompletionChoice | CompletionResponseStreamChoice
     ) -> list[FunctionCallContent]:
         """Get tool calls from a chat choice."""
+<<<<<<< HEAD
         content: ChatMessage | DeltaMessage
 <<<<<<< HEAD
 <<<<<<< div
@@ -1149,6 +1179,10 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
 >>>>>>> Stashed changes
 >>>>>>> head
         content = choice.message if isinstance(choice, ChatCompletionResponseChoice) else choice.delta
+=======
+        content: AssistantMessage | DeltaMessage
+        content = choice.message if isinstance(choice, ChatCompletionChoice) else choice.delta
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         if content.tool_calls is None:
             return []
 
@@ -1160,6 +1194,7 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
                 arguments=tool.function.arguments,
             )
             for tool in content.tool_calls
+            if isinstance(tool, ToolCall)
         ]
 
     # endregion

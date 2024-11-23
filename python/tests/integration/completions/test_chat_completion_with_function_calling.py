@@ -83,7 +83,11 @@ from tests.integration.completions.chat_completion_test_base import (
     vertex_ai_setup,
 )
 from tests.integration.completions.completion_test_base import ServiceType
+<<<<<<< HEAD
 from tests.integration.completions.test_utils import retry
+=======
+from tests.integration.utils import retry
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
@@ -339,6 +343,10 @@ pytestmark = pytest.mark.parametrize(
                 ]
             ],
             {"test_type": FunctionChoiceTestTypes.NON_AUTO},
+            marks=pytest.mark.skip(
+                reason="Possible regression on the Azure AI Inference side when"
+                " returning tool calls in streaming responses. Investigating..."
+            ),
             id="azure_ai_inference_tool_call_non_auto",
         ),
         pytest.param(

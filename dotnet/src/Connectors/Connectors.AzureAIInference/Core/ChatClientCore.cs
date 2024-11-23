@@ -2,21 +2,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 using Azure;
 using Azure.AI.Inference;
 using Azure.Core.Pipeline;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Diagnostics;
 using Microsoft.SemanticKernel.Http;
 using Microsoft.SemanticKernel.Services;
 
@@ -168,6 +160,7 @@ internal sealed class ChatClientCore
         }
     }
 
+<<<<<<< HEAD
     /// <summary>Gets options to use for an Azure AI InferenceClient</summary>
     /// <param name="httpClient">Custom <see cref="HttpClient"/> for HTTP requests.</param>
     /// <param name="serviceVersion">Optional API version.</param>
@@ -368,40 +361,9 @@ internal sealed class ChatClientCore
         }
     }
 
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     #region Private
-
-    private const string ModelProvider = "azure-ai-inference";
-    /// <summary>
-    /// Instance of <see cref="Meter"/> for metrics.
-    /// </summary>
-    private static readonly Meter s_meter = new("Microsoft.SemanticKernel.Connectors.AzureAIInference");
-
-    /// <summary>
-    /// Instance of <see cref="Counter{T}"/> to keep track of the number of prompt tokens used.
-    /// </summary>
-    private static readonly Counter<int> s_promptTokensCounter =
-        s_meter.CreateCounter<int>(
-            name: "semantic_kernel.connectors.azure-ai-inference.tokens.prompt",
-            unit: "{token}",
-            description: "Number of prompt tokens used");
-
-    /// <summary>
-    /// Instance of <see cref="Counter{T}"/> to keep track of the number of completion tokens used.
-    /// </summary>
-    private static readonly Counter<int> s_completionTokensCounter =
-        s_meter.CreateCounter<int>(
-            name: "semantic_kernel.connectors.azure-ai-inference.tokens.completion",
-            unit: "{token}",
-            description: "Number of completion tokens used");
-
-    /// <summary>
-    /// Instance of <see cref="Counter{T}"/> to keep track of the total number of tokens used.
-    /// </summary>
-    private static readonly Counter<int> s_totalTokensCounter =
-        s_meter.CreateCounter<int>(
-            name: "semantic_kernel.connectors.azure-ai-inference.tokens.total",
-            unit: "{token}",
-            description: "Number of tokens used");
 
     /// <summary>
     /// Single space constant.
@@ -440,6 +402,7 @@ internal sealed class ChatClientCore
                             Metadata = metadata,
                         };
 
+<<<<<<< HEAD
                     streamedContents?.Add(streamingChatMessageContent);
                     yield return streamingChatMessageContent;
                 }
@@ -671,4 +634,7 @@ internal sealed class ChatClientCore
             { nameof(completions.FinishReason), completions.FinishReason?.ToString() },
         };
     }
+=======
+    #endregion
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 }

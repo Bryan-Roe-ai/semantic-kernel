@@ -79,6 +79,7 @@ def test_azure_ai_inference_chat_completion_init_with_custom_client(
     assert azure_ai_inference.client == client
 
 
+<<<<<<< HEAD
 @pytest.mark.parametrize(
     "exclude_list", [["AZURE_AI_INFERENCE_API_KEY"]], indirect=True
 )
@@ -96,9 +97,13 @@ def test_azure_ai_inference_text_embedding_init_with_empty_api_key(
 def test_azure_ai_inference_text_embedding_init_with_empty_endpoint(
     azure_ai_inference_unit_test_env, model_id
 ) -> None:
+=======
+@pytest.mark.parametrize("exclude_list", [["AZURE_AI_INFERENCE_ENDPOINT"]], indirect=True)
+def test_azure_ai_inference_text_embedding_init_with_empty_endpoint(azure_ai_inference_unit_test_env, model_id) -> None:
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     """Test initialization of AzureAIInferenceTextEmbedding with empty endpoint"""
     with pytest.raises(ServiceInitializationError):
-        AzureAIInferenceTextEmbedding(model_id)
+        AzureAIInferenceTextEmbedding(model_id, env_file_path="fake_path")
 
 
 @pytest.mark.asyncio

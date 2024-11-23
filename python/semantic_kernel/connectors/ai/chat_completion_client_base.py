@@ -588,7 +588,7 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                 settings.function_call_behavior
             )
 
-        kernel = kwargs.get("kernel", None)
+        kernel: "Kernel" = kwargs.get("kernel")  # type: ignore
         if settings.function_choice_behavior is not None:
             if kernel is None:
                 raise ServiceInvalidExecutionSettingsError("The kernel is required for function calls.")
@@ -623,6 +623,7 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
 
             logger.info(f"processing {fc_count} tool calls in parallel.")
 
+<<<<<<< HEAD
             # This function either updates the chat history with the function call results
             # or returns the context, with terminate set to True in which case the loop will
             # break and the function calls are returned.
@@ -639,6 +640,24 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                     for function_call in function_calls
                 ],
             )
+=======
+                # This function either updates the chat history with the function call results
+                # or returns the context, with terminate set to True in which case the loop will
+                # break and the function calls are returned.
+                results = await asyncio.gather(
+                    *[
+                        kernel.invoke_function_call(
+                            function_call=function_call,
+                            chat_history=chat_history,
+                            arguments=kwargs.get("arguments"),
+                            function_call_count=fc_count,
+                            request_index=request_index,
+                            function_behavior=settings.function_choice_behavior,
+                        )
+                        for function_call in function_calls
+                    ],
+                )
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
             if any(result.terminate for result in results if result is not None):
                 return merge_function_results(chat_history.messages[-len(results) :])
@@ -849,7 +868,7 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                 settings.function_call_behavior
             )
 
-        kernel = kwargs.get("kernel", None)
+        kernel: "Kernel" = kwargs.get("kernel")  # type: ignore
         if settings.function_choice_behavior is not None:
             if kernel is None:
                 raise ServiceInvalidExecutionSettingsError("The kernel is required for function calls.")
@@ -900,6 +919,7 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
             fc_count = len(function_calls)
             logger.info(f"processing {fc_count} tool calls in parallel.")
 
+<<<<<<< HEAD
             # This function either updates the chat history with the function call results
             # or returns the context, with terminate set to True in which case the loop will
             # break and the function calls are returned.
@@ -916,6 +936,24 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                     for function_call in function_calls
                 ],
             )
+=======
+                # This function either updates the chat history with the function call results
+                # or returns the context, with terminate set to True in which case the loop will
+                # break and the function calls are returned.
+                results = await asyncio.gather(
+                    *[
+                        kernel.invoke_function_call(
+                            function_call=function_call,
+                            chat_history=chat_history,
+                            arguments=kwargs.get("arguments"),
+                            function_call_count=fc_count,
+                            request_index=request_index,
+                            function_behavior=settings.function_choice_behavior,
+                        )
+                        for function_call in function_calls
+                    ],
+                )
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
             if any(result.terminate for result in results if result is not None):
                 yield merge_function_results(chat_history.messages[-len(results) :])  # type: ignore

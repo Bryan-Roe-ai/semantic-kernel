@@ -2,6 +2,8 @@
 
 
 import pytest
+from openai.types.chat.chat_completion import ChatCompletion, Choice
+from openai.types.chat.chat_completion_message import ChatCompletionMessage
 
 <<<<<<< HEAD
 <<<<<<< div
@@ -158,6 +160,19 @@ from semantic_kernel.kernel import Kernel
 >>>>>>> head
 from semantic_kernel.prompt_template.kernel_prompt_template import KernelPromptTemplate
 from semantic_kernel.prompt_template.prompt_template_config import PromptTemplateConfig
+
+
+@pytest.fixture
+def mock_chat_completion_response() -> ChatCompletion:
+    return ChatCompletion(
+        id="test_id",
+        choices=[
+            Choice(index=0, message=ChatCompletionMessage(content="test", role="assistant"), finish_reason="stop")
+        ],
+        created=0,
+        model="test",
+        object="chat.completion",
+    )
 
 
 def test_init_with_system_message_only():
@@ -1506,8 +1521,9 @@ def test_serialize():  # ignore: E501
     )
 
 
-def test_serialize_and_deserialize_to_chat_history():
+def test_serialize_and_deserialize_to_chat_history(mock_chat_completion_response: ChatCompletion):
     system_msg = "a test system prompt"
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -1639,10 +1655,26 @@ def test_serialize_and_deserialize_to_chat_history():
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+    msgs = [
+        ChatMessageContent(
+            role=AuthorRole.USER,
+            content=f"Message {i}",
+            inner_content=mock_chat_completion_response,
+        )
+        for i in range(3)
+    ]
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     chat_history = ChatHistory(messages=msgs, system_message=system_msg)
+
     json_str = chat_history.serialize()
     new_chat_history = ChatHistory.restore_chat_history(json_str)
-    assert new_chat_history == chat_history
+
+    assert len(new_chat_history.messages) == len(chat_history.messages)
+
+    for original_msg, restored_msg in zip(chat_history.messages, new_chat_history.messages):
+        assert original_msg.role == restored_msg.role
+        assert original_msg.content == restored_msg.content
 
 
 def test_deserialize_invalid_json_raises_exception():
@@ -3750,6 +3782,7 @@ async def test_template_empty_history(chat_history: ChatHistory):
 def test_to_from_file(chat_history: ChatHistory, tmp_path):
     chat_history.add_system_message("You are an AI assistant")
     chat_history.add_user_message("What is the weather in Seattle?")
+<<<<<<< HEAD
     chat_history.add_assistant_message(
         [
             FunctionCallContent(
@@ -3765,6 +3798,13 @@ def test_to_from_file(chat_history: ChatHistory, tmp_path):
     chat_history.add_assistant_message(
         "It is raining in Seattle, what else can I help you with?"
     )
+=======
+    chat_history.add_assistant_message([
+        FunctionCallContent(id="test1", name="WeatherPlugin-GetWeather", arguments='{{ "location": "Seattle" }}')
+    ])
+    chat_history.add_tool_message([FunctionResultContent(id="test1", result="It is raining")])
+    chat_history.add_assistant_message("It is raining in Seattle, what else can I help you with?")
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     file_path = tmp_path / "chat_history.json"
     chat_history.store_chat_history_to_file(file_path)
@@ -3788,6 +3828,7 @@ def test_chat_history_serialize(chat_history: ChatHistory):
     custom_result = CustomResultClass(result="CustomResultTestValue")
     chat_history.add_system_message("You are an AI assistant")
     chat_history.add_user_message("What is the weather in Seattle?")
+<<<<<<< HEAD
     chat_history.add_assistant_message(
         [
             FunctionCallContent(
@@ -3800,6 +3841,12 @@ def test_chat_history_serialize(chat_history: ChatHistory):
     chat_history.add_tool_message(
         [FunctionResultContent(id="test1", result=custom_result)]
     )
+=======
+    chat_history.add_assistant_message([
+        FunctionCallContent(id="test1", name="WeatherPlugin-GetWeather", arguments='{{ "location": "Seattle" }}')
+    ])
+    chat_history.add_tool_message([FunctionResultContent(id="test1", result=custom_result)])
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     assert "CustomResultTestValue" in chat_history.serialize()
 <<<<<<< HEAD
 <<<<<<< div

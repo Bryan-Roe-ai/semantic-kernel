@@ -472,7 +472,7 @@ class OpenAITextCompletionBase(OpenAIHandler, TextCompletionClientBase):
 <<<<<<< main
 >>>>>>> Stashed changes
 
-        response = await self._send_request(request_settings=settings)
+        response = await self._send_request(settings)
         assert isinstance(response, (TextCompletion, ChatCompletion))  # nosec
 
         metadata = self._get_metadata_from_text_response(response)
@@ -740,6 +740,7 @@ class OpenAITextCompletionBase(OpenAIHandler, TextCompletionClientBase):
         settings.ai_model_id = settings.ai_model_id or self.ai_model_id
         settings.stream = True
 
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -760,6 +761,9 @@ class OpenAITextCompletionBase(OpenAIHandler, TextCompletionClientBase):
 >>>>>>> Stashed changes
 >>>>>>> head
         response = await self._send_request(request_settings=settings)
+=======
+        response = await self._send_request(settings)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         assert isinstance(response, AsyncStream)  # nosec
 
         async for chunk in response:

@@ -18,6 +18,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 using System.Collections.Generic;
 using System.Linq;
+<<<<<<< HEAD
 =======
 <<<<<<< Updated upstream
 =======
@@ -87,6 +88,9 @@ using System.Text.Json;
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+using System.Text.Json;
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
@@ -190,6 +194,7 @@ internal class MockAgent : ChatHistoryKernelAgent
     {
         return base.MergeArguments(arguments);
     }
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -224,4 +229,14 @@ internal class MockAgent : ChatHistoryKernelAgent
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+
+    protected internal override Task<AgentChannel> RestoreChannelAsync(string channelState, CancellationToken cancellationToken)
+    {
+        ChatHistory history =
+            JsonSerializer.Deserialize<ChatHistory>(channelState) ??
+            throw new KernelException("Unable to restore channel: invalid state.");
+        return Task.FromResult<AgentChannel>(new ChatHistoryChannel(history));
+    }
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 }

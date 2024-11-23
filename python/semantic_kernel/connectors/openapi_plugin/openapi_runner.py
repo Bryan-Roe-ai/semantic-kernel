@@ -11,6 +11,7 @@ from urllib.parse import urlparse, urlunparse
 import httpx
 from openapi_core import Spec
 
+<<<<<<< HEAD
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import (
     RestApiOperation,
 )
@@ -29,6 +30,14 @@ from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_run_options import RestApiOperationRunOptions
 from semantic_kernel.connectors.telemetry import APP_INFO, prepend_semantic_kernel_to_user_agent
 >>>>>>> origin/PR
+=======
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_expected_response import (
+    RestApiExpectedResponse,
+)
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import RestApiOperation
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload import RestApiPayload
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_run_options import RestApiRunOptions
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.exceptions.function_exceptions import FunctionExecutionException
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.utils.experimental_decorator import experimental_class
@@ -83,9 +92,7 @@ class OpenApiRunner:
         )
         return self.build_full_url(url, operation.build_query_string(arguments))
 
-    def build_json_payload(
-        self, payload_metadata: RestApiOperationPayload, arguments: dict[str, Any]
-    ) -> tuple[str, str]:
+    def build_json_payload(self, payload_metadata: RestApiPayload, arguments: dict[str, Any]) -> tuple[str, str]:
         """Build the JSON payload."""
         if self.enable_dynamic_payload:
             if payload_metadata is None:
@@ -154,9 +161,7 @@ class OpenApiRunner:
             else property_name
         )
 
-    def _get_first_response_media_type(
-        self, responses: OrderedDict[str, RestApiOperationExpectedResponse] | None
-    ) -> str:
+    def _get_first_response_media_type(self, responses: OrderedDict[str, RestApiExpectedResponse] | None) -> str:
         if responses:
             first_response = next(iter(responses.values()))
             return (
@@ -170,7 +175,7 @@ class OpenApiRunner:
         self,
         operation: RestApiOperation,
         arguments: KernelArguments | None = None,
-        options: RestApiOperationRunOptions | None = None,
+        options: RestApiRunOptions | None = None,
     ) -> str:
         """Runs the operation defined in the OpenAPI manifest."""
         if not arguments:
@@ -221,7 +226,7 @@ class OpenApiRunner:
 
             if hasattr(self, "http_client") and self.http_client is not None:
                 return await make_request(self.http_client)
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(timeout=5) as client:
                 return await make_request(client)
 
         return await fetch()

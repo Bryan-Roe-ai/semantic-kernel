@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -61,6 +62,9 @@ using System.Text.Json;
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+using System.Text.Json;
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -79,6 +83,7 @@ using Microsoft.SemanticKernel.Agents.Extensions;
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 using Microsoft.SemanticKernel.Agents.Internal;
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Stashed changes
@@ -133,6 +138,9 @@ using Microsoft.SemanticKernel.Agents.Serialization;
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+using Microsoft.SemanticKernel.Agents.Serialization;
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace Microsoft.SemanticKernel.Agents;
@@ -168,6 +176,7 @@ public abstract class AgentChat
     private ILogger? _logger;
 
     /// <summary>
+<<<<<<< HEAD
 =======
 <<<<<<< Updated upstream
 =======
@@ -203,11 +212,14 @@ public abstract class AgentChat
     private ILogger? _logger;
 
     /// <summary>
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// The agents participating in the chat.
     /// </summary>
     public abstract IReadOnlyList<Agent> Agents { get; }
 
     /// <summary>
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -242,6 +254,8 @@ public abstract class AgentChat
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// Indicates if a chat operation is active.  Activity is defined as
     /// any the execution of any public method.
     /// </summary>
@@ -843,6 +857,7 @@ public abstract class AgentChat
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -878,6 +893,8 @@ public abstract class AgentChat
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     internal async Task DeserializeAsync(AgentChatState state)
     {
         if (this._agentChannels.Count > 0 || this.History.Count > 0)
@@ -932,6 +949,7 @@ public abstract class AgentChat
                         })
         };
 
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -966,6 +984,8 @@ public abstract class AgentChat
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// <summary>
     /// Clear activity signal to indicate that activity has ceased.
     /// </summary>

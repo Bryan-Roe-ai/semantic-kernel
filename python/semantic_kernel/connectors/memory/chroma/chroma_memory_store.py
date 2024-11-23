@@ -347,6 +347,7 @@ class ChromaMemoryStore(MemoryStoreBase):
             ) from exc
 
     async def get_batch(
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< div
 <<<<<<< div
@@ -521,6 +522,9 @@ class ChromaMemoryStore(MemoryStoreBase):
 >>>>>>> Stashed changes
 >>>>>>> origin/main
 >>>>>>> head
+=======
+        self, collection_name: str, keys: list[str], with_embeddings: bool = False
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ) -> list[MemoryRecord]:
         """Gets a batch of records.
 

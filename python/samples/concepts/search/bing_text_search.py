@@ -11,6 +11,7 @@ async def main():
     service_id = "chat-gpt"
     kernel.add_service(AzureChatCompletion(service_id=service_id))
     connector = BingSearch()
+<<<<<<< HEAD
     query = "What is semanti kernel?"
     print("Query: ", query)
     print("\n============================\n")
@@ -28,16 +29,41 @@ async def main():
         print(f"  Altered query: {results.metadata['altered_query']}")
     for idx, result in enumerate(results.results):
         print(f"  result {idx + 1}:")
+=======
+    query = "What is semantic kernel?"
+    print("Query: ", query)
+    print("\n============================\n")
+    results = await connector.search(query, top=2)
+    print("String search results: ")
+    if results.metadata and results.metadata.get("altered_query", None):
+        print(f"  Altered query: {results.metadata['altered_query']}")
+    async for result in results.results:
+        print(f"    result: {result}")
+    print("\n============================\n")
+    results = await connector.get_text_search_results(query, top=2)
+    print("Text search results: ")
+    if results.metadata and results.metadata.get("altered_query", None):
+        print(f"  Altered query: {results.metadata['altered_query']}")
+    async for result in results.results:
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         print(f"    name: {result.name}")
         print(f"    value: {result.value}")
         print(f"    link: {result.link}")
     print("\n============================\n")
+<<<<<<< HEAD
     results = await connector.get_search_result(query, count=2)
     print("BingWebPage results: ")
     if results.metadata and results.metadata.get("altered_query", None):
         print(f"  Altered query: {results.metadata['altered_query']}")
     for idx, result in enumerate(results.results):
         print(f"  result {idx + 1}:")
+=======
+    results = await connector.get_search_results(query, top=2)
+    print("BingWebPage results: ")
+    if results.metadata and results.metadata.get("altered_query", None):
+        print(f"  Altered query: {results.metadata['altered_query']}")
+    async for result in results.results:
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         print(f"    name: {result.name}")
         print(f"    url: {result.url}")
         print(f"    language: {result.language}")

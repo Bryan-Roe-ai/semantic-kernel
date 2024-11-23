@@ -92,6 +92,7 @@ from azure.search.documents.aio import SearchClient
 from azure.search.documents.indexes.aio import SearchIndexClient
 from azure.search.documents.indexes.models import SearchIndex
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -150,6 +151,9 @@ from azure.search.documents.models import VectorizedQuery
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+from azure.search.documents.models import VectorizableTextQuery, VectorizedQuery
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from pydantic import ValidationError
 
 from semantic_kernel.connectors.memory.azure_ai_search.utils import (
@@ -157,6 +161,7 @@ from semantic_kernel.connectors.memory.azure_ai_search.utils import (
     get_search_client,
     get_search_index_client,
 )
+<<<<<<< HEAD
 <<<<<<< main
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
@@ -242,6 +247,20 @@ from semantic_kernel.data.vector_store_model_definition import VectorStoreRecord
 =======
 >>>>>>> head
 from semantic_kernel.data.vector_store_record_fields import VectorStoreRecordVectorField
+=======
+from semantic_kernel.data.filter_clauses import AnyTagsEqualTo, EqualTo
+from semantic_kernel.data.kernel_search_results import KernelSearchResults
+from semantic_kernel.data.record_definition import VectorStoreRecordDefinition, VectorStoreRecordVectorField
+from semantic_kernel.data.vector_search import (
+    VectorizableTextSearchMixin,
+    VectorSearchFilter,
+    VectorSearchOptions,
+)
+from semantic_kernel.data.vector_search.vector_search import VectorSearchBase
+from semantic_kernel.data.vector_search.vector_search_result import VectorSearchResult
+from semantic_kernel.data.vector_search.vector_text_search import VectorTextSearchMixin
+from semantic_kernel.data.vector_search.vectorized_search import VectorizedSearchMixin
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.exceptions import MemoryConnectorException, MemoryConnectorInitializationError
 >>>>>>> upstream/main
 from semantic_kernel.utils.experimental_decorator import experimental_class
@@ -253,6 +272,7 @@ TModel = TypeVar("TModel")
 
 @experimental_class
 class AzureAISearchCollection(
+<<<<<<< HEAD
     VectorStoreRecordCollection[str, TModel], Generic[TModel]
 ):
 <<<<<<< HEAD
@@ -314,12 +334,21 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+    VectorSearchBase[str, TModel],
+    VectorizableTextSearchMixin[TModel],
+    VectorizedSearchMixin[TModel],
+    VectorTextSearchMixin[TModel],
+    Generic[TModel],
+):
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     """Azure AI Search collection implementation."""
 
     search_client: SearchClient
     search_index_client: SearchIndexClient
     supported_key_types: ClassVar[list[str] | None] = ["str"]
     supported_vector_types: ClassVar[list[str] | None] = ["float", "int"]
+    managed_search_index_client: bool = True
 
     def __init__(
         self,
@@ -363,6 +392,8 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
                 collection_name=collection_name,
                 search_client=search_client,
                 search_index_client=search_index_client,
+                managed_search_index_client=False,
+                managed_client=False,
             )
             return
 
@@ -378,6 +409,7 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
                     collection_name=collection_name,
                 ),
                 search_index_client=search_index_client,
+                managed_search_index_client=False,
             )
             return
 
@@ -387,10 +419,10 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
 
         try:
             azure_ai_search_settings = AzureAISearchSettings.create(
-                env_file_path=kwargs.get("env_file_path", None),
-                endpoint=kwargs.get("search_endpoint", None),
-                api_key=kwargs.get("api_key", None),
-                env_file_encoding=kwargs.get("env_file_encoding", None),
+                env_file_path=kwargs.get("env_file_path"),
+                endpoint=kwargs.get("search_endpoint"),
+                api_key=kwargs.get("api_key"),
+                env_file_encoding=kwargs.get("env_file_encoding"),
                 index_name=collection_name,
             )
         except ValidationError as exc:
@@ -399,8 +431,8 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
             ) from exc
         search_index_client = get_search_index_client(
             azure_ai_search_settings=azure_ai_search_settings,
-            azure_credential=kwargs.get("azure_credentials", None),
-            token_credential=kwargs.get("token_credentials", None),
+            azure_credential=kwargs.get("azure_credentials"),
+            token_credential=kwargs.get("token_credentials"),
         )
         if not azure_ai_search_settings.index_name:
             raise MemoryConnectorInitializationError("Collection name is required.")
@@ -639,6 +671,7 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
     async def delete_collection(self, **kwargs) -> None:
         await self.search_index_client.delete_index(self.collection_name, **kwargs)
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -674,11 +707,14 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     @override
     async def _inner_search(
         self,
         options: VectorSearchOptions,
+<<<<<<< HEAD
     ) -> Sequence[Any] | None:
         search_args: dict[str, Any] = {
             "top": options.count,
@@ -712,16 +748,75 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
         return [res async for res in await self.search_client.search(**search_args)]
 
     def _build_filter_string(self, search_filter: VectorSearchFilter) -> str:
+=======
+        search_text: str | None = None,
+        vectorizable_text: str | None = None,
+        vector: list[float | int] | None = None,
+        **kwargs: Any,
+    ) -> KernelSearchResults[VectorSearchResult[TModel]]:
+        search_args: dict[str, Any] = {
+            "top": options.top,
+            "skip": options.skip,
+            "include_total_count": options.include_total_count,
+        }
+        if options.filter.filters:
+            search_args["filter"] = self._build_filter_string(options.filter)
+        if search_text is not None:
+            search_args["search_text"] = search_text
+        if vectorizable_text is not None:
+            search_args["vector_queries"] = [
+                VectorizableTextQuery(
+                    text=vectorizable_text,
+                    k_nearest_neighbors=options.top,
+                    fields=options.vector_field_name,
+                )
+            ]
+        if vector is not None:
+            search_args["vector_queries"] = [
+                VectorizedQuery(
+                    vector=vector,
+                    k_nearest_neighbors=options.top,
+                    fields=options.vector_field_name,
+                )
+            ]
+        if "vector_queries" not in search_args and "search_text" not in search_args:
+            # this assumes that a filter only query is asked for
+            search_args["search_text"] = "*"
+
+        if options.include_vectors:
+            search_args["select"] = ["*"]
+        else:
+            search_args["select"] = [
+                name
+                for name, field in self.data_model_definition.fields.items()
+                if not isinstance(field, VectorStoreRecordVectorField)
+            ]
+        raw_results = await self.search_client.search(**search_args)
+        return KernelSearchResults(
+            results=self._get_vector_search_results_from_results(raw_results, options),
+            total_count=await raw_results.get_count() if options.include_total_count else None,
+        )
+
+    def _build_filter_string(self, search_filter: VectorSearchFilter) -> str:
+        """Create the filter string based on the filters.
+
+        Since the group_type is always added (and currently always "AND"), the last " and " is removed.
+        """
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         filter_string = ""
         for filter in search_filter.filters:
             if isinstance(filter, EqualTo):
                 filter_string += f"{filter.field_name} eq '{filter.value}' {search_filter.group_type.lower()} "
+<<<<<<< HEAD
             elif isinstance(filter, NotEqualTo):
                 filter_string += f"{filter.field_name} ne '{filter.value}' {search_filter.group_type.lower()} "
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             elif isinstance(filter, AnyTagsEqualTo):
                 filter_string += (
                     f"{filter.field_name}/any(t: t eq '{filter.value}') {search_filter.group_type.lower()} "
                 )
+<<<<<<< HEAD
         return filter_string[:-5]
 
     @staticmethod
@@ -756,6 +851,11 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
                 type_object=int,
             ),
         ]
+=======
+        if filter_string.endswith(" and "):
+            filter_string = filter_string[:-5]
+        return filter_string
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     @override
     def _get_record_from_result(self, result: dict[str, Any]) -> dict[str, Any]:
@@ -764,6 +864,7 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
     @override
     def _get_score_from_result(self, result: dict[str, Any]) -> float | None:
         return result.get("@search.score")
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -798,3 +899,13 @@ class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+
+    @override
+    async def __aexit__(self, exc_type, exc_value, traceback) -> None:
+        """Exit the context manager."""
+        if self.managed_client:
+            await self.search_client.close()
+        if self.managed_search_index_client:
+            await self.search_index_client.close()
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377

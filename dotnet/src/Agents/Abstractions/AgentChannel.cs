@@ -20,6 +20,7 @@ public abstract class AgentChannel
 
     /// <summary>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -55,11 +56,14 @@ public abstract class AgentChannel
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// Responsible for providing the serialized representation of the channel.
     /// </summary>
     protected internal abstract string Serialize();
 
     /// <summary>
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -94,6 +98,8 @@ public abstract class AgentChannel
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// Receive the conversation messages.  Used when joining a conversation and also during each agent interaction..
     /// </summary>
     /// <param name="history">The chat history at the point the channel is created.</param>

@@ -6135,7 +6135,10 @@ internal class FlowExecutor : IFlowExecutor
                 string? actionResult;
                 try
                 {
-                    await Task.Delay(this._config.MinIterationTimeMs).ConfigureAwait(false);
+                    if (this._config.MinIterationTimeMs > 0)
+                    {
+                        await Task.Delay(this._config.MinIterationTimeMs).ConfigureAwait(false);
+                    }
                     actionResult = await this._reActEngine.InvokeActionAsync(actionStep, input, chatHistory, kernel, actionContextVariables).ConfigureAwait(false);
 
                     if (string.IsNullOrEmpty(actionResult))
@@ -7348,8 +7351,11 @@ internal class FlowExecutor : IFlowExecutor
 >>>>>>> head
             }
 
-            // continue to next iteration
-            await Task.Delay(this._config.MinIterationTimeMs).ConfigureAwait(false);
+            if (this._config.MinIterationTimeMs > 0)
+            {
+                // continue to next iteration
+                await Task.Delay(this._config.MinIterationTimeMs).ConfigureAwait(false);
+            }
         }
 
 <<<<<<< div

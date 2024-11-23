@@ -176,6 +176,15 @@ public sealed class ChatCompletionAgent : ChatHistoryKernelAgent
         }
     }
 
+    /// <inheritdoc/>
+    protected override Task<AgentChannel> RestoreChannelAsync(string channelState, CancellationToken cancellationToken)
+    {
+        ChatHistory history =
+            JsonSerializer.Deserialize<ChatHistory>(channelState) ??
+            throw new KernelException("Unable to restore channel: invalid state.");
+        return Task.FromResult<AgentChannel>(new ChatHistoryChannel(history));
+    }
+
     internal static (IChatCompletionService service, PromptExecutionSettings? executionSettings) GetChatCompletionService(Kernel kernel, KernelArguments? arguments)
     /// <inheritdoc/>
     protected override Task<AgentChannel> CreateChannelAsync(CancellationToken cancellationToken)

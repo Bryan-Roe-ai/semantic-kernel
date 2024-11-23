@@ -16,6 +16,7 @@ from pydantic import ValidationError
 from semantic_kernel.connectors.memory.azure_ai_search.azure_ai_search_collection import (
     AzureAISearchCollection,
 )
+<<<<<<< HEAD
 from semantic_kernel.connectors.memory.azure_ai_search.utils import (
     get_search_client,
     get_search_index_client,
@@ -24,6 +25,11 @@ from semantic_kernel.data.vector_store import VectorStore
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
+=======
+from semantic_kernel.connectors.memory.azure_ai_search.utils import get_search_client, get_search_index_client
+from semantic_kernel.data.record_definition import VectorStoreRecordDefinition
+from semantic_kernel.data.vector_storage import VectorStore
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.exceptions import MemoryConnectorInitializationError
 from semantic_kernel.utils.experimental_decorator import experimental_class
 
@@ -31,9 +37,13 @@ if TYPE_CHECKING:
     from azure.core.credentials import AzureKeyCredential, TokenCredential
     from azure.core.credentials_async import AsyncTokenCredential
 
+<<<<<<< HEAD
     from semantic_kernel.data.vector_store_record_collection import (
         VectorStoreRecordCollection,
     )
+=======
+    from semantic_kernel.data import VectorStoreRecordCollection
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -75,6 +85,7 @@ class AzureAISearchStore(VectorStore):
             AzureAISearchSettings,
         )
 
+        managed_client: bool = False
         if not search_index_client:
             try:
                 azure_ai_search_settings = AzureAISearchSettings.create(
@@ -92,8 +103,9 @@ class AzureAISearchStore(VectorStore):
                 azure_credential=azure_credentials,
                 token_credential=token_credentials,
             )
+            managed_client = True
 
-        super().__init__(search_index_client=search_index_client)
+        super().__init__(search_index_client=search_index_client, managed_client=managed_client)
 
     @override
     def get_collection(
@@ -122,6 +134,7 @@ class AzureAISearchStore(VectorStore):
                 search_client=search_client
                 or get_search_client(self.search_index_client, collection_name),
                 collection_name=collection_name,
+                managed_client=search_client is None,
                 **kwargs,
             )
         return self.vector_record_collections[collection_name]
@@ -130,6 +143,15 @@ class AzureAISearchStore(VectorStore):
     async def list_collection_names(self, **kwargs: Any) -> list[str]:
         if "params" not in kwargs:
             kwargs["params"] = {"select": ["name"]}
+<<<<<<< HEAD
         return [
             index async for index in self.search_index_client.list_index_names(**kwargs)
         ]
+=======
+        return [index async for index in self.search_index_client.list_index_names(**kwargs)]
+
+    async def __aexit__(self, exc_type, exc_value, traceback) -> None:
+        """Exit the context manager."""
+        if self.managed_client:
+            await self.search_index_client.close()
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377

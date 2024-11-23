@@ -13,6 +13,7 @@ from semantic_kernel.connectors.ai.google.vertex_ai.vertex_ai_prompt_execution_s
     VertexAIChatPromptExecutionSettings,
     VertexAIEmbeddingPromptExecutionSettings,
     VertexAIPromptExecutionSettings,
+    VertexAITextPromptExecutionSettings,
 )
 
 __all__ = [
@@ -22,4 +23,5 @@ __all__ = [
     "VertexAIPromptExecutionSettings",
     "VertexAITextCompletion",
     "VertexAITextEmbedding",
+    "VertexAITextPromptExecutionSettings",
 ]

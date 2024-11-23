@@ -2,8 +2,15 @@
 
 
 from semantic_kernel.kernel_pydantic import KernelBaseModel
+<<<<<<< HEAD
 
 
+=======
+from semantic_kernel.utils.experimental_decorator import experimental_class
+
+
+@experimental_class
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 class BingWebPage(KernelBaseModel):
     """A Bing web page."""
 

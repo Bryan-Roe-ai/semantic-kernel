@@ -346,6 +346,7 @@ class PromptTemplateConfig(KernelBaseModel):
     def rewrite_execution_settings(
         cls,
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -409,6 +410,9 @@ class PromptTemplateConfig(KernelBaseModel):
             | list[PromptExecutionSettings]
             | dict[str, PromptExecutionSettings]
         ),
+=======
+        settings: PromptExecutionSettings | list[PromptExecutionSettings] | dict[str, PromptExecutionSettings] | None,
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ) -> dict[str, PromptExecutionSettings]:
 <<<<<<< HEAD
 <<<<<<< div

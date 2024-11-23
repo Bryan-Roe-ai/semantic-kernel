@@ -14,7 +14,6 @@ from tests.integration.fakes.writer_plugin_fake import WriterPluginFake
 
 @pytest.mark.asyncio
 async def test_can_call_to_plan_from_xml():
-
     kernel = Kernel()
     # Configure LLM service
     kernel.add_service(

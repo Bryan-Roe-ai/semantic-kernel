@@ -65,6 +65,7 @@
 =======
 >>>>>>> head
 using System.Collections.Generic;
+using Microsoft.SemanticKernel.ChatCompletion;
 using OpenAI.Assistants;
 
 namespace Microsoft.SemanticKernel.Agents.OpenAI.Internal;
@@ -302,6 +303,18 @@ internal static class AssistantRunOptionsFactory
             }
         }
 
+        if (invocationOptions?.AdditionalMessages != null)
+        {
+            foreach (ChatMessageContent message in invocationOptions.AdditionalMessages)
+            {
+                ThreadInitializationMessage threadMessage = new(
+                    role: message.Role == AuthorRole.User ? MessageRole.User : MessageRole.Assistant,
+                    content: AssistantMessageFactory.GetMessageContents(message));
+
+                options.AdditionalMessages.Add(threadMessage);
+            }
+        }
+
         return options;
     }
 
@@ -309,5 +322,5 @@ internal static class AssistantRunOptionsFactory
         =>
             setting.HasValue && (!agentSetting.HasValue || !EqualityComparer<TValue>.Default.Equals(setting.Value, agentSetting.Value)) ?
                 setting.Value :
-                null;
+                agentSetting;
 }

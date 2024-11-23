@@ -32,11 +32,13 @@
 <<<<<<< main
 =======
         "endregion",
+        "entra",
         "genai",
         "generativeai",
         "hnsw",
         "httpx",
         "huggingface",
+        "Instrumentor",
         "kernelfunction",
 >>>>>>> upstream/main
         "logit",
@@ -44,6 +46,7 @@
         "mongocluster",
         "ndarray",
         "nopep",
+        "NOSQL",
         "ollama",
         "onyourdatatest",
         "OPENAI",
@@ -52,6 +55,7 @@
         "kernelfunction",
         "skprompt",
         "templating",
+        "uninstrument",
         "vectordb",
 <<<<<<< main
         "generativeai",
@@ -158,7 +162,20 @@
         "vectorizer",
         "vectorstoremodel",
         "vertexai",
+<<<<<<< HEAD
         "Weaviate"
 >>>>>>> upstream/main
+=======
+        "Weaviate",
+        "qdrant",
+        "huggingface",
+        "pytestmark",
+        "contoso",
+        "opentelemetry",
+        "SEMANTICKERNEL",
+        "OTEL",
+        "vectorizable",
+        "desync"
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ]
 }

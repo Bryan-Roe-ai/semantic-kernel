@@ -15,7 +15,11 @@ using Microsoft.VisualStudio.Threading;
 
 namespace Microsoft.SemanticKernel;
 
+<<<<<<< HEAD
 internal delegate bool ProcessEventFilter(KernelProcessEvent processEvent);
+=======
+internal delegate bool ProcessEventProxy(ProcessEvent processEvent);
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 internal sealed class LocalProcess : LocalStep, IDisposable
 {
@@ -34,6 +38,11 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     private ILogger? _logger; // Note: Use the Logger property to access this field.
     private ILogger Logger => this._logger ??= this.LoggerFactory?.CreateLogger<LocalProcess>() ?? NullLogger<LocalProcess>.Instance;
 
+<<<<<<< HEAD
+=======
+    private readonly ILogger _logger;
+
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     private JoinableTask? _processTask;
     private CancellationTokenSource? _processCancelSource;
 
@@ -44,9 +53,12 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// <param name="kernel">An instance of <see cref="Kernel"/></param>
     internal LocalProcess(KernelProcess process, Kernel kernel)
         : base(process, kernel)
+<<<<<<< HEAD
     /// <param name="parentProcessId">Optional. The Id of the parent process if one exists, otherwise null.</param>
     internal LocalProcess(KernelProcess process, Kernel kernel, string? parentProcessId = null)
         : base(process, kernel, parentProcessId)
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     {
         Verify.NotNull(process);
         Verify.NotNull(process.Steps);
@@ -85,12 +97,13 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// <param name="processEvent">Required. The <see cref="KernelProcessEvent"/> to start the process with.</param>
     /// <param name="kernel">Optional. A <see cref="Kernel"/> to use when executing the process.</param>
     /// <returns>A <see cref="Task"/></returns>
-    internal async Task RunOnceAsync(KernelProcessEvent? processEvent, Kernel? kernel = null)
+    internal async Task RunOnceAsync(KernelProcessEvent processEvent, Kernel? kernel = null)
     {
         Verify.NotNull(processEvent);
         await Task.Yield(); // Ensure that the process has an opportunity to run in a different synchronization context.
         Verify.NotNull(processEvent, nameof(processEvent));
         Verify.NotNull(processEvent, nameof(processEvent));
+        Verify.NotNullOrWhiteSpace(processEvent.Id, $"{nameof(processEvent)}.{nameof(KernelProcessEvent.Id)}");
 
         await Task.Yield(); // Ensure that the process has an opportunity to run in a different synchronization context.
         await this._externalEventChannel.Writer.WriteAsync(processEvent).ConfigureAwait(false);
@@ -173,7 +186,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
         {
             // Create the external event that will be used to start the nested process. Since this event came
             // from outside this processes, we set the visibility to internal so that it's not emitted back out again.
-            var nestedEvent = new KernelProcessEvent() { Id = eventId, Data = message.TargetEventData, Visibility = KernelProcessEventVisibility.Internal };
+            KernelProcessEvent nestedEvent = new() { Id = eventId, Data = message.TargetEventData, Visibility = KernelProcessEventVisibility.Internal };
 
             // Run the nested process completely within a single superstep.
             await this.RunOnceAsync(nestedEvent, this._kernel).ConfigureAwait(false);
@@ -211,8 +224,12 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     new LocalProcess(processStep, this._kernel)
                     {
                         ParentProcessId = this.Id,
+<<<<<<< HEAD
                         LoggerFactory = this.LoggerFactory,
                         EventFilter = this.EventFilter,
+=======
+                        EventProxy = this.EventProxy,
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
                     };
             }
             else if (step is KernelProcessMap mapStep)
@@ -221,6 +238,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     new LocalMap(mapStep, this._kernel)
                     {
                         ParentProcessId = this.Id,
+<<<<<<< HEAD
                         LoggerFactory = this.LoggerFactory,
                     };
                 var process = new LocalProcess(
@@ -229,6 +247,9 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     parentProcessId: this.Id);
 
                 localStep = process;
+=======
+                    };
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             }
             else
             {
@@ -239,6 +260,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     new LocalStep(step, this._kernel)
                     {
                         ParentProcessId = this.Id,
+<<<<<<< HEAD
                         LoggerFactory = this.LoggerFactory,
                         EventFilter = this.EventFilter,
                     };
@@ -246,6 +268,10 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     stepInfo: step,
                     kernel: this._kernel,
                     parentProcessId: this.Id);
+=======
+                        EventProxy = this.EventProxy,
+                    };
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             }
 
             this._steps.Add(localStep);
@@ -348,7 +374,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     {
         while (this._externalEventChannel.Reader.TryRead(out var externalEvent))
         {
-            if (this._outputEdges!.TryGetValue(externalEvent.Id!, out List<KernelProcessEdge>? edges) && edges is not null)
+            if (this._outputEdges.TryGetValue(externalEvent.Id, out List<KernelProcessEdge>? edges) && edges is not null)
             {
                 foreach (var edge in edges)
                 {
@@ -378,7 +404,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
 
             // Get the edges for the event and queue up the messages to be sent to the next steps.
             bool foundEdge = false;
-            foreach (KernelProcessEdge edge in step.GetEdgeForEvent(stepEvent.Id))
+            foreach (KernelProcessEdge edge in step.GetEdgeForEvent(stepEvent.QualifiedId))
             {
                 LocalMessage message = LocalMessageFactory.CreateFromEdge(edge, stepEvent.Data);
                 messageChannel.Enqueue(message);
@@ -407,7 +433,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// <exception cref="InvalidOperationException"></exception>
     private async Task<KernelProcess> ToKernelProcessAsync()
     {
-        var processState = new KernelProcessState(this.Name, this.Id);
+        var processState = new KernelProcessState(this.Name, this._stepState.Version, this.Id);
         var stepTasks = this._steps.Select(step => step.ToKernelProcessStepInfoAsync()).ToList();
         var steps = await Task.WhenAll(stepTasks).ConfigureAwait(false);
         return new KernelProcess(processState, steps, this._outputEdges);

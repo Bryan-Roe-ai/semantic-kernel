@@ -5,7 +5,7 @@ from typing import Annotated, Any
 from uuid import uuid4
 
 from pandas import DataFrame
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 from semantic_kernel.data.vector_store_model_decorator import vectorstoremodel
 from semantic_kernel.data.vector_store_model_definition import (
@@ -23,7 +23,6 @@ from semantic_kernel.data import (
     VectorStoreRecordVectorField,
     vectorstoremodel,
 )
-from semantic_kernel.kernel_pydantic import KernelBaseModel
 
 # This concept shows the different ways you can create a vector store data model
 # using dataclasses, Pydantic, and Python classes.
@@ -69,6 +68,7 @@ class DataModelDataclass:
 
 # Data model using Pydantic BaseModels
 @vectorstoremodel
+<<<<<<< HEAD
 class DataModelPydantic(KernelBaseModel):
     vector: Annotated[list[float], VectorStoreRecordVectorField]
     key: Annotated[str, VectorStoreRecordKeyField()] = Field(
@@ -80,12 +80,20 @@ class DataModelPydantic(KernelBaseModel):
             has_embedding=True, embedding_property_name="vector"
         ),
     ] = "content1"
+=======
+class DataModelPydantic(BaseModel):
+    id: Annotated[str, VectorStoreRecordKeyField()] = Field(default_factory=lambda: str(uuid4()))
+    content: Annotated[str, VectorStoreRecordDataField(has_embedding=True, embedding_property_name="vector")] = (
+        "content1"
+    )
+    vector: Annotated[list[float], VectorStoreRecordVectorField]
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     other: str | None = None
 
 
 # Data model using Pydantic BaseModels with mixed annotations (from pydantic and SK)
 @vectorstoremodel
-class DataModelPydanticComplex(KernelBaseModel):
+class DataModelPydanticComplex(BaseModel):
     vector: Annotated[list[float], VectorStoreRecordVectorField]
     key: Annotated[
         str, Field(default_factory=lambda: str(uuid4())), VectorStoreRecordKeyField()

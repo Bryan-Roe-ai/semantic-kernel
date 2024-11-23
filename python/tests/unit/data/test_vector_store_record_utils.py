@@ -4,19 +4,30 @@ from unittest.mock import AsyncMock, MagicMock
 
 from pytest import mark, raises
 
+<<<<<<< HEAD
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
 from semantic_kernel.data.vector_store_record_fields import (
+=======
+from semantic_kernel import Kernel
+from semantic_kernel.data import (
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     VectorStoreRecordDataField,
+    VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
+    VectorStoreRecordUtils,
     VectorStoreRecordVectorField,
 )
+<<<<<<< HEAD
 from semantic_kernel.data.vector_store_record_utils import VectorStoreRecordUtils
 from semantic_kernel.exceptions.memory_connector_exceptions import (
     VectorStoreModelException,
 )
 from semantic_kernel.kernel import Kernel
+=======
+from semantic_kernel.exceptions import VectorStoreModelException
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 @mark.asyncio
