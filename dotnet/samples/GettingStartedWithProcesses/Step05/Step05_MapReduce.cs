@@ -1,19 +1,13 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 using System.Text;
 using Microsoft.SemanticKernel;
-<<<<<<< HEAD
-=======
 using Resources;
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 namespace Step05;
 
 /// <summary>
-<<<<<<< HEAD
 /// DEV HARNESS
-=======
 /// Demonstrate usage of <see cref="KernelProcessMap"/> for a map-reduce operation.
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 /// </summary>
 public class Step05_MapReduce : BaseTest
 {
@@ -22,12 +16,9 @@ public class Step05_MapReduce : BaseTest
 
     /// <summary>
     /// Factor to increase the scale of the content processed.
-<<<<<<< HEAD
     /// Factor to increase the scale of the content processed to highlight the characteristics of
     /// each approach: map vs linear.
-=======
     /// Factor to increase the scale of the content processed.
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// </summary>
     private const int ScaleFactor = 100;
 
@@ -36,23 +27,17 @@ public class Step05_MapReduce : BaseTest
     public Step05_MapReduce(ITestOutputHelper output)
          : base(output, redirectSystemConsoleOutput: true)
     {
-<<<<<<< HEAD
-=======
         // Initialize the test content
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         StringBuilder content = new();
 
         for (int count = 0; count < ScaleFactor; ++count)
         {
-<<<<<<< HEAD
             content.AppendLine(File.ReadAllText("Grimms-The-King-of-the-Golden-Mountain.txt"));
             content.AppendLine(File.ReadAllText("Grimms-The-Water-of-Life.txt"));
             content.AppendLine(File.ReadAllText("Grimms-The-White-Snake.txt"));
-=======
             content.AppendLine(EmbeddedResource.Read("Grimms-The-King-of-the-Golden-Mountain.txt"));
             content.AppendLine(EmbeddedResource.Read("Grimms-The-Water-of-Life.txt"));
             content.AppendLine(EmbeddedResource.Read("Grimms-The-White-Snake.txt"));
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         }
 
         this._sourceContent = content.ToString().ToUpperInvariant();
@@ -61,14 +46,11 @@ public class Step05_MapReduce : BaseTest
     [Fact]
     public async Task RunMapReduceAsync()
     {
-<<<<<<< HEAD
         KernelProcess process = SetupMapReduceProcess(nameof(RunMapReduceAsync), "Start");
-=======
         // Define the process
         KernelProcess process = SetupMapReduceProcess(nameof(RunMapReduceAsync), "Start");
 
         // Execute the process
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         Kernel kernel = new();
         using LocalKernelProcessContext localProcess =
             await process.StartAsync(
@@ -79,10 +61,7 @@ public class Step05_MapReduce : BaseTest
                     Data = this._sourceContent,
                 });
 
-<<<<<<< HEAD
-=======
         // Display the results
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         Dictionary<string, int> results = (Dictionary<string, int>?)kernel.Data[ResultStep.ResultKey] ?? [];
         foreach (var result in results)
         {
@@ -90,7 +69,6 @@ public class Step05_MapReduce : BaseTest
         }
     }
 
-<<<<<<< HEAD
     [Fact]
     public async Task RunLinearAsync()
     {
@@ -119,8 +97,6 @@ public class Step05_MapReduce : BaseTest
         }
     }
 
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     private KernelProcess SetupMapReduceProcess(string processName, string inputEventId)
     {
         ProcessBuilder process = new(processName);
@@ -130,18 +106,15 @@ public class Step05_MapReduce : BaseTest
             .OnInputEvent(inputEventId)
             .SendEventTo(new ProcessFunctionTargetBuilder(chunkStep));
 
-<<<<<<< HEAD
         ProcessStepBuilder countStep = process.AddStepFromType<CountStep>();
         ProcessMapBuilder mapStep = process.AddMapForTarget(new ProcessFunctionTargetBuilder(countStep));
         chunkStep
             .OnEvent(ChunkStep.EventId)
             .SendEventTo(mapStep);
-=======
         ProcessMapBuilder mapStep = process.AddMapStepFromType<CountStep>();
         chunkStep
             .OnEvent(ChunkStep.EventId)
             .SendEventTo(new ProcessFunctionTargetBuilder(mapStep));
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         ProcessStepBuilder resultStep = process.AddStepFromType<ResultStep>();
         mapStep
@@ -151,10 +124,7 @@ public class Step05_MapReduce : BaseTest
         return process.Build();
     }
 
-<<<<<<< HEAD
-=======
     // Step for breaking the content into chunks
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     private sealed class ChunkStep : KernelProcessStep
     {
         public const string EventId = "ChunkComplete";
@@ -177,10 +147,7 @@ public class Step05_MapReduce : BaseTest
         }
     }
 
-<<<<<<< HEAD
-=======
     // Step for counting the words in a chunk
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     private sealed class CountStep : KernelProcessStep
     {
         public const string EventId = "CountComplete";
@@ -206,10 +173,7 @@ public class Step05_MapReduce : BaseTest
         }
     }
 
-<<<<<<< HEAD
-=======
     // Step for combining the results
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     private sealed class ResultStep : KernelProcessStep
     {
         public const string ResultKey = "WordCount";
@@ -237,10 +201,7 @@ public class Step05_MapReduce : BaseTest
         }
     }
 
-<<<<<<< HEAD
-=======
     // Uninteresting words to remove from content
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     private static readonly HashSet<string> s_notInteresting =
         [
             "A",
