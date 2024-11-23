@@ -21,6 +21,7 @@ public class KernelProcessStateTests
         string id = "123";
 
         // Act
+        KernelProcessState state = new(name, "v1", id);
 <<<<<<< HEAD
         KernelProcessState state = new(name, id);
 =======
@@ -42,6 +43,7 @@ public class KernelProcessStateTests
         string name = "TestProcess";
 
         // Act
+        KernelProcessState state = new(name, version: "v1");
 <<<<<<< HEAD
         KernelProcessState state = new(name);
 =======
@@ -60,6 +62,7 @@ public class KernelProcessStateTests
     public void KernelProcessStateInitializationWithNullNameThrows()
     {
         // Act & Assert
+        var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: null!, version: "v1"));
 <<<<<<< HEAD
         Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: null!));
 =======
@@ -73,6 +76,7 @@ public class KernelProcessStateTests
     public void KernelProcessStateInitializationWithNullVersionThrows()
     {
         // Act & Assert
+        var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: "stateName", version: null!));
         var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: "stateName", version: null!));
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     }

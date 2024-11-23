@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 =======
 using System.Collections.Generic;
 using System.IO;
@@ -38,9 +39,10 @@ public class LocalMapTests
             .OnInputEvent("Start")
             .SendEventTo(mapStep);
 
-        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>();
+        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>("Union");
         mapStep
             .OnEvent(ComputeStep.SquareEventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumSquareFunction));
             .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumFunction));
 =======
         ProcessMapBuilder mapStep = process.AddMapStepFromType<ComputeStep>();
@@ -58,14 +60,17 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+        using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 
         // Assert
-        VerifyMapResult(kernel, UnionStep.ResultKey, 55L);
+        UnionState unionState = await GetUnionStateAsync(processContext);
+        Assert.Equal(55L, unionState.SquareResult);
     }
 
     /// <summary>
+    /// Validates the <see cref="LocalMap"/> filtering on a specific event (cubic, not square).
     /// Validates the <see cref="LocalMap"/> result as the first step in the process
     /// and with a step as the map operation.
 =======
@@ -93,9 +98,10 @@ public class LocalMapTests
             .OnInputEvent("Start")
             .SendEventTo(mapStep);
 
-        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>();
+        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>("Union");
         mapStep
             .OnEvent(ComputeStep.CubicEventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumSquareFunction));
             .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumFunction));
 =======
         ProcessMapBuilder mapStep = process.AddMapStepFromType<ComputeStep>();
@@ -113,10 +119,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+        using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 
         // Assert
+        UnionState unionState = await GetUnionStateAsync(processContext);
+        Assert.Equal(225L, unionState.SquareResult);
         VerifyMapResult(kernel, UnionStep.ResultKey, 225L);
 =======
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
@@ -144,9 +153,10 @@ public class LocalMapTests
             .OnInputEvent("Start")
             .SendEventTo(mapStep);
 
-        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>();
+        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>("Union");
         mapStep
             .OnEvent(FormatStep.EventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.FormatFunction));
             .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.JoinFunction));
 =======
         ProcessMapBuilder mapStep = process.AddMapStepFromType<FormatStep>();
@@ -164,10 +174,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+        using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 
         // Assert
+        UnionState unionState = await GetUnionStateAsync(processContext);
+        Assert.Equal("[1]/[2]/[3]/[4]/[5]", unionState.FormatResult);
         VerifyMapResult(kernel, UnionStep.ResultKey, "[1]/[2]/[3]/[4]/[5]");
 =======
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
@@ -196,9 +209,10 @@ public class LocalMapTests
             .OnInputEvent("Start")
             .SendEventTo(mapStep);
 
-        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>();
+        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>("Union");
         mapStep
             .OnEvent(ComplexStep.ComputeEventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumSquareFunction));
             .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumFunction));
 =======
         ProcessMapBuilder mapStep = process.AddMapStepFromType<ComplexStep>();
@@ -216,10 +230,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+        using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 
         // Assert
+        UnionState unionState = await GetUnionStateAsync(processContext);
+        Assert.Equal(55L, unionState.SquareResult);
         VerifyMapResult(kernel, UnionStep.ResultKey, 55L);
 =======
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
@@ -252,9 +269,10 @@ public class LocalMapTests
             .OnEvent(InitialStep.EventId)
             .SendEventTo(mapStep);
 
-        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>();
+        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>("Union");
         mapStep
             .OnEvent(ComputeStep.SquareEventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumSquareFunction));
             .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumFunction));
 =======
         ProcessMapBuilder mapStep = process.AddMapStepFromType<ComputeStep>();
@@ -272,10 +290,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+        using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 
         // Assert
+        UnionState unionState = await GetUnionStateAsync(processContext);
+        Assert.Equal(55L, unionState.SquareResult);
         VerifyMapResult(kernel, UnionStep.ResultKey, 55L);
 =======
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
@@ -303,14 +324,13 @@ public class LocalMapTests
             .OnInputEvent("Start")
             .SendEventTo(mapStep);
 
-        ProcessStepBuilder unionSquaredStep = process.AddStepFromType<UnionStep, UnionState>(new() { Key = "Key1" });
+        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>("Union");
         mapStep
             .OnEvent(ComputeStep.SquareEventId)
-            .SendEventTo(new ProcessFunctionTargetBuilder(unionSquaredStep, UnionStep.SumFunction));
-
-        ProcessStepBuilder unionCubicStep = process.AddStepFromType<UnionStep, UnionState>(new() { Key = "Key2" });
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumSquareFunction));
         mapStep
             .OnEvent(ComputeStep.CubicEventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumCubicFunction));
             .SendEventTo(new ProcessFunctionTargetBuilder(unionCubicStep, UnionStep.SumFunction));
 =======
         ProcessMapBuilder mapStep = process.AddMapStepFromType<ComputeStep>();
@@ -331,10 +351,14 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+        using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 
         // Assert
+        UnionState unionState = await GetUnionStateAsync(processContext);
+        Assert.Equal(55L, unionState.SquareResult);
+        Assert.Equal(225L, unionState.CubicResult);
         VerifyMapResult(kernel, "Key1", 55L);
         VerifyMapResult(kernel, "Key2", 225L);
 =======
@@ -368,9 +392,10 @@ public class LocalMapTests
             .OnInputEvent("Start")
             .SendEventTo(mapStep);
 
-        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>();
+        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>("Union");
         mapStep
             .OnEvent(ComputeStep.SquareEventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumSquareFunction));
             .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumFunction));
 =======
             .OnInputEvent("Anything")
@@ -392,10 +417,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+        using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 
         // Assert
+        UnionState unionState = await GetUnionStateAsync(processContext);
+        Assert.Equal(55L, unionState.SquareResult);
         VerifyMapResult(kernel, UnionStep.ResultKey, 55L);
 =======
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
@@ -425,14 +453,16 @@ public class LocalMapTests
             .SendEventTo(mapStep);
 
         // CountStep is not part of the map operation, rather it has been defined on the "outer" process.
+        CountStep.Index = 0; // Reset static state (test hack)
         ProcessStepBuilder countStep = process.AddStepFromType<CountStep>();
         computeStep
             .OnEvent(ComputeStep.SquareEventId)
             .SendEventTo(new ProcessFunctionTargetBuilder(countStep));
 
-        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>();
+        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>("Union");
         mapStep
             .OnEvent(ComputeStep.SquareEventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumSquareFunction));
             .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumFunction));
 =======
         ProcessMapBuilder mapStep = process.AddMapStepFromType<ComputeStep>();
@@ -495,9 +525,10 @@ public class LocalMapTests
             .OnInputEvent("Start")
             .SendEventTo(mapStep);
 
-        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>();
+        ProcessStepBuilder unionStep = process.AddStepFromType<UnionStep>("Union");
         mapStep
             .OnEvent(ComputeStep.SquareEventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumSquareFunction));
             .SendEventTo(new ProcessFunctionTargetBuilder(unionStep, UnionStep.SumFunction));
 =======
         ProcessMapBuilder mapStep = process.AddMapStepFromProcess(mapProcess);
@@ -515,10 +546,14 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+        using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 
         // Assert
+        UnionState unionState = await GetUnionStateAsync(processContext);
+        Assert.Equal(55L, unionState.SquareResult);
+        Assert.Equal(5, CountStep.Index);
         VerifyMapResult(kernel, UnionStep.ResultKey, 55L);
         VerifyMapResult(kernel, CountStep.CountKey, 5);
 =======
@@ -547,17 +582,17 @@ public class LocalMapTests
         ProcessStepBuilder unionStepInner = mapProcess.AddStepFromType<UnionStep>();
         mapStepInner
             .OnEvent(ComputeStep.SquareEventId)
-            .SendEventTo(new ProcessFunctionTargetBuilder(unionStepInner, UnionStep.SumFunction));
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStepInner, UnionStep.SumSquareFunction));
 
         mapProcess
             .OnInputEvent("StartMap")
             .SendEventTo(mapStepInner);
 
         ProcessMapBuilder mapStepOuter = process.AddMapForTarget(mapProcess.WhereInputEventIs("StartMap"));
-        ProcessStepBuilder unionStepOuter = process.AddStepFromType<UnionStep>();
+        ProcessStepBuilder unionStepOuter = process.AddStepFromType<UnionStep>("Union");
         mapStepOuter
-            .OnEvent(ComputeStep.SquareEventId)
-            .SendEventTo(new ProcessFunctionTargetBuilder(unionStepOuter, UnionStep.SumFunction));
+            .OnEvent(UnionStep.EventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(unionStepOuter, UnionStep.SumSquareFunction));
 
         process
             .OnInputEvent("Start")
@@ -594,15 +629,18 @@ public class LocalMapTests
             [1, 2, 3, 4, 5],
             [1, 2, 3, 4, 5],
         ];
+        using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, input, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, input, "Start");
 
         // Assert
-        VerifyMapResult(kernel, UnionStep.ResultKey, 165L);
+        UnionState unionState = await GetUnionStateAsync(processContext);
+        Assert.Equal(165L, unionState.SquareResult);
     }
 
-    private async Task RunProcessAsync(Kernel kernel, KernelProcess process, object? input, string inputEvent)
+    private async Task<LocalKernelProcessContext> RunProcessAsync(Kernel kernel, KernelProcess process, object? input, string inputEvent)
     {
+        return
         using LocalKernelProcessContext localProcess =
 =======
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, input, "Start");
@@ -625,6 +663,13 @@ public class LocalMapTests
                 });
     }
 
+    private static async Task<UnionState> GetUnionStateAsync(LocalKernelProcessContext processContext)
+    {
+        KernelProcess processState = await processContext.GetStateAsync();
+        KernelProcessStepState<UnionState> unionState = (KernelProcessStepState<UnionState>)processState.Steps.Where(s => s.State.Name == "Union").Single().State;
+        Assert.NotNull(unionState);
+        Assert.NotNull(unionState.State);
+        return unionState.State;
 <<<<<<< HEAD
     private static void VerifyMapResult<TResult>(Kernel kernel, string resultKey, TResult expectedResult)
     {
@@ -773,6 +818,9 @@ public class LocalMapTests
 
     private sealed record UnionState
     {
+        public long SquareResult { get; set; }
+        public long CubicResult { get; set; }
+        public string FormatResult { get; set; } = string.Empty;
         public string Key { get; set; } = UnionStep.ResultKey;
 =======
     private sealed record UnionState
@@ -791,6 +839,9 @@ public class LocalMapTests
 <<<<<<< HEAD
         public const string ResultKey = "Result";
         public const string EventId = "MapUnion";
+        public const string SumSquareFunction = "UnionSquare";
+        public const string SumCubicFunction = "UnionCubic";
+        public const string FormatFunction = "UnionFormat";
         public const string SumFunction = "UnionSum";
         public const string JoinFunction = "UnionJoin";
 =======
@@ -809,23 +860,27 @@ public class LocalMapTests
             return ValueTask.CompletedTask;
         }
 
+        [KernelFunction(SumSquareFunction)]
+        public async ValueTask SumSquareAsync(KernelProcessStepContext context, IList<long> values)
 <<<<<<< HEAD
         [KernelFunction(SumFunction)]
         public async ValueTask SumAsync(KernelProcessStepContext context, IList<long> values, Kernel kernel)
         {
-            long current = 0;
-            long sum = values.Sum();
-            if (kernel.Data.TryGetValue(this._state.Key, out object? result))
-            {
-                current = (long)result!;
-            }
-            kernel.Data[this._state.Key] = current + sum;
-            await context.EmitEventAsync(new() { Id = EventId, Data = sum });
+            this._state.SquareResult = values.Sum();
+            await context.EmitEventAsync(new() { Id = EventId, Data = this._state.SquareResult });
         }
 
-        [KernelFunction(JoinFunction)]
-        public async ValueTask JoinAsync(KernelProcessStepContext context, IList<string> values, Kernel kernel)
+        [KernelFunction(SumCubicFunction)]
+        public async ValueTask SumCubicAsync(KernelProcessStepContext context, IList<long> values)
         {
+            this._state.CubicResult = values.Sum();
+            await context.EmitEventAsync(new() { Id = EventId, Data = this._state.CubicResult });
+        }
+
+        [KernelFunction(FormatFunction)]
+        public void FormatValues(IList<string> values)
+        {
+            this._state.FormatResult = string.Join("/", values);
             string list = string.Join("/", values);
             kernel.Data[this._state.Key] = list;
             await context.EmitEventAsync(new() { Id = EventId, Data = list });
@@ -858,12 +913,15 @@ public class LocalMapTests
     private sealed class CountStep : KernelProcessStep
     {
         public const string CountFunction = nameof(Count);
+
+        public static int Index = 0;
 <<<<<<< HEAD
         public const string CountKey = "Count";
 
         [KernelFunction]
-        public void Count(Kernel kernel)
+        public void Count()
         {
+            Interlocked.Increment(ref Index);
             int count = 0;
             if (kernel.Data.TryGetValue(CountKey, out object? value))
             {

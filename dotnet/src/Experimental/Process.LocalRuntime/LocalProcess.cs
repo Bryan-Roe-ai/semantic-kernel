@@ -15,6 +15,7 @@ using Microsoft.VisualStudio.Threading;
 
 namespace Microsoft.SemanticKernel;
 
+internal delegate bool ProcessEventProxy(ProcessEvent processEvent);
 <<<<<<< HEAD
 internal delegate bool ProcessEventFilter(KernelProcessEvent processEvent);
 =======
@@ -35,8 +36,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     internal readonly KernelProcess _process;
     internal readonly Kernel _kernel;
 
-    private ILogger? _logger; // Note: Use the Logger property to access this field.
-    private ILogger Logger => this._logger ??= this.LoggerFactory?.CreateLogger<LocalProcess>() ?? NullLogger<LocalProcess>.Instance;
+    private readonly ILogger _logger;
 
 <<<<<<< HEAD
 =======
@@ -98,11 +98,13 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// <param name="kernel">Optional. A <see cref="Kernel"/> to use when executing the process.</param>
     /// <returns>A <see cref="Task"/></returns>
     internal async Task RunOnceAsync(KernelProcessEvent processEvent, Kernel? kernel = null)
+    internal async Task RunOnceAsync(KernelProcessEvent processEvent, Kernel? kernel = null)
     {
         Verify.NotNull(processEvent);
         await Task.Yield(); // Ensure that the process has an opportunity to run in a different synchronization context.
         Verify.NotNull(processEvent, nameof(processEvent));
         Verify.NotNull(processEvent, nameof(processEvent));
+        Verify.NotNullOrWhiteSpace(processEvent.Id, $"{nameof(processEvent)}.{nameof(KernelProcessEvent.Id)}");
         Verify.NotNullOrWhiteSpace(processEvent.Id, $"{nameof(processEvent)}.{nameof(KernelProcessEvent.Id)}");
 
         await Task.Yield(); // Ensure that the process has an opportunity to run in a different synchronization context.
@@ -224,6 +226,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     new LocalProcess(processStep, this._kernel)
                     {
                         ParentProcessId = this.Id,
+                        EventProxy = this.EventProxy,
 <<<<<<< HEAD
                         LoggerFactory = this.LoggerFactory,
                         EventFilter = this.EventFilter,
@@ -238,6 +241,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     new LocalMap(mapStep, this._kernel)
                     {
                         ParentProcessId = this.Id,
+                    };
 <<<<<<< HEAD
                         LoggerFactory = this.LoggerFactory,
                     };
@@ -260,6 +264,7 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     new LocalStep(step, this._kernel)
                     {
                         ParentProcessId = this.Id,
+                        EventProxy = this.EventProxy,
 <<<<<<< HEAD
                         LoggerFactory = this.LoggerFactory,
                         EventFilter = this.EventFilter,

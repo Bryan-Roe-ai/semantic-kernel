@@ -64,6 +64,7 @@ public record KernelProcessStepState
     public KernelProcessStepState(string name, string version, string? id = null)
     {
         Verify.NotNullOrWhiteSpace(name, nameof(name));
+        Verify.NotNullOrWhiteSpace(version, nameof(version));
 <<<<<<< HEAD
 =======
         Verify.NotNullOrWhiteSpace(version, nameof(version));

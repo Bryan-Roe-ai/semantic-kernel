@@ -14,8 +14,11 @@ public sealed record KernelProcessMapState : KernelProcessStepState
     /// Initializes a new instance of the <see cref="KernelProcessMapState"/> class.
     /// </summary>
     /// <param name="name">The name of the associated <see cref="KernelProcessMap"/></param>
+    /// <param name="version">version id of the process step state</param>
 <<<<<<< HEAD
     /// <param name="id">The Id of the associated <see cref="KernelProcessMap"/></param>
+    public KernelProcessMapState(string name, string version, string id)
+        : base(name, version, id)
     public KernelProcessMapState(string name, string id)
         : base(name, id)
 =======

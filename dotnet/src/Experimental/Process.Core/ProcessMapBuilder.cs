@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.SemanticKernel.Process.Internal;
+using Microsoft.SemanticKernel.Process.Models;
 <<<<<<< HEAD
 =======
 using Microsoft.SemanticKernel.Process.Models;
@@ -28,8 +30,18 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
         : base($"Map{mapTarget.Step.Name}")
     {
         this._mapTarget = mapTarget;
-        this._mapProcess = this.CreateMapProcess(mapTarget);
+        this.MapOperation = this.CreateMapProcess(mapTarget);
     }
+
+    /// <summary>
+    /// Version of the map-step, used when saving the state of the step.
+    /// </summary>
+    public string Version { get; init; } = "v1";
+
+    /// <summary>
+    /// The map operation that will be executed for each element in the input.
+    /// </summary>
+    internal ProcessBuilder MapOperation { get; }
 
 =======
     /// <summary>
@@ -90,13 +102,15 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
     }
 
     /// <inheritdoc/>
-    internal override KernelProcessStepInfo BuildStep()
+    internal override KernelProcessStepInfo BuildStep(KernelProcessStepStateMetadata? stateMetadata = null)
     {
+        KernelProcessMapStateMetadata? mapMetadata = stateMetadata as KernelProcessMapStateMetadata;
+
         // Build the edges first
         var builtEdges = this.Edges.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Select(e => e.Build()).ToList());
 
-        KernelProcessMapState state = new(this.Name, this.Id);
-        return new KernelProcessMap(state, this._mapProcess.Build(), builtEdges);
+        KernelProcessMapState state = new(this.Name, this.Version, this.Id);
+        return new KernelProcessMap(state, this.MapOperation.Build(mapMetadata?.OperationState), builtEdges);
     }
 
     private ProcessBuilder CreateMapProcess(ProcessFunctionTargetBuilder mapTarget)
@@ -120,7 +134,7 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
 
         var transformProcess = transformBuilder.AddStepFromProcess(mapProcess);
         transformBuilder
-            .OnInputEvent(KernelProcessMap.MapEventId)
+            .OnInputEvent(ProcessConstants.MapEventId)
             .SendEventTo(transformProcess.WhereInputEventIs(eventId));
 
         return transformBuilder;
@@ -132,7 +146,7 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
 
         transformBuilder.AddStepFromBuilder(mapTarget.Step);
         transformBuilder
-            .OnInputEvent(KernelProcessMap.MapEventId)
+            .OnInputEvent(ProcessConstants.MapEventId)
             .SendEventTo(mapTarget);
 
         return transformBuilder;

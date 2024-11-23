@@ -32,6 +32,7 @@ internal class LocalStep : IKernelProcessMessageChannel
     private readonly Lazy<ValueTask> _initializeTask;
     private readonly KernelProcessStepInfo _stepInfo;
     private readonly string _eventNamespace;
+    private readonly ILogger _logger;
     private readonly ILogger? _logger;
 
 
@@ -80,6 +81,7 @@ internal class LocalStep : IKernelProcessMessageChannel
     /// The Id of the parent process if one exists.
     /// </summary>
     internal string? ParentProcessId { get; init; }
+    internal string? ParentProcessId { get; init; }
 
     /// <summary>
     /// The name of the step.
@@ -100,6 +102,7 @@ internal class LocalStep : IKernelProcessMessageChannel
     /// <summary>
     /// An event filter that can be used to intercept events emitted by the step.
     /// </summary>
+    internal ProcessEventProxy? EventProxy { get; init; }
     internal ProcessEventFilter? EventFilter { get; init; }
 
     /// <summary>
@@ -150,6 +153,10 @@ internal class LocalStep : IKernelProcessMessageChannel
     /// <returns>A <see cref="ValueTask"/></returns>
     public ValueTask EmitEventAsync(KernelProcessEvent processEvent)
     {
+        Verify.NotNullOrWhiteSpace(processEvent.Id, $"{nameof(processEvent)}.{nameof(KernelProcessEvent.Id)}");
+
+        ProcessEvent emitEvent = ProcessEvent.Create(processEvent, this._eventNamespace);
+        if (this.EventProxy?.Invoke(emitEvent) ?? true)
 <<<<<<< HEAD
         this.EmitEvent(LocalEvent.FromKernelProcessEvent(processEvent, this._eventNamespace));
         ProcessEvent emitEvent = ProcessEvent.FromKernelProcessEvent(processEvent, this._eventNamespace);
@@ -190,6 +197,7 @@ internal class LocalStep : IKernelProcessMessageChannel
         }
 
         string messageLogParameters = string.Join(", ", message.Values.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
+        this._logger.LogDebug("Received message from '{SourceId}' targeting function '{FunctionName}' and parameters '{Parameters}'.", message.SourceId, message.FunctionName, messageLogParameters);
         this._logger?.LogDebug("Received message from '{SourceId}' targeting function '{FunctionName}' and parameters '{Parameters}'.", message.SourceId, message.FunctionName, messageLogParameters);
         this.Logger.LogDebug("Received message from '{SourceId}' targeting function '{FunctionName}' and parameters '{Parameters}'.", message.SourceId, message.FunctionName, messageLogParameters);
 
@@ -198,6 +206,7 @@ internal class LocalStep : IKernelProcessMessageChannel
         {
             if (this._inputs.TryGetValue(message.FunctionName, out Dictionary<string, object?>? functionName) && functionName != null && functionName.TryGetValue(kvp.Key, out object? parameterName) && parameterName != null)
             {
+                this._logger.LogWarning("Step {StepName} already has input for {FunctionName}.{Key}, it is being overwritten with a message from Step named '{SourceId}'.", this.Name, message.FunctionName, kvp.Key, message.SourceId);
                 this._logger?.LogWarning("Step {StepName} already has input for {FunctionName}.{Key}, it is being overwritten with a message from Step named '{SourceId}'.", this.Name, message.FunctionName, kvp.Key, message.SourceId);
                 this.Logger.LogWarning("Step {StepName} already has input for {FunctionName}.{Key}, it is being overwritten with a message from Step named '{SourceId}'.", this.Name, message.FunctionName, kvp.Key, message.SourceId);
             }
@@ -218,6 +227,7 @@ internal class LocalStep : IKernelProcessMessageChannel
         if (invocableFunctions.Count == 0)
         {
             string missingKeysLog() => string.Join(", ", missingKeys.Select(k => $"{k.Key}: {string.Join(", ", k.Value?.Where(v => v.Value == null).Select(v => v.Key) ?? [])}"));
+            this._logger.LogDebug("No invocable functions, missing keys: {MissingKeys}", missingKeysLog());
             this._logger?.LogDebug("No invocable functions, missing keys: {MissingKeys}", missingKeysLog());
             this.Logger.LogDebug("No invocable functions, missing keys: {MissingKeys}", missingKeysLog());
             return;
@@ -227,6 +237,7 @@ internal class LocalStep : IKernelProcessMessageChannel
         var targetFunction = invocableFunctions.FirstOrDefault((name) => name == message.FunctionName) ??
             throw new InvalidOperationException($"A message targeting function '{message.FunctionName}' has resulted in a function named '{invocableFunctions.First()}' becoming invocable. Are the function names configured correctly?");
 
+        this._logger.LogDebug("Step with Id `{StepId}` received all required input for function [{TargetFunction}] and is executing.", this.Name, targetFunction);
         this._logger?.LogDebug("Step with Id `{StepId}` received all required input for function [{TargetFunction}] and is executing.", this.Name, targetFunction);
         this.Logger.LogDebug("Step with Id `{StepId}` received all required input for function [{TargetFunction}] and is executing.", this.Name, targetFunction);
 
@@ -298,6 +309,7 @@ internal class LocalStep : IKernelProcessMessageChannel
         }
 
         // Initialize the input channels
+        this._initialInputs = this.FindInputChannels(this._functions, this._logger);
         this._initialInputs = this.FindInputChannels();
         this._inputs = this._initialInputs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 
@@ -306,7 +318,7 @@ internal class LocalStep : IKernelProcessMessageChannel
         this._inputs = this._initialInputs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 
         // Activate the step with user-defined state if needed
-        Type stateType = this._stepInfo.InnerStepType.ExtractStateType(out Type? userStateType, this.Logger);
+        Type stateType = this._stepInfo.InnerStepType.ExtractStateType(out Type? userStateType, this._logger);
         KernelProcessStepState stateObject = this._stepInfo.State;
         Type? stateType = null;
 
@@ -344,6 +356,15 @@ internal class LocalStep : IKernelProcessMessageChannel
 
         if (stateObject is null)
         {
+            throw new KernelException("The state object for the KernelProcessStep could not be created.").Log(this._logger);
+        }
+
+        MethodInfo methodInfo =
+            this._stepInfo.InnerStepType.GetMethod(nameof(KernelProcessStep.ActivateAsync), [stateType]) ??
+            throw new KernelException("The ActivateAsync method for the KernelProcessStep could not be found.").Log(this._logger);
+
+        this._stepState = stateObject;
+
             var errorMessage = "The state object for the KernelProcessStep could not be created.";
             this._logger?.LogError("{ErrorMessage}", errorMessage);
             this.Logger.LogError("{ErrorMessage}", errorMessage);

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 <<<<<<< HEAD
 =======
 using System.Collections.Concurrent;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.SemanticKernel.Process.Internal;
 <<<<<<< HEAD
 =======
 using Microsoft.SemanticKernel.Process.Internal;
@@ -22,6 +24,7 @@ internal sealed class LocalMap : LocalStep
 {
     private readonly HashSet<string> _mapEvents;
     private readonly KernelProcessMap _map;
+    private readonly ILogger _logger;
 <<<<<<< HEAD
     private ILogger? _logger;
     private ILogger Logger => this._logger ??= this.LoggerFactory?.CreateLogger(this.Name) ?? NullLogger.Instance;
@@ -38,6 +41,8 @@ internal sealed class LocalMap : LocalStep
         : base(map, kernel)
     {
         this._map = map;
+        this._logger = this._kernel.LoggerFactory?.CreateLogger(this._map.State.Name) ?? new NullLogger<LocalStep>();
+        this._mapEvents = [.. map.Edges.Keys.Select(key => key.Split(ProcessConstants.EventIdSeparator).Last())];
 <<<<<<< HEAD
 
         this._mapEvents = [.. map.Edges.Keys.Select(key => key.Split('.').Last())];
@@ -50,12 +55,13 @@ internal sealed class LocalMap : LocalStep
     /// <inheritdoc/>
     internal override async Task HandleMessageAsync(ProcessMessage message)
     {
+        IEnumerable values = message.GetMapInput(this._logger);
 <<<<<<< HEAD
         IEnumerable values = message.GetMapInput(this.Logger);
 
         int index = 0;
         List<(Task Task, LocalKernelProcessContext ProcessContext, MapOperationContext Context)> mapOperations = [];
-        Dictionary<string, Type> capturedEvents = [];
+        ConcurrentDictionary<string, Type> capturedEvents = [];
 
         try
         {
@@ -63,6 +69,8 @@ internal sealed class LocalMap : LocalStep
             {
                 ++index;
 
+                KernelProcess process = this._map.Operation.CloneProcess(this._logger);
+                MapOperationContext context = new(this._mapEvents, capturedEvents);
                 KernelProcess process = this._map.Operation.CloneProcess(this.Logger);
                 MapOperationContext context = new(index, this._mapEvents, capturedEvents);
 =======
@@ -89,6 +97,7 @@ internal sealed class LocalMap : LocalStep
                     processContext.StartWithEventAsync(
                         new KernelProcessEvent
                         {
+                            Id = ProcessConstants.MapEventId,
 <<<<<<< HEAD
                             Id = KernelProcessMap.MapEventId,
 =======
@@ -101,13 +110,15 @@ internal sealed class LocalMap : LocalStep
                 mapOperations.Add((processTask, processContext, context));
             }
 
+            // Wait for all the map operations to complete
 <<<<<<< HEAD
             await Task.WhenAll(mapOperations.Select(p => p.Task)).ConfigureAwait(false);
 
+            // Correlate the operation results to emit as the map result
             Dictionary<string, Array> resultMap = [];
-
             for (index = 0; index < mapOperations.Count; ++index)
             {
+                foreach (KeyValuePair<string, Type> capturedEvent in capturedEvents)
                 foreach (var capturedEvent in capturedEvents)
 =======
             // Wait for all the map operations to complete
@@ -134,6 +145,8 @@ internal sealed class LocalMap : LocalStep
                 }
             }
 
+            // Emit map results
+            foreach (string eventName in capturedEvents.Keys)
 <<<<<<< HEAD
             foreach (var capturedEvent in capturedEvents)
             {
@@ -164,24 +177,24 @@ internal sealed class LocalMap : LocalStep
         return default;
     }
 
+    private sealed record MapOperationContext(in HashSet<string> EventTargets, in IDictionary<string, Type> CapturedEvents)
 <<<<<<< HEAD
     private sealed record MapOperationContext(int Index, HashSet<string> EventTargets, Dictionary<string, Type> CapturedEvents)
     {
-        public Dictionary<string, object?> Results { get; } = [];
+        public ConcurrentDictionary<string, object?> Results { get; } = [];
 
-        public bool Filter(KernelProcessEvent processEvent)
+        public bool Filter(ProcessEvent processEvent)
         {
-            if (!string.IsNullOrEmpty(processEvent.Id))
+            string eventName = processEvent.SourceId;
+            if (this.EventTargets.Contains(eventName))
             {
-                string eventName = processEvent.Id!;
-                if (this.EventTargets.Contains(eventName))
+                this.CapturedEvents.TryGetValue(eventName, out Type? resultType);
+                if (resultType is null || resultType == typeof(object))
                 {
-                    this.CapturedEvents.TryGetValue(eventName, out Type? resultType);
-                    if (resultType is null || resultType == typeof(object))
-                    {
-                        this.CapturedEvents[eventName] = processEvent.Data?.GetType() ?? typeof(object);
-                    }
+                    this.CapturedEvents[eventName] = processEvent.Data?.GetType() ?? typeof(object);
+                }
 
+                this.Results[eventName] = processEvent.Data;
                     this.Results[eventName] = processEvent.Data;
                 }
 =======

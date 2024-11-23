@@ -17,6 +17,7 @@ public sealed class LocalKernelProcessContext : KernelProcessContext, IDisposabl
     private readonly LocalProcess _localProcess;
     private readonly Kernel _kernel;
 
+    internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventProxy? filter = null)
 <<<<<<< HEAD
     internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventFilter? filter = null)
 =======
@@ -25,6 +26,7 @@ public sealed class LocalKernelProcessContext : KernelProcessContext, IDisposabl
     {
         Verify.NotNull(kernel, nameof(kernel));
         Verify.NotNull(process, nameof(process));
+        Verify.NotNull(kernel, nameof(kernel));
         Verify.NotNullOrWhiteSpace(process.State?.Name);
 
         this._kernel = kernel;
@@ -32,6 +34,8 @@ public sealed class LocalKernelProcessContext : KernelProcessContext, IDisposabl
             process,
             kernel)
         {
+            EventProxy = filter
+        };
             EventFilter = filter,
             LoggerFactory = kernel.LoggerFactory,
         };
@@ -61,7 +65,7 @@ public sealed class LocalKernelProcessContext : KernelProcessContext, IDisposabl
         this._localProcess = new LocalProcess(process, kernel);
     }
 
-    internal Task StartWithEventAsync(KernelProcessEvent? initialEvent, Kernel? kernel = null) =>
+    internal Task StartWithEventAsync(KernelProcessEvent initialEvent, Kernel? kernel = null) =>
         this._localProcess.RunOnceAsync(initialEvent, kernel);
 
     internal Task StartWithEventAsync(KernelProcessEvent initialEvent, Kernel? kernel = null) =>

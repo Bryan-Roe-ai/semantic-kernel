@@ -167,10 +167,12 @@ public class LocalProcessTests
     /// A class that represents a step for testing.
     /// </summary>
     [Fact]
+    public void ProcessWithSubprocessAndInvalidTargetThrows()
 <<<<<<< HEAD
     public async Task ProcessWithSubprocessAndInvalidTargetThrowsAsync()
     {
         // Arrange
+        ProcessBuilder process = new(nameof(ProcessWithSubprocessAndInvalidTargetThrows));
         ProcessBuilder process = new(nameof(ProcessWithSubprocessAndInvalidTargetThrowsAsync));
 =======
     public void ProcessWithSubprocessAndInvalidTargetThrows()
@@ -250,6 +252,7 @@ public class LocalProcessTests
     }
 
     /// <summary>
+    /// A class that represents a step for testing.
     /// A class that represents a step for testing.
     /// </summary>
     private sealed class TestStep : KernelProcessStep

@@ -21,6 +21,7 @@ public class Step05_MapReduce : BaseTest
     protected override bool ForceOpenAI => true;
 
     /// <summary>
+    /// Factor to increase the scale of the content processed.
 <<<<<<< HEAD
     /// Factor to increase the scale of the content processed to highlight the characteristics of
     /// each approach: map vs linear.

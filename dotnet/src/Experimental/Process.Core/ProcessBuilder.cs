@@ -100,6 +100,7 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     {
         // The step is a, process so we can return the step info directly.
         return this.Build(stateMetadata as KernelProcessStateMetadata);
+        return this.Build(stateMetadata as KernelProcessStateMetadata);
     }
 
     /// <summary>
@@ -329,8 +330,12 @@ public sealed class ProcessBuilder : ProcessStepBuilder
 
         // Build the steps and injecting initial state if any is provided
         var builtSteps = this.BuildWithStateMetadata(stateMetadata);
+        var builtSteps = this.BuildWithStateMetadata(stateMetadata);
 
         // Create the process
+        KernelProcessState state = new(this.Name, version: this.Version, id: this.HasParentProcess ? this.Id : null);
+        KernelProcess process = new(state, builtSteps, builtEdges);
+
         KernelProcessState state = new(this.Name, version: this.Version, id: this.HasParentProcess ? this.Id : null);
         KernelProcess process = new(state, builtSteps, builtEdges);
 

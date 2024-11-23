@@ -16,9 +16,11 @@ public class KernelProcessMapTests
     public void KernelProcessMapStateInitialization()
     {
         // Arrange
+        KernelProcessState processState = new("Operation", "vTest");
 <<<<<<< HEAD
         KernelProcessState processState = new("Operation");
         KernelProcess process = new(processState, [], []);
+        KernelProcessMapState state = new(nameof(KernelProcessMapStateInitialization), "vTest", Guid.NewGuid().ToString());
         KernelProcessMapState state = new(nameof(KernelProcessMapStateInitialization), Guid.NewGuid().ToString());
 =======
         KernelProcessState processState = new("Operation", "vTest");
@@ -43,10 +45,14 @@ public class KernelProcessMapTests
     /// Verify <see cref="KernelProcessMapState"/> requires a name and id
     /// </summary>
     [Fact]
+    public void KernelProcessMapStateRequiredProperties()
 <<<<<<< HEAD
     public void KernelProcessMapStateRequiresNameAndId()
     {
         // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState(name: null!, "vTest", "testid"));
+        Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState(name: "testname", null!, "testid"));
+        Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState("testname", "vTest", null!));
         Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState(name: null!, "testid"));
         Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState("testname", null!));
 =======

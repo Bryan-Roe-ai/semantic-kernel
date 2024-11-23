@@ -76,8 +76,6 @@ public abstract class ProcessStepBuilder
 
     #endregion
 
-    internal const char EventIdSeparator = '.';
-
     /// <summary>The namespace for events that are scoped to this step.</summary>
     private readonly string _eventNamespace;
 
