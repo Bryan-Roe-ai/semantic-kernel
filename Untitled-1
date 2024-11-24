@@ -6,7 +6,14 @@
       "type": "debugpy",
       "request": "launch",
       "module": "uvicorn",
-      "args": ["app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"],
+      "args": [
+        "app:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload"
+      ],
       "console": "integratedTerminal",
       "justMyCode": true,
       "cwd": "${workspaceFolder}"
@@ -17,7 +24,11 @@
   "description": "A sample JSON structure",
   "isActive": true,
   "created": "2024-03-20",
-  "tags": ["sample", "demo", "test"],
+  "tags": [
+    "sample",
+    "demo",
+    "test"
+  ],
   "settings": {
     "version": "1.0.0",
     "debug": false,

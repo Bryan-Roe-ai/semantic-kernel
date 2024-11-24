@@ -43,6 +43,18 @@
     "eamodio.gitlens",
     "ms-python.vscode-pylance",
     "ms-python.debugpy",
-    "ms-toolsai.jupyter-keymap"
+    "ms-toolsai.jupyter-keymap",
+    "ms-azure-devops.azure-pipelines",
+    "ms-cst-e.vscode-devskim"
+  ],
+  "sync.ignoredSettings": [
+    "netbeans.format.codeFormatter",
+    "netbeans.userdir",
+    "netbeans.verbose",
+    "platformio-ide.activateProjectOnTextEditorChange",
+    "platformio-ide.autoPreloadEnvTasks",
+    "platformio-ide.disablePIOHomeStartup",
+    "platformio-ide.useDevelopmentPIOCore",
+    "editor.formatOnSave"
   ]
 }

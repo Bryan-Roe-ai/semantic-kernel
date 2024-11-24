@@ -10,13 +10,4 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
 
-  <Target Name="CopyFiles" AfterTargets="Build">
-    <Copy SourceFiles="@(Compile)" DestinationFolder="$(OutputPath)" />
-  </Target>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App.Ref" Version="8.0.0" />
-    <PackageReference Include="FSharp.Core" Version="8.0.0" />
-  </ItemGroup>
-
 </Project>
