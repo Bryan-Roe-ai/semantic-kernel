@@ -2,6 +2,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "RobotCode: Default",
+      "type": "robotcode",
+      "request": "launch",
+      "presentation": {
+        "hidden": true
+      },
+      "purpose": "default"
+    },
+    {
       "name": "Python: FastAPI",
       "type": "debugpy",
       "request": "launch",
