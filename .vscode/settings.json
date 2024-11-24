@@ -156,5 +156,11 @@
   },
   "[plaintext]": {
     "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "[msbuild]": {
+    "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "Google.cros-ide"
   }
 }
