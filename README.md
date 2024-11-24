@@ -95,6 +95,15 @@ new_version: Bryan-Roe/semantic-kernel
 [![License: MIT](https://img.shields.io/github/license/microsoft/semantic-kernel)](https://github.com/microsoft/semantic-kernel/blob/main/LICENSE)
 [![Discord](https://img.shields.io/discord/1063152441819942922?label=Discord&logo=discord&logoColor=white&color=d82679)](https://aka.ms/SKDiscord)
 
+Semantic Kernel is a set of libraries for easily integrating AI into applications and services implemented with C#, Java, and Python.
+
+It provides:
+- abstractions for AI services (such as chat, text to images, audio to text, etc.) and memory stores
+- implementations of those abstractions for services from [OpenAI](https://platform.openai.com/docs/introduction), [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service), [Hugging Face](https://huggingface.co/), local models, and more, and for a multitude of vector databases, such as those from [Chroma](https://docs.trychroma.com/getting-started), [Qdrant](https://qdrant.tech/), [Milvus](https://milvus.io/), and [Azure](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search)
+- a common representation for [plugins](https://learn.microsoft.com/en-us/semantic-kernel/ai-orchestration/plugins), which can then be orchestrated automatically by AI
+- the ability to create such plugins from a multitude of sources, including from OpenAPI specifications, prompts, and arbitrary code written in the target language
+- extensible support for prompt management and rendering, including built-in handling of common formats like Handlebars and Liquid
+- and a wealth of functionality layered on top of these abstractions, such as filters for responsible AI, dependency injection integration, and more.
 [Semantic Kernel](https://learn.microsoft.com/en-us/semantic-kernel/overview/)
 is an SDK that integrates Large Language Models (LLMs) like
 [OpenAI](https://platform.openai.com/docs/introduction),
@@ -111,6 +120,9 @@ plugins with AI. With Semantic Kernel
 can ask an LLM to generate a plan that achieves a user's unique goal. Afterwards,
 Semantic Kernel will execute the plan for the user.
 
+#### Please star the repo to show your support for this project!
+
+![Orchestrating plugins with planner](https://learn.microsoft.com/en-us/semantic-kernel/media/kernel-infographic.png)
 It provides:
 
 ### Key Features and Functionality
