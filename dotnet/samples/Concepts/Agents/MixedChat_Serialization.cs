@@ -7,6 +7,8 @@ using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace Agents;
 /// <summary>
+/// Demonstrate the serialization of <see cref="AgentGroupChat"/> with a <see cref="ChatCompletionAgent"/>
+/// and an <see cref="OpenAIAssistantAgent"/>.
 <<<<<<< HEAD
 /// Demonstrate that two different agent types are able to participate in the same conversation.
 /// In this case a <see cref="ChatCompletionAgent"/> and <see cref="OpenAIAssistantAgent"/> participate.
@@ -28,7 +30,7 @@ public class MixedChat_Serialization(ITestOutputHelper output) : BaseAgentsTest(
         """
         Increment the last number from your most recent response.
         Never repeat the same number.
-        
+
         Only respond with a single number that is the result of your calculation without explanation.
         """;
 
@@ -61,23 +63,19 @@ public class MixedChat_Serialization(ITestOutputHelper output) : BaseAgentsTest(
         chat.AddChatMessage(input);
         this.WriteAgentChatMessage(input);
 
+        Console.WriteLine("============= Dynamic Agent Chat - Primary (prior to serialization) ==============");
 <<<<<<< HEAD
         Console.WriteLine("============= Source Chat ==============");
         await InvokeAgents(chat);
 
-        Console.WriteLine("============= Counter Thread ==============");
-        await foreach (ChatMessageContent content in chat.GetChatMessagesAsync(agentCounter))
-        {
-            this.WriteAgentChatMessage(content);
-        }
-
         AgentGroupChat copy = CreateGroupChat();
-        Console.WriteLine("\n=========== Serialized Chat ============");
+        Console.WriteLine("\n=========== Serialize and restore the Agent Chat into a new instance ============");
         await CloneChatAsync(chat, copy);
 
-        Console.WriteLine("\n============ Cloned Chat ===============");
+        Console.WriteLine("\n============ Continue with the dynamic Agent Chat (after deserialization) ===============");
         await InvokeAgents(copy);
 
+        Console.WriteLine("\n============ The entire Agent Chat (includes messages prior to serialization and those after deserialization) ==============");
         Console.WriteLine("\n============ Full History ==============");
 =======
         Console.WriteLine("============= Dynamic Agent Chat - Primary (prior to serialization) ==============");
