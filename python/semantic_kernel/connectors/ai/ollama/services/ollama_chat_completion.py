@@ -1,20 +1,10 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-import logging
-import sys
-from collections.abc import AsyncGenerator, AsyncIterator, Callable, Mapping
-from typing import TYPE_CHECKING, Any, ClassVar
-
-if sys.version_info >= (3, 12):
-    from typing import override  # pragma: no cover
-else:
-    from typing_extensions import override  # pragma: no cover
-
 import httpx
-from ollama import AsyncClient
-from ollama._types import Message
-from pydantic import ValidationError
-
+from semantic_kernel.exceptions.service_exceptions import (
+    ServiceInitializationError,
+    ServiceInvalidResponseError,
+)
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
 from semantic_kernel.connectors.ai.completion_usage import CompletionUsage
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
@@ -32,20 +22,26 @@ from semantic_kernel.contents.chat_message_content import ITEM_TYPES, ChatMessag
 from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.contents.streaming_chat_message_content import ITEM_TYPES as STREAMING_ITEM_TYPES
 from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
-from semantic_kernel.contents.streaming_text_content import StreamingTextContent
-from semantic_kernel.contents.text_content import TextContent
-from semantic_kernel.exceptions.service_exceptions import (
-    ServiceInitializationError,
-    ServiceInvalidExecutionSettingsError,
-    ServiceInvalidResponseError,
-)
-from semantic_kernel.utils.telemetry.model_diagnostics.decorators import (
-    trace_chat_completion,
-    trace_streaming_chat_completion,
-)
+from semantic_kernel.utils.telemetry.model_diagnostics.decorators import trace_chat_completion
+import logging
+import sys
+from collections.abc import AsyncGenerator, AsyncIterator, Callable, Mapping
+from typing import TYPE_CHECKING, Any, ClassVar
+from typing import AsyncIterable, List, Optional
+
+if sys.version_info >= (3, 12):
+    from typing import override  # pragma: no cover
+else:
+    from typing_extensions import override  # pragma: no cover
+
+from ollama import AsyncClient
+from ollama._types import Message
+from pydantic import ValidationError
 
 if TYPE_CHECKING:
-    from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+    from semantic_kernel.connectors.ai.prompt_execution_settings import (
+        PromptExecutionSettings,
+    )
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -86,10 +82,12 @@ class OllamaChatCompletion(OllamaBase, ChatCompletionClientBase):
                 env_file_encoding=env_file_encoding,
             )
         except ValidationError as ex:
-            raise ServiceInitializationError("Failed to create Ollama settings.", ex) from ex
+            raise ServiceInitializationError(
+                "Failed to create Ollama settings.", ex) from ex
 
         if not ollama_settings.chat_model_id:
-            raise ServiceInitializationError("Ollama chat model ID is required.")
+            raise ServiceInitializationError(
+                "Ollama chat model ID is required.")
 
         super().__init__(
             service_id=service_id or ollama_settings.chat_model_id,
@@ -151,10 +149,12 @@ class OllamaChatCompletion(OllamaBase, ChatCompletionClientBase):
         settings: "PromptExecutionSettings",
     ) -> list["ChatMessageContent"]:
         if not isinstance(settings, OllamaChatPromptExecutionSettings):
-            settings = self.get_prompt_execution_settings_from_settings(settings)
+            settings = self.get_prompt_execution_settings_from_settings(
+                settings)
         assert isinstance(settings, OllamaChatPromptExecutionSettings)  # nosec
 
-        prepared_chat_history = self._prepare_chat_history_for_request(chat_history)
+        prepared_chat_history = self._prepare_chat_history_for_request(
+            chat_history)
 
         response_object = await self.client.chat(
             model=self.ai_model_id,
@@ -183,7 +183,8 @@ class OllamaChatCompletion(OllamaBase, ChatCompletionClientBase):
         settings: "PromptExecutionSettings",
     ) -> AsyncGenerator[list["StreamingChatMessageContent"], Any]:
         if not isinstance(settings, OllamaChatPromptExecutionSettings):
-            settings = self.get_prompt_execution_settings_from_settings(settings)
+            settings = self.get_prompt_execution_settings_from_settings(
+                settings)
         assert isinstance(settings, OllamaChatPromptExecutionSettings)  # nosec
 
         if settings.tools:
@@ -191,7 +192,8 @@ class OllamaChatCompletion(OllamaBase, ChatCompletionClientBase):
                 "Ollama does not support tool calling in streaming chat completion."
             )
 
-        prepared_chat_history = self._prepare_chat_history_for_request(chat_history)
+        prepared_chat_history = self._prepare_chat_history_for_request(
+            chat_history)
 
         response_object = await self.client.chat(
             model=self.ai_model_id,
@@ -220,7 +222,8 @@ class OllamaChatCompletion(OllamaBase, ChatCompletionClientBase):
         """Create a chat message content from the response."""
         items: list[ITEM_TYPES] = []
         if not (message := response.get("message", None)):
-            raise ServiceInvalidResponseError("No message content found in response.")
+            raise ServiceInvalidResponseError(
+                "No message content found in response.")
 
         if content := message.get("content", None):
             items.append(
@@ -253,7 +256,8 @@ class OllamaChatCompletion(OllamaBase, ChatCompletionClientBase):
         """Create a streaming chat message content from the response part."""
         items: list[STREAMING_ITEM_TYPES] = []
         if not (message := part.get("message", None)):
-            raise ServiceInvalidResponseError("No message content found in response part.")
+            raise ServiceInvalidResponseError(
+                "No message content found in response part.")
 
         if content := message.get("content", None):
             items.append(
