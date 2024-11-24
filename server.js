@@ -40,7 +40,7 @@ const limiter = expressRateLimit({
   message: 'Too many requests from this IP, please try again later'
 });
 
-// Apply rate limiting to all routes
+// Apply the rate limiting middleware to all requests
 app.use(limiter);
 
 // Parse JSON payloads
@@ -52,11 +52,8 @@ app.get('/health', (req, res) => {
 });
 
 // Handle 404 errors
-app.use((req, res) => {
-  res.status(404).json({
-    status: 'error',
-    message: 'Route not found'
-  });
+app.use((req, res, next) => {
+  res.status(404).json({ error: 'Not Found' });
 });
 
 // Global error handler
@@ -77,12 +74,22 @@ const server = app.listen(PORT, () => {
 });
 
 // Graceful shutdown handling
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received. Shutting down gracefully...');
+const gracefulShutdown = () => {
+  console.log('Received kill signal, shutting down gracefully.');
   server.close(() => {
-    console.log('Process terminated');
+    console.log('Closed out remaining connections.');
     process.exit(0);
   });
-});
+
+  // Force close server after 10 seconds
+  setTimeout(() => {
+    console.error('Could not close connections in time, forcefully shutting down');
+    process.exit(1);
+  }, 10000);
+};
+
+// Listen for termination signals
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
 
 module.exports = app;
