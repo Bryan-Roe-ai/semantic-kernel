@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -7,75 +9,71 @@ using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.SkillDefinition;
+using Microsoft.SemanticKernel.Orchestration;
 
-namespace AIPlugins.AzureFunctions.Extensions;
-
-public class KernelAIPluginRunner : IAIPluginRunner
+namespace SemanticKernel.Functions
 {
-    private const string DefaultSemanticSkillsFolder = "skills";
-
-    private readonly ILogger<KernelAIPluginRunner> _logger;
-    private readonly IKernel _kernel;
-
-    public KernelAIPluginRunner(IKernel kernel, ILoggerFactory loggerFactory)
+    /// <summary>
+    /// KernelAIPluginRunner provides functionality for running AI plugins using Semantic Kernel.
+    /// </summary>
+    public class KernelAIPluginRunner
     {
-        this._kernel = kernel;
-        this._logger = loggerFactory.CreateLogger<KernelAIPluginRunner>();
-    }
+        private readonly IKernel _kernel;
 
-    public async Task<HttpResponseData> RunAIPluginOperationAsync(HttpRequestData req, string operationId)
-    {
-        ContextVariables contextVariables = LoadContextVariablesFromRequest(req);
-
-        // Assuming operation ID is of the format "skill/function"
-        string[] parts = operationId.Split('/');
-
-        if (!this._kernel.Skills.TryGetFunction(
-            skillName: parts[0],
-            functionName: parts[1],
-            out ISKFunction? function))
+        /// <summary>
+        /// Initializes a new instance of the KernelAIPluginRunner class.
+        /// </summary>
+        /// <param name="kernel">The Semantic Kernel instance</param>
+        public KernelAIPluginRunner(IKernel kernel)
         {
-            HttpResponseData errorResponse = req.CreateResponse(HttpStatusCode.NotFound);
-            await errorResponse.WriteStringAsync($"Function {operationId} not found");
-            return errorResponse;
+            _kernel = kernel ?? throw new ArgumentNullException(nameof(kernel));
         }
 
-        var result = await this._kernel.RunAsync(contextVariables, function);
-        if (result.ErrorOccurred)
+        /// <summary>
+        /// Runs an AI plugin function with the specified input.
+        /// </summary>
+        /// <param name="pluginName">Name of the plugin to run</param>
+        /// <param name="functionName">Name of the function to execute</param>
+        /// <param name="input">Optional input for the function. Defaults to an empty string.</param>
+        /// <returns>Result of the plugin execution</returns>
+        public async Task<string> RunPluginAsync(string pluginName, string functionName, string input = "")
         {
-            HttpResponseData errorResponse = req.CreateResponse(HttpStatusCode.BadRequest);
-            await errorResponse.WriteStringAsync(result.LastErrorDescription);
-            return errorResponse;
+            ValidatePluginParameters(pluginName, functionName);
+
+            var function = _kernel.Functions.GetFunction(pluginName, functionName);
+            var context = _kernel.CreateNewContext();
+            context.Variables.Update(input);
+            var result = await function.InvokeAsync(context).ConfigureAwait(false);
+            return result.GetValue<string>() ??= string.Empty;
         }
 
-        var response = req.CreateResponse(HttpStatusCode.OK);
-        response.Headers.Add("Content-Type", "text/plain;charset=utf-8");
-        await response.WriteStringAsync(result.Result);
-        return response;
-    }
-
-    protected static ContextVariables LoadContextVariablesFromRequest(HttpRequestData req)
-    {
-        ContextVariables contextVariables = new ContextVariables();
-        foreach (string? key in req.Query.AllKeys)
+        /// <summary>
+        /// Runs an AI plugin function with a pre-configured context.
+        /// </summary>
+        /// <param name="pluginName">Name of the plugin to run</param>
+        /// <param name="functionName">Name of the function to execute</param>
+        /// <param name="context">Pre-configured kernel context</param>
+        /// <returns>Result of the plugin execution</returns>
+        public async Task<string> RunPluginWithContextAsync(string pluginName, string functionName, SKContext context)
         {
-            if (!string.IsNullOrEmpty(key))
+            ValidatePluginParameters(pluginName, functionName);
+
+            var function = _kernel.Functions.GetFunction(pluginName, functionName);
+            var result = await function.InvokeAsync(context);
+            return result.GetValue<string>() ?? string.Empty;
+        }
+
+        private static void ValidatePluginParameters(string pluginName, string functionName)
+        {
+            if (string.IsNullOrEmpty(pluginName))
             {
-                contextVariables.Set(key, req.Query[key]);
+                throw new ArgumentException("Plugin name cannot be null or empty", nameof(pluginName));
+            }
+
+            if (string.IsNullOrEmpty(functionName))
+            {
+                throw new ArgumentException("Function name cannot be null or empty", nameof(functionName));
             }
         }
-
-        // If "input" was not specified in the query string, then check the body
-        if (string.IsNullOrEmpty(req.Query.Get("input")))
-        {
-            // Load the input from the body
-            string? body = req.ReadAsString();
-            if (!string.IsNullOrEmpty(body))
-            {
-                contextVariables.Update(body);
-            }
-        }
-
-        return contextVariables;
     }
 }
