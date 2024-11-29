@@ -81,6 +81,12 @@ async function resize(accessTokens: AccessTokens, terminalUri: string) {
 }
 function connectSocket(ipcHandle: string, url: string) {
 
+	const allowedUrls = ['wss://trusted.example.com', 'wss://another-trusted.example.com'];
+	if (!allowedUrls.includes(url)) {
+		console.error('Invalid URL:', url);
+		return;
+	}
+
 	const proxy = process.env.HTTPS_PROXY || process.env.HTTP_PROXY || undefined;
 	let agent: http.Agent | undefined = undefined;
 	if (proxy) {
