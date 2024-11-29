@@ -1,2 +1,14 @@
 fastapi
 uvicorn[standard]
+aiofiles
+python-dotenv
+regex
+openapi-core
+numpy
+openai
+pydantic
+pytest
+poetry
+mypy
+ruff
+bandit
