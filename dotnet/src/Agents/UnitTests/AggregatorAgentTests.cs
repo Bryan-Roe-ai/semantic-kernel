@@ -1,10 +1,5 @@
-<<<<<<< main
-// Copyright (c) Microsoft. All rights reserved.
-=======
-﻿// Copyright (c) Microsoft. All rights reserved.
 using System;
 using System.Collections.Generic;
->>>>>>> upstream/main
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -68,89 +63,6 @@ public class AggregatorAgentTests
         // Assert
         Assert.Empty(messages); // Agent hasn't joined chat, no broadcast
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        // Add message to inner chat (not visible to parent)
-        groupChat.Add(new ChatMessageContent(AuthorRole.User, "test inner"));
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-        // Add message to inner chat (not visible to parent)
-        groupChat.Add(new ChatMessageContent(AuthorRole.User, "test inner"));
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-        // Add message to inner chat (not visible to parent)
-        groupChat.Add(new ChatMessageContent(AuthorRole.User, "test inner"));
-=======
->>>>>>> Stashed changes
-=======
-        // Add message to inner chat (not visible to parent)
-        groupChat.Add(new ChatMessageContent(AuthorRole.User, "test inner"));
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-        // Add message to inner chat (not visible to parent)
-        groupChat.Add(new ChatMessageContent(AuthorRole.User, "test inner"));
-=======
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
         // Arrange: Add message to inner chat (not visible to parent)
         groupChat.AddChatMessage(new ChatMessageContent(AuthorRole.User, "test inner"));
 
@@ -190,22 +102,6 @@ public class AggregatorAgentTests
         Assert.Equal(5, messages.Length); // Total messages on inner chat once synchronized (agent equivalent)
     }
 
-<<<<<<< main
-<<<<<<< main
-    private static MockAgent CreateMockAgent() => new() { Response = [new(AuthorRole.Assistant, "test")] };
-=======
-    private static Mock<ChatHistoryKernelAgent> CreateMockAgent()
-    {
-        Mock<ChatHistoryKernelAgent> agent = new();
-
-        ChatMessageContent[] messages = [new ChatMessageContent(AuthorRole.Assistant, "test agent")];
-        agent.Setup(a => a.InvokeAsync(It.IsAny<ChatHistory>(), It.IsAny<CancellationToken>())).Returns(() => messages.ToAsyncEnumerable());
-        agent.Setup(a => a.InvokeAsync(It.IsAny<IReadOnlyList<ChatMessageContent>>(), It.IsAny<CancellationToken>())).Returns(() => messages.ToAsyncEnumerable());
-
-        return agent;
-    }
->>>>>>> origin/PR
-=======
     /// <summary>
     /// Ensure multiple <see cref="AggregatorAgent"/> instances do not share a channel.
     /// </summary>
@@ -277,6 +173,43 @@ public class AggregatorAgentTests
         Assert.Equal(agent2Review.Name, messages[3].AuthorName);
     }
 
+    /// <summary>
+    /// Verify termination strategy of <see cref="AggregatorAgent"/> with different agents.
+    /// </summary>
+    [Fact]
+    public async Task VerifyAggregatorAgentTerminationStrategyAsync()
+    {
+        // Arrange
+        Agent agent1 = CreateMockAgent("First");
+        Agent agent2 = CreateMockAgent("Second");
+        Agent agent3 = CreateMockAgent("Third");
+
+        AgentGroupChat groupChat =
+            new(agent1, agent2, agent3)
+            {
+                ExecutionSettings =
+                    new()
+                    {
+                        TerminationStrategy =
+                        {
+                            MaximumIterations = 3
+                        }
+                    }
+            };
+
+        AggregatorAgent uberAgent = new(() => groupChat) { Mode = AggregatorMode.Nested };
+        AgentGroupChat uberChat = new();
+
+        // Add message to outer chat (no agent has joined)
+        uberChat.Add(new ChatMessageContent(AuthorRole.User, "test uber"));
+
+        // Act
+        var messages = await uberChat.InvokeAsync(uberAgent).ToArrayAsync();
+
+        // Assert
+        Assert.Equal(3, messages.Length); // 3 iterations as per termination strategy
+    }
+
     private static MockAgent CreateMockAgent(string agentName) => new() { Name = agentName, Response = [new(AuthorRole.Assistant, $"{agentName} -> test") { AuthorName = agentName }] };
 
     private sealed class ApprovalTerminationStrategy : TerminationStrategy
@@ -292,5 +225,4 @@ public class AggregatorAgentTests
             return Task.FromResult(agent == lastAgent);
         }
     }
->>>>>>> upstream/main
 }
