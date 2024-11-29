@@ -30,8 +30,8 @@ export class DevSkimFixer implements vscode.CodeActionProvider {
     provideCodeActions(document: vscode.TextDocument, range: vscode.Range | vscode.Selection, context: vscode.CodeActionContext, token: vscode.CancellationToken): vscode.CodeAction[] {
         const output: vscode.CodeAction[] = [];
         context.diagnostics.filter(diagnostic => String(diagnostic.source).startsWith("DevSkim Language Server")).forEach((filteredDiagnostic: vscode.Diagnostic) => {
-            const diagnosticKey = this.createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString().replace("%3A", ":"));
-            this.fixMapping.get(document.uri.toString().replace("%3A", ":"))?.get(document.version)?.forEach(codeFix => {
+            const diagnosticKey = this.createMapKeyForDiagnostic(filteredDiagnostic, document.uri.toString().replace(/%3A/g, ":"));
+            this.fixMapping.get(document.uri.toString().replace(/%3A/g, ":"))?.get(document.version)?.forEach(codeFix => {
                 if (diagnosticKey == this.createMapKeyForDiagnostic(codeFix.diagnostic, codeFix.fileName)) {
                     output.push(this.createFix(document, filteredDiagnostic, codeFix));
                 }
