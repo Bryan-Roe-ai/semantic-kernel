@@ -52,3 +52,37 @@ jobs:
               repo: context.repo.repo,
               labels: labels
             });
+
+      - name: Auto-assign issues based on predefined criteria
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
+          script: |
+            const issue = context.payload.issue;
+            const labels = issue.labels.map(label => label.name);
+
+            // Define the assignment criteria
+            const criteria = {
+              "python": "team-python",
+              "java": "team-java",
+              ".NET": "team-dotnet"
+            };
+
+            // Find the assignee based on the labels
+            let assignee = null;
+            for (const [label, team] of Object.entries(criteria)) {
+              if (labels.includes(label)) {
+                assignee = team;
+                break;
+              }
+            }
+
+            // Assign the issue if an assignee is found
+            if (assignee) {
+              github.rest.issues.addAssignees({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                assignees: [assignee]
+              });
+            }
