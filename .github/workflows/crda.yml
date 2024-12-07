@@ -37,7 +37,10 @@
 #    Refer to: https://github.com/redhat-actions/crda/#4-set-up-authentication
 # 5. (Optional) Upload SARIF file as an Artifact to download and view
 # 6. Commit and push the workflow file to your default branch to trigger a workflow run.
-
+- name: Set up Node.js
+  uses: actions/setup-node@v2
+  with:
+    node-version: '14'
 # 👋 Visit our GitHub organization at https://github.com/redhat-actions/ to see our actions and provide feedback.
 
 name: CRDA Scan
@@ -53,7 +56,7 @@ on:
   #
   workflow_call:
     secrets:
-      CRDA_KEY:
+      CRDA_KEY: ${{ secrets.CRDA_KEY }}
         required: false
       SNYK_TOKEN:
         required: false
@@ -99,12 +102,15 @@ jobs:
       # - name: Setup Node
       #   uses: actions/setup-node@v2
       #   with:
-      #     node-version: '14'
-
+      #    node-version: '14'
+       - name: Setup Node
+         uses: actions/setup-node@v2
+         with:
+           node-version: '14'
       # https://github.com/redhat-actions/openshift-tools-installer/blob/main/README.md
       - name: Install CRDA CLI
         uses: redhat-actions/openshift-tools-installer@v1
-        with: actions/setup-python@v5
+        with: 
           source: github
           github_pat: ${{ github.token }}
           # Choose the desired version of the CRDA CLI
@@ -123,7 +129,7 @@ jobs:
       - name: CRDA Scan
         id: scan
         uses: redhat-actions/crda@v1
-        with: actions/setup-python@v5
+        with: 
           crda_key: ${{ secrets.CRDA_KEY }}           # Either use crda_key or snyk_token
           # snyk_token: ${{ secrets.SNYK_TOKEN }}
           # upload_artifact: false                    # Set this to false to skip artifact upload
