@@ -72,3 +72,61 @@ internal class MockAgent : ChatHistoryKernelAgent
         return base.MergeArguments(arguments);
     }
 }
+
+// Unit tests for MockAgent
+public class MockAgentTests
+{
+    [Fact]
+    public async Task InvokeAsync_ShouldIncrementInvokeCountAndReturnExpectedResponse()
+    {
+        // Arrange
+        var mockAgent = new MockAgent();
+        var expectedResponse = new List<ChatMessageContent>
+        {
+            new ChatMessageContent("user", "Hello"),
+            new ChatMessageContent("assistant", "Hi there!")
+        };
+        mockAgent.Response = expectedResponse;
+
+        // Act
+        var response = await mockAgent.InvokeAsync(new ChatHistory()).ToListAsync();
+
+        // Assert
+        Assert.Equal(1, mockAgent.InvokeCount);
+        Assert.Equal(expectedResponse, response);
+    }
+
+    [Fact]
+    public void MergeArguments_ShouldMergeKernelArgumentsCorrectly()
+    {
+        // Arrange
+        var mockAgent = new MockAgent();
+        var arguments1 = new KernelArguments
+        {
+            Parameters = new Dictionary<string, object>
+            {
+                { "param1", "value1" },
+                { "param2", "value2" }
+            }
+        };
+        var arguments2 = new KernelArguments
+        {
+            Parameters = new Dictionary<string, object>
+            {
+                { "param2", "new_value2" },
+                { "param3", "value3" }
+            }
+        };
+
+        // Act
+        var mergedArguments = mockAgent.MergeArguments(arguments1);
+        mergedArguments = mockAgent.MergeArguments(arguments2);
+
+        // Assert
+        Assert.NotNull(mergedArguments);
+        Assert.Equal(3, mergedArguments.Parameters.Count);
+        Assert.Equal("value1", mergedArguments.Parameters["param1"]);
+        Assert.Equal("new_value2", mergedArguments.Parameters["param2"]);
+        Assert.Equal("value3", mergedArguments.Parameters["param3"]);
+   } 
+}
