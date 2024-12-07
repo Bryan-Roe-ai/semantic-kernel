@@ -70,6 +70,8 @@ jobs:
           push: true
           tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
           file: ./Dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Integrate additional service
         uses: codacy/codacy-analysis-cli-action@v4
