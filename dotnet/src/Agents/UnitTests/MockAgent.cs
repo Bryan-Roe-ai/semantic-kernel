@@ -128,5 +128,5 @@ public class MockAgentTests
         Assert.Equal("value1", mergedArguments.Parameters["param1"]);
         Assert.Equal("new_value2", mergedArguments.Parameters["param2"]);
         Assert.Equal("value3", mergedArguments.Parameters["param3"]);
-    }
+   } 
 }
