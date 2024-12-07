@@ -104,7 +104,7 @@ jobs:
       # https://github.com/redhat-actions/openshift-tools-installer/blob/main/README.md
       - name: Install CRDA CLI
         uses: redhat-actions/openshift-tools-installer@v1
-        with:
+        with: actions/setup-python@v5
           source: github
           github_pat: ${{ github.token }}
           # Choose the desired version of the CRDA CLI
@@ -123,7 +123,7 @@ jobs:
       - name: CRDA Scan
         id: scan
         uses: redhat-actions/crda@v1
-        with:
+        with: actions/setup-python@v5
           crda_key: ${{ secrets.CRDA_KEY }}           # Either use crda_key or snyk_token
           # snyk_token: ${{ secrets.SNYK_TOKEN }}
           # upload_artifact: false                    # Set this to false to skip artifact upload
