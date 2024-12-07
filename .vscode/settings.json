@@ -164,3 +164,6 @@
     "editor.defaultFormatter": "Google.cros-ide"
   }
 }
+  "azureFunctions.deploySubpath": "dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function/bin/Release/net8.0/publish",
+  "azureFunctions.projectLanguage": "C#"
+}

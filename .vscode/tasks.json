@@ -39,6 +39,9 @@
       "command": "dotnet",
       "args": [
         "build",
+      "command": "dotnet",
+      "args": [
+        "clean",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -113,8 +116,33 @@
     },
     {
       "label": "watch (Concepts)",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function"
+      }
+    },
+    {
+      "label": "build (functions)",
       "command": "dotnet",
+      "args": [
+        "build",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
       "type": "process",
+      "dependsOn": "clean (functions)",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function"
+      }
+    },
+    {
+      "label": "clean release (functions)",
+      "command": "dotnet",
       "args": [
         "watch",
         "run",
@@ -144,15 +172,35 @@
     },
     {
       "label": "build (ProcessWithDapr)",
-      "command": "dotnet",
+        "clean",
+        "--configuration",
+        "Release",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
       "type": "process",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function"
+      }
+    },
+    {
+      "label": "publish (functions)",
+      "command": "dotnet",
       "args": [
         "build",
         "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/ProcessWithDapr.csproj",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary",
         "/property:DebugType=portable"
+        "publish",
+        "--configuration",
+        "Release",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
       ],
+      "type": "process",
+      "dependsOn": "clean release (functions)",
       "problemMatcher": "$msCompile",
       "group": "build"
     },
@@ -211,6 +259,19 @@
       "type": "promptString",
       "default": "",
       "description": "Enter a filter to pass as argument or filter"
+      "options": {
+        "cwd": "${workspaceFolder}/dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function"
+      }
+    },
+    {
+      "type": "func",
+      "dependsOn": "build (functions)",
+      "options": {
+        "cwd": "${workspaceFolder}/dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function/bin/Debug/net8.0"
+      },
+      "command": "host start",
+      "isBackground": true,
+      "problemMatcher": "$func-dotnet-watch"
     }
   ]
 }
