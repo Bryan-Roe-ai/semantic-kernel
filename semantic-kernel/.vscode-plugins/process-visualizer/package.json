@@ -1,0 +1,31 @@
+{
+  "name": "process-visualizer",
+  "displayName": "Process Visualizer",
+  "description": "A VS Code extension to visualize processes happening behind the scenes.",
+  "version": "0.0.1",
+  "publisher": "YourPublisherName",
+  "engines": {
+    "vscode": "^1.63.0"
+  },
+  "activationEvents": [
+    "onCommand:extension.trackProcesses"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.trackProcesses",
+        "title": "Track Processes"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.5",
+    "@types/node": "^14.x",
+    "@types/vscode": "^1.63.0"
+  }
+}
