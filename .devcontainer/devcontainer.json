@@ -60,7 +60,14 @@
         "ms-toolsai.jupyter-renderers",
         "ms-toolsai.vscode-jupyter-slideshow",
         "salesforce.salesforcedx-vscode-core",
-        "MS-CST-E.vscode-devskim"
+        "MS-CST-E.vscode-devskim",
+        "c-cpp-runner",
+        "ms-python.debugpy",
+        "atariq11700.debugpy-old",
+        "ms-vscode.powershell",
+        "hangxingliu.vscode-coding-tracker",
+        "micoloth.reactive-jupyter",
+        "ms-vscode-remote.remote-containers"
       ]
     }
   },
