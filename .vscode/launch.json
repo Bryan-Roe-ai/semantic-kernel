@@ -2,6 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": ".NET Core Launch (dotnet-kernel-syntax-examples)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build (KernelSyntaxExamples)",
+      "program": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples/bin/Debug/net6.0/KernelSyntaxExamples.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples",
+      "name": "C#: Concept Samples",
+      "name": "Attach to .NET Functions",
+      "type": "coreclr",
+      "request": "attach",
+      "processId": "${command:azureFunctions.pickProcess}"
       "name": "RobotCode: Default",
       "type": "robotcode",
       "request": "launch",
@@ -38,6 +50,8 @@
       "value": "First item"
     },
     {
+      "name": "Attach to .NET Functions",
+      "name": "C#: Process with Dapr",
       "id": 2,
       "value": "Second item"
       "name": "Attach to .NET Functions",
