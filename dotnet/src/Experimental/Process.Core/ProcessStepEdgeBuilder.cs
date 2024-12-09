@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using Microsoft.SemanticKernel.Process.Internal;
 
 namespace Microsoft.SemanticKernel;
 
@@ -20,7 +21,7 @@ public sealed class ProcessStepEdgeBuilder
     /// <summary>
     /// The source step of the edge.
     /// </summary>
-    internal ProcessStepBuilder Source { get; init; }
+    internal ProcessStepBuilder Source { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProcessStepEdgeBuilder"/> class.
@@ -29,8 +30,8 @@ public sealed class ProcessStepEdgeBuilder
     /// <param name="eventId">The Id of the event.</param>
     internal ProcessStepEdgeBuilder(ProcessStepBuilder source, string eventId)
     {
-        Verify.NotNull(source);
-        Verify.NotNullOrWhiteSpace(eventId);
+        Verify.NotNull(source, nameof(source));
+        Verify.NotNullOrWhiteSpace(eventId, nameof(eventId));
 
         this.Source = source;
         this.EventId = eventId;
@@ -63,8 +64,16 @@ public sealed class ProcessStepEdgeBuilder
             throw new InvalidOperationException("An output target has already been set.");
         }
 
+<<<<<<< HEAD
         this.OutputTarget = outputTarget;
         this.Target = outputTarget;
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+        if (this.Source is ProcessMapBuilder && target.Step is ProcessMapBuilder)
+        {
+            throw new ArgumentException($"{nameof(ProcessMapBuilder)} may not target another {nameof(ProcessMapBuilder)}.", nameof(target));
+        }
+
         this.Target = target;
         this.Source.LinkTo(this.EventId, this);
 
@@ -85,6 +94,6 @@ public sealed class ProcessStepEdgeBuilder
         var outputTarget = new ProcessFunctionTargetBuilder(EndStep.Instance);
         this.OutputTarget = outputTarget;
         this.Target = outputTarget;
-        this.Source.LinkTo(EndStep.EndStepName, this);
+        this.Source.LinkTo(ProcessConstants.EndStepName, this);
     }
 }

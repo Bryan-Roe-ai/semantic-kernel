@@ -6,7 +6,10 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Agents.Extensions;
+<<<<<<< HEAD
 using Microsoft.SemanticKernel.Agents.History;
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 using Microsoft.SemanticKernel.Agents.Serialization;
 using Microsoft.SemanticKernel.ChatCompletion;
 
@@ -15,7 +18,10 @@ namespace Microsoft.SemanticKernel.Agents;
 /// <summary>
 /// A <see cref="AgentChannel"/> specialization for that acts upon a <see cref="ChatHistoryKernelAgent"/>.
 /// </summary>
+<<<<<<< HEAD
 public sealed class ChatHistoryChannel : AgentChannel
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 internal sealed class ChatHistoryChannel : AgentChannel
 {
     private readonly ChatHistory _history;
@@ -136,11 +142,16 @@ internal sealed class ChatHistoryChannel : AgentChannel
     protected override string Serialize()
         => JsonSerializer.Serialize(ChatMessageReference.Prepare(this._history));
 
+    /// <inheritdoc/>
+    protected override string Serialize()
+        => JsonSerializer.Serialize(ChatMessageReference.Prepare(this._history));
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ChatHistoryChannel"/> class.
     /// </summary>
-    public ChatHistoryChannel()
+    public ChatHistoryChannel(ChatHistory? history = null)
     {
+<<<<<<< HEAD
         this._history = [];
     public ChatHistoryChannel(ChatHistory? history = null)
     {
@@ -150,6 +161,8 @@ internal sealed class ChatHistoryChannel : AgentChannel
         this._history = history ?? [];
     public ChatHistoryChannel(ChatHistory? history = null)
     {
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         this._history = history ?? [];
     }
 }

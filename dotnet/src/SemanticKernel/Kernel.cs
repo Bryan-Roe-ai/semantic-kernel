@@ -171,9 +171,7 @@ public sealed class Kernel : IKernel, IDisposable
         {
             if (context.ErrorOccurred)
             {
-                this._log.LogError(
-                    context.LastException,
-                    "Something went wrong in pipeline step {0}:'{1}'", pipelineStepCount, context.LastErrorDescription);
+                this.HandleError(context.LastException, $"Something went wrong in pipeline step {pipelineStepCount}:'{context.LastErrorDescription}'");
                 return context;
             }
 
@@ -186,15 +184,13 @@ public sealed class Kernel : IKernel, IDisposable
 
                 if (context.ErrorOccurred)
                 {
-                    this._log.LogError("Function call fail during pipeline step {0}: {1}.{2}. Error: {3}",
-                        pipelineStepCount, f.SkillName, f.Name, context.LastErrorDescription);
+                    this.HandleError(new Exception(context.LastErrorDescription), $"Function call fail during pipeline step {pipelineStepCount}: {f.SkillName}.{f.Name}. Error: {context.LastErrorDescription}");
                     return context;
                 }
             }
             catch (Exception e) when (!e.IsCriticalException())
             {
-                this._log.LogError(e, "Something went wrong in pipeline step {0}: {1}.{2}. Error: {3}",
-                    pipelineStepCount, f.SkillName, f.Name, e.Message);
+                this.HandleError(e, $"Something went wrong in pipeline step {pipelineStepCount}: {f.SkillName}.{f.Name}. Error: {e.Message}");
                 context.Fail(e.Message, e);
                 return context;
             }
@@ -304,7 +300,7 @@ public sealed class Kernel : IKernel, IDisposable
         string functionName,
         SemanticFunctionConfig functionConfig)
     {
-        if (!functionConfig.PromptTemplateConfig.Type.Equals("completion", StringComparison.OrdinalIgnoreCase))
+        if (!functionConfig.PromptTemplateConfig.Type.equals("completion", StringComparison.OrdinalIgnoreCase))
         {
             throw new SKException($"Function type not supported: {functionConfig.PromptTemplateConfig}");
         }
@@ -367,6 +363,42 @@ public sealed class Kernel : IKernel, IDisposable
         return config.Services
             .OrderBy(s => s.Order)
             .FirstOrDefault(s => !string.IsNullOrEmpty(s.ModelId) && this.Config.TextCompletionServices.ContainsKey(s.ModelId));
+    }
+
+    private void HandleMergeRequestComments(SKContext context)
+    {
+        if (context.Variables.TryGetValue("mergeRequestComments", out string? comments))
+        {
+            // Process the comments and determine if the file needs optimization or merge
+            bool needsOptimization = ProcessCommentsForOptimization(comments);
+            bool needsMerge = ProcessCommentsForMerge(comments);
+
+            if (needsOptimization)
+            {
+                context.Variables.Set("fileStatus", "needsOptimization");
+            }
+            else if (needsMerge)
+            {
+                context.Variables.Set("fileStatus", "needsMerge");
+            }
+        }
+    }
+
+    private bool ProcessCommentsForOptimization(string comments)
+    {
+        // Implement logic to determine if the file needs optimization based on comments
+        return comments.Contains("optimize");
+    }
+
+    private bool ProcessCommentsForMerge(string comments)
+    {
+        // Implement logic to determine if the file needs merge based on comments
+        return comments.Contains("merge");
+    }
+
+    private void HandleError(Exception exception, string message)
+    {
+        this._log.LogError(exception, message);
     }
 
     #endregion

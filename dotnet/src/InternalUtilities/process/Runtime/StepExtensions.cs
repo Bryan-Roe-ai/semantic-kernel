@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,11 @@ internal static class StepExtensions
         if (step is KernelProcess subProcess)
         {
             return subProcess.CloneProcess(logger);
+        }
+
+        if (step is KernelProcessMap mapStep)
+        {
+            return mapStep.CloneMap(logger);
         }
 
         Type stateType = step.InnerStepType.ExtractStateType(out Type? userStateType, logger);

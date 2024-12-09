@@ -21,12 +21,19 @@ def test_calculate_token_limits(
     options_data = {"max_tokens": max_tokens, "max_tokens_ratio": max_tokens_ratio}
     options = FunctionCallingStepwisePlannerOptions(**options_data)
 
+<<<<<<< HEAD
     assert (
         options.max_completion_tokens == expected_max_completion
     ), "max_completion_tokens did not match expected value"
     assert (
         options.max_prompt_tokens == expected_max_prompt
     ), "max_prompt_tokens did not match expected value"
+=======
+    assert options.max_completion_tokens == expected_max_completion, (
+        "max_completion_tokens did not match expected value"
+    )
+    assert options.max_prompt_tokens == expected_max_prompt, "max_prompt_tokens did not match expected value"
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 def test_defaults():

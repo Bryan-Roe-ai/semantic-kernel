@@ -6,7 +6,7 @@ authors = [{ name = "Microsoft", email = "SK-Support@microsoft.com"}]
 readme = "pip/README.md"
 # Version read from __version__ field in __init__.py by Flit
 dynamic = ["version"]
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10"
 license = {file = "LICENSE"}
 urls.homepage = "https://learn.microsoft.com/en-us/semantic-kernel/overview/"
 urls.source = "https://github.com/microsoft/semantic-kernel/tree/main/python"
@@ -25,7 +25,12 @@ classifiers = [
 ]
 dependencies = [
     "aiohttp ~= 3.8",
+<<<<<<< HEAD
     "pydantic ~= 2.0",
+=======
+    "cloudevents ~=1.0",
+    "pydantic >=2.0,<2.10",
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     "pydantic-settings ~= 2.0",
     "defusedxml ~= 0.7",
 
@@ -356,13 +361,14 @@ addopts = "-ra -q -r fEX -n logical --dist loadfile --dist worksteal"
 
 [project.optional-dependencies]
 azure = [
-    "azure-ai-inference >= 1.0.0b3",
+    "azure-ai-inference >= 1.0.0b6",
+    "azure-core-tracing-opentelemetry >= 1.0.0b11",
     "azure-search-documents >= 11.6.0b4",
     "azure-identity ~= 1.13",
     "azure-cosmos ~= 4.7"
 ]
 chroma = [
-    "chromadb >= 0.4,<0.6"
+    "chromadb >= 0.5,<0.6"
 ]
 google = [
     "google-cloud-aiplatform ~= 1.60",
@@ -377,10 +383,17 @@ mongo = [
     "motor ~= 3.3.2"
     "torch == 2.4.1"
     "sentence-transformers >= 2.2,< 4.0",
+    "sentence-transformers >= 2.2,< 4.0",
+    "torch == 2.5.1"
 ]
 mongo = [
+<<<<<<< HEAD
     "motor >= 3.3.2,< 3.7.0"
     "pymongo >= 4.8.0, < 4.9",
+=======
+    "pymongo >= 4.8.0, < 4.11",
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+    "motor >= 3.3.2,< 3.7.0"
 ]
 notebooks = [
     "ipykernel ~= 6.29"
@@ -392,9 +405,13 @@ milvus = [
 
 ]
 mistralai = [
+<<<<<<< HEAD
     "mistralai >= 0.4,< 2.0"
     "pymilvus >= 2.3,< 2.5",
     "milvus >= 2.3,<2.3.8; platform_system != 'Windows'"
+=======
+    "mistralai >= 1.2,< 2.0"
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 ]
 ollama = [
     "ollama ~= 0.2"
@@ -416,11 +433,12 @@ qdrant = [
 ]
 redis = [
     "redis[hiredis] ~= 5.0",
-    "types-redis ~= 4.6.0.20240425"
+    "types-redis ~= 4.6.0.20240425",
+    "redisvl >= 0.3.6",
 ]
 usearch = [
     "usearch ~= 2.9",
-    "pyarrow >= 12.0,<18.0"
+    "pyarrow >= 12.0,< 19.0"
 ]
 weaviate = [
     "weaviate-client>=4.7,<5.0",
@@ -432,6 +450,11 @@ bing = []
 
 aws = [
     "boto3>=1.28.57",
+]
+dapr = [
+    "dapr>=1.14.0",
+    "dapr-ext-fastapi>=1.14.0",
+    "flask-dapr>=1.14.0"
 ]
 
 [tool.uv]
@@ -447,7 +470,7 @@ dev-dependencies = [
     "snoop ~= 0.4",
     "mypy >= 1.10",
     "types-PyYAML ~= 6.0.12.20240311",
-    "ruff ~= 0.5"
+    "ruff ~= 0.7"
 ]
 environments = [
     "sys_platform == 'darwin'",
@@ -457,6 +480,10 @@ environments = [
 
 [tool.pytest.ini_options]
 addopts = "-ra -q -r fEX"
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = [
+    'ignore:.*FunctionChoiceBehavior.*:DeprecationWarning'
+]
 
 [tool.ruff]
 line-length = 120
@@ -519,6 +546,7 @@ name = "semantic_kernel"
 requires = ["flit-core >= 3.9,<4.0"]
 build-backend = "flit_core.buildapi"
 
+<<<<<<< HEAD
 [tool.poetry]
 name = "semantic-kernel"
 version = "0.1.0.dev"
@@ -548,3 +576,6 @@ build-backend = "poetry.core.masonry.api"
 [build-system]
 requires = ["flit-core >= 3.9,<4.0"]
 build-backend = "flit_core.buildapi"
+=======
+
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377

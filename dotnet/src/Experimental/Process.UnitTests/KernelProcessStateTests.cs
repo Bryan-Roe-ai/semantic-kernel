@@ -21,7 +21,12 @@ public class KernelProcessStateTests
         string id = "123";
 
         // Act
-        var state = new KernelProcessState(name, id);
+        KernelProcessState state = new(name, "v1", id);
+<<<<<<< HEAD
+        KernelProcessState state = new(name, id);
+=======
+        KernelProcessState state = new(name, "v1", id);
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert
         Assert.Equal(name, state.Name);
@@ -38,7 +43,12 @@ public class KernelProcessStateTests
         string name = "TestProcess";
 
         // Act
-        var state = new KernelProcessState(name);
+        KernelProcessState state = new(name, version: "v1");
+<<<<<<< HEAD
+        KernelProcessState state = new(name);
+=======
+        KernelProcessState state = new(name, version: "v1");
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert
         Assert.Equal(name, state.Name);
@@ -52,8 +62,22 @@ public class KernelProcessStateTests
     public void KernelProcessStateInitializationWithNullNameThrows()
     {
         // Act & Assert
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-        var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: null));
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+        var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: null!, version: "v1"));
+<<<<<<< HEAD
+        Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: null!));
+=======
+        var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: null!, version: "v1"));
+    }
+
+    /// <summary>
+    /// Verify initialization of <see cref="KernelProcessState"/> with null version throws.
+    /// </summary>
+    [Fact]
+    public void KernelProcessStateInitializationWithNullVersionThrows()
+    {
+        // Act & Assert
+        var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: "stateName", version: null!));
+        var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: "stateName", version: null!));
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     }
 }

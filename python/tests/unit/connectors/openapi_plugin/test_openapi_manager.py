@@ -4,9 +4,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_parameter import (
-    RestApiOperationParameter,
-    RestApiOperationParameterLocation,
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter import (
+    RestApiParameter,
+    RestApiParameterLocation,
 )
 from semantic_kernel.connectors.openapi_plugin.openapi_manager import (
     _create_function_from_operation,
@@ -26,12 +26,16 @@ async def test_run_openapi_operation_success(kernel: Kernel):
     operation.summary = "Test Summary"
     operation.description = "Test Description"
     operation.get_parameters.return_value = [
+<<<<<<< HEAD
         RestApiOperationParameter(
             name="param1",
             type="string",
             location=RestApiOperationParameterLocation.QUERY,
             is_required=True,
         )
+=======
+        RestApiParameter(name="param1", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ]
 
     execution_parameters = MagicMock()
@@ -80,12 +84,16 @@ async def test_run_openapi_operation_missing_required_param(kernel: Kernel):
     operation.summary = "Test Summary"
     operation.description = "Test Description"
     operation.get_parameters.return_value = [
+<<<<<<< HEAD
         RestApiOperationParameter(
             name="param1",
             type="string",
             location=RestApiOperationParameterLocation.QUERY,
             is_required=True,
         )
+=======
+        RestApiParameter(name="param1", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ]
 
     execution_parameters = MagicMock()
@@ -133,12 +141,16 @@ async def test_run_openapi_operation_runner_exception(kernel: Kernel):
     operation.summary = "Test Summary"
     operation.description = "Test Description"
     operation.get_parameters.return_value = [
+<<<<<<< HEAD
         RestApiOperationParameter(
             name="param1",
             type="string",
             location=RestApiOperationParameterLocation.QUERY,
             is_required=True,
         )
+=======
+        RestApiParameter(name="param1", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ]
 
     execution_parameters = MagicMock()
@@ -189,10 +201,10 @@ async def test_run_openapi_operation_alternative_name(kernel: Kernel):
     operation.summary = "Test Summary"
     operation.description = "Test Description"
     operation.get_parameters.return_value = [
-        RestApiOperationParameter(
+        RestApiParameter(
             name="param1",
             type="string",
-            location=RestApiOperationParameterLocation.QUERY,
+            location=RestApiParameterLocation.QUERY,
             is_required=True,
             alternative_name="alt_param1",
         )

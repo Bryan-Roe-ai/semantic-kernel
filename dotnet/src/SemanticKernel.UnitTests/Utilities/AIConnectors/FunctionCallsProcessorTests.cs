@@ -97,6 +97,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
         }
 
@@ -124,6 +125,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: CreateKernel(),
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -150,6 +152,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: CreateKernel(),
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -181,6 +184,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -207,6 +211,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => false, // Return false to simulate that the function is not advertised
                 kernel: CreateKernel(),
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -233,6 +238,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: CreateKernel(),
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -268,6 +274,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -327,6 +334,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel!,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -401,6 +409,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel!,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -442,6 +451,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel!,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -488,6 +498,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel!,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         var firstFunctionResult = chatHistory[^2].Content;
@@ -534,6 +545,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel!,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -574,6 +586,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel!,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -616,6 +629,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel!,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -667,6 +681,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert
@@ -700,6 +715,7 @@ public class FunctionCallsProcessorTests
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
                 kernel: kernel,
+                isStreaming: false,
                 cancellationToken: CancellationToken.None);
 
         // Assert

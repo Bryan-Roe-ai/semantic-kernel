@@ -9,6 +9,10 @@ Before you begin, ensure you have the following installed on your system:
 - Git
 - Node.js (version 14 or higher)
 - npm (Node Package Manager)
+- Python (version 3.8 or higher)
+- Docker (optional, for containerized deployment)
+- .NET SDK (version 5.0 or higher)
+- Java Development Kit (JDK) (version 11 or higher)
 
 ## Installation
 
@@ -23,6 +27,24 @@ Before you begin, ensure you have the following installed on your system:
 
    ```bash
    npm install
+   ```
+
+3. **Install Python dependencies** (if applicable):
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Install .NET dependencies** (if applicable):
+
+   ```bash
+   dotnet restore
+   ```
+
+5. **Install Java dependencies** (if applicable):
+
+   ```bash
+   ./mvnw install
    ```
 
 ## Configuration
@@ -83,6 +105,66 @@ async function postData() {
 }
 
 postData();
+```
+
+### Example 3: Running the API in a Docker Container
+
+```bash
+# Build the Docker image
+docker build -t sk-api .
+
+# Run the Docker container
+docker run -p 3000:3000 sk-api
+```
+
+### Example 4: Running a .NET Console Application
+
+```csharp
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        using (HttpClient client = new HttpClient())
+        {
+            HttpResponseMessage response = await client.GetAsync("http://localhost:3000/api/data");
+            string responseData = await response.Content.ReadAsStringAsync();
+            Console.WriteLine(responseData);
+        }
+    }
+}
+```
+
+### Example 5: Running a Java Console Application
+
+```java
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        URL url = new URL("http://localhost:3000/api/data");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.connect();
+
+        int responseCode = conn.getResponseCode();
+        if (responseCode != 200) {
+            throw new RuntimeException("HttpResponseCode: " + responseCode);
+        } else {
+            Scanner scanner = new Scanner(url.openStream());
+            while (scanner.hasNext()) {
+                System.out.println(scanner.nextLine());
+            }
+            scanner.close();
+        }
+    }
+}
 ```
 
 ## Troubleshooting

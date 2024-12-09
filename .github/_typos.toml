@@ -16,38 +16,10 @@ extend-exclude = [
     "test_code_tokenizer.py",
     "*response.json",
     "test_content.txt",
-<<<<<<< main
-<<<<<<< main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> div
     "serializedChatHistoryV1_15_1.json",
     "MultipleFunctionsVsParameters.cs"
-=======
-<<<<<<< Updated upstream
     "serializedChatHistoryV1_15_1.json",
     "MultipleFunctionsVsParameters.cs"
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
->>>>>>> Stashed changes
     "serializedChatHistoryV1_15_1.json",
     "MultipleFunctionsVsParameters.cs"
     "google_what_is_the_semantic_kernel.json",
@@ -72,32 +44,14 @@ arange = "arange"         # Method in Python numpy package
 prompty = "prompty"       # prompty is a format name.
 ist = "ist"               # German language
 dall = "dall"             # OpenAI model name
-<<<<<<< main
->>>>>>> origin/main
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
-    "google_what_is_the_semantic_kernel.json",
+
+"google_what_is_the_semantic_kernel.json",
     "what-is-semantic-kernel.json",
     "serializedChatHistoryV1_15_1.json",
     "MultipleFunctionsVsParameters.cs",
     "PopulationByCountry.csv",
     "PopulationByAdmin1.csv",
     "WomensSuffrage.txt",
->>>>>>> upstream/main
-=======
->>>>>>> div
 ]
 
 [default.extend-words]
@@ -112,6 +66,7 @@ arange = "arange"         # Method in Python numpy package
 prompty = "prompty"       # prompty is a format name.
 ist = "ist"               # German language
 dall = "dall"             # OpenAI model name
+    "SK-dotnet.sln.DotSettings"
 ]
 
 [default.extend-words]
@@ -139,46 +94,7 @@ extend-ignore-re = [
 extend-ignore-re = [
     'Version=".*"', # ignore package version numbers
 ]
-<<<<<<< Updated upstream
 ]
 ]
 ]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
 ]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes

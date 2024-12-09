@@ -8,6 +8,12 @@ class MemoryConnectorException(KernelException):
     """Base class for all memory connector exceptions."""
 
 
+class MemoryConnectorConnectionException(MemoryConnectorException):
+    """An error occurred while connecting to the memory connector."""
+
+    pass
+
+
 class VectorStoreModelException(MemoryConnectorException):
     """Base class for all vector store model exceptions."""
 
@@ -74,6 +80,7 @@ class VectorStoreSearchError(MemoryConnectorException):
     pass
 
 
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -108,7 +115,16 @@ class VectorStoreSearchError(MemoryConnectorException):
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+class VectorStoreSearchError(MemoryConnectorException):
+    """An error occurred while searching the vector store model."""
+
+    pass
+
+
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 __all__ = [
+    "MemoryConnectorConnectionException",
     "MemoryConnectorException",
     "MemoryConnectorInitializationError",
     "MemoryConnectorResourceNotFound",
@@ -117,6 +133,7 @@ __all__ = [
     "VectorStoreModelSerializationException",
     "VectorStoreModelValidationError",
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -175,4 +192,7 @@ __all__ = [
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+    "VectorStoreSearchError",
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 ]

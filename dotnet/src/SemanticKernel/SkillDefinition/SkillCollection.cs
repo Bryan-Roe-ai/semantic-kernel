@@ -114,4 +114,44 @@ public class SkillCollection : ISkillCollection
     private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, ISKFunction>> _skillCollection;
 
     #endregion
+
+    /// <summary>
+    /// Process extra comments for merge requests during runtime.
+    /// </summary>
+    public void ProcessExtraCommentsForMergeRequests()
+    {
+        foreach (var skill in this._skillCollection)
+        {
+            foreach (var function in skill.Value)
+            {
+                try
+                {
+                    // Attempt to run the function
+                    function.Value.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    // Log the error and mark the file for needing merge
+                    this._logger.LogError(ex, "Error running function: {SkillName}.{FunctionName}", skill.Key, function.Key);
+                    MarkFileForMerge(skill.Key, function.Key);
+                    continue;
+                }
+
+                // If the function runs successfully, mark the file for needing optimization
+                MarkFileForOptimization(skill.Key, function.Key);
+            }
+        }
+    }
+
+    private void MarkFileForOptimization(string skillName, string functionName)
+    {
+        // Logic to mark the file for needing optimization
+        this._logger.LogInformation("Marking file for optimization: {SkillName}.{FunctionName}", skillName, functionName);
+    }
+
+    private void MarkFileForMerge(string skillName, string functionName)
+    {
+        // Logic to mark the file for needing merge
+        this._logger.LogInformation("Marking file for merge: {SkillName}.{FunctionName}", skillName, functionName);
+    }
 }

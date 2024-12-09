@@ -99,6 +99,7 @@ class Jinja2PromptTemplate(PromptTemplateBase):
         helpers: dict[str, Callable[..., Any]] = {}
         helpers.update(JINJA2_SYSTEM_HELPERS)
         for plugin in kernel.plugins.values():
+<<<<<<< HEAD
             helpers.update(
                 {
                     function.fully_qualified_name.replace(
@@ -114,6 +115,19 @@ class Jinja2PromptTemplate(PromptTemplateBase):
                     for function in plugin
                 }
             )
+=======
+            helpers.update({
+                function.fully_qualified_name.replace("-", "_"): create_template_helper_from_function(
+                    function,
+                    kernel,
+                    arguments,
+                    self.prompt_template_config.template_format,
+                    allow_unsafe_function_output,
+                    enable_async=True,
+                )
+                for function in plugin
+            })
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         if self.prompt_template_config.template is None:
             raise Jinja2TemplateRenderException(
                 "Error rendering template, template is None"

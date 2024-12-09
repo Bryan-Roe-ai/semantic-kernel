@@ -219,6 +219,7 @@ public class KernelTests
     }
 
     [Fact]
+<<<<<<< HEAD
     public async Task InvokeAsyncHandlesPreInvocationAsync()
     {
         // Arrange
@@ -851,6 +852,8 @@ public class KernelTests
     }
 
     [Fact]
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     public async Task ItReturnsFunctionResultsCorrectlyAsync()
     {
         // Arrange
@@ -864,50 +867,6 @@ public class KernelTests
         // Assert
         Assert.NotNull(result);
         Assert.Equal("Result", result.GetValue<string>());
-    }
-
-    [Fact]
-    public async Task ItReturnsChangedResultsFromFunctionInvokedEventsAsync()
-    {
-        var kernel = new Kernel();
-
-        // Arrange
-        var function1 = KernelFunctionFactory.CreateFromMethod(() => "Result1", "Function1");
-        const string ExpectedValue = "new result";
-
-        kernel.FunctionInvoked += (object? sender, FunctionInvokedEventArgs args) =>
-        {
-            args.SetResultValue(ExpectedValue);
-        };
-
-        // Act
-        var result = await kernel.InvokeAsync(function1);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(ExpectedValue, result.GetValue<string>());
-    }
-
-    [Fact]
-    public async Task ItReturnsChangedResultsFromFunctionInvokingEventsAsync()
-    {
-        // Arrange
-        var kernel = new Kernel();
-
-        var function1 = KernelFunctionFactory.CreateFromMethod((string injectedVariable) => injectedVariable, "Function1");
-        const string ExpectedValue = "injected value";
-
-        kernel.FunctionInvoking += (object? sender, FunctionInvokingEventArgs args) =>
-        {
-            args.Arguments["injectedVariable"] = ExpectedValue;
-        };
-
-        // Act
-        var result = await kernel.InvokeAsync(function1);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.Equal(ExpectedValue, result.GetValue<string>());
     }
 
     [Fact]

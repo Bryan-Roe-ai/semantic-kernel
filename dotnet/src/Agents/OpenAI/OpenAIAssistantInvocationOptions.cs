@@ -85,6 +85,7 @@ public sealed class OpenAIAssistantInvocationOptions
 
     /// <summary>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -151,6 +152,18 @@ public sealed class OpenAIAssistantInvocationOptions
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+    /// Additional messages to add to the thread.
+    /// </summary>
+    /// <remarks>
+    /// Only supports messages with role = User or Assistant:
+    /// https://platform.openai.com/docs/api-reference/runs/createRun#runs-createrun-additional_messages
+    /// </remarks>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public IReadOnlyList<ChatMessageContent>? AdditionalMessages { get; init; }
+
+    /// <summary>
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// Set if code_interpreter tool is enabled.
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]

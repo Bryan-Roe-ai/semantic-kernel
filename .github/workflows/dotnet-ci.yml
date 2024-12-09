@@ -121,6 +121,7 @@ jobs:
 
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v4
       with:
         name: dotnet-testresults-${{ matrix.configuration }}
         path: ./TestResults
@@ -246,6 +247,8 @@ jobs:
           dotnet test $project --verbosity normal --logger trx --results-directory ./TestResults --configuration ${{ matrix.configuration }}
         done
 
+    - name: Upload dotnet test results
+      uses: actions/upload-artifact@v4
     - name: Archive artifacts ${{ matrix.os }}-${{ matrix.configuration }}
       uses: actions/upload-artifact@v3
       with:

@@ -19,7 +19,7 @@ from azure.ai.inference.models import (
     AsyncStreamingChatCompletions,
     ChatChoice,
     ChatCompletions,
-    ChatCompletionsFunctionToolCall,
+    ChatCompletionsToolCall,
     ChatRequestMessage,
     StreamingChatChoiceUpdate,
     StreamingChatCompletionsUpdate,
@@ -43,14 +43,13 @@ from azure.ai.inference.models import (
     ToolMessage,
     UserMessage,
 )
-from azure.core.credentials import AzureKeyCredential
-from azure.identity import DefaultAzureCredential
-from pydantic import ValidationError
 
-from semantic_kernel.connectors.ai.azure_ai_inference import (
-    AzureAIInferenceChatPromptExecutionSettings,
-    AzureAIInferenceSettings,
+from semantic_kernel.connectors.ai.azure_ai_inference import AzureAIInferenceChatPromptExecutionSettings
+from semantic_kernel.connectors.ai.azure_ai_inference.services.azure_ai_inference_base import (
+    AzureAIInferenceBase,
+    AzureAIInferenceClientType,
 )
+<<<<<<< HEAD
 from semantic_kernel.connectors.ai.azure_ai_inference.services.azure_ai_inference_base import (
     AzureAIInferenceBase,
 )
@@ -67,6 +66,9 @@ from semantic_kernel.connectors.ai.function_choice_behavior import (
     FunctionChoiceBehavior,
 )
 from semantic_kernel.connectors.ai.azure_ai_inference.services.azure_ai_inference_base import AzureAIInferenceBase
+=======
+from semantic_kernel.connectors.ai.azure_ai_inference.services.azure_ai_inference_tracing import AzureAIInferenceTracing
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.connectors.ai.azure_ai_inference.services.utils import MESSAGE_CONVERTERS
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
 from semantic_kernel.connectors.ai.function_calling_utils import (
@@ -76,7 +78,6 @@ from semantic_kernel.connectors.ai.function_calling_utils import (
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.function_calling_utils import update_settings_from_function_call_configuration
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-from semantic_kernel.connectors.ai.open_ai.const import DEFAULT_AZURE_API_VERSION
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ITEM_TYPES, ChatMessageContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
@@ -97,10 +98,7 @@ from semantic_kernel.contents.streaming_text_content import StreamingTextContent
 from semantic_kernel.contents.text_content import TextContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.contents.utils.finish_reason import FinishReason
-from semantic_kernel.exceptions.service_exceptions import (
-    ServiceInitializationError,
-    ServiceInvalidExecutionSettingsError,
-)
+from semantic_kernel.exceptions.service_exceptions import ServiceInvalidExecutionSettingsError
 from semantic_kernel.utils.experimental_decorator import experimental_class
 
 if TYPE_CHECKING:
@@ -156,6 +154,7 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
         Raises:
             ServiceInitializationError: If an error occurs during initialization.
         """
+<<<<<<< HEAD
         if not client:
             try:
                 azure_ai_inference_settings = AzureAIInferenceSettings.create(
@@ -197,9 +196,16 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
                     ),
                 )
 
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         super().__init__(
             ai_model_id=ai_model_id,
             service_id=service_id or ai_model_id,
+            client_type=AzureAIInferenceClientType.ChatCompletions,
+            api_key=api_key,
+            endpoint=endpoint,
+            env_file_path=env_file_path,
+            env_file_encoding=env_file_encoding,
             client=client,
         )
 
@@ -211,7 +217,6 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
         return AzureAIInferenceChatPromptExecutionSettings
 
     @override
-    @trace_chat_completion(AzureAIInferenceBase.MODEL_PROVIDER_NAME)
     async def _inner_get_chat_message_contents(
         self,
         chat_history: "ChatHistory",
@@ -309,6 +314,7 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
         assert isinstance(settings, AzureAIInferenceChatPromptExecutionSettings)  # nosec
 
         assert isinstance(self.client, ChatCompletionsClient)  # nosec
+<<<<<<< HEAD
         response: ChatCompletions = await self.client.complete(
             messages=self._prepare_chat_history_for_request(chat_history),
         response: ChatCompletions = await self.client.complete(
@@ -316,6 +322,14 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
             model_extras=settings.extra_parameters,
             **settings.prepare_settings_dict(),
         )
+=======
+        with AzureAIInferenceTracing():
+            response: ChatCompletions = await self.client.complete(
+                messages=self._prepare_chat_history_for_request(chat_history),
+                model_extras=settings.extra_parameters,
+                **settings.prepare_settings_dict(),
+            )
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         response_metadata = self._get_metadata_from_response(response)
 
         return [
@@ -334,12 +348,13 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
         assert isinstance(settings, AzureAIInferenceChatPromptExecutionSettings)  # nosec
 
         assert isinstance(self.client, ChatCompletionsClient)  # nosec
-        response: AsyncStreamingChatCompletions = await self.client.complete(
-            stream=True,
-            messages=self._prepare_chat_history_for_request(chat_history),
-            model_extras=settings.extra_parameters,
-            **settings.prepare_settings_dict(),
-        )
+        with AzureAIInferenceTracing():
+            response: AsyncStreamingChatCompletions = await self.client.complete(
+                stream=True,
+                messages=self._prepare_chat_history_for_request(chat_history),
+                model_extras=settings.extra_parameters,
+                **settings.prepare_settings_dict(),
+            )
 
         async for chunk in response:
             if len(chunk.choices) == 0:
@@ -466,7 +481,7 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
             )
         if choice.message.tool_calls:
             for tool_call in choice.message.tool_calls:
-                if isinstance(tool_call, ChatCompletionsFunctionToolCall):
+                if isinstance(tool_call, ChatCompletionsToolCall):
                     items.append(
                         FunctionCallContent(
                             id=tool_call.id,
@@ -662,7 +677,7 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
             )
         if choice.delta.tool_calls:
             for tool_call in choice.delta.tool_calls:
-                if isinstance(tool_call, ChatCompletionsFunctionToolCall):
+                if isinstance(tool_call, ChatCompletionsToolCall):
                     items.append(
                         FunctionCallContent(
                             id=tool_call.id,

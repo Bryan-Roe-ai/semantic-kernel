@@ -1,22 +1,14 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Linq;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Text.Json;
 using System.Threading;
-using System.Threading.Tasks;
 using Azure;
 using Azure.AI.Inference;
 using Azure.Core.Pipeline;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Diagnostics;
 using Microsoft.SemanticKernel.Http;
 using Microsoft.SemanticKernel.Services;
 
@@ -168,6 +160,7 @@ internal sealed class ChatClientCore
         }
     }
 
+<<<<<<< HEAD
     /// <summary>Gets options to use for an Azure AI InferenceClient</summary>
     /// <param name="httpClient">Custom <see cref="HttpClient"/> for HTTP requests.</param>
     /// <param name="serviceVersion">Optional API version.</param>
@@ -249,10 +242,10 @@ internal sealed class ChatClientCore
         {
             try
             {
-                responseData = (await RunRequestAsync(() => this.Client!.CompleteAsync(chatOptions, chatExecutionSettings.ExtraParameters ?? string.Empty, cancellationToken)).ConfigureAwait(false)).Value;
+                responseData = (await RunRequestAsync(() => this.Client!.CompleteAsync(chatOptions, cancellationToken)).ConfigureAwait(false)).Value;
 
                 this.LogUsage(responseData.Usage);
-                if (responseData.Choices.Count == 0)
+                if (responseData is null)
                 {
                     throw new KernelException("Chat completions not found");
                 }
@@ -271,7 +264,7 @@ internal sealed class ChatClientCore
                 throw;
             }
 
-            responseContent = responseData.Choices.Select(chatChoice => this.GetChatMessage(chatChoice, responseData)).ToList();
+            responseContent = [this.GetChatMessage(responseData)];
             activity?.SetCompletionResponse(responseContent, responseData.Usage.PromptTokens, responseData.Usage.CompletionTokens);
         }
 
@@ -298,7 +291,6 @@ internal sealed class ChatClientCore
 
         // Stream the response.
         IReadOnlyDictionary<string, object?>? metadata = null;
-        string? streamedName = null;
         ChatRole? streamedRole = default;
         CompletionsFinishReason finishReason = default;
 
@@ -333,6 +325,62 @@ internal sealed class ChatClientCore
                         activity.SetError(ex);
                         throw;
                     }
+                }
+                catch (Exception ex) when (activity is not null)
+                {
+                    activity.SetError(ex);
+                    throw;
+                }
+
+                StreamingChatCompletionsUpdate update = responseEnumerator.Current;
+                metadata = GetResponseMetadata(update);
+                streamedRole ??= update.Role;
+                finishReason = update.FinishReason ?? default;
+
+                AuthorRole? role = null;
+                if (streamedRole.HasValue)
+                {
+                    role = new AuthorRole(streamedRole.Value.ToString());
+                }
+
+                StreamingChatMessageContent streamingChatMessageContent =
+                    new(role: update.Role.HasValue ? new AuthorRole(update.Role.ToString()!) : null, content: update.ContentUpdate, innerContent: update, modelId: update.Model, metadata: metadata)
+                    {
+                        Role = role,
+                        Metadata = metadata,
+                    };
+
+                streamedContents?.Add(streamingChatMessageContent);
+                yield return streamingChatMessageContent;
+            }
+        }
+        finally
+        {
+            activity?.EndStreaming(streamedContents, null);
+            await responseEnumerator.DisposeAsync();
+        }
+    }
+
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+    #region Private
+
+    /// <summary>
+    /// Single space constant.
+    /// </summary>
+    private const string SingleSpace = " ";
+
+    /// <summary>Gets options to use for an Azure AI InferenceClient</summary>
+    /// <param name="httpClient">Custom <see cref="HttpClient"/> for HTTP requests.</param>
+    /// <param name="serviceVersion">Optional API version.</param>
+    /// <returns>An instance of <see cref="AzureAIInferenceClientOptions"/>.</returns>
+    private static AzureAIInferenceClientOptions GetClientOptions(HttpClient? httpClient, AzureAIInferenceClientOptions.ServiceVersion? serviceVersion = null)
+    {
+        AzureAIInferenceClientOptions options = serviceVersion is not null ?
+            new(serviceVersion.Value) :
+            new();
+
+        options.Diagnostics.ApplicationId = HttpHeaderConstant.Values.UserAgent;
 
                     StreamingChatCompletionsUpdate update = responseEnumerator.Current;
                     metadata = GetResponseMetadata(update);
@@ -354,6 +402,7 @@ internal sealed class ChatClientCore
                             Metadata = metadata,
                         };
 
+<<<<<<< HEAD
                     streamedContents?.Add(streamingChatMessageContent);
                     yield return streamingChatMessageContent;
                 }
@@ -487,7 +536,7 @@ internal sealed class ChatClientCore
         {
             // Name removed temporarily as the Azure AI Inference service does not support it ATM.
             // Issue: https://github.com/Azure/azure-sdk-for-net/issues/45415
-            return [new ChatRequestAssistantMessage() { Content = message.Content /* Name = message.AuthorName */ }];
+            return [new ChatRequestAssistantMessage(message.Content) { /* Name = message.AuthorName */ }];
         }
 
         throw new NotSupportedException($"Role {message.Role} is not supported.");
@@ -539,6 +588,29 @@ internal sealed class ChatClientCore
     }
 
     private static Dictionary<string, object?> GetChatChoiceMetadata(ChatCompletions completions, ChatChoice chatChoice)
+    /// <summary>
+    /// Create a new <see cref="ChatMessageContent"/> based on the provided <see cref="ChatChoice"/> and <see cref="ChatCompletions"/>.
+    /// </summary>
+    /// <param name="responseData">The <see cref="ChatCompletions"/> object containing the response data.</param>
+    /// <returns>A new <see cref="ChatMessageContent"/> object.</returns>
+    private ChatMessageContent GetChatMessage(ChatCompletions responseData)
+    {
+        var message = new ChatMessageContent(
+            new AuthorRole(responseData.Role.ToString()),
+            responseData.Content,
+            responseData.Model,
+            innerContent: responseData,
+            metadata: GetChatChoiceMetadata(responseData)
+        );
+        return message;
+    }
+
+    /// <summary>
+    /// Create the metadata dictionary based on the provided <see cref="ChatChoice"/> and <see cref="ChatCompletions"/>.
+    /// </summary>
+    /// <param name="completions">The <see cref="ChatCompletions"/> object containing the response data.</param>
+    /// <returns>A new dictionary with metadata.</returns>
+    private static Dictionary<string, object?> GetChatChoiceMetadata(ChatCompletions completions)
     {
         return new Dictionary<string, object?>(5)
         {
@@ -547,8 +619,7 @@ internal sealed class ChatClientCore
             { nameof(completions.Usage), completions.Usage },
 
             // Serialization of this struct behaves as an empty object {}, need to cast to string to avoid it.
-            { nameof(chatChoice.FinishReason), chatChoice.FinishReason?.ToString() },
-            { nameof(chatChoice.Index), chatChoice.Index },
+            { nameof(completions.FinishReason), completions.FinishReason?.ToString() },
         };
     }
 
@@ -563,4 +634,7 @@ internal sealed class ChatClientCore
             { nameof(completions.FinishReason), completions.FinishReason?.ToString() },
         };
     }
+=======
+    #endregion
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 }

@@ -455,6 +455,7 @@ class AzureChatCompletion(
         if not azure_openai_settings.chat_deployment_name:
             raise ServiceInitializationError("chat_deployment_name is required.")
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -501,6 +502,8 @@ class AzureChatCompletion(
                 "Please provide either a custom client, or an api_key, an ad_token or an ad_token_provider"
             )
 
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         super().__init__(
             deployment_name=azure_openai_settings.chat_deployment_name,
             endpoint=azure_openai_settings.endpoint,
@@ -996,6 +999,7 @@ class AzureChatCompletion(
 >>>>>>> Stashed changes
             ad_token=ad_token,
             ad_token_provider=ad_token_provider,
+            token_endpoint=azure_openai_settings.token_endpoint,
             default_headers=default_headers,
             ai_model_type=OpenAIModelTypes.CHAT,
             client=async_client,
@@ -1073,7 +1077,7 @@ class AzureChatCompletion(
         settings.messages = self._prepare_chat_history_for_request(chat_history)
         settings.ai_model_id = settings.ai_model_id or self.ai_model_id
 
-        response = await self._send_request(request_settings=settings)
+        response = await self._send_request(settings)
         if not isinstance(response, AsyncStream):
             raise ServiceInvalidResponseError("Expected an AsyncStream[ChatCompletionChunk] response.")
         async for chunk in response:

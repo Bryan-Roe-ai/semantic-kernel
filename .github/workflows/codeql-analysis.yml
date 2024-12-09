@@ -44,7 +44,7 @@ jobs:
           # By default, queries listed here will override any specified in a config file.
           # Prefix the list here with "+" to use these queries and those in the config file.
 
-          # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+          # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#[...]
           # queries: security-extended,security-and-quality
 
       # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
@@ -52,19 +52,7 @@ jobs:
       - name: Autobuild
         if: ${{ matrix.language != 'java' }}
         uses: github/codeql-action/autobuild@v4
-      - name: Autobuild
-        if: ${{ matrix.language != 'Go' }}
-        uses: github/codeql-action/autobuild@v4
-      - name: Autobuild
-        if: ${{ matrix.language != 'C#' }}
-        uses: github/codeql-action/autobuild@v4
-      - name: Autobuild
-        if: ${{ matrix.language != 'C++' }}
-        uses: github/codeql-action/autobuild@v4
-      - name: Autobuild
-        if: ${{ matrix.language != 'C' }}
-        
-        uses: github/codeql-action/autobuild@v4
+
       - name: Setup JDK
         uses: actions/setup-java@v4
         if: ${{ matrix.language == 'java' }}
@@ -92,3 +80,8 @@ jobs:
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{matrix.language}}"
+
+      - name: Trigger Ensure Success Workflow
+        run: |
+          gh workflow run ensure-success.yml
+

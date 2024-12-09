@@ -14,10 +14,15 @@ from pydantic import ValidationError
 from qdrant_client.async_qdrant_client import AsyncQdrantClient
 
 from semantic_kernel.connectors.memory.qdrant.qdrant_collection import QdrantCollection
+<<<<<<< HEAD
 from semantic_kernel.data.vector_store import VectorStore
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
+=======
+from semantic_kernel.data.record_definition import VectorStoreRecordDefinition
+from semantic_kernel.data.vector_storage import VectorStore
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.exceptions import MemoryConnectorInitializationError
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.telemetry.user_agent import (
@@ -26,9 +31,13 @@ from semantic_kernel.utils.telemetry.user_agent import (
 )
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     from semantic_kernel.data.vector_store_record_collection import (
         VectorStoreRecordCollection,
     )
+=======
+    from semantic_kernel.data import VectorStoreRecordCollection
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -82,7 +91,7 @@ class QdrantStore(VectorStore):
 
         """
         if client:
-            super().__init__(qdrant_client=client, **kwargs)
+            super().__init__(qdrant_client=client, managed_client=False, **kwargs)
             return
 
         from semantic_kernel.connectors.memory.qdrant.qdrant_settings import (
@@ -152,3 +161,8 @@ class QdrantStore(VectorStore):
     async def list_collection_names(self, **kwargs: Any) -> Sequence[str]:
         collections = await self.qdrant_client.get_collections()
         return [collection.name for collection in collections.collections]
+
+    @override
+    async def __aexit__(self, exc_type, exc_value, traceback) -> None:
+        if self.managed_client:
+            await self.qdrant_client.close()

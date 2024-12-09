@@ -118,4 +118,39 @@ public class PromptTemplateEngine : IPromptTemplateEngine
             ? block
             : new TextBlock(((ITextRendering)block).Render(variables), this._logger)).ToList();
     }
+
+    /// <summary>
+    /// Mark files for optimization or merge based on success or failure.
+    /// </summary>
+    /// <param name="context">The context containing the merge request comments.</param>
+    public void MarkFilesForOptimizationOrMerge(SKContext context)
+    {
+        if (context.Variables.TryGetValue("mergeRequestComments", out string? comments))
+        {
+            // Process the comments and determine if the file needs optimization or merge
+            bool needsOptimization = ProcessCommentsForOptimization(comments);
+            bool needsMerge = ProcessCommentsForMerge(comments);
+
+            if (needsOptimization)
+            {
+                context.Variables.Set("fileStatus", "needsOptimization");
+            }
+            else if (needsMerge)
+            {
+                context.Variables.Set("fileStatus", "needsMerge");
+            }
+        }
+    }
+
+    private bool ProcessCommentsForOptimization(string comments)
+    {
+        // Implement logic to determine if the file needs optimization based on comments
+        return comments.Contains("optimize");
+    }
+
+    private bool ProcessCommentsForMerge(string comments)
+    {
+        // Implement logic to determine if the file needs merge based on comments
+        return comments.Contains("merge");
+    }
 }

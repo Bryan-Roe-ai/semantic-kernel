@@ -65,3 +65,6 @@ Indicate whether the resolved issue has been reviewed and approved by a trusted 
 
 **Additional Information**
 Any other information that may be helpful in diagnosing and resolving the issue.
+
+**Check Discussions**
+Before submitting a bug report, please check the [Discussions](https://github.com/Bryan-Roe/semantic-kernel/discussions) page for existing solutions or ongoing discussions related to your issue.

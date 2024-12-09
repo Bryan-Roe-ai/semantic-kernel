@@ -36,3 +36,6 @@ Indicate whether the feature request has been reviewed and approved by a trusted
 
 **Additional Information**
 Any other information that may be helpful in understanding and implementing the feature request.
+
+**Check Discussions**
+Before submitting a feature request, please check the [Discussions](https://github.com/Bryan-Roe/semantic-kernel/discussions) page for existing feature requests or ongoing discussions related to your idea.

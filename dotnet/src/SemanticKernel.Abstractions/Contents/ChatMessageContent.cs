@@ -54,6 +54,10 @@ public class ChatMessageContent : KernelContent
             {
                 this.Items.Add(new TextContent(
                     text: value,
+                    modelId: this.ModelId,
+                    innerContent: this.InnerContent,
+                    encoding: this.Encoding,
+                    metadata: this.Metadata
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -132,6 +136,7 @@ public class ChatMessageContent : KernelContent
                     encoding: this.Encoding // %%% WEIRD, BUT WHO CARES (IGNORED FOR SERIALIZATION)
                 ////metadata: this.Metadata, // %%% CARDINALITY MISMATCH / MUTATION RISK
                 )
+                { MimeType = this.MimeType });
                 { MimeType = this.MimeType }); // %%% CARDINALITY MISMATCH / INVALID ASSUMPTION
 <<<<<<< div
 =======
@@ -212,6 +217,7 @@ public class ChatMessageContent : KernelContent
     /// Represents the source of the message.
     /// </summary>
     /// <remarks>
+<<<<<<< HEAD
     /// The source is corresponds to the entity that generated this message.
 <<<<<<< HEAD
 <<<<<<< div
@@ -225,6 +231,9 @@ public class ChatMessageContent : KernelContent
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+    /// The source corresponds to the entity that generated this message.
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// The property is intended to be used by agents to associate themselves with the messages they generate.
 =======
 =======

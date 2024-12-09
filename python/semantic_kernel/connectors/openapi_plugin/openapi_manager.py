@@ -4,6 +4,7 @@ import logging
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urlparse
 
+<<<<<<< HEAD
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import (
     RestApiOperation,
 )
@@ -13,6 +14,13 @@ from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_paramet
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_run_options import (
     RestApiOperationRunOptions,
 )
+=======
+from semantic_kernel.connectors.openapi_plugin.const import OperationExtensions
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import RestApiOperation
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter import RestApiParameter
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_run_options import RestApiRunOptions
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_security_requirement import RestApiSecurityRequirement
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_uri import Uri
 from semantic_kernel.connectors.openapi_plugin.openapi_parser import OpenApiParser
 from semantic_kernel.connectors.openapi_plugin.openapi_runner import OpenApiRunner
@@ -40,20 +48,38 @@ logger: logging.Logger = logging.getLogger(__name__)
 @experimental_function
 def create_functions_from_openapi(
     plugin_name: str,
-    openapi_document_path: str,
+    openapi_document_path: str | None = None,
+    openapi_parsed_spec: dict[str, Any] | None = None,
     execution_settings: "OpenAIFunctionExecutionParameters | OpenAPIFunctionExecutionParameters | None" = None,
 ) -> list[KernelFunctionFromMethod]:
     """Creates the functions from OpenAPI document.
 
     Args:
         plugin_name: The name of the plugin
-        openapi_document_path: The OpenAPI document path, it must be a file path to the spec.
+        openapi_document_path: The OpenAPI document path, it must be a file path to the spec (optional)
+        openapi_parsed_spec: The parsed OpenAPI spec (optional)
         execution_settings: The execution settings
 
     Returns:
         list[KernelFunctionFromMethod]: the operations as functions
     """
+    parsed_doc: dict[str, Any] | Any = None
+    if openapi_parsed_spec is not None:
+        parsed_doc = openapi_parsed_spec
+    else:
+        if openapi_document_path is None:
+            raise FunctionExecutionException(
+                "Either `openapi_document_path` or `openapi_parsed_spec` must be provided."
+            )
+
+        # Parse the document from the given path
+        parser = OpenApiParser()
+        parsed_doc = parser.parse(openapi_document_path)
+        if parsed_doc is None:
+            raise FunctionExecutionException(f"Error parsing OpenAPI document: {openapi_document_path}")
+
     parser = OpenApiParser()
+<<<<<<< HEAD
     if (parsed_doc := parser.parse(openapi_document_path)) is None:
         raise FunctionExecutionException(
             f"Error parsing OpenAPI document: {openapi_document_path}"
@@ -61,6 +87,11 @@ def create_functions_from_openapi(
     operations = parser.create_rest_api_operations(
         parsed_doc, execution_settings=execution_settings
     )
+=======
+    operations = parser.create_rest_api_operations(parsed_doc, execution_settings=execution_settings)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
+    global_security_requirements = parsed_doc.get("security", [])
 
     auth_callback = None
     if execution_settings and execution_settings.auth_callback:
@@ -80,6 +111,7 @@ def create_functions_from_openapi(
         ),
     )
 
+<<<<<<< HEAD
     return [
         _create_function_from_operation(
             openapi_runner,
@@ -89,6 +121,26 @@ def create_functions_from_openapi(
         )
         for operation in operations.values()
     ]
+=======
+    functions = []
+    for operation in operations.values():
+        try:
+            kernel_function = _create_function_from_operation(
+                openapi_runner,
+                operation,
+                plugin_name,
+                execution_parameters=execution_settings,
+                security=global_security_requirements,
+            )
+            functions.append(kernel_function)
+            operation.freeze()
+        except Exception as ex:
+            error_msg = f"Error while registering Rest function {plugin_name}.{operation.id}: {ex}"
+            logger.error(error_msg)
+            raise FunctionExecutionException(error_msg) from ex
+
+    return functions
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 @experimental_function
@@ -98,10 +150,11 @@ def _create_function_from_operation(
     plugin_name: str | None = None,
     execution_parameters: "OpenAIFunctionExecutionParameters | OpenAPIFunctionExecutionParameters | None" = None,
     document_uri: str | None = None,
+    security: list[RestApiSecurityRequirement] | None = None,
 ) -> KernelFunctionFromMethod:
     logger.info(f"Registering OpenAPI operation: {plugin_name}.{operation.id}")
 
-    rest_operation_params: list[RestApiOperationParameter] = operation.get_parameters(
+    rest_operation_params: list[RestApiParameter] = operation.get_parameters(
         operation=operation,
         add_payload_params_from_metadata=getattr(
             execution_parameters, "enable_dynamic_payload", True
@@ -140,7 +193,7 @@ def _create_function_from_operation(
                         f"`{parameter.name}` parameter of the `{plugin_name}.{operation.id}` REST function."
                     )
 
-            options = RestApiOperationRunOptions(
+            options = RestApiRunOptions(
                 server_url_override=(
                     urlparse(execution_parameters.server_url_override)
                     if execution_parameters
@@ -180,7 +233,18 @@ def _create_function_from_operation(
 
     return_parameter = operation.get_default_return_parameter()
 
-    additional_metadata = {"method": operation.method.upper()}
+    additional_metadata = {
+        OperationExtensions.METHOD_KEY.value: operation.method.upper(),
+        OperationExtensions.OPERATION_KEY.value: operation,
+        OperationExtensions.SERVER_URLS_KEY.value: (
+            [operation.servers[0]["url"]]
+            if operation.servers and len(operation.servers) > 0 and operation.servers[0]["url"]
+            else []
+        ),
+    }
+
+    if security is not None:
+        additional_metadata[OperationExtensions.SECURITY_KEY.value] = security
 
     return KernelFunctionFromMethod(
         method=run_openapi_operation,

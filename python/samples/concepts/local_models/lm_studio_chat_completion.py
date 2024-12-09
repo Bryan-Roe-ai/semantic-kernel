@@ -5,9 +5,13 @@ import asyncio
 
 from openai import AsyncOpenAI
 
+<<<<<<< HEAD
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion import (
     OpenAIChatCompletion,
 )
+=======
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.kernel import Kernel

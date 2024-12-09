@@ -4,6 +4,7 @@ from semantic_kernel.connectors.ai.google.google_ai.google_ai_prompt_execution_s
     GoogleAIChatPromptExecutionSettings,
     GoogleAIEmbeddingPromptExecutionSettings,
     GoogleAIPromptExecutionSettings,
+    GoogleAITextPromptExecutionSettings,
 )
 from semantic_kernel.connectors.ai.google.google_ai.services.google_ai_chat_completion import (
     GoogleAIChatCompletion,
@@ -22,4 +23,5 @@ __all__ = [
     "GoogleAIPromptExecutionSettings",
     "GoogleAITextCompletion",
     "GoogleAITextEmbedding",
+    "GoogleAITextPromptExecutionSettings",
 ]

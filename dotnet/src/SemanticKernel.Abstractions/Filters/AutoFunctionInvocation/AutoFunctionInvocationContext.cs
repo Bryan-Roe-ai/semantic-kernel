@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Microsoft.SemanticKernel.ChatCompletion;
 
@@ -9,7 +8,6 @@ namespace Microsoft.SemanticKernel;
 /// <summary>
 /// Class with data related to automatic function invocation.
 /// </summary>
-[Experimental("SKEXP0001")]
 public class AutoFunctionInvocationContext
 {
     /// <summary>
@@ -45,6 +43,11 @@ public class AutoFunctionInvocationContext
     /// The default is <see cref="CancellationToken.None"/>.
     /// </summary>
     public CancellationToken CancellationToken { get; init; }
+
+    /// <summary>
+    /// Boolean flag which indicates whether a filter is invoked within streaming or non-streaming mode.
+    /// </summary>
+    public bool IsStreaming { get; init; }
 
     /// <summary>
     /// Gets the arguments associated with the operation.

@@ -27,6 +27,11 @@ jobs:
     - name: Push Docker image to GitHub Container Registry
       run: docker push ghcr.io/${{ github.repository }}/my-image-name:$(date +%s)
 
+    - name: Integrate additional service
+      uses: codacy/codacy-analysis-cli-action@v4
+      with:
+        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
   deploy:
     runs-on: ubuntu-latest
     needs: build

@@ -97,6 +97,7 @@ def test_azure_ai_inference_chat_completion_init_with_custom_client(
     assert azure_ai_inference.client == client
 
 
+<<<<<<< HEAD
 @pytest.mark.parametrize(
     "exclude_list", [["AZURE_AI_INFERENCE_API_KEY"]], indirect=True
 )
@@ -111,12 +112,15 @@ def test_azure_ai_inference_chat_completion_init_with_empty_api_key(
 @pytest.mark.parametrize(
     "exclude_list", [["AZURE_AI_INFERENCE_ENDPOINT"]], indirect=True
 )
+=======
+@pytest.mark.parametrize("exclude_list", [["AZURE_AI_INFERENCE_ENDPOINT"]], indirect=True)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 def test_azure_ai_inference_chat_completion_init_with_empty_endpoint(
     azure_ai_inference_unit_test_env, model_id
 ) -> None:
     """Test initialization of AzureAIInferenceChatCompletion with empty endpoint"""
     with pytest.raises(ServiceInitializationError):
-        AzureAIInferenceChatCompletion(model_id)
+        AzureAIInferenceChatCompletion(model_id, env_file_path="fake_path")
 
 
 def test_prompt_execution_settings_class(

@@ -73,6 +73,7 @@ public abstract class Agent
     protected internal abstract Task<AgentChannel> CreateChannelAsync(CancellationToken cancellationToken);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -108,6 +109,8 @@ public abstract class Agent
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// <summary>
     /// Produce the an <see cref="AgentChannel"/> appropriate for the agent type based on the provided state.
     /// </summary>
@@ -120,6 +123,7 @@ public abstract class Agent
     /// </remarks>
     protected internal abstract Task<AgentChannel> RestoreChannelAsync(string channelState, CancellationToken cancellationToken);
 
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -154,5 +158,7 @@ public abstract class Agent
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     private ILogger? _logger;
 }

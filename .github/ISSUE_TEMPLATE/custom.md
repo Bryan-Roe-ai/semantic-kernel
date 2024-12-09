@@ -51,3 +51,6 @@ If there are any related issues or pull requests, please link to them here.
 
 **Additional Information**
 Any other information that may be helpful in diagnosing and resolving the issue.
+
+**Check Discussions**
+Before submitting a custom issue, please check the [Discussions](https://github.com/Bryan-Roe/semantic-kernel/discussions) page for related topics or ongoing discussions.

@@ -2,6 +2,7 @@
 
 from pytest import raises
 
+<<<<<<< HEAD
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
@@ -12,6 +13,14 @@ from semantic_kernel.data.vector_store_record_fields import (
 from semantic_kernel.exceptions.memory_connector_exceptions import (
     VectorStoreModelException,
 )
+=======
+from semantic_kernel.data import (
+    VectorStoreRecordDataField,
+    VectorStoreRecordDefinition,
+    VectorStoreRecordKeyField,
+)
+from semantic_kernel.exceptions import VectorStoreModelException
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 def test_vector_store_record_definition():

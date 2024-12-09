@@ -1047,6 +1047,7 @@ class KernelPromptTemplate(PromptTemplateBase):
         prompt = "".join(rendered_blocks)
         logger.debug(f"Rendered prompt: {prompt}")
         return prompt
+<<<<<<< HEAD
 =======
 =======
 <<<<<<< Updated upstream
@@ -1084,6 +1085,9 @@ class KernelPromptTemplate(PromptTemplateBase):
         return prompt
 
 <<<<<<< HEAD
+=======
+
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     @staticmethod
     def quick_render(template: str, arguments: dict[str, Any]) -> str:
         """Quick render a Kernel prompt template, only supports text and variable blocks.
@@ -1103,6 +1107,7 @@ class KernelPromptTemplate(PromptTemplateBase):
         if any(isinstance(block, CodeRenderer) for block in blocks):
             raise ValueError("Quick render does not support code blocks.")
         kernel = Kernel()
+<<<<<<< HEAD
         return "".join([block.render(kernel, arguments) for block in blocks])
 =======
     def render_variables(
@@ -1187,3 +1192,6 @@ class KernelPromptTemplate(PromptTemplateBase):
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+        return "".join([block.render(kernel, arguments) for block in blocks])  # type: ignore
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377

@@ -1,0 +1,4 @@
+[submodule "semantic-kernel"]
+[submodule "tree-sitter-python"]
+[submodule "compositional-generalization-span-level-attention"]
+[submodule "OpenKP"]

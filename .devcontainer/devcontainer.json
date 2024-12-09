@@ -1,37 +1,41 @@
 {
-	"image": "mcr.microsoft.com/devcontainers/universal:2",
-	"features": {
-		"ghcr.io/jayree/devcontainer-features/npm-registry:1": {},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
-		"ghcr.io/devcontainers/features/dotnet:2.1.3": {
-			"version": "8"
-		},
-		"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {}
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"ms-dotnettools.dotnet-interactive-vscode",
-				"ms-semantic-kernel.semantic-kernel",
-				"esbenp.prettier-vscode",
-				"vscjava.vscode-gradle",
-				"GitHub.copilot-chat",
-				"GitHub.copilot",
-				"franneck94.c-cpp-runner",
-				"ms-python.debugpy",
-				"atariq11700.debugpy-old",
-				"ms-vscode.powershell",
-				"hangxingliu.vscode-coding-tracker",
-				"micoloth.reactive-jupyter",
-				"ms-vscode-remote.remote-containers",
-				"ms-dotnettools.csdevkit"
-			]
-		}
-	},
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers/features/java:1": {
+      "version": "17",
+      "installMaven": true
+    }
+  },
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "postAttachCommand": {
+    "launch": "npm start",
+    "test": "dotnet test --no-build --verbosity normal && python -m pytest && ./mvnw -B -Pbug-check -Pcompile-jdk${{ matrix.java-versions }} test --file pom.xml && npm test"
+  },
   "postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet",
-  "tasks": {
-    "test": "pytest && dotnet test && mvn test && npm test",
-    "build": "1. dotnet restore\n2. dotnet build\n3. pip install -r requirements.txt\n4. mvn clean install\n5. npm install",
-    "launch": "docker-compose up"
+  "postStartCommand": "dotnet restore && pip install -r requirements.txt && ./mvnw install && npm install",
+  "remoteEnv": {
+    "DOTNET_ROOT": "/usr/share/dotnet",
+    "MAVEN_HOME": "/usr/share/maven",
+    "PYTHONPATH": "${workspaceFolder}/python"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-python.python",
+        "vscjava.vscode-java-pack",
+        "dbaeumer.vscode-eslint",
+        "ms-dotnettools.dotnet-interactive",
+        "ms-vscode.cpptools",
+        "msjsdiag.debugger-for-chrome",
+        "ms-vscode.go",
+        "ms-azure-devops.azure-pipelines",
+        "ms-cst-e.vscode-devskim"
+      ]
+    }
   }
 }

@@ -96,6 +96,7 @@ class KernelParameterMetadata(KernelBaseModel):
     type_object: Any | None = None
     schema_data: dict[str, Any] | None = None
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -159,6 +160,9 @@ class KernelParameterMetadata(KernelBaseModel):
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+    include_in_function_choices: bool = True
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     @model_validator(mode="before")
     @classmethod

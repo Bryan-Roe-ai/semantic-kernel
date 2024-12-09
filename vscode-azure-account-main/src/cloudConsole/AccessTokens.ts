@@ -7,6 +7,16 @@ import { delay } from '../utils/timeUtils';
 import { readJSON, sendData } from './createServer';
 
 
+function isValidTerminalUri(uri: string): boolean {
+	const allowedHosts = ['example.com', 'another-example.com']; // Add allowed hosts here
+	try {
+		const url = new URL(uri);
+		return allowedHosts.includes(url.hostname);
+	} catch (e) {
+		return false;
+	}
+}
+
 export interface AccessTokens {
 	resource: string;
 	graph: string;
@@ -35,6 +45,10 @@ function getWindowSize(): Size {
 }
 let resizeToken = {};
 async function resize(accessTokens: AccessTokens, terminalUri: string) {
+	if (!isValidTerminalUri(terminalUri)) {
+		console.log('Invalid terminal URI.');
+		return;
+	}
 	const token = resizeToken = {};
 	await delay(300);
 
@@ -80,6 +94,12 @@ async function resize(accessTokens: AccessTokens, terminalUri: string) {
 	console.log('Failed to resize terminal.');
 }
 function connectSocket(ipcHandle: string, url: string) {
+
+	const allowedUrls = ['wss://trusted.example.com', 'wss://another-trusted.example.com'];
+	if (!allowedUrls.includes(url)) {
+		console.error('Invalid URL:', url);
+		return;
+	}
 
 	const proxy = process.env.HTTPS_PROXY || process.env.HTTP_PROXY || undefined;
 	let agent: http.Agent | undefined = undefined;
