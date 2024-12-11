@@ -81,6 +81,12 @@ jobs:
         with:
           category: "/language:${{matrix.language}}"
 
+      - name: Run npm audit
+        run: npm audit
+
+      - name: Run npm audit fix
+        run: npm audit fix
+
       - name: Trigger Ensure Success Workflow
         run: |
           gh workflow run ensure-success.yml
