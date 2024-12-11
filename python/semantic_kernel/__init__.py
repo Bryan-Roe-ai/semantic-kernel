@@ -25,78 +25,7 @@ from semantic_kernel.kernel_base import KernelBase
 from semantic_kernel.configuration.kernel_config import KernelConfig
 import semantic_kernel.memory as memory
 from semantic_kernel.kernel import Kernel
-<< << << < main
-
-<< << << < main
-<< << << < div
-<< << << < div
-== == == =
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < head
->>>>>> > head
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-__version__ = "1.9.0"
-== == == =
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-<< << << < Updated upstream
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-<< << << < main
-__version__ = "1.9.0"
-== == == =
-__version__ = "1.11.0"
->>>>>> > origin/main
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
->>>>>> > Stashed changes
-== == == =
-== == == =
->>>>>> > Stashed changes
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
-__version__ = "1.11.0"
->>>>>> > origin/main
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-<< << << < div
-== == == =
-__version__ = "1.11.0"
->>>>>> > main
-== == == =
->>>>>> > head
-== == == =
-__version__ = "1.12.1"
->>>>>> > origin/main
+__version__ = "1.17.0"
 __all__ = ["Kernel", "__version__"]
 
 # from semantic_kernel.prompt_template.chat_prompt_template import ChatPromptTemplate
@@ -126,18 +55,5 @@ __all__ = [
     "KernelArguments",
     "memory",
 ]
-__version__= "1.8.1"
-<< << << < main
-== == == =
-__version__= "1.12.1"
->> >>>> > upstream/main
-== == == =
->>>>>> > origin/main
-__all__= ["Kernel", "__version__"]
-
-# Copyright (c) Microsoft. All rights reserved.
-
-from semantic_kernel.kernel import Kernel
-
-__version__= "1.16.0"
+__version__= "1.17.0"
 __all__= ["Kernel", "__version__"]

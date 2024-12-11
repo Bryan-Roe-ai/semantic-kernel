@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -552,7 +552,7 @@ internal sealed class MistralClient
         var endpoint = this.GetEndpoint(executionSettings, path: "chat/completions");
         using var httpRequestMessage = this.CreatePost(chatRequest, endpoint, this._apiKey, stream: true);
         using var response = await this.SendStreamingRequestAsync(httpRequestMessage, cancellationToken).ConfigureAwait(false);
-        using var responseStream = await response.Content.ReadAsStreamAndTranslateExceptionAsync(cancellationToken).ConfigureAwait(false);
+        var responseStream = await response.Content.ReadAsStreamAndTranslateExceptionAsync(cancellationToken).ConfigureAwait(false);
         await foreach (var streamingChatContent in this.ProcessChatResponseStreamAsync(responseStream, modelId, cancellationToken).ConfigureAwait(false))
         {
             yield return streamingChatContent;
@@ -770,7 +770,11 @@ internal sealed class MistralClient
             TopP = executionSettings.TopP,
             MaxTokens = executionSettings.MaxTokens,
             SafePrompt = executionSettings.SafePrompt,
-            RandomSeed = executionSettings.RandomSeed
+            RandomSeed = executionSettings.RandomSeed,
+            ResponseFormat = executionSettings.ResponseFormat,
+            FrequencyPenalty = executionSettings.FrequencyPenalty,
+            PresencePenalty = executionSettings.PresencePenalty,
+            Stop = executionSettings.Stop,
         };
 
         executionSettings.ToolCallBehavior?.ConfigureRequest(kernel, request);
@@ -781,6 +785,24 @@ internal sealed class MistralClient
     private async IAsyncEnumerable<StreamingChatMessageContent> StreamChatMessageContentsAsync(ChatHistory chatHistory, MistralAIPromptExecutionSettings executionSettings, ChatCompletionRequest chatRequest, string modelId, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         this.ValidateChatHistory(chatHistory);
+    internal List<MistralChatMessage> ToMistralChatMessages(ChatMessageContent chatMessage, MistralAIToolCallBehavior? toolCallBehavior)
+    {
+        if (chatMessage.Role == AuthorRole.Assistant)
+        {
+            // Handling function calls supplied via ChatMessageContent.Items collection elements of the FunctionCallContent type.
+            var message = new MistralChatMessage(chatMessage.Role.ToString(), chatMessage.Content ?? string.Empty);
+            Dictionary<string, MistralToolCall> toolCalls = [];
+            foreach (var item in chatMessage.Items)
+            {
+                if (item is not FunctionCallContent callRequest)
+                {
+                    continue;
+                }
+
+                if (callRequest.Id is null || toolCalls.ContainsKey(callRequest.Id))
+                {
+                    continue;
+                }
 
         var endpoint = this.GetEndpoint(executionSettings, path: "chat/completions");
         using var httpRequestMessage = this.CreatePost(chatRequest, endpoint, this._apiKey, stream: true);
@@ -803,6 +825,10 @@ internal sealed class MistralClient
 
             string? currentRole = null;
             while (await responseEnumerator.MoveNextAsync().ConfigureAwait(false))
+        if (chatMessage.Role == AuthorRole.Tool)
+        {
+            List<MistralChatMessage>? messages = null;
+            foreach (var item in chatMessage.Items)
             {
                 var chunk = responseEnumerator.Current!;
 
@@ -818,6 +844,13 @@ internal sealed class MistralClient
                         innerContent: chunk,
                         metadata: chunk.GetMetadata());
                 }
+                var stringResult = ProcessFunctionResult(resultContent.Result ?? string.Empty, toolCallBehavior);
+                var name = $"{resultContent.PluginName}-{resultContent.FunctionName}";
+                messages.Add(new MistralChatMessage(chatMessage.Role.ToString(), stringResult)
+                {
+                    Name = name,
+                    ToolCallId = resultContent.CallId
+                });
             }
         }
         finally
@@ -835,6 +868,29 @@ internal sealed class MistralClient
         {
             yield return DeserializeResponse<MistralChatCompletionChunk>(json);
         }
+        if (chatMessage.Items.Count == 1 && chatMessage.Items[0] is TextContent text)
+        {
+            return [new MistralChatMessage(chatMessage.Role.ToString(), text.Text)];
+        }
+
+        List<ContentChunk> content = [];
+        foreach (var item in chatMessage.Items)
+        {
+            if (item is TextContent textContent && !string.IsNullOrEmpty(textContent.Text))
+            {
+                content.Add(new TextChunk(textContent.Text!));
+            }
+            else if (item is ImageContent imageContent && imageContent.Uri is not null)
+            {
+                content.Add(new ImageUrlChunk(imageContent.Uri));
+            }
+            else
+            {
+                throw new NotSupportedException("Invalid message content, only text and image url are supported.");
+            }
+        }
+
+        return [new MistralChatMessage(chatMessage.Role.ToString(), content)];
     }
 
     private HttpRequestMessage CreatePost(object requestData, Uri endpoint, string apiKey, bool stream)
@@ -913,7 +969,7 @@ internal sealed class MistralClient
 
     private ChatMessageContent ToChatMessageContent(string modelId, ChatCompletionResponse response, MistralChatChoice chatChoice)
     {
-        var message = new ChatMessageContent(new AuthorRole(chatChoice.Message!.Role!), chatChoice.Message!.Content, modelId, chatChoice, Encoding.UTF8, GetChatChoiceMetadata(response, chatChoice));
+        var message = new ChatMessageContent(new AuthorRole(chatChoice.Message!.Role!), chatChoice.Message!.Content?.ToString(), modelId, chatChoice, Encoding.UTF8, GetChatChoiceMetadata(response, chatChoice));
 
         if (chatChoice.IsToolCall)
         {
@@ -928,7 +984,7 @@ internal sealed class MistralClient
 
     private ChatMessageContent ToChatMessageContent(string modelId, string streamedRole, MistralChatCompletionChunk chunk, MistralChatCompletionChoice chatChoice)
     {
-        var message = new ChatMessageContent(new AuthorRole(streamedRole), chatChoice.Delta!.Content, modelId, chatChoice, Encoding.UTF8, GetChatChoiceMetadata(chunk, chatChoice));
+        var message = new ChatMessageContent(new AuthorRole(streamedRole), chatChoice.Delta!.Content?.ToString(), modelId, chatChoice, Encoding.UTF8, GetChatChoiceMetadata(chunk, chatChoice));
 
         if (chatChoice.IsToolCall)
         {
@@ -1053,7 +1109,7 @@ internal sealed class MistralClient
     /// <param name="functionResult">The result of the function call.</param>
     /// <param name="toolCallBehavior">The ToolCallBehavior object containing optional settings like JsonSerializerOptions.TypeInfoResolver.</param>
     /// <returns>A string representation of the function result.</returns>
-    private static string? ProcessFunctionResult(object functionResult, MistralAIToolCallBehavior? toolCallBehavior)
+    private static string ProcessFunctionResult(object functionResult, MistralAIToolCallBehavior? toolCallBehavior)
     {
         if (functionResult is string stringResult)
         {
@@ -1071,7 +1127,7 @@ internal sealed class MistralClient
         // a corresponding JsonTypeInfoResolver should be provided via the JsonSerializerOptions.TypeInfoResolver property.
         // For more details about the polymorphic serialization, see the article at:
         // https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism?pivots=dotnet-8-0
-        return JsonSerializer.Serialize(functionResult, toolCallBehavior?.ToolCallResultSerializerOptions);
+        return JsonSerializer.Serialize(functionResult, toolCallBehavior?.ToolCallResultSerializerOptions) ?? string.Empty;
     }
 
     /// <summary>
