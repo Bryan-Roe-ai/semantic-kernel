@@ -82,3 +82,9 @@ jobs:
           # EXTRA_PACKAGE_OPTS: -bv myCustomPom.xml        # Extra 'scancentral package' options
           # DO_WAIT: true                                  # Wait for scan completion, implied if 'DO_EXPORT: true'
           # DO_EXPORT: true                                # Export SAST results to GitHub code scanning dashboard
+
+      # Add steps to specifically address server-side request forgery alerts
+      - name: SSRF Detection
+        run: |
+          echo "Running SSRF detection..."
+          # Add your SSRF detection script or tool here

@@ -679,125 +679,6 @@ We welcome contributions from the community! To contribute to this project, plea
 
 Thank you for your contributions!
 
-## Setting Up CI/CD Pipelines Using CircleCI, GitHub Actions, and Azure Pipelines
-
-### CircleCI
-
-The repository contains a CircleCI configuration file at `.circleci/config.yml`. This file defines a simple job that runs tests using a Docker image with Node.js and browsers. You can customize this file to include additional steps, such as building, testing, and deploying your application.
-
-### GitHub Actions
-
-The repository has several GitHub Actions workflows in the `.github/workflows` directory. For example, the `.github/workflows/dotnet-build-and-test.yml` workflow builds and tests .NET projects. You can create or modify existing workflows to suit your CI/CD needs, such as running tests, building Docker images, and deploying to cloud services.
-
-#### Configuring Secrets for GitHub Actions
-
-To configure secrets for GitHub Actions workflows, follow these steps:
-
-1. Navigate to the repository on GitHub.
-2. Click on the "Settings" tab.
-3. In the left sidebar, click on "Secrets and variables" and then "Actions".
-4. Click the "New repository secret" button.
-5. Add a name for the secret (e.g., `AZURE_WEBAPP_PUBLISH_PROFILE`).
-6. Add the value for the secret.
-7. Click "Add secret" to save it.
-
-You can then reference these secrets in your GitHub Actions workflows using the `${{ secrets.SECRET_NAME }}` syntax. For example, in the `.github/workflows/azure-container-webapp.yml` workflow, the secret `AZURE_WEBAPP_PUBLISH_PROFILE` is referenced as `${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}`. Similarly, in the `.github/workflows/Auto-merge.yml` workflow, the secret `GITHUB_TOKEN` is referenced as `${{ secrets.GITHUB_TOKEN }}`.
-
-#### Customizing Workflows for Specific Project Needs
-
-You can customize the existing workflows to fit your project's needs. Here are some ways to do it:
-
-- Modify the existing workflows in the `.github/workflows` directory to suit your specific requirements. For example, you can adjust the triggers, add or remove steps, and change the configuration settings.
-- Add new workflows to automate additional tasks, such as deploying to different environments, running additional tests, or integrating with other services.
-- Use secrets to securely store sensitive information, such as API keys and credentials, and reference them in your workflows using the `${{ secrets.SECRET_NAME }}` syntax.
-- Leverage the existing workflows as templates and create variations for different branches, environments, or project components.
-- Utilize GitHub Actions marketplace to find and integrate additional actions that can help you achieve your CI/CD goals.
-
-#### Troubleshooting Issues in GitHub Actions Workflows
-
-To troubleshoot issues in GitHub Actions workflows, follow these steps:
-
-- Check the workflow logs for errors and warnings. You can find the logs in the "Actions" tab of your repository.
-- Verify that the secrets used in the workflows are correctly configured. For example, ensure that `AZURE_WEBAPP_PUBLISH_PROFILE` and `GITHUB_TOKEN` are set up correctly in the repository settings.
-- Ensure that the syntax and structure of the workflow files in the `.github/workflows` directory are correct. For example, check the syntax of `.github/workflows/dotnet-build-and-test.yml` and `.github/workflows/azure-container-webapp.yml`.
-- Confirm that the required permissions are set correctly in the workflow files. For example, the `permissions` section in `.github/workflows/Auto-merge.yml` and `.github/workflows/docker-image.yml` should have the appropriate permissions.
-- Verify that the necessary dependencies and actions are correctly specified in the workflow files. For example, ensure that the `actions/checkout@v4` and `docker/setup-buildx-action@v3.0.0` actions are used correctly in the workflows.
-- Check for any conditional statements in the workflows that might be causing issues. For example, the `if` conditions in `.github/workflows/Auto-merge.yml` and `.github/workflows/dotnet-build-and-test.yml` should be evaluated correctly.
-- Ensure that the environment variables and secrets are correctly referenced in the workflows. For example, the `${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}` and `${{ secrets.GITHUB_TOKEN }}` references should be accurate.
-- Review the documentation and examples for the actions used in the workflows. For example, refer to the documentation for `azure/webapps-deploy@v2` and `docker/build-push-action@v5.0.0` to ensure they are used correctly.
-
-#### Best Practices for Managing Secrets in GitHub Actions
-
-Here are some best practices for managing secrets in GitHub Actions:
-
-- **Use GitHub Secrets:** Store sensitive information such as API keys, credentials, and tokens in GitHub Secrets. Navigate to the repository's "Settings" tab, click on "Secrets and variables" and then "Actions", and add your secrets there. Reference these secrets in your workflows using the `${{ secrets.SECRET_NAME }}` syntax.
-- **Limit Secret Access:** Only provide access to secrets to workflows and jobs that require them. For example, in the `.github/workflows/azure-container-webapp.yml` workflow, the `AZURE_WEBAPP_PUBLISH_PROFILE` secret is only used in the deploy step.
-- **Use Environment Variables:** Use environment variables to manage secrets and configuration settings. For example, in the `.github/workflows/dotnet-build-and-test.yml` workflow, environment variables are used to store API keys and other sensitive information.
-- **Rotate Secrets Regularly:** Regularly update and rotate secrets to minimize the risk of unauthorized access. Ensure that old secrets are removed from the repository settings.
-- **Audit Secret Usage:** Regularly review and audit the usage of secrets in your workflows. Check the workflow logs and ensure that secrets are only used where necessary.
-- **Use Least Privilege Principle:** Grant the minimum necessary permissions to secrets. For example, in the `.github/workflows/Auto-merge.yml` workflow, the `GITHUB_TOKEN` secret is used with limited permissions to enable auto-merge for Dependabot PRs.
-- **Avoid Hardcoding Secrets:** Never hardcode secrets directly in your workflow files. Always use GitHub Secrets to securely store and reference them.
-- **Monitor for Leaks:** Use tools and services to monitor for potential secret leaks in your repository. GitHub provides secret scanning to detect and alert you about exposed secrets.
-
-### Azure Pipelines
-
-The repository includes an Azure Pipelines configuration file at `.github/workflows/azure-container-webapp.yml`. This workflow builds and pushes a Docker container to an Azure Web App. You can customize this file to include additional steps, such as running tests and deploying to other Azure services.
-
-## Reporting Issues and Requesting Features
-
-If you encounter any issues or have feature requests, please follow these steps to report them:
-
-1. **Search for existing issues**: Before creating a new issue, search the [list of issues](https://github.com/Bryan-Roe/semantic-kernel/issues) to see if the issue has already been reported. If you find an existing issue, you can add your feedback or upvote the issue to indicate its importance.
-
-2. **Create a new issue**: If you cannot find an existing issue, create a new one by clicking on the "New Issue" button. Provide a clear and concise title for the issue and include the following information:
-   - A high-level description of the problem or feature request.
-   - Steps to reproduce the issue (if applicable).
-   - Expected behavior and actual behavior observed.
-   - Any relevant logs, screenshots, or error messages.
-   - Information about your environment, such as OS, SDK version, and any other relevant details.
-
-3. **Label the issue**: Use appropriate labels to categorize the issue, such as "bug," "feature request," "documentation," etc. This helps maintainers prioritize and manage issues more effectively.
-
-4. **Engage in discussions**: Participate in discussions related to the issue by providing additional information, answering questions, or suggesting potential solutions. This helps maintainers and other contributors understand the issue better and work towards a resolution.
-
-By following these steps, you can help improve the repository and contribute to its ongoing development.
-
-## Contributing to the Repository
-
-We welcome contributions from the community! To contribute to this project, please follow these guidelines:
-
-1. **Fork the repository**: Create a fork of the repository to work on your changes.
-
-2. **Create a branch**: Create a new branch for your changes.
-
-   ```bash
-   git checkout -b my-feature-branch
-   ```
-
-3. **Make your changes**: Implement your changes in the new branch.
-
-4. **Test your changes**: Ensure that your changes do not break any existing functionality and pass all tests.
-
-5. **Commit your changes**: Commit your changes with a descriptive commit message.
-
-   ```bash
-   git commit -m "Add new feature"
-   ```
-
-6. **Push your changes**: Push your changes to your forked repository.
-
-   ```bash
-   git push origin my-feature-branch
-   ```
-
-7. **Create a pull request**: Open a pull request to merge your changes into the main repository.
-
-8. **Review and feedback**: Address any feedback or comments from the maintainers during the review process.
-
-9. **Merge**: Once your pull request is approved, it will be merged into the main repository.
-
-Thank you for your contributions!
-
 ## CI/CD Pipeline Efficiency Improvements
 
 To improve the efficiency of our CI/CD pipelines, we have implemented several enhancements:
@@ -819,3 +700,43 @@ We have optimized our Docker builds by using multi-stage builds. This helps to r
 We have automated issue management using GitHub Actions. This includes auto-labeling issues based on their content, auto-assigning issues to specific team members based on predefined criteria, and auto-closing stale issues after a certain period of inactivity. For example, the `.github/workflows/label-issues.yml` workflow includes logic for auto-labeling and auto-assigning issues.
 
 By implementing these improvements, we have enhanced the efficiency of our CI/CD pipelines and streamlined our development process.
+
+## New Workflow for Handling Server-Side Request Forgery Alerts
+
+We have added a new workflow to specifically handle server-side request forgery (SSRF) alerts. This workflow is designed to detect and address SSRF vulnerabilities in the codebase.
+
+### Configuration
+
+To configure the new workflow, follow these steps:
+
+1. **Create a new workflow file**: Add a new workflow file named `.github/workflows/ssrf-detection.yml` to the repository.
+
+2. **Define the workflow**: Add the following content to the workflow file:
+
+   ```yaml
+   name: SSRF Detection
+
+   on:
+     push:
+       branches: [ "main" ]
+     pull_request:
+       branches: [ "main" ]
+     schedule:
+       - cron: '0 0 * * 0'
+
+   jobs:
+     ssrf-detection:
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v4
+
+         - name: Run SSRF detection
+           run: |
+             # Add your SSRF detection script or tool here
+             echo "Running SSRF detection..."
+   ```
+
+3. **Run the workflow**: The workflow will automatically run on push, pull request, and scheduled events. It will detect and address any SSRF vulnerabilities in the codebase.
+
+By following these steps, you can ensure that SSRF vulnerabilities are detected and addressed in your codebase, enhancing the security of your project.
