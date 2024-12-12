@@ -15,13 +15,12 @@ from semantic_kernel.contents import ChatHistory
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.contents.function_result_content import FunctionResultContent
+from semantic_kernel.connectors.ai import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAIChatPromptExecutionSettings
+from semantic_kernel.contents import ChatHistory, ChatMessageContent, FunctionCallContent, FunctionResultContent
 from semantic_kernel.core_plugins import MathPlugin, TimePlugin
-from semantic_kernel.filters.auto_function_invocation.auto_function_invocation_context import (
-    AutoFunctionInvocationContext,
-)
-from semantic_kernel.filters.filter_types import FilterTypes
-from semantic_kernel.functions import KernelArguments
-from semantic_kernel.functions.function_result import FunctionResult
+from semantic_kernel.filters import AutoFunctionInvocationContext, FilterTypes
+from semantic_kernel.functions import FunctionResult, KernelArguments
 
 system_message = """
 You are a chat bot. Your name is Mosscap and
@@ -116,8 +115,6 @@ async def auto_function_invocation_filter(context: AutoFunctionInvocationContext
                 value="Stop trying to ask me to do math, I don't like it!",
             )
             context.terminate = True
-<<<<<<< Updated upstream
-=======
     if context.function.plugin_name == "math":
         print("Altering the Math plugin")
         context.function_result = FunctionResult(
@@ -125,7 +122,6 @@ async def auto_function_invocation_filter(context: AutoFunctionInvocationContext
             value="Stop trying to ask me to do math, I don't like it!",
         )
         context.terminate = True
->>>>>>> Stashed changes
 
 
 def print_tool_calls(message: ChatMessageContent) -> None:

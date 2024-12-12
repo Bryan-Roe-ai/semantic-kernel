@@ -7,10 +7,10 @@ from typing import Any, Literal, TypeVar
 
 from pydantic import Field
 
+from semantic_kernel.exceptions.filter_exceptions import FilterManagementException
 from semantic_kernel.filters.filter_context_base import FilterContextBase
 from semantic_kernel.filters.filter_types import FilterTypes
 from semantic_kernel.kernel_pydantic import KernelBaseModel
-from semantic_kernel.utils.experimental_decorator import experimental_function
 
 FILTER_CONTEXT_TYPE = TypeVar("FILTER_CONTEXT_TYPE", bound=FilterContextBase)
 CALLABLE_FILTER_TYPE = Callable[
@@ -48,6 +48,7 @@ class KernelFilterExtension(KernelBaseModel, ABC):
         filter_type: ALLOWED_FILTERS_LITERAL | FilterTypes,
         filter: CALLABLE_FILTER_TYPE,
     ) -> None:
+    def add_filter(self, filter_type: ALLOWED_FILTERS_LITERAL | FilterTypes, filter: CALLABLE_FILTER_TYPE) -> None:
         """Add a filter to the Kernel.
 
         Each filter is added to the beginning of the list of filters,
@@ -59,12 +60,17 @@ class KernelFilterExtension(KernelBaseModel, ABC):
             filter_type (str): The type of the filter to add (function_invocation, prompt_rendering)
             filter (object): The filter to add
 
-        """
-        if not isinstance(filter_type, FilterTypes):
-            filter_type = FilterTypes(filter_type)
-        getattr(self, FILTER_MAPPING[filter_type.value]).insert(0, (id(filter), filter))
+        Raises:
+            FilterDefinitionException: If an error occurs while adding the filter to the kernel
 
-    @experimental_function
+        """
+        try:
+            if not isinstance(filter_type, FilterTypes):
+                filter_type = FilterTypes(filter_type)
+            getattr(self, FILTER_MAPPING[filter_type.value]).insert(0, (id(filter), filter))
+        except Exception as ecx:
+            raise FilterManagementException(f"Error adding filter {filter} to {filter_type}") from ecx
+
     def filter(
         self, filter_type: ALLOWED_FILTERS_LITERAL | FilterTypes
     ) -> Callable[[CALLABLE_FILTER_TYPE], CALLABLE_FILTER_TYPE]:
@@ -78,7 +84,6 @@ class KernelFilterExtension(KernelBaseModel, ABC):
 
         return decorator
 
-    @experimental_function
     def remove_filter(
         self,
         filter_type: ALLOWED_FILTERS_LITERAL | FilterTypes | None = None,
@@ -97,12 +102,13 @@ class KernelFilterExtension(KernelBaseModel, ABC):
         if filter_type and not isinstance(filter_type, FilterTypes):
             filter_type = FilterTypes(filter_type)
         if filter_id is None and position is None:
-            raise ValueError("Either hook_id or position should be provided.")
+            raise FilterManagementException("Either hook_id or position should be provided.")
         if position is not None:
             if filter_type is None:
                 raise ValueError(
                     "Please specify the type of filter when using position."
                 )
+                raise FilterManagementException("Please specify the type of filter when using position.")
             getattr(self, FILTER_MAPPING[filter_type]).pop(position)
             return
         if filter_type:
