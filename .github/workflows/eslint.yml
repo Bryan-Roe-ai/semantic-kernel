@@ -48,3 +48,9 @@ jobs:
         with:
           sarif_file: eslint-results.sarif
           wait-for-processing: true
+
+      - name: Run npm audit
+        run: npm audit
+
+      - name: Run npm audit fix
+        run: npm audit fix
