@@ -70,121 +70,12 @@ import sys
 import platform
 import os
 import logging
-<< << << < main
-<< << << < HEAD
-<< << << < div
-== == == =
-<< << << < Updated upstream
-<< << << < Updated upstream
->>>>>> > head
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-
-<< << << < main
-<< << << < main
-== == == =
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-<< << << < HEAD
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-
-== == == =
->>>>>> > main
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > eab985c52d058dc92abc75034bc790079131ce75
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-<< << << < main
-== == == =
-== == == =
->>>>>> > upstream/main
-== == == =
->>>>>> > origin/main
-
 
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
 else:
     from typing_extensions import override  # pragma: no cover
 
-<< << << < main
-<< << << < main
-<< << << < main
-<< << << < HEAD
-<< << << < div
-== == == =
-<< << << < Updated upstream
-<< << << < Updated upstream
->>>>>> > head
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-== == == =
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-<< << << < HEAD
-== == == =
-== == == =
->>>>>> > eab985c52d058dc92abc75034bc790079131ce75
-<< << << < div
-== == == =
-== == == =
-== == == =
->>>>>> > Stashed changes
-== == == =
-== == == =
->>>>>> > Stashed changes
->>>>>> > head
-== == == =
->>>>>> > origin/main
 logger: logging.Logger = logging.getLogger(__name__)
 
 logging.basicConfig(level=logging.DEBUG)
@@ -231,10 +122,6 @@ vertex_ai_setup: bool = is_service_setup_for_testing("VERTEX_AI_PROJECT_ID")
 anthropic_setup: bool = is_service_setup_for_testing("ANTHROPIC_API_KEY")
 onnx_setup: bool = is_service_setup_for_testing(
     "ONNX_GEN_AI_CHAT_MODEL_FOLDER")
-<< << << < main
-== == == =
-== == == =
->>>>>> > origin/main
 # Make sure all services are setup for before running the tests
 # The following exceptions apply:
 # 1. OpenAI and Azure OpenAI services are always setup for testing.
@@ -261,10 +148,6 @@ onnx_setup: bool = is_service_setup_for_testing(
 anthropic_setup: bool = is_service_setup_for_testing(
     ["ANTHROPIC_API_KEY", "ANTHROPIC_CHAT_MODEL_ID"], raise_if_not_set=False
 )  # We don't have an Anthropic deployment
-<< << << < main
->>>>>> > upstream/main
-== == == =
->>>>>> > origin/main
 
 skip_on_mac_available = platform.system() == "Darwin"
 if not skip_on_mac_available:
@@ -423,6 +306,7 @@ class ChatCompletionTestBase(CompletionTestBase):
 
 # Copyright (c) Microsoft. All rights reserved.
 
+from tests.utils import is_service_setup_for_testing, is_test_running_on_supported_platforms
 
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover

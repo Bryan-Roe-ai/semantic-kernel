@@ -1,125 +1,17 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-<<<<<<< main
->>>>>>> main
-=======
->>>>>>> head
 PLUGIN_NAME_REGEX = r"^[0-9A-Za-z_]+$"
 FUNCTION_NAME_REGEX = r"^[0-9A-Za-z_]+$"
 FULLY_QUALIFIED_FUNCTION_NAME = (
     r"^(?P<plugin>[0-9A-Za-z_]+)[.](?P<function>[0-9A-Za-z_]+)$"
 )
 FUNCTION_PARAM_NAME_REGEX = r"^[0-9A-Za-z_]+$"
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
-=======
->>>>>>> origin/main
-=======
-=======
-<<<<<<< main
-=======
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-=======
->>>>>>> Stashed changes
+
 from re import match as re_match
 from typing import Optional
 
 # Validation regexes
+AGENT_NAME_REGEX = r"^[0-9A-Za-z_-]+$"
 PLUGIN_NAME_REGEX = r"^[0-9A-Za-z_]+$"
 FUNCTION_NAME_REGEX = r"^[0-9A-Za-z_]+$"
 FULLY_QUALIFIED_FUNCTION_NAME = r"^(?P<plugin>[0-9A-Za-z_]+)[.](?P<function>[0-9A-Za-z_]+)$"
@@ -189,38 +81,3 @@ def validate_function_param_name(value: Optional[str]) -> None:
             f"Invalid function parameter name: {value}. Function parameter "
             f"names may only contain ASCII letters, digits, and underscores."
         )
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head

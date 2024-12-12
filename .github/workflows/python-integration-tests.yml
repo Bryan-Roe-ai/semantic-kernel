@@ -20,8 +20,8 @@ permissions:
 env:
   # Configure a constant location for the uv cache
   UV_CACHE_DIR: /tmp/.uv-cache
-  HNSWLIB_NO_NATIVE: 1
   Python_Integration_Tests: Python_Integration_Tests
+  INTEGRATION_TEST_SERVICE_SETUP_EXCEPTION: ${{ true }}
   AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME }} # azure-text-embedding-ada-002
   AZURE_OPENAI_CHAT_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_CHAT_DEPLOYMENT_NAME }}
   AZURE_OPENAI_TEXT_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_TEXT_DEPLOYMENT_NAME }}
@@ -96,8 +96,8 @@ jobs:
         if: steps.filter.outputs.python != 'true'
         run: echo "NOT python file"
 
-  python-merge-gate:
-    name: Python Pre-Merge Integration Tests
+  python-merge-gate-ai-services:
+    name: Python Pre-Merge Integration Tests - AI Services (incl samples using those)
     needs: paths-filter
     if: github.event_name != 'pull_request' && github.event_name != 'schedule' && needs.paths-filter.outputs.pythonChanges == 'true'
     needs: paths-filter
@@ -115,10 +115,12 @@ jobs:
         working-directory: python
     runs-on: ${{ matrix.os }}
     environment: "integration"
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
+      COMPLETIONS_CONCEPT_SAMPLE: "true"
     steps:
       - uses: actions/checkout@v4
       - name: Set up uv
-<<<<<<< HEAD
         if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest' }}
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Set up uv
@@ -140,13 +142,11 @@ jobs:
           path: ${{  env.UV_CACHE_DIR  }}
           key: uv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/uv.lock') }}
           cache: "poetry"
-=======
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v4
         with:
-          version: "0.4.30"
+          version: "0.5.x"
           enable-cache: true
           cache-suffix: ${{ runner.os }}-${{ matrix.python-version }}
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
       - name: Install dependencies with hnswlib native disabled
         if: matrix.os == 'macos-latest' && matrix.python-version == '3.11'
         run: |
@@ -154,6 +154,7 @@ jobs:
           uv sync --all-extras --dev
       - name: Install dependencies with hnswlib native enabled
         if: matrix.os != 'macos-latest' || matrix.python-version != '3.11'
+      - name: Install dependencies
         run: |
           uv sync --all-extras --dev
       - name: Install Ollama
@@ -226,18 +227,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
-      - name: Setup Redis Stack Server
-        if: matrix.os == 'ubuntu-latest'
-        run: docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
-      - name: Setup Weaviate docker deployment
-        if: matrix.os == 'ubuntu-latest'
-        run: docker run -d -p 8080:8080 -p 50051:50051 cr.weaviate.io/semitechnologies/weaviate:1.26.6
-      - name: Start Azure Cosmos DB emulator
-        if: matrix.os == 'windows-latest'
-        run: |
-          Write-Host "Launching Cosmos DB Emulator"
-          Import-Module "$env:ProgramFiles\Azure Cosmos DB Emulator\PSModules\Microsoft.Azure.CosmosDB.Emulator"
-          Start-CosmosDbEmulator
       - name: Azure CLI Login
         if: github.event_name != 'pull_request'
         uses: azure/login@v2
@@ -245,11 +234,10 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-      - name: Run Integration Tests - Completions
-        id: run_tests_completions
-        timeout-minutes: 15
+      - name: Run Integration Tests
+        id: run_tests_ai_services
+        timeout-minutes: 25
         shell: bash
-<<<<<<< HEAD
         env:
           HNSWLIB_NO_NATIVE: 1
           Python_Integration_Tests: Python_Integration_Tests
@@ -387,16 +375,60 @@ jobs:
         run: |
           cd python
           poetry run pytest -n logical --dist loadfile --dist worksteal ./tests/integration ./tests/samples -v --junitxml=pytest.xml
-=======
         run: |
-          uv run pytest -n logical --dist loadfile --dist worksteal ./tests/integration/completions -v --junitxml=pytest-completions.xml
-      - name: Run Integration Tests - Embeddings
-        id: run_tests_embeddings
-        timeout-minutes: 5
-        shell: bash
+          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration/completions ./tests/integration/embeddings ./tests/samples ./tests/integration/cross_language
+
+  python-merge-gate-memory:
+    name: Python Pre-Merge Integration Tests - Memory (incl samples using those)
+    needs: paths-filter
+    if: github.event_name != 'pull_request' && github.event_name != 'schedule' && needs.paths-filter.outputs.pythonChanges == 'true'
+    strategy:
+      max-parallel: 1
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+        os: [ubuntu-latest]
+    defaults:
+      run:
+        working-directory: python
+    runs-on: ${{ matrix.os }}
+    environment: "integration"
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
+      MEMORY_CONCEPT_SAMPLE: "true"
+    # Service containers to run with for the memory connectors, this only works on Ubuntu
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis/redis-stack-server:latest
+        ports:
+          # Opens tcp port 6379 on the host and service container
+          - 6379:6379
+      weaviate:
+        image: cr.weaviate.io/semitechnologies/weaviate:1.26.6
+        ports:
+          - 8080:8080
+          - 50051:50051
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.5.x"
+          enable-cache: true
+          cache-suffix: ${{ runner.os }}-${{ matrix.python-version }}
+      - name: Install dependencies
         run: |
-          uv run pytest -n logical --dist loadfile --dist worksteal ./tests/integration/embeddings -v --junitxml=pytest-embeddings.xml
-      - name: Run Integration Tests - Memory
+          uv sync --all-extras --dev
+      - name: Azure CLI Login
+        if: github.event_name != 'pull_request'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Run Integration Tests
         id: run_tests_memory
         timeout-minutes: 10
         shell: bash
@@ -420,7 +452,6 @@ jobs:
         shell: bash
         run: |
           uv run pytest -n logical --dist loadfile --dist worksteal ./tests/samples -v --junitxml=pytest-samples.xml
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
       - name: Surface failing tests
         if: always()
         uses: pmeier/pytest-results-action@main
@@ -434,8 +465,10 @@ jobs:
         run: uv cache prune --ci
           poetry run pytest ./tests/integration -v
           poetry run pytest ./tests/samples -v
+          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration/memory ./tests/samples
 
   python-integration-tests:
+    name: Python Integration Tests - Scheduled run
     needs: paths-filter
     if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.paths-filter.outputs.pythonChanges == 'true'
     strategy:
@@ -449,10 +482,27 @@ jobs:
         working-directory: python
     runs-on: ${{ matrix.os }}
     environment: "integration"
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
+      MEMORY_CONCEPT_SAMPLE: "true"
+      COMPLETIONS_CONCEPT_SAMPLE: "true"
+    # Service containers to run with for the memory connectors, this only works on Ubuntu
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis/redis-stack-server:latest
+        ports:
+          # Opens tcp port 6379 on the host and service container
+          - 6379:6379
+      weaviate:
+        image: cr.weaviate.io/semitechnologies/weaviate:1.26.6
+        ports:
+          - 8080:8080
+          - 50051:50051
     steps:
       - uses: actions/checkout@v4
       - name: Set up uv
-<<<<<<< HEAD
         if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest' }}
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
       - name: Set up uv
@@ -488,13 +538,11 @@ jobs:
           path: ${{ env.UV_CACHE_DIR }}
           key: uv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/uv.lock') }}
           cache: "poetry"
-=======
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v4
         with:
-          version: "0.4.30"
+          version: "0.5.x"
           enable-cache: true
           cache-suffix: ${{ runner.os }}-${{ matrix.python-version }}
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
       - name: Install dependencies with hnswlib native disabled
         if: matrix.os == 'macos-latest' && matrix.python-version == '3.11'
         run: |
@@ -502,6 +550,7 @@ jobs:
           uv sync --all-extras --dev
       - name: Install dependencies with hnswlib native enabled
         if: matrix.os != 'macos-latest' || matrix.python-version != '3.11'
+      - name: Install dependencies
         run: |
           uv sync --all-extras --dev
       - name: Install Ollama
@@ -573,12 +622,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
-      - name: Setup Redis Stack Server
-        if: matrix.os == 'ubuntu-latest'
-        run: docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
-      - name: Setup Weaviate docker deployment
-        if: matrix.os == 'ubuntu-latest'
-        run: docker run -d -p 8080:8080 -p 50051:50051 cr.weaviate.io/semitechnologies/weaviate:1.26.6
       - name: Start Azure Cosmos DB emulator
         if: matrix.os == 'windows-latest'
         run: |
@@ -596,7 +639,6 @@ jobs:
         id: run_tests_completions
         timeout-minutes: 10
         shell: bash
-<<<<<<< HEAD
         env:
         uses: google-github-actions/setup-gcloud@v2      
       - name: Setup Redis Stack Server
@@ -647,34 +689,32 @@ jobs:
           VERTEX_AI_GEMINI_MODEL_ID: ${{ vars.VERTEX_AI_GEMINI_MODEL_ID }}
           VERTEX_AI_EMBEDDING_MODEL_ID: ${{ vars.VERTEX_AI_EMBEDDING_MODEL_ID }}
           REDIS_CONNECTION_STRING: ${{ vars.REDIS_CONNECTION_STRING }}
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         run: |
-          uv run pytest -n logical --dist loadfile --dist worksteal ./tests/integration/completions -v --junitxml=pytest-completions.xml
+          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration/completions
       - name: Run Integration Tests - Embeddings
         id: run_tests_embeddings
         timeout-minutes: 5
         shell: bash
         run: |
-          uv run pytest -n logical --dist loadfile --dist worksteal ./tests/integration/embeddings -v --junitxml=pytest-embeddings.xml
+          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration/embeddings
       - name: Run Integration Tests - Memory
         id: run_tests_memory
         timeout-minutes: 5
         shell: bash
         run: |
-          uv run pytest -n logical --dist loadfile --dist worksteal ./tests/integration/memory -v --junitxml=pytest-memory.xml
+          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration/memory
       - name: Run Integration Tests - Cross Language
         id: run_tests_cross_language
         timeout-minutes: 5
         shell: bash
         run: |
-          uv run pytest -n logical --dist loadfile --dist worksteal ./tests/integration/cross_language -v --junitxml=pytest-cross.xml
+          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration/cross_language
       - name: Run Integration Tests - Planning
         id: run_tests_planning
         timeout-minutes: 5
         shell: bash
         run: |
-          uv run pytest -n logical --dist loadfile --dist worksteal ./tests/integration/planning -v --junitxml=pytest-planning.xml
+          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration/planning
       - name: Run Integration Tests - Samples
         id: run_tests_samples
         timeout-minutes: 5
@@ -785,6 +825,7 @@ jobs:
           poetry run pytest -n logical --dist loadfile --dist worksteal ./tests/samples -v
           poetry run pytest ./tests/integration -v
           poetry run pytest ./tests/integration -v
+          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/samples
 
   # This final job is required to satisfy the merge queue. It must only run (or succeed) if no tests failed
   python-integration-tests-check:
@@ -793,7 +834,12 @@ jobs:
     strategy:
       max-parallel: 1
       fail-fast: false
-    needs: [python-merge-gate, python-integration-tests]
+    needs:
+      [
+        python-merge-gate-ai-services,
+        python-merge-gate-memory,
+        python-integration-tests,
+      ]
     steps:
       - name: Get Date
         shell: bash
@@ -840,7 +886,7 @@ jobs:
           dry_run: ${{ env.run_type != 'Daily' && env.run_type != 'Manual'}}
           job: ${{ toJson(job) }}
           steps: ${{ toJson(steps) }}
-          overwrite: "{title: ` ${{ env.run_type }}: ${{ env.date }} `, text: ` ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`}"
+          title: "{title: ` ${{ env.run_type }}: ${{ env.date }} `, text: ` ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`}"
 
       - name: Microsoft Teams Notification (Dry Run)
         uses: skitionek/notify-microsoft-teams@master
@@ -850,4 +896,4 @@ jobs:
           dry_run: ${{ env.run_type != 'Daily' && env.run_type != 'Manual'}}
           job: ${{ toJson(job) }}
           steps: ${{ toJson(steps) }}
-          overwrite: "{title: ` ${{ env.run_type }}: ${{ env.date }} `, text: ` ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`}"
+          title: "{title: ` ${{ env.run_type }}: ${{ env.date }} `, text: ` ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`}"

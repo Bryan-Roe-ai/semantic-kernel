@@ -3,18 +3,16 @@
 from unittest.mock import AsyncMock, create_autospec, patch
 
 import pytest
+from pydantic import ValidationError
 
-<<<<<<< main
 from semantic_kernel.agents.chat_completion_agent import ChatCompletionAgent
 from semantic_kernel.agents.chat_history_channel import ChatHistoryChannel
 from semantic_kernel.connectors.ai.chat_completion_client_base import (
     ChatCompletionClientBase,
 )
-=======
 from semantic_kernel.agents import ChatCompletionAgent
 from semantic_kernel.agents.channels.chat_history_channel import ChatHistoryChannel
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
->>>>>>> upstream/main
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
@@ -45,23 +43,35 @@ def mock_streaming_chat_completion_response() -> AsyncMock:
 async def test_initialization():
     agent = ChatCompletionAgent(
         service_id="test_service",
-        name="Test Agent",
+        name="TestAgent",
         id="test_id",
         description="Test Description",
         instructions="Test Instructions",
     )
 
     assert agent.service_id == "test_service"
-    assert agent.name == "Test Agent"
+    assert agent.name == "TestAgent"
     assert agent.id == "test_id"
     assert agent.description == "Test Description"
     assert agent.instructions == "Test Instructions"
 
 
 @pytest.mark.asyncio
+async def test_initialization_invalid_name_throws():
+    with pytest.raises(ValidationError):
+        _ = ChatCompletionAgent(
+            service_id="test_service",
+            name="Test Agent",
+            id="test_id",
+            description="Test Description",
+            instructions="Test Instructions",
+        )
+
+
+@pytest.mark.asyncio
 async def test_initialization_no_service_id():
     agent = ChatCompletionAgent(
-        name="Test Agent",
+        name="TestAgent",
         id="test_id",
         description="Test Description",
         instructions="Test Instructions",
@@ -69,7 +79,7 @@ async def test_initialization_no_service_id():
 
     assert agent.service_id == "default"
     assert agent.kernel is not None
-    assert agent.name == "Test Agent"
+    assert agent.name == "TestAgent"
     assert agent.id == "test_id"
     assert agent.description == "Test Description"
     assert agent.instructions == "Test Instructions"
@@ -79,7 +89,7 @@ async def test_initialization_no_service_id():
 async def test_initialization_with_kernel(kernel: Kernel):
     agent = ChatCompletionAgent(
         kernel=kernel,
-        name="Test Agent",
+        name="TestAgent",
         id="test_id",
         description="Test Description",
         instructions="Test Instructions",
@@ -87,7 +97,7 @@ async def test_initialization_with_kernel(kernel: Kernel):
 
     assert agent.service_id == "default"
     assert kernel == agent.kernel
-    assert agent.name == "Test Agent"
+    assert agent.name == "TestAgent"
     assert agent.id == "test_id"
     assert agent.description == "Test Description"
     assert agent.instructions == "Test Instructions"
@@ -107,6 +117,7 @@ async def test_invoke():
         service_id="test_service",
         name="Test Agent",
         instructions="Test Instructions",
+        kernel=kernel, service_id="test_service", name="TestAgent", instructions="Test Instructions"
     )
 
     history = ChatHistory(
@@ -127,6 +138,7 @@ async def test_invoke_tool_call_added():
     agent = ChatCompletionAgent(
         kernel=kernel, service_id="test_service", name="Test Agent"
     )
+    agent = ChatCompletionAgent(kernel=kernel, service_id="test_service", name="TestAgent")
 
     history = ChatHistory(
         messages=[ChatMessageContent(role=AuthorRole.USER, content="Initial Message")]
@@ -155,8 +167,8 @@ async def test_invoke_tool_call_added():
     assert len(history.messages) == 3
     assert history.messages[1].content == "Processed Message 1"
     assert history.messages[2].content == "Processed Message 2"
-    assert history.messages[1].name == "Test Agent"
-    assert history.messages[2].name == "Test Agent"
+    assert history.messages[1].name == "TestAgent"
+    assert history.messages[2].name == "TestAgent"
 
 
 @pytest.mark.asyncio
@@ -166,6 +178,7 @@ async def test_invoke_no_service_throws():
     agent = ChatCompletionAgent(
         kernel=kernel, service_id="test_service", name="Test Agent"
     )
+    agent = ChatCompletionAgent(kernel=kernel, service_id="test_service", name="TestAgent")
 
     history = ChatHistory(
         messages=[ChatMessageContent(role=AuthorRole.USER, content="Initial Message")]
@@ -184,6 +197,7 @@ async def test_invoke_stream():
     agent = ChatCompletionAgent(
         kernel=kernel, service_id="test_service", name="Test Agent"
     )
+    agent = ChatCompletionAgent(kernel=kernel, service_id="test_service", name="TestAgent")
 
     history = ChatHistory(
         messages=[ChatMessageContent(role=AuthorRole.USER, content="Initial Message")]
@@ -210,6 +224,7 @@ async def test_invoke_stream_tool_call_added(mock_streaming_chat_completion_resp
     agent = ChatCompletionAgent(
         kernel=kernel, service_id="test_service", name="Test Agent"
     )
+    agent = ChatCompletionAgent(kernel=kernel, service_id="test_service", name="TestAgent")
 
     history = ChatHistory(
         messages=[ChatMessageContent(role=AuthorRole.USER, content="Initial Message")]
@@ -234,6 +249,7 @@ async def test_invoke_stream_no_service_throws():
     agent = ChatCompletionAgent(
         kernel=kernel, service_id="test_service", name="Test Agent"
     )
+    agent = ChatCompletionAgent(kernel=kernel, service_id="test_service", name="TestAgent")
 
     history = ChatHistory(
         messages=[ChatMessageContent(role=AuthorRole.USER, content="Initial Message")]

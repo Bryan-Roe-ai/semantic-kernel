@@ -1,0 +1,34 @@
+name: Remove Binary Artifacts
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  remove-binary-artifacts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Find and delete binary artifact files
+        run: |
+          find . -type f -name '__azurite_db_blob__.json' -delete
+          find . -type f -name '__azurite_db_blob_extent__.json' -delete
+          find . -type f -name '__azurite_db_queue__.json' -delete
+
+      - name: Upload report of deleted files
+        uses: actions/upload-artifact@v3
+        with:
+          name: deleted-files-report
+          path: deleted-files-report.txt
+
+      - name: Generate report of deleted files
+        run: |
+          echo "Deleted files:" > deleted-files-report.txt
+          find . -type f -name '__azurite_db_blob__.json' -print >> deleted-files-report.txt
+          find . -type f -name '__azurite_db_blob_extent__.json' -print >> deleted-files-report.txt
+          find . -type f -name '__azurite_db_queue__.json' -print >> deleted-files-report.txt
