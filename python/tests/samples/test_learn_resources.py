@@ -18,6 +18,7 @@ from samples.learn_resources.using_the_kernel import main as using_the_kernel
 from samples.learn_resources.your_first_prompt import main as your_first_prompt
 from tests.samples.samples_utils import retry
 from tests.samples.test_samples_utils import retry
+from tests.utils import retry
 
 
 @mark.asyncio

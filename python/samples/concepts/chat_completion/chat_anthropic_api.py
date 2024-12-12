@@ -60,15 +60,12 @@ async def chat() -> bool:
             chat_history=chat_history,
         )
         print("Mosscap:> ", end="")
-<<<<<<< main
         async for message in answer:
             print(str(message[0]), end="")
-=======
         answer = ""
         async for message in chunks:
             print(str(message[0]), end="", flush=True)
             answer += str(message[0])
->>>>>>> upstream/main
         print("\n")
     else:
         answer = await kernel.invoke(

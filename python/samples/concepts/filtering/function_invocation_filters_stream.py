@@ -3,7 +3,9 @@
 import asyncio
 import logging
 import os
+from collections.abc import Callable, Coroutine
 from functools import reduce
+from typing import Any
 
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion import (
     OpenAIChatCompletion,
@@ -16,6 +18,11 @@ from semantic_kernel.contents.streaming_chat_message_content import (
 from semantic_kernel.filters.filter_types import FilterTypes
 from semantic_kernel.functions.function_result import FunctionResult
 from semantic_kernel.kernel import Kernel
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+from semantic_kernel.contents import AuthorRole, ChatHistory, StreamingChatMessageContent
+from semantic_kernel.filters import FilterTypes, FunctionInvocationContext
+from semantic_kernel.functions import FunctionResult
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +46,10 @@ kernel.add_plugin(
 # in the specific case of a filter for streaming functions, you need to override the generator
 # that is present in the function_result.value as seen below.
 @kernel.filter(FilterTypes.FUNCTION_INVOCATION)
-async def streaming_exception_handling(context, next):
+async def streaming_exception_handling(
+    context: FunctionInvocationContext,
+    next: Callable[[FunctionInvocationContext], Coroutine[Any, Any, None]],
+):
     await next(context)
 
     async def override_stream(stream):
@@ -51,6 +61,7 @@ async def streaming_exception_handling(context, next):
                 StreamingChatMessageContent(
                     role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}"
                 )
+                StreamingChatMessageContent(role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}", choice_index=0)
             ]
 
     stream = context.result.value

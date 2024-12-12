@@ -34,9 +34,6 @@ jobs:
 <<<<<<< main
         continue-on-error: true
         uses: dawidd6/action-download-artifact@v5
-=======
-        uses: dawidd6/action-download-artifact@v3
->>>>>>> upstream/main
         with:
           name: python-coverage-${{ env.FILE_ID }}.txt
           github_token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
@@ -44,21 +41,29 @@ jobs:
           search_artifacts: true
           if_no_artifact_found: warn
       - name: Download pytest
-<<<<<<< main
         continue-on-error: true
         uses: dawidd6/action-download-artifact@v5
-=======
-        uses: dawidd6/action-download-artifact@v3
->>>>>>> upstream/main
         with:
           name: pytest-${{ env.FILE_ID }}.xml
           github_token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
           workflow: python-unit-tests.yml
           search_artifacts: true
           if_no_artifact_found: warn
+=======
+      - name: Download Files
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: python/
+          merge-multiple: true
+      - name: Display structure of downloaded files
+        run: ls python/
+>>>>>>> main-microsoft
       - name: Pytest coverage comment
         id: coverageComment
         uses: MishaKav/pytest-coverage-comment@main
+        continue-on-error: true
         with:
           github-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
           pytest-coverage-path: python-coverage.txt

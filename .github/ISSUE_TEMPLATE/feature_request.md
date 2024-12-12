@@ -3,6 +3,8 @@ name: Feature request
 about: Suggest an idea for this project
 title: ''
 labels: ''
+type: 'feature'
+projects: ["semantic-kernel"]
 assignees: ''
 
 ---
