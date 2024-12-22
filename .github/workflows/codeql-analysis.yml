@@ -57,7 +57,7 @@ jobs:
         uses: actions/setup-java@v4
         if: ${{ matrix.language == 'java' }}
         with:
-          java-version: 21
+          java-version: 23
           distribution: microsoft
           cache: maven
 
