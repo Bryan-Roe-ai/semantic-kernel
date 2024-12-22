@@ -69,5 +69,16 @@
     "dataset": "your_parquet_export_dataset_here",
     "hfToken": "your_parquet_export_hf_token_here",
     "secret": "your_parquet_export_secret_here"
+  },
+  "aiInteraction": {
+    "openaiApiKey": "your_openai_api_key_here",
+    "azureOpenaiEndpoint": "your_azure_openai_endpoint_here",
+    "azureOpenaiApiKey": "your_azure_openai_api_key_here",
+    "azureOpenaiChatModelDeployment": "your_azure_openai_chat_model_deployment_here",
+    "azureBlobStorageEndpoint": "your_azure_blob_storage_endpoint_here",
+    "azureCognitiveServicesEndpoint": "your_azure_cognitive_services_endpoint_here",
+    "cosmosDbEndpoint": "your_cosmos_db_endpoint_here",
+    "keyVaultEndpoint": "your_key_vault_endpoint_here",
+    "azureDevOpsOrganizationUrl": "your_azure_devops_organization_url_here"
   }
 }
