@@ -198,4 +198,99 @@ public static class Program
     {
         // Implement logic to process comments for optimization or merge
     }
+
+    // Method to handle AI interactions via a web interface
+    public static async Task<string> HandleAIInteraction(string userInput)
+    {
+        // Load configuration from environment variables or user secrets.
+        Settings settings = new();
+
+        OpenAIClientProvider clientProvider =
+            OpenAIClientProvider.ForAzureOpenAI(
+                new AzureCliCredential(),
+                new Uri(settings.AzureOpenAI.Endpoint));
+
+        Console.WriteLine("Creating store...");
+        VectorStoreClient storeClient = clientProvider.Client.GetVectorStoreClient();
+        VectorStore store = await storeClient.CreateVectorStoreAsync();
+
+        // Retain file references.
+        Dictionary<string, OpenAIFileInfo> fileReferences = [];
+
+        Console.WriteLine("Uploading files...");
+        FileClient fileClient = clientProvider.Client.GetFileClient();
+        foreach (string fileName in _fileNames)
+        {
+            OpenAIFileInfo fileInfo = await fileClient.UploadFileAsync(fileName, FileUploadPurpose.Assistants);
+            await storeClient.AddFileToVectorStoreAsync(store.Id, fileInfo.Id);
+            fileReferences.Add(fileInfo.Id, fileInfo);
+        }
+
+        Console.WriteLine("Defining agent...");
+        OpenAIAssistantAgent agent =
+            await OpenAIAssistantAgent.CreateAsync(
+                clientProvider,
+                new OpenAIAssistantDefinition(settings.AzureOpenAI.ChatModelDeployment)
+                {
+                    Name = "SampleAssistantAgent",
+                    Instructions =
+                        """
+                        The document store contains the text of fictional stories.
+                        Always analyze the document store to provide an answer to the user's question.
+                        Never rely on your knowledge of stories not included in the document store.
+                        Always format response using markdown.
+                        """,
+                    EnableFileSearch = true,
+                    VectorStoreId = store.Id,
+                },
+                new Kernel());
+
+        Console.WriteLine("Creating thread...");
+        string threadId = await agent.CreateThreadAsync();
+
+        Console.WriteLine("Ready!");
+
+        try
+        {
+            await agent.AddChatMessageAsync(threadId, new ChatMessageContent(AuthorRole.User, userInput));
+            Console.WriteLine();
+
+            List<StreamingAnnotationContent> footnotes = [];
+            string response = string.Empty;
+            await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(threadId))
+            {
+                // Capture annotations for footnotes
+                footnotes.AddRange(chunk.Items.OfType<StreamingAnnotationContent>());
+
+                // Append chunk content to response
+                response += chunk.Content.ReplaceUnicodeBrackets();
+            }
+
+            Console.WriteLine();
+
+            // Render footnotes for captured annotations.
+            if (footnotes.Count > 0)
+            {
+                response += "\n\n";
+                foreach (StreamingAnnotationContent footnote in footnotes)
+                {
+                    response += $"#{footnote.Quote.ReplaceUnicodeBrackets()} - {fileReferences[footnote.FileId!].Filename} (Index: {footnote.StartIndex} - {footnote.EndIndex})\n";
+                }
+            }
+
+            return response;
+        }
+        finally
+        {
+            Console.WriteLine();
+            Console.WriteLine("Cleaning-up...");
+            await Task.WhenAll(
+                [
+                    agent.DeleteThreadAsync(threadId),
+                    agent.DeleteAsync(),
+                    storeClient.DeleteVectorStoreAsync(store.Id),
+                    ..fileReferences.Select(fileReference => fileClient.DeleteFileAsync(fileReference.Key))
+                ]);
+        }
+    }
 }
