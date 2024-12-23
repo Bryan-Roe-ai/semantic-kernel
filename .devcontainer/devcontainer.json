@@ -37,5 +37,10 @@
         "ms-cst-e.vscode-devskim"
       ]
     }
+  },
+  "tasks": {
+    "build": "npm install && mvn install && dotnet restore && dotnet build && pip install -r requirements.txt && docker build -t my-image .",
+    "test": "1. dotnet test --no-build --verbosity normal\n2. cd python && poetry run pytest\n3. cd java && ./mvnw -B test --file pom.xml\n4. npm test",
+    "launch": "npm start"
   }
 }
