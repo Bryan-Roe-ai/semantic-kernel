@@ -2,7 +2,7 @@ name: ADR Validation
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Runs weekly on Sunday at midnight
+    - cron: '0 4 * * 0' # Runs weekly on Sunday at 4 AM UTC
   push:
     branches:
       - main
