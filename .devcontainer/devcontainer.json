@@ -41,6 +41,8 @@
   "tasks": {
     "test": "dotnet test --no-build --verbosity normal && python -m pytest && ./mvnw -B -Pbug-check -Pcompile-jdk17 test --file java/pom.xml && npm test",
     "build": "dotnet restore && dotnet build --no-restore && pip install -r requirements.txt && ./mvnw -B package --file java/pom.xml && npm install && npm run build",
+    "build": "npm install && mvn install && dotnet restore && dotnet build && pip install -r requirements.txt && docker build -t my-image .",
+    "test": "1. dotnet test --no-build --verbosity normal\n2. cd python && poetry run pytest\n3. cd java && ./mvnw -B test --file pom.xml\n4. npm test",
     "launch": "npm start"
   }
 }
