@@ -18,6 +18,7 @@ public class Settings
     private CosmosDBSettings cosmosDB;
     private KeyVaultSettings keyVault;
     private AzureDevOpsSettings azureDevOps;
+    private GeneralSettings general;
 
     public AzureOpenAISettings AzureOpenAI => this.azureOpenAI ??= this.GetSettings<Settings.AzureOpenAISettings>();
     public OpenAISettings OpenAI => this.openAI ??= this.GetSettings<Settings.OpenAISettings>();
@@ -28,6 +29,7 @@ public class Settings
     public CosmosDBSettings CosmosDB => this.cosmosDB ??= this.GetSettings<Settings.CosmosDBSettings>();
     public KeyVaultSettings KeyVault => this.keyVault ??= this.GetSettings<Settings.KeyVaultSettings>();
     public AzureDevOpsSettings AzureDevOps => this.azureDevOps ??= this.GetSettings<Settings.AzureDevOpsSettings>();
+    public GeneralSettings General => this.general ??= this.GetSettings<Settings.GeneralSettings>();
 
     public class OpenAISettings
     {
@@ -77,6 +79,13 @@ public class Settings
     public class AzureDevOpsSettings
     {
         public string OrganizationUrl { get; set; } = string.Empty;
+    }
+
+    public class GeneralSettings
+    {
+        public string ApiKey { get; set; } = string.Empty;
+        public string DatabaseUrl { get; set; } = string.Empty;
+        public string SecretKey { get; set; } = string.Empty;
     }
 
     private TSettings GetSettings<TSettings>() =>
