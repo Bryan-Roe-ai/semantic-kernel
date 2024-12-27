@@ -2,3 +2,18 @@
 [submodule "tree-sitter-python"]
 [submodule "compositional-generalization-span-level-attention"]
 [submodule "OpenKP"]
+[submodule "tree-sitter-python"]
+path = tree-sitter-python
+url = https://github.com/tree-sitter/tree-sitter-python.git
+[submodule "compositional-generalization-span-level-attention"]
+path = compositional-generalization-span-level-attention  
+url = https://github.com/microsoft/compositional-generalization-span-level-attention.git
+[submodule "OpenKP"]
+path = OpenKP
+url = https://github.com/microsoft/OpenKP.git
+[submodule "DevSkim"]
+path = DevSkim
+url = https://github.com/microsoft/DevSkim.git
+[submodule "corenet"]
+path = corenet
+url = https://github.com/apple/corenet.git
