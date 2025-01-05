@@ -8,13 +8,22 @@ import semantic_kernel.connectors.ai.open_ai as sk_oai
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
 )
+from semantic_kernel.connectors.ai.prompt_execution_settings import (
+    PromptExecutionSettings,
+)
+from semantic_kernel.connectors.ai.prompt_execution_settings import (
+    PromptExecutionSettings,
+)
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.core_plugins.conversation_summary_plugin import (
     ConversationSummaryPlugin,
 )
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.prompt_template.prompt_template_config import PromptTemplateConfig
 from tests.integration.utils import retry
+from tests.integration.utils import retry
 from tests.utils import retry
+
 
 @pytest.mark.asyncio
 async def test_azure_summarize_conversation_using_plugin(
@@ -48,6 +57,7 @@ async def test_azure_summarize_conversation_using_plugin(
             conversationSummaryPlugin["SummarizeConversation"], arguments
         )
     )
+
     )
 
     if "Python_Integration_Tests" in os.environ:
@@ -121,6 +131,7 @@ async def test_oai_summarize_conversation_using_plugin(
             conversationSummaryPlugin["SummarizeConversation"], arguments
         )
     )
+
     )
 
     _, chatTranscript = setup_summarize_conversation_using_plugin

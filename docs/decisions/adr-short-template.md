@@ -23,6 +23,8 @@ You may want to articulate the problem in form of a question and add links to co
 - {decision driver 2, e.g., a force, facing concern, …}
 - … <!-- numbers of drivers can vary -->
 
+* It is important to list decision drivers to provide context and rationale for the decision.
+
 ## Considered Options
 
 - {title of option 1}
@@ -34,3 +36,7 @@ You may want to articulate the problem in form of a question and add links to co
 
 Chosen option: "{title of option 1}", because
 {justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force {force} | … | comes out best (see below)}.
+
+## Validation
+
+{describe how the implementation of/compliance with the ADR is validated. E.g., by a review or an ArchUnit test}

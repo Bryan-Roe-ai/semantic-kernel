@@ -46,7 +46,6 @@ TAG_CONTENT_MAP = {
 
 ITEM_TYPES = (
     AnnotationContent | ImageContent | TextContent | FunctionResultContent | FunctionCallContent | FileReferenceContent
-
     STREAMING_FILE_REFERENCE_CONTENT_TAG: StreamingFileReferenceContent,
     STREAMING_ANNOTATION_CONTENT_TAG: StreamingAnnotationContent,
 }
@@ -81,7 +80,6 @@ class ChatMessageContent(KernelContent):
     """This is the base class for chat message response content.
 
     All Chat Completion Services should return a instance of this class as response.
-
     Or they can implement their own subclass of this class and return an instance.
 
     Args:
