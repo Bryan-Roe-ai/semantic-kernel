@@ -145,4 +145,4 @@ RUN docker build -t my-app .
 CMD ["docker", "run", "-p", "3000:3000", "--env-file", ".env", "my-app"]
 
 # Access the web page
-CMD ["open", "http://localhost:3000"]
+CMD ["open", "http://${API_HOST}:${API_PORT}"]
