@@ -4,6 +4,8 @@ from enum import Enum
 from typing import Any, Union, overload
 from xml.etree.ElementTree import Element  # nosec
 
+from pydantic import Field
+
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.contents.function_result_content import FunctionResultContent
@@ -256,6 +258,12 @@ class StreamingChatMessageContent(StreamingKernelContent):
         __add__: Combines two StreamingChatMessageContent instances.
     """
 
+    function_invoke_attempt: int | None = Field(
+        default=0,
+        description="Tracks the current attempt count for automatically invoking functions. "
+        "This value increments with each subsequent automatic invocation attempt.",
+    )
+
     @overload
     def __init__(
         self,
@@ -268,6 +276,7 @@ class StreamingChatMessageContent(StreamingKernelContent):
         finish_reason: FinishReason | None = None,
         ai_model_id: str | None = None,
         metadata: dict[str, Any] | None = None,
+        function_invoke_attempt: int | None = None,
     ) -> None: ...
 
     @overload
@@ -282,6 +291,7 @@ class StreamingChatMessageContent(StreamingKernelContent):
         finish_reason: FinishReason | None = None,
         ai_model_id: str | None = None,
         metadata: dict[str, Any] | None = None,
+        function_invoke_attempt: int | None = None,
     ) -> None: ...
 
     def __init__(  # type: ignore
@@ -296,26 +306,30 @@ class StreamingChatMessageContent(StreamingKernelContent):
         finish_reason: FinishReason | None = None,
         ai_model_id: str | None = None,
         metadata: dict[str, Any] | None = None,
+        function_invoke_attempt: int | None = None,
     ):
         """Create a new instance of StreamingChatMessageContent.
 
         Args:
-            role: ChatRole - The role of the chat message.
-            choice_index: int - The index of the choice that generated this response.
-            items: list[TextContent, FunctionCallContent, FunctionResultContent, ImageContent] - The content.
-            content: str - The text of the response.
-            inner_content: Optional[Any] - The inner content of the response,
+            role: The role of the chat message.
+            choice_index: The index of the choice that generated this response.
+            items: The content.
+            content: The text of the response.
+            inner_content: The inner content of the response,
                 this should hold all the information from the response so even
                 when not creating a subclass a developer can leverage the full thing.
-            name: Optional[str] - The name of the response.
-            encoding: Optional[str] - The encoding of the text.
-            finish_reason: Optional[FinishReason] - The reason the response was finished.
-            metadata: Dict[str, Any] - Any metadata that should be attached to the response.
-            ai_model_id: Optional[str] - The id of the AI model that generated this response.
+            name: The name of the response.
+            encoding: The encoding of the text.
+            finish_reason: The reason the response was finished.
+            metadata: Any metadata that should be attached to the response.
+            ai_model_id: The id of the AI model that generated this response.
+            function_invoke_attempt: Tracks the current attempt count for automatically
+                invoking functions. This value increments with each subsequent automatic invocation attempt.
         """
         kwargs: dict[str, Any] = {
             "role": role,
             "choice_index": choice_index,
+            "function_invoke_attempt": function_invoke_attempt,
         }
         if encoding:
             kwargs["encoding"] = encoding
@@ -660,6 +674,7 @@ class StreamingChatMessageContent(StreamingKernelContent):
 >>>>>>> head
             encoding=self.encoding,
             finish_reason=self.finish_reason or other.finish_reason,
+            function_invoke_attempt=self.function_invoke_attempt,
         )
 
     def to_element(self) -> "Element":
@@ -743,6 +758,7 @@ class StreamingChatMessageContent(StreamingKernelContent):
             self.encoding,
             self.finish_reason,
             self.choice_index,
+            self.function_invoke_attempt,
             *self.items,
         ))
 <<<<<<< div

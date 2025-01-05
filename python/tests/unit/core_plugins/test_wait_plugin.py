@@ -122,7 +122,6 @@ def test_can_be_instantiated():
     assert plugin is not None
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize("wait_time", test_data_good)
 async def test_wait_valid_params(wait_time):
     plugin = WaitPlugin()
@@ -210,7 +209,6 @@ async def test_wait_valid_params(wait_time):
 >>>>>>> head
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize("wait_time", test_data_bad)
 async def test_wait_invalid_params(wait_time):
     plugin = WaitPlugin()

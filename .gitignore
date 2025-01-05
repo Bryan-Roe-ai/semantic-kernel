@@ -3578,3 +3578,5 @@ swa-cli.config.json
 *.sww
 *.swv
 *.
+# kiota workspace files
+**/.kiota

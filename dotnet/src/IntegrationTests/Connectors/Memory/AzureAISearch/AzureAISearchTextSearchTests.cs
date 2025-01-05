@@ -16,7 +16,6 @@ using Microsoft.SemanticKernel.Data;
 using SemanticKernel.IntegrationTests.Data;
 using SemanticKernel.IntegrationTests.TestSettings;
 using Xunit;
-using static SemanticKernel.IntegrationTests.Connectors.Memory.AzureAISearch.AzureAISearchVectorStoreFixture;
 
 namespace SemanticKernel.IntegrationTests.Connectors.Memory.AzureAISearch;
 
@@ -96,11 +95,11 @@ public class AzureAISearchTextSearchTests(AzureAISearchVectorStoreFixture fixtur
             this.VectorStore = new AzureAISearchVectorStore(fixture.SearchIndexClient);
         }
 
-        var vectorSearch = this.VectorStore.GetCollection<string, Hotel>(fixture.TestIndexName);
+        var vectorSearch = this.VectorStore.GetCollection<string, AzureAISearchHotel>(fixture.TestIndexName);
         var stringMapper = new HotelTextSearchStringMapper();
         var resultMapper = new HotelTextSearchResultMapper();
 
-        var result = new VectorStoreTextSearch<Hotel>(vectorSearch, this.EmbeddingGenerator!, stringMapper, resultMapper);
+        var result = new VectorStoreTextSearch<AzureAISearchHotel>(vectorSearch, this.EmbeddingGenerator!, stringMapper, resultMapper);
         return Task.FromResult<ITextSearch>(result);
     }
 
@@ -119,7 +118,7 @@ public class AzureAISearchTextSearchTests(AzureAISearchVectorStoreFixture fixtur
         foreach (var result in results)
         {
             Assert.NotNull(result);
-            Assert.IsType<Hotel>(result);
+            Assert.IsType<AzureAISearchHotel>(result);
         }
 
         return true;
@@ -133,7 +132,7 @@ public class AzureAISearchTextSearchTests(AzureAISearchVectorStoreFixture fixtur
         /// <inheritdoc />
         public string MapFromResultToString(object result)
         {
-            if (result is Hotel hotel)
+            if (result is AzureAISearchHotel hotel)
             {
                 return $"{hotel.HotelName} {hotel.Description}";
             }
@@ -149,7 +148,7 @@ public class AzureAISearchTextSearchTests(AzureAISearchVectorStoreFixture fixtur
         /// <inheritdoc />
         public TextSearchResult MapFromResultToTextSearchResult(object result)
         {
-            if (result is Hotel hotel)
+            if (result is AzureAISearchHotel hotel)
             {
 <<<<<<< HEAD
                 return new TextSearchResult(name: hotel.HotelName, value: hotel.Description, link: $"id://{hotel.HotelId}");

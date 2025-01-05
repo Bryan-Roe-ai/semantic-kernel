@@ -1,7 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 
-from typing import Any
 from unittest.mock import Mock
 
 import pytest
@@ -13,6 +12,26 @@ from semantic_kernel.contents.image_content import ImageContent
 from semantic_kernel.contents.text_content import TextContent
 from semantic_kernel.functions.function_result import FunctionResult
 from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
+
+
+class CustomResultClass:
+    """Custom class for testing."""
+
+    def __init__(self, result):
+        self.result = result
+
+    def __str__(self) -> str:
+        return self.result
+
+
+class CustomObjectWithList:
+    """Custom class for testing."""
+
+    def __init__(self, items):
+        self.items = items
+
+    def __str__(self):
+        return f"CustomObjectWithList({self.items})"
 
 
 def test_init():
@@ -63,6 +82,13 @@ def test_init_from_names():
                 FunctionResultContent(id="test", name="test", result="Hello world!")
             ],
         ),
+        ChatMessageContent(role="user", items=[ImageContent(uri="https://example.com")]),
+        ChatMessageContent(role="user", items=[FunctionResultContent(id="test", name="test", result="Hello world!")]),
+        [1, 2, 3],
+        [{"key": "value"}, {"another": "item"}],
+        {"a", "b"},
+        CustomResultClass("test"),
+        CustomObjectWithList(["one", "two", "three"]),
     ],
     ids=[
         "str",
@@ -73,9 +99,14 @@ def test_init_from_names():
         "ChatMessageContent",
         "ChatMessageContent-ImageContent",
         "ChatMessageContent-FunctionResultContent",
+        "list",
+        "list_of_dicts",
+        "set",
+        "CustomResultClass",
+        "CustomObjectWithList",
     ],
 )
-def test_from_fcc_and_result(result: Any):
+def test_from_fcc_and_result(result: any):
     fcc = FunctionCallContent(
         id="test",
         name="test-function",

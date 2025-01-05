@@ -57,7 +57,6 @@ def test_config_without_prompt():
     assert template._env is None
 
 
-@pytest.mark.asyncio
 async def test_render_without_prompt(kernel: Kernel):
     config = PromptTemplateConfig(
         name="test", description="test", template_format="jinja2"
@@ -67,7 +66,6 @@ async def test_render_without_prompt(kernel: Kernel):
     assert rendered == ""
 
 
-@pytest.mark.asyncio
 async def test_it_renders_variables(kernel: Kernel):
     template = "Foo {% if bar %}{{ bar }}{% else %}No Bar{% endif %}"
     target = create_jinja2_prompt_template(template)
@@ -79,7 +77,6 @@ async def test_it_renders_variables(kernel: Kernel):
     assert rendered == "Foo No Bar"
 
 
-@pytest.mark.asyncio
 async def test_it_renders_nested_variables(kernel: Kernel):
     template = "{{ foo.bar }}"
     target = create_jinja2_prompt_template(template)
@@ -88,7 +85,6 @@ async def test_it_renders_nested_variables(kernel: Kernel):
     assert rendered == "Foo Bar"
 
 
-@pytest.mark.asyncio
 async def test_it_renders_with_comments(kernel: Kernel):
     template = "{# This comment will not show up in the output #}{{ bar }}"
     target = create_jinja2_prompt_template(template)
@@ -97,7 +93,6 @@ async def test_it_renders_with_comments(kernel: Kernel):
     assert rendered == "Bar"
 
 
-@pytest.mark.asyncio
 async def test_it_renders_fail(kernel: Kernel):
     template = "{{ plug-func 'test1'}}"
     target = create_jinja2_prompt_template(template)
@@ -105,7 +100,6 @@ async def test_it_renders_fail(kernel: Kernel):
         await target.render(kernel, KernelArguments())
 
 
-@pytest.mark.asyncio
 async def test_it_renders_fail_empty_template(kernel: Kernel):
     template = "{{ plug-func 'test1'}}"
     target = create_jinja2_prompt_template(template)
@@ -114,7 +108,6 @@ async def test_it_renders_fail_empty_template(kernel: Kernel):
         await target.render(kernel, KernelArguments())
 
 
-@pytest.mark.asyncio
 async def test_it_renders_list(kernel: Kernel):
     template = "List: {% for item in items %}{{ item }}{% endfor %}"
     target = create_jinja2_prompt_template(template)
@@ -129,6 +122,7 @@ async def test_it_renders_list(kernel: Kernel):
 async def test_it_renders_kernel_functions_arg_from_template(
     kernel: Kernel, decorated_native_function
 ):
+async def test_it_renders_kernel_functions_arg_from_template(kernel: Kernel, decorated_native_function):
     kernel.add_function(plugin_name="plug", function=decorated_native_function)
     template = "Function: {{ plug_getLightStatus(arg1='test') }}"
     target = create_jinja2_prompt_template(template)
@@ -141,6 +135,7 @@ async def test_it_renders_kernel_functions_arg_from_template(
 async def test_it_renders_kernel_functions_arg_from_arguments(
     kernel: Kernel, decorated_native_function
 ):
+async def test_it_renders_kernel_functions_arg_from_arguments(kernel: Kernel, decorated_native_function):
     kernel.add_function(plugin_name="plug", function=decorated_native_function)
     template = "Function: {{ plug_getLightStatus() }}"
     target = create_jinja2_prompt_template(template)
@@ -159,7 +154,6 @@ async def test_it_renders_kernel_functions_arg_from_arguments(
         ("snakeCase", "'TestString'", "test_string"),
     ],
 )
-@mark.asyncio
 async def test_helpers(function, input, expected, kernel: Kernel):
     template = f"{{{{ {function}({input}) }}}}"
     target = create_jinja2_prompt_template(template)
@@ -183,7 +177,6 @@ async def test_helpers(function, input, expected, kernel: Kernel):
         ("not in", "'test', 'test'", "False"),
     ],
 )
-@pytest.mark.asyncio
 async def test_builtin_test_filters(function, input, expected, kernel: Kernel):
     input_values = input.split(", ")
     template = f"""
@@ -208,7 +201,6 @@ async def test_builtin_test_filters(function, input, expected, kernel: Kernel):
         ("0, 5, 2", "[0, 2, 4]"),
     ],
 )
-@mark.asyncio
 async def test_range_function(input, expected, kernel: Kernel):
     template = f"{{{{ range({input}) | list }}}}"
     target = create_jinja2_prompt_template(template)
@@ -217,7 +209,6 @@ async def test_range_function(input, expected, kernel: Kernel):
     assert rendered == expected
 
 
-@mark.asyncio
 async def test_helpers_set_get(kernel: Kernel):
     template = """{% set arg = 'test' %}{{ arg }} {{ arg }}"""
     target = create_jinja2_prompt_template(template)
@@ -226,7 +217,6 @@ async def test_helpers_set_get(kernel: Kernel):
     assert rendered == "test test"
 
 
-@mark.asyncio
 async def test_helpers_empty_get(kernel: Kernel):
     template = """{{get(default='test')}}"""
     target = create_jinja2_prompt_template(template)
@@ -235,7 +225,6 @@ async def test_helpers_empty_get(kernel: Kernel):
     assert rendered == "test"
 
 
-@mark.asyncio
 async def test_helpers_get(kernel: Kernel):
     template = """{{get(context=args, name='arg', default='fail')}}"""
     target = create_jinja2_prompt_template(template)
@@ -244,7 +233,6 @@ async def test_helpers_get(kernel: Kernel):
     assert rendered == "test"
 
 
-@mark.asyncio
 async def test_helpers_set_get_from_kernel_arguments(kernel: Kernel):
     template = """{% set arg = arg1 %}{{ arg }} {{ arg }} {{ arg1 }}"""
     target = create_jinja2_prompt_template(template)
@@ -253,7 +241,6 @@ async def test_helpers_set_get_from_kernel_arguments(kernel: Kernel):
     assert rendered == "test test test"
 
 
-@mark.asyncio
 async def test_helpers_array_from_args(kernel: Kernel):
     template = """{{array(arg1, arg2, arg3)}}"""
     target = create_jinja2_prompt_template(template)
@@ -264,7 +251,6 @@ async def test_helpers_array_from_args(kernel: Kernel):
     assert rendered == "['test1', 'test2', 'test3']"
 
 
-@mark.asyncio
 async def test_helpers_double_open_close_style_one(kernel: Kernel):
     template = "{{ '{{' }}{{ '}}' }}"
     target = create_jinja2_prompt_template(template)
@@ -273,7 +259,6 @@ async def test_helpers_double_open_close_style_one(kernel: Kernel):
     assert rendered == "{{}}"
 
 
-@mark.asyncio
 async def test_helpers_double_open_close_style_two(kernel: Kernel):
     template = """{{double_open()}}{{double_close()}}"""
     target = create_jinja2_prompt_template(template)
@@ -282,7 +267,6 @@ async def test_helpers_double_open_close_style_two(kernel: Kernel):
     assert rendered == "{{}}"
 
 
-@mark.asyncio
 async def test_helpers_json_style_two(kernel: Kernel):
     template = "{{input_json | tojson}}"
     target = create_jinja2_prompt_template(template)
@@ -291,7 +275,6 @@ async def test_helpers_json_style_two(kernel: Kernel):
     assert rendered == '{"key": "value"}'
 
 
-@mark.asyncio
 async def test_helpers_message(kernel: Kernel):
     template = """{% for item in chat_history %}{{ message(item) }}{% endfor %}"""
     target = create_jinja2_prompt_template(template)
@@ -304,7 +287,6 @@ async def test_helpers_message(kernel: Kernel):
     assert "Assistant message" in rendered
 
 
-@mark.asyncio
 async def test_helpers_message_to_prompt(kernel: Kernel):
     template = """
     {% for chat in chat_history %}
@@ -337,7 +319,6 @@ async def test_helpers_message_to_prompt(kernel: Kernel):
     assert "Tool message" in rendered
 
 
-@mark.asyncio
 async def test_helpers_message_to_prompt_other(kernel: Kernel):
     # NOTE: The template contains an example of how to strip new lines and whitespaces, if needed
     template = """
@@ -351,7 +332,6 @@ async def test_helpers_message_to_prompt_other(kernel: Kernel):
     assert rendered.strip() == """test1 test2"""
 
 
-@mark.asyncio
 async def test_helpers_messageToPrompt_other(kernel: Kernel):
     template = """
     {% for item in other_list -%}
@@ -364,7 +344,6 @@ async def test_helpers_messageToPrompt_other(kernel: Kernel):
     assert rendered.strip() == """test1 test2"""
 
 
-@mark.asyncio
 async def test_helpers_chat_history_messages(kernel: Kernel):
     template = """{{ messages(chat_history) }}"""
     target = create_jinja2_prompt_template(template)
@@ -378,7 +357,6 @@ async def test_helpers_chat_history_messages(kernel: Kernel):
     )
 
 
-@mark.asyncio
 async def test_helpers_chat_history_messages_non(kernel: Kernel):
     template = """{{ messages(chat_history) }}"""
     target = create_jinja2_prompt_template(template)

@@ -76,7 +76,7 @@ namespace Agents;
 >>>>>>> head
 /// when calling <see cref="ChatCompletionAgent.InvokeAsync"/>
 /// </summary>
-public class ChatCompletion_ServiceSelection(ITestOutputHelper output) : BaseTest(output)
+public class ChatCompletion_ServiceSelection(ITestOutputHelper output) : BaseAgentsTest(output)
 {
     private const string ServiceKeyGood = "chat-good";
     private const string ServiceKeyBad = "chat-bad";

@@ -67,6 +67,8 @@ prompty = "prompty"       # prompty is a format name.
 ist = "ist"               # German language
 dall = "dall"             # OpenAI model name
     "SK-dotnet.sln.DotSettings"
+    "SK-dotnet.sln.DotSettings",
+    "dotnet/samples/Concepts/Resources/Plugins/CopilotAgentPlugins/README.md"
 ]
 
 [default.extend-words]

@@ -18,7 +18,6 @@ from semantic_kernel.kernel import Kernel
 from semantic_kernel.prompt_template.prompt_template_config import PromptTemplateConfig
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ("model_name", "task", "input_str"),
     [
@@ -96,7 +95,6 @@ async def test_text_completion(model_name, task, input_str):
         assert mock_pipeline.call_args.args[0] == input_str
 
 
-@pytest.mark.asyncio
 async def test_text_completion_throws():
     kernel = Kernel()
 
@@ -144,7 +142,6 @@ async def test_text_completion_throws():
             )
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ("model_name", "task", "input_str"),
     [
@@ -203,7 +200,6 @@ async def test_text_completion_streaming(model_name, task, input_str):
         assert result[0][0].inner_content == "mocked_text"
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     ("model_name", "task", "input_str"),
     [

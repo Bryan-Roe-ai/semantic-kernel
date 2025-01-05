@@ -325,7 +325,6 @@ def test_get_first_response_media_type_default():
     )
 
 
-@pytest.mark.asyncio
 async def test_run_operation():
     runner = OpenApiRunner({})
     operation = MagicMock()

@@ -4,10 +4,6 @@ from unittest.mock import patch
 
 import pytest
 
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
 from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import (
     OllamaChatPromptExecutionSettings,
     OllamaTextPromptExecutionSettings,
@@ -20,15 +16,10 @@ from semantic_kernel.exceptions.service_exceptions import (
     ServiceInvalidResponseError,
 )
 _kernel.connectors.ai.ollama.ollama_prompt_execution_settings import OllamaChatPromptExecutionSettings
-<<<<<<< main
-=======
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import OllamaChatPromptExecutionSettings
->>>>>>> upstream/main
-=======
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import OllamaChatPromptExecutionSettings
->>>>>>> origin/main
 from semantic_kernel.connectors.ai.ollama.services.ollama_chat_completion import OllamaChatCompletion
 from semantic_kernel.exceptions.service_exceptions import (
     ServiceInitializationError,
@@ -70,39 +61,10 @@ def test_custom_client(model_id, custom_client):
     ollama = OllamaChatCompletion(ai_model_id=model_id, client=custom_client)
     assert ollama.client == custom_client
 
-<<<<<<< main
-
-<<<<<<< main
-=======
->>>>>>> origin/main
 @pytest.mark.parametrize("exclude_list", [["OLLAMA_MODEL"]], indirect=True)
 def test_init_empty_model_id(ollama_unit_test_env):
 def test_init_empty_model_id(ollama_unit_test_env):
 def test_init_empty_model_id_in_env(ollama_unit_test_env):
-<<<<<<< main
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
-=======
->>>>>>> origin/main
 def test_invalid_ollama_settings():
     """Test that the service initializes incorrectly with invalid settings."""
     with pytest.raises(ServiceInitializationError):
@@ -110,10 +72,6 @@ def test_invalid_ollama_settings():
 
 
 @pytest.mark.parametrize("exclude_list", [["OLLAMA_CHAT_MODEL_ID"]], indirect=True)
-<<<<<<< main
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
 def test_init_empty_model_id_in_env(ollama_unit_test_env):
 def test_init_empty_model_id_in_env(ollama_unit_test_env):
     """Test that the service initializes incorrectly with an empty model id."""
@@ -141,7 +99,6 @@ def test_service_url(ollama_unit_test_env):
     assert ollama.service_url() == ollama_unit_test_env["OLLAMA_HOST"]
 
 
-@pytest.mark.asyncio
 @patch("ollama.AsyncClient.__init__", return_value=None)  # mock_client
 @patch("ollama.AsyncClient.chat")  # mock_chat_client
 async def test_custom_host(
@@ -182,7 +139,6 @@ async def test_custom_host(
     assert chat_responses[0].content == "test_response"
 
 
-@pytest.mark.asyncio
 @patch("ollama.AsyncClient.__init__", return_value=None)  # mock_client
 @patch("ollama.AsyncClient.chat")  # mock_chat_client
 async def test_custom_host_streaming(
@@ -227,7 +183,6 @@ async def test_custom_host_streaming(
     assert mock_chat_client.call_count == 1
 
 
-@pytest.mark.asyncio
 @patch("ollama.AsyncClient.chat")
 async def test_chat_completion(
     mock_chat_client, model_id, service_id, chat_history, default_options
@@ -273,7 +228,6 @@ async def test_complete_chat(mock_post):
     )
 
 
-@pytest.mark.asyncio
 @patch("ollama.AsyncClient.chat")
 async def test_chat_completion_wrong_return_type(
     mock_chat_client,
@@ -348,7 +302,6 @@ async def test_text_completion_wrong_return_type(
         )
 
 
-@pytest.mark.asyncio
 @patch("ollama.AsyncClient.chat")
 async def test_streaming_chat_completion(
     mock_chat_client,
@@ -447,10 +400,6 @@ async def test_streaming_chat_completion_wrong_return_type(
 
 
 @pytest.mark.asyncio
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
 @patch("ollama.AsyncClient.chat")
 async def test_streaming_text_completion(
     mock_chat_client,
@@ -490,22 +439,13 @@ async def test_streaming_text_completion(
 @patch("ollama.AsyncClient.chat")
 async def test_streaming_text_completion_wrong_return_type(
     mock_chat_client,
-<<<<<<< main
-=======
 async def test_streaming_chat_completion_with_tools_raise(
->>>>>>> upstream/main
-=======
 async def test_streaming_chat_completion_with_tools_raise(
->>>>>>> origin/main
     model_id,
     service_id,
     chat_history,
     default_options,
 ):
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
     """Test that the text completion streaming service fails when the return type is incorrect."""
     mock_chat_client.return_value = {
         "message": {"content": "test_response"}
@@ -540,45 +480,6 @@ async def test_complete_stream(mock_post):
             "messages": [{"role": "user", "content": "test_prompt"}],
         },
     )
-<<<<<<< main
->>>>>>> f40c1f2075e2443c31c57c34f5f66c2711a8db75
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
-=======
->>>>>>> origin/main
     """Test that the chat completion streaming service fails when tool calls are requested."""
     ollama = OllamaChatCompletion(ai_model_id=model_id)
     with pytest.raises(ServiceInvalidExecutionSettingsError):
@@ -589,7 +490,3 @@ async def test_complete_stream(mock_post):
             ),
         ):
             pass
-<<<<<<< main
->>>>>>> upstream/main
-=======
->>>>>>> origin/main

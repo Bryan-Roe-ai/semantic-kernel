@@ -93,7 +93,8 @@ async def chat(chat_history: ChatHistory) -> bool:
         chat_history=chat_history,
     )
     async for message in responses:
-        streamed_chunks.append(message[0])
+        if isinstance(message[0], StreamingChatMessageContent) and message[0].role == AuthorRole.ASSISTANT:
+            streamed_chunks.append(message[0])
         print(str(message[0]), end="")
     print("")
     chat_history.add_user_message(user_input)

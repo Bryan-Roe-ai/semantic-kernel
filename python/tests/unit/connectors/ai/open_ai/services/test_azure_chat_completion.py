@@ -899,7 +899,6 @@ def test_azure_chat_completion_init_with_base_url() -> None:
 >>>>>>> head
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 <<<<<<< HEAD
 <<<<<<< div
@@ -1085,7 +1084,6 @@ async def test_azure_chat_completion_call_with_parameters(mock_create) -> None:
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 <<<<<<< HEAD
 <<<<<<< div
@@ -1414,7 +1412,6 @@ async def test_azure_chat_completion_call_with_parameters_and_Logit_Bias_Defined
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 <<<<<<< HEAD
 <<<<<<< div
@@ -1646,7 +1643,6 @@ async def test_azure_chat_completion_call_with_parameters_and_Stop_Defined(
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_azure_on_your_data(
     mock_create,
@@ -1719,7 +1715,6 @@ async def test_azure_on_your_data(
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_azure_on_your_data_string(
     mock_create,
@@ -1921,7 +1916,6 @@ def test_azure_chat_completion_serialize() -> None:
 >>>>>>> head
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 <<<<<<< HEAD
 <<<<<<< div
@@ -2366,7 +2360,6 @@ async def test_azure_chat_completion_with_data_call_with_parameters(
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 <<<<<<< HEAD
 <<<<<<< div
@@ -2480,7 +2473,6 @@ async def test_azure_on_your_data_split_messages(
     assert message == [messages[0]]
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_function_calling(
     mock_create,
@@ -2780,7 +2772,6 @@ async def test_azure_chat_completion_call_with_data_parameters_and_function_call
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 <<<<<<< HEAD
 <<<<<<< div
@@ -3011,7 +3002,6 @@ async def test_azure_chat_completion_call_with_data_with_parameters_and_Stop_Def
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_tool_calling_parallel_tool_calls(
     mock_create,
@@ -3088,7 +3078,6 @@ async def test_cmc_tool_calling_parallel_tool_calls(
         mock_process_function_call.assert_awaited()
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_tool_calling_parallel_tool_calls_disabled(
     mock_create,
@@ -3180,7 +3169,6 @@ CONTENT_FILTERED_ERROR_FULL_MESSAGE = (
 ) % CONTENT_FILTERED_ERROR_MESSAGE
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create")
 <<<<<<< HEAD
 <<<<<<< div
@@ -3526,7 +3514,6 @@ async def test_azure_chat_completion_content_filtering_raises_correct_exception(
 >>>>>>> head
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create")
 <<<<<<< HEAD
 <<<<<<< div
@@ -3777,7 +3764,6 @@ async def test_azure_chat_completion_content_filtering_without_response_code_rai
         )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create")
 async def test_bad_request_non_content_filter(
     mock_create, kernel: Kernel, azure_openai_unit_test_env, chat_history: ChatHistory
@@ -3805,7 +3791,6 @@ async def test_bad_request_non_content_filter(
         )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create")
 async def test_no_kernel_provided_throws_error(
     mock_create, azure_openai_unit_test_env, chat_history: ChatHistory
@@ -3834,7 +3819,6 @@ async def test_no_kernel_provided_throws_error(
         )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create")
 async def test_auto_invoke_false_no_kernel_provided_throws_error(
     mock_create, azure_openai_unit_test_env, chat_history: ChatHistory
@@ -3865,7 +3849,6 @@ async def test_auto_invoke_false_no_kernel_provided_throws_error(
         )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_streaming(
     mock_create,

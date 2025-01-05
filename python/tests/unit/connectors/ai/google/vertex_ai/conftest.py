@@ -123,8 +123,8 @@ def mock_vertex_ai_streaming_chat_completion_response_with_tool_call() -> (
         parts=[
             Part(
                 function_call=FunctionCall(
-                    name="test_function",
-                    args={"test_arg": "test_value"},
+                    name="getLightStatus",
+                    args={"arg1": "test_value"},
                 )
             )
         ],

@@ -86,7 +86,6 @@ def test_initialization():
     assert planner.options is not None
 
 
-@pytest.mark.asyncio
 async def test_invoke_with_empty_question_raises_error():
     planner = FunctionCallingStepwisePlanner(service_id="test-service", options=None)
     kernel_mock = AsyncMock(Kernel)
@@ -94,7 +93,6 @@ async def test_invoke_with_empty_question_raises_error():
         await planner.invoke(kernel_mock, "")
 
 
-@pytest.mark.asyncio
 async def test_get_initial_plan_callback_usage():
     fake_get_initial_plan = MagicMock(return_value="custom initial plan")
     options = FunctionCallingStepwisePlannerOptions(
@@ -105,7 +103,6 @@ async def test_get_initial_plan_callback_usage():
     fake_get_initial_plan.assert_called_once()
 
 
-@pytest.mark.asyncio
 async def test_get_step_prompt_callback_usage():
     fake_get_step_prompt = MagicMock(return_value="custom step prompt")
     options = FunctionCallingStepwisePlannerOptions(
@@ -116,7 +113,6 @@ async def test_get_step_prompt_callback_usage():
     fake_get_step_prompt.assert_called_once_with()
 
 
-@pytest.mark.asyncio
 async def test_build_chat_history_for_step():
     planner = FunctionCallingStepwisePlanner(service_id="test_service", options=None)
     kernel_mock = AsyncMock(Kernel)
@@ -130,7 +126,6 @@ async def test_build_chat_history_for_step():
     assert chat_history[0].role == AuthorRole.USER
 
 
-@pytest.mark.asyncio
 async def test_generate_plan():
     planner = FunctionCallingStepwisePlanner(service_id="test_service")
 
@@ -153,14 +148,12 @@ async def test_generate_plan():
         assert result is not None
 
 
-@pytest.mark.asyncio
 async def test_invoke_with_no_configured_AI_service_raises_exception(kernel: Kernel):
     planner = FunctionCallingStepwisePlanner(service_id="test", options=None)
     with pytest.raises(PlannerInvalidConfigurationError):
         await planner.invoke(kernel, "test question")
 
 
-@pytest.mark.asyncio
 async def test_invoke_with_function_call_content_and_processing(
     get_function_call_content, get_kernel_function_metadata_list
 ):
@@ -226,6 +219,7 @@ async def test_invoke_with_function_call_content_and_processing(
 async def test_invoke_with_function_call_content_and_processing_error(
     get_kernel_function_metadata_list,
 ):
+async def test_invoke_with_function_call_content_and_processing_error(get_kernel_function_metadata_list):
     kernel_mock = AsyncMock(spec=Kernel)
     question = "Test question"
     arguments = KernelArguments()
@@ -287,7 +281,6 @@ async def test_invoke_with_function_call_content_and_processing_error(
         )
 
 
-@pytest.mark.asyncio
 async def test_invoke_with_invalid_service_type():
     planner = FunctionCallingStepwisePlanner(service_id="test_service", options=None)
     kernel_mock = AsyncMock(spec=Kernel)
@@ -296,7 +289,6 @@ async def test_invoke_with_invalid_service_type():
         await planner.invoke(kernel_mock, "test question")
 
 
-@pytest.mark.asyncio
 async def test_invoke_with_no_arguments():
     planner = FunctionCallingStepwisePlanner(service_id="test_service", options=None)
     kernel_mock = AsyncMock(spec=Kernel)

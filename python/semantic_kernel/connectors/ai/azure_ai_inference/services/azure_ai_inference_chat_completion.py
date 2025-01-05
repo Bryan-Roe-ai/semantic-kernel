@@ -342,6 +342,7 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
         self,
         chat_history: "ChatHistory",
         settings: "PromptExecutionSettings",
+        function_invoke_attempt: int = 0,
     ) -> AsyncGenerator[list["StreamingChatMessageContent"], Any]:
         if not isinstance(settings, AzureAIInferenceChatPromptExecutionSettings):
             settings = self.get_prompt_execution_settings_from_settings(settings)
@@ -361,7 +362,8 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
                 continue
             chunk_metadata = self._get_metadata_from_response(chunk)
             yield [
-                self._create_streaming_chat_message_content(chunk, choice, chunk_metadata) for choice in chunk.choices
+                self._create_streaming_chat_message_content(chunk, choice, chunk_metadata, function_invoke_attempt)
+                for choice in chunk.choices
             ]
 
     @override
@@ -653,6 +655,7 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
         chunk: AsyncStreamingChatCompletions,
         choice: StreamingChatChoiceUpdate,
         metadata: dict[str, Any],
+        function_invoke_attempt: int,
     ) -> StreamingChatMessageContent:
         """Create a streaming chat message content object.
 
@@ -660,6 +663,7 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
             chunk: The chunk from the response.
             choice: The choice from the response.
             metadata: The metadata from the response.
+            function_invoke_attempt: The function invoke attempt.
 
         Returns:
             A streaming chat message content object.
@@ -708,6 +712,7 @@ class AzureAIInferenceChatCompletion(ChatCompletionClientBase, AzureAIInferenceB
                 FinishReason(choice.finish_reason) if choice.finish_reason else None
             ),
             metadata=metadata,
+            function_invoke_attempt=function_invoke_attempt,
         )
 
     # endregion

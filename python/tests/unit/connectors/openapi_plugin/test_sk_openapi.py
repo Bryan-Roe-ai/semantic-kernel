@@ -1216,6 +1216,10 @@ def openapi_runner_with_auth_callback():
 
 @pytest.fixture
 def openapi_runner_with_predicate_callback():
+    from semantic_kernel.connectors.openapi_plugin import OperationSelectionPredicateContext  # noqa: F401
+
+    OpenAPIFunctionExecutionParameters.model_rebuild()
+
     # Define a dummy predicate callback
     def predicate_callback(context):
         # Skip operations with DELETE method or containing 'internal' in the path
@@ -1232,7 +1236,7 @@ def openapi_runner_with_predicate_callback():
     return runner, operations, exec_settings
 
 
-def test_predicate_callback_applied(openapi_runner_with_predicate_callback):
+def test_predicate_callback_applied(openapi_runner_with_predicate_callback, define_openai_predicate_context):
     _, operations, exec_settings = openapi_runner_with_predicate_callback
 
     skipped_operations = []
@@ -1270,7 +1274,6 @@ def test_predicate_callback_applied(openapi_runner_with_predicate_callback):
 
 
 @patch("aiohttp.ClientSession.request")
-@pytest.mark.asyncio
 async def test_run_operation_with_invalid_request(mock_request, openapi_runner):
     runner, operations = openapi_runner
     operation = operations["getTodoById"]
@@ -1284,7 +1287,6 @@ async def test_run_operation_with_invalid_request(mock_request, openapi_runner):
 
 
 @patch("aiohttp.ClientSession.request")
-@pytest.mark.asyncio
 async def test_run_operation_with_error(mock_request, openapi_runner):
     runner, operations = openapi_runner
     operation = operations["addTodo"]
@@ -1298,6 +1300,10 @@ async def test_run_operation_with_error(mock_request, openapi_runner):
 
 
 def test_invalid_server_url_override():
+    from semantic_kernel.connectors.openapi_plugin import OperationSelectionPredicateContext  # noqa: F401
+
+    OpenAPIFunctionExecutionParameters.model_rebuild()
+
     with pytest.raises(ValueError, match="Invalid server_url_override: invalid_url"):
         params = OpenAPIFunctionExecutionParameters(server_url_override="invalid_url")
         params.model_post_init(None)

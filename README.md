@@ -146,11 +146,36 @@ Semantic Kernel was designed to be future proof, easily connecting your code to 
 The Semantic Kernel SDK is available in C#, Python, and Java. To get started, choose your preferred language below. See the [Feature Matrix](https://learn.microsoft.com/en-us/semantic-kernel/get-started/supported-languages) for a breakdown of
 feature parity between our currently supported languages.
 
-| | | |
+<<<<<<< | | | |
 |---|---|---|
 | ![C# Logo](https://user-images.githubusercontent.com/371009/230673036-fad1e8e6-5d48-49b1-a9c1-6f9834e0d165.png)<br>[Using Semantic Kernel in C#](dotnet/README.md) | ![Python Logo](https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg)<br>[Using Semantic Kernel in Python](python/README.md) | ![Java logo](https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg)<br>[Using Semantic Kernel in Java](https://github.com/microsoft/semantic-kernel/blob/main/java/README.md) |
-
-The quickest way to get started with the basics is to get an API key
+>>>>>>>+main
+<table w<table width=100%>
+  <tbody>
+    <tr>
+      <td>
+        <img align="left" width=52px src="https://user-images.githubusercontent.com/371009/230673036-fad1e8e6-5d48-49b1-a9c1-6f9834e0d165.png">
+        <div>
+          <a href="dotnet/README.md">Using Semantic Kernel in C#</a> &nbsp<br/>
+        </div>
+      </td>
+      <td>
+        <img align="left" width=52px src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg">
+        <div>
+          <a href="python/README.md">Using Semantic Kernel in Python</a>
+        </div>
+      </td>
+      <td>
+        <img align="left" width=52px height=52px src="https://upload.wikimedia.org/wikipedia/en/3/30/Java_programming_language_logo.svg" alt="Java logo">
+        <div>
+          <a href="https://github.com/microsoft/semantic-kernel-java/blob/main/README.md">Using Semantic Kernel in Java</a>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+>>>>>>>+upstream/main
+ckest way to get started with the basics is to get an API key
 from either OpenAI or Azure OpenAI and to run one of the C#, Python, and Java console applications/scripts below.
 
 ### For C

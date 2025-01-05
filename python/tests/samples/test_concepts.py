@@ -1,33 +1,24 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import copy
-<<<<<<< Updated upstream
 import os
 from collections.abc import Awaitable, Callable
 from typing import Any
-=======
->>>>>>> Stashed changes
 
 import pytest
 from pytest import mark, param
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
 from samples.concepts.auto_function_calling.azure_python_code_interpreter_function_calling import (
     main as azure_python_code_interpreter_function_calling,
 )
 from samples.concepts.auto_function_calling.chat_gpt_api_function_calling import (
     main as chat_gpt_api_function_calling,
 )
-<<<<<<< Updated upstream
 from samples.concepts.auto_function_calling.chat_gpt_api_function_calling import main as chat_gpt_api_function_calling
-=======
-=======
 from samples.concepts.auto_function_calling.chat_gpt_api_function_calling import main as chat_gpt_api_function_calling
->>>>>>> microsoft/main
->>>>>>> Stashed changes
+from samples.concepts.auto_function_calling.chat_completion_with_auto_function_calling import (
+    main as chat_completion_with_function_calling,
+)
 from samples.concepts.auto_function_calling.functions_defined_in_json_prompt import (
     main as function_defined_in_json_prompt,
 )
@@ -52,7 +43,6 @@ from samples.concepts.filtering.function_invocation_filters import (
 from samples.concepts.filtering.function_invocation_filters_stream import (
     main as function_invocation_filters_stream,
 )
-<<<<<<< Updated upstream
 from samples.concepts.chat_completion.simple_chatbot import main as simple_chatbot
 from samples.concepts.chat_completion.simple_chatbot_kernel_function import main as simple_chatbot_kernel_function
 from samples.concepts.chat_completion.simple_chatbot_logit_bias import main as simple_chatbot_logit_bias
@@ -64,12 +54,9 @@ from samples.concepts.filtering.function_invocation_filters_stream import main a
 from samples.concepts.filtering.prompt_filters import main as prompt_filters
 from samples.concepts.functions.kernel_arguments import main as kernel_arguments
 from samples.concepts.grounding.grounded import main as grounded
-=======
 from samples.concepts.filtering.prompt_filters import main as prompt_filters
 from samples.concepts.functions.kernel_arguments import main as kernel_arguments
 from samples.concepts.grounding.grounded import main as grounded
-<<<<<<< main
->>>>>>> Stashed changes
 from samples.concepts.local_models.lm_studio_chat_completion import (
     main as lm_studio_chat_completion,
 )
@@ -82,19 +69,11 @@ from samples.concepts.local_models.ollama_chat_completion import (
 from samples.concepts.memory.azure_cognitive_search_memory import (
     main as azure_cognitive_search_memory,
 )
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
 from samples.concepts.images.image_generation import main as image_generation
 from samples.concepts.local_models.lm_studio_chat_completion import main as lm_studio_chat_completion
 from samples.concepts.local_models.lm_studio_text_embedding import main as lm_studio_text_embedding
 from samples.concepts.local_models.ollama_chat_completion import main as ollama_chat_completion
 from samples.concepts.memory.azure_cognitive_search_memory import main as azure_cognitive_search_memory
-<<<<<<< Updated upstream
-=======
->>>>>>> upstream/main
->>>>>>> Stashed changes
 from samples.concepts.memory.memory import main as memory
 from samples.concepts.planners.azure_openai_function_calling_stepwise_planner import (
     main as azure_openai_function_calling_stepwise_planner,
@@ -139,10 +118,6 @@ from tests.samples.samples_utils import retry
 from tests.samples.test_samples_utils import retry
 
 concepts = [
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
     param(
         azure_python_code_interpreter_function_calling,
         ["print('Hello, World!')", "exit"],
@@ -156,15 +131,8 @@ concepts = [
     param(
         azure_chat_gpt_api, ["Why is the sky blue?", "exit"], id="azure_chat_gpt_api"
     ),
-<<<<<<< Updated upstream
     param(chat_gpt_api_function_calling, ["What is 3+3?", "exit"], id="chat_gpt_api_function_calling"),
     param(azure_chat_gpt_api, ["Why is the sky blue?", "exit"], id="azure_chat_gpt_api"),
-=======
-=======
-    param(chat_gpt_api_function_calling, ["What is 3+3?", "exit"], id="chat_gpt_api_function_calling"),
-    param(azure_chat_gpt_api, ["Why is the sky blue?", "exit"], id="azure_chat_gpt_api"),
->>>>>>> microsoft/main
->>>>>>> Stashed changes
     param(chat_gpt_api, ["What is life?", "exit"], id="chat_gpt_api"),
     param(chat_streaming, ["Why is the sun hot?", "exit"], id="chat_streaming"),
     param(openai_logit_bias, [], id="openai_logit_bias"),
@@ -183,7 +151,6 @@ concepts = [
         ["What is 3+3?", "exit"],
         id="function_invocation_filters_stream",
     ),
-<<<<<<< Updated upstream
     param(simple_chatbot, ["Why is the sky blue in one sentence?", "exit"], id="simple_chatbot"),
     param(simple_chatbot_streaming, ["Why is the sky blue in one sentence?", "exit"], id="simple_chatbot_streaming"),
     param(simple_chatbot_with_image, ["exit"], id="simple_chatbot_with_image"),
@@ -236,9 +203,9 @@ concepts = [
         ),
     ),
     param(
-        chat_gpt_api_function_calling,
+        chat_completion_with_function_calling,
         ["What is 3+3?", "exit"],
-        id="chat_gpt_api_function_calling",
+        id="chat_completion_with_function_calling",
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
@@ -326,8 +293,6 @@ concepts = [
     param(auto_function_invoke_filters, ["What is 3+3?", "exit"], id="auto_function_invoke_filters"),
     param(function_invocation_filters, ["What is 3+3?", "exit"], id="function_invocation_filters"),
     param(function_invocation_filters_stream, ["What is 3+3?", "exit"], id="function_invocation_filters_stream"),
-=======
->>>>>>> Stashed changes
     param(prompt_filters, ["What is the fastest animal?", "exit"], id="prompt_filters"),
     param(kernel_arguments, [], id="kernel_arguments"),
     param(grounded, [], id="grounded"),
@@ -353,12 +318,9 @@ concepts = [
         openai_plugin_azure_key_vault,
         ["Create a secret with the name 'Foo' and value 'Bar'", "exit"],
         id="openai_plugin_azure_key_vault",
-<<<<<<< Updated upstream
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
-=======
->>>>>>> Stashed changes
     ),
     param(
         openai_plugin_klarna,
@@ -371,7 +333,6 @@ concepts = [
     param(openai_plugin_klarna, [], id="openai_plugin_klarna"),
     param(plugins_from_dir, [], id="plugins_from_dir"),
     param(
-<<<<<<< Updated upstream
         plugins_from_dir,
         [],
         id="plugins_from_dir",
@@ -386,11 +347,9 @@ concepts = [
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
-=======
         azure_chat_gpt_api_handlebars,
         ["What is 3+3?", "exit"],
         id="azure_chat_gpt_api_handlebars",
->>>>>>> Stashed changes
     ),
     param(
         azure_chat_gpt_api_jinja2,
@@ -400,7 +359,6 @@ concepts = [
     param(configuring_prompts, ["What is my name?", "exit"], id="configuring_prompts"),
     param(load_yaml_prompt, [], id="load_yaml_prompt"),
     param(template_language, [], id="template_language"),
-<<<<<<< Updated upstream
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
@@ -466,7 +424,6 @@ concepts = [
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
-=======
     param(rag_with_text_memory_plugin, [], id="rag_with_text_memory_plugin"),
     param(bing_search_plugin, [], id="bing_search_plugin"),
     param(azure_chat_image_input, [], id="azure_chat_image_input"),
@@ -475,7 +432,6 @@ concepts = [
         function_defined_in_json_prompt,
         ["What is 3+3?", "exit"],
         id="function_defined_in_json_prompt",
->>>>>>> Stashed changes
     ),
     param(
         function_defined_in_yaml_prompt,
@@ -486,7 +442,6 @@ concepts = [
     param(step2_plugins, [], id="step2_agent_plugins"),
     param(step3_chat, [], id="step3_chat"),
     param(step7_assistant, [], id="step7_assistant"),
-<<<<<<< Updated upstream
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
@@ -523,8 +478,6 @@ concepts = [
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
     ),
-=======
->>>>>>> Stashed changes
     param(
         ollama_chat_completion,
         ["Why is the sky blue?", "exit"],
@@ -549,7 +502,6 @@ concepts = [
             reason="Need to set up LM Studio locally. Check out the module for more details."
         ),
     ),
-<<<<<<< Updated upstream
     param(
         image_generation,
         [],
@@ -558,20 +510,15 @@ concepts = [
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
     ),
-=======
     param(image_generation, [], id="image_generation"),
->>>>>>> Stashed changes
 ]
 
 
 @mark.asyncio
-<<<<<<< Updated upstream
 @mark.parametrize("sample, responses", concepts)
 async def test_concepts(sample: Callable[..., Awaitable[Any]], responses: list[str], monkeypatch):
-=======
 @mark.parametrize("func, responses", concepts)
 async def test_concepts(func, responses, monkeypatch):
->>>>>>> Stashed changes
     saved_responses = copy.deepcopy(responses)
 
     def reset():
@@ -582,7 +529,4 @@ async def test_concepts(func, responses, monkeypatch):
     await retry(lambda: func(), reset=reset)
     monkeypatch.setattr("builtins.input", lambda _: responses.pop(0))
     await retry(lambda: func())
-<<<<<<< Updated upstream
     await retry(sample, retries=3, reset=reset)
-=======
->>>>>>> Stashed changes

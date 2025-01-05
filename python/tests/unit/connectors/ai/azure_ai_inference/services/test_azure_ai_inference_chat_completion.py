@@ -24,6 +24,7 @@ from semantic_kernel.exceptions.service_exceptions import (
     ServiceInvalidExecutionSettingsError,
 )
 from semantic_kernel.functions.kernel_arguments import KernelArguments
+from semantic_kernel.kernel import Kernel
 from semantic_kernel.utils.telemetry.user_agent import SEMANTIC_KERNEL_USER_AGENT
 
 
@@ -97,7 +98,6 @@ def test_azure_ai_inference_chat_completion_init_with_custom_client(
     assert azure_ai_inference.client == client
 
 
-<<<<<<< HEAD
 @pytest.mark.parametrize(
     "exclude_list", [["AZURE_AI_INFERENCE_API_KEY"]], indirect=True
 )
@@ -112,9 +112,7 @@ def test_azure_ai_inference_chat_completion_init_with_empty_api_key(
 @pytest.mark.parametrize(
     "exclude_list", [["AZURE_AI_INFERENCE_ENDPOINT"]], indirect=True
 )
-=======
 @pytest.mark.parametrize("exclude_list", [["AZURE_AI_INFERENCE_ENDPOINT"]], indirect=True)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 def test_azure_ai_inference_chat_completion_init_with_empty_endpoint(
     azure_ai_inference_unit_test_env, model_id
 ) -> None:
@@ -137,7 +135,8 @@ def test_prompt_execution_settings_class(
 
 
 # region chat completion
-@pytest.mark.asyncio
+
+
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -157,14 +156,11 @@ async def test_azure_ai_inference_chat_completion(
 
     mock_complete.return_value = mock_azure_ai_inference_chat_completion_response
 
-<<<<<<< main
     responses = await azure_ai_inference_service.get_chat_message_contents(
         chat_history=chat_history, settings=settings
     )
-=======
     responses = await azure_ai_inference_service.get_chat_message_contents(chat_history=chat_history, settings=settings)
     await azure_ai_inference_service.get_chat_message_contents(chat_history, settings)
->>>>>>> origin/PR
 
     mock_complete.assert_awaited_once_with(
         messages=[UserMessage(content=user_message_content)],
@@ -176,7 +172,6 @@ async def test_azure_ai_inference_chat_completion(
     assert responses[0].content == "Hello"
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -205,14 +200,11 @@ async def test_azure_ai_inference_chat_completion_with_standard_parameters(
 
     mock_complete.return_value = mock_azure_ai_inference_chat_completion_response
 
-<<<<<<< main
     responses = await azure_ai_inference_service.get_chat_message_contents(
         chat_history=chat_history, settings=settings
     )
-=======
     responses = await azure_ai_inference_service.get_chat_message_contents(chat_history=chat_history, settings=settings)
     await azure_ai_inference_service.get_chat_message_contents(chat_history, settings)
->>>>>>> origin/PR
 
     mock_complete.assert_awaited_once_with(
         messages=[UserMessage(content=user_message_content)],
@@ -230,7 +222,6 @@ async def test_azure_ai_inference_chat_completion_with_standard_parameters(
     assert responses[0].content == "Hello"
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -268,7 +259,6 @@ async def test_azure_ai_inference_chat_completion_with_extra_parameters(
     assert responses[0].content == "Hello"
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -306,7 +296,6 @@ async def test_azure_ai_inference_chat_completion_with_function_choice_behavior_
         )
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -349,7 +338,6 @@ async def test_azure_ai_inference_chat_completion_with_function_choice_behavior(
     assert responses[0].finish_reason == FinishReason.TOOL_CALLS
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -394,7 +382,8 @@ async def test_azure_ai_inference_chat_completion_with_function_choice_behavior_
 
 
 # region streaming chat completion
-@pytest.mark.asyncio
+
+
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -433,7 +422,6 @@ async def test_azure_ai_inference_streaming_chat_completion(
     )
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -487,7 +475,6 @@ async def test_azure_ai_inference_chat_streaming_completion_with_standard_parame
     )
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -530,7 +517,6 @@ async def test_azure_ai_inference_streaming_chat_completion_with_extra_parameter
     )
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -570,7 +556,6 @@ async def test_azure_ai_inference_streaming_chat_completion_with_function_choice
             pass
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],
@@ -580,11 +565,12 @@ async def test_azure_ai_inference_streaming_chat_completion_with_function_choice
 async def test_azure_ai_inference_streaming_chat_completion_with_function_choice_behavior(
     mock_complete,
     azure_ai_inference_service,
-    kernel,
+    kernel: Kernel,
     chat_history: ChatHistory,
     mock_azure_ai_inference_streaming_chat_completion_response_with_tool_call,
+    decorated_native_function,
 ) -> None:
-    """Test streaming completion of AzureAIInferenceChatCompletion with function choice behavior"""
+    """Test streaming completion of AzureAIInferenceChatCompletion with function choice behavior."""
     user_message_content: str = "Hello"
     chat_history.add_user_message(user_message_content)
 
@@ -600,22 +586,33 @@ async def test_azure_ai_inference_streaming_chat_completion_with_function_choice
     async for (
         messages
     ) in azure_ai_inference_service.get_streaming_chat_message_contents(
+    kernel.add_function(plugin_name="TestPlugin", function=decorated_native_function)
+
+    all_messages = []
+    async for messages in azure_ai_inference_service.get_streaming_chat_message_contents(
         chat_history,
         settings,
         kernel=kernel,
         arguments=KernelArguments(),
     ):
-        assert len(messages) == 1
-        assert messages[0].role == "assistant"
-        assert messages[0].content == ""
-        assert messages[0].finish_reason == FinishReason.TOOL_CALLS
+        all_messages.extend(messages)
 
-    # Streaming completion with tool call does not invoke the model
-    # after maximum_auto_invoke_attempts is reached
-    assert mock_complete.call_count == 1
+    # Assert the number of total messages
+    assert len(all_messages) == 2, f"Expected 2 messages, got {len(all_messages)}"
+
+    # Validate the first message
+    assert all_messages[0].role == "assistant", f"Unexpected role for first message: {all_messages[0].role}"
+    assert all_messages[0].content == "", f"Unexpected content for first message: {all_messages[0].content}"
+    assert all_messages[0].finish_reason == FinishReason.TOOL_CALLS, (
+        f"Unexpected finish reason for first message: {all_messages[0].finish_reason}"
+    )
+
+    # Validate the second message
+    assert all_messages[1].role == "tool", f"Unexpected role for second message: {all_messages[1].role}"
+    assert all_messages[1].content == "", f"Unexpected content for second message: {all_messages[1].content}"
+    assert all_messages[1].finish_reason is None
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
     [AzureAIInferenceChatCompletion.__name__],

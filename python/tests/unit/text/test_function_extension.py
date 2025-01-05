@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-import pytest
 
 from semantic_kernel import Kernel
 <<<<<<< div
@@ -148,7 +147,6 @@ from semantic_kernel.prompt_template.prompt_template_config import PromptTemplat
 from semantic_kernel.text import aggregate_chunked_results
 
 
-@pytest.mark.asyncio
 async def test_aggregate_results():
     kernel = Kernel()
 <<<<<<< div

@@ -18,7 +18,6 @@ from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterM
 from semantic_kernel.kernel import Kernel
 
 
-@pytest.mark.asyncio
 async def test_run_openapi_operation_success(kernel: Kernel):
     runner = AsyncMock()
     operation = MagicMock()
@@ -26,16 +25,13 @@ async def test_run_openapi_operation_success(kernel: Kernel):
     operation.summary = "Test Summary"
     operation.description = "Test Description"
     operation.get_parameters.return_value = [
-<<<<<<< HEAD
         RestApiOperationParameter(
             name="param1",
             type="string",
             location=RestApiOperationParameterLocation.QUERY,
             is_required=True,
         )
-=======
         RestApiParameter(name="param1", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ]
 
     execution_parameters = MagicMock()
@@ -76,7 +72,6 @@ async def test_run_openapi_operation_success(kernel: Kernel):
         run_operation_mock.assert_called_once()
 
 
-@pytest.mark.asyncio
 async def test_run_openapi_operation_missing_required_param(kernel: Kernel):
     runner = AsyncMock()
     operation = MagicMock()
@@ -84,16 +79,13 @@ async def test_run_openapi_operation_missing_required_param(kernel: Kernel):
     operation.summary = "Test Summary"
     operation.description = "Test Description"
     operation.get_parameters.return_value = [
-<<<<<<< HEAD
         RestApiOperationParameter(
             name="param1",
             type="string",
             location=RestApiOperationParameterLocation.QUERY,
             is_required=True,
         )
-=======
         RestApiParameter(name="param1", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ]
 
     execution_parameters = MagicMock()
@@ -133,7 +125,6 @@ async def test_run_openapi_operation_missing_required_param(kernel: Kernel):
             await run_openapi_operation(kernel, **kwargs)
 
 
-@pytest.mark.asyncio
 async def test_run_openapi_operation_runner_exception(kernel: Kernel):
     runner = AsyncMock()
     operation = MagicMock()
@@ -141,16 +132,13 @@ async def test_run_openapi_operation_runner_exception(kernel: Kernel):
     operation.summary = "Test Summary"
     operation.description = "Test Description"
     operation.get_parameters.return_value = [
-<<<<<<< HEAD
         RestApiOperationParameter(
             name="param1",
             type="string",
             location=RestApiOperationParameterLocation.QUERY,
             is_required=True,
         )
-=======
         RestApiParameter(name="param1", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ]
 
     execution_parameters = MagicMock()
@@ -193,7 +181,6 @@ async def test_run_openapi_operation_runner_exception(kernel: Kernel):
             await run_openapi_operation(kernel, **kwargs)
 
 
-@pytest.mark.asyncio
 async def test_run_openapi_operation_alternative_name(kernel: Kernel):
     runner = AsyncMock()
     operation = MagicMock()
@@ -254,6 +241,7 @@ async def test_run_openapi_operation_alternative_name(kernel: Kernel):
     "semantic_kernel.connectors.openapi_plugin.openapi_parser.OpenApiParser.parse",
     return_value=None,
 )
+@patch("semantic_kernel.connectors.openapi_plugin.openapi_parser.OpenApiParser.parse", return_value=None)
 async def test_create_functions_from_openapi_raises_exception(mock_parse):
     """Test that an exception is raised when parsing fails."""
     with pytest.raises(
