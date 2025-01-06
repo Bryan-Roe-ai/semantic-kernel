@@ -146,3 +146,26 @@ CMD ["docker", "run", "-p", "3000:3000", "--env-file", ".env", "my-app"]
 
 # Access the web page
 CMD ["open", "http://${API_HOST}:${API_PORT}"]
+
+# Install necessary dependencies for REST API endpoints
+RUN apt-get update && apt-get install -y \
+    python3-pip \
+    python3-dev \
+    libpq-dev
+
+# Install required Python packages
+COPY requirements.txt /app/requirements.txt
+RUN pip3 install -r /app/requirements.txt
+
+# Copy the application code
+COPY . /app
+
+# Set environment variables for REST API endpoints
+ENV API_HOST=0.0.0.0
+ENV API_PORT=5000
+
+# Expose the API port
+EXPOSE 5000
+
+# Run the application
+CMD ["python3", "app.py"]
