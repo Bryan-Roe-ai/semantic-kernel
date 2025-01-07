@@ -37,5 +37,10 @@
         "ms-cst-e.vscode-devskim"
       ]
     }
+  },
+  "tasks": {
+    "test": "npm test && pytest && dotnet test && mvn test",
+    "build": "npm install",
+    "launch": "npm start"
   }
 }

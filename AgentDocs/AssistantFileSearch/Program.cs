@@ -15,6 +15,7 @@ using Microsoft.Azure.Cosmos;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Build.Client;
+using AI.TaskGenerator;
 
 namespace AgentsSample;
 
@@ -108,6 +109,14 @@ public static class Program
         string threadId = await agent.CreateThreadAsync();
 
         Console.WriteLine("Ready!");
+
+        // Generate tasks using the AI Task Generator
+        TaskGenerator taskGenerator = new TaskGenerator();
+        var tasks = taskGenerator.GenerateTasks("educational", "students", "math", "medium", "problem-solving");
+        foreach (var task in tasks)
+        {
+            Console.WriteLine(task);
+        }
 
         try
         {

@@ -16,6 +16,7 @@ using Azure.Storage.Blobs;
 using Azure.AI.TextAnalytics;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Hosting;
+using AI.TaskGenerator;
 
 namespace AgentsSample;
 
@@ -152,6 +153,14 @@ public static class Program
                     fileClient.DeleteFileAsync(fileDataCountryList.Id),
                     fileClient.DeleteFileAsync(fileDataCountryDetail.Id),
                 ]);
+        }
+
+        // Generate tasks using the AI Task Generator
+        TaskGenerator taskGenerator = new TaskGenerator();
+        var tasks = taskGenerator.GenerateTasks("educational", "students", "math", "medium", "problem-solving");
+        foreach (var task in tasks)
+        {
+            Console.WriteLine(task);
         }
     }
 
