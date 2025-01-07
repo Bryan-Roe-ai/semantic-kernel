@@ -19,6 +19,7 @@ public class Settings
     private KeyVaultSettings keyVault;
     private AzureDevOpsSettings azureDevOps;
     private TaskGeneratorSettings taskGenerator; // P8992
+    private GeneralSettings general;
 
     public AzureOpenAISettings AzureOpenAI => this.azureOpenAI ??= this.GetSettings<Settings.AzureOpenAISettings>();
     public OpenAISettings OpenAI => this.openAI ??= this.GetSettings<Settings.OpenAISettings>();
@@ -30,6 +31,7 @@ public class Settings
     public KeyVaultSettings KeyVault => this.keyVault ??= this.GetSettings<Settings.KeyVaultSettings>();
     public AzureDevOpsSettings AzureDevOps => this.azureDevOps ??= this.GetSettings<Settings.AzureDevOpsSettings>();
     public TaskGeneratorSettings TaskGenerator => this.taskGenerator ??= this.GetSettings<Settings.TaskGeneratorSettings>(); // P8992
+    public GeneralSettings General => this.general ??= this.GetSettings<Settings.GeneralSettings>();
 
     public class OpenAISettings
     {
@@ -88,6 +90,11 @@ public class Settings
         public string Topic { get; set; } = string.Empty; // P5f96
         public string DifficultyLevel { get; set; } = string.Empty; // P5f96
         public string TaskType { get; set; } = string.Empty; // P5f96
+    public class GeneralSettings
+    {
+        public string ApiKey { get; set; } = string.Empty;
+        public string DatabaseUrl { get; set; } = string.Empty;
+        public string SecretKey { get; set; } = string.Empty;
     }
 
     private TSettings GetSettings<TSettings>() =>

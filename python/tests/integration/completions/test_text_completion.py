@@ -62,13 +62,6 @@ from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_pro
     OpenAITextPromptExecutionSettings,
 )
 from semantic_kernel.connectors.ai.open_ai.services.azure_text_completion import (
-from semantic_kernel.connectors.ai.bedrock import BedrockTextCompletion, BedrockTextPromptExecutionSettings
-from semantic_kernel.connectors.ai.google.google_ai import GoogleAITextCompletion, GoogleAITextPromptExecutionSettings
-from semantic_kernel.connectors.ai.google.vertex_ai import VertexAITextCompletion, VertexAITextPromptExecutionSettings
-from semantic_kernel.connectors.ai.hugging_face import HuggingFacePromptExecutionSettings, HuggingFaceTextCompletion
-from semantic_kernel.connectors.ai.ollama import OllamaTextCompletion, OllamaTextPromptExecutionSettings
-from semantic_kernel.connectors.ai.open_ai import (
-    AzureOpenAISettings,
     AzureTextCompletion,
 )
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_text_completion import (
@@ -87,6 +80,23 @@ from semantic_kernel.connectors.ai.hugging_face.services.hf_text_completion impo
 from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import OllamaTextPromptExecutionSettings
 from semantic_kernel.connectors.ai.ollama.services.ollama_text_completion import OllamaTextCompletion
 from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_prompt_execution_settings import (
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.bedrock import BedrockTextCompletion, BedrockTextPromptExecutionSettings
+from semantic_kernel.connectors.ai.google.google_ai import GoogleAITextCompletion, GoogleAITextPromptExecutionSettings
+from semantic_kernel.connectors.ai.google.vertex_ai import VertexAITextCompletion, VertexAITextPromptExecutionSettings
+from semantic_kernel.connectors.ai.hugging_face import HuggingFacePromptExecutionSettings, HuggingFaceTextCompletion
+from semantic_kernel.connectors.ai.ollama import OllamaTextCompletion, OllamaTextPromptExecutionSettings
+from semantic_kernel.connectors.ai.open_ai import (
+    AzureOpenAISettings,
+    AzureTextCompletion,
+    OpenAITextCompletion,
+    OpenAITextPromptExecutionSettings,
+)
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.connectors.ai.text_completion_client_base import TextCompletionClientBase
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.text_content import TextContent
+from semantic_kernel.utils.authentication.entra_id_authentication import get_entra_auth_token
     OpenAITextPromptExecutionSettings,
 )
 from semantic_kernel.connectors.ai.open_ai.services.azure_text_completion import AzureTextCompletion
@@ -153,13 +163,14 @@ def services() -> (
         "google_ai": (GoogleAITextCompletion(), GoogleAITextPromptExecutionSettings),
         "vertex_ai": (VertexAITextCompletion(), VertexAITextPromptExecutionSettings),
     }
+from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from tests.integration.completions.completion_test_base import CompletionTestBase, ServiceType
+from tests.integration.completions.test_utils import is_service_setup_for_testing, retry
+
+from tests.utils import is_service_setup_for_testing, is_test_running_on_supported_platforms, retry
 
 
-<< << << < main
-<< << << < main
-<< << << < main
-== == == =
->>>>>> > origin/main
 ollama_setup: bool = False
 try:
     if os.environ["OLLAMA_MODEL"]:
@@ -169,22 +180,20 @@ except KeyError:
 ollama_setup: bool = is_service_setup_for_testing("OLLAMA_MODEL")
 google_ai_setup: bool = is_service_setup_for_testing("GOOGLE_AI_API_KEY")
 vertex_ai_setup: bool = is_service_setup_for_testing("VERTEX_AI_PROJECT_ID")
+onnx_setup: bool = is_service_setup_for_testing("ONNX_GEN_AI_TEXT_MODEL_FOLDER")
+ollama_setup: bool = is_service_setup_for_testing(["OLLAMA_TEXT_MODEL_ID"])
+ollama_setup: bool = is_service_setup_for_testing(["OLLAMA_TEXT_MODEL_ID"]) and is_test_running_on_supported_platforms([
+    "Linux"
+])
+
 onnx_setup: bool = is_service_setup_for_testing(
     "ONNX_GEN_AI_TEXT_MODEL_FOLDER")
-<< << << < main
-== == == =
-== == == =
->>>>>> > origin/main
 ollama_setup: bool = is_service_setup_for_testing(["OLLAMA_TEXT_MODEL_ID"])
 google_ai_setup: bool = is_service_setup_for_testing(["GOOGLE_AI_API_KEY"])
 vertex_ai_setup: bool = is_service_setup_for_testing(["VERTEX_AI_PROJECT_ID"])
 onnx_setup: bool = is_service_setup_for_testing(
     ["ONNX_GEN_AI_TEXT_MODEL_FOLDER"], raise_if_not_set=False
 )  # Tests are optional for ONNX
-<< << << < main
->>>>>> > upstream/main
-== == == =
->>>>>> > origin/main
 
 skip_on_mac_available = platform.system() == "Darwin"
 if not skip_on_mac_available:
@@ -288,8 +297,6 @@ pytestmark = pytest.mark.parametrize(
             {"streaming": False},
             marks=pytest.mark.skip(
                 reason="Skipping due to occasional throttling from Bedrock."),
-            marks=pytest.mark.skip(
-                reason="Skipping due to occasional throttling from Bedrock."),
             id="bedrock_anthropic_claude_text_completion",
         ),
         pytest.param(
@@ -298,8 +305,6 @@ pytestmark = pytest.mark.parametrize(
             ["Repeat the word Hello once"],
             # Streaming is not supported for models from this provider
             {"streaming": False},
-            marks=pytest.mark.skip(
-                reason="Skipping due to occasional throttling from Bedrock."),
             marks=pytest.mark.skip(
                 reason="Skipping due to occasional throttling from Bedrock."),
             id="bedrock_cohere_command_text_completion",
@@ -312,20 +317,14 @@ pytestmark = pytest.mark.parametrize(
             {"streaming": False},
             marks=pytest.mark.skip(
                 reason="Skipping due to occasional throttling from Bedrock."),
-            marks=pytest.mark.skip(
-                reason="Skipping due to occasional throttling from Bedrock."),
             id="bedrock_ai21labs_text_completion",
         ),
         pytest.param(
             "bedrock_meta_llama",
             {},
             ["Repeat the word Hello once"],
-            # Streaming is not supported for models from this provider
-            {"streaming": False},
-            marks=pytest.mark.skip(
-                reason="Skipping due to occasional throttling from Bedrock."),
-            marks=pytest.mark.skip(
-                reason="Skipping due to occasional throttling from Bedrock."),
+            {"streaming": False},  # Streaming is not supported for models from this provider
+            marks=pytest.mark.skip(reason="Skipping due to occasional throttling from Bedrock."),
             id="bedrock_meta_llama_text_completion",
         ),
         pytest.param(
@@ -334,8 +333,6 @@ pytestmark = pytest.mark.parametrize(
             ["Repeat the word Hello once"],
             # Streaming is not supported for models from this provider
             {"streaming": False},
-            marks=pytest.mark.skip(
-                reason="Skipping due to occasional throttling from Bedrock."),
             marks=pytest.mark.skip(
                 reason="Skipping due to occasional throttling from Bedrock."),
             id="bedrock_mistralai_text_completion",
@@ -370,20 +367,13 @@ async def test_text_completion(
 class TestTextCompletion(CompletionTestBase):
     """Test class for text completion"""
 
-
-class TestTextCompletion(CompletionTestBase):
-    """Test class for text completion"""
-
-
-class TestTextCompletion(CompletionTestBase):
-    """Test class for text completion"""
-
     @override
     @pytest.fixture(scope="class")
     def services(self) -> dict[str, tuple[ServiceType, type[PromptExecutionSettings]]]:
         azure_openai_settings = AzureOpenAISettings.create()
         endpoint = azure_openai_settings.endpoint
         deployment_name = azure_openai_settings.text_deployment_name
+        ad_token = get_entra_auth_token(azure_openai_settings.token_endpoint)
         ad_token = azure_openai_settings.get_azure_openai_auth_token()
         api_version = azure_openai_settings.api_version
         azure_custom_client = AzureTextCompletion(
@@ -395,7 +385,6 @@ class TestTextCompletion(CompletionTestBase):
                 default_headers={"Test-User-X-ID": "test"},
             ),
         )
-
 
 @pytest.mark.asyncio(scope="module")
 async def test_streaming_text_completion(
@@ -609,13 +598,6 @@ if sys.version_info >= (3, 12):
 else:
     from typing_extensions import override  # pragma: no cover
 
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
-from semantic_kernel.connectors.ai.text_completion_client_base import TextCompletionClientBase
-from semantic_kernel.contents.chat_message_content import ChatMessageContent
-from semantic_kernel.contents.text_content import TextContent
-from semantic_kernel.utils.authentication.entra_id_authentication import get_entra_auth_token
-from tests.integration.completions.completion_test_base import CompletionTestBase, ServiceType
-from tests.utils import is_service_setup_for_testing, is_test_running_on_supported_platforms, retry
 
 ollama_setup: bool = is_service_setup_for_testing(["OLLAMA_TEXT_MODEL_ID"]) and is_test_running_on_supported_platforms([
     "Linux"

@@ -58,6 +58,62 @@ public class Example21_OpenAIPlugins : BaseTest
         WriteLine($"Function execution result: {result?.Content}");
     }
 
+    [Fact]
+    public async Task CreateBase64ContentAsync()
+    {
+        Kernel kernel = new();
+
+        var plugin = await kernel.ImportPluginFromOpenAIAsync("Base64Plugin", new Uri("https://example.com/.well-known/ai-plugin.json"));
+
+        var arguments = new KernelArguments();
+        arguments["content"] = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("Sample content"));
+        arguments["repository"] = "sample-repo";
+        arguments["path"] = "sample-path";
+
+        var functionResult = await kernel.InvokeAsync(plugin["createContent"], arguments);
+
+        var result = functionResult.GetValue<RestApiOperationResponse>();
+
+        WriteLine($"CreateBase64Content function result: {result?.Content}");
+    }
+
+    [Fact]
+    public async Task ModifyBase64ContentAsync()
+    {
+        Kernel kernel = new();
+
+        var plugin = await kernel.ImportPluginFromOpenAIAsync("Base64Plugin", new Uri("https://example.com/.well-known/ai-plugin.json"));
+
+        var arguments = new KernelArguments();
+        arguments["content"] = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("Updated content"));
+        arguments["repository"] = "sample-repo";
+        arguments["path"] = "sample-path";
+
+        var functionResult = await kernel.InvokeAsync(plugin["modifyContent"], arguments);
+
+        var result = functionResult.GetValue<RestApiOperationResponse>();
+
+        WriteLine($"ModifyBase64Content function result: {result?.Content}");
+    }
+
+    [Fact]
+    public async Task DeleteBase64ContentAsync()
+    {
+        Kernel kernel = new();
+
+        var plugin = await kernel.ImportPluginFromOpenAIAsync("Base64Plugin", new Uri("https://example.com/.well-known/ai-plugin.json"));
+
+        var arguments = new KernelArguments();
+        arguments["repository"] = "sample-repo";
+        arguments["path"] = "sample-path";
+
+        var functionResult = await kernel.InvokeAsync(plugin["deleteContent"], arguments);
+
+        var result = functionResult.GetValue<RestApiOperationResponse>();
+
+        WriteLine($"DeleteBase64Content function result: {result?.Content}");
+    }
+
     public Example21_OpenAIPlugins(ITestOutputHelper output) : base(output)
     {
     }
