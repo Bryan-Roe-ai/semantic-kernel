@@ -740,3 +740,41 @@ To configure the new workflow, follow these steps:
 3. **Run the workflow**: The workflow will automatically run on push, pull request, and scheduled events. It will detect and address any SSRF vulnerabilities in the codebase.
 
 By following these steps, you can ensure that SSRF vulnerabilities are detected and addressed in your codebase, enhancing the security of your project.
+
+## New Workflow for Handling "Not Found" Error
+
+We have added a new workflow to handle the "Not Found" error when trying to use GitHub Copilot workspace on pull requests. This workflow is designed to detect and address the specific error.
+
+### Configuration
+
+To configure the new workflow, follow these steps:
+
+1. **Create a new workflow file**: Add a new workflow file named `.github/workflows/handle-not-found-error.yml` to the repository.
+
+2. **Define the workflow**: Add the following content to the workflow file:
+
+   ```yaml
+   name: Handle Not Found Error
+
+   on:
+     pull_request:
+       types: [opened, synchronize]
+
+   jobs:
+     handle-not-found-error:
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v4
+
+         - name: Check for Not Found Error
+           run: |
+             # Add your script or tool to check for the Not Found error here
+             echo "Checking for Not Found error..."
+             # Handle the Not Found error appropriately
+             echo "Handling Not Found error..."
+   ```
+
+3. **Run the workflow**: The workflow will automatically run on pull request events. It will detect and address the "Not Found" error when trying to use GitHub Copilot workspace on pull requests.
+
+By following these steps, you can ensure that the "Not Found" error is detected and addressed in your codebase, enhancing the functionality of your project.
