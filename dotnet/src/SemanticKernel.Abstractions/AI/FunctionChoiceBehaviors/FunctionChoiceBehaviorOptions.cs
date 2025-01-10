@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-<<<<<<< HEAD
-using System.Diagnostics.CodeAnalysis;
-=======
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+/// This option is only relevant if <see cref="AllowParallelCalls"/> is set to true.</remarks>
+    [JsonPropertyName("concurrent_invocations")]
+    public bool? ConcurrentInvocations { get; set; } = null;
+}
 
 namespace Microsoft.SemanticKernel;
 

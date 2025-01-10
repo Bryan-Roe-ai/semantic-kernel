@@ -1,4 +1,19 @@
 [submodule "semantic-kernel"]
+        path = semantic-kernel
+        url = https://github.com/microsoft/semantic-kernel.git
+        update = checkout
+        ignore = dirty
+        branch = main
 [submodule "tree-sitter-python"]
-[submodule "compositional-generalization-span-level-attention"]
+        path = tree-sitter-python
+        branch = main
+        url = https://github.com/tree-sitter/tree-sitter-python.git
 [submodule "OpenKP"]
+        path = OpenKP
+        url = https://github.com/microsoft/OpenKP.git 
+        branch = main
+ [submodule "compositional-generalization-span-level-attention"]
+        path = compositional-generalization-span-level-attention
+        ignore = dirty
+        url = https://github.com/allenai/compositional-generalization-span-level-attention.git
+        branch = main

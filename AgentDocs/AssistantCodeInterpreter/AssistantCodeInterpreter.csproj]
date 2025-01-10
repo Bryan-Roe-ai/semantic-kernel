@@ -5,11 +5,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>AssistantCodeInterpreter</AssemblyName>
+    <AssemblyName>AssistantCodeAsembly</AssemblyName></AssemblyName>
+    <IncludeSymbols>true</IncludeSymbols>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+<RuntimeIdentifier>win-x64</RuntimeIdentifier>    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <SelfContained>false</SelfContained>    <DebugType>portable</DebugType><EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     <RootNamespace>AssistantCodeInterpreter</RootNamespace>
     <Version>1.0.0.0</Version>
-    <Authors>GitHub Copilot</Authors>
-    <Description>Assistant Code Interpreter Application</Description>
+    <Authors>Bryan-Roe</Authors>
+    <Description>Assistant Code Assembly Application</Description>
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
@@ -19,8 +23,8 @@
     <!-- Package Metadata -->
     <PackageId>AssistantCodeInterpreter</PackageId>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/yourusername/AssistantCodeInterpreter</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/yourusername/AssistantCodeInterpreter.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/Bryan-Roe/AssistantCodeInterpreter</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Bryan-Roe/AssistantCodeInterpreter.git</RepositoryUrl>
     <PackageTags>AI;Assistant;Code;Interpreter</PackageTags>
 
     <!-- Build Optimizations -->

@@ -1,38 +1,4 @@
 SHELL = /bin/bash
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
 
 .PHONY: help install clean build
 .SILENT:
@@ -109,39 +75,11 @@ clean:
 
 build:
 	uvx --from build pyproject-build --installer uv
-<<<<<<< main
 SHELL = bash
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< div
-=======
-<<<<<<< main
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> origin/main
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< main
->>>>>>> origin/main
->>>>>>> Stashed changes
->>>>>>> head
 
 .PHONY: help install clean build
 .SILENT:
 all: install
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
 
 ifeq ($(PYTHON_VERSION),)
     PYTHON_VERSION="3.10"
@@ -211,14 +149,7 @@ clean:
 
 build:
 	uvx --from build pyproject-build --installer uv
-<<<<<<< main
 SHELL = bash
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> ms/features/bugbash-prep
 
 .PHONY: help install clean build
 .SILENT:
@@ -273,26 +204,6 @@ install-python:
 	uv python install 3.10 3.11 3.12
 
 .ONESHELL:
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
->>>>>>> origin/main
 
 .PHONY: help install clean build
 .SILENT:
@@ -347,8 +258,6 @@ install-python:
 	uv python install 3.10 3.11 3.12
 
 .ONESHELL:
-=======
->>>>>>> Stashed changes
 install-pre-commit:
 	echo "Installing pre-commit hooks"
 	uv run pre-commit install -c python/.pre-commit-config.yaml
@@ -369,10 +278,7 @@ clean:
 
 build:
 	uvx --from build pyproject-build --installer uv
-<<<<<<< main
 SHELL = bash
-=======
->>>>>>> ms/features/bugbash-prep
 
 .PHONY: help install clean build
 .SILENT:
@@ -433,86 +339,16 @@ install-pre-commit:
 
 
 .ONESHELL:
-<<<<<<< main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 install-pre-commit:
 	echo "Installing pre-commit hooks"
 	uv run pre-commit install -c python/.pre-commit-config.yaml
 
 
 .ONESHELL:
-<<<<<<< main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
 install-pre-commit:
 	poetry run pre-commit install
 	# Edit the pre-commit config file to change the config path
 	sed -i 's|\.pre-commit-config\.yaml|\.conf/\.pre-commit-config\.yaml|g' .git/hooks/pre-commit
-=======
->>>>>>> upstream/main
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
->>>>>>> origin/main
-=======
-=======
-<<<<<<< main
-=======
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
-=======
->>>>>>> Stashed changes
 install-sk:
 	echo "Creating and activating venv for python $(PYTHON_VERSION)"
 	uv venv --python $(PYTHON_VERSION)
@@ -526,38 +362,3 @@ clean:
 
 build:
 	uvx --from build pyproject-build --installer uv
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head

@@ -5,6 +5,8 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Azure.Identity;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
+using Microsoft.SemanticKernel.Agents.AzureAI;
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
 using OpenAI.Assistants;
@@ -20,6 +22,8 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
     /// Metadata key to indicate the assistant as created for a sample.
     /// </summary>
     protected const string AssistantSampleMetadataKey = "sksample";
+
+    protected override bool ForceOpenAI => true;
 
     /// <summary>
     /// Metadata to indicate the assistant as created for a sample.
@@ -38,10 +42,23 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
     /// <summary>
     /// Provide a <see cref="OpenAIClientProvider"/> according to the configuration settings.
     /// </summary>
+    protected AzureAIClientProvider GetAzureProvider()
+    {
+        //if (this.UseOpenAIConfig) // %%%
+        //{
+        //    throw new InvalidOperationException("Azure provider is not available when using OpenAI configuration.");
+        //}
+
+        return AzureAIClientProvider.ForAzureOpenAI("eastus.api.azureml.ms;5b742c40-bc2b-4a4f-902f-ee9f644d8844;rg-crickman-ai;sc-xx8889760-8651", new AzureCliCredential()); // %%% CONFIG
+    }
+
+    /// <summary>
+    /// Provide a <see cref="OpenAIClientProvider"/> according to the configuration settings.
+    /// </summary>
     protected OpenAIClientProvider GetClientProvider()
-        =>
+    {
+        return
             this.UseOpenAIConfig ?
-<<<<<<< HEAD
                 OpenAIClientProvider.ForOpenAI(this.ApiKey) :
                 OpenAIClientProvider.ForAzureOpenAI(this.ApiKey, new Uri(this.Endpoint!));
                 OpenAIClientProvider.ForOpenAI(this.ApiKey) :
@@ -54,12 +71,14 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
                 OpenAIClientProvider.ForAzureOpenAI(new ApiKeyCredential(this.ApiKey), new Uri(this.Endpoint!));
                 OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(this.ApiKey)) :
                 OpenAIClientProvider.ForAzureOpenAI(new ApiKeyCredential(this.ApiKey), new Uri(this.Endpoint!));
-=======
                 OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(this.ApiKey ?? throw new ConfigurationNotFoundException("OpenAI:ApiKey"))) :
                 !string.IsNullOrWhiteSpace(this.ApiKey) ?
                     OpenAIClientProvider.ForAzureOpenAI(new ApiKeyCredential(this.ApiKey), new Uri(this.Endpoint!)) :
                     OpenAIClientProvider.ForAzureOpenAI(new AzureCliCredential(), new Uri(this.Endpoint!));
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+<<<<<<< main
+=======
+    }
+>>>>>>> upstream/agents-azureai
 
     /// <summary>
     /// Common method to write formatted agent chat content to the console.
