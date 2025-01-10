@@ -153,10 +153,7 @@ def get_key(key: str | AzureCosmosDBNoSQLCompositeKey) -> str:
     Returns:
         str: The key.
     """
-    if isinstance(key, AzureCosmosDBNoSQLCompositeKey):
-        return key.key
-
-    return key
+    return key.key if isinstance(key, AzureCosmosDBNoSQLCompositeKey) else key
 
 
 def get_partition_key(key: str | AzureCosmosDBNoSQLCompositeKey) -> str:
