@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
@@ -27,6 +25,10 @@ public static class Example22_OpenApiPlugin_AzureKeyVault
         await GetSecretFromAzureKeyVaultWithRetryAsync(authenticationProvider);
 
         await AddSecretToAzureKeyVaultAsync(authenticationProvider);
+
+        await CreateBase64ContentAsync(authenticationProvider);
+        await ModifyBase64ContentAsync(authenticationProvider);
+        await DeleteBase64ContentAsync(authenticationProvider);
     }
 
     public static async Task GetSecretFromAzureKeyVaultWithRetryAsync(InteractiveMsalAuthenticationProvider authenticationProvider)
@@ -98,5 +100,106 @@ public static class Example22_OpenApiPlugin_AzureKeyVault
         var result = kernelResult.GetValue<RestApiOperationResponse>();
 
         Console.WriteLine("SetSecret function result: {0}", result?.Content?.ToString());
+    }
+
+    public static async Task CreateBase64ContentAsync(InteractiveMsalAuthenticationProvider authenticationProvider)
+    {
+        var kernel = new KernelBuilder().WithLoggerFactory(ConsoleLogger.LoggerFactory).Build();
+
+        var type = typeof(PluginResourceNames);
+        var resourceName = $"{PluginResourceNames.AzureKeyVault}.openapi.json";
+
+        var stream = type.Assembly.GetManifestResourceStream(type, resourceName);
+
+        // Import AI Plugin
+        var plugin = await kernel.ImportPluginFunctionsAsync(
+            PluginResourceNames.AzureKeyVault,
+            stream!,
+            new OpenApiFunctionExecutionParameters
+            {
+                AuthenticateCallbackProvider = _ => authenticationProvider.AuthenticateRequestAsync,
+                EnableDynamicPayload = true
+            });
+
+        // Add arguments for required parameters, arguments for optional ones can be skipped.
+        var contextVariables = new ContextVariables();
+        contextVariables.Set("server-url", TestConfiguration.KeyVault.Endpoint);
+        contextVariables.Set("content", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("Sample content")));
+        contextVariables.Set("repository", "sample-repo");
+        contextVariables.Set("path", "sample-path");
+
+        // Run
+        var kernelResult = await kernel.RunAsync(contextVariables, plugin["createContent"]);
+
+        var result = kernelResult.GetValue<RestApiOperationResponse>();
+
+        Console.WriteLine("CreateBase64Content function result: {0}", result?.Content?.ToString());
+    }
+
+    public static async Task ModifyBase64ContentAsync(InteractiveMsalAuthenticationProvider authenticationProvider)
+    {
+        var kernel = new KernelBuilder().WithLoggerFactory(ConsoleLogger.LoggerFactory).Build();
+
+        var type = typeof(PluginResourceNames);
+        var resourceName = $"{PluginResourceNames.AzureKeyVault}.openapi.json";
+
+        var stream = type.Assembly.GetManifestResourceStream(type, resourceName);
+
+        // Import AI Plugin
+        var plugin = await kernel.ImportPluginFunctionsAsync(
+            PluginResourceNames.AzureKeyVault,
+            stream!,
+            new OpenApiFunctionExecutionParameters
+            {
+                AuthenticateCallbackProvider = _ => authenticationProvider.AuthenticateRequestAsync,
+                EnableDynamicPayload = true
+            });
+
+        // Add arguments for required parameters, arguments for optional ones can be skipped.
+        var contextVariables = new ContextVariables();
+        contextVariables.Set("server-url", TestConfiguration.KeyVault.Endpoint);
+        contextVariables.Set("content", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("Updated content")));
+        contextVariables.Set("repository", "sample-repo");
+        contextVariables.Set("path", "sample-path");
+
+        // Run
+        var kernelResult = await kernel.RunAsync(contextVariables, plugin["modifyContent"]);
+
+        var result = kernelResult.GetValue<RestApiOperationResponse>();
+
+        Console.WriteLine("ModifyBase64Content function result: {0}", result?.Content?.ToString());
+    }
+
+    public static async Task DeleteBase64ContentAsync(InteractiveMsalAuthenticationProvider authenticationProvider)
+    {
+        var kernel = new KernelBuilder().WithLoggerFactory(ConsoleLogger.LoggerFactory).Build();
+
+        var type = typeof(PluginResourceNames);
+        var resourceName = $"{PluginResourceNames.AzureKeyVault}.openapi.json";
+
+        var stream = type.Assembly.GetManifestResourceStream(type, resourceName);
+
+        // Import AI Plugin
+        var plugin = await kernel.ImportPluginFunctionsAsync(
+            PluginResourceNames.AzureKeyVault,
+            stream!,
+            new OpenApiFunctionExecutionParameters
+            {
+                AuthenticateCallbackProvider = _ => authenticationProvider.AuthenticateRequestAsync,
+                EnableDynamicPayload = true
+            });
+
+        // Add arguments for required parameters, arguments for optional ones can be skipped.
+        var contextVariables = new ContextVariables();
+        contextVariables.Set("server-url", TestConfiguration.KeyVault.Endpoint);
+        contextVariables.Set("repository", "sample-repo");
+        contextVariables.Set("path", "sample-path");
+
+        // Run
+        var kernelResult = await kernel.RunAsync(contextVariables, plugin["deleteContent"]);
+
+        var result = kernelResult.GetValue<RestApiOperationResponse>();
+
+        Console.WriteLine("DeleteBase64Content function result: {0}", result?.Content?.ToString());
     }
 }

@@ -70,6 +70,12 @@
     "hfToken": "your_parquet_export_hf_token_here",
     "secret": "your_parquet_export_secret_here"
   },
+  "taskGeneratorSettings": {
+    "endpoint": "https://example.com/taskgenerator",
+    "apiKey": "your-api-key",
+    "topic": "default-topic",
+    "difficultyLevel": "default-difficulty",
+    "taskType": "default-task-type"
   "aiInteraction": {
     "openaiApiKey": "your_openai_api_key_here",
     "azureOpenaiEndpoint": "your_azure_openai_endpoint_here",
