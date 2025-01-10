@@ -42,7 +42,7 @@ def azure_cosmos_db_no_sql_unit_test_env(monkeypatch, url, key, database_name, e
         "AZURE_COSMOS_DB_NO_SQL_DATABASE_NAME": database_name,
     }
 
-    env_vars.update(override_env_param_dict)
+    env_vars |= override_env_param_dict
 
     for key, value in env_vars.items():
         if key not in exclude_list:
