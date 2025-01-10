@@ -33,9 +33,7 @@ def distance_function(request) -> str:
 
 @fixture
 def vector_property_type(request) -> str:
-    if hasattr(request, "param"):
-        return request.param
-    return "float"
+    return request.param if hasattr(request, "param") else "float"
 
 
 @fixture
