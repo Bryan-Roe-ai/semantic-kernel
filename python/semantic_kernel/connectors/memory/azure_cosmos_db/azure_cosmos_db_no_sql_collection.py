@@ -137,14 +137,24 @@ class AzureCosmosDBNoSQLCollection(AzureCosmosDBNoSQLBase, VectorStoreRecordColl
     @override
     async def _inner_delete(self, keys: Sequence[TKey], **kwargs: Any) -> None:
         container_proxy = await self._get_container_proxy(self.collection_name, **kwargs)
-        results = await asyncio.gather(
-            *[container_proxy.delete_item(item=get_key(key), partition_key=get_partition_key(key)) for key in keys],
-            return_exceptions=True,
-        )
-        if exceptions := [
-            result for result in results if isinstance(result, Exception)
-        ]:
-            raise MemoryConnectorException("Failed to delete item(s).", exceptions)
+        delete_operations = [
+            (key, container_proxy.delete_item(item=get_key(key), partition_key=get_partition_key(key)))
+            for key in keys
+        ]
+        results = await asyncio.gather(*(op[1] for op in delete_operations), return_exceptions=True)
+
+        # Pair the results with their corresponding keys
+        failed_operations = [
+            (delete_operations[i][0], result)
+            for i, result in enumerate(results)
+            if isinstance(result, Exception)
+        ]
+
+        if failed_operations:
+            failed_keys = [str(key) for key, _ in failed_operations]
+            exceptions = [ex for _, ex in failed_operations]
+            error_message = f"Failed to delete {len(failed_operations)} item(s). Failed keys: {', '.join(failed_keys)}"
+            raise MemoryConnectorException(error_message, exceptions)
 
     @override
     def _serialize_dicts_to_store_models(self, records: Sequence[dict[str, Any]], **kwargs: Any) -> Sequence[Any]:
