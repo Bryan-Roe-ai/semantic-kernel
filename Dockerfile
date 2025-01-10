@@ -138,6 +138,16 @@ COPY .env /app/.env
 # Create a configuration file using config.json
 COPY config.json /app/config.json
 
+# Copy app.py and requirements.txt to the Docker image
+COPY app.py /app/app.py
+COPY requirements.txt /app/requirements.txt
+
+# Install Python dependencies from requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /app/requirements.txt
+
+# Run the FastAPI application using uvicorn
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "3000"]
+
 # Build the Docker image
 RUN docker build -t my-app .
 
