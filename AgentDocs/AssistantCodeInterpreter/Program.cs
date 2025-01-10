@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -90,6 +90,9 @@ public static class Program
                 new Kernel());
 
         HandleMergeRequestComments();
+
+                },
+                new Kernel());
 
         Console.WriteLine("Creating thread...");
         string threadId = await agent.CreateThreadAsync();

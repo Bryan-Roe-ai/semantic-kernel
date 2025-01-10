@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
@@ -11,7 +11,7 @@ public class Settings
 
     private AzureOpenAISettings azureOpenAI;
     private OpenAISettings openAI;
-    private MongoDBSettings mongoDB;
+<<<    private MongoDBSettings mongoDB;
     private AzureBlobStorageSettings azureBlobStorage;
     private AzureCognitiveServicesSettings azureCognitiveServices;
     private AzureFunctionsSettings azureFunctions;
@@ -32,8 +32,14 @@ public class Settings
     public AzureDevOpsSettings AzureDevOps => this.azureDevOps ??= this.GetSettings<Settings.AzureDevOpsSettings>();
     public TaskGeneratorSettings TaskGenerator => this.taskGenerator ??= this.GetSettings<Settings.TaskGeneratorSettings>(); // P8992
     public GeneralSettings General => this.general ??= this.GetSettings<Settings.GeneralSettings>();
+>>>>>>>+HEAD
+====
 
-    public class OpenAISettings
+  
+    public AzureOpenAISettings AzureOpenAI => this.azureOpenAI ??= this.GetSettings<Settings.AzureOpenAISettings>();
+    public OpenAISettings OpenAI => this.openAI ??= this.GetSettings<Settings.OpenAISettings>();
+>>>>>>>+95da59c8414c9b4
+  public class OpenAISettings
     {
         public string ChatModel { get; set; } = string.Empty;
         public string ApiKey { get; set; } = string.Empty;
@@ -46,7 +52,7 @@ public class Settings
         public string ApiKey { get; set; } = string.Empty;
     }
 
-    public class MongoDBSettings
+<<<    public class MongoDBSettings
     {
         public string ConnectionString { get; set; } = string.Empty;
         public string DatabaseName { get; set; } = string.Empty;
@@ -98,14 +104,21 @@ public class Settings
     }
 
     private TSettings GetSettings<TSettings>() =>
-        this.configRoot.GetRequiredSection(typeof(TSettings).Name).Get<TSettings>()!;
+>>>>>>>+HEAD
+====
+       public TSettings GetSettings<TSettings>() =>
+>>>>>>>+95da59c8414c9b4
+     this.configRoot.GetRequiredSection(typeof(TSettings).Name).Get<TSettings>()!;
 
     public Settings()
     {
         this.configRoot =
             new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+<<<                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile("appsettings.Development.json", optional: true, reloadOnChange: true)
+>>>>>>>+HEAD
+====
+>>>>>>> 95da59c8414c9b4c18886783b035f8bda3421fd2
                 .AddEnvironmentVariables()
                 .AddUserSecrets(Assembly.GetExecutingAssembly(), optional: true)
                 .Build();

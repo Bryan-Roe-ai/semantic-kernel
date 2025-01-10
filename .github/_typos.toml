@@ -70,6 +70,7 @@ dall = "dall"             # OpenAI model name
     "SK-dotnet.sln.DotSettings",
     "dotnet/samples/Concepts/Resources/Plugins/CopilotAgentPlugins/README.md"
     "SK-dotnet.sln.DotSettings"
+	"WomensSuffrage.txt",
 ]
 
 [default.extend-words]
