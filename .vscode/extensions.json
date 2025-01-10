@@ -64,3 +64,13 @@
     "editor.formatOnSave"
   ]
 }
+{
+    "recommendations": [
+        "ms-semantic-kernel.semantic-kernel",
+        "dotjoshjohnson.xml",
+        "vscjava.vscode-maven",
+        "redhat.java",
+        "golang.go",
+        "ms-azuretools.vscode-docker"
+    ]
+}
