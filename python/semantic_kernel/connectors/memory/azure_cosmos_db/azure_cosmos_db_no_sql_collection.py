@@ -141,8 +141,9 @@ class AzureCosmosDBNoSQLCollection(AzureCosmosDBNoSQLBase, VectorStoreRecordColl
             *[container_proxy.delete_item(item=get_key(key), partition_key=get_partition_key(key)) for key in keys],
             return_exceptions=True,
         )
-        exceptions = [result for result in results if isinstance(result, Exception)]
-        if exceptions:
+        if exceptions := [
+            result for result in results if isinstance(result, Exception)
+        ]:
             raise MemoryConnectorException("Failed to delete item(s).", exceptions)
 
     @override
