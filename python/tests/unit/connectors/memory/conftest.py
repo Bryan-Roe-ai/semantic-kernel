@@ -21,9 +21,7 @@ from semantic_kernel.data.record_definition.vector_store_record_fields import (
 
 @fixture
 def index_kind(request) -> str:
-    if hasattr(request, "param"):
-        return request.param
-    return "hnsw"
+    return request.param if hasattr(request, "param") else "hnsw"
 
 
 @fixture
