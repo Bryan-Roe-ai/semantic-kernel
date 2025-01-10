@@ -3,7 +3,12 @@
 using System;
 using System.Net;
 
-namespace Microsoft.SemanticKernel.Diagnostics;
+namespace Microsoft.SemanticKernel.Diagnostics
+{
+    /// <summary>
+    /// Contains diagnostic utilities and exceptions for the Semantic Kernel.
+    /// </summary>
+}
 
 /// <summary>
 /// Represents an exception specific to HTTP operations.

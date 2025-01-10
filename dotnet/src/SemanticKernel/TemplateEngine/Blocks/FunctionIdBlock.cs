@@ -26,6 +26,10 @@ internal sealed class FunctionIdBlock : Block, ITextRendering
             throw new SKException("A function name can contain at most one dot separating the skill name from the function name");
             this.Logger.LogError("Invalid function name `{FunctionName}`.", this.Content);
             throw new SKException($"Invalid function name `{this.Content}`. A function name can contain at most one dot separating the skill name from the function name");
+            throw new SKException(
+                SKException.ErrorCodes.SyntaxError,
+                "A function name can contain at most one dot separating the skill name from the function name"
+            );
         }
 
         if (functionNameParts.Length == 2)

@@ -36,7 +36,9 @@ internal class ProtoDocumentParser
         var errors = descriptor.GetErrors();
         if (errors != null && errors.Length != 0)
         {
-            throw new SKException($"Parsing of '{protoFileName}' .proto document has failed. Details: {string.Join(";", errors.AsEnumerable())}");
+            var errorMessage = $"Parsing of '{protoFileName}' .proto document has failed. Details: {string.Join(";", errors.AsEnumerable())}";
+            // Log the error message here using your preferred logging framework
+            throw new SKException(errorMessage);
         }
 
         return this.GetGrpcOperations(descriptor.Files.Single());

@@ -79,7 +79,9 @@ public class ChromaMemoryStore : IMemoryStore
             this._logger.LogError("Cannot delete non-existent collection {0}", collectionName);
             throw new SKException($"Cannot delete non-existent collection {collectionName}", e);
         }
+        this._logger.LogInformation("Attempting to delete collection {0}", collectionName);
         await this._chromaClient.DeleteCollectionAsync(collectionName, cancellationToken).ConfigureAwait(false);
+        this._logger.LogInformation("Successfully deleted collection {0}", collectionName);
     }
 
     /// <inheritdoc />

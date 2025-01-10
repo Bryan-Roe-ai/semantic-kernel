@@ -1,6 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-namespace Microsoft.SemanticKernel.Diagnostics;
+namespace Microsoft.SemanticKernel.Diagnostics
+{
+    /// <summary>
+    /// Provides extension methods for HttpResponseMessage to ensure successful responses.
+    /// </summary>
+}
 using System.Net.Http;
 using Microsoft.Extensions.Logging;
 
