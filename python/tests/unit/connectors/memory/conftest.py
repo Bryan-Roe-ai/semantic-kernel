@@ -26,9 +26,7 @@ def index_kind(request) -> str:
 
 @fixture
 def distance_function(request) -> str:
-    if hasattr(request, "param"):
-        return request.param
-    return "cosine_similarity"
+    return request.param if hasattr(request, "param") else "cosine_similarity"
 
 
 @fixture
