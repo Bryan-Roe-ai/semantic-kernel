@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
+import logging
 
 app = FastAPI()
 
@@ -20,10 +21,23 @@ def greet_json():
 
 @app.post("/generate-tasks", response_model=TaskResponse)
 def generate_tasks(request: TaskRequest):
-    # Placeholder for task generation logic
-    tasks = [
-        f"Task 1 for {request.topic}",
-        f"Task 2 for {request.topic}",
-        f"Task 3 for {request.topic}"
-    ]
-    return TaskResponse(tasks=tasks)
+    try:
+        # Placeholder for task generation logic
+        tasks = [
+            f"Task 1 for {request.topic}",
+            f"Task 2 for {request.topic}",
+            f"Task 3 for {request.topic}"
+        ]
+        return TaskResponse(tasks=tasks)
+    except Exception as e:
+        logging.error(f"Error generating tasks: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+@app.get("/test-model")
+def test_model():
+    try:
+        # Placeholder for model testing logic
+        return {"status": "Model is running successfully"}
+    except Exception as e:
+        logging.error(f"Error testing model: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
