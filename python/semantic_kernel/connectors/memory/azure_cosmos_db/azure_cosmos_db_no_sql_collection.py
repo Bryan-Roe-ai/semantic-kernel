@@ -81,9 +81,8 @@ class AzureCosmosDBNoSQLCollection(AzureCosmosDBNoSQLBase, VectorStoreRecordColl
         """
         if not partition_key:
             partition_key = PartitionKey(path=f"/{COSMOS_ITEM_ID_PROPERTY_NAME}")
-        else:
-            if isinstance(partition_key, str):
-                partition_key = PartitionKey(path=f"/{partition_key.strip('/')}")
+        elif isinstance(partition_key, str):
+            partition_key = PartitionKey(path=f"/{partition_key.strip('/')}")
 
         super().__init__(
             partition_key=partition_key,
