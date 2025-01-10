@@ -3226,7 +3226,7 @@ internal partial class ClientCore
 
             foreach (var function in functions)
             {
-                tools.Add(function.Metadata.ToOpenAIFunction().ToFunctionDefinition());
+                tools.Add(function.Metadata.ToOpenAIFunction().ToFunctionDefinition(config?.Options?.AllowStrictSchemaAdherence ?? false));
             }
         }
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Linq;
 using Microsoft.SemanticKernel;
@@ -292,6 +292,42 @@ public sealed class RequiredFunctionChoiceBehaviorTests
         var configuration = choiceBehavior.GetConfiguration(new FunctionChoiceBehaviorConfigurationContext(chatHistory: []));
 
         Assert.NotNull(configuration.Options);
+    }
+
+    [Fact]
+    public void ItShouldPropagateAllowConcurrentInvocationOptionToConfiguration()
+    {
+        // Arrange
+        var options = new FunctionChoiceBehaviorOptions
+        {
+            AllowConcurrentInvocation = true
+        };
+
+        // Act
+        var choiceBehavior = new RequiredFunctionChoiceBehavior(autoInvoke: false, options: options);
+
+        // Assert
+        var configuration = choiceBehavior.GetConfiguration(new FunctionChoiceBehaviorConfigurationContext(chatHistory: []));
+
+        Assert.True(configuration.Options.AllowConcurrentInvocation);
+    }
+
+    [Fact]
+    public void ItShouldPropagateAllowStrictSchemaAdherenceOptionToConfiguration()
+    {
+        // Arrange
+        var options = new FunctionChoiceBehaviorOptions
+        {
+            AllowStrictSchemaAdherence = true
+        };
+
+        // Act
+        var choiceBehavior = new RequiredFunctionChoiceBehavior(autoInvoke: false, options: options);
+
+        // Assert
+        var configuration = choiceBehavior.GetConfiguration(new FunctionChoiceBehaviorConfigurationContext(chatHistory: []));
+
+        Assert.True(configuration.Options.AllowStrictSchemaAdherence);
     }
 
     private static KernelPlugin GetTestPlugin()

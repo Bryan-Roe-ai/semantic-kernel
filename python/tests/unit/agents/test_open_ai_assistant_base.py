@@ -2150,4 +2150,20 @@ def test_generate_options(
     ), f"Expected {expected_options}, but got {options}"
 
 
+def test_generate_function_call_content_sets_assistant_role():
+    fcc1 = FunctionCallContent(name="function_name1", arguments={"input": "some input"})
+    fcc2 = FunctionCallContent(name="function_name2", arguments={"input": "other input"})
+    agent_name = "TestAgent"
+
+    result = generate_function_call_content(agent_name=agent_name, fccs=[fcc1, fcc2])
+
+    assert result.role == AuthorRole.ASSISTANT
+    assert result.name == agent_name
+    assert len(result.items) == 2
+    assert isinstance(result.items[0], FunctionCallContent)
+    assert isinstance(result.items[1], FunctionCallContent)
+    assert result.items[0].name == "function_name1"
+    assert result.items[1].name == "function_name2"
+
+
 # endregion

@@ -4,7 +4,6 @@ import os
 from typing import Union
 from unittest.mock import AsyncMock, MagicMock, patch
 
-import httpx
 import pytest
 
 from semantic_kernel import Kernel
@@ -20,6 +19,9 @@ from semantic_kernel.connectors.ai.prompt_execution_settings import (
 from semantic_kernel.connectors.openai_plugin.openai_function_execution_parameters import (
     OpenAIFunctionExecutionParameters,
 )
+from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.const import METADATA_EXCEPTION_KEY
 from semantic_kernel.contents import ChatMessageContent
 from semantic_kernel.contents.chat_history import ChatHistory

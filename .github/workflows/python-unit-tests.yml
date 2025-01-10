@@ -111,6 +111,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v5
         with:
           version: "0.5.x"
           enable-cache: true

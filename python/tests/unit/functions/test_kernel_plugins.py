@@ -3,9 +3,7 @@
 import os
 from collections.abc import Callable
 from typing import Any
-from unittest.mock import AsyncMock, patch
 
-import httpx
 import pytest
 from pytest import raises
 
@@ -27,7 +25,6 @@ from semantic_kernel.functions.kernel_function_from_prompt import (
 from semantic_kernel.functions.kernel_plugin import KernelPlugin
 from semantic_kernel.prompt_template.input_variable import InputVariable
 from semantic_kernel.prompt_template.prompt_template_config import PromptTemplateConfig
-from semantic_kernel.utils.telemetry.user_agent import HTTP_USER_AGENT
 
 
 @pytest.fixture

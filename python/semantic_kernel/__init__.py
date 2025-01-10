@@ -26,7 +26,7 @@ from semantic_kernel.configuration.kernel_config import KernelConfig
 import semantic_kernel.memory as memory
 from semantic_kernel.kernel import Kernel
 
-__version__ = "1.17.1"
+__version__ = "1.18.1"
 __all__ = ["Kernel", "__version__"]
 
 # from semantic_kernel.prompt_template.chat_prompt_template import ChatPromptTemplate

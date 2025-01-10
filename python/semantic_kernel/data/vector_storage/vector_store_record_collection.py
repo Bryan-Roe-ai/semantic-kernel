@@ -696,6 +696,8 @@ class VectorStoreRecordCollection(KernelBaseModel, Generic[TKey, TModel]):
             return self._serialize_vectors(record.model_dump())
         if isinstance(record, ToDictMethodProtocol):
             return self._serialize_vectors(record.to_dict())
+        if isinstance(record, BaseModel):
+            return self._serialize_vectors(record.model_dump())
 
         store_model = {}
         for field_name in self.data_model_definition.field_names:
@@ -845,6 +847,10 @@ class VectorStoreRecordCollection(KernelBaseModel, Generic[TKey, TModel]):
             if include_vectors:
                 record = self._deserialize_vector(record)
             return func(record)
+        if issubclass(self.data_model_type, BaseModel):
+            if include_vectors:
+                record = self._deserialize_vector(record)
+            return self.data_model_type.model_validate(record)  # type: ignore
         data_model_dict: dict[str, Any] = {}
         for field_name in self.data_model_definition.fields:
             if not include_vectors and field_name in self.data_model_definition.vector_field_names:
