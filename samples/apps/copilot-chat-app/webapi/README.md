@@ -121,7 +121,7 @@ Before you get started, make sure you have the following additional requirements
 
 ## 2. Run a Weaviate instance locally
 
-Change directory to this repo and start the Weaviate container on port `8080`:
+From the project root directory, navigate to the Weaviate test directory:
 
 ```bash
 cd ./dotnet/src/IntegrationTests/Connectors/Weaviate
