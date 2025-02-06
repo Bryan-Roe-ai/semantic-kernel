@@ -37,6 +37,9 @@ public class AIPluginModel
     [JsonPropertyName("legal_info_url")]
     public string LegalInfoUrl { get; set; }
 
+    [JsonPropertyName("allowed_domains")]
+    public string[] AllowedDomains { get; set; }
+
     public class AuthModel
     {
         [JsonPropertyName("type")]
