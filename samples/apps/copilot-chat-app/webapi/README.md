@@ -128,7 +128,7 @@ cd ./dotnet/src/IntegrationTests/Connectors/Weaviate
 docker-compose up -d
 ```
 
-This will launch both the Weaviate and Contextionary instances.
+This will launch both the Weaviate and contextionary instances.
 
 The Weaviate instance API key is set to "my-secret-key" by default.
 
