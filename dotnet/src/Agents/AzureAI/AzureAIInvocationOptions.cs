@@ -101,4 +101,16 @@ public sealed class AzureAIInvocationOptions
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IReadOnlyDictionary<string, string>? Metadata { get; init; }
+
+    /// <summary>
+    /// The endpoint for Azure Cognitive Services.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? AzureCognitiveServicesEndpoint { get; init; }
+
+    /// <summary>
+    /// The API key for Azure Cognitive Services.
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? AzureCognitiveServicesApiKey { get; init; }
 }
