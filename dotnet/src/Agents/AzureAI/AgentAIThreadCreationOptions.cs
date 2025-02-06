@@ -28,4 +28,14 @@ public sealed class AzureAIThreadCreationOptions
     /// Optional file-ids made available to the code_interpreter tool, if enabled.
     /// </summary>
     public AzureAIP.ToolResources? ToolResources { get; init; }
+
+    /// <summary>
+    /// The endpoint for Azure Cognitive Services.
+    /// </summary>
+    public string? AzureCognitiveServicesEndpoint { get; init; }
+
+    /// <summary>
+    /// The API key for Azure Cognitive Services.
+    /// </summary>
+    public string? AzureCognitiveServicesApiKey { get; init; }
 }
