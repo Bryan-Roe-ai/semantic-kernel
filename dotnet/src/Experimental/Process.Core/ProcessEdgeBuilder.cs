@@ -1,7 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
-using System;
-
 using System;
 
 namespace Microsoft.SemanticKernel;
@@ -32,11 +28,8 @@ public sealed class ProcessEdgeBuilder
     /// <param name="eventId">The Id of the event.</param>
     internal ProcessEdgeBuilder(ProcessBuilder source, string eventId)
     {
-<<<<<<< HEAD
         this._source = source;
         this._eventId = eventId;
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         Verify.NotNull(source, nameof(source));
         Verify.NotNullOrWhiteSpace(eventId, nameof(eventId));
 
@@ -51,7 +44,8 @@ public sealed class ProcessEdgeBuilder
     public void SendEventTo(ProcessStepEdgeBuilder outputTarget)
     {
         this._source.LinkTo(this._eventId, outputTarget);
-    public void SendEventTo(ProcessFunctionTargetBuilder target)
+    }
+
     public ProcessEdgeBuilder SendEventTo(ProcessFunctionTargetBuilder target)
     {
         if (this.Target is not null)

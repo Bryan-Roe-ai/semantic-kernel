@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -209,6 +209,8 @@ public static class Program
     private static void HandleMergeRequestComments()
     {
         // Implement logic to process comments for optimization or merge
+        Console.WriteLine("Processing merge request comments...");
+        // Add your implementation here
     }
 
     // Method to handle AI interactions via a web interface

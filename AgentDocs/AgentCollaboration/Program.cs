@@ -44,10 +44,6 @@ public static class Program
         Console.WriteLine("Creating kernel...");
         IKernelBuilder builder = Kernel.CreateBuilder();
 
-        //builder.AddOpenAIChatCompletion(
-        //    settings.OpenAI.ChatModel,
-        //    settings.OpenAI.ApiKey);
-
         builder.AddAzureOpenAIChatCompletion(
             settings.AzureOpenAI.ChatModelDeployment,
             settings.AzureOpenAI.Endpoint,
@@ -268,4 +264,3 @@ public static class Program
         }
     }
 }
-

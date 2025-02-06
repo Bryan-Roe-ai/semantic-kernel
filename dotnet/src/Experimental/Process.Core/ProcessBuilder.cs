@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -99,7 +99,6 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     internal override KernelProcessStepInfo BuildStep(KernelProcessStepStateMetadata? stateMetadata = null)
     {
         // The step is a, process so we can return the step info directly.
-        return this.Build(stateMetadata as KernelProcessStateMetadata);
         return this.Build(stateMetadata as KernelProcessStateMetadata);
     }
 
@@ -222,12 +221,9 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
     /// <returns>An instance of <see cref="ProcessStepBuilder"/></returns>
     public ProcessStepBuilder AddStepFromType<TStep>(string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep
-    public ProcessStepBuilder AddStepFromType<TStep>(string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep
     {
         ProcessStepBuilder<TStep> stepBuilder = new(name);
-        ProcessStepBuilder<TStep> stepBuilder = new(name);
 
-        return this.AddStep(stepBuilder, aliases);
         return this.AddStep(stepBuilder, aliases);
     }
 
@@ -241,11 +237,7 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
     /// <returns>An instance of <see cref="ProcessStepBuilder"/></returns>
     public ProcessStepBuilder AddStepFromType<TStep, TState>(TState initialState, string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep<TState> where TState : class, new()
-    public ProcessStepBuilder AddStepFromType<TStep, TState>(TState initialState, string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep<TState> where TState : class, new()
     {
-        ProcessStepBuilder<TStep> stepBuilder = new(name, initialState: initialState);
-
-        return this.AddStep(stepBuilder, aliases);
         ProcessStepBuilder<TStep> stepBuilder = new(name, initialState: initialState);
 
         return this.AddStep(stepBuilder, aliases);
@@ -258,45 +250,8 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
     /// <returns>An instance of <see cref="ProcessStepBuilder"/></returns>
     public ProcessBuilder AddStepFromProcess(ProcessBuilder kernelProcess, IReadOnlyList<string>? aliases = null)
-    public ProcessBuilder AddStepFromProcess(ProcessBuilder kernelProcess, IReadOnlyList<string>? aliases = null)
     {
         kernelProcess.HasParentProcess = true;
-
-        return this.AddStep(kernelProcess, aliases);
-    }
-
-    /// <summary>
-    /// Adds a step to the process.
-    /// </summary>
-    /// <typeparam name="TStep">The step Type.</typeparam>
-    /// <param name="name">The name of the step. This parameter is optional.</param>
-    /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
-    /// <returns>An instance of <see cref="ProcessMapBuilder"/></returns>
-    public ProcessMapBuilder AddMapStepFromType<TStep>(string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep
-    {
-        ProcessStepBuilder<TStep> stepBuilder = new(name);
-
-        ProcessMapBuilder mapBuilder = new(stepBuilder);
-
-        return this.AddStep(mapBuilder, aliases);
-    }
-
-    /// <summary>
-    /// Adds a step to the process and define it's initial user-defined state.
-    /// </summary>
-    /// <typeparam name="TStep">The step Type.</typeparam>
-    /// <typeparam name="TState">The state Type.</typeparam>
-    /// <param name="initialState">The initial state of the step.</param>
-    /// <param name="name">The name of the step. This parameter is optional.</param>
-    /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
-    /// <returns>An instance of <see cref="ProcessMapBuilder"/></returns>
-    public ProcessMapBuilder AddMapStepFromType<TStep, TState>(TState initialState, string? name = null, IReadOnlyList<string>? aliases = null) where TStep : KernelProcessStep<TState> where TState : class, new()
-    {
-        ProcessStepBuilder<TStep> stepBuilder = new(name, initialState: initialState);
-
-        ProcessMapBuilder mapBuilder = new(stepBuilder);
-
-        return this.AddStep(mapBuilder, aliases);
 
         return this.AddStep(kernelProcess, aliases);
     }
@@ -375,11 +330,7 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// </summary>
     /// <param name="eventId">The Id of the external event.</param>
     /// <returns>An instance of <see cref="ProcessStepEdgeBuilder"/></returns>
-    public ProcessStepEdgeBuilder OnExternalEvent(string eventId)
-    {
-        return new ProcessStepEdgeBuilder(this, eventId);
     public ProcessEdgeBuilder OnExternalEvent(string eventId)
-    public ProcessEdgeBuilder OnInputEvent(string eventId)
     {
         return new ProcessEdgeBuilder(this, eventId);
     }
@@ -406,7 +357,6 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     public ProcessFunctionTargetBuilder WhereInputEventIs(string eventId)
     {
         Verify.NotNullOrWhiteSpace(eventId, nameof(eventId));
-        Verify.NotNullOrWhiteSpace(eventId, nameof(eventId));
 
         if (!this._externalEventTargetMap.TryGetValue(eventId, out var target))
         {
@@ -425,18 +375,13 @@ public sealed class ProcessBuilder : ProcessStepBuilder
     /// <exception cref="NotImplementedException"></exception>
     public KernelProcess Build(KernelProcessStateMetadata? stateMetadata = null)
     {
-        var process = new KernelProcess(this.Name, this._steps.Select(step => step.BuildStep()).ToList());
         // Build the edges first
         var builtEdges = this.Edges.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Select(e => e.Build()).ToList());
 
         // Build the steps and injecting initial state if any is provided
         var builtSteps = this.BuildWithStateMetadata(stateMetadata);
-        var builtSteps = this.BuildWithStateMetadata(stateMetadata);
 
         // Create the process
-        KernelProcessState state = new(this.Name, version: this.Version, id: this.HasParentProcess ? this.Id : null);
-        KernelProcess process = new(state, builtSteps, builtEdges);
-
         KernelProcessState state = new(this.Name, version: this.Version, id: this.HasParentProcess ? this.Id : null);
         KernelProcess process = new(state, builtSteps, builtEdges);
 
