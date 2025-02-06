@@ -7,14 +7,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
+using Microsoft.Extensions.Configuration;
 
 const string DefaultSemanticSkillsFolder = "skills";
 string semanticSkillsFolder = Environment.GetEnvironmentVariable("SEMANTIC_SKILLS_FOLDER") ?? DefaultSemanticSkillsFolder;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()
-    .ConfigureServices(services =>
+    .ConfigureAppConfiguration((context, config) =>
     {
+        config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+    })
+    .ConfigureServices((context, services) =>
+    {
+        var allowedDomains = context.Configuration.GetSection("SecuritySettings:AllowedDomains").Get<string[]>();
+
         services
             .AddScoped<IKernel>((providers) =>
             {
@@ -38,7 +45,8 @@ var host = new HostBuilder()
 
                 return kernel;
             })
-            .AddScoped<IAIPluginRunner, KernelAIPluginRunner>();
+            .AddScoped<IAIPluginRunner, KernelAIPluginRunner>()
+            .AddSingleton(allowedDomains);
     })
     .Build();
 
