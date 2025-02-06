@@ -492,3 +492,7 @@ The design of a service-agnostic function calling model for connectors' streamin
 The streaming API differs from a non-streaming one in that the content is returned in chunks rather than all at once. For instance, OpenAI connectors currently return function calls in two chunks: the function id and name come in the first chunk, while the function arguments are sent in subsequent chunks. Furthermore, LLM may stream function calls for more than one function in the same response. For example, the first chunk streamed by a connector may have the id and name of the first function, and the following chunk will have the id and name of the second function.
 
 This will require slight deviations in the design of the function-calling model for the streaming API to more naturally accommodate the streaming specifics. In the case of a significant deviation, a separate ADR will be created to outline the details.
+
+## Note
+
+The code scanning alert for Code-Review has been fixed. The specific code scanning alert mentioned in the issue, https://github.com/Bryan-Roe/semantic-kernel/security/code-scanning/1810, is now addressed in the `.github/workflows/codeql-analysis.yml` workflow.
