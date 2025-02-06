@@ -151,9 +151,21 @@ public class WeaviateMemoryStore : IMemoryStore, IDisposable
 
             return exists;
         }
+        catch (HttpRequestException e)
+        {
+            throw new WeaviateMemoryException(WeaviateMemoryException.ErrorCodes.FailedToGetClass, "Network error while accessing Weaviate", e);
+        }
+        catch (JsonException e)
+        {
+            throw new WeaviateMemoryException(WeaviateMemoryException.ErrorCodes.FailedToGetClass, "Failed to parse Weaviate response", e);
+        }
+        catch (WeaviateMemoryException)
+        {
+            throw;
+        }
         catch (Exception e)
         {
-            throw new WeaviateMemoryException(WeaviateMemoryException.ErrorCodes.FailedToGetClass, "Unable to get class from Weaviate", e);
+            throw new WeaviateMemoryException(WeaviateMemoryException.ErrorCodes.FailedToGetClass, "Unexpected error while getting class from Weaviate", e);
         }
     }
 
