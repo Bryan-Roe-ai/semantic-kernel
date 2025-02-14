@@ -1085,6 +1085,60 @@ public sealed class KernelFunctionFromMethodTests1
         Assert.Same(expected, actual);
     }
 
+    [Fact]
+    public async Task ItLogsMethodInvocationAsync()
+    {
+        // Arrange
+        var loggerMock = new Mock<ILogger>();
+        this._logger.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(loggerMock.Object);
+
+        static void Test()
+        {
+            s_actual = s_expected;
+        }
+
+        var function = KernelFunctionFactory.CreateFromMethod(Method(Test), loggerFactory: this._logger.Object);
+        Assert.NotNull(function);
+
+        // Act
+        await function.InvokeAsync(this._kernel);
+
+        // Assert
+        loggerMock.Verify(x => x.Log(
+            LogLevel.Information,
+            It.IsAny<EventId>(),
+            It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Invoking method")),
+            It.IsAny<Exception>(),
+            It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ItLogsMethodErrorHandlingAsync()
+    {
+        // Arrange
+        var loggerMock = new Mock<ILogger>();
+        this._logger.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(loggerMock.Object);
+
+        static void Test()
+        {
+            throw new InvalidOperationException("Test exception");
+        }
+
+        var function = KernelFunctionFactory.CreateFromMethod(Method(Test), loggerFactory: this._logger.Object);
+        Assert.NotNull(function);
+
+        // Act
+        await Assert.ThrowsAsync<InvalidOperationException>(() => function.InvokeAsync(this._kernel));
+
+        // Assert
+        loggerMock.Verify(x => x.Log(
+            LogLevel.Error,
+            It.IsAny<EventId>(),
+            It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Error invoking method")),
+            It.IsAny<Exception>(),
+            It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
+    }
+
     private static MethodInfo Method(Delegate method)
     {
         return method.Method;
