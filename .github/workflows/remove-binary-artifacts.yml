@@ -20,7 +20,12 @@ jobs:
           find . -type f -name '__azurite_db_blob_extent__.json' -delete
           find . -type f -name '__azurite_db_queue__.json' -delete
           find internal-semantic-core -type f -name '__azurite_db_blob__.json' -delete
+          find internal-semantic-core -type f -name '__azurite_db_blob_extent__.json' -delete
           find internal-semantic-core -type f -name '__azurite_db_queue__.json' -delete
+          find . -type f -name '*.bin' -delete
+          find . -type f -name '*.exe' -delete
+          find . -type f -name '*.dll' -delete
+          find . -type f -name '*.zip' -delete
 
       - name: Upload report of deleted files
         uses: actions/upload-artifact@v3
@@ -35,4 +40,9 @@ jobs:
           find . -type f -name '__azurite_db_blob_extent__.json' -print >> deleted-files-report.txt
           find . -type f -name '__azurite_db_queue__.json' -print >> deleted-files-report.txt
           find internal-semantic-core -type f -name '__azurite_db_blob__.json' -print >> deleted-files-report.txt
+          find internal-semantic-core -type f -name '__azurite_db_blob_extent__.json' -print >> deleted-files-report.txt
           find internal-semantic-core -type f -name '__azurite_db_queue__.json' -print >> deleted-files-report.txt
+          find . -type f -name '*.bin' -print >> deleted-files-report.txt
+          find . -type f -name '*.exe' -print >> deleted-files-report.txt
+          find . -type f -name '*.dll' -print >> deleted-files-report.txt
+          find . -type f -name '*.zip' -print >> deleted-files-report.txt
