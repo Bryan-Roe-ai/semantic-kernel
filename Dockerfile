@@ -143,6 +143,3 @@ RUN docker build -t my-app .
 
 # Run the Docker container
 CMD ["docker", "run", "-p", "3000:3000", "--env-file", ".env", "my-app"]
-
-# Access the web page
-CMD ["open", "http://localhost:3000"]
