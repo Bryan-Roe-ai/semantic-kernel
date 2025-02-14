@@ -803,3 +803,16 @@ To configure the new workflow, follow these steps:
 3. **Run the workflow**: The workflow will automatically run on pull request events. It will detect and address the "Not Found" error when trying to use GitHub Copilot workspace on pull requests.
 
 By following these steps, you can ensure that the "Not Found" error is detected and addressed in your codebase, enhancing the functionality of your project.
+
+## Branch Protection Rules
+
+To ensure the integrity and security of the codebase, we have implemented branch protection rules. These rules help enforce best practices and prevent unauthorized changes to the main branch.
+
+### Enforcing Branch Protection Rules
+
+We have configured the `ossf/scorecard-action` in the `.github/workflows/scorecard.yml` file to enforce branch protection rules. This ensures that the branch protection rules are correctly applied and any violations are detected and reported.
+
+### GitHub Documentation on Branch Protection
+
+For more information on branch protection rules and how to configure them, refer to the [GitHub documentation on branch protection](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-protected-branches).
+
