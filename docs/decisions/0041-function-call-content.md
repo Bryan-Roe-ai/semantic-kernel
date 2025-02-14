@@ -496,3 +496,21 @@ This will require slight deviations in the design of the function-calling model 
 ## Note
 
 The code scanning alert for Code-Review has been fixed. The specific code scanning alert mentioned in the issue, https://github.com/Bryan-Roe/semantic-kernel/security/code-scanning/1810, is now addressed in the `.github/workflows/codeql-analysis.yml` workflow.
+
+## Server-Side Request Forgery (SSRF) Vulnerabilities
+
+### Steps to Mitigate SSRF Attacks
+
+1. **Input Validation**: Ensure that all user inputs are validated and sanitized. This includes URLs and other parameters that could be manipulated to perform SSRF attacks.
+2. **Allowlist**: Implement an allowlist of acceptable URLs or IP addresses that the server can access. This helps in restricting access to internal services.
+3. **Network Segmentation**: Isolate the server from internal services that do not need to be accessed by the server. This limits the potential impact of an SSRF attack.
+4. **Use of Metadata Services**: Avoid using metadata services that can be exploited through SSRF attacks. If necessary, restrict access to these services.
+5. **Regular Security Audits**: Conduct regular security audits and code reviews to identify and fix potential SSRF vulnerabilities.
+
+### Updated Workflows for SSRF Detection
+
+The following workflows have been updated to include specific steps for SSRF detection:
+
+- `.github/workflows/codeql-analysis.yml`
+- `.github/workflows/fortify.yml`
+- `.github/workflows/codeql.yml`
