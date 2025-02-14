@@ -803,3 +803,41 @@ To configure the new workflow, follow these steps:
 3. **Run the workflow**: The workflow will automatically run on pull request events. It will detect and address the "Not Found" error when trying to use GitHub Copilot workspace on pull requests.
 
 By following these steps, you can ensure that the "Not Found" error is detected and addressed in your codebase, enhancing the functionality of your project.
+
+## Contribution Guidelines
+
+We welcome contributions from the community! To contribute to this project, please follow these guidelines:
+
+1. **Fork the repository**: Create a fork of the repository to work on your changes.
+
+2. **Create a branch**: Create a new branch for your changes.
+
+   ```bash
+   git checkout -b my-feature-branch
+   ```
+
+3. **Make your changes**: Implement your changes in the new branch.
+
+4. **Test your changes**: Ensure that your changes do not break any existing functionality and pass all tests.
+
+5. **Commit your changes**: Commit your changes with a descriptive commit message.
+
+   ```bash
+   git commit -m "Add new feature"
+   ```
+
+6. **Push your changes**: Push your changes to your forked repository.
+
+   ```bash
+   git push origin my-feature-branch
+   ```
+
+7. **Create a pull request**: Open a pull request to merge your changes into the main repository.
+
+8. **Review and feedback**: Address any feedback or comments from the maintainers during the review process.
+
+9. **Merge**: Once your pull request is approved, it will be merged into the main repository.
+
+Thank you for your contributions!
+
+For more detailed guidelines on contributing, refer to the `CONTRIBUTING.md` file in the root directory of the repository.

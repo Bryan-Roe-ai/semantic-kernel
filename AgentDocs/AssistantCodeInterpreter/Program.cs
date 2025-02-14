@@ -16,6 +16,7 @@ using Azure.Storage.Blobs;
 using Azure.AI.TextAnalytics;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using AI.TaskGenerator;
 
 namespace AgentsSample;
