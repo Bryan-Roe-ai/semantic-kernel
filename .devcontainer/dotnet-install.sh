@@ -601,11 +601,11 @@ validate_remote_local_file_sizes()
             else
                 say "The remote and local file sizes are equal."
             fi
-        fi
         
-    else
-        say "Either downloaded or local package size can not be measured. One of them may be corrupted."      
-    fi 
+        else
+            say "Either downloaded or local package size can not be measured. One of them may be corrupted."      
+        fi
+    fi
 }
 
 # args:
@@ -1858,3 +1858,11 @@ fi
 say "Note that the script does not resolve dependencies during installation."
 say "To check the list of dependencies, go to https://learn.microsoft.com/dotnet/core/install, select your operating system and check the \"Dependencies\" section."
 say "Installation finished successfully."
+
+# New script to automatically fix errors within the Docker container
+fix_errors() {
+    say "Fixing errors within the Docker container"
+    sudo apt-get update && sudo apt-get install -y --fix-missing
+}
+
+fix_errors

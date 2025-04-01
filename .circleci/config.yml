@@ -27,6 +27,16 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run deploy
+      - run: echo "Running error fixing job"
+      - run: ./fix-errors.sh
+
+  fix-errors:
+    docker:
+      - image: cimg/node:16.8.0
+    steps:
+      - checkout
+      - run: echo "Fixing errors within the docker container"
+      - run: ./fix-errors.sh
 
 workflows:
   test-flow:

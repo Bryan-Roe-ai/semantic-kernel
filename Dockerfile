@@ -179,3 +179,7 @@ EXPOSE 5000
 
 # Run the application
 CMD ["python3", "app.py"]
+
+# Add a new script to automatically fix errors within the docker container
+COPY fix-errors.sh /app/fix-errors.sh
+RUN chmod +x /app/fix-errors.sh
