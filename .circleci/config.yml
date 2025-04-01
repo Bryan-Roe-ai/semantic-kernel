@@ -11,6 +11,9 @@ jobs:
       - run: echo "Running tests using Node.js and browsers"
       - run: npm install
       - run: npm test
+      - run: echo "Running tests for .NET project"
+      - run: dotnet restore
+      - run: dotnet test --no-build --verbosity normal
 
   build:
     docker:
@@ -19,6 +22,8 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run build
+      - run: echo "Building .NET project"
+      - run: dotnet build --no-restore
 
   deploy:
     docker:
@@ -27,16 +32,8 @@ jobs:
       - checkout
       - run: npm install
       - run: npm run deploy
-      - run: echo "Running error fixing job"
-      - run: ./fix-errors.sh
-
-  fix-errors:
-    docker:
-      - image: cimg/node:16.8.0
-    steps:
-      - checkout
-      - run: echo "Fixing errors within the docker container"
-      - run: ./fix-errors.sh
+      - run: echo "Deploying .NET project"
+      - run: dotnet publish --no-restore
 
 workflows:
   test-flow:
