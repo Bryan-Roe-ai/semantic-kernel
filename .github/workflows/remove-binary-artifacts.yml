@@ -9,6 +9,9 @@ on:
 jobs:
   remove-binary-artifacts:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
 
     steps:
       - name: Checkout repository
@@ -52,3 +55,8 @@ jobs:
           find . -type f -name '*.dll' -print >> deleted-files-report.txt
           find . -type f -name '*.zip' -print >> deleted-files-report.txt
           find . -type f -name '*.json' -print >> deleted-files-report.txt
+
+      - name: Upload SARIF results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: deleted-files-report.txt
