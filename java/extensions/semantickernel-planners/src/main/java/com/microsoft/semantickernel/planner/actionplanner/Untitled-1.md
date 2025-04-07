@@ -1,5 +1,7 @@
 ---
-Crafted by [Genie](https://marketplace.visualstudio.com/items?itemName=genieai.chatgpt-vscode)
+title: "website"
+description: "A brief description"
+date: 2025-04-07
 ---
 
 # Java Syntax Error Resolution Guide
