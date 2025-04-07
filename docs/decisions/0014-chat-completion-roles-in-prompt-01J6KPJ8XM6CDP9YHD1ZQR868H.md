@@ -6,13 +6,8 @@ deciders: markwallace-microsoft, matthewbolanos
 informed: null
 runme:
   document:
-    relativePath: 0014-chat-completion-roles-in-prompt.md
   session:
-    id: 01J6KPJ8XM6CDP9YHD1ZQR868H
     updated: 2024-08-31 07:59:59Z
-status: accepted
----
-
 - It should be possible to mark a block of text in a prompt as a message with a role so that it can be converted into a list of chat messages for use by chat completion connectors.
 - The syntax specific to the template engine message/role should be mapped to the SK message/role syntax to abstract SK from a specific template engine syntax.
 
@@ -27,13 +22,6 @@ You are a bank manager. Be helpful, respectful, appreciate diverse language styl
 
 {{message role="user"}}
 I want to {{$input}}
-{{message role="user"}}
-```
-
-Rendered prompt:
-
-<message role="system">
-```
 this.handlebarsEngine.RegisterHelper("user", (EncodedTextWriter output, Context context, Arguments arguments) => {
   //Emit the <message role="user"> tags
 });
@@ -53,7 +41,6 @@ I want to {{$input}}
 Rendered prompt:
 
 ```xml {"id":"01J6KQ5B99ZG69EC80EWQ9CTA4"}
-<message role="system">
 I want to buy a house.
 </message>
 ```
