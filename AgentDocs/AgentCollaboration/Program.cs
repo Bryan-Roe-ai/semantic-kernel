@@ -204,7 +204,7 @@ public static class Program
                         Console.WriteLine($"Unable to access file: {filePath}");
                         continue;
                     }
-                    input = File.ReadAllText(filePath);
+                    input = await File.ReadAllTextAsync(filePath);
                 }
                 catch (Exception)
                 {

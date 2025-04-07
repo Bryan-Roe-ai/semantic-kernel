@@ -16,6 +16,7 @@ using Azure.Security.KeyVault.Secrets;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.TeamFoundation.Build.Client;
 using AI.TaskGenerator;
+using Microsoft.Extensions.Logging;
 
 namespace AgentsSample;
 
