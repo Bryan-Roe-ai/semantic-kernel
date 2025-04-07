@@ -49,20 +49,12 @@ IKernel kernel = Kernel.Builder
 | ---------------- | ----- | ------------ |
 | Compile template | 66277 | 6            |
 | Render variables | 4173  | 0            |
-**By separating the extract blocks/compile from the render variables operation, it will be possible to optimize performance by compiling templates just once.**
-
-## Implementing a Custom Prompt Template Engine
-
-{
-    Task<string> RenderAsync(string templateText, SKContext context, CancellationToken cancellationToken = default);
-}
 
 public interface IPromptTemplate
 {
     IReadOnlyList<ParameterView> Parameters { get; }
     Task<string> RenderAsync(SKContext executionContext, CancellationToken cancellationToken = default);
 }
-
 A prototype implementation of a Handlebars prompt template engine could look like this:
 
 public class HandlebarsTemplateEngine : IPromptTemplateEngine
@@ -88,7 +80,6 @@ public class HandlebarsTemplateEngine : IPromptTemplateEngine
 
     }
 }
-```
 
 **Note: This is just a prototype implementation for illustration purposes only.**
 
@@ -100,7 +91,6 @@ There is one implementation of `IPromptTemplate` provided in the Semantic Kernel
 
 ## Handlebars Considerations
 
-Handlebars does not support dynamic binding of helpers. Consider the following snippet:
 
 ```csharp
 HandlebarsHelper link_to = (writer, context, parameters) =>
