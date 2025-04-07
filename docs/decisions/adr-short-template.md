@@ -32,3 +32,8 @@ Chosen option: "{Title of option 1}", because
 ## Validation
 
 {Describe how the implementation of/compliance with the ADR is validated, e.g., by a review or an ArchUnit test.}
+
+## Additional Resources
+
+- [Link to example ADR](#)
+- [Link to documentation on ADRs](#)
