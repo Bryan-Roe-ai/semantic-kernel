@@ -21,7 +21,6 @@ Today, SK runs all text prompts using the text completion service. With the addi
 
 ## Considered Options
 
-__1. Completion service type identified by the "prompt_type" property.__ This option presumes adding the 'prompt_type' property to the prompt template config model class, 'PromptTemplateConfig.' The property will be specified once by a prompt developer and will be used by the 'SemanticFunction' class to decide which completion service type (not instance) to use when resolving an instance of that particular completion service type.
 
 
 {
@@ -36,14 +35,10 @@ config: {
 	"prompt_type": "text",
 	...
 }
-
 name: ComicStrip.Draw
 config: {
 	"prompt_type": "image",
 }
-
-
-
 name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
