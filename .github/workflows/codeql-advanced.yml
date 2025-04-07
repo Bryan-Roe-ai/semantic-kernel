@@ -2,54 +2,64 @@ name: "CodeQL Advanced"
 
 on:
   push:
- branches: ["main"]
+    branches: ["main"]
   pull_request:
-    branches ["main"]
- :
+    branches: ["main"]
+  schedule:
     - cron: '22 20 * * 3'
 
 jobs:
- :
-    name: Analyze (${{matrix.language}})
-    runs-on: $(matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest'}}
+  analyze:
+    name: Analyze ${{ matrix.language }}
+    runs-on: ${{ matrix.language == 'swift' && 'macos-latest' || 'ubuntu-latest' }}
     permissions:
-     -events: write
- packages: read      actions: read
-      contents: read    strategy:
-      fail-fast: false      matrix:
+      actions: read
+      contents: read
+      packages: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
         include:
- - language: c-cpp
+          - language: c-cpp
             build-mode: autobuild
-          language: csharp
+          - language: csharp
             build-mode: none
           - language: java-kotlin
- build-mode: none
+            build-mode: none
           - language: javascript-typescript
- build-mode: none
-          -: python
-            build: none
+            build-mode: none
+          - language: python
+            build-mode: none
 
     steps:
-    - name Checkout repository
-      uses: actions/checkout@v
-    
-    - name: Setup .NET      uses: actions-dotnet@v1
-      with:
-        dotnet-version: '6.x'
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
- name: Initialize CodeQL
-      uses: githubql-action/init@v3
-     :
-        languages:{{matrix.language}}
-        build-mode: ${{matrix.build-mode}}
-       : +security-extended,-and-quality
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.x'
 
-    - if: matrix.build-mode == 'manual      shell: bash
-      run: |
-        echo 'Building code for analysis...'
-        bootstrap
-        release
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          queries: +security-extended,-and-quality
 
+      - name: Build code
+        if: matrix.build-mode == 'manual'
+        shell: bash
+        run: |
+          echo 'Building code for analysis...'
+          bootstrap
+          release
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: language:${{ matrix.language }}
     -: Perform CodeQL Analysis
       uses github/codeql-action/analyze3
  with:
