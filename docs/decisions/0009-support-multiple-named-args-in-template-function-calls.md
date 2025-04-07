@@ -16,7 +16,6 @@ Native functions now support multiple parameters, populated from context values 
 ## Decision Drivers
 
 - Parity with Guidance
-- Readability
 - Similarity to languages familiar to SK developers
 - YAML compatibility
 
@@ -32,7 +31,6 @@ Pros:
 
 - Commas could make longer function calls easier to read, especially if spaces before and after the arg separator (a colon in this case) are allowed.
 
-Cons:
 
 - Guidance doesn't use commas
 - Spaces are already used as delimiters elsewhere so the added complexity of supporting commas isn't necessary
@@ -48,7 +46,6 @@ Cons:
 Pros:
 
 - Resembles JavaScript Object syntax and C# named argument syntax
-
 Cons:
 
 - Doesn't align with Guidance syntax which uses equal signs as arg part delimiters
@@ -64,9 +61,8 @@ Pros:
 
 - Resembles Python's keyword argument syntax
 - Resembles Guidance's named argument syntax
-- Not too similar to YAML key/value pairs if we support YAML prompts in the future.
-
 Cons:
+
 
 - Doesn't align with C# syntax
 
@@ -87,8 +83,6 @@ Cons:
 - Doesn't align with Guidance which doesn't support spaces before and after the = sign.
 
 ## Decision Outcome
-
-Chosen options: "Syntax idea 3: Python/Guidance-Style keyword arguments", because it aligns well with Guidance's syntax and is the most compatible with YAML and "Syntax idea 4: Allow whitespace between arg name/value delimiter" for more flexible developer experience.
 
 Additional decisions:
 
