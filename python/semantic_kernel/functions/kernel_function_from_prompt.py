@@ -2,7 +2,7 @@
 
 import logging
 import os
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Mapping, Sequence
 from html import unescape
 from typing import TYPE_CHECKING, Any
 
@@ -92,8 +92,8 @@ class KernelFunctionFromPrompt(KernelFunction):
         ) = None,
 =======
         prompt_execution_settings: PromptExecutionSettings
-        | list[PromptExecutionSettings]
-        | dict[str, PromptExecutionSettings]
+        | Sequence[PromptExecutionSettings]
+        | Mapping[str, PromptExecutionSettings]
         | None = None,
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ) -> None:
@@ -198,7 +198,7 @@ through prompt_template_config or in the prompt_template."
                 prompt_execution_settings.service_id
                 or DEFAULT_SERVICE_NAME: prompt_execution_settings
             }
-        if isinstance(prompt_execution_settings, list):
+        if isinstance(prompt_execution_settings, Sequence):
             data["prompt_execution_settings"] = {
                 s.service_id or DEFAULT_SERVICE_NAME: s
                 for s in prompt_execution_settings

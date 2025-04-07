@@ -44,3 +44,25 @@ Currently, there are several aspects of error handling in SK that can be enhance
 - Create a new exception HttpOperationException, which includes a StatusCode property, and implement the necessary logic to map the exception from HttpStatusCode, HttpRequestException, or Azure.RequestFailedException. Update existing SK code that interacts with the HTTP stack to throw HttpOperationException in case of a failed HTTP request and assign the original exception as its inner exception.
 - Modify all SK components that currently store exceptions to SK context to rethrow them instead.
 - Simplify the SK critical exception handling functionality by modifying the IsCriticalException extension method to exclude handling of StackOverflowException and OutOfMemoryException exceptions. This is because the former exception is not thrown, so the calling code won't be executed, while the latter exception doesn't necessarily prevent the execution of recovery code.
+
+## Current Error Handling Approach in Kernel.cs
+
+In the `dotnet/src/SemanticKernel/Kernel.cs` file, the current error handling approach involves catching exceptions and storing them within the SKContext. This deviates from the standard .NET approach, which expects methods to either execute successfully or throw an exception if the contract is violated. This approach can make it challenging for developers to determine whether a method executed successfully or failed without analyzing specific properties of the SKContext instance.
+
+## Proposed Improvements to Error Handling
+
+1. **Exception Propagation**: Modify the Kernel.cs file to propagate exceptions to the SK client code instead of storing them in the SKContext. This will align the error handling approach with the standard .NET approach.
+2. **Standard Exception Usage**: Replace custom SK exceptions with standard .NET exceptions, such as ArgumentOutOfRangeException or ArgumentNullException, when class argument values are not provided or are invalid.
+3. **Simplified Exception Hierarchy**: Simplify the existing SK exception hierarchy by removing unnecessary custom exception types and using SKException for most cases. Create specific derived exceptions only when more details need to be conveyed.
+4. **Preserve Original Exception Details**: Ensure that the original exception details are preserved as inner exceptions when rethrowing SK exceptions. This will help SK client code understand the problem and handle it properly.
+5. **HttpOperationException**: Create a new exception HttpOperationException with a StatusCode property to handle failed HTTP requests. Update existing SK code that interacts with the HTTP stack to throw HttpOperationException in case of a failed HTTP request and assign the original exception as its inner exception.
+6. **Critical Exception Handling**: Simplify the SK critical exception handling functionality by modifying the IsCriticalException extension method to exclude handling of StackOverflowException and OutOfMemoryException exceptions.
+
+## Benefits of the Proposed Improvements
+
+1. **Consistency with .NET Standards**: The proposed improvements will bring SK error handling in line with the standard .NET approach, making it more consistent and predictable for developers.
+2. **Simplified Code**: By simplifying the exception hierarchy and using standard .NET exceptions, the SK codebase will become easier to maintain and understand.
+3. **Improved Developer Experience**: Developers using the .NET SK SDK will have a more intuitive and familiar experience when handling errors, reducing frustration and improving productivity.
+4. **Better Error Handling**: Preserving original exception details and using specific derived exceptions when necessary will provide more meaningful error messages and help developers diagnose and fix issues more effectively.
+5. **Enhanced HTTP Error Handling**: The introduction of HttpOperationException will provide a standardized way to handle failed HTTP requests, making it easier to manage and debug HTTP-related issues.
+6. **Robust Critical Exception Handling**: Simplifying the critical exception handling functionality will ensure that only truly critical exceptions are handled, improving the overall robustness of the SK codebase.

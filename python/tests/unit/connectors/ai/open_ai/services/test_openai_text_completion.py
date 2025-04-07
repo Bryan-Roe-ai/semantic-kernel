@@ -170,7 +170,6 @@ def streaming_completion_response() -> AsyncStream[TextCompletion]:
     return stream
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncCompletions, "create", new_callable=AsyncMock)
 async def test_tc(
     mock_create,
@@ -194,7 +193,6 @@ async def test_tc(
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncCompletions, "create", new_callable=AsyncMock)
 async def test_tc_singular(
     mock_create,
@@ -218,7 +216,6 @@ async def test_tc_singular(
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncCompletions, "create", new_callable=AsyncMock)
 async def test_tc_prompt_execution_settings(
     mock_create,
@@ -245,7 +242,6 @@ async def test_tc_prompt_execution_settings(
 # region Streaming
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncCompletions, "create", new_callable=AsyncMock)
 async def test_stc(
     mock_create,
@@ -272,7 +268,6 @@ async def test_stc(
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncCompletions, "create", new_callable=AsyncMock)
 async def test_stc_singular(
     mock_create,
@@ -299,7 +294,6 @@ async def test_stc_singular(
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncCompletions, "create", new_callable=AsyncMock)
 async def test_stc_prompt_execution_settings(
     mock_create,
@@ -326,7 +320,6 @@ async def test_stc_prompt_execution_settings(
     )
 
 
-@pytest.mark.asyncio
 @patch.object(AsyncCompletions, "create", new_callable=AsyncMock)
 async def test_stc_empty_choices(
     mock_create,

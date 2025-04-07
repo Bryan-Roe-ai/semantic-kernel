@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
 using Microsoft.Plugins.Manifest;
 using Microsoft.SemanticKernel.Http;
@@ -79,12 +79,12 @@ public static class CopilotAgentPluginKernelExtensions
 
         var results = await PluginManifestDocument.LoadAsync(CopilotAgentFileJsonContents, new ReaderOptions
         {
-            ValidationRules = new() // Disable validation rules
+            ValidationRules = [] // Disable validation rules
         }).ConfigureAwait(false);
 
         if (!results.IsValid)
         {
-            var messages = results.Problems.Select(p => p.Message).Aggregate((a, b) => $"{a}, {b}");
+            var messages = results.Problems.Select(static p => p.Message).Aggregate(static (a, b) => $"{a}, {b}");
             throw new InvalidOperationException($"Error loading the manifest: {messages}");
         }
 
@@ -128,11 +128,16 @@ public static class CopilotAgentPluginKernelExtensions
                 DocumentLoader.LoadDocumentFromFilePathAsStream(parsedDescriptionUrl.LocalPath,
                     logger);
 
-            var documentReadResult = await new OpenApiStreamReader(new()
-            {
-                BaseUrl = parsedDescriptionUrl
-            }
-            ).ReadAsync(openApiDocumentStream, cancellationToken).ConfigureAwait(false);
+            // TODO: Refactor the code to the new readers available in the OpenAPI.NET V2
+            ReadResult documentReadResult = await OpenApiModelFactory.LoadAsync(
+                input: openApiDocumentStream,
+                format: "TBD",
+                settings: new OpenApiReaderSettings()
+                {
+                    BaseUrl = new(apiDescriptionUrl)
+                },
+                cancellationToken: cancellationToken).ConfigureAwait(false);
+
             var openApiDocument = documentReadResult.OpenApiDocument;
             var openApiDiagnostic = documentReadResult.OpenApiDiagnostic;
 
@@ -141,7 +146,7 @@ public static class CopilotAgentPluginKernelExtensions
             var predicate = OpenApiFilterService.CreatePredicate(string.Join(",", manifestFunctions.Select(static f => f.Name)), null, null, openApiDocument);
             var filteredOpenApiDocument = OpenApiFilterService.CreateFilteredDocument(openApiDocument, predicate);
 
-            var server = filteredOpenApiDocument.Servers.FirstOrDefault();
+            var server = filteredOpenApiDocument.Servers?.FirstOrDefault();
             if (server?.Url is null)
             {
                 logger.LogWarning("Server URI not found. Plugin: {0}", pluginName);
@@ -152,9 +157,8 @@ public static class CopilotAgentPluginKernelExtensions
                 ? parameters
                 : new OpenApiFunctionExecutionParameters()
                 {
-                    EnableDynamicPayload = true,
+                    EnableDynamicPayload = false,
                     EnablePayloadNamespacing = true,
-                    ParameterFilter = (RestApiParameterFilterContext context) => context.Parameter.Name == "@odata.type" ? null : context.Parameter,
                 };
 
 #pragma warning disable CA2000 // Dispose objects before losing scope. No need to dispose the Http client here. It can either be an internal client using NonDisposableHttpClientHandler or an external client managed by the calling code, which should handle its disposal.
@@ -165,7 +169,7 @@ public static class CopilotAgentPluginKernelExtensions
                 operationRunnerHttpClient,
                 openApiFunctionExecutionParameters?.AuthCallback,
                 openApiFunctionExecutionParameters?.UserAgent,
-                openApiFunctionExecutionParameters?.EnableDynamicPayload ?? true,
+                openApiFunctionExecutionParameters?.EnableDynamicPayload ?? false,
                 openApiFunctionExecutionParameters?.EnablePayloadNamespacing ?? true);
 
             var info = OpenApiDocumentParser.ExtractRestApiInfo(filteredOpenApiDocument);

@@ -8,17 +8,14 @@ import os
 
 import httpx
 import pytest
+import pytest_asyncio
 from openai import AsyncOpenAI
 
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.open_ai.settings.open_ai_settings import (
     OpenAISettings,
 )
 from semantic_kernel.connectors.openapi_plugin import OpenAPIFunctionExecutionParameters
-=======
-from semantic_kernel.connectors.ai.open_ai.settings.open_ai_settings import OpenAISettings
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.functions.kernel_function import KernelFunction
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
@@ -31,6 +28,8 @@ from semantic_kernel.functions.kernel_function_from_prompt import (
 from semantic_kernel.kernel import Kernel
 
 logger = logging.getLogger(__name__)
+
+OPENAI_MODEL_ID = "gpt-3.5-turbo"
 
 # region Test Prompts
 
@@ -83,7 +82,8 @@ class LoggingAsyncClient(httpx.AsyncClient):
 # region Test Helper Methods
 
 
-def get_new_client():
+@pytest_asyncio.fixture
+async def async_client():
     openai_settings = OpenAISettings.create()
     logging_async_client = LoggingAsyncClient()
     async_client = AsyncOpenAI(
@@ -91,6 +91,10 @@ def get_new_client():
         http_client=logging_async_client,
     )
     return async_client, logging_async_client
+    async with AsyncOpenAI(
+        api_key=openai_settings.api_key.get_secret_value(), http_client=logging_async_client
+    ) as async_client:
+        yield async_client
 
 
 async def run_prompt(
@@ -137,6 +141,8 @@ async def run_function(
     is_streaming: bool = False,
     function: KernelFunction = None,
     arguments: KernelArguments = None,
+    function: KernelFunction | None = None,
+    arguments: KernelArguments | None = None,
 ):
     if is_streaming:
         try:
@@ -161,62 +167,68 @@ class City:
 @pytest.mark.parametrize(
     "is_inline, is_streaming, template_format, prompt",
     [
-        (
+        pytest.param(
             True,
             False,
             "semantic-kernel",
             '<message role="user">Can you help me tell the time in Seattle right now?</message><message role="assistant">Sure! The time in Seattle is currently 3:00 PM.</message><message role="user">What about New York?</message>',  # noqa: E501
+            id="sk_inline_non_streaming",
         ),
-        (
+        pytest.param(
             True,
             True,
             "semantic-kernel",
             '<message role="user">Can you help me tell the time in Seattle right now?</message><message role="assistant">Sure! The time in Seattle is currently 3:00 PM.</message><message role="user">What about New York?</message>',  # noqa: E501
+            id="sk_inline_streaming",
         ),
-        (
+        pytest.param(
             False,
             False,
             "semantic-kernel",
             '<message role="user">Can you help me tell the time in Seattle right now?</message><message role="assistant">Sure! The time in Seattle is currently 3:00 PM.</message><message role="user">What about New York?</message>',  # noqa: E501
+            id="sk_non_inline_non_streaming",
         ),
-        (
+        pytest.param(
             False,
             True,
             "semantic-kernel",
             '<message role="user">Can you help me tell the time in Seattle right now?</message><message role="assistant">Sure! The time in Seattle is currently 3:00 PM.</message><message role="user">What about New York?</message>',  # noqa: E501
+            id="sk_non_inline_streaming",
         ),
-        (
+        pytest.param(
             False,
             False,
             "handlebars",
             '<message role="user">Can you help me tell the time in Seattle right now?</message><message role="assistant">Sure! The time in Seattle is currently 3:00 PM.</message><message role="user">What about New York?</message>',  # noqa: E501
+            id="hb_non_inline_non_streaming",
         ),
-        (
+        pytest.param(
             False,
             True,
             "handlebars",
             '<message role="user">Can you help me tell the time in Seattle right now?</message><message role="assistant">Sure! The time in Seattle is currently 3:00 PM.</message><message role="user">What about New York?</message>',  # noqa: E501
+            id="hb_non_inline_streaming",
         ),
-        (
+        pytest.param(
             False,
             False,
             "jinja2",
             '<message role="user">Can you help me tell the time in Seattle right now?</message><message role="assistant">Sure! The time in Seattle is currently 3:00 PM.</message><message role="user">What about New York?</message>',  # noqa: E501
+            id="j2_non_inline_non_streaming",
         ),
-        (
+        pytest.param(
             False,
             True,
             "jinja2",
             '<message role="user">Can you help me tell the time in Seattle right now?</message><message role="assistant">Sure! The time in Seattle is currently 3:00 PM.</message><message role="user">What about New York?</message>',  # noqa: E501
+            id="j2_non_inline_streaming",
         ),
     ],
 )
-@pytest.mark.asyncio
-async def test_prompt_with_chat_roles(is_inline, is_streaming, template_format, prompt):
-    async_client, logging_client = get_new_client()
+async def test_prompt_with_chat_roles(is_inline, is_streaming, template_format, prompt, async_client):
     ai_service = OpenAIChatCompletion(
         service_id="test",
-        ai_model_id="gpt-3.5-turbo",
+        ai_model_id=OPENAI_MODEL_ID,
         async_client=async_client,
     )
 
@@ -232,7 +244,7 @@ async def test_prompt_with_chat_roles(is_inline, is_streaming, template_format, 
         prompt=prompt,
     )
 
-    request_content = logging_client.get_request_content()
+    request_content = async_client._client.get_request_content()
     assert request_content is not None
 
     obtained_object = json.loads(request_content)
@@ -249,65 +261,7 @@ async def test_prompt_with_chat_roles(is_inline, is_streaming, template_format, 
 
     if is_streaming:
         expected_object["stream"] = True
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
         expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
     assert obtained_object == expected_object
 
@@ -321,42 +275,61 @@ async def test_prompt_with_chat_roles(is_inline, is_streaming, template_format, 
     "is_inline, is_streaming, template_format, prompt",
     [
         (
+        pytest.param(
             False,
             False,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
         ),
         (
+            id="hb_non_inline_non_streaming",
+        ),
+        pytest.param(
             False,
             True,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
         ),
         (
+            id="hb_non_inline_streaming",
+        ),
+        pytest.param(
             False,
             False,
             "jinja2",
             "Can you help me tell the time in {{city.name}} right now?",
         ),
         (
+            id="j2_non_inline_non_streaming",
+        ),
+        pytest.param(
             False,
             True,
             "jinja2",
             "Can you help me tell the time in {{city.name}} right now?",
         ),
         (
+            id="j2_non_inline_streaming",
+        ),
+        pytest.param(
             True,
             False,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
         ),
         (
+            id="hb_inline_non_streaming",
+        ),
+        pytest.param(
             True,
             True,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
         ),
         (
+            id="hb_inline_streaming",
+        ),
+        pytest.param(
             True,
             False,
             "jinja2",
@@ -375,9 +348,17 @@ async def test_prompt_with_complex_objects(
     is_inline, is_streaming, template_format, prompt
 ):
     async_client, logging_client = get_new_client()
+            id="j2_inline_non_streaming",
+        ),
+        pytest.param(
+            True, True, "jinja2", "Can you help me tell the time in {{city.name}} right now?", id="j2_inline_streaming"
+        ),
+    ],
+)
+async def test_prompt_with_complex_objects(is_inline, is_streaming, template_format, prompt, async_client):
     ai_service = OpenAIChatCompletion(
         service_id="default",
-        ai_model_id="gpt-3.5-turbo",
+        ai_model_id=OPENAI_MODEL_ID,
         async_client=async_client,
     )
 
@@ -394,7 +375,7 @@ async def test_prompt_with_complex_objects(
         arguments=KernelArguments(city=City("Seattle")),
     )
 
-    request_content = logging_client.get_request_content()
+    request_content = async_client._client.get_request_content()
     assert request_content is not None
 
     obtained_object = json.loads(request_content)
@@ -411,65 +392,7 @@ async def test_prompt_with_complex_objects(
 
     if is_streaming:
         expected_object["stream"] = True
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
         expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
     assert obtained_object == expected_object
 
@@ -482,14 +405,21 @@ async def test_prompt_with_complex_objects(
 @pytest.mark.parametrize(
     "is_inline, is_streaming, template_format, prompt",
     [
-        (True, False, "semantic-kernel", sk_prompt),
-        (True, True, "semantic-kernel", sk_prompt),
-        (False, False, "semantic-kernel", sk_prompt),
-        (False, True, "semantic-kernel", sk_prompt),
-        (False, False, "handlebars", hb_prompt),
-        (False, True, "handlebars", hb_prompt),
-        (False, False, "jinja2", j2_prompt),
-        (False, True, "jinja2", j2_prompt),
+        pytest.param(True, False, "semantic-kernel", sk_prompt, id="sk_inline_non_streaming"),
+        pytest.param(True, True, "semantic-kernel", sk_prompt, id="sk_inline_streaming"),
+        pytest.param(False, False, "semantic-kernel", sk_prompt, id="sk_non_inline_non_streaming"),
+        pytest.param(False, True, "semantic-kernel", sk_prompt, id="sk_non_inline_streaming"),
+        pytest.param(
+            False,
+            False,
+            "handlebars",
+            hb_prompt,
+            id="hb_non_inline_non_streaming",
+            marks=pytest.mark.xfail(reason="Throws intermittent APIConnectionError errors"),
+        ),
+        pytest.param(False, True, "handlebars", hb_prompt, id="hb_non_inline_streaming"),
+        pytest.param(False, False, "jinja2", j2_prompt, id="j2_non_inline_non_streaming"),
+        pytest.param(False, True, "jinja2", j2_prompt, id="j2_non_inline_streaming"),
     ],
 )
 @pytest.mark.asyncio
@@ -497,9 +427,10 @@ async def test_prompt_with_helper_functions(
     is_inline, is_streaming, template_format, prompt
 ):
     async_client, logging_client = get_new_client()
+async def test_prompt_with_helper_functions(is_inline, is_streaming, template_format, prompt, async_client):
     ai_service = OpenAIChatCompletion(
         service_id="default",
-        ai_model_id="gpt-3.5-turbo",
+        ai_model_id=OPENAI_MODEL_ID,
         async_client=async_client,
     )
 
@@ -527,7 +458,7 @@ async def test_prompt_with_helper_functions(
         arguments=KernelArguments(city="Seattle"),
     )
 
-    request_content = logging_client.get_request_content()
+    request_content = async_client._client.get_request_content()
     assert request_content is not None
 
     obtained_object = json.loads(request_content)
@@ -544,65 +475,7 @@ async def test_prompt_with_helper_functions(
 
     if is_streaming:
         expected_object["stream"] = True
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
         expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
     assert obtained_object == expected_object
 
@@ -615,14 +488,14 @@ async def test_prompt_with_helper_functions(
 @pytest.mark.parametrize(
     "is_inline, is_streaming, template_format, prompt",
     [
-        (True, False, "semantic-kernel", sk_simple_prompt),
-        (True, True, "semantic-kernel", sk_simple_prompt),
-        (False, False, "semantic-kernel", sk_simple_prompt),
-        (False, True, "semantic-kernel", sk_simple_prompt),
-        (False, False, "handlebars", hb_simple_prompt),
-        (False, True, "handlebars", hb_simple_prompt),
-        (False, False, "jinja2", j2_simple_prompt),
-        (False, True, "jinja2", j2_simple_prompt),
+        pytest.param(True, False, "semantic-kernel", sk_simple_prompt, id="sk_inline_non_streaming"),
+        pytest.param(True, True, "semantic-kernel", sk_simple_prompt, id="sk_inline_streaming"),
+        pytest.param(False, False, "semantic-kernel", sk_simple_prompt, id="sk_non_inline_non_streaming"),
+        pytest.param(False, True, "semantic-kernel", sk_simple_prompt, id="sk_non_inline_streaming"),
+        pytest.param(False, False, "handlebars", hb_simple_prompt, id="hb_non_inline_non_streaming"),
+        pytest.param(False, True, "handlebars", hb_simple_prompt, id="hb_non_inline_streaming"),
+        pytest.param(False, False, "jinja2", j2_simple_prompt, id="j2_non_inline_non_streaming"),
+        pytest.param(False, True, "jinja2", j2_simple_prompt, id="j2_non_inline_streaming"),
     ],
 )
 @pytest.mark.asyncio
@@ -630,9 +503,10 @@ async def test_prompt_with_simple_variable(
     is_inline, is_streaming, template_format, prompt
 ):
     async_client, logging_client = get_new_client()
+async def test_prompt_with_simple_variable(is_inline, is_streaming, template_format, prompt, async_client):
     ai_service = OpenAIChatCompletion(
         service_id="default",
-        ai_model_id="gpt-3.5-turbo",
+        ai_model_id=OPENAI_MODEL_ID,
         async_client=async_client,
     )
 
@@ -649,7 +523,7 @@ async def test_prompt_with_simple_variable(
         arguments=KernelArguments(city="Seattle"),
     )
 
-    request_content = logging_client.get_request_content()
+    request_content = async_client._client.get_request_content()
     assert request_content is not None
 
     obtained_object = json.loads(request_content)
@@ -666,65 +540,7 @@ async def test_prompt_with_simple_variable(
 
     if is_streaming:
         expected_object["stream"] = True
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
         expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
     assert obtained_object == expected_object
 
@@ -737,22 +553,20 @@ async def test_prompt_with_simple_variable(
 @pytest.mark.parametrize(
     "is_inline, is_streaming, template_format, prompt",
     [
-        (True, False, "semantic-kernel", simple_prompt),
-        (True, True, "semantic-kernel", simple_prompt),
-        (False, False, "semantic-kernel", simple_prompt),
-        (False, True, "semantic-kernel", simple_prompt),
-        (False, False, "handlebars", simple_prompt),
-        (False, True, "handlebars", simple_prompt),
-        (False, False, "jinja2", simple_prompt),
-        (False, True, "jinja2", simple_prompt),
+        pytest.param(True, False, "semantic-kernel", simple_prompt, id="sk_inline_non_streaming"),
+        pytest.param(True, True, "semantic-kernel", simple_prompt, id="sk_inline_streaming"),
+        pytest.param(False, False, "semantic-kernel", simple_prompt, id="sk_non_inline_non_streaming"),
+        pytest.param(False, True, "semantic-kernel", simple_prompt, id="sk_non_inline_streaming"),
+        pytest.param(False, False, "handlebars", simple_prompt, id="hb_non_inline_non_streaming"),
+        pytest.param(False, True, "handlebars", simple_prompt, id="hb_non_inline_streaming"),
+        pytest.param(False, False, "jinja2", simple_prompt, id="j2_non_inline_non_streaming"),
+        pytest.param(False, True, "jinja2", simple_prompt, id="j2_non_inline_streaming"),
     ],
 )
-@pytest.mark.asyncio
-async def test_simple_prompt(is_inline, is_streaming, template_format, prompt):
-    async_client, logging_client = get_new_client()
+async def test_simple_prompt(is_inline, is_streaming, template_format, prompt, async_client):
     ai_service = OpenAIChatCompletion(
         service_id="default",
-        ai_model_id="gpt-3.5-turbo",
+        ai_model_id=OPENAI_MODEL_ID,
         async_client=async_client,
     )
 
@@ -768,7 +582,7 @@ async def test_simple_prompt(is_inline, is_streaming, template_format, prompt):
         prompt=prompt,
     )
 
-    request_content = logging_client.get_request_content()
+    request_content = async_client._client.get_request_content()
     assert request_content is not None
 
     obtained_object = json.loads(request_content)
@@ -785,65 +599,7 @@ async def test_simple_prompt(is_inline, is_streaming, template_format, prompt):
 
     if is_streaming:
         expected_object["stream"] = True
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
         expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
     assert obtained_object == expected_object
 
@@ -895,9 +651,52 @@ async def test_yaml_prompt(
     is_streaming, prompt_path, expected_result_path, kernel: Kernel
 ):
     async_client, logging_client = get_new_client()
+        pytest.param(
+            False, "simple_prompt_test.yaml", "prompt_simple_expected.json", id="simple_prompt_test_non_streaming"
+        ),
+        pytest.param(True, "simple_prompt_test.yaml", "prompt_simple_expected.json", id="simple_prompt_test_streaming"),
+        pytest.param(
+            False,
+            "prompt_with_chat_roles_test_hb.yaml",
+            "prompt_with_chat_roles_expected.json",
+            id="prompt_with_chat_roles_test_hb_non_streaming",
+        ),
+        pytest.param(
+            True,
+            "prompt_with_chat_roles_test_hb.yaml",
+            "prompt_with_chat_roles_expected.json",
+            id="prompt_with_chat_roles_test_hb_streaming",
+        ),
+        pytest.param(
+            False,
+            "prompt_with_chat_roles_test_j2.yaml",
+            "prompt_with_chat_roles_expected.json",
+            id="prompt_with_chat_roles_test_j2_non_streaming",
+        ),
+        pytest.param(
+            True,
+            "prompt_with_chat_roles_test_j2.yaml",
+            "prompt_with_chat_roles_expected.json",
+            id="prompt_with_chat_roles_test_j2_streaming",
+        ),
+        pytest.param(
+            False,
+            "prompt_with_simple_variable_test.yaml",
+            "prompt_with_simple_variable_expected.json",
+            id="prompt_with_simple_variable_non_streaming",
+        ),
+        pytest.param(
+            True,
+            "prompt_with_simple_variable_test.yaml",
+            "prompt_with_simple_variable_expected.json",
+            id="prompt_with_simple_variable_streaming",
+        ),
+    ],
+)
+async def test_yaml_prompt(is_streaming, prompt_path, expected_result_path, kernel: Kernel, async_client):
     ai_service = OpenAIChatCompletion(
         service_id="default",
-        ai_model_id="gpt-3.5-turbo",
+        ai_model_id=OPENAI_MODEL_ID,
         async_client=async_client,
     )
 
@@ -912,7 +711,7 @@ async def test_yaml_prompt(
 
     await run_function(kernel=kernel, is_streaming=is_streaming, function=function)
 
-    request_content = logging_client.get_request_content()
+    request_content = async_client._client.get_request_content()
     assert request_content is not None
 
     obtained_object = json.loads(request_content)
@@ -929,65 +728,7 @@ async def test_yaml_prompt(
 
     if is_streaming:
         expected_object["stream"] = True
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
         expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        expected_object["stream_options"] = {"include_usage": True}
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
     assert obtained_object == expected_object
 
@@ -998,15 +739,12 @@ async def test_yaml_prompt(
 
 
 async def setup_openapi_function_call(kernel, function_name, arguments):
-<<<<<<< HEAD
     openapi_spec_file = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json"
     )
-=======
     from semantic_kernel.connectors.openapi_plugin import OpenAPIFunctionExecutionParameters
 
     openapi_spec_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json")
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     request_details = None
 
@@ -1062,7 +800,6 @@ async def setup_openapi_function_call(kernel, function_name, arguments):
         return request_details
 
 
-@pytest.mark.asyncio
 async def test_openapi_get_lights(kernel: Kernel):
     request_content = await setup_openapi_function_call(
         kernel, function_name="GetLights", arguments=KernelArguments(roomId=1)
@@ -1075,7 +812,6 @@ async def test_openapi_get_lights(kernel: Kernel):
     assert request_content.get("params") == {"roomId": "1"}
 
 
-@pytest.mark.asyncio
 async def test_openapi_get_light_by_id(kernel: Kernel):
     request_content = await setup_openapi_function_call(
         kernel, function_name="GetLightById", arguments=KernelArguments(id=1)
@@ -1087,7 +823,6 @@ async def test_openapi_get_light_by_id(kernel: Kernel):
     assert request_content.get("url") == "https://127.0.0.1/Lights/1"
 
 
-@pytest.mark.asyncio
 async def test_openapi_delete_light_by_id(kernel: Kernel):
     request_content = await setup_openapi_function_call(
         kernel, function_name="DeleteLightById", arguments=KernelArguments(id=1)
@@ -1099,7 +834,6 @@ async def test_openapi_delete_light_by_id(kernel: Kernel):
     assert request_content.get("url") == "https://127.0.0.1/Lights/1"
 
 
-@pytest.mark.asyncio
 async def test_openapi_create_lights(kernel: Kernel):
     request_content = await setup_openapi_function_call(
         kernel,
@@ -1116,7 +850,6 @@ async def test_openapi_create_lights(kernel: Kernel):
     )
 
 
-@pytest.mark.asyncio
 async def test_openapi_put_light_by_id(kernel: Kernel):
     request_content = await setup_openapi_function_call(
         kernel,

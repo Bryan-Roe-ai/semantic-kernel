@@ -133,6 +133,16 @@ public class VolatileMemoryStore : IMemoryStore
         return Task.WhenAll(keys.Select(k => this.RemoveAsync(collectionName, k, cancellationToken)));
     }
 
+    /// <summary>
+    /// Get the nearest matches to the given embedding in the specified collection.
+    /// </summary>
+    /// <param name="collectionName">The name of the collection to search.</param>
+    /// <param name="embedding">The embedding to compare against.</param>
+    /// <param name="limit">The maximum number of matches to return.</param>
+    /// <param name="minRelevanceScore">The minimum relevance score for a match to be included.</param>
+    /// <param name="withEmbeddings">Whether to include embeddings in the results.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>An async enumerable of tuples containing the matching memory records and their relevance scores.</returns>
     public IAsyncEnumerable<(MemoryRecord, double)> GetNearestMatchesAsync(
         string collectionName,
         Embedding<float> embedding,
@@ -198,6 +208,13 @@ public class VolatileMemoryStore : IMemoryStore
 
     #region protected ================================================================================
 
+    /// <summary>
+    /// Try to get the collection with the specified name.
+    /// </summary>
+    /// <param name="name">The name of the collection.</param>
+    /// <param name="collection">The collection, if found.</param>
+    /// <param name="create">Whether to create the collection if it does not exist.</param>
+    /// <returns>True if the collection was found or created, false otherwise.</returns>
     protected bool TryGetCollection(
         string name,
         [NotNullWhen(true)] out ConcurrentDictionary<string,

@@ -5,15 +5,10 @@ from collections.abc import Mapping
 from copy import deepcopy
 from typing import Any, TypeVar
 from uuid import uuid4
-
 from openai import AsyncAzureOpenAI
-
-import json
-import logging
-from collections.abc import Mapping
+import sys
+from collections.abc import AsyncGenerator, Mapping
 from copy import deepcopy
-from typing import Any, TypeVar
-from uuid import uuid4
 
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
@@ -21,7 +16,6 @@ else:
     from typing_extensions import override  # pragma: no cover
 
 from openai import AsyncAzureOpenAI, AsyncStream
-from openai import AsyncAzureOpenAI
 from openai.lib.azure import AsyncAzureADTokenProvider
 from openai.types.chat.chat_completion import ChatCompletion, Choice
 from openai.types.chat.chat_completion_chunk import ChatCompletionChunk
@@ -218,6 +212,8 @@ class AzureChatCompletion(
     @overload
     def __init__(
         self,
+        deployment_name: str,
+        endpoint: Union[HttpsUrl, str],
         deployment_name: str,
         base_url: Union[HttpsUrl, str],
         service_id: Optional[str] = None,
@@ -608,6 +604,9 @@ class AzureChatCompletion(
             api_version=settings.get("api_version", DEFAULT_AZURE_API_VERSION),
             service_id=settings.get("service_id"),
             api_key=settings.get("api_key"),
+            api_version=settings.get("api_version", DEFAULT_AZURE_API_VERSION),
+            service_id=settings.get("service_id"),
+            api_key=settings.get("api_key"),
             ad_token=settings.get("ad_token"),
             ad_token_provider=settings.get("ad_token_provider"),
             default_headers=settings.get("default_headers"),
@@ -635,6 +634,7 @@ class AzureChatCompletion(
         chunk: ChatCompletionChunk,
         choice: ChunkChoice,
         chunk_metadata: dict[str, Any],
+        function_invoke_attempt: int = 0,
     ) -> "StreamingChatMessageContent":
         """Create an Azure streaming chat message content object from a choice."""
         content = super()._create_streaming_chat_message_content(
@@ -684,6 +684,8 @@ class AzureChatCompletion(
         assert isinstance(content, StreamingChatMessageContent) and isinstance(
             choice, ChunkChoice
         )  # nosec
+        content = super()._create_streaming_chat_message_content(chunk, choice, chunk_metadata, function_invoke_attempt)
+        assert isinstance(content, StreamingChatMessageContent) and isinstance(choice, ChunkChoice)  # nosec
         return self._add_tool_message_to_chat_message_content(content, choice)
 
     def _add_tool_message_to_chat_message_content(

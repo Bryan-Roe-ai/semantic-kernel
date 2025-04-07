@@ -1,5 +1,8 @@
+# Directories to scan
 dirs: 
   - .
+
+# Patterns to ignore during the scan
 ignorePatterns:
   - pattern: "/github/"
   - pattern: "./actions"
@@ -11,11 +14,17 @@ ignorePatterns:
   - pattern: "^https://localhost"
   - pattern: "^https://platform.openai.com"
   - pattern: "^https://outlook.office.com/bookings"
+
+# Base URL for the links
 baseUrl: https://github.com/microsoft/semantic-kernel/
+
+# Status codes that indicate the link is alive
 aliveStatusCodes: 
   - 200
   - 206
   - 429
   - 500
   - 503
+
+# Use .gitignore file for additional ignore patterns
 useGitIgnore: true

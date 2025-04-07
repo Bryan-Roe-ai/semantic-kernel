@@ -22,6 +22,7 @@ from semantic_kernel.exceptions.content_exceptions import ContentInitializationE
 if TYPE_CHECKING:
     from semantic_kernel.contents.chat_message_content import ChatMessageContent
     from semantic_kernel.contents.function_call_content import FunctionCallContent
+    from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
     from semantic_kernel.functions.function_result import FunctionResult
 
 TAG_CONTENT_MAP = {
@@ -176,6 +177,12 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
 
         return ChatMessageContent(role=AuthorRole.TOOL, items=[self])
 
+    def to_streaming_chat_message_content(self) -> "StreamingChatMessageContent":
+        """Convert the instance to a StreamingChatMessageContent."""
+        from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
+
+        return StreamingChatMessageContent(role=AuthorRole.TOOL, choice_index=0, items=[self])
+
     def to_dict(self) -> dict[str, str]:
         """Convert the instance to a dictionary."""
         return {
@@ -206,4 +213,12 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
 
     def __hash__(self) -> int:
         """Return the hash of the function result content."""
-        return hash((self.tag, self.id, self.result, self.name, self.function_name, self.plugin_name, self.encoding))
+        return hash((
+            self.tag,
+            self.id,
+            tuple(self.result) if isinstance(self.result, list) else self.result,
+            self.name,
+            self.function_name,
+            self.plugin_name,
+            self.encoding,
+        ))

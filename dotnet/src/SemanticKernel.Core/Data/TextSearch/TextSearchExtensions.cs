@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -290,5 +290,28 @@ public static class TextSearchExtensions
 
         return filter;
     }
+
+    private static IEnumerable<KernelParameterMetadata> CreateDefaultKernelParameterMetadata(JsonSerializerOptions jsonSerializerOptions)
+    {
+        return [
+            new KernelParameterMetadata("query", jsonSerializerOptions) { Description = "What to search for", ParameterType = typeof(string), IsRequired = true },
+            new KernelParameterMetadata("count", jsonSerializerOptions) { Description = "Number of results", ParameterType = typeof(int), IsRequired = false, DefaultValue = 2 },
+            new KernelParameterMetadata("skip", jsonSerializerOptions) { Description = "Number of results to skip", ParameterType = typeof(int), IsRequired = false, DefaultValue = 0 },
+        ];
+    }
+
+    [RequiresUnreferencedCode("Uses reflection for generating JSON schema for method parameters and return type, making it incompatible with AOT scenarios.")]
+    [RequiresDynamicCode("Uses reflection for generating JSON schema for method parameters and return type, making it incompatible with AOT scenarios.")]
+    private static IEnumerable<KernelParameterMetadata> GetDefaultKernelParameterMetadata()
+    {
+        return s_kernelParameterMetadata ??= [
+            new KernelParameterMetadata("query") { Description = "What to search for", ParameterType = typeof(string), IsRequired = true },
+            new KernelParameterMetadata("count") { Description = "Number of results", ParameterType = typeof(int), IsRequired = false, DefaultValue = 2 },
+            new KernelParameterMetadata("skip") { Description = "Number of results to skip", ParameterType = typeof(int), IsRequired = false, DefaultValue = 0 },
+        ];
+    }
+
+    private static IEnumerable<KernelParameterMetadata>? s_kernelParameterMetadata;
+
     #endregion
 }

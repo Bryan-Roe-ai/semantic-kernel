@@ -8,28 +8,22 @@ from pydantic import BaseModel
 from pydantic.dataclasses import dataclass as pydantic_dataclass
 from pytest import raises
 
-<<<<<<< HEAD
 from semantic_kernel.data.vector_store_model_decorator import vectorstoremodel
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
 from semantic_kernel.data.vector_store_record_fields import (
-=======
 from semantic_kernel.data import (
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     VectorStoreRecordDataField,
     VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
     VectorStoreRecordVectorField,
     vectorstoremodel,
 )
-<<<<<<< HEAD
 from semantic_kernel.exceptions.memory_connector_exceptions import (
     VectorStoreModelException,
 )
-=======
 from semantic_kernel.exceptions import VectorStoreModelException
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 def test_vanilla():
@@ -232,8 +226,10 @@ def test_non_vector_list_and_dict():
         key: Annotated[str, VectorStoreRecordKeyField()]
         list1: Annotated[list[int], VectorStoreRecordDataField()]
         list2: Annotated[list[str], VectorStoreRecordDataField]
+        list3: Annotated[list[str] | None, VectorStoreRecordDataField]
         dict1: Annotated[dict[str, int], VectorStoreRecordDataField()]
         dict2: Annotated[dict[str, str], VectorStoreRecordDataField]
+        dict3: Annotated[dict[str, str] | None, VectorStoreRecordDataField]
 
     assert hasattr(DataModelClass, "__kernel_vectorstoremodel__")
     assert hasattr(DataModelClass, "__kernel_vectorstoremodel_definition__")
@@ -241,12 +237,18 @@ def test_non_vector_list_and_dict():
         DataModelClass.__kernel_vectorstoremodel_definition__
     )
     assert len(data_model_definition.fields) == 5
+    data_model_definition: VectorStoreRecordDefinition = DataModelClass.__kernel_vectorstoremodel_definition__
+    assert len(data_model_definition.fields) == 7
     assert data_model_definition.fields["list1"].name == "list1"
     assert data_model_definition.fields["list1"].property_type == "list[int]"
     assert data_model_definition.fields["list2"].name == "list2"
     assert data_model_definition.fields["list2"].property_type == "list[str]"
+    assert data_model_definition.fields["list3"].name == "list3"
+    assert data_model_definition.fields["list3"].property_type == "list[str]"
     assert data_model_definition.fields["dict1"].name == "dict1"
     assert data_model_definition.fields["dict1"].property_type == "dict"
     assert data_model_definition.fields["dict2"].name == "dict2"
     assert data_model_definition.fields["dict2"].property_type == "dict"
+    assert data_model_definition.fields["dict3"].name == "dict3"
+    assert data_model_definition.fields["dict3"].property_type == "dict"
     assert data_model_definition.container_mode is False

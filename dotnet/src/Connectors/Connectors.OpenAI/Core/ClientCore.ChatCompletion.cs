@@ -453,56 +453,14 @@ internal partial class ClientCore
 
             var toolCallingConfig = this.GetFunctionCallingConfiguration(kernel, chatExecutionSettings, chatHistory, requestIndex);
 
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
             var chatOptions = this.CreateChatCompletionOptions(chatExecutionSettings, chatHistory, toolCallingConfig, kernel);
             var chatForRequest = CreateChatCompletionMessages(chatExecutionSettings, chat);
 
             var toolCallingConfig = this.GetToolCallingConfiguration(kernel, chatExecutionSettings, requestIndex);
 
             var chatOptions = this.CreateChatCompletionOptions(chatExecutionSettings, chat, toolCallingConfig, kernel);
-<<<<<<< main
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
             var chatOptions = this.CreateChatCompletionOptions(chatExecutionSettings, chatHistory, functionCallingConfig, kernel);
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
 
             // Reset state
             contentBuilder?.Clear();
@@ -1708,7 +1666,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using JsonSchemaMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Diagnostics;
@@ -1724,17 +1681,6 @@ namespace Microsoft.SemanticKernel.Connectors.OpenAI;
 /// </summary>
 internal partial class ClientCore
 {
-    /// <summary>
-    /// <see cref="JsonSchemaMapperConfiguration"/> for JSON schema format for structured outputs.
-    /// </summary>
-    private static readonly JsonSchemaMapperConfiguration s_jsonSchemaMapperConfiguration = new()
-    {
-        IncludeSchemaVersion = false,
-        IncludeTypeInEnums = true,
-        TreatNullObliviousAsNonNullable = true,
-        TransformSchemaNode = OpenAIJsonSchemaTransformer.Transform
-    };
-
     protected const string ModelProvider = "openai";
     protected record ToolCallingConfig(IList<ChatTool>? Tools, ChatToolChoice? Choice, bool AutoInvoke, bool AllowAnyRequestedKernelFunction, FunctionChoiceBehaviorOptions? Options);
     protected const string ModelProvider = "openai";
@@ -2526,7 +2472,8 @@ internal partial class ClientCore
             Seed = executionSettings.Seed,
             EndUserId = executionSettings.User,
             TopLogProbabilityCount = executionSettings.TopLogprobs,
-            IncludeLogProbabilities = executionSettings.Logprobs
+            IncludeLogProbabilities = executionSettings.Logprobs,
+            StoredOutputEnabled = executionSettings.Store,
         };
 
         var responseFormat = GetResponseFormat(executionSettings);
@@ -2580,6 +2527,14 @@ internal partial class ClientCore
         if (toolCallingConfig.Options?.AllowParallelCalls is not null)
         {
             options.AllowParallelToolCalls = toolCallingConfig.Options.AllowParallelCalls;
+        }
+
+        if (executionSettings.Metadata is not null)
+        {
+            foreach (var kvp in executionSettings.Metadata)
+            {
+                options.Metadata.Add(kvp.Key, kvp.Value);
+            }
         }
 
         return options;
@@ -2647,9 +2602,10 @@ internal partial class ClientCore
                 return ChatResponseFormat.CreateJsonSchemaFormat(
                     "JsonSchema",
                     new BinaryData(Encoding.UTF8.GetBytes(formatElement.ToString())));
+                return OpenAIChatResponseFormatBuilder.GetJsonSchemaResponseFormat(formatElement);
 
             case Type formatObjectType:
-                return GetJsonSchemaResponseFormat(formatObjectType);
+                return OpenAIChatResponseFormatBuilder.GetJsonSchemaResponseFormat(formatObjectType);
         }
 
         return null;
@@ -2958,30 +2914,16 @@ internal partial class ClientCore
 
         if (imageContent.Data is { IsEmpty: false } data)
         {
-<<<<<<< HEAD
-            return ChatMessageContentPart.CreateImageMessageContentPart(BinaryData.FromBytes(data), imageContent.MimeType);
             return ChatMessageContentPart.CreateImageMessageContentPart(BinaryData.FromBytes(data), imageContent.MimeType);
             return ChatMessageContentPart.CreateImagePart(BinaryData.FromBytes(data), imageContent.MimeType);
-            return ChatMessageContentPart.CreateImagePart(BinaryData.FromBytes(data), imageContent.MimeType);
-            return ChatMessageContentPart.CreateImagePart(BinaryData.FromBytes(data), imageContent.MimeType);
-            return ChatMessageContentPart.CreateImagePart(BinaryData.FromBytes(data), imageContent.MimeType);
-=======
             return ChatMessageContentPart.CreateImagePart(BinaryData.FromBytes(data), imageContent.MimeType, detailLevel);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         }
 
         if (imageContent.Uri is not null)
         {
-<<<<<<< HEAD
-            return ChatMessageContentPart.CreateImageMessageContentPart(imageContent.Uri);
             return ChatMessageContentPart.CreateImageMessageContentPart(imageContent.Uri);
             return ChatMessageContentPart.CreateImagePart(imageContent.Uri);
-            return ChatMessageContentPart.CreateImagePart(imageContent.Uri);
-            return ChatMessageContentPart.CreateImagePart(imageContent.Uri);
-            return ChatMessageContentPart.CreateImagePart(imageContent.Uri);
-=======
             return ChatMessageContentPart.CreateImagePart(imageContent.Uri, detailLevel);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         }
 
         throw new ArgumentException($"{nameof(ImageContent)} must have either Data or a Uri.");
@@ -3284,7 +3226,7 @@ internal partial class ClientCore
 
             foreach (var function in functions)
             {
-                tools.Add(function.Metadata.ToOpenAIFunction().ToFunctionDefinition());
+                tools.Add(function.Metadata.ToOpenAIFunction().ToFunctionDefinition(config?.Options?.AllowStrictSchemaAdherence ?? false));
             }
         }
 

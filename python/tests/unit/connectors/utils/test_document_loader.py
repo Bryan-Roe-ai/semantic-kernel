@@ -23,7 +23,6 @@ def http_client():
         ("Custom-Agent", "Custom-Agent"),
     ],
 )
-@pytest.mark.asyncio
 async def test_from_uri_success(http_client, user_agent, expected_user_agent):
     url = "https://example.com/document"
     response_text = "Document content"
@@ -42,7 +41,6 @@ async def test_from_uri_success(http_client, user_agent, expected_user_agent):
     )
 
 
-@pytest.mark.asyncio
 async def test_from_uri_default_user_agent(http_client):
     url = "https://example.com/document"
     response_text = "Document content"
@@ -61,7 +59,6 @@ async def test_from_uri_default_user_agent(http_client):
     )
 
 
-@pytest.mark.asyncio
 async def test_from_uri_with_auth_callback(http_client):
     url = "https://example.com/document"
     response_text = "Document content"
@@ -83,7 +80,6 @@ async def test_from_uri_with_auth_callback(http_client):
     )
 
 
-@pytest.mark.asyncio
 async def test_from_uri_request_error(http_client):
     url = "https://example.com/document"
 
@@ -96,7 +92,6 @@ async def test_from_uri_request_error(http_client):
     )
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.get")
 async def test_from_uri_http_status_error(mock_get, http_client):
     url = "https://example.com/document"
@@ -110,7 +105,6 @@ async def test_from_uri_http_status_error(mock_get, http_client):
     mock_get.assert_awaited_once_with(url, headers={"User-Agent": HTTP_USER_AGENT})
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.get")
 async def test_from_uri_general_exception(mock_get, http_client):
     url = "https://example.com/document"

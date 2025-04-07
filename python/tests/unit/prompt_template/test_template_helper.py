@@ -52,6 +52,7 @@ def test_create_helpers(kernel: Kernel):
 async def test_create_helpers_fail(
     kernel: Kernel, template_format: str, enable_async: bool, exception: bool
 ):
+async def test_create_helpers_fail(kernel: Kernel, template_format: str, enable_async: bool, exception: bool):
     # Arrange
     function = KernelFunctionFromMethod(
         kernel_function(lambda x: x + 1, name="test"), plugin_name="test"

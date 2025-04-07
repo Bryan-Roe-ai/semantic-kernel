@@ -155,7 +155,7 @@ public abstract class ToolCallBehavior
                     tools = [];
                     for (int i = 0; i < functions.Count; i++)
                     {
-                        tools.Add(functions[i].ToOpenAIFunction().ToFunctionDefinition());
+                        tools.Add(functions[i].ToOpenAIFunction().ToFunctionDefinition(false));
                     }
                 }
             }
@@ -181,7 +181,7 @@ public abstract class ToolCallBehavior
             var defs = new ChatTool[this._openAIFunctions.Length];
             for (int i = 0; i < defs.Length; i++)
             {
-                defs[i] = this._openAIFunctions[i].ToFunctionDefinition();
+                defs[i] = this._openAIFunctions[i].ToFunctionDefinition(false);
             }
             this._functions = defs;
         }
@@ -255,6 +255,7 @@ public abstract class ToolCallBehavior
             this._choice = ChatToolChoice.CreateFunctionChoice(this._tool.FunctionName);
 
             this._choice = ChatToolChoice.CreateFunctionChoice(this._tool.FunctionName);
+            this._tool = function.ToFunctionDefinition(false);
             this._choice = ChatToolChoice.CreateFunctionChoice(this._tool.FunctionName);
         }
 

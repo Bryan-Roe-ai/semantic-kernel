@@ -237,7 +237,6 @@ def test_embedding_missing_model_constructor(mistralai_unit_test_env):
         )
 
 
-@pytest.mark.asyncio
 async def test_embedding_generate_raw_embedding(mistralai_unit_test_env):
 <<<<<<< HEAD
     mock_client = AsyncMock(spec=MistralAsyncClient)
@@ -256,7 +255,6 @@ async def test_embedding_generate_raw_embedding(mistralai_unit_test_env):
     assert embedding == [[1, 2, 3, 4, 5]]
 
 
-@pytest.mark.asyncio
 async def test_embedding_generate_embedding(mistralai_unit_test_env):
 <<<<<<< HEAD
     mock_client = AsyncMock(spec=MistralAsyncClient)
@@ -275,7 +273,6 @@ async def test_embedding_generate_embedding(mistralai_unit_test_env):
     assert embedding.tolist() == [[1, 2, 3, 4, 5]]
 
 
-@pytest.mark.asyncio
 async def test_embedding_generate_embedding_exception(mistralai_unit_test_env):
     mock_client = AsyncMock(spec=Mistral)
     mock_client.embeddings = AsyncMock()

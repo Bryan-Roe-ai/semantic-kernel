@@ -2,7 +2,7 @@
 
 import json
 import logging
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 
 from azure.ai.inference.models import (
     AssistantMessage,
@@ -105,6 +105,9 @@ def _format_assistant_message(message: ChatMessageContent) -> AssistantMessage:
                             if isinstance(item.arguments, dict)
                             else item.arguments or ""
                         ),
+                        arguments=json.dumps(item.arguments)
+                        if isinstance(item.arguments, Mapping)
+                        else item.arguments or "",
                     ),
                 )
             )

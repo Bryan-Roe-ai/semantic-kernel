@@ -19,7 +19,8 @@ internal static class GPT3Settings
     /// <summary>Lazy load the cached encoding table (encoder.json).</summary>
     private static readonly Lazy<Dictionary<string, int>> s_encoder = new(() =>
         JsonSerializer.Deserialize<Dictionary<string, int>>(
-            EmbeddedResource.ReadEncodingTable()) ?? throw new SKException("Encoding table deserialization returned NULL"));
+            EmbeddedResource.ReadEncodingTable()) ?? throw new SKException(
+                "Encoding table deserialization returned NULL for file: vocab.bpe"));
 
     /// <summary>Lazy load the cached byte pair encoding table (vocab.bpe).</summary>
     private static readonly Lazy<Dictionary<(string, string), int>> s_bpeRanks = new(() =>

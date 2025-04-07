@@ -26,16 +26,12 @@ from redisvl.redis.utils import array_to_buffer, buffer_to_array, convert_bytes
 
 from semantic_kernel.connectors.memory.redis.const import (
     INDEX_TYPE_MAP,
-<<<<<<< HEAD
-=======
     STORAGE_TYPE_MAP,
     TYPE_MAPPER_VECTOR,
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     RedisCollectionTypes,
 )
 from semantic_kernel.connectors.memory.redis.utils import (
     RedisWrapper,
-<<<<<<< HEAD
     data_model_definition_to_redis_fields,
 )
 from semantic_kernel.data.vector_store_model_definition import (
@@ -45,7 +41,6 @@ from semantic_kernel.data.vector_store_record_collection import (
     VectorStoreRecordCollection,
 )
 from semantic_kernel.data.vector_store_record_fields import (
-=======
     _filters_to_redis_filters,
     data_model_definition_to_redis_fields,
 )
@@ -53,7 +48,6 @@ from semantic_kernel.data.const import DistanceFunction
 from semantic_kernel.data.kernel_search_results import KernelSearchResults
 from semantic_kernel.data.record_definition import (
     VectorStoreRecordDefinition,
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     VectorStoreRecordKeyField,
     VectorStoreRecordVectorField,
 )
@@ -62,11 +56,12 @@ from semantic_kernel.data.vector_search.vector_search_options import VectorSearc
 from semantic_kernel.data.vector_search.vector_search_result import VectorSearchResult
 from semantic_kernel.data.vector_search.vector_text_search import VectorTextSearchMixin
 from semantic_kernel.data.vector_search.vectorized_search import VectorizedSearchMixin
-from semantic_kernel.exceptions.memory_connector_exceptions import (
-    MemoryConnectorException,
-    MemoryConnectorInitializationError,
+from semantic_kernel.exceptions import (
+    VectorSearchExecutionException,
+    VectorSearchOptionsException,
+    VectorStoreInitializationException,
+    VectorStoreOperationException,
 )
-from semantic_kernel.exceptions.search_exceptions import VectorSearchExecutionException, VectorSearchOptionsException
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.list_handler import desync_list
 
@@ -131,6 +126,7 @@ class RedisCollection(VectorSearchBase[str, TModel], VectorizedSearchMixin[TMode
             raise MemoryConnectorInitializationError(
                 "Failed to create Redis settings.", ex
             ) from ex
+            raise VectorStoreInitializationException("Failed to create Redis settings.", ex) from ex
         super().__init__(
             data_model_type=data_model_type,
             data_model_definition=data_model_definition,
@@ -176,6 +172,8 @@ class RedisCollection(VectorSearchBase[str, TModel], VectorizedSearchMixin[TMode
         fields = data_model_definition_to_redis_fields(
             self.data_model_definition, self.collection_type
         )
+            raise VectorStoreOperationException("Invalid index type supplied.")
+        fields = data_model_definition_to_redis_fields(self.data_model_definition, self.collection_type)
         index_definition = IndexDefinition(
             prefix=f"{self.collection_name}:",
             index_type=INDEX_TYPE_MAP[self.collection_type],
@@ -338,17 +336,14 @@ class RedisHashsetCollection(RedisCollection):
         return self._unget_redis_key(upsert_record["name"])
 
     @override
-<<<<<<< HEAD
     async def _inner_get(
         self, keys: Sequence[str], **kwargs
     ) -> Sequence[dict[bytes, bytes]] | None:
         results = await asyncio.gather(
             *[self.redis_database.hgetall(self._get_redis_key(key)) for key in keys]
         )
-=======
     async def _inner_get(self, keys: Sequence[str], **kwargs) -> Sequence[dict[str, Any]] | None:
         results = await asyncio.gather(*[self._single_get(self._get_redis_key(key)) for key in keys])
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         return [result for result in results if result]
 
     async def _single_get(self, key: str) -> dict[str, Any] | None:
@@ -473,22 +468,17 @@ class RedisJsonCollection(RedisCollection):
         return self._unget_redis_key(upsert_record["name"])
 
     @override
-<<<<<<< main
     async def _inner_get(
         self, keys: Sequence[str], **kwargs
     ) -> Sequence[dict[bytes, bytes]] | None:
         results = await self.redis_database.json().mget(
             [self._get_redis_key(key) for key in keys], "$", **kwargs
         )
-=======
     async def _inner_get(self, keys: Sequence[str], **kwargs) -> Sequence[dict[bytes, bytes]] | None:
         kwargs_copy = copy(kwargs)
         kwargs_copy.pop("include_vectors", None)
-<<<<<<< HEAD
         results = await self.redis_database.json().mget([self._get_redis_key(key) for key in keys], "$", **kwargs_copy)
->>>>>>> upstream/main
         return [result[0] for result in results if result]
-=======
         redis_keys = [self._get_redis_key(key) for key in keys]
         results = await self.redis_database.json().mget(redis_keys, "$", **kwargs_copy)
         return [self._add_key(key, result[0]) for key, result in zip(redis_keys, results) if result]
@@ -496,7 +486,6 @@ class RedisJsonCollection(RedisCollection):
     def _add_key(self, key: str, record: dict[str, Any]) -> dict[str, Any]:
         record[self.data_model_definition.key_field_name] = key
         return record
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     @override
     async def _inner_delete(self, keys: Sequence[str], **kwargs: Any) -> None:
@@ -533,19 +522,16 @@ class RedisJsonCollection(RedisCollection):
         **kwargs: Any,
     ) -> Sequence[dict[str, Any]]:
         results = []
-<<<<<<< HEAD
         for key, record in zip(keys, records):
             record[self.data_model_definition.key_field_name] = self._unget_redis_key(
                 key
             )
             results.append(record)
-=======
         key_field_name = self.data_model_definition.key_field_name
         for record in records:
             rec = record.copy()
             rec[key_field_name] = self._unget_redis_key(record[key_field_name])
             results.append(rec)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         return results
 
     def _add_return_fields(self, query: TQuery, include_vectors: bool) -> TQuery:

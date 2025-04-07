@@ -293,6 +293,101 @@ This diagram show current skills are integrated with the Semantic Kernel core.
 ___Note:___
 
 - This is not a true class hierarchy diagram. It show some class relationships and dependencies.
-- Namespaces are abbreviated to remove Microsoft.SemanticKernel prefix. Namespaces use `_` rather than `.`.
+- Namespaces are abbreviated to remove Microsoft.SemanticKernel prefix. Namespaces use `_` rather than `.`
 
 <img src="./diagrams/skfunctions-preview.png" alt="ISKFunction class relationships" width="400"/>
+
+## Current Project Structure
+
+The current project structure of the repository is as follows:
+
+```text
+SK-dotnet
+├── samples/
+└── src/
+    ├── connectors/
+    │   ├── Connectors.AI.OpenAI*
+    │   ├── Connectors...
+    │   └── Connectors.UnitTests
+    ├── extensions/
+    │   ├── Planner.ActionPlanner*
+    │   ├── Planner.SequentialPlanner*
+    │   ├── Planner.StepwisePlanner
+    │   ├── TemplateEngine.PromptTemplateEngine*
+    │   └── Extensions.UnitTests
+    ├── InternalUtilities/
+    ├── skills/
+    │   ├── Skills.Core
+    │   ├── Skills.Document
+    │   ├── Skills.Grpc
+    │   ├── Skills.MsGraph
+    │   ├── Skills.OpenAPI
+    │   ├── Skills.Web
+    │   └── Skills.UnitTests
+    ├── IntegrationTests
+    ├── SemanticKernel*
+    ├── SemanticKernel.Abstractions*
+    ├── SemanticKernel.MetaPackage
+    └── SemanticKernel.UnitTests
+```
+
+## Proposed Project Structure
+
+The proposed project structure aims to provide a cohesive, well-defined set of assemblies that developers can easily combine based on their needs. The main categories for the projects will be:
+
+1. `Connectors`: A connector project allows the Semantic Kernel to connect to AI and Memory services. Some of the existing connector projects may move to other repositories.
+2. `Planners`: A planner project provides one or more planner implementations which take an ask and convert it into an executable plan to achieve that ask. This category will include the current action, sequential, and stepwise planners (these could be merged into a single project). Additional planning implementations, e.g., planners that generate Powershell or Python code, can be added as separate projects.
+3. `Functions`: A function project that enables the Semantic Kernel to access the functions it will orchestrate. This category will include:
+   - Semantic functions, i.e., prompts executed against an LLM
+   - GRPC remote procedures, i.e., procedures executed remotely using the GRPC framework
+   - Open API endpoints, i.e., REST endpoints that have Open API definitions executed remotely using the HTTP protocol
+4. `Plugins`: A plugin project contains the implementation(s) of a Semantic Kernel plugin. A Semantic Kernel plugin contains a concrete implementation of a function, e.g., a plugin may include code for basic text operations.
+
+The proposed project structure is as follows:
+
+```text
+SK-dotnet
+├── samples/
+└── libraries/
+    ├── SK-dotnet.sln
+    │
+    ├── Microsoft.SemanticKernel.Connectors.AI.OpenAI*
+    │   ├── src
+    │   └── tests
+    │ (Not shown but all projects will have src and tests subfolders)
+    ├── Microsoft.SemanticKernel.Connectors.AI.HuggingFace
+    ├── Microsoft.SemanticKernel.Connectors.Memory.AzureCognitiveSearch
+    ├── Microsoft.SemanticKernel.Connectors.Memory.Qdrant
+    │
+    ├── Microsoft.SemanticKernel.Planners*
+    │
+    ├── Microsoft.SemanticKernel.Reliability.Basic*
+    ├── Microsoft.SemanticKernel.Reliability.Polly
+    │
+    ├── Microsoft.SemanticKernel.TemplateEngines.Basic*
+    │
+    ├── Microsoft.SemanticKernel.Functions.Semantic*
+    ├── Microsoft.SemanticKernel.Functions.Grpc
+    ├── Microsoft.SemanticKernel.Functions.OpenAPI
+    │
+    ├── Microsoft.SemanticKernel.Plugins.Core*
+    ├── Microsoft.SemanticKernel.Plugins.Document
+    ├── Microsoft.SemanticKernel.Plugins.MsGraph
+    ├── Microsoft.SemanticKernel.Plugins.Web
+    │
+    ├── InternalUtilities
+    │
+    ├── IntegrationTests
+    │
+    ├── Microsoft.SemanticKernel.Core*
+    ├── Microsoft.SemanticKernel.Abstractions*
+    └── Microsoft.SemanticKernel.MetaPackage
+```
+
+## Benefits of the Proposed Project Structure
+
+1. **Consistency**: The proposed structure provides a consistent naming convention for assemblies and their root namespaces, making it easier for developers to discover where the code for a particular assembly is located.
+2. **Modularity**: By separating the projects into distinct categories (Connectors, Planners, Functions, Plugins), the proposed structure promotes modularity and allows developers to easily combine the assemblies based on their needs.
+3. **Clarity**: The proposed structure clearly distinguishes between plugin implementations and plugin integration, reducing confusion for developers.
+4. **Maintainability**: The proposed structure simplifies the process of maintaining and updating the codebase by organizing the projects in a logical and consistent manner.
+5. **Scalability**: The proposed structure allows for the addition of new projects and functionalities without disrupting the existing structure, making it easier to scale the codebase as needed.

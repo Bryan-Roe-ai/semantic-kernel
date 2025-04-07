@@ -18,7 +18,6 @@ def bing_connector(bing_unit_test_env):
     return BingConnector()
 
 
-@pytest.mark.asyncio
 @pytest.mark.parametrize(
     "status_code, response_data, expected_result",
     [
@@ -62,7 +61,6 @@ def test_bing_search_connector_init_with_empty_api_key(bing_unit_test_env) -> No
         )
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.get")
 async def test_search_http_status_error(mock_get, bing_connector):
     query = "test query"
@@ -80,7 +78,6 @@ async def test_search_http_status_error(mock_get, bing_connector):
     mock_get.assert_awaited_once()
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.get")
 async def test_search_request_error(mock_get, bing_connector):
     query = "test query"
@@ -97,7 +94,6 @@ async def test_search_request_error(mock_get, bing_connector):
     mock_get.assert_awaited_once()
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.get")
 async def test_search_general_exception(mock_get, bing_connector):
     query = "test query"
@@ -114,14 +110,12 @@ async def test_search_general_exception(mock_get, bing_connector):
     mock_get.assert_awaited_once()
 
 
-@pytest.mark.asyncio
 async def test_search_empty_query(bing_connector):
     with pytest.raises(ServiceInvalidRequestError) as excinfo:
         await bing_connector.search("", 1, 0)
     assert str(excinfo.value) == "query cannot be 'None' or empty."
 
 
-@pytest.mark.asyncio
 async def test_search_invalid_num_results(bing_connector):
     with pytest.raises(ServiceInvalidRequestError) as excinfo:
         await bing_connector.search("test", 0, 0)
@@ -132,14 +126,12 @@ async def test_search_invalid_num_results(bing_connector):
     assert str(excinfo.value) == "num_results value must be less than 50."
 
 
-@pytest.mark.asyncio
 async def test_search_invalid_offset(bing_connector):
     with pytest.raises(ServiceInvalidRequestError) as excinfo:
         await bing_connector.search("test", 1, -1)
     assert str(excinfo.value) == "offset must be greater than 0."
 
 
-@pytest.mark.asyncio
 async def test_search_api_failure(bing_connector):
     query = "test query"
     num_results = 1

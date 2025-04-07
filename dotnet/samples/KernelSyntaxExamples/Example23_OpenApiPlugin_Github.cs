@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
@@ -26,6 +26,9 @@ public static class Example23_OpenApiPlugin_GitHub
         Console.WriteLine("== Example23_OpenApiPlugin_GitHub ==");
         var firstPRNumber = await ListPullRequestsFromGitHubAsync(authenticationProvider);
         await GetPullRequestFromGitHubAsync(authenticationProvider, firstPRNumber);
+        await CreateBase64ContentAsync(authenticationProvider);
+        await ModifyBase64ContentAsync(authenticationProvider);
+        await DeleteBase64ContentAsync(authenticationProvider);
     }
 
     public static async Task<string> ListPullRequestsFromGitHubAsync(BearerAuthenticationProvider authenticationProvider)
@@ -81,5 +84,73 @@ public static class Example23_OpenApiPlugin_GitHub
         var kernelResult = await kernel.RunAsync(contextVariables, plugin["PullsGet"]);
 
         Console.WriteLine("Successful GitHub Get Pull Request plugin response: {0}", kernelResult.GetValue<RestApiOperationResponse>()?.Content);
+    }
+
+    public static async Task CreateBase64ContentAsync(BearerAuthenticationProvider authenticationProvider)
+    {
+        var kernel = new KernelBuilder().WithLoggerFactory(ConsoleLogger.LoggerFactory).Build();
+
+        var plugin = await kernel.ImportPluginFunctionsAsync(
+            "GitHubPlugin",
+            "../../../../../../samples/dotnet/OpenApiPluginsExample/GitHubPlugin/openapi.json",
+            new OpenApiFunctionExecutionParameters { AuthenticateCallbackProvider = _ => authenticationProvider.AuthenticateRequestAsync });
+
+        // Add arguments for required parameters, arguments for optional ones can be skipped.
+        var contextVariables = new ContextVariables();
+        contextVariables.Set("owner", "microsoft");
+        contextVariables.Set("repo", "semantic-kernel");
+        contextVariables.Set("path", "sample-path");
+        contextVariables.Set("message", "Creating a new file");
+        contextVariables.Set("content", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("Sample content")));
+
+        // Run
+        var kernelResult = await kernel.RunAsync(contextVariables, plugin["CreateFile"]);
+
+        Console.WriteLine("Successful GitHub Create File plugin response: {0}", kernelResult.GetValue<RestApiOperationResponse>()?.Content);
+    }
+
+    public static async Task ModifyBase64ContentAsync(BearerAuthenticationProvider authenticationProvider)
+    {
+        var kernel = new KernelBuilder().WithLoggerFactory(ConsoleLogger.LoggerFactory).Build();
+
+        var plugin = await kernel.ImportPluginFunctionsAsync(
+            "GitHubPlugin",
+            "../../../../../../samples/dotnet/OpenApiPluginsExample/GitHubPlugin/openapi.json",
+            new OpenApiFunctionExecutionParameters { AuthenticateCallbackProvider = _ => authenticationProvider.AuthenticateRequestAsync });
+
+        // Add arguments for required parameters, arguments for optional ones can be skipped.
+        var contextVariables = new ContextVariables();
+        contextVariables.Set("owner", "microsoft");
+        contextVariables.Set("repo", "semantic-kernel");
+        contextVariables.Set("path", "sample-path");
+        contextVariables.Set("message", "Updating the file");
+        contextVariables.Set("content", Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("Updated content")));
+
+        // Run
+        var kernelResult = await kernel.RunAsync(contextVariables, plugin["UpdateFile"]);
+
+        Console.WriteLine("Successful GitHub Update File plugin response: {0}", kernelResult.GetValue<RestApiOperationResponse>()?.Content);
+    }
+
+    public static async Task DeleteBase64ContentAsync(BearerAuthenticationProvider authenticationProvider)
+    {
+        var kernel = new KernelBuilder().WithLoggerFactory(ConsoleLogger.LoggerFactory).Build();
+
+        var plugin = await kernel.ImportPluginFunctionsAsync(
+            "GitHubPlugin",
+            "../../../../../../samples/dotnet/OpenApiPluginsExample/GitHubPlugin/openapi.json",
+            new OpenApiFunctionExecutionParameters { AuthenticateCallbackProvider = _ => authenticationProvider.AuthenticateRequestAsync });
+
+        // Add arguments for required parameters, arguments for optional ones can be skipped.
+        var contextVariables = new ContextVariables();
+        contextVariables.Set("owner", "microsoft");
+        contextVariables.Set("repo", "semantic-kernel");
+        contextVariables.Set("path", "sample-path");
+        contextVariables.Set("message", "Deleting the file");
+
+        // Run
+        var kernelResult = await kernel.RunAsync(contextVariables, plugin["DeleteFile"]);
+
+        Console.WriteLine("Successful GitHub Delete File plugin response: {0}", kernelResult.GetValue<RestApiOperationResponse>()?.Content);
     }
 }

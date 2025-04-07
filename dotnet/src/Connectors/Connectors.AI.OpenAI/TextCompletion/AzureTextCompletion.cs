@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Net.Http;
@@ -73,5 +73,18 @@ public sealed class AzureTextCompletion : AzureOpenAIClientBase, ITextCompletion
         return this.InternalGetTextResultsAsync(text, requestSettings, cancellationToken);
         var settings = CompletionRequestSettings.FromJson(requestSettings);
         return this.InternalCompletionStreamAsync(text, settings, cancellationToken);
+    }
+
+    /// <summary>
+    /// Interact with Azure Cognitive Services.
+    /// </summary>
+    /// <param name="input">The input data for the interaction.</param>
+    /// <returns>The result of the interaction.</returns>
+    public async Task<string> InteractWithAzureCognitiveServicesAsync(string input)
+    {
+        // Implement the logic to interact with Azure Cognitive Services here.
+        // This is a placeholder implementation.
+        await Task.Delay(100); // Simulate async operation
+        return $"Processed input: {input}";
     }
 }

@@ -10,7 +10,8 @@ else:
     from typing_extensions import Self  # pragma: no cover
 
 from pydantic import Field, field_validator, model_validator
-
+from pydantic import Field, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
@@ -37,6 +38,8 @@ class OpenAIPromptExecutionSettings(PromptExecutionSettings):
     temperature: Annotated[float | None, Field(ge=0.0, le=2.0)] = None
     top_p: Annotated[float | None, Field(ge=0.0, le=1.0)] = None
     user: str | None = None
+    store: bool | None = None
+    metadata: dict[str, str] | None = None
 
 
 class OpenAITextPromptExecutionSettings(OpenAIPromptExecutionSettings):
@@ -74,17 +77,19 @@ class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
     """Specific settings for the Chat Completion endpoint."""
 
     response_format: dict[Literal["type"], Literal["text", "json_object"]] | None = None
-
+    response_format: dict[Literal["type"], Literal["text", "json_object"]] | None = None
+    response_format: (
+        dict[Literal["type"], Literal["text", "json_object"]] | dict[str, Any] | type[BaseModel] | type | None
+    ) = None
     response_format: (
         dict[Literal["type"], Literal["text", "json_object"]] | dict[str, Any] | type[BaseModel] | type | None
     ) = None
     function_call: str | None = None
     functions: list[dict[str, Any]] | None = None
-    messages: Annotated[
-        list[dict[str, Any]] | None, Field(description="Do not set this manually. It is set by the service.")
-    ] = None
-    function_call_behavior: Annotated[FunctionCallBehavior | None, Field(exclude=True)] = None
-    parallel_tool_calls: bool = True
+    messages: list[dict[str, Any]] | None = Field(
+        None, description="Do not set this manually. It is set by the service based on the chat history."
+    )
+    function_call_behavior: FunctionCallBehavior | None = Field(None, exclude=True)
     tools: list[dict[str, Any]] | None = Field(
         None,
         max_length=64,
@@ -99,10 +104,14 @@ class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
         None,
         description="Additional options to pass when streaming is used. Do not set this manually.",
     )
+    messages: Annotated[
+        list[dict[str, Any]] | None, Field(description="Do not set this manually. It is set by the service.")
+    ] = None
+    function_call_behavior: Annotated[FunctionCallBehavior | None, Field(exclude=True)] = None
+    parallel_tool_calls: bool = True
     tools: Annotated[
         list[dict[str, Any]] | None,
         Field(
-            max_length=64,
             description="Do not set this manually. It is set by the service based "
             "on the function choice configuration.",
         ),

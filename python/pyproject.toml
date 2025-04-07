@@ -25,12 +25,8 @@ classifiers = [
 ]
 dependencies = [
     "aiohttp ~= 3.8",
-<<<<<<< HEAD
-    "pydantic ~= 2.0",
-=======
     "cloudevents ~=1.0",
-    "pydantic >=2.0,<2.10",
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+    "pydantic >=2.0,<2.11,!=2.10.0,!=2.10.1,!=2.10.2,!=2.10.3",
     "pydantic-settings ~= 2.0",
     "defusedxml ~= 0.7",
 
@@ -368,7 +364,7 @@ azure = [
     "azure-cosmos ~= 4.7"
 ]
 chroma = [
-    "chromadb >= 0.5,<0.6"
+    "chromadb >= 0.5,< 0.7"
 ]
 google = [
     "google-cloud-aiplatform ~= 1.60",
@@ -387,37 +383,28 @@ mongo = [
     "torch == 2.5.1"
 ]
 mongo = [
-<<<<<<< HEAD
     "motor >= 3.3.2,< 3.7.0"
-    "pymongo >= 4.8.0, < 4.9",
-=======
     "pymongo >= 4.8.0, < 4.11",
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-    "motor >= 3.3.2,< 3.7.0"
 ]
 notebooks = [
     "ipykernel ~= 6.29"
 ]
 milvus = [
-    "pymilvus >= 2.3,<2.4",
+    "pymilvus >= 2.3,< 2.6",
     "milvus >= 2.3,<2.3.8; platform_system != 'Windows'"
 ]
 
 ]
 mistralai = [
-<<<<<<< HEAD
-    "mistralai >= 0.4,< 2.0"
+    "mistralai >= 1.2,< 2.0"
     "pymilvus >= 2.3,< 2.5",
     "milvus >= 2.3,<2.3.8; platform_system != 'Windows'"
-=======
-    "mistralai >= 1.2,< 2.0"
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 ]
 ollama = [
-    "ollama ~= 0.2"
+    "ollama ~= 0.4"
 ]
 onnx = [
-    "onnxruntime-genai ~= 0.4; platform_system != 'Darwin'"
+    "onnxruntime-genai ~= 0.5"
 ]
 anthropic = [
     "anthropic ~= 0.32"
@@ -466,11 +453,12 @@ dev-dependencies = [
     "pytest ~= 8.2",
     "pytest-xdist[psutil] ~= 3.6",
     "pytest-cov >= 5.0",
-    "pytest-asyncio ~= 0.23",
+    "pytest-asyncio ~= 0.24",
+    "pytest-timeout>=2.3.1",
     "snoop ~= 0.4",
     "mypy >= 1.10",
     "types-PyYAML ~= 6.0.12.20240311",
-    "ruff ~= 0.7"
+    "ruff ~= 0.7",
 ]
 environments = [
     "sys_platform == 'darwin'",
@@ -481,9 +469,15 @@ environments = [
 [tool.pytest.ini_options]
 testpaths = 'tests'
 addopts = "-ra -q -r fEX"
+asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
 filterwarnings = [
     'ignore:.*FunctionChoiceBehavior.*:DeprecationWarning'
+]
+timeout = 120
+markers = [
+    "ollama: mark a test as requiring the Ollama service (use \"not ollama\" to skip those tests)",
+    "onnx: mark a test as requiring the Onnx service (use \"not onnx\" to skip those tests)"
 ]
 
 [tool.ruff]
@@ -547,7 +541,6 @@ name = "semantic_kernel"
 requires = ["flit-core >= 3.9,<4.0"]
 build-backend = "flit_core.buildapi"
 
-<<<<<<< HEAD
 [tool.poetry]
 name = "semantic-kernel"
 version = "0.1.0.dev"
@@ -577,6 +570,4 @@ build-backend = "poetry.core.masonry.api"
 [build-system]
 requires = ["flit-core >= 3.9,<4.0"]
 build-backend = "flit_core.buildapi"
-=======
 
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377

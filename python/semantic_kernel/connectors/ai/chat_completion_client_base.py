@@ -10,49 +10,16 @@ from typing import TYPE_CHECKING, Any, ClassVar
 
 from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
-from semantic_kernel.connectors.ai.function_calling_utils import merge_function_results
+from semantic_kernel.connectors.ai.function_calling_utils import (
+    merge_function_results,
+    merge_streaming_function_results,
+)
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior, FunctionChoiceType
 from semantic_kernel.contents.annotation_content import AnnotationContent
 from semantic_kernel.contents.file_reference_content import FileReferenceContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.exceptions.service_exceptions import ServiceInvalidExecutionSettingsError
 from semantic_kernel.services.ai_service_client_base import AIServiceClientBase
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
 
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
@@ -72,46 +39,9 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
 
     # Connectors that support function calling should set this to True
     SUPPORTS_FUNCTION_CALLING: ClassVar[bool] = False
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
 
     # region Internal methods to be implemented by the derived classes
 
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< Updated upstream
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
@@ -173,44 +103,9 @@ if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
     from semantic_kernel.contents import StreamingChatMessageContent
     from semantic_kernel.contents.chat_history import ChatHistory
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
->>>>>>> origin/main
 
     # region Internal methods to be implemented by the derived classes
 
-<<<<<<< main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     async def _inner_get_chat_message_contents(
         self,
         chat_history: "ChatHistory",
@@ -221,19 +116,6 @@ if TYPE_CHECKING:
         Args:
             chat_history (ChatHistory): The chat history to send.
             settings (PromptExecutionSettings): The settings for the request.
-<<<<<<< div
-=======
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
 
         Returns:
             chat_message_contents (list[ChatMessageContent]): The chat message contents representing the response(s).
@@ -244,15 +126,17 @@ if TYPE_CHECKING:
         self,
         chat_history: "ChatHistory",
         settings: "PromptExecutionSettings",
+        function_invoke_attempt: int = 0,
     ) -> AsyncGenerator[list["StreamingChatMessageContent"], Any]:
         """Send a streaming chat request to the AI service.
 
         Args:
-            chat_history (ChatHistory): The chat history to send.
-            settings (PromptExecutionSettings): The settings for the request.
+            chat_history: The chat history to send.
+            settings: The settings for the request.
+            function_invoke_attempt: The current attempt count for automatically invoking functions.
 
         Yields:
-            streaming_chat_message_contents (list[StreamingChatMessageContent]): The streaming chat message contents.
+            streaming_chat_message_contents: The streaming chat message contents.
         """
         raise NotImplementedError("The _inner_get_streaming_chat_message_contents method is not implemented.")
         # Below is needed for mypy: https://mypy.readthedocs.io/en/stable/more_types.html#asynchronous-iterators
@@ -261,59 +145,16 @@ if TYPE_CHECKING:
 
     # endregion
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
 class ChatCompletionClientBase(AIServiceClientBase, ABC):
     def get_chat_message_content_class(self) -> type[ChatMessageContent]:
         """Get the chat message content types used by a class, default is ChatMessageContent."""
         return ChatMessageContent
 
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< head
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
 class ChatCompletionClientBase(AIServiceClientBase, ABC):
     def get_chat_message_content_class(self) -> type[ChatMessageContent]:
         """Get the chat message content types used by a class, default is ChatMessageContent."""
         return ChatMessageContent
 
-<<<<<<< div
->>>>>>> main
-=======
-<<<<<<< Updated upstream
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
     @abstractmethod
     async def complete_chat(
         self,
@@ -327,53 +168,9 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
             yield
 
     # endregion
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-    # region Public methods
-
-=======
 
     # region Public methods
 
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-=======
->>>>>>> Stashed changes
-
->>>>>>> origin/main
-    # region Public methods
-
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
     async def get_chat_message_contents(
         self,
         chat_history: "ChatHistory",
@@ -387,198 +184,27 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                 rendered into messages from system, user, assistant and tools.
             settings (PromptExecutionSettings): Settings for the request.
             **kwargs (Any): The optional arguments.
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
->>>>>>> head
         Arguments:
             chat_history {ChatHistory} -- A list of chats in a chat_history object, that can be
                 rendered into messages from system, user, assistant and tools.
             settings {PromptExecutionSettings} -- Settings for the request.
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
 
         Returns:
             A list of chat message contents representing the response(s) from the LLM.
         """
         # Create a copy of the settings to avoid modifying the original settings
         settings = copy.deepcopy(settings)
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
->>>>>>> head
 
         if not self.SUPPORTS_FUNCTION_CALLING:
             return await self._inner_get_chat_message_contents(chat_history, settings)
 
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+        # Later on, we already use the tools or equivalent settings, we cast here.
+        if not isinstance(settings, self.get_prompt_execution_settings_class()):
+            settings = self.get_prompt_execution_settings_from_settings(settings)
 
         if not self.SUPPORTS_FUNCTION_CALLING:
             return await self._inner_get_chat_message_contents(chat_history, settings)
 
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
         # For backwards compatibility we need to convert the `FunctionCallBehavior` to `FunctionChoiceBehavior`
         # if this method is called with a `FunctionCallBehavior` object as part of the settings
         if hasattr(settings, "function_call_behavior") and isinstance(
@@ -623,7 +249,6 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
 
             logger.info(f"processing {fc_count} tool calls in parallel.")
 
-<<<<<<< HEAD
             # This function either updates the chat history with the function call results
             # or returns the context, with terminate set to True in which case the loop will
             # break and the function calls are returned.
@@ -640,7 +265,6 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                     for function_call in function_calls
                 ],
             )
-=======
                 # This function either updates the chat history with the function call results
                 # or returns the context, with terminate set to True in which case the loop will
                 # break and the function calls are returned.
@@ -657,7 +281,6 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                         for function_call in function_calls
                     ],
                 )
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
             if any(result.terminate for result in results if result is not None):
                 return merge_function_results(chat_history.messages[-len(results) :])
@@ -682,69 +305,7 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
 
         Returns:
             A string representing the response from the LLM.
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
     ) -> AsyncIterable[List["StreamingChatMessageContent"]]:
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-    ) -> AsyncIterable[List["StreamingChatMessageContent"]]:
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
         """
         results = await self.get_chat_message_contents(
             chat_history=chat_history, settings=settings, **kwargs
@@ -767,90 +328,19 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                 set of chat_history, from system, user, assistant and function.
             settings (PromptExecutionSettings): Settings for the request.
             kwargs (Dict[str, Any]): The optional arguments.
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
->>>>>>> head
         Arguments:
             chat_history {ChatHistory} -- A list of chat chat_history, that can be rendered into a
                 set of chat_history, from system, user, assistant and function.
             settings {PromptExecutionSettings} -- Settings for the request.
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
 
         Yields:
             A stream representing the response(s) from the LLM.
         """
         # Create a copy of the settings to avoid modifying the original settings
         settings = copy.deepcopy(settings)
+        # Later on, we already use the tools or equivalent settings, we cast here.
+        if not isinstance(settings, self.get_prompt_execution_settings_class()):
+            settings = self.get_prompt_execution_settings_from_settings(settings)
 
         if not self.SUPPORTS_FUNCTION_CALLING:
             async for streaming_chat_message_contents in self._inner_get_streaming_chat_message_contents(
@@ -919,7 +409,6 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
             fc_count = len(function_calls)
             logger.info(f"processing {fc_count} tool calls in parallel.")
 
-<<<<<<< HEAD
             # This function either updates the chat history with the function call results
             # or returns the context, with terminate set to True in which case the loop will
             # break and the function calls are returned.
@@ -936,7 +425,34 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                     for function_call in function_calls
                 ],
             )
-=======
+        with use_span(self._start_auto_function_invocation_activity(kernel, settings), end_on_exit=True) as _:
+            for request_index in range(settings.function_choice_behavior.maximum_auto_invoke_attempts):
+                # Hold the messages, if there are more than one response, it will not be used, so we flatten
+                all_messages: list["StreamingChatMessageContent"] = []
+                function_call_returned = False
+                async for messages in self._inner_get_streaming_chat_message_contents(
+                    chat_history, settings, request_index
+                ):
+                    for msg in messages:
+                        if msg is not None:
+                            all_messages.append(msg)
+                            if any(isinstance(item, FunctionCallContent) for item in msg.items):
+                                function_call_returned = True
+                    yield messages
+
+                if not function_call_returned:
+                    return
+
+                # There is one FunctionCallContent response stream in the messages, combining now to create
+                # the full completion depending on the prompt, the message may contain both function call
+                # content and others
+                full_completion: StreamingChatMessageContent = reduce(lambda x, y: x + y, all_messages)
+                function_calls = [item for item in full_completion.items if isinstance(item, FunctionCallContent)]
+                chat_history.add_message(message=full_completion)
+
+                fc_count = len(function_calls)
+                logger.info(f"processing {fc_count} tool calls in parallel.")
+
                 # This function either updates the chat history with the function call results
                 # or returns the context, with terminate set to True in which case the loop will
                 # break and the function calls are returned.
@@ -953,11 +469,23 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                         for function_call in function_calls
                     ],
                 )
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-
             if any(result.terminate for result in results if result is not None):
                 yield merge_function_results(chat_history.messages[-len(results) :])  # type: ignore
                 break
+                # Merge and yield the function results, regardless of the termination status
+                # Include the ai_model_id so we can later add two streaming messages together
+                # Some settings may not have an ai_model_id, so we need to check for it
+                ai_model_id = self._get_ai_model_id(settings)
+                function_result_messages = merge_streaming_function_results(
+                    messages=chat_history.messages[-len(results) :],
+                    ai_model_id=ai_model_id,  # type: ignore
+                    function_invoke_attempt=request_index,
+                )
+                if self._yield_function_result_messages(function_result_messages):
+                    yield function_result_messages
+
+                if any(result.terminate for result in results if result is not None):
+                    break
 
     async def get_streaming_chat_message_content(
         self,
@@ -972,81 +500,10 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
                 set of chat_history, from system, user, assistant and function.
             settings (PromptExecutionSettings): Settings for the request.
             kwargs (Dict[str, Any]): The optional arguments.
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
 
         Yields:
             A stream representing the response(s) from the LLM.
         """
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
         # Create a copy of the settings to avoid modifying the original settings
         settings = copy.deepcopy(settings)
 
@@ -1155,37 +612,6 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
         Yields:
             A stream representing the response(s) from the LLM.
         """
-=======
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
         async for (
             streaming_chat_message_contents
         ) in self.get_streaming_chat_message_contents(chat_history, settings, **kwargs):
@@ -1198,69 +624,7 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
     # endregion
 
     # region internal handlers
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
         pass
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-        pass
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-        pass
->>>>>>> main
-=======
->>>>>>> head
 
     def _prepare_chat_history_for_request(
         self,
@@ -1322,48 +686,37 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
         """
         return
 
+    def _start_auto_function_invocation_activity(self, kernel: "Kernel", settings: "PromptExecutionSettings") -> Span:
+        """Start the auto function invocation activity.
+
+        Args:
+            kernel (Kernel): The kernel instance.
+            settings (PromptExecutionSettings): The prompt execution settings.
+        """
+        span = tracer.start_span(AUTO_FUNCTION_INVOCATION_SPAN_NAME)
+
+        if settings.function_choice_behavior is not None:
+            available_functions = settings.function_choice_behavior.get_config(kernel).available_functions or []
+            span.set_attribute(
+                AVAILABLE_FUNCTIONS,
+                ",".join([f.fully_qualified_name for f in available_functions]),
+            )
+
+        return span
+
+    def _get_ai_model_id(self, settings: "PromptExecutionSettings") -> str:
+        """Retrieve the AI model ID from settings if available.
+
+        Attempt to get ai_model_id from the settings object. If it doesn't exist or
+        is blank, fallback to self.ai_model_id (from AIServiceClientBase).
+        """
+        return getattr(settings, "ai_model_id", self.ai_model_id) or self.ai_model_id
+
+    def _yield_function_result_messages(self, function_result_messages: list) -> bool:
+        """Determine if the function result messages should be yielded."""
+        return len(function_result_messages) > 0 and len(function_result_messages[0].items) > 0
+
     # endregion
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> Stashed changes
->>>>>>> head
     ) -> List[Dict[str, Optional[str]]]:
         """
         Prepare the chat history for a request, allowing customization of the key names for role/author,
@@ -1372,37 +725,3 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
         return [
             message.model_dump(exclude_none=True, exclude=["metadata", "encoding"]) for message in chat_history.messages
         ]
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head

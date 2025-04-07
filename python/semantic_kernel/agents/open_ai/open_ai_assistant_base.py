@@ -6,8 +6,6 @@ import logging
 from collections.abc import AsyncIterable, Iterable
 
 from dataclasses import dataclass
-from dataclasses import dataclass
-from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, ClassVar, Literal
 
 from openai import AsyncOpenAI
@@ -27,62 +25,28 @@ from semantic_kernel.agents.open_ai.assistant_content_generation import (
     generate_function_call_content,
     generate_function_result_content,
     generate_message_content,
-<< << << < main
-<< << << < main
-<< << << < HEAD
-<< << << < div
-== == == =
-<< << << < Updated upstream
-<< << << < Updated upstream
->> >>>> > head
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-<< << << < Updated upstream
-== == == =
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-<< << << < HEAD
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
-== == == =
-== == == =
->>>>>> > origin/main
     generate_streaming_message_content,
     generate_streaming_tools_content,
     generate_streaming_message_content,
     generate_streaming_tools_content,
-<< << << < main
->> >>>> > eab985c52d058dc92abc75034bc790079131ce75
-<< << << < div
-== == == =
-== == == =
->>>>>> > Stashed changes
-== == == =
->>>>>> > Stashed changes
->> >>>> > head
-== == == =
     generate_streaming_code_interpreter_content,
     generate_streaming_function_content,
     generate_streaming_message_content,
->>>>>> > upstream/main
-== == == =
     generate_streaming_code_interpreter_content,
     generate_streaming_function_content,
     generate_streaming_message_content,
->>>>>> > origin/main
+    generate_streaming_code_interpreter_content,
+    generate_streaming_function_content,
+    generate_streaming_message_content,
+    generate_streaming_code_interpreter_content,
+    generate_streaming_function_content,
+    generate_streaming_message_content,
+    generate_streaming_code_interpreter_content,
+    generate_streaming_function_content,
+    generate_streaming_message_content,
+    generate_streaming_code_interpreter_content,
+    generate_streaming_function_content,
+    generate_streaming_message_content,
     get_function_call_contents,
     get_message_contents,
 )
@@ -116,9 +80,9 @@ if TYPE_CHECKING:
 logger: logging.Logger= logging.getLogger(__name__)
 
 
-@ experimental_class
+@experimental_class
 
-@ dataclass
+@dataclass
 class FunctionActionResult:
     """Function Action Result."""
 
@@ -138,6 +102,29 @@ class OpenAIAssistantBase(Agent):
 
     ai_model_id: str
     client: AsyncOpenAI
+    assistant: Assistant | None = None
+    polling_options: RunPollingOptions = Field(default_factory=RunPollingOptions)
+    enable_code_interpreter: bool | None = Field(False)
+    enable_file_search: bool | None = Field(False)
+    enable_json_response: bool | None = Field(False)
+    code_interpreter_file_ids: list[str] | None = Field(default_factory=list, max_length=20)  # type: ignore
+    file_search_file_ids: list[str] | None = Field(default_factory=list, max_length=20)  # type: ignore
+    temperature: float | None = Field(None)
+    top_p: float | None = Field(None)
+    vector_store_id: str | None = None
+    metadata: dict[str, Any] | None = Field(default_factory=dict, max_length=16)  # type: ignore
+    max_completion_tokens: int | None = Field(None)
+    max_prompt_tokens: int | None = Field(None)
+    parallel_tool_calls_enabled: bool | None = Field(True)
+    truncation_message_count: int | None = Field(None)
+
+    allowed_message_roles: ClassVar[list[str]] = [AuthorRole.USER, AuthorRole.ASSISTANT]
+    polling_status: ClassVar[list[str]] = ["queued", "in_progress", "cancelling"]
+    error_message_states: ClassVar[list[str]] = ["failed", "canceled", "expired"]
+    channel_type: ClassVar[type[AgentChannel]] = OpenAIAssistantChannel
+
+    _is_deleted: bool = False
+
     assistant: Assistant | None= None
     polling_options: RunPollingOptions= Field(default_factory=RunPollingOptions)
     enable_code_interpreter: bool | None= Field(False)
@@ -356,12 +343,20 @@ class OpenAIAssistantBase(Agent):
             execution_settings["truncation_message_count"] = (
                 self.truncation_message_count
             )
+            execution_settings["parallel_tool_calls_enabled"] = self.parallel_tool_calls_enabled
+
+        if self.truncation_message_count:
+            execution_settings["truncation_message_count"] = self.truncation_message_count
 
         if execution_settings:
             if "metadata" not in create_assistant_kwargs:
                 create_assistant_kwargs["metadata"] = {}
             if self._options_metadata_key not in create_assistant_kwargs["metadata"]:
                 create_assistant_kwargs["metadata"][self._options_metadata_key] = {}
+            create_assistant_kwargs["metadata"][self._options_metadata_key] = (
+                json.dumps(execution_settings)
+            )
+            create_assistant_kwargs["metadata"][self._options_metadata_key] = json.dumps(execution_settings)
             create_assistant_kwargs["metadata"][self._options_metadata_key] = (
                 json.dumps(execution_settings)
             )
@@ -396,6 +391,10 @@ class OpenAIAssistantBase(Agent):
     def _create_open_ai_assistant_definition(
         cls, assistant: "Assistant"
     ) -> dict[str, Any]:
+    def _create_open_ai_assistant_definition(cls, assistant: "Assistant") -> dict[str, Any]:
+    def _create_open_ai_assistant_definition(
+        cls, assistant: "Assistant"
+    ) -> dict[str, Any]:
         """Create an OpenAI Assistant Definition from the provided assistant dictionary.
 
         Args:
@@ -417,6 +416,11 @@ class OpenAIAssistantBase(Agent):
                 assistant.metadata[OpenAIAssistantBase._options_metadata_key] = (
                     settings_data
                 )
+        if isinstance(assistant.metadata, dict) and OpenAIAssistantBase._options_metadata_key in assistant.metadata:
+            settings_data = assistant.metadata[OpenAIAssistantBase._options_metadata_key]
+            if isinstance(settings_data, str):
+                settings_data = json.loads(settings_data)
+                assistant.metadata[OpenAIAssistantBase._options_metadata_key] = settings_data
             execution_settings = {key: value for key, value in settings_data.items()}
 
         file_ids: list[str] = []
@@ -441,10 +445,16 @@ class OpenAIAssistantBase(Agent):
                 file_ids = getattr(tool_resources.code_interpreter, "code_interpreter_file_ids", [])
             if hasattr(tool_resources, "code_interpreter") and tool_resources.code_interpreter:
                 file_ids = getattr(tool_resources.code_interpreter, "code_interpreter_file_ids", [])
+
             if hasattr(tool_resources, "file_search") and tool_resources.file_search:
                 vector_store_ids = getattr(
                     tool_resources.file_search, "vector_store_ids", []
                 )
+            if hasattr(tool_resources, "code_interpreter") and tool_resources.code_interpreter:
+                file_ids = getattr(tool_resources.code_interpreter, "code_interpreter_file_ids", [])
+
+            if hasattr(tool_resources, "file_search") and tool_resources.file_search:
+                vector_store_ids = getattr(tool_resources.file_search, "vector_store_ids", [])
                 if vector_store_ids:
                     vector_store_id = vector_store_ids[0]
 
@@ -460,6 +470,8 @@ class OpenAIAssistantBase(Agent):
         enable_file_search = any(
             isinstance(tool, FileSearchTool) for tool in assistant.tools
         )
+        enable_code_interpreter = any(isinstance(tool, CodeInterpreterTool) for tool in assistant.tools)
+        enable_file_search = any(isinstance(tool, FileSearchTool) for tool in assistant.tools)
 
         return {
             "ai_model_id": assistant.model,
@@ -569,6 +581,10 @@ class OpenAIAssistantBase(Agent):
                     messages_to_add.append(
                         {"role": message.role.value, "content": content}
                     )
+                    messages_to_add.append({"role": message.role.value, "content": content})
+                    messages_to_add.append(
+                        {"role": message.role.value, "content": content}
+                    )
             create_thread_kwargs["messages"] = messages_to_add
 
         if metadata:
@@ -667,6 +683,9 @@ class OpenAIAssistantBase(Agent):
     async def get_thread_messages(
         self, thread_id: str
     ) -> AsyncIterable[ChatMessageContent]:
+        return await create_chat_message(self.client, thread_id, message, self.allowed_message_roles)
+
+    async def get_thread_messages(self, thread_id: str) -> AsyncIterable[ChatMessageContent]:
         """Get the messages for the specified thread.
 
         Args:
@@ -677,6 +696,10 @@ class OpenAIAssistantBase(Agent):
         """
         agent_names: dict[str, Any] = {}
 
+        thread_messages = await self.client.beta.threads.messages.list(
+            thread_id=thread_id, limit=100, order="desc"
+        )
+        thread_messages = await self.client.beta.threads.messages.list(thread_id=thread_id, limit=100, order="desc")
         thread_messages = await self.client.beta.threads.messages.list(
             thread_id=thread_id, limit=100, order="desc"
         )
@@ -703,6 +726,9 @@ class OpenAIAssistantBase(Agent):
             content: ChatMessageContent = generate_message_content(str(assistant_name), message)
             content: ChatMessageContent = generate_message_content(str(assistant_name), message)
             content: ChatMessageContent = generate_message_content(str(assistant_name), message)
+            assistant_name = agent_names.get(message.assistant_id) if message.assistant_id else message.assistant_id
+            assistant_name = assistant_name or message.assistant_id
+
             content: ChatMessageContent = generate_message_content(str(assistant_name), message)
 
             if len(content.items) > 0:
@@ -851,9 +877,6 @@ class OpenAIAssistantBase(Agent):
         truncation_message_count: int | None = None,
         temperature: float | None = None,
         top_p: float | None = None,
-        metadata: dict[str, str] | None = {},
-        metadata: dict[str, str] | None = {},
-        metadata: dict[str, str] | None = None,
         metadata: dict[str, str] | None = None,
         **kwargs: Any,
     ) -> AsyncIterable[tuple[bool, ChatMessageContent]]:
@@ -884,9 +907,6 @@ class OpenAIAssistantBase(Agent):
 
         if self._is_deleted:
             raise AgentInitializationException("The assistant has been deleted.")
-
-        if metadata is None:
-            metadata = {}
 
         if metadata is None:
             metadata = {}
@@ -966,6 +986,10 @@ class OpenAIAssistantBase(Agent):
                     _ = await self._invoke_function_calls(
                         fccs=fccs, chat_history=chat_history
                     )
+                    yield False, generate_function_call_content(agent_name=self.name, fccs=fccs)
+
+                    chat_history = ChatHistory()
+                    _ = await self._invoke_function_calls(fccs=fccs, chat_history=chat_history)
 
                     tool_outputs = self._format_tool_outputs(fccs, chat_history)
                     await self.client.beta.threads.runs.submit_tool_outputs(
@@ -984,6 +1008,10 @@ class OpenAIAssistantBase(Agent):
                     for s in steps
                     if s.completed_at is not None and s.id not in processed_step_ids
                 ],
+            steps_response = await self.client.beta.threads.runs.steps.list(run_id=run.id, thread_id=thread_id)
+            steps: list[RunStep] = steps_response.data
+            completed_steps_to_process: list[RunStep] = sorted(
+                [s for s in steps if s.completed_at is not None and s.id not in processed_step_ids],
                 key=lambda s: s.created_at,
             )
 
@@ -1026,6 +1054,13 @@ class OpenAIAssistantBase(Agent):
                                 agent_name=self.name, function_step=function_step, tool_call=tool_call
                             content = generate_function_result_content(
                                 agent_name=self.name, function_step=function_step, tool_call=tool_call
+                                agent_name=self.name, function_step=function_step, tool_call=tool_call
+                            agent_name=self.name, function_step=function_step, tool_call=
+                                agent_name=self.name, function_step=function_step, tool_call=tool_call
+                                agent_name=self.name, function_step=function_step, tool_call=tool_call
+                            agent_name=self.name, function_step=function_step, tool_call=
+                            content = generate_function_result_content(
+                                agent_name=self.name, function_step=function_step, tool_call=tool_call
                             )
 
                         if content:
@@ -1038,6 +1073,10 @@ class OpenAIAssistantBase(Agent):
                     )
                     if message:
                         content = generate_message_content(self.name, message)
+                        if len(content.items) > 0:
+                        if len(content.items) > 0:
+                        if content and len(content.items) > 0:
+                          changes
                         if len(content.items) > 0:
                         if len(content.items) > 0:
                         if content and len(content.items) > 0:
@@ -1360,6 +1399,9 @@ class OpenAIAssistantBase(Agent):
             "truncation_strategy": (
                 truncation_message_count if truncation_message_count else None
             ),
+            "response_format": "json" if merged_options.get("enable_json_response") else None,
+            "temperature": merged_options.get("temperature"),
+            "truncation_strategy": truncation_message_count if truncation_message_count else None,
             "metadata": merged_options.get("metadata", None),
         }
 
@@ -1416,6 +1458,23 @@ class OpenAIAssistantBase(Agent):
                 if truncation_message_count is not None
                 else self.truncation_message_count
             ),
+            "enable_code_interpreter": enable_code_interpreter
+            if enable_code_interpreter is not None
+            else self.enable_code_interpreter,
+            "enable_file_search": enable_file_search if enable_file_search is not None else self.enable_file_search,
+            "enable_json_response": enable_json_response
+            if enable_json_response is not None
+            else self.enable_json_response,
+            "max_completion_tokens": max_completion_tokens
+            if max_completion_tokens is not None
+            else self.max_completion_tokens,
+            "max_prompt_tokens": max_prompt_tokens if max_prompt_tokens is not None else self.max_prompt_tokens,
+            "parallel_tool_calls_enabled": parallel_tool_calls_enabled
+            if parallel_tool_calls_enabled is not None
+            else self.parallel_tool_calls_enabled,
+            "truncation_message_count": truncation_message_count
+            if truncation_message_count is not None
+            else self.truncation_message_count,
             "temperature": temperature if temperature is not None else self.temperature,
             "top_p": top_p if top_p is not None else self.top_p,
             "metadata": metadata if metadata is not None else self.metadata,
@@ -1435,12 +1494,16 @@ class OpenAIAssistantBase(Agent):
         Returns:
             The run.
             The updated run.
+            The run.
+            The updated run.
             The updated run.
         """
         logger.info(f"Polling run status: {run.id}, threadId: {thread_id}")
 
         count = 0
 
+        while True:
+        while True:
         while True:
         while True:
         try:
@@ -1459,17 +1522,11 @@ class OpenAIAssistantBase(Agent):
     async def _poll_loop(self, run: Run, thread_id: str, count: int) -> Run:
         """Internal polling loop."""
         while True:
-<<<<<<< main
-<<<<<<< main
             # Reduce polling frequency after a couple attempts
             await asyncio.sleep(
                 self.polling_options.get_polling_interval(count).total_seconds()
             )
             await asyncio.sleep(self.polling_options.get_polling_interval(count).total_seconds())
-=======
-            await asyncio.sleep(self.polling_options.get_polling_interval(count).total_seconds())
-            await asyncio.sleep(self.polling_options.get_polling_interval(count).total_seconds())
->>>>>>> origin/main
             count += 1
 
             try:
@@ -1480,6 +1537,13 @@ class OpenAIAssistantBase(Agent):
                 logging.warning(
                     f"Failed to retrieve run for run id: `{run.id}` and thread id: `{thread_id}`: {e}"
                 )
+            await asyncio.sleep(self.polling_options.get_polling_interval(count).total_seconds())
+            count += 1
+
+            try:
+                run = await self.client.beta.threads.runs.retrieve(run.id, thread_id=thread_id)
+            except Exception as e:
+                logging.warning(f"Failed to retrieve run for run id: `{run.id}` and thread id: `{thread_id}`: {e}")
                 # Retry anyway
 
             if run.status not in self.polling_status:
@@ -1493,6 +1557,8 @@ class OpenAIAssistantBase(Agent):
         self, thread_id: str, message_id: str
     ) -> Message | None:
         """Retrieve a message from a thread."""
+        return run
+
     async def _retrieve_message(self, thread_id: str, message_id: str) -> Message | None:
         """Retrieve a message from a thread.
 
@@ -1517,6 +1583,10 @@ class OpenAIAssistantBase(Agent):
                 logger.error(
                     f"Failed to retrieve message {message_id} from thread {thread_id}: {ex}"
                 )
+                message = await self.client.beta.threads.messages.retrieve(message_id, thread_id=thread_id)
+                break
+            except Exception as ex:
+                logger.error(f"Failed to retrieve message {message_id} from thread {thread_id}: {ex}")
                 count += 1
                 if count >= max_retries:
                     logger.error(
@@ -1528,6 +1598,7 @@ class OpenAIAssistantBase(Agent):
                 ) = self.polling_options.message_synchronization_delay.total_seconds() * (
                     2**count
                 )
+                backoff_time: float = self.polling_options.message_synchronization_delay.total_seconds() * (2**count)
                 await asyncio.sleep(backoff_time)
 
         return message
@@ -1638,6 +1709,10 @@ class OpenAIAssistantBase(Agent):
     async def _invoke_function_calls(self, fccs: list[FunctionCallContent], chat_history: ChatHistory) -> list[Any]:
     async def _invoke_function_calls(self, fccs: list[FunctionCallContent], chat_history: ChatHistory) -> list[Any]:
     async def _invoke_function_calls(self, fccs: list[FunctionCallContent], chat_history: ChatHistory) -> list[Any]:
+        tools.extend([kernel_function_metadata_to_function_call_format(f) for f in funcs])
+
+        return tools
+
     async def _invoke_function_calls(self, fccs: list[FunctionCallContent], chat_history: ChatHistory) -> list[Any]:
         """Invoke function calls and store results in chat history.
 
@@ -1649,6 +1724,10 @@ class OpenAIAssistantBase(Agent):
             The results as a list.
         """
         tasks = [
+            self.kernel.invoke_function_call(
+                function_call=function_call, chat_history=chat_history
+            )
+            self.kernel.invoke_function_call(function_call=function_call, chat_history=chat_history)
             self.kernel.invoke_function_call(
                 function_call=function_call, chat_history=chat_history
             )
@@ -1689,9 +1768,8 @@ import logging
 from collections.abc import AsyncIterable, Iterable
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, ClassVar, Literal
-=======
+
 from typing import TYPE_CHECKING, Annotated, Any, ClassVar, Literal
->>>>>>> main-microsoft
 
 from openai import AsyncOpenAI
 from openai.resources.beta.assistants import Assistant

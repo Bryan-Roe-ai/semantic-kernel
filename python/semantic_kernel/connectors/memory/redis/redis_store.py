@@ -19,7 +19,6 @@ from semantic_kernel.connectors.memory.redis.redis_collection import (
     RedisJsonCollection,
 )
 from semantic_kernel.connectors.memory.redis.utils import RedisWrapper
-<<<<<<< HEAD
 from semantic_kernel.data.vector_store import VectorStore
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
@@ -30,11 +29,10 @@ from semantic_kernel.data.vector_store_record_collection import (
 from semantic_kernel.exceptions.memory_connector_exceptions import (
     MemoryConnectorInitializationError,
 )
-=======
 from semantic_kernel.data.record_definition import VectorStoreRecordDefinition
 from semantic_kernel.data.vector_storage import VectorStore, VectorStoreRecordCollection
 from semantic_kernel.exceptions.memory_connector_exceptions import MemoryConnectorInitializationError
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+from semantic_kernel.exceptions import VectorStoreInitializationException
 from semantic_kernel.utils.experimental_decorator import experimental_class
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -84,6 +82,8 @@ class RedisStore(VectorStore):
                 redis_settings.connection_string.get_secret_value()
             )
         )
+            raise VectorStoreInitializationException("Failed to create Redis settings.", ex) from ex
+        super().__init__(redis_database=RedisWrapper.from_url(redis_settings.connection_string.get_secret_value()))
 
     @override
     async def list_collection_names(self, **kwargs) -> Sequence[str]:

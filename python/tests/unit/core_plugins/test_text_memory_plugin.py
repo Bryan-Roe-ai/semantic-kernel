@@ -2,7 +2,7 @@
 
 
 from numpy import array
-from pytest import fixture, mark
+from pytest import fixture
 
 from semantic_kernel import Kernel
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
@@ -28,7 +28,6 @@ def memory() -> SemanticTextMemory:
 
 
 @fixture
-@mark.asyncio
 async def memory_with_records(memory: SemanticTextMemory) -> SemanticTextMemory:
     await memory.save_information("generic", "hello world", "1")
     return memory
@@ -45,21 +44,18 @@ def test_can_be_imported(kernel: Kernel, memory: SemanticTextMemory):
     ).is_prompt
 
 
-@mark.asyncio
 async def test_can_save(memory: SemanticTextMemory):
     text_plugin = TextMemoryPlugin(memory)
     await text_plugin.save(text="hello you", key="1")
     assert text_plugin.memory._storage._store["generic"]["1"].text == "hello you"
 
 
-@mark.asyncio
 async def test_can_recall(memory_with_records: SemanticTextMemory):
-    text_plugin = TextMemoryPlugin(await memory_with_records)
+    text_plugin = TextMemoryPlugin(memory_with_records)
     result = await text_plugin.recall(ask="hello world")
     assert result == "hello world"
 
 
-@mark.asyncio
 async def test_can_save_through_function(kernel: Kernel, memory: SemanticTextMemory):
     text_plugin = TextMemoryPlugin(memory)
     kernel.add_plugin(text_plugin, "memory_plugin")
@@ -74,6 +70,8 @@ async def test_can_recall_through_function(
     kernel: Kernel, memory_with_records: SemanticTextMemory
 ):
     text_plugin = TextMemoryPlugin(await memory_with_records)
+async def test_can_recall_through_function(kernel: Kernel, memory_with_records: SemanticTextMemory):
+    text_plugin = TextMemoryPlugin(memory_with_records)
     kernel.add_plugin(text_plugin, "memory_plugin")
     result = await kernel.invoke(
         function_name="recall", plugin_name="memory_plugin", ask="hello world"
@@ -81,7 +79,6 @@ async def test_can_recall_through_function(
     assert str(result) == "hello world"
 
 
-@mark.asyncio
 async def test_can_recall_no_result(memory: SemanticTextMemory):
     text_plugin = TextMemoryPlugin(memory)
     result = await text_plugin.recall(ask="hello world")

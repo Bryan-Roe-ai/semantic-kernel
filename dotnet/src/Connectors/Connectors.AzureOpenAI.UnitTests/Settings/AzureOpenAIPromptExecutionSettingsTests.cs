@@ -101,6 +101,8 @@ public class AzureOpenAIPromptExecutionSettingsTests
         Assert.Null(executionSettings.Logprobs);
         Assert.Null(executionSettings.AzureChatDataSource);
         Assert.Equal(maxTokensSettings, executionSettings.MaxTokens);
+        Assert.Null(executionSettings.Store);
+        Assert.Null(executionSettings.Metadata);
     }
 
     [Fact]
@@ -119,6 +121,9 @@ public class AzureOpenAIPromptExecutionSettingsTests
             Logprobs = true,
             TopLogprobs = 5,
             TokenSelectionBiases = new Dictionary<int, int>() { { 1, 2 }, { 3, 4 } },
+            Seed = 123456,
+            Store = true,
+            Metadata = new Dictionary<string, string>() { { "foo", "bar" } }
         };
 
         // Act
@@ -126,6 +131,14 @@ public class AzureOpenAIPromptExecutionSettingsTests
 
         // Assert
         Assert.Equal(actualSettings, executionSettings);
+        Assert.Equal(actualSettings, executionSettings);
+        Assert.Equal(actualSettings.MaxTokens, executionSettings.MaxTokens);
+        Assert.Equal(actualSettings.Logprobs, executionSettings.Logprobs);
+        Assert.Equal(actualSettings.TopLogprobs, executionSettings.TopLogprobs);
+        Assert.Equal(actualSettings.TokenSelectionBiases, executionSettings.TokenSelectionBiases);
+        Assert.Equal(actualSettings.Seed, executionSettings.Seed);
+        Assert.Equal(actualSettings.Store, executionSettings.Store);
+        Assert.Equal(actualSettings.Metadata, executionSettings.Metadata);
     }
 
     [Fact]
@@ -136,7 +149,9 @@ public class AzureOpenAIPromptExecutionSettingsTests
         {
             ExtensionData = new Dictionary<string, object>() {
                 { "max_tokens", 1000 },
-                { "temperature", 0 }
+                { "temperature", 0 },
+                { "store", true },
+                { "metadata", new Dictionary<string, string>() { { "foo", "bar" } } }
             }
         };
 
@@ -147,6 +162,8 @@ public class AzureOpenAIPromptExecutionSettingsTests
         Assert.NotNull(executionSettings);
         Assert.Equal(1000, executionSettings.MaxTokens);
         Assert.Equal(0, executionSettings.Temperature);
+        Assert.True(executionSettings.Store);
+        Assert.Equal(new Dictionary<string, string>() { { "foo", "bar" } }, executionSettings.Metadata);
     }
 
     [Fact]
@@ -168,6 +185,8 @@ public class AzureOpenAIPromptExecutionSettingsTests
                 { "seed", 123456 },
                 { "logprobs", true },
                 { "top_logprobs", 5 },
+                { "store", true },
+                { "metadata", new Dictionary<string, string>() { { "foo", "bar" } } }
             }
         };
 
@@ -196,7 +215,9 @@ public class AzureOpenAIPromptExecutionSettingsTests
                 { "token_selection_biases", new Dictionary<string, string>() { { "1", "2" }, { "3", "4" } } },
                 { "seed", 123456 },
                 { "logprobs", true },
-                { "top_logprobs", 5 }
+                { "top_logprobs", 5 },
+                { "store", true },
+                { "metadata", new Dictionary<string, string>() { { "foo", "bar" } } }
             }
         };
 
@@ -223,7 +244,9 @@ public class AzureOpenAIPromptExecutionSettingsTests
               "max_tokens": 128,
               "seed": 123456,
               "logprobs": true,
-              "top_logprobs": 5
+              "top_logprobs": 5,
+              "store": true,
+              "metadata": { "foo": "bar" }
             }
             """;
         var actualSettings = JsonSerializer.Deserialize<PromptExecutionSettings>(json);
@@ -282,7 +305,9 @@ public class AzureOpenAIPromptExecutionSettingsTests
             "presence_penalty": 0.0,
             "frequency_penalty": 0.0,
             "stop_sequences": [ "DONE" ],
-            "token_selection_biases": { "1": 2, "3": 4 }
+            "token_selection_biases": { "1": 2, "3": 4 },
+            "store": true,
+            "metadata": { "foo": "bar" }
         }
         """;
         var executionSettings = JsonSerializer.Deserialize<AzureOpenAIPromptExecutionSettings>(configPayload);
@@ -297,6 +322,8 @@ public class AzureOpenAIPromptExecutionSettingsTests
         Assert.Throws<InvalidOperationException>(() => executionSettings.TopP = 1);
         Assert.Throws<NotSupportedException>(() => executionSettings.StopSequences?.Add("STOP"));
         Assert.Throws<NotSupportedException>(() => executionSettings.TokenSelectionBiases?.Add(5, 6));
+        Assert.Throws<InvalidOperationException>(() => executionSettings.Store = false);
+        Assert.Throws<NotSupportedException>(() => executionSettings.Metadata?.Add("bar", "foo"));
 
         executionSettings!.Freeze(); // idempotent
         Assert.True(executionSettings.IsFrozen);
@@ -401,7 +428,9 @@ public class AzureOpenAIPromptExecutionSettingsTests
             Logprobs = true,
             Seed = 123456,
             TopLogprobs = 5,
-            ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
+            ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions,
+            Store = true,
+            Metadata = new Dictionary<string, string>() { { "foo", "bar" } }
         };
 
         // Act
@@ -565,5 +594,7 @@ public class AzureOpenAIPromptExecutionSettingsTests
         Assert.Equal(123456, executionSettings.Seed);
         Assert.Equal(true, executionSettings.Logprobs);
         Assert.Equal(5, executionSettings.TopLogprobs);
+        Assert.Equal(true, executionSettings.Store);
+        Assert.Equal(new Dictionary<string, string>() { { "foo", "bar" } }, executionSettings.Metadata);
     }
 }

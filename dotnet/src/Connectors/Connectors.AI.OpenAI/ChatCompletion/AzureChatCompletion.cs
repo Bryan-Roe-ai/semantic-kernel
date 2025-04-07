@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Net.Http;
@@ -94,6 +94,11 @@ public sealed class AzureChatCompletion : AzureOpenAIClientBase, IChatCompletion
         CancellationToken cancellationToken = default)
     {
         return this.InternalGetChatResultsAsTextAsync(text, requestSettings, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public Task<IReadOnlyList<ITextCompletionResult>> GetCompletionsAsync(
+        string text,
         JsonObject requestSettings,
         CancellationToken cancellationToken = default)
     {
@@ -108,5 +113,18 @@ public sealed class AzureChatCompletion : AzureOpenAIClientBase, IChatCompletion
     {
         var settings = CompletionRequestSettings.FromJson(requestSettings);
         return this.InternalCompleteTextUsingChatStreamAsync(text, settings, cancellationToken);
+    }
+
+    /// <summary>
+    /// Interact with Azure Cognitive Services.
+    /// </summary>
+    /// <param name="input">The input data for the interaction.</param>
+    /// <returns>The result of the interaction.</returns>
+    public async Task<string> InteractWithAzureCognitiveServicesAsync(string input)
+    {
+        // Implement the logic to interact with Azure Cognitive Services here.
+        // This is a placeholder implementation.
+        await Task.Delay(100); // Simulate async operation
+        return $"Processed input: {input}";
     }
 }

@@ -12,9 +12,9 @@ from semantic_kernel.connectors.memory.redis.redis_collection import (
     RedisJsonCollection,
 )
 from semantic_kernel.connectors.memory.redis.redis_store import RedisStore
-from semantic_kernel.exceptions.memory_connector_exceptions import (
-    MemoryConnectorException,
-    MemoryConnectorInitializationError,
+from semantic_kernel.exceptions import (
+    VectorStoreInitializationException,
+    VectorStoreOperationException,
 )
 
 BASE_PATH = "redis.asyncio.client.Redis"
@@ -169,10 +169,10 @@ def test_vector_store_fail(redis_unit_test_env):
     with raises(
         MemoryConnectorInitializationError, match="Failed to create Redis settings."
     ):
+    with raises(VectorStoreInitializationException, match="Failed to create Redis settings."):
         RedisStore(env_file_path="test.env")
 
 
-@mark.asyncio
 async def test_store_list_collection_names(vector_store, moc_list_collection_names):
     collections = await vector_store.list_collection_names()
     assert collections == ["test"]
@@ -246,6 +246,7 @@ def test_collection_fail(redis_unit_test_env, data_model_definition):
     with raises(
         MemoryConnectorInitializationError, match="Failed to create Redis settings."
     ):
+    with raises(VectorStoreInitializationException, match="Failed to create Redis settings."):
         RedisHashsetCollection(
             data_model_type=dict,
             collection_name="test",
@@ -255,6 +256,7 @@ def test_collection_fail(redis_unit_test_env, data_model_definition):
     with raises(
         MemoryConnectorInitializationError, match="Failed to create Redis settings."
     ):
+    with raises(VectorStoreInitializationException, match="Failed to create Redis settings."):
         RedisJsonCollection(
             data_model_type=dict,
             collection_name="test",
@@ -263,7 +265,6 @@ def test_collection_fail(redis_unit_test_env, data_model_definition):
         )
 
 
-@mark.asyncio
 @mark.parametrize("type_", ["hashset", "json"])
 async def test_upsert(collection_hash, collection_json, type_):
     if type_ == "hashset":
@@ -296,6 +297,7 @@ async def test_upsert(collection_hash, collection_json, type_):
 async def test_upsert_with_prefix(
     collection_with_prefix_hash, collection_with_prefix_json
 ):
+async def test_upsert_with_prefix(collection_with_prefix_hash, collection_with_prefix_json):
     ids = await collection_with_prefix_hash.upsert(
         record={"id": "id1", "content": "content", "vector": [1.0, 2.0, 3.0]}
     )
@@ -306,7 +308,6 @@ async def test_upsert_with_prefix(
     assert ids == "id1"
 
 
-@mark.asyncio
 @mark.parametrize("prefix", [True, False])
 @mark.parametrize("type_", ["hashset", "json"])
 async def test_get(
@@ -332,37 +333,31 @@ async def test_get(
     assert records is not None
 
 
-@mark.asyncio
 @mark.parametrize("type_", ["hashset", "json"])
 async def test_delete(collection_hash, collection_json, type_):
     collection = collection_hash if type_ == "hashset" else collection_json
     await collection._inner_delete(["id1"])
 
 
-@mark.asyncio
 async def test_does_collection_exist(collection_hash, mock_does_collection_exist):
     await collection_hash.does_collection_exist()
 
 
-@mark.asyncio
 async def test_does_collection_exist_false(collection_hash, mock_does_collection_exist):
     mock_does_collection_exist.side_effect = Exception
     exists = await collection_hash.does_collection_exist()
     assert not exists
 
 
-@mark.asyncio
 async def test_delete_collection(collection_hash, mock_delete_collection):
     await collection_hash.delete_collection()
     await collection_hash.delete_collection()
 
 
-@mark.asyncio
 async def test_create_index(collection_hash, mock_create_collection):
     await collection_hash.create_collection()
 
 
-@mark.asyncio
 async def test_create_index_manual(collection_hash, mock_create_collection):
     from redis.commands.search.indexDefinition import IndexDefinition, IndexType
 
@@ -373,9 +368,10 @@ async def test_create_index_manual(collection_hash, mock_create_collection):
     )
 
 
-@mark.asyncio
 async def test_create_index_fail(collection_hash, mock_create_collection):
     with raises(MemoryConnectorException, match="Invalid index type supplied."):
         await collection_hash.create_collection(
             index_definition="index_definition", fields="fields"
         )
+    with raises(VectorStoreOperationException, match="Invalid index type supplied."):
+        await collection_hash.create_collection(index_definition="index_definition", fields="fields")

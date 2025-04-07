@@ -14,3 +14,4 @@ from semantic_kernel.exceptions.search_exceptions import *  # noqa: F403
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.exceptions.service_exceptions import *  # noqa: F403
 from semantic_kernel.exceptions.template_engine_exceptions import *  # noqa: F403
+from semantic_kernel.exceptions.vector_store_exceptions import *  # noqa: F403

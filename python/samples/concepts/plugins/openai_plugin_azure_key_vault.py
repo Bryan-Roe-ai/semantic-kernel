@@ -27,6 +27,8 @@ from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.contents.streaming_chat_message_content import (
     StreamingChatMessageContent,
 )
+from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.functions import KernelArguments, KernelFunction, KernelPlugin
 
 # region Helper functions
@@ -236,18 +238,19 @@ async def handle_streaming(
     print("Security Agent:> ", end="")
     streamed_chunks: list[StreamingChatMessageContent] = []
     async for message in response:
-<<<<<<< main
         if (
             not execution_settings.function_choice_behavior.auto_invoke_kernel_functions
             and isinstance(message[0], StreamingChatMessageContent)
-=======
         if not execution_settings.function_choice_behavior.auto_invoke_kernel_functions and isinstance(
         if not execution_settings.function_call_behavior.auto_invoke_kernel_functions and isinstance(
             message[0], StreamingChatMessageContent
->>>>>>> origin/PR
+        if (
+            not execution_settings.function_choice_behavior.auto_invoke_kernel_functions
+            and isinstance(message[0], StreamingChatMessageContent)
+            and message[0].role == AuthorRole.ASSISTANT
         ):
             streamed_chunks.append(message[0])
-        else:
+        elif isinstance(message[0], StreamingChatMessageContent) and message[0].role == AuthorRole.ASSISTANT:
             print(str(message[0]), end="")
 
     if streamed_chunks:

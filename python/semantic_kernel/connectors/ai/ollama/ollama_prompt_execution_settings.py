@@ -5,21 +5,18 @@ from typing import Any, Dict, List, Literal, Optional
 from typing import Any, Literal
 from typing import Annotated, Any, Literal
 
-<<<<<<< main
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
 )
 from pydantic import Field
 
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
-=======
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
 )
 from pydantic import Field
 
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
->>>>>>> origin/main
 
 
 class OllamaPromptExecutionSettings(PromptExecutionSettings):
@@ -53,7 +50,6 @@ class OllamaChatPromptExecutionSettings(OllamaPromptExecutionSettings):
     tools: Annotated[
         list[dict[str, Any]] | None,
         Field(
-            max_length=64,
             description="Do not set this manually. It is set by the service based "
             "on the function choice configuration.",
         ),

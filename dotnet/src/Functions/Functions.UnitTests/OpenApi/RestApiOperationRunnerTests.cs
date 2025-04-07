@@ -15,6 +15,7 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Http;
 using Microsoft.SemanticKernel.Plugins.OpenApi;
 using Moq;
 using SemanticKernel.Functions.UnitTests.OpenApi.TestResponses;
@@ -196,18 +197,18 @@ public sealed class RestApiOperationRunnerTests : IDisposable
         // Arrange
         var parameters = new List<RestApiParameter>
         {
-            new(name: "X-HS-1", type: "string", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HA-1", type: "array", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HA-2", type: "array", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HB-1", type: "boolean", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HB-2", type: "boolean", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HI-1", type: "integer", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HI-2", type: "integer", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HN-1", type: "number", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HN-2", type: "number", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HD-1", type: "string", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HD-2", type: "string", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
-            new(name: "X-HD-3", type: "string", isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HS-1", type: RestApiParameterType.String, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HA-1", type: RestApiParameterType.Array, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HA-2", type: RestApiParameterType.Array, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HB-1", type: RestApiParameterType.Boolean, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HB-2", type: RestApiParameterType.Boolean, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HI-1", type: RestApiParameterType.Integer, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HI-2", type: RestApiParameterType.Integer, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HN-1", type: RestApiParameterType.Number, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HN-2", type: RestApiParameterType.Number, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HD-1", type: RestApiParameterType.String, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HD-2", type: RestApiParameterType.String, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
+            new(name: "X-HD-3", type: RestApiParameterType.String, isRequired: true, expand: false, location: RestApiParameterLocation.Header, style: RestApiParameterStyle.Simple),
         };
 
         var operation = new RestApiOperation(
@@ -270,7 +271,7 @@ public sealed class RestApiOperationRunnerTests : IDisposable
         {
             new(
             name: "fake-header",
-            type: "string",
+            type: RestApiParameterType.String,
             isRequired: true,
             expand: false,
             location: RestApiParameterLocation.Header,
@@ -315,10 +316,10 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         List<RestApiPayloadProperty> payloadProperties =
         [
-            new("name", "string", true, []),
-            new("attributes", "object", false,
+            new("name", RestApiParameterType.String, true, []),
+            new("attributes", RestApiParameterType.Object, false,
             [
-                new("enabled", "boolean", false, []),
+                new("enabled", RestApiParameterType.Boolean, false, []),
             ])
         ];
 
@@ -377,14 +378,14 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         List<RestApiPayloadProperty> payloadProperties =
         [
-            new("name", "string", true, []),
-            new("attributes", "object", false,
+            new("name", RestApiParameterType.String, true, []),
+            new("attributes", RestApiParameterType.Object, false,
             [
-                new("enabled", "boolean", false, []),
-                new("cardinality", "number", false, []),
-                new("coefficient", "number", false, []),
-                new("count", "integer", false, []),
-                new("params", "array", false, []),
+                new("enabled", RestApiParameterType.Boolean, false, []),
+                new("cardinality", RestApiParameterType.Number, false, []),
+                new("coefficient", RestApiParameterType.Number, false, []),
+                new("count", RestApiParameterType.Integer, false, []),
+                new("params", RestApiParameterType.Array, false, []),
             ])
         ];
 
@@ -464,18 +465,18 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         List<RestApiPayloadProperty> payloadProperties =
         [
-            new("upn", "string", true, []),
-            new("receiver", "object", false,
+            new("upn", RestApiParameterType.String, true, []),
+            new("receiver", RestApiParameterType.Object, false,
             [
-                new("upn", "string", false, []),
-                new("alternative", "object", false,
+                new("upn", RestApiParameterType.String, false, []),
+                new("alternative", RestApiParameterType.Object, false,
                 [
-                    new("upn", "string", false, []),
+                    new("upn", RestApiParameterType.String, false, []),
                 ]),
             ]),
-            new("cc", "object", false,
+            new("cc", RestApiParameterType.Object, false,
             [
-                new("upn", "string", false, []),
+                new("upn", RestApiParameterType.String, false, []),
             ])
         ];
 
@@ -700,7 +701,7 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         List<RestApiPayloadProperty> payloadProperties =
         [
-            new("upn", "string", false, []),
+            new("upn", RestApiParameterType.String, false, []),
         ];
 
         var payload = new RestApiPayload(MediaTypeNames.Application.Json, payloadProperties);
@@ -748,7 +749,7 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         List<RestApiPayloadProperty> payloadProperties =
         [
-            new("upn", "string", false, []),
+            new("upn", RestApiParameterType.String, false, []),
         ];
 
         var payload = new RestApiPayload(MediaTypeNames.Application.Json, payloadProperties);
@@ -796,7 +797,7 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         var firstParameter = new RestApiParameter(
             "p1",
-            "string",
+            RestApiParameterType.String,
             isRequired: true, //Marking the parameter as required
             false,
             RestApiParameterLocation.Query,
@@ -804,7 +805,7 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         var secondParameter = new RestApiParameter(
             "p2",
-            "integer",
+            RestApiParameterType.Integer,
             isRequired: true, //Marking the parameter as required
             false,
             RestApiParameterLocation.Query,
@@ -845,7 +846,7 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         var firstParameter = new RestApiParameter(
             "p1",
-            "string",
+            RestApiParameterType.String,
             isRequired: false, //Marking the parameter as not required
             false,
             RestApiParameterLocation.Query,
@@ -853,7 +854,7 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         var secondParameter = new RestApiParameter(
             "p2",
-            "string",
+            RestApiParameterType.String,
             isRequired: false, //Marking the parameter as not required
             false,
             RestApiParameterLocation.Query,
@@ -894,7 +895,7 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         var firstParameter = new RestApiParameter(
             "p1",
-            "string",
+            RestApiParameterType.String,
             isRequired: false, //Marking the parameter as not required
             false,
             RestApiParameterLocation.Query,
@@ -902,7 +903,7 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         var secondParameter = new RestApiParameter(
             "p2",
-            "string",
+            RestApiParameterType.String,
             isRequired: true, //Marking the parameter as required
             false,
             RestApiParameterLocation.Query,
@@ -942,7 +943,7 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         var parameter = new RestApiParameter(
             "p1",
-            "string",
+            RestApiParameterType.String,
             isRequired: true, //Marking the parameter as required
             false,
             RestApiParameterLocation.Query,
@@ -1094,10 +1095,10 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         List<RestApiPayloadProperty> payloadProperties =
         [
-            new("name", "string", true, []),
-            new("attributes", "object", false,
+            new("name", RestApiParameterType.String, true, []),
+            new("attributes", RestApiParameterType.Object, false,
             [
-                new("enabled", "boolean", false, []),
+                new("enabled", RestApiParameterType.Boolean, false, []),
             ])
         ];
 
@@ -1136,18 +1137,21 @@ public sealed class RestApiOperationRunnerTests : IDisposable
         Assert.Equal("{\"name\":\"fake-name-value\",\"attributes\":{\"enabled\":true}}", ((JsonObject)result.RequestPayload).ToJsonString());
     }
 
-    [Fact]
-    public async Task ItShouldHandleNoContentAsync()
+    [InlineData(System.Net.HttpStatusCode.NoContent)]
+    [InlineData(System.Net.HttpStatusCode.Accepted)]
+    [InlineData(System.Net.HttpStatusCode.Created)]
+    [Theory]
+    public async Task ItShouldHandleNoContentAsync(System.Net.HttpStatusCode statusCode)
     {
         // Arrange
-        this._httpMessageHandlerStub!.ResponseToReturn = new HttpResponseMessage(System.Net.HttpStatusCode.NoContent);
+        this._httpMessageHandlerStub!.ResponseToReturn = new HttpResponseMessage(statusCode);
 
         List<RestApiPayloadProperty> payloadProperties =
         [
-            new("name", "string", true, []),
-            new("attributes", "object", false,
+            new("name", RestApiParameterType.String, true, []),
+            new("attributes", RestApiParameterType.Object, false,
             [
-                new("enabled", "boolean", false, []),
+                new("enabled", RestApiParameterType.Boolean, false, []),
             ])
         ];
 
@@ -1194,10 +1198,10 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         List<RestApiPayloadProperty> payloadProperties =
         [
-            new("name", "string", true, []),
-            new("attributes", "object", false,
+            new("name", RestApiParameterType.String, true, []),
+            new("attributes", RestApiParameterType.Object, false,
             [
-                new("enabled", "boolean", false, []),
+                new("enabled", RestApiParameterType.Boolean, false, []),
             ])
         ];
 
@@ -1395,10 +1399,10 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         List<RestApiPayloadProperty> payloadProperties =
         [
-            new("name", "string", true, []) { ArgumentName = "alt-name" },
-            new("attributes", "object", false,
+            new("name", RestApiParameterType.String, true, []) { ArgumentName = "alt-name" },
+            new("attributes", RestApiParameterType.Object, false,
             [
-                new("enabled", "boolean", false, []) { ArgumentName = "alt-enabled" },
+                new("enabled", RestApiParameterType.Boolean, false, []) { ArgumentName = "alt-enabled" },
             ])
         ];
 
@@ -1460,10 +1464,10 @@ public sealed class RestApiOperationRunnerTests : IDisposable
 
         List<RestApiPayloadProperty> payloadProperties =
         [
-            new("name", "string", true, []) { ArgumentName = "alt-name" },
-            new("attributes", "object", false,
+            new("name", RestApiParameterType.String, true, []) { ArgumentName = "alt-name" },
+            new("attributes", RestApiParameterType.Object, false,
             [
-                new("enabled", "boolean", false, []) { ArgumentName = "alt-enabled" },
+                new("enabled", RestApiParameterType.Boolean, false, []) { ArgumentName = "alt-enabled" },
             ])
         ];
 
@@ -1515,6 +1519,121 @@ public sealed class RestApiOperationRunnerTests : IDisposable
         var enabledProperty = attributesProperty["enabled"]?.AsValue();
         Assert.NotNull(enabledProperty);
         Assert.Equal("true", enabledProperty.ToString());
+    }
+
+    [Fact]
+    public async Task ItShouldUseUrlHeaderAndPayloadFactoriesIfProvidedAsync()
+    {
+        // Arrange
+        this._httpMessageHandlerStub.ResponseToReturn.Content = new StringContent("fake-content", Encoding.UTF8, MediaTypeNames.Application.Json);
+
+        List<RestApiPayloadProperty> payloadProperties =
+        [
+            new("name", "string", true, [])
+        ];
+
+        var payload = new RestApiPayload(MediaTypeNames.Application.Json, payloadProperties);
+
+        var expectedOperation = new RestApiOperation(
+            id: "fake-id",
+            servers: [new RestApiServer("https://fake-random-test-host")],
+            path: "fake-path",
+            method: HttpMethod.Post,
+            description: "fake-description",
+            parameters: [],
+            responses: new Dictionary<string, RestApiExpectedResponse>(),
+            securityRequirements: [],
+            payload: payload
+        );
+
+        var expectedArguments = new KernelArguments();
+
+        var expectedOptions = new RestApiOperationRunOptions()
+        {
+            Kernel = new(),
+            KernelFunction = KernelFunctionFactory.CreateFromMethod(() => false),
+            KernelArguments = expectedArguments,
+        };
+
+        bool createUrlFactoryCalled = false;
+        bool createHeadersFactoryCalled = false;
+        bool createPayloadFactoryCalled = false;
+
+        Uri CreateUrl(RestApiOperation operation, IDictionary<string, object?> arguments, RestApiOperationRunOptions? options)
+        {
+            createUrlFactoryCalled = true;
+            Assert.Same(expectedOperation, operation);
+            Assert.Same(expectedArguments, arguments);
+            Assert.Same(expectedOptions, options);
+
+            return new Uri("https://fake-random-test-host-from-factory/");
+        }
+
+        IDictionary<string, string>? CreateHeaders(RestApiOperation operation, IDictionary<string, object?> arguments, RestApiOperationRunOptions? options)
+        {
+            createHeadersFactoryCalled = true;
+            Assert.Same(expectedOperation, operation);
+            Assert.Same(expectedArguments, arguments);
+            Assert.Same(expectedOptions, options);
+
+            return new Dictionary<string, string>() { ["header-from-factory"] = "value-of-header-from-factory" };
+        }
+
+        (object Payload, HttpContent Content)? CreatePayload(RestApiOperation operation, IDictionary<string, object?> arguments, bool enableDynamicPayload, bool enablePayloadNamespacing, RestApiOperationRunOptions? options)
+        {
+            createPayloadFactoryCalled = true;
+            Assert.Same(expectedOperation, operation);
+            Assert.Same(expectedArguments, arguments);
+            Assert.True(enableDynamicPayload);
+            Assert.True(enablePayloadNamespacing);
+            Assert.Same(expectedOptions, options);
+
+            var json = """{"name":"fake-name-value"}""";
+
+            return ((JsonObject)JsonObject.Parse(json)!, new StringContent(json, Encoding.UTF8, MediaTypeNames.Application.Json));
+        }
+
+        var sut = new RestApiOperationRunner(
+            this._httpClient,
+            enableDynamicPayload: true,
+            enablePayloadNamespacing: true,
+            urlFactory: CreateUrl,
+            headersFactory: CreateHeaders,
+            payloadFactory: CreatePayload);
+
+        // Act
+        var result = await sut.RunAsync(expectedOperation, expectedArguments, expectedOptions);
+
+        // Assert
+        Assert.True(createUrlFactoryCalled);
+        Assert.True(createHeadersFactoryCalled);
+        Assert.True(createPayloadFactoryCalled);
+
+        // Assert url factory
+        Assert.NotNull(this._httpMessageHandlerStub.RequestUri);
+        Assert.Equal("https://fake-random-test-host-from-factory/", this._httpMessageHandlerStub.RequestUri.AbsoluteUri);
+
+        // Assert headers factory
+        Assert.NotNull(this._httpMessageHandlerStub.RequestHeaders);
+        Assert.Equal(3, this._httpMessageHandlerStub.RequestHeaders.Count());
+
+        Assert.Contains(this._httpMessageHandlerStub.RequestHeaders, h => h.Key == "header-from-factory" && h.Value.Contains("value-of-header-from-factory"));
+        Assert.Contains(this._httpMessageHandlerStub.RequestHeaders, h => h.Key == "User-Agent" && h.Value.Contains("Semantic-Kernel"));
+        Assert.Contains(this._httpMessageHandlerStub.RequestHeaders, h => h.Key == "Semantic-Kernel-Version");
+
+        // Assert payload factory
+        var messageContent = this._httpMessageHandlerStub.RequestContent;
+        Assert.NotNull(messageContent);
+
+        var deserializedPayload = await JsonNode.ParseAsync(new MemoryStream(messageContent));
+        Assert.NotNull(deserializedPayload);
+
+        var nameProperty = deserializedPayload["name"]?.ToString();
+        Assert.Equal("fake-name-value", nameProperty);
+
+        Assert.NotNull(result.RequestPayload);
+        Assert.IsType<JsonObject>(result.RequestPayload);
+        Assert.Equal("""{"name":"fake-name-value"}""", ((JsonObject)result.RequestPayload).ToJsonString());
     }
 
     public class SchemaTestData : IEnumerable<object[]>
@@ -1585,6 +1704,196 @@ public sealed class RestApiOperationRunnerTests : IDisposable
         Assert.NotNull(result);
         var expected = responses.First(r => r.Item1 == expectedStatusCode).Item2.Schema;
         Assert.Equal(JsonSerializer.Serialize(expected), JsonSerializer.Serialize(result.ExpectedSchema));
+    }
+
+    [Theory]
+    [InlineData("application/json;x-api-version=2.0", "application/json")]
+    [InlineData("application/json ; x-api-version=2.0", "application/json")]
+    [InlineData(" application/JSON; x-api-version=2.0", "application/json")]
+    [InlineData(" TEXT/PLAIN ; x-api-version=2.0", "text/plain")]
+    public async Task ItShouldNormalizeContentTypeArgumentAsync(string actualContentType, string normalizedContentType)
+    {
+        // Arrange
+        this._httpMessageHandlerStub.ResponseToReturn.Content = new StringContent("fake-content", Encoding.UTF8, MediaTypeNames.Text.Plain);
+
+        var operation = new RestApiOperation(
+            id: "fake-id",
+            servers: [new RestApiServer("https://fake-random-test-host")],
+            path: "fake-path",
+            method: HttpMethod.Post,
+            description: "fake-description",
+            parameters: [],
+            responses: new Dictionary<string, RestApiExpectedResponse>(),
+            securityRequirements: [],
+            payload: null
+        );
+
+        var arguments = new KernelArguments
+        {
+            { "payload", "fake-input-value" },
+            { "content-type", actualContentType },
+        };
+
+        var sut = new RestApiOperationRunner(this._httpClient, this._authenticationHandlerMock.Object, enableDynamicPayload: false);
+
+        // Act
+        var result = await sut.RunAsync(operation, arguments);
+
+        // Assert
+        Assert.NotNull(this._httpMessageHandlerStub.ContentHeaders);
+        Assert.Contains(this._httpMessageHandlerStub.ContentHeaders, h => h.Key == "Content-Type" && h.Value.Any(h => h.StartsWith(normalizedContentType, StringComparison.InvariantCulture)));
+    }
+
+    [Fact]
+    public async Task ItShouldProvideValidContextToRestApiOperationResponseFactoryAsync()
+    {
+        // Arrange
+        this._httpMessageHandlerStub.ResponseToReturn.Content = new StringContent("fake-content", Encoding.UTF8, MediaTypeNames.Text.Plain);
+
+        RestApiOperationResponseFactoryContext? factoryContext = null;
+        RestApiOperationResponse? factoryInternalResponse = null;
+        CancellationToken? factoryCancellationToken = null;
+
+        async Task<RestApiOperationResponse> RestApiOperationResponseFactory(RestApiOperationResponseFactoryContext context, CancellationToken cancellationToken)
+        {
+            factoryContext = context;
+            factoryInternalResponse = await context.InternalFactory(context, cancellationToken);
+            factoryCancellationToken = cancellationToken;
+
+            return factoryInternalResponse;
+        }
+
+        var operation = new RestApiOperation(
+            id: "fake-id",
+            servers: [new RestApiServer("https://fake-random-test-host")],
+            path: "fake-path",
+            method: HttpMethod.Post,
+            description: "fake-description",
+            parameters: [],
+            responses: new Dictionary<string, RestApiExpectedResponse>(),
+            securityRequirements: [],
+            payload: null
+        );
+
+        var arguments = new KernelArguments
+        {
+            { "payload", "fake-input-value" },
+            { "content-type", "text/plain" },
+        };
+
+        var sut = new RestApiOperationRunner(this._httpClient, responseFactory: RestApiOperationResponseFactory);
+
+        using var cancellationTokenSource = new CancellationTokenSource();
+
+        var cancellationToken = cancellationTokenSource.Token;
+
+        // Act
+        var response = await sut.RunAsync(operation, arguments, cancellationToken: cancellationToken);
+
+        // Assert
+        Assert.NotNull(factoryContext);
+        Assert.Same(operation, factoryContext.Operation);
+        Assert.Same(this._httpMessageHandlerStub.RequestMessage, factoryContext.Request);
+        Assert.Same(this._httpMessageHandlerStub.ResponseToReturn, factoryContext.Response);
+
+        Assert.Same(factoryInternalResponse, response);
+
+        Assert.Equal(cancellationToken, factoryCancellationToken);
+    }
+
+    [Fact]
+    public async Task ItShouldWrapStreamContentIntoHttpResponseStreamAsync()
+    {
+        // Arrange
+        this._httpMessageHandlerStub.ResponseToReturn.Content = new StringContent("fake-content", Encoding.UTF8, MediaTypeNames.Text.Plain);
+
+        var factoryStream = new MemoryStream();
+
+        async Task<RestApiOperationResponse> RestApiOperationResponseFactory(RestApiOperationResponseFactoryContext context, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(new RestApiOperationResponse(factoryStream, contentType: MediaTypeNames.Text.Plain));
+        }
+
+        var operation = new RestApiOperation(
+            id: "fake-id",
+            servers: [new RestApiServer("https://fake-random-test-host")],
+            path: "fake-path",
+            method: HttpMethod.Post,
+            description: "fake-description",
+            parameters: [],
+            responses: new Dictionary<string, RestApiExpectedResponse>(),
+            securityRequirements: [],
+            payload: null
+        );
+
+        var arguments = new KernelArguments
+        {
+            { "payload", "fake-input-value" },
+            { "content-type", "text/plain" },
+        };
+
+        var sut = new RestApiOperationRunner(this._httpClient, responseFactory: RestApiOperationResponseFactory);
+
+        // Act
+        var response = await sut.RunAsync(operation, arguments);
+
+        // Assert
+        var httpResponseStream = Assert.IsType<HttpResponseStream>(response.Content);
+
+        // Assert that neither the HttResponseMessage nor stream returned by factory is disposed
+        this._httpMessageHandlerStub.ResponseToReturn!.Version = Version.Parse("1.1.1");
+        Assert.True(factoryStream!.CanRead);
+        Assert.True(factoryStream!.CanSeek);
+
+        // Dispose the response stream
+        httpResponseStream.Dispose();
+
+        // Assert both the stream and the response message are disposed
+        Assert.Throws<ObjectDisposedException>(() => this._httpMessageHandlerStub.ResponseToReturn!.Version = Version.Parse("1.1.1"));
+        Assert.False(httpResponseStream!.CanRead);
+        Assert.False(httpResponseStream!.CanSeek);
+    }
+
+    [Fact]
+    public async Task ItShouldNotWrapStreamContentIntoHttpResponseStreamIfItIsAlreadyOfHttpResponseStreamTypeAsync()
+    {
+        // Arrange
+        this._httpMessageHandlerStub.ResponseToReturn.Content = new StringContent("fake-content", Encoding.UTF8, MediaTypeNames.Text.Plain);
+
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        await using var httpResponseStream = new HttpResponseStream(new MemoryStream(), new HttpResponseMessage());
+#pragma warning restore CA2000 // Dispose objects before losing scope
+
+        async Task<RestApiOperationResponse> RestApiOperationResponseFactory(RestApiOperationResponseFactoryContext context, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(new RestApiOperationResponse(httpResponseStream, contentType: MediaTypeNames.Text.Plain));
+        }
+
+        var operation = new RestApiOperation(
+            id: "fake-id",
+            servers: [new RestApiServer("https://fake-random-test-host")],
+            path: "fake-path",
+            method: HttpMethod.Post,
+            description: "fake-description",
+            parameters: [],
+            responses: new Dictionary<string, RestApiExpectedResponse>(),
+            securityRequirements: [],
+            payload: null
+        );
+
+        var arguments = new KernelArguments
+        {
+            { "payload", "fake-input-value" },
+            { "content-type", "text/plain" },
+        };
+
+        var sut = new RestApiOperationRunner(this._httpClient, responseFactory: RestApiOperationResponseFactory);
+
+        // Act
+        var response = await sut.RunAsync(operation, arguments);
+
+        // Assert
+        Assert.Same(httpResponseStream, response.Content);
     }
 
     /// <summary>

@@ -19,6 +19,8 @@ This extension is also available for **Azure Database for PostgreSQL - Flexible 
 
 ```bash {"id":"01J6KNEBBQ8G1WSGWE0ND2CQET"}
 docker run -d --name postgres-pgvector -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword ankane/pgvector
+```bash
+docker run -d --name postgres-pgvector -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword pgvector/pgvector
 ```
 
 2. Create a database and enable pgvector extension on this database
@@ -33,8 +35,13 @@ sk_demo=# CREATE EXTENSION vector;
 
 > Note, "Azure Cosmos DB for PostgreSQL" uses `SELECT CREATE_EXTENSION('vector');` to enable the extension.
 
-3. To use Postgres as a semantic memory store:
-   > See [Example 14](../../../samples/Concepts/Memory/SemanticTextMemory_Building.cs) and [Example 15](../../../samples/Concepts/Memory/TextMemoryPlugin_MultipleMemoryStore.cs) for more memory usage examples with the kernel.
+### Using PostgresVectorStore
+
+See [this sample](../../../samples/Concepts/Memory/VectorStore_VectorSearch_MultiStore_Postgres.cs) for an example of using the vector store.
+
+### Using  PostgresMemoryStore
+
+> See [Example 14](../../../samples/Concepts/Memory/SemanticTextMemory_Building.cs) and [Example 15](../../../samples/Concepts/Memory/TextMemoryPlugin_MultipleMemoryStore.cs) for more memory usage examples with the kernel.
 
 ```csharp {"id":"01J6KNEBBQ8G1WSGWE0SVP3MH4"}
 NpgsqlDataSourceBuilder dataSourceBuilder = new NpgsqlDataSourceBuilder("Host=localhost;Port=5432;Database=sk_demo;User Id=postgres;Password=mysecretpassword");

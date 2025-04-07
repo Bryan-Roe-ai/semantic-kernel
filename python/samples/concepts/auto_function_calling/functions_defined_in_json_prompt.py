@@ -16,6 +16,8 @@ from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.contents.streaming_chat_message_content import (
     StreamingChatMessageContent,
 )
+from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
+from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.core_plugins import MathPlugin, TimePlugin
 from semantic_kernel.filters.auto_function_invocation.auto_function_invocation_context import (
     AutoFunctionInvocationContext,
@@ -155,7 +157,7 @@ async def handle_streaming(
     kernel: Kernel,
     chat_function: "KernelFunction",
     arguments: KernelArguments,
-) -> None:
+) -> str | None:
     response = kernel.invoke_stream(
         chat_function,
         return_function_results=False,
@@ -164,23 +166,32 @@ async def handle_streaming(
 
     print("Mosscap:> ", end="")
     streamed_chunks: list[StreamingChatMessageContent] = []
+    result_content: list[StreamingChatMessageContent] = []
     async for message in response:
         if (
             not execution_settings.function_choice_behavior.auto_invoke_kernel_functions
             and isinstance(message[0], StreamingChatMessageContent)
+            and message[0].role == AuthorRole.ASSISTANT
         ):
             streamed_chunks.append(message[0])
-        else:
+        elif isinstance(message[0], StreamingChatMessageContent) and message[0].role == AuthorRole.ASSISTANT:
+            result_content.append(message[0])
             print(str(message[0]), end="")
 
     if streamed_chunks:
         streaming_chat_message = reduce(
             lambda first, second: first + second, streamed_chunks
         )
+        streaming_chat_message = reduce(lambda first, second: first + second, streamed_chunks)
+        if hasattr(streaming_chat_message, "content"):
+            print(streaming_chat_message.content)
         print("Auto tool calls is disabled, printing returned tool calls...")
         print_tool_calls(streaming_chat_message)
 
     print("\n")
+    if result_content:
+        return "".join([str(content) for content in result_content])
+    return None
 
 
 async def chat() -> bool:
@@ -201,7 +212,7 @@ async def chat() -> bool:
 
     stream = False
     if stream:
-        await handle_streaming(kernel, chat_function, arguments=arguments)
+        result = await handle_streaming(kernel, chat_function, arguments=arguments)
     else:
         result = await kernel.invoke(chat_plugin["ChatBot"], arguments=arguments)
 
@@ -221,6 +232,9 @@ async def chat() -> bool:
             return True
 
         print(f"Mosscap:> {result}")
+
+    history.add_user_message(user_input)
+    history.add_assistant_message(str(result))
     return True
 
 

@@ -916,6 +916,7 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
         self,
         chat_history: "ChatHistory",
         settings: "PromptExecutionSettings",
+        function_invoke_attempt: int = 0,
     ) -> AsyncGenerator[list["StreamingChatMessageContent"], Any]:
         if not isinstance(settings, MistralAIChatPromptExecutionSettings):
             settings = self.get_prompt_execution_settings_from_settings(settings)
@@ -951,7 +952,9 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
                     continue
                 chunk_metadata = self._get_metadata_from_response(chunk.data)
                 yield [
-                    self._create_streaming_chat_message_content(chunk.data, choice, chunk_metadata)
+                    self._create_streaming_chat_message_content(
+                        chunk.data, choice, chunk_metadata, function_invoke_attempt
+                    )
                     for choice in chunk.data.choices
                 ]
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
@@ -995,6 +998,7 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
         chunk: CompletionChunk,
         choice: CompletionResponseStreamChoice,
         chunk_metadata: dict[str, Any],
+        function_invoke_attempt: int,
     ) -> StreamingChatMessageContent:
         """Create a streaming chat message content object from a choice."""
         metadata = self._get_metadata_from_chat_choice(choice)
@@ -1023,6 +1027,7 @@ class MistralAIChatCompletion(MistralAIBase, ChatCompletionClientBase):
                 FinishReason(choice.finish_reason) if choice.finish_reason else None
             ),
             items=items,
+            function_invoke_attempt=function_invoke_attempt,
         )
 
     def _get_metadata_from_response(self, response: ChatCompletionResponse | CompletionChunk) -> dict[str, Any]:

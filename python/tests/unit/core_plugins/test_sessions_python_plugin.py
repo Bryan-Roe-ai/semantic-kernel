@@ -133,7 +133,6 @@ def test_it_can_be_imported(kernel: Kernel, aca_python_sessions_unit_test_env):
     )
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.post")
 async def test_call_to_container_succeeds(mock_post, aca_python_sessions_unit_test_env):
     async def async_return(result):
@@ -172,7 +171,6 @@ async def test_call_to_container_succeeds(mock_post, aca_python_sessions_unit_te
         mock_post.assert_awaited_once()
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.post")
 async def test_call_to_container_fails_raises_exception(
     mock_post, aca_python_sessions_unit_test_env
@@ -202,12 +200,12 @@ async def test_call_to_container_fails_raises_exception(
 async def test_empty_call_to_container_fails_raises_exception(
     aca_python_sessions_unit_test_env,
 ):
+async def test_empty_call_to_container_fails_raises_exception(aca_python_sessions_unit_test_env):
     plugin = SessionsPythonTool(auth_callback=auth_callback_test)
     with pytest.raises(FunctionExecutionException):
         await plugin.execute_code(code="")
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.post")
 async def test_upload_file_with_local_path(
     mock_post, aca_python_sessions_unit_test_env
@@ -278,7 +276,6 @@ async def test_upload_file_with_local_path(
         mock_post.assert_awaited_once()
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.post")
 async def test_upload_file_with_local_path_and_no_remote(
     mock_post, aca_python_sessions_unit_test_env
@@ -340,7 +337,6 @@ async def test_upload_file_with_local_path_and_no_remote(
         mock_post.assert_awaited_once()
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.post")
 async def test_upload_file_throws_exception(
     mock_post, aca_python_sessions_unit_test_env
@@ -385,7 +381,6 @@ async def test_upload_file_throws_exception(
         ("./file.py", "/mnt/data/input.py", "/mnt/data/input.py"),
     ],
 )
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.post")
 async def test_upload_file_with_buffer(
     mock_post,
@@ -458,7 +453,6 @@ async def test_upload_file_with_buffer(
         mock_post.assert_awaited_once()
 
 
-@pytest.mark.asyncio
 async def test_upload_file_fail_with_no_local_path(aca_python_sessions_unit_test_env):
     """Test upload_file when not providing a local file path throws an exception."""
 
@@ -470,7 +464,6 @@ async def test_upload_file_fail_with_no_local_path(aca_python_sessions_unit_test
         )
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.get")
 async def test_list_files(mock_get, aca_python_sessions_unit_test_env):
     """Test list_files function."""
@@ -539,7 +532,6 @@ async def test_list_files(mock_get, aca_python_sessions_unit_test_env):
         mock_get.assert_awaited_once()
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.get")
 async def test_list_files_throws_exception(mock_get, aca_python_sessions_unit_test_env):
     """Test throwing exception during list files."""
@@ -574,7 +566,6 @@ async def test_list_files_throws_exception(mock_get, aca_python_sessions_unit_te
         mock_get.assert_awaited_once()
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.get")
 async def test_download_file_to_local(mock_get, aca_python_sessions_unit_test_env):
     """Test download_file when saving to a local file path."""
@@ -615,7 +606,6 @@ async def test_download_file_to_local(mock_get, aca_python_sessions_unit_test_en
         mock_file().write.assert_called_once_with(b"file data")
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.get")
 async def test_download_file_to_buffer(mock_get, aca_python_sessions_unit_test_env):
     """Test download_file when returning as a BufferedReader."""
@@ -648,7 +638,6 @@ async def test_download_file_to_buffer(mock_get, aca_python_sessions_unit_test_e
         mock_get.assert_awaited_once()
 
 
-@pytest.mark.asyncio
 @patch("httpx.AsyncClient.get")
 async def test_download_file_throws_exception(
     mock_get, aca_python_sessions_unit_test_env
@@ -716,7 +705,6 @@ def test_sanitize_input(input_code, expected_output, aca_python_sessions_unit_te
     assert sanitized_code == expected_output
 
 
-@pytest.mark.asyncio
 async def test_auth_token(aca_python_sessions_unit_test_env):
     async def token_cb():
         return "sample_token"
@@ -725,7 +713,6 @@ async def test_auth_token(aca_python_sessions_unit_test_env):
     assert await plugin._ensure_auth_token() == "sample_token"
 
 
-@pytest.mark.asyncio
 async def test_auth_token_fail(aca_python_sessions_unit_test_env):
     async def token_cb():
         raise ValueError("Could not get token.")

@@ -31,7 +31,6 @@ def test_huggingface_text_embedding_initialization():
         )
 
 
-@pytest.mark.asyncio
 async def test_generate_embeddings_success():
     model_name = "sentence-transformers/all-MiniLM-L6-v2"
     device = -1
@@ -54,7 +53,6 @@ async def test_generate_embeddings_success():
         assert (embeddings == mock_embeddings).all()
 
 
-@pytest.mark.asyncio
 async def test_generate_embeddings_throws():
     model_name = "sentence-transformers/all-MiniLM-L6-v2"
     device = -1

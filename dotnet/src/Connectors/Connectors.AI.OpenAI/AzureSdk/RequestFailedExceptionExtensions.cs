@@ -4,7 +4,12 @@ using System.Net;
 using Azure;
 using Microsoft.SemanticKernel.Diagnostics;
 
-namespace Microsoft.SemanticKernel.Connectors.AI.OpenAI.AzureSdk;
+namespace Microsoft.SemanticKernel.Connectors.AI.OpenAI.AzureSdk
+{
+    /// <summary>
+    /// Provides extension methods for handling RequestFailedException.
+    /// </summary>
+}
 
 /// <summary>
 /// Provides extension methods for the <see cref="RequestFailedException"/> class.

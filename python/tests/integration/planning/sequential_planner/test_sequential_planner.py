@@ -389,7 +389,6 @@ def initialize_kernel(use_embeddings=False, use_chat_model=False):
         ),
     ],
 )
-@pytest.mark.asyncio
 @pytest.mark.xfail(
     reason="Test is known to be blocked by Azure OpenAI content policy.",
 )
@@ -545,7 +544,6 @@ async def test_create_plan_function_flow(
         )
     ],
 )
-@pytest.mark.asyncio
 @pytest.mark.xfail(
 <<<<<<< div
 <<<<<<< div
@@ -664,7 +662,6 @@ async def test_create_plan_with_defaults(
         )
     ],
 )
-@pytest.mark.asyncio
 @pytest.mark.xfail(
 <<<<<<< main
 <<<<<<< div

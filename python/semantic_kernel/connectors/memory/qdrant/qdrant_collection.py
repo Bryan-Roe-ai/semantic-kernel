@@ -19,7 +19,6 @@ from semantic_kernel.connectors.memory.qdrant.const import (
     TYPE_MAPPER_VECTOR,
 )
 from semantic_kernel.connectors.memory.qdrant.utils import AsyncQdrantClientWrapper
-<<<<<<< HEAD
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
@@ -27,26 +26,23 @@ from semantic_kernel.data.vector_store_record_collection import (
     VectorStoreRecordCollection,
 )
 from semantic_kernel.data.vector_store_record_fields import VectorStoreRecordVectorField
-=======
 from semantic_kernel.data.kernel_search_results import KernelSearchResults
 from semantic_kernel.data.record_definition import VectorStoreRecordDefinition, VectorStoreRecordVectorField
 from semantic_kernel.data.vector_search.vector_search import VectorSearchBase
 from semantic_kernel.data.vector_search.vector_search_options import VectorSearchOptions
 from semantic_kernel.data.vector_search.vector_search_result import VectorSearchResult
 from semantic_kernel.data.vector_search.vectorized_search import VectorizedSearchMixin
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.exceptions import (
-    MemoryConnectorInitializationError,
+    VectorSearchExecutionException,
+    VectorStoreInitializationException,
     VectorStoreModelValidationError,
+    VectorStoreOperationException,
 )
-<<<<<<< HEAD
 from semantic_kernel.exceptions.memory_connector_exceptions import (
     MemoryConnectorException,
 )
-=======
 from semantic_kernel.exceptions.memory_connector_exceptions import MemoryConnectorException
 from semantic_kernel.exceptions.search_exceptions import VectorSearchExecutionException
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.kernel_types import OneOrMany
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.telemetry.user_agent import (
@@ -152,6 +148,7 @@ class QdrantCollection(
             raise MemoryConnectorInitializationError(
                 "Failed to create Qdrant settings.", ex
             ) from ex
+            raise VectorStoreInitializationException("Failed to create Qdrant settings.", ex) from ex
         if APP_INFO:
             kwargs.setdefault("metadata", {})
             kwargs["metadata"] = prepend_semantic_kernel_to_user_agent(
@@ -165,6 +162,7 @@ class QdrantCollection(
             raise MemoryConnectorInitializationError(
                 "Failed to create Qdrant client.", ex
             ) from ex
+            raise VectorStoreInitializationException("Failed to create Qdrant client.", ex) from ex
         super().__init__(
             data_model_type=data_model_type,
             data_model_definition=data_model_definition,
@@ -222,7 +220,7 @@ class QdrantCollection(
             else:
                 query_vector = vector
         if query_vector is None:
-            raise VectorSearchExecutionException("Search requires either a vector.")
+            raise VectorSearchExecutionException("Search requires a vector.")
         results = await self.qdrant_client.search(
             collection_name=self.collection_name,
             query_vector=query_vector,
@@ -248,7 +246,7 @@ class QdrantCollection(
     def _create_filter(self, options: VectorSearchOptions) -> Filter:
         return Filter(
             must=[
-                FieldCondition(key=filter.field_name, match=MatchAny(any=filter.value))
+                FieldCondition(key=filter.field_name, match=MatchAny(any=[filter.value]))
                 for filter in options.filter.filters
             ]
         )
@@ -318,6 +316,7 @@ class QdrantCollection(
                         raise MemoryConnectorException(
                             "Vector field must have dimensions."
                         )
+                        raise VectorStoreOperationException("Vector field must have dimensions.")
                     vectors_config[field] = VectorParams(
                         size=vector.dimensions,
                         distance=DISTANCE_FUNCTION_MAP[
@@ -331,7 +330,7 @@ class QdrantCollection(
                 ]
                 assert isinstance(vector, VectorStoreRecordVectorField)  # nosec
                 if not vector.dimensions:
-                    raise MemoryConnectorException("Vector field must have dimensions.")
+                    raise VectorStoreOperationException("Vector field must have dimensions.")
                 vectors_config = VectorParams(
                     size=vector.dimensions,
                     distance=DISTANCE_FUNCTION_MAP[
@@ -362,7 +361,6 @@ class QdrantCollection(
         Checks should include, allowed naming of parameters, allowed data types, allowed vector dimensions.
         """
         super()._validate_data_model()
-<<<<<<< HEAD
         if (
             len(self.data_model_definition.vector_field_names) > 1
             and not self.named_vectors
@@ -370,7 +368,6 @@ class QdrantCollection(
             raise VectorStoreModelValidationError(
                 "Only one vector field is allowed when not using named vectors."
             )
-=======
         if len(self.data_model_definition.vector_field_names) > 1 and not self.named_vectors:
             raise VectorStoreModelValidationError("Only one vector field is allowed when not using named vectors.")
 
@@ -379,4 +376,3 @@ class QdrantCollection(
         """Exit the context manager."""
         if self.managed_client:
             await self.qdrant_client.close()
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377

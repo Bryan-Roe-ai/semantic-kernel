@@ -1,6 +1,5 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
-<<<<<<< HEAD
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
@@ -73,7 +72,6 @@ public class KernelPluginFactoryTests
             return new TestReturnType() { Result = int.Parse(p1.Value!) };
         }
     }
-=======
 using System.ComponentModel;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
@@ -103,9 +101,25 @@ public class KernelPluginFactoryTests
     [Fact]
     public async Task ItCanCreateFromTypeUsingGenericsAsync()
     {
+<<<<<<< main
         // Arrange
         var kernel = new Kernel();
         var args = new KernelArguments { { "param1", "value1" } };
+=======
+        // Assert plugin properties
+        Assert.Equal("MyKernelFunctions", plugin.Name);
+        Assert.Equal(2, plugin.FunctionCount);
+
+        // Assert Function1
+        KernelFunction function1 = plugin["Function1"];
+
+        Assert.NotEmpty(function1.Metadata.Parameters);
+        Assert.NotNull(function1.Metadata.Parameters[0].Schema);
+        Assert.Equal("""{"description":"Description for parameter 1","type":"string"}""", function1.Metadata.Parameters[0].Schema!.ToString());
+
+        Assert.NotNull(function1.Metadata.ReturnParameter);
+        Assert.NotNull(function1.Metadata.ReturnParameter.Schema);
+        Assert.Equal("""{"type":"string"}""", function1.Metadata.ReturnParameter.Schema!.ToString());
 
         // Act
         var plugin = KernelPluginFactory.CreateFromType<MyKernelFunctions>();
@@ -124,6 +138,9 @@ public class KernelPluginFactoryTests
         var kernel = new Kernel();
         var args = new KernelArguments { { "param1", "value1" } };
         var instanceType = typeof(MyKernelFunctions);
+        Assert.NotEmpty(function2.Metadata.Parameters);
+        Assert.NotNull(function2.Metadata.Parameters[0].Schema);
+        Assert.Equal("""{"description":"Description for parameter 1","type":"object","properties":{"Value":{"type":["string","null"]}}}""", function2.Metadata.Parameters[0].Schema!.ToString());
 
         // Act
         var plugin = KernelPluginFactory.CreateFromType(instanceType);

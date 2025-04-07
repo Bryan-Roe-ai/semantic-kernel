@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.OpenApi.ApiManifest;
-using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
 using Microsoft.SemanticKernel.Http;
 using Microsoft.SemanticKernel.Plugins.OpenApi;
@@ -109,11 +109,16 @@ public static class ApiManifestKernelExtensions
                 DocumentLoader.LoadDocumentFromFilePathAsStream(parsedDescriptionUrl.LocalPath,
                     logger);
 
-            var documentReadResult = await new OpenApiStreamReader(new()
-            {
-                BaseUrl = new(apiDescriptionUrl)
-            }
-            ).ReadAsync(openApiDocumentStream, cancellationToken).ConfigureAwait(false);
+            // TODO: Refactor the code to the new readers available in the OpenAPI.NET V2
+            ReadResult documentReadResult = await OpenApiModelFactory.LoadAsync(
+                input: openApiDocumentStream,
+                format: "TBD",
+                settings: new OpenApiReaderSettings()
+                {
+                    BaseUrl = new(apiDescriptionUrl)
+                },
+                cancellationToken).ConfigureAwait(false);
+
             var openApiDocument = documentReadResult.OpenApiDocument;
             var openApiDiagnostic = documentReadResult.OpenApiDiagnostic;
 
@@ -142,7 +147,11 @@ public static class ApiManifestKernelExtensions
 
             var openApiFunctionExecutionParameters = pluginParameters?.FunctionExecutionParameters?.TryGetValue(apiName, out var parameters) == true
                 ? parameters
-                : null;
+                : new OpenApiFunctionExecutionParameters()
+                {
+                    EnableDynamicPayload = false,
+                    EnablePayloadNamespacing = true,
+                };
 
 #pragma warning disable CA2000 // Dispose objects before losing scope. No need to dispose the Http client here. It can either be an internal client using NonDisposableHttpClientHandler or an external client managed by the calling code, which should handle its disposal.
             var operationRunnerHttpClient = HttpClientProvider.GetHttpClient(openApiFunctionExecutionParameters?.HttpClient ?? kernel.Services.GetService<HttpClient>());
@@ -152,10 +161,10 @@ public static class ApiManifestKernelExtensions
                 operationRunnerHttpClient,
                 openApiFunctionExecutionParameters?.AuthCallback,
                 openApiFunctionExecutionParameters?.UserAgent,
-                openApiFunctionExecutionParameters?.EnableDynamicPayload ?? true,
+                openApiFunctionExecutionParameters?.EnableDynamicPayload ?? false,
                 openApiFunctionExecutionParameters?.EnablePayloadNamespacing ?? false);
 
-            var server = filteredOpenApiDocument.Servers.FirstOrDefault();
+            var server = filteredOpenApiDocument.Servers?.FirstOrDefault();
             if (server?.Url is null)
             {
                 logger.LogWarning("Server URI not found. Plugin: {0}", pluginName);

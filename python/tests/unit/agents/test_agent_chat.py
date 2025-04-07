@@ -32,28 +32,24 @@ def chat_message():
     return mock_chat_message
 
 
-@pytest.mark.asyncio
 async def test_set_activity_or_throw_when_inactive(agent_chat):
     agent_chat._is_active = False
     agent_chat.set_activity_or_throw()
     assert agent_chat.is_active
 
 
-@pytest.mark.asyncio
 async def test_set_activity_or_throw_when_active(agent_chat):
     agent_chat._is_active = True
     with pytest.raises(Exception, match="Unable to proceed while another agent is active."):
         agent_chat.set_activity_or_throw()
 
 
-@pytest.mark.asyncio
 async def test_clear_activity_signal(agent_chat):
     agent_chat._is_active = True
     agent_chat.clear_activity_signal()
     assert not agent_chat.is_active
 
 
-@pytest.mark.asyncio
 async def test_get_messages_in_descending_order(agent_chat, chat_message):
     agent_chat.history.messages = [chat_message, chat_message, chat_message]
     messages = []
@@ -62,7 +58,6 @@ async def test_get_messages_in_descending_order(agent_chat, chat_message):
     assert len(messages) == 3
 
 
-@pytest.mark.asyncio
 async def test_get_chat_messages_without_agent(agent_chat, chat_message):
     agent_chat.history.messages = [chat_message]
     with patch(
@@ -74,7 +69,6 @@ async def test_get_chat_messages_without_agent(agent_chat, chat_message):
         mock_get_messages.assert_called_once()
 
 
-@pytest.mark.asyncio
 async def test_get_chat_messages_with_agent(agent_chat, agent, chat_message):
     agent_chat.channel_map[agent] = "test_channel"
 
@@ -90,7 +84,6 @@ async def test_get_chat_messages_with_agent(agent_chat, agent, chat_message):
             pass
 
 
-@pytest.mark.asyncio
 async def test_add_chat_message(agent_chat, chat_message):
     with patch(
         "semantic_kernel.agents.group_chat.agent_chat.AgentChat.add_chat_messages",
@@ -100,14 +93,12 @@ async def test_add_chat_message(agent_chat, chat_message):
         mock_add_chat_messages.assert_called_once_with([chat_message])
 
 
-@pytest.mark.asyncio
 async def test_add_chat_messages(agent_chat, chat_message):
     with patch("semantic_kernel.agents.group_chat.broadcast_queue.BroadcastQueue.enqueue", return_value=AsyncMock()):
         await agent_chat.add_chat_messages([chat_message])
         assert chat_message in agent_chat.history.messages
 
 
-@pytest.mark.asyncio
 async def test_invoke_agent(agent_chat, agent, chat_message):
     mock_channel = mock.MagicMock(spec=AgentChannel)
 
@@ -133,42 +124,6 @@ async def test_invoke_agent(agent_chat, agent, chat_message):
 
 
 @pytest.mark.asyncio
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
 async def test_invoke_streaming_agent(agent_chat, agent, chat_message):
     mock_channel = mock.MagicMock(spec=AgentChannel)
 
@@ -194,40 +149,6 @@ async def test_invoke_streaming_agent(agent_chat, agent, chat_message):
 
 
 @pytest.mark.asyncio
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 async def test_synchronize_channel_with_existing_channel(agent_chat):
     mock_channel = MagicMock(spec=AgentChannel)
     channel_key = "test_channel_key"
@@ -242,7 +163,6 @@ async def test_synchronize_channel_with_existing_channel(agent_chat):
         mock_ensure_synchronized.assert_called_once_with(ChannelReference(channel=mock_channel, hash=channel_key))
 
 
-@pytest.mark.asyncio
 async def test_synchronize_channel_with_nonexistent_channel(agent_chat):
     channel_key = "test_channel_key"
 
@@ -274,7 +194,6 @@ def test_get_agent_hash_generates_new_hash(agent_chat, agent):
         assert agent_chat.channel_map[agent] == expected_hash
 
 
-@pytest.mark.asyncio
 async def test_add_chat_messages_throws_exception_for_system_role(agent_chat):
     system_message = MagicMock(spec=ChatMessageContent)
     system_message.role = AuthorRole.SYSTEM
@@ -283,7 +202,6 @@ async def test_add_chat_messages_throws_exception_for_system_role(agent_chat):
         await agent_chat.add_chat_messages([system_message])
 
 
-@pytest.mark.asyncio
 async def test_get_or_create_channel_creates_new_channel(agent_chat, agent):
     agent_chat.history.messages = [MagicMock(spec=ChatMessageContent)]
     channel_key = "test_channel_key"
@@ -309,7 +227,6 @@ async def test_get_or_create_channel_creates_new_channel(agent_chat, agent):
             assert agent_chat.agent_channels[channel_key] == mock_channel
 
 
-@pytest.mark.asyncio
 async def test_get_or_create_channel_reuses_existing_channel(agent_chat, agent):
     channel_key = "test_channel_key"
     mock_channel = MagicMock(spec=AgentChannel)

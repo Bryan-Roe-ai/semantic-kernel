@@ -2080,7 +2080,6 @@ stuff</message>
     assert chat_history.messages[1].role == AuthorRole.USER
 
 
-@pytest.mark.asyncio
 async def test_template_unsafe(chat_history: ChatHistory):
     chat_history.add_assistant_message("I am an AI assistant")
 
@@ -2107,7 +2106,6 @@ async def test_template_unsafe(chat_history: ChatHistory):
     assert chat_history_2.messages[2].role == AuthorRole.USER
 
 
-@pytest.mark.asyncio
 async def test_template_safe(chat_history: ChatHistory):
 <<<<<<< HEAD
 <<<<<<< div
@@ -2447,7 +2445,6 @@ async def test_template():
 >>>>>>> head
 
 
-@pytest.mark.asyncio
 async def test_template_two_histories():  # ignore: E501
     chat_history1 = ChatHistory()
     chat_history1.add_assistant_message("I am an AI assistant")
@@ -2637,7 +2634,6 @@ What can you do?<message role="assistant">I like to be added later on</message>'
 >>>>>>> head
 
 
-@pytest.mark.asyncio
 async def test_template_two_histories_one_empty():
     chat_history1 = ChatHistory()
 <<<<<<< HEAD
@@ -2872,7 +2868,6 @@ async def test_template_two_histories_one_empty():
     assert chat_history_out.messages[2].role == AuthorRole.ASSISTANT
 
 
-@pytest.mark.asyncio
 async def test_template_history_only(chat_history: ChatHistory):
 <<<<<<< HEAD
 <<<<<<< div
@@ -3137,7 +3132,6 @@ async def test_template_history_only():
 >>>>>>> head
 
 
-@pytest.mark.asyncio
 async def test_template_without_chat_history():
     template = "{{$input}}"
     rendered = await KernelPromptTemplate(
@@ -3317,7 +3311,6 @@ async def test_template_without_chat_history():
 >>>>>>> head
 
 
-@pytest.mark.asyncio
 async def test_handwritten_xml():
     template = '<message role="user">test content</message>'
     rendered = await KernelPromptTemplate(
@@ -3389,7 +3382,6 @@ async def test_handwritten_xml():
     assert chat_history.messages[0].role == AuthorRole.USER
 
 
-@pytest.mark.asyncio
 async def test_empty_text_content_message():
     template = '<message role="assistant"><text></text></message><message role="user">test content</message>'
     rendered = await KernelPromptTemplate(
@@ -3480,7 +3472,6 @@ async def test_empty_text_content_message():
 >>>>>>> head
 
 
-@pytest.mark.asyncio
 async def test_handwritten_xml_invalid():
     template = '<message role="user"test content</message>'
     rendered = await KernelPromptTemplate(
@@ -3554,7 +3545,6 @@ async def test_handwritten_xml_invalid():
     assert chat_history.messages[0].role == AuthorRole.USER
 
 
-@pytest.mark.asyncio
 async def test_handwritten_xml_as_arg_safe():
     template = "{{$input}}"
     rendered = await KernelPromptTemplate(
@@ -3575,7 +3565,6 @@ async def test_handwritten_xml_as_arg_safe():
     assert chat_history.messages[0].role == AuthorRole.USER
 
 
-@pytest.mark.asyncio
 async def test_handwritten_xml_as_arg_unsafe_template():
     template = "{{$input}}"
     rendered = await KernelPromptTemplate(
@@ -3739,7 +3728,6 @@ async def test_handwritten_xml_as_arg():
     assert chat_history.messages[0].role == AuthorRole.USER
 
 
-@pytest.mark.asyncio
 async def test_handwritten_xml_as_arg_unsafe_variable():
     template = "{{$input}}"
     rendered = await KernelPromptTemplate(
@@ -3760,7 +3748,6 @@ async def test_handwritten_xml_as_arg_unsafe_variable():
     assert chat_history.messages[0].role == AuthorRole.USER
 
 
-@pytest.mark.asyncio
 async def test_template_empty_history(chat_history: ChatHistory):
     template = "system stuff{{$chat_history}}{{$input}}"
     rendered = await KernelPromptTemplate(

@@ -101,6 +101,8 @@ def mock_google_ai_chat_completion_response_with_tool_call() -> (
 async def mock_google_ai_streaming_chat_completion_response() -> (
     AsyncGenerateContentResponse
 ):
+@pytest_asyncio.fixture
+async def mock_google_ai_streaming_chat_completion_response() -> AsyncGenerateContentResponse:
     """Mock Google AI streaming Chat Completion response."""
     candidate = protos.Candidate()
     candidate.index = 0
@@ -130,6 +132,8 @@ async def mock_google_ai_streaming_chat_completion_response() -> (
 async def mock_google_ai_streaming_chat_completion_response_with_tool_call() -> (
     AsyncGenerateContentResponse
 ):
+@pytest_asyncio.fixture
+async def mock_google_ai_streaming_chat_completion_response_with_tool_call() -> AsyncGenerateContentResponse:
     """Mock Google AI streaming Chat Completion response with tool call."""
     candidate = protos.Candidate()
     candidate.index = 0
@@ -138,8 +142,8 @@ async def mock_google_ai_streaming_chat_completion_response_with_tool_call() -> 
         parts=[
             protos.Part(
                 function_call=protos.FunctionCall(
-                    name="test_function",
-                    args={"test_arg": "test_value"},
+                    name="getLightStatus",
+                    args={"arg1": "test_value"},
                 )
             )
         ],
@@ -184,6 +188,8 @@ def mock_google_ai_text_completion_response() -> AsyncGenerateContentResponse:
 async def mock_google_ai_streaming_text_completion_response() -> (
     AsyncGenerateContentResponse
 ):
+@pytest_asyncio.fixture
+async def mock_google_ai_streaming_text_completion_response() -> AsyncGenerateContentResponse:
     """Mock Google AI streaming Text Completion response."""
     candidate = protos.Candidate()
     candidate.index = 0

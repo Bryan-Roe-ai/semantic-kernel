@@ -1,13 +1,15 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
+#pragma warning disable IDE0005 // Using directive is unnecessary.
 using System;
-using System.Diagnostics;
+#pragma warning restore IDE0005 // Using directive is unnecessary.
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
-using JsonSchemaMapper;
+using Microsoft.Extensions.AI;
+
+#pragma warning disable IDE0010 // Add missing cases
 
 namespace Microsoft.SemanticKernel;
 
@@ -21,129 +23,18 @@ namespace Microsoft.SemanticKernel;
 [ExcludeFromCodeCoverage]
 internal static class KernelJsonSchemaBuilder
 {
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     private static readonly JsonSerializerOptions s_options = CreateDefaultOptions();
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-    private static readonly JsonSerializerOptions s_options = CreateDefaultOptions();
-=======
     private static JsonSerializerOptions? s_options;
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-    private static JsonSerializerOptions? s_options;
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-    private static JsonSerializerOptions? s_options;
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
-<<<<<<< main
-=======
-    private static JsonSerializerOptions? s_options;
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
     private static readonly JsonSchemaMapperConfiguration s_config = new()
+    private static readonly AIJsonSchemaCreateOptions s_schemaOptions = new()
+    internal static readonly AIJsonSchemaCreateOptions s_schemaOptions = new()
     {
-        IncludeSchemaVersion = false,
-        IncludeTypeInEnums = true,
-        TreatNullObliviousAsNonNullable = true,
+        IncludeSchemaKeyword = false,
+        IncludeTypeInEnumSchemas = true,
+        RequireAllProperties = false,
+        DisallowAdditionalProperties = false,
     };
 
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
     [RequiresUnreferencedCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
     public static KernelJsonSchema Build(Type type, string? description = null, JsonSchemaMapperConfiguration? configuration = null)
@@ -151,9 +42,6 @@ internal static class KernelJsonSchemaBuilder
         return Build(type, GetDefaultOptions(), description, configuration);
     }
 
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
     public static KernelJsonSchema Build(
         JsonSerializerOptions? options,
         Type type,
@@ -163,45 +51,13 @@ internal static class KernelJsonSchemaBuilder
         var serializerOptions = options ?? s_options;
         var mapperConfiguration = configuration ?? s_config;
 
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
         JsonNode jsonSchema = serializerOptions.GetJsonSchema(type, mapperConfiguration);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
+    private static readonly JsonElement s_trueSchemaAsObject = JsonDocument.Parse("{}").RootElement;
+    private static readonly JsonElement s_falseSchemaAsObject = JsonDocument.Parse("""{"not":true}""").RootElement;
+
     [RequiresUnreferencedCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
-    public static KernelJsonSchema Build(Type type, string? description = null, JsonSchemaMapperConfiguration? configuration = null)
+    public static KernelJsonSchema Build(Type type, string? description = null, AIJsonSchemaCreateOptions? configuration = null)
     {
         return Build(type, GetDefaultOptions(), description, configuration);
     }
@@ -210,51 +66,11 @@ internal static class KernelJsonSchemaBuilder
         Type type,
         JsonSerializerOptions options,
         string? description = null,
-        JsonSchemaMapperConfiguration? configuration = null)
+        AIJsonSchemaCreateOptions? configuration = null)
     {
         var mapperConfiguration = configuration ?? s_config;
 
         JsonNode jsonSchema = options.GetJsonSchema(type, mapperConfiguration);
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-=======
-        JsonNode jsonSchema = options.GetJsonSchema(type, mapperConfiguration);
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
         Debug.Assert(jsonSchema.GetValueKind() is JsonValueKind.Object or JsonValueKind.False or JsonValueKind.True);
 
         if (jsonSchema is not JsonObject jsonObj)
@@ -266,104 +82,33 @@ internal static class KernelJsonSchemaBuilder
         }
 
         if (!string.IsNullOrWhiteSpace(description))
+        configuration ??= s_schemaOptions;
+        JsonElement schemaDocument = AIJsonUtilities.CreateJsonSchema(type, description, serializerOptions: options, inferenceOptions: configuration);
+        switch (schemaDocument.ValueKind)
         {
-            jsonObj["description"] = description;
+            case JsonValueKind.False:
+                schemaDocument = s_falseSchemaAsObject;
+                break;
+            case JsonValueKind.True:
+                schemaDocument = s_trueSchemaAsObject;
+                break;
         }
 
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-        return KernelJsonSchema.Parse(jsonObj.ToJsonString(serializerOptions));
-<<<<<<< main
-=======
-        return KernelJsonSchema.Parse(jsonObj.ToJsonString(options));
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
+        return KernelJsonSchema.Parse(jsonObj.ToJsonString(serializerOptions)); 
+        KernelJsonSchema.Parse(jsonObj.ToJsonString(options));
     }
 
     private static JsonSerializerOptions CreateDefaultOptions()
     {
         JsonSerializerOptions options = new()
         {
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
             TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
             Converters = { new JsonStringEnumConverter() },
         };
         options.MakeReadOnly();
         return options;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
         return KernelJsonSchema.Parse(jsonObj.ToJsonString(options));
+        return KernelJsonSchema.Parse(schemaDocument.GetRawText());
     }
 
     [RequiresUnreferencedCode("Uses JsonStringEnumConverter and DefaultJsonTypeInfoResolver classes, making it incompatible with AOT scenarios.")]
@@ -372,11 +117,6 @@ internal static class KernelJsonSchemaBuilder
     {
         if (s_options is null)
         {
-<<<<<<< main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
             JsonSerializerOptions options = new()
             {
                 TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
@@ -387,48 +127,5 @@ internal static class KernelJsonSchemaBuilder
         }
 
         return s_options;
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
     }
 }

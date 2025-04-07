@@ -73,7 +73,10 @@ public class StepwisePlanner : IStepwisePlanner
     {
         if (string.IsNullOrEmpty(goal))
         {
-            throw new SKException("The goal specified is empty");
+            throw new SKException("The goal specified is empty")
+            {
+                ErrorCode = "InvalidGoal"
+            };
         }
 
         string functionDescriptions = this.GetFunctionDescriptions();

@@ -29,7 +29,6 @@ internal static class AssistantThreadActions
         RunStatus.Cancelling,
     ];
 
-<<<<<<< HEAD
     private static readonly HashSet<RunStatus> s_terminalStatuses =
     [
         RunStatus.Expired,
@@ -49,8 +48,6 @@ internal static class AssistantThreadActions
         RunStatus.Cancelled,
     ];
 
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// <summary>
     /// Create a new assistant thread.
     /// </summary>
@@ -254,7 +251,6 @@ internal static class AssistantThreadActions
         // Evaluate status and process steps and messages, as encountered.
         HashSet<string> processedStepIds = [];
         Dictionary<string, FunctionResultContent> functionSteps = [];
-<<<<<<< HEAD
         Dictionary<string, FunctionCallContent> functionSteps = [];
         Dictionary<string, FunctionResultContent> functionSteps = [];
         Dictionary<string, FunctionResultContent> functionSteps = [];
@@ -265,8 +261,6 @@ internal static class AssistantThreadActions
         Dictionary<string, FunctionResultContent> functionSteps = [];
         Dictionary<string, FunctionCallContent> functionSteps = [];
 
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         do
         {
             // Check for cancellation
@@ -281,7 +275,6 @@ internal static class AssistantThreadActions
                 throw new KernelException($"Agent Failure - Run terminated: {run.Status} [{run.Id}]: {run.LastError?.Message ?? "Unknown"}");
             }
 
-<<<<<<< HEAD
             IReadOnlyList<RunStep> steps = await GetRunStepsAsync(client, run).ConfigureAwait(false);
             List<RunStep> steps = [];
             await foreach (var page in client.GetRunStepsAsync(run).ConfigureAwait(false))
@@ -290,9 +283,7 @@ internal static class AssistantThreadActions
             };
             IReadOnlyList<RunStep> steps = await GetRunStepsAsync(client, run, cancellationToken).ConfigureAwait(false);
             RunStep[] steps = await client.GetRunStepsAsync(run).ToArrayAsync(cancellationToken).ConfigureAwait(false);
-=======
             RunStep[] steps = await client.GetRunStepsAsync(run.ThreadId, run.Id, cancellationToken: cancellationToken).ToArrayAsync(cancellationToken).ConfigureAwait(false);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
             // Is tool action required?
             if (run.Status == RunStatus.RequiresAction)
@@ -325,7 +316,6 @@ internal static class AssistantThreadActions
                             isStreaming: false,
                             cancellationToken).ToArrayAsync(cancellationToken).ConfigureAwait(false);
 
-<<<<<<< HEAD
                     IEnumerable<Task<FunctionResultContent>> functionResultTasks = ExecuteFunctionSteps(agent, functionCalls, cancellationToken);
                 FunctionCallContent[] activeFunctionSteps = steps.SelectMany(step => ParseFunctionStep(agent, step)).ToArray();
                 if (activeFunctionSteps.Length > 0)
@@ -340,7 +330,6 @@ internal static class AssistantThreadActions
                     FunctionResultContent[] functionResults = await Task.WhenAll(functionResultTasks).ConfigureAwait(false);
                     // Capture function-call for message processing
                     foreach (FunctionResultContent functionCall in functionResults) // %%%
-=======
                     FunctionResultContent[] functionResults =
                         await functionProcessor.InvokeFunctionCallsAsync(
                             functionCallMessage,
@@ -350,7 +339,6 @@ internal static class AssistantThreadActions
                             isStreaming: false,
                             cancellationToken).ToArrayAsync(cancellationToken).ConfigureAwait(false);
 
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
                     // Capture function-call for message processing
                     foreach (FunctionResultContent functionCall in functionResults)
                     {
@@ -585,13 +573,10 @@ internal static class AssistantThreadActions
         IAsyncEnumerable<StreamingUpdate> asyncUpdates = client.CreateRunStreamingAsync(threadId, agent.Id, options, cancellationToken);
         do
         {
-<<<<<<< HEAD
             activeMessages.Clear();
-=======
             // Check for cancellation
             cancellationToken.ThrowIfCancellationRequested();
 
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             stepsToProcess.Clear();
 
             await foreach (StreamingUpdate update in asyncUpdates.ConfigureAwait(false))
@@ -665,17 +650,14 @@ internal static class AssistantThreadActions
 
             if (run.Status == RunStatus.RequiresAction)
             {
-<<<<<<< HEAD
                 IReadOnlyList<RunStep> steps = await GetRunStepsAsync(client, run).ConfigureAwait(false);
                 IReadOnlyList<RunStep> steps = await GetRunStepsAsync(client, run).ConfigureAwait(false);
                 IReadOnlyList<RunStep> steps = await GetRunStepsAsync(client, run, cancellationToken).ConfigureAwait(false);
                 IReadOnlyList<RunStep> steps = await GetRunStepsAsync(client, run, cancellationToken).ConfigureAwait(false);
-=======
                 RunStep[] activeSteps =
                     await client.GetRunStepsAsync(run.ThreadId, run.Id, cancellationToken: cancellationToken)
                     .Where(step => step.Status == RunStepStatus.InProgress)
                     .ToArrayAsync(cancellationToken).ConfigureAwait(false);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
                 // Capture map between the tool call and its associated step
                 Dictionary<string, string> toolMap = [];
@@ -703,15 +685,12 @@ internal static class AssistantThreadActions
                             kernel,
                             isStreaming: true,
                             cancellationToken).ToArrayAsync(cancellationToken).ConfigureAwait(false);
-<<<<<<< HEAD
                     messages.Add(GenerateFunctionCallContent(agent.GetName(), functionCalls));
                     messages.Add(GenerateFunctionCallContent(agent.GetName(), functionCalls));
                     messages?.Add(GenerateFunctionCallContent(agent.GetName(), functionCalls));
                     messages?.Add(GenerateFunctionCallContent(agent.GetName(), functionCalls));
-=======
                     ChatMessageContent functionCallMessage = GenerateFunctionCallContent(agent.GetName(), functionCalls);
                     messages?.Add(functionCallMessage);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
                     FunctionResultContent[] functionResults =
                         await functionProcessor.InvokeFunctionCallsAsync(
@@ -738,13 +717,10 @@ internal static class AssistantThreadActions
                 {
                     asyncUpdates = client.SubmitToolOutputsToRunStreamingAsync(run.ThreadId, run.Id, toolOutputs, cancellationToken);
 
-<<<<<<< HEAD
                     messages.Add(GenerateFunctionResultContent(agent.GetName(), functionResults));
                     messages?.Add(GenerateFunctionResultContent(agent.GetName(), functionResults));
                     foreach (RunStep step in steps)
-=======
                     foreach (RunStep step in activeSteps)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
                     {
                         stepFunctionResults.Add(step.Id, functionResults.Where(result => step.Id == toolMap[result.CallId!]).ToArray());
                     }
@@ -817,7 +793,6 @@ internal static class AssistantThreadActions
         logger.LogOpenAIAssistantCompletedRun(nameof(InvokeAsync), run?.Id ?? "Failed", threadId);
     }
 
-<<<<<<< HEAD
     private static async Task<IReadOnlyList<RunStep>> GetRunStepsAsync(AssistantClient client, ThreadRun run)
     {
         List<RunStep> steps = [];
@@ -902,8 +877,6 @@ internal static class AssistantThreadActions
         }
     }
 
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     private static ChatMessageContent GenerateMessageContent(string? assistantName, ThreadMessage message, RunStep? completedStep = null)
     {
         AuthorRole role = new(message.Role.ToString());
@@ -1164,12 +1137,9 @@ internal static class AssistantThreadActions
         return functionCallContent;
     }
 
-<<<<<<< HEAD
     private static ChatMessageContent GenerateFunctionResultsContent(string agentName, IList<FunctionResultContent> functionResults)
     private static ChatMessageContent GenerateFunctionResultContent(string agentName, FunctionResultContent[] functionResults, RunStep completedStep)
-=======
     private static ChatMessageContent GenerateFunctionResultContent(string agentName, IEnumerable<FunctionResultContent> functionResults, RunStep completedStep)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     {
         ChatMessageContent functionResultContent = new(AuthorRole.Tool, content: null)
         {

@@ -12,5 +12,11 @@
     "http": {
       "routePrefix": ""
     }
+  },
+  "SecuritySettings": {
+    "AllowedDomains": [
+      "example.com",
+      "anotherexample.com"
+    ]
   }
 }

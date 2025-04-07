@@ -15,6 +15,10 @@ from samples.concepts.auto_function_calling.chat_gpt_api_function_calling import
     main as chat_gpt_api_function_calling,
 )
 from samples.concepts.auto_function_calling.chat_gpt_api_function_calling import main as chat_gpt_api_function_calling
+from samples.concepts.auto_function_calling.chat_gpt_api_function_calling import main as chat_gpt_api_function_calling
+from samples.concepts.auto_function_calling.chat_completion_with_auto_function_calling import (
+    main as chat_completion_with_function_calling,
+)
 from samples.concepts.auto_function_calling.functions_defined_in_json_prompt import (
     main as function_defined_in_json_prompt,
 )
@@ -47,6 +51,9 @@ from samples.concepts.chat_completion.simple_chatbot_with_image import main as s
 from samples.concepts.filtering.auto_function_invoke_filters import main as auto_function_invoke_filters
 from samples.concepts.filtering.function_invocation_filters import main as function_invocation_filters
 from samples.concepts.filtering.function_invocation_filters_stream import main as function_invocation_filters_stream
+from samples.concepts.filtering.prompt_filters import main as prompt_filters
+from samples.concepts.functions.kernel_arguments import main as kernel_arguments
+from samples.concepts.grounding.grounded import main as grounded
 from samples.concepts.filtering.prompt_filters import main as prompt_filters
 from samples.concepts.functions.kernel_arguments import main as kernel_arguments
 from samples.concepts.grounding.grounded import main as grounded
@@ -115,6 +122,38 @@ concepts = [
         azure_python_code_interpreter_function_calling,
         ["print('Hello, World!')", "exit"],
         id="azure_python_code_interpreter_function_calling",
+    ),
+    param(
+        chat_gpt_api_function_calling,
+        ["What is 3+3?", "exit"],
+        id="chat_gpt_api_function_calling",
+    ),
+    param(
+        azure_chat_gpt_api, ["Why is the sky blue?", "exit"], id="azure_chat_gpt_api"
+    ),
+    param(chat_gpt_api_function_calling, ["What is 3+3?", "exit"], id="chat_gpt_api_function_calling"),
+    param(azure_chat_gpt_api, ["Why is the sky blue?", "exit"], id="azure_chat_gpt_api"),
+    param(chat_gpt_api, ["What is life?", "exit"], id="chat_gpt_api"),
+    param(chat_streaming, ["Why is the sun hot?", "exit"], id="chat_streaming"),
+    param(openai_logit_bias, [], id="openai_logit_bias"),
+    param(
+        auto_function_invoke_filters,
+        ["What is 3+3?", "exit"],
+        id="auto_function_invoke_filters",
+    ),
+    param(
+        function_invocation_filters,
+        ["What is 3+3?", "exit"],
+        id="function_invocation_filters",
+    ),
+    param(
+        function_invocation_filters_stream,
+        ["What is 3+3?", "exit"],
+        id="function_invocation_filters_stream",
+    ),
+    param(simple_chatbot, ["Why is the sky blue in one sentence?", "exit"], id="simple_chatbot"),
+    param(simple_chatbot_streaming, ["Why is the sky blue in one sentence?", "exit"], id="simple_chatbot_streaming"),
+    param(simple_chatbot_with_image, ["exit"], id="simple_chatbot_with_image"),
 from tests.utils import retry
 
 # These environment variable names are used to control which samples are run during integration testing.
@@ -164,22 +203,9 @@ concepts = [
         ),
     ),
     param(
-        chat_gpt_api_function_calling,
+        chat_completion_with_function_calling,
         ["What is 3+3?", "exit"],
-        id="chat_gpt_api_function_calling",
-    ),
-    param(
-        azure_chat_gpt_api, ["Why is the sky blue?", "exit"], id="azure_chat_gpt_api"
-    ),
-    param(chat_gpt_api_function_calling, ["What is 3+3?", "exit"], id="chat_gpt_api_function_calling"),
-    param(azure_chat_gpt_api, ["Why is the sky blue?", "exit"], id="azure_chat_gpt_api"),
-    param(chat_gpt_api, ["What is life?", "exit"], id="chat_gpt_api"),
-    param(chat_streaming, ["Why is the sun hot?", "exit"], id="chat_streaming"),
-    param(openai_logit_bias, [], id="openai_logit_bias"),
-    param(
-        auto_function_invoke_filters,
-        ["What is 3+3?", "exit"],
-        id="auto_function_invoke_filters",
+        id="chat_completion_with_function_calling",
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
@@ -204,12 +230,6 @@ concepts = [
         function_invocation_filters_stream,
         ["What is 3+3?", "exit"],
         id="function_invocation_filters_stream",
-    ),
-    param(prompt_filters, ["What is the fastest animal?", "exit"], id="prompt_filters"),
-    param(kernel_arguments, [], id="kernel_arguments"),
-    param(grounded, [], id="grounded"),
-    param(azure_cognitive_search_memory, [], id="azure_cognitive_search_memory"),
-    param(memory, ["What are my investments?", "exit"], id="memory"),
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
@@ -250,8 +270,6 @@ concepts = [
         openai_function_calling_stepwise_planner,
         [],
         id="openai_function_calling_stepwise_planner",
-    ),
-    param(sequential_planner, [], id="sequential_planner"),
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
@@ -271,6 +289,30 @@ concepts = [
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
+    ),
+    param(auto_function_invoke_filters, ["What is 3+3?", "exit"], id="auto_function_invoke_filters"),
+    param(function_invocation_filters, ["What is 3+3?", "exit"], id="function_invocation_filters"),
+    param(function_invocation_filters_stream, ["What is 3+3?", "exit"], id="function_invocation_filters_stream"),
+    param(prompt_filters, ["What is the fastest animal?", "exit"], id="prompt_filters"),
+    param(kernel_arguments, [], id="kernel_arguments"),
+    param(grounded, [], id="grounded"),
+    param(azure_cognitive_search_memory, [], id="azure_cognitive_search_memory"),
+    param(memory, ["What are my investments?", "exit"], id="memory"),
+    param(
+        azure_openai_function_calling_stepwise_planner,
+        [],
+        id="azure_openai_function_calling_stepwise_planner",
+    ),
+    param(
+        openai_function_calling_stepwise_planner,
+        [],
+        id="openai_function_calling_stepwise_planner",
+    ),
+    param(sequential_planner, [], id="sequential_planner"),
+    param(
+        openai_function_calling_with_custom_plugin,
+        [],
+        id="openai_function_calling_with_custom_plugin",
     ),
     param(
         openai_plugin_azure_key_vault,
@@ -305,6 +347,9 @@ concepts = [
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
+        azure_chat_gpt_api_handlebars,
+        ["What is 3+3?", "exit"],
+        id="azure_chat_gpt_api_handlebars",
     ),
     param(
         azure_chat_gpt_api_jinja2,
@@ -314,10 +359,6 @@ concepts = [
     param(configuring_prompts, ["What is my name?", "exit"], id="configuring_prompts"),
     param(load_yaml_prompt, [], id="load_yaml_prompt"),
     param(template_language, [], id="template_language"),
-    param(rag_with_text_memory_plugin, [], id="rag_with_text_memory_plugin"),
-    param(bing_search_plugin, [], id="bing_search_plugin"),
-    param(azure_chat_image_input, [], id="azure_chat_image_input"),
-    param(custom_service_selector, [], id="custom_service_selector"),
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
@@ -359,12 +400,15 @@ concepts = [
         marks=pytest.mark.skipif(os.getenv(MEMORY_CONCEPT_SAMPLE, None) is None, reason="Not running memory samples."),
     ),
     param(rag_with_text_memory_plugin, [], id="rag_with_text_memory_plugin"),
+    param(bing_search_plugin, [], id="bing_search_plugin"),
+    param(azure_chat_image_input, [], id="azure_chat_image_input"),
     param(
         bing_search_plugin,
         [],
         id="bing_search_plugin",
         marks=pytest.mark.skip(reason="Flaky test due to Azure OpenAI content policy"),
     ),
+    param(custom_service_selector, [], id="custom_service_selector"),
     param(
         custom_service_selector,
         [],
@@ -380,6 +424,14 @@ concepts = [
         marks=pytest.mark.skipif(
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
+    param(rag_with_text_memory_plugin, [], id="rag_with_text_memory_plugin"),
+    param(bing_search_plugin, [], id="bing_search_plugin"),
+    param(azure_chat_image_input, [], id="azure_chat_image_input"),
+    param(custom_service_selector, [], id="custom_service_selector"),
+    param(
+        function_defined_in_json_prompt,
+        ["What is 3+3?", "exit"],
+        id="function_defined_in_json_prompt",
     ),
     param(
         function_defined_in_yaml_prompt,
@@ -458,12 +510,15 @@ concepts = [
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
     ),
+    param(image_generation, [], id="image_generation"),
 ]
 
 
 @mark.asyncio
 @mark.parametrize("sample, responses", concepts)
 async def test_concepts(sample: Callable[..., Awaitable[Any]], responses: list[str], monkeypatch):
+@mark.parametrize("func, responses", concepts)
+async def test_concepts(func, responses, monkeypatch):
     saved_responses = copy.deepcopy(responses)
 
     def reset():

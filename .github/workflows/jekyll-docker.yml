@@ -13,8 +13,31 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    
+    - name: Cache gems
+      uses: actions/cache@v3
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-gems-
+    
     - name: Build the site in the jekyll/builder container
       run: |
         docker run \
         -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
-        jekyll/builder:latest /bin/bash -c "chmod -R 777 /srv/jekyll && jekyll build --future"
+        jekyll/builder:4.2.0 /bin/bash -c "chmod -R 755 /srv/jekyll && jekyll build --future"
+    
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main'
+      run: |
+        docker run \
+        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
+        jekyll/builder:4.2.0 /bin/bash -c "chmod -R 755 /srv/jekyll && jekyll build --future"
+        git config --global user.email "you@example.com"
+        git config --global user.name "GitHub Action"
+        cd _site
+        git init
+        git add .
+        git commit -m "Deploy Jekyll site"
+        git push --force --quiet "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" main:gh-pages

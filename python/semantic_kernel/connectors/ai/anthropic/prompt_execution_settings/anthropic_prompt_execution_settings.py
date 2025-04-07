@@ -6,15 +6,22 @@ from typing import Annotated, Any
 from pydantic import Field, model_validator
 
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.exceptions import ServiceInvalidExecutionSettingsError
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.exceptions import ServiceInvalidExecutionSettingsError
 
 logger = logging.getLogger(__name__)
+
 
 class AnthropicPromptExecutionSettings(PromptExecutionSettings):
     """Common request settings for Anthropic services."""
 
     ai_model_id: Annotated[str | None, Field(serialization_alias="model")] = None
+
 
 class AnthropicChatPromptExecutionSettings(AnthropicPromptExecutionSettings):
     """Specific settings for the Chat Completion endpoint."""
@@ -23,6 +30,9 @@ class AnthropicChatPromptExecutionSettings(AnthropicPromptExecutionSettings):
     stream: bool | None = None
     system: str | None = None
     max_tokens: int | None = Field(None, gt=0)
+    max_tokens: int = Field(default=1024, gt=0)
+    max_tokens: int = Field(default=1024, gt=0)
+    max_tokens: int = Field(default=1024, gt=0)
     max_tokens: int = Field(default=1024, gt=0)
     temperature: float | None = Field(None, ge=0.0, le=2.0)
     stop_sequences: list[str] | None = None
@@ -45,7 +55,6 @@ class AnthropicChatPromptExecutionSettings(AnthropicPromptExecutionSettings):
     tools: Annotated[
         list[dict[str, Any]] | None,
         Field(
-            max_length=64,
             description=(
                 "Do not set this manually. It is set by the service based on the function choice configuration."
             ),
@@ -63,6 +72,7 @@ class AnthropicChatPromptExecutionSettings(AnthropicPromptExecutionSettings):
         """Check if the user is requesting function call behavior."""
         if self.function_choice_behavior is not None:
             raise NotImplementedError("Anthropic does not support function call behavior.")
+            
             
     def validate_tool_choice(self) -> "AnthropicChatPromptExecutionSettings":
         """Validate tool choice. Anthropic doesn't support NONE tool choice."""

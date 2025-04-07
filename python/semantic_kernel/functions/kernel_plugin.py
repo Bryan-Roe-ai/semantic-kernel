@@ -1,67 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-<<<<<<< HEAD
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< HEAD
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 import importlib
 import inspect
-import json
 import logging
 import os
 from collections.abc import Generator, ItemsView
@@ -70,7 +10,6 @@ from glob import glob
 from types import MethodType
 from typing import TYPE_CHECKING, Annotated, Any, TypeVar
 
-import httpx
 from pydantic import Field, StringConstraints
 from typing_extensions import deprecated
 
@@ -97,69 +36,11 @@ from semantic_kernel.functions.kernel_function_from_prompt import (
 )
 from semantic_kernel.functions.types import KERNEL_FUNCTION_TYPE
 from semantic_kernel.kernel_pydantic import KernelBaseModel
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
 from semantic_kernel.kernel_types import OptionalOneOrMany
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
 from semantic_kernel.kernel_types import OptionalOneOrMany
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
 from semantic_kernel.kernel_types import OptionalOneOrMany
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
 from semantic_kernel.kernel_types import OptionalOneOrMany
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
 from semantic_kernel.kernel_types import OptionalOneOrMany
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.utils.validation import PLUGIN_NAME_REGEX
 
 if TYPE_CHECKING:
@@ -182,47 +63,6 @@ class KernelPlugin(KernelBaseModel):
     When you add a function, through `.set` or `__setitem__`, the function is copied, the metadata is deep-copied
     and the name of the plugin is set in the metadata and added to the dict of functions.
     This is done in the same way as a normal dict, so a existing key will be overwritten.
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< div
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
-=======
->>>>>>> Stashed changes
 import sys
 from typing import TYPE_CHECKING, Dict, List, Optional
 
@@ -245,41 +85,6 @@ if TYPE_CHECKING:
 class KernelPlugin(KernelBaseModel):
     """
     Represents a Kernel Plugin with functions.
->>>>>>> f40c1f2075e2443c31c57c34f5f66c2711a8db75
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
     Attributes:
         name (str): The name of the plugin. The name can be upper/lower
@@ -287,65 +92,6 @@ class KernelPlugin(KernelBaseModel):
         description (str): The description of the plugin.
         functions (Dict[str, KernelFunction]): The functions in the plugin,
             indexed by their name.
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-<<<<<<< HEAD
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< HEAD
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
     Methods:
         set: Set a function in the plugin.
@@ -370,13 +116,6 @@ class KernelPlugin(KernelBaseModel):
                 execution_settings: OpenAPIFunctionExecutionParameters | None = None,
                 description: str | None = None):
             Create a plugin from an OpenAPI document.
-        from_openai(
-                plugin_name: str,
-                plugin_url: str | None = None,
-                plugin_str: str | None = None,
-                execution_parameters: OpenAIFunctionExecutionParameters | None = None,
-                description: str | None = None):
-            Create a plugin from the Open AI manifest.
 
     """
 
@@ -388,41 +127,6 @@ class KernelPlugin(KernelBaseModel):
         self,
         name: str,
         description: str | None = None,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         functions: (
             KERNEL_FUNCTION_TYPE
             | "KernelPlugin"
@@ -430,178 +134,16 @@ class KernelPlugin(KernelBaseModel):
             | dict[str, KERNEL_FUNCTION_TYPE]
             | None
         ) = None,
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
-=======
         functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
-=======
-        functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> main
->>>>>>> Stashed changes
-=======
-        functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-=======
-        functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> main
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-        functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
-=======
-        functions: (OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE]) = None,
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     ):
         """Create a KernelPlugin.
 
         Args:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
             name: The name of the plugin. The name can be upper/lower
                 case letters and underscores.
             description: The description of the plugin.
             functions:
                 The functions in the plugin, will be rewritten to a dictionary of functions.
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-            name: The name of the plugin. The name can be upper/lower case letters and underscores.
-            description: The description of the plugin.
-            functions: The functions in the plugin, will be rewritten to a dictionary of functions.
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-            name: The name of the plugin. The name can be upper/lower case letters and underscores.
-            description: The description of the plugin.
-            functions: The functions in the plugin, will be rewritten to a dictionary of functions.
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
-            name: The name of the plugin. The name can be upper/lower case letters and underscores.
-            description: The description of the plugin.
-            functions: The functions in the plugin, will be rewritten to a dictionary of functions.
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         Raises:
             ValueError: If the functions are not of the correct type.
@@ -859,15 +401,12 @@ class KernelPlugin(KernelBaseModel):
             else:
                 logger.warning(f"Unknown file found: {object}")
         if not functions:
-<<<<<<< HEAD
             raise PluginInitializationError(
                 f"No functions found in folder: {parent_directory}/{plugin_name}"
             )
         return cls(name=plugin_name, description=description, functions=functions)  # type: ignore
-=======
             raise PluginInitializationError(f"No functions found in folder: {parent_directory}/{plugin_name}")
         return cls(name=plugin_name, description=description, functions=functions)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     @classmethod
     def from_openapi(
@@ -893,6 +432,8 @@ class KernelPlugin(KernelBaseModel):
         Raises:
             PluginInitializationError: if the plugin URL or plugin JSON/YAML is not provided
         """
+        from semantic_kernel.connectors.openapi_plugin.openapi_manager import create_functions_from_openapi
+
         if not openapi_document_path and not openapi_parsed_spec:
             raise PluginInitializationError("Either the OpenAPI document path or a parsed OpenAPI spec is required.")
 
@@ -944,13 +485,10 @@ class KernelPlugin(KernelBaseModel):
         elif plugin_url is not None:
             # Load plugin from the URL
             http_client = (
-<<<<<<< HEAD
                 execution_parameters.http_client
                 if execution_parameters.http_client
                 else httpx.AsyncClient()
-=======
                 execution_parameters.http_client if execution_parameters.http_client else httpx.AsyncClient(timeout=5)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             )
             openai_manifest = await DocumentLoader.from_uri(
                 url=plugin_url,
@@ -1102,41 +640,6 @@ class KernelPlugin(KernelBaseModel):
 
     @staticmethod
     def _validate_functions(
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         functions: (
             KERNEL_FUNCTION_TYPE
             | list[KERNEL_FUNCTION_TYPE | "KernelPlugin"]
@@ -1144,68 +647,7 @@ class KernelPlugin(KernelBaseModel):
             | "KernelPlugin"
             | None
         ),
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
-=======
         functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
-=======
-        functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> main
->>>>>>> Stashed changes
-=======
-        functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-=======
-        functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-        functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> main
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-        functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
-=======
-        functions: OptionalOneOrMany[KERNEL_FUNCTION_TYPE | "KernelPlugin"] | dict[str, KERNEL_FUNCTION_TYPE],
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         plugin_name: str,
     ) -> dict[str, "KernelFunction"]:
         """Validates the functions and returns a dictionary of functions."""
@@ -1244,7 +686,6 @@ class KernelPlugin(KernelBaseModel):
                     )
                     functions_dict[function.name] = function
                 elif isinstance(function, KernelPlugin):  # type: ignore
-<<<<<<< HEAD
                     functions_dict.update(
                         {
                             name: KernelPlugin._parse_or_copy(
@@ -1253,85 +694,10 @@ class KernelPlugin(KernelBaseModel):
                             for name, function in function.functions.items()
                         }
                     )
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
                     functions_dict.update({
                         name: KernelPlugin._parse_or_copy(function=function, plugin_name=plugin_name)
                         for name, function in function.functions.items()
                     })
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
                 else:
                     raise ValueError(
                         f"Invalid type for functions in list: {function} (type: {type(function)})"
@@ -1355,46 +721,6 @@ class KernelPlugin(KernelBaseModel):
         )
 
     # endregion
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< div
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
-=======
-=======
->>>>>>> Stashed changes
     """
 
     name: Annotated[str, StringConstraints(pattern=PLUGIN_NAME_REGEX, min_length=1)]
@@ -1487,38 +813,3 @@ class KernelPlugin(KernelBaseModel):
             A list of KernelFunctionMetadata instances.
         """
         return [func.metadata for func in self.functions.values()]
->>>>>>> f40c1f2075e2443c31c57c34f5f66c2711a8db75
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
