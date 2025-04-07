@@ -1,10 +1,11 @@
-name: .NET
+name: .NET Build and Test
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -13,14 +14,16 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         dotnet-version: [6.0.x, 7.0.x, 8.0.x]
+    timeout-minutes: 60
 
     steps:
       - uses: actions/checkout@v4
       - uses: actions/cache@v3
         with:
           path: ~/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/*.fsproj', '**/*.props', '**/*.targets') }}
+          key: ${{ runner.os }}-nuget-${{ matrix.dotnet-version }}-${{ hashFiles('**/*.csproj', '**/*.fsproj', '**/*.props', '**/*.targets') }}
           restore-keys: |
+            ${{ runner.os }}-nuget-${{ matrix.dotnet-version }}-
             ${{ runner.os }}-nuget-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -30,6 +33,8 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
+      - name: Code Quality Analysis
+        run: dotnet format
       - name: Test
         run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test_results.trx"
       - name: Publish Test Results
@@ -43,4 +48,8 @@ jobs:
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_MESSAGE: "Build ${{ github.run_id }} finished with status ${{ job.status }}."
+          SLACK_MESSAGE: |
+            Build ${{ github.run_id }} finished with status ${{ job.status }}.
+            Commit: ${{ github.sha }}
+            Branch: ${{ github.ref }}
+            Author: ${{ github.actor }}
