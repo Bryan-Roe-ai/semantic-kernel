@@ -7,7 +7,9 @@
 
 name: Labeler
 
-on: [pull_request_target]
+on: 
+  pull_request_target:
+    types: [opened, synchronize, reopened]
 
 jobs:
   label:
@@ -20,10 +22,17 @@ jobs:
     steps:
     # Step to checkout the repository
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2.4.0
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
 
     # Step to apply labels based on the configuration in .github/labeler.yml
     - name: Apply Labeler
       uses: actions/labeler@v4.0.2
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
+
+    # Optional: Step to handle errors
+    - name: Notify on failure
+      if: failure()
+      run: echo "Label application failed"
