@@ -6,32 +6,23 @@
 # https://github.com/actions/labeler
 
 name: Label pull request
-on: [pull_request_target]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
-  add_label:
+  label:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest]
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Run labeler
-        uses: actions/labeler@v5
+      - name: Labeler
+        uses: actions/labeler@v3
         with:
-          repo-token: "${{ secrets.GH_ACTIONS_PR_WRITE }}"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
 
       - name: Error handling
         if: failure()
