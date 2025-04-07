@@ -3,11 +3,11 @@ fastapi==0.79.0
 uvicorn==0.17.6
 
 # Data validation
-pydantic==1.9.1
+pydantic==1.10.13
 
 # NLP tools
 bert_score==0.3.11
-nltk==3.7
+nltk==3.9.1
 evaluate==0.1.0
 
 # Build tools
