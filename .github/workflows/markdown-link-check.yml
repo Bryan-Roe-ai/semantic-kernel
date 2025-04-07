@@ -3,68 +3,7 @@ name: Check .md links
 on:
   workflow_dispatch:
   pull_request:
-    branches: ["main"]
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
->>>>>>> head
     branches: ["main", "java-development"]
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    branches: ["main", "java-development"]
->>>>>>> origin/main
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
 permissions:
   contents: read
@@ -72,10 +11,9 @@ permissions:
 jobs:
   markdown-link-check:
     runs-on: ubuntu-22.04
-    # check out the latest version of the code
     steps:
       - uses: actions/checkout@v4
-
+      
       # Checks the status of hyperlinks in all files
       - name: Run linkspector
         uses: umbrelladocs/action-linkspector@v1
