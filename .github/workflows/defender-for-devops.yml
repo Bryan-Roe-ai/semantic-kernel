@@ -18,6 +18,15 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3.1.0
     
+    # Cache .NET dependencies
+    - name: Cache .NET packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+    
     # Set up .NET environment
     - name: Set up .NET
       uses: actions/setup-dotnet@v3.0.2
@@ -43,6 +52,13 @@ jobs:
   #   steps:
   #   - name: Checkout repository
   #     uses: actions/checkout@v3.1.0
+  #   - name: Cache .NET packages
+  #     uses: actions/cache@v3
+  #     with:
+  #       path: ~/.nuget/packages
+  #       key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+  #       restore-keys: |
+  #         ${{ runner.os }}-nuget-
   #   - name: Set up .NET
   #     uses: actions/setup-dotnet@v3.0.2
   #     with:
