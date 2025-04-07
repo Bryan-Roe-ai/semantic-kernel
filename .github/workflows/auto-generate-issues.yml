@@ -9,7 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4 # Specify exact version
+
+      - name: Cache dependencies
+        uses: actions/cache@v2.1.6 # Specify exact version
+        with:
+          path: ~/.cache
+          key: ${{ runner.os }}-cache
+          restore-keys: |
+            ${{ runner.os }}-cache
 
       - name: Generate issues
         run: |
@@ -32,10 +40,23 @@ jobs:
           # Example: python notify_approvers.py
         continue-on-error: false
 
-      - name: Cache dependencies
-        uses: actions/cache@v2
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2.3.4 # Specify exact version
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
         with:
-          path: ~/.cache
-          key: ${{ runner.os }}-cache
-          restore-keys: |
-            ${{ runner.os }}-cache
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Lint code
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
