@@ -41,7 +41,6 @@ if(string.IsNullOrEmpty(promptTemplateConfig.PromptType) || promptTemplateConfig
 {
     var service = this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, this._modelSettings);
     //render the prompt, call the service, process and return result
-}
 else (promptTemplateConfig.PromptType == "chat")
     var service = this._serviceSelector.SelectAIService<IChatCompletion>(context.ServiceProvider, this._modelSettings);
 },
@@ -49,7 +48,6 @@ else (promptTemplateConfig.PromptType == "chat")
     //render the prompt, call the service, process and return result
 }
 ```
-
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
 	"schema": 1,
@@ -78,14 +76,12 @@ Cons:
 
 ```csharp {"id":"01J6KQ298EJX8WKY132C2C0J2P"}
 if (Regex.IsMatch(renderedPrompt, @"<message>.*?</message>"))
-{
 this._serviceSelector.SelectAIService<IChatCompletion>(context.ServiceProvider, this._modelSettings);
 return result
 },
 {this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, this._modelSettings);
     //render the prompt, call the service, process and return result
 }
-```
 name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
