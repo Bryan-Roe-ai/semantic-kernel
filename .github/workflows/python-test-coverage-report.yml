@@ -19,24 +19,26 @@ jobs:
       run:
         working-directory: python
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4.0.0
+      
       - name: Download coverage report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.0.0
         with:
           github-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
           run-id: ${{ github.event.workflow_run.id }}
           path: ./python
           merge-multiple: true
+
       - name: Display structure of downloaded files
         run: ls
+
       - name: Read and set PR number
-        # Need to read the PR number from the file saved in the previous workflow
-        # because the workflow_run event does not have access to the PR number
-        # The PR number is needed to post the comment on the PR
         run: |
           PR_NUMBER=$(cat pr_number)
           echo "PR number: $PR_NUMBER"
           echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+
       - name: Pytest coverage comment
         id: coverageComment
         uses: MishaKav/pytest-coverage-comment@main
