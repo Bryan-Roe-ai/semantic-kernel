@@ -28,10 +28,19 @@ jobs:
           repo-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
           wait-interval: 10
 
+      # Cache dependencies
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       # Checkout the repository
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       # Download coverage and pytest artifacts
       - name: Download coverage and pytest artifacts
@@ -60,3 +69,12 @@ jobs:
           junitxml-path: pytest-${{ matrix.os }}-${{ matrix.python-version }}.xml
           default-branch: "main"
           unique-id-for-comment: python-${{ matrix.python-version }}
+
+      # Notify on failure
+      - name: Notify Slack
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: your-slack-channel
+          SLACK_COLOR: ${{ job.status == 'success' && 'good' || 'danger' }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
