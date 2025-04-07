@@ -1,107 +1,82 @@
 #!/bin/bash
 
-POSITIONAL_ARGS=()
+# Function to display error messages
+error_exit() {
+    echo "ERROR: $1"
+    exit 1
+}
 
+# Parse arguments
+POSITIONAL_ARGS=()
 while [[ $# -gt 0 ]]; do
     case $1 in
         -f|--file)
             file="$2"
-            shift # past argument
-            shift # past value
-        ;;
+            shift 2
+            ;;
         -p|--propsFile)
             propsFile="$2"
-            shift # past argument
-            shift # past value
-        ;;
+            shift 2
+            ;;
         -b|--buildAndRevisionNumber)
             buildAndRevisionNumber="$2"
-            shift # past argument
-            shift # past value
-        ;;
+            shift 2
+            ;;
         -*|--*)
-            echo "Unknown option $1"
-            exit 1
-        ;;
+            error_exit "Unknown option $1"
+            ;;
         *)
-            POSITIONAL_ARGS+=("$1") # save positional arg
-            shift # past argument
-        ;;
+            POSITIONAL_ARGS+=("$1")
+            shift
+            ;;
     esac
 done
 
-set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+# Restore positional parameters
+set -- "${POSITIONAL_ARGS[@]}"
 
-if [ -z "$file" ]; then
-    echo "ERROR: Parameter file (-f|--file) not provided"
-    exit 1;
-elif [ ! -f "$file" ]; then
-    echo "ERROR: file ${file} not found"
-    exit 1;
-fi
+# Validate inputs
+[[ -z "$file" ]] && error_exit "Parameter file (-f|--file) not provided"
+[[ ! -f "$file" ]] && error_exit "file ${file} not found"
 
-if [ -n "$(cat $file | grep -i "<IsPackable>false</IsPackable>")" ]; then
+grep -q "<IsPackable>false</IsPackable>" "$file" && {
     echo "Project is marked as NOT packable - skipping."
-    exit 0;
-fi
-    
-if [ -z "$propsFile" ]; then
-    echo "ERROR: Parameter propsFile (-f|--file) not provided"
-    exit 1;
-elif [ ! -f "$propsFile" ]; then
-    echo "ERROR: propsFile ${file} not found"
-    exit 1;
-fi
+    exit 0
+}
 
-if [ -z "$buildAndRevisionNumber" ]; then
-    echo "ERROR: Parameter buildAndRevisionNumber (-b|--buildAndRevisionNumber) not provided"
-    exit 1;
-fi
+[[ -z "$propsFile" ]] && error_exit "Parameter propsFile (-p|--propsFile) not provided"
+[[ ! -f "$propsFile" ]] && error_exit "propsFile ${propsFile} not found"
 
-propsVersionString=$(cat $propsFile | grep -i "<Version>");
+[[ -z "$buildAndRevisionNumber" ]] && error_exit "Parameter buildAndRevisionNumber (-b|--buildAndRevisionNumber) not provided"
+
+# Extract version from propsFile
+propsVersionString=$(grep -i "<Version>" "$propsFile")
 regex="<Version>([0-9.]*)<\/Version>"
-if [[ $propsVersionString =~ $regex ]]; then
-  propsVersion=${BASH_REMATCH[1]}
-else
-  echo "ERROR: Version tag not found in propsFile"
-  exit 1;
-fi
+[[ $propsVersionString =~ $regex ]] || error_exit "Version tag not found in propsFile"
 
-if [ -z "$propsVersion" ]; then
-    echo "ERROR: Version tag not found in propsFile"
-    exit 1;
-elif [[ ! "$propsVersion" =~ ^0.* ]]; then
-    echo "ERROR: Version expected to start with 0. Actual: ${propsVersion}"
-    exit 1;
-fi
+propsVersion=${BASH_REMATCH[1]}
+[[ -z "$propsVersion" ]] && error_exit "Version tag not found in propsFile"
+[[ ! "$propsVersion" =~ ^0.* ]] && error_exit "Version expected to start with 0. Actual: ${propsVersion}"
 
 fullVersionString="${propsVersion}.${buildAndRevisionNumber}-preview"
+[[ ! "$fullVersionString" =~ ^0.* ]] && error_exit "Version expected to start with 0. Actual: ${fullVersionString}"
 
-if [[ ! "$fullVersionString" =~ ^0.* ]]; then
-    echo "ERROR: Version expected to start with 0. Actual: ${fullVersionString}"
-    exit 1;
-fi
+# Display information
+cat <<EOF
+==== Project: ${file} ====
+propsFile = ${propsFile}
+buildAndRevisionNumber = ${buildAndRevisionNumber}
+version prefix from propsFile = ${propsVersion}
+full version string: ${fullVersionString}
+EOF
 
-echo "==== Project: ${file} ====";
-echo "propsFile = ${propsFile}"
-echo "buildAndRevisionNumber = ${buildAndRevisionNumber}"
-echo "version prefix from propsFile = ${propsVersion}"
-echo "full version string: ${fullVersionString}"
-
-versionInProj=$(cat $file | grep -i "<Version>");
-if [ -n "$versionInProj" ]; then
-    # Version tag already exists in the csproj. Let's replace it.
+# Update or add version tag in the project file
+if grep -qi "<Version>" "$file"; then
     echo "Updating version tag..."
-    content=$(cat $file | sed --expression="s/<Version>\([0-9]*.[0-9]*\)<\/Version>/<Version>$fullVersionString<\/Version>/g");
+    sed -i "s/<Version>[0-9]*\.[0-9]*<\/Version>/<Version>$fullVersionString<\/Version>/g" "$file"
 else
-    # Version tag not found in the csproj. Let's add it.
     echo "Project is packable - adding version tag..."
-    content=$(cat $file | sed --expression="s/<\/Project>/<PropertyGroup><Version>$fullVersionString<\/Version><\/PropertyGroup><\/Project>/g");
+    sed -i "s/<\/Project>/<PropertyGroup><Version>$fullVersionString<\/Version><\/PropertyGroup><\/Project>/g" "$file"
 fi
 
-if [ $? -ne 0 ]; then exit 1; fi
-echo "$content" && echo "$content" > $file;
-if [ $? -ne 0 ]; then exit 1; fi
-
-echo "DONE";
-echo "";
+echo "DONE"
