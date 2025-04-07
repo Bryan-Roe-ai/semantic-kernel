@@ -1,11 +1,9 @@
----
 consulted: stephentoub, dluc, ajcvickers, roji
 contact: westey-m
 date: 2024-06-05T00:00:00Z
 deciders: sergeymenshykh, markwallace, rbarreto, dmytrostruk, westey-m, matthewbolanos, eavanvalkenburg
 informed: null
 status: proposed
----
 
 # Updated Memory Connector Design
 
