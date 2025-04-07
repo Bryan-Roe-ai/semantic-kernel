@@ -22,24 +22,25 @@ jobs:
     steps:
       # Check out the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.1.0  # Specify the exact version
 
       # Apply labels based on labeler configuration
       - name: Apply labeler
-        uses: actions/labeler@v4
+        uses: actions/labeler@v4.1.2  # Specify the exact version
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
       # Add a step to handle potential errors
       - name: Error handling
         if: failure()
-        run: echo "An error occurred while applying labels"
+        run: echo "An error occurred while applying labels. Please check the logs for more details."
 
       # Add a step to notify on failure (optional)
       - name: Notify failure
         if: failure()
         run: |
           echo "Sending notification about the failure"
-          # Add your notification logic here
+          # Example: Send a Slack notification (requires setup)
+          # curl -X POST -H 'Content-type: application/json' --data '{"text":"Labeler workflow failed"}' ${{ secrets.SLACK_WEBHOOK_URL }}
 
     timeout-minutes: 10  # Add a timeout to prevent running indefinitely
