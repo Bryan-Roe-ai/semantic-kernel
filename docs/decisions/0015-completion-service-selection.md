@@ -1,11 +1,9 @@
----
 consulted: null
 contact: SergeyMenshykh
 date: 2023-10-25T00:00:00Z
 deciders: markwallace-microsoft, matthewbolanos
 informed: null
 status: superseded by [ADR-0038](0038-completion-service-selection.md)
----
 
 # Completion service type selection strategy
 
@@ -21,8 +19,6 @@ Today, SK runs all text prompts using the text completion service. With the addi
 
 ## Considered Options
 
-
-
 {
     "description": "Hello AI, what can you do for me?",
 }
@@ -31,14 +27,12 @@ Today, SK runs all text prompts using the text completion service. With the addi
 if(string.IsNullOrEmpty(promptTemplateConfig.PromptType) || promptTemplateConfig.PromptType == "text")
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
-	"schema": 1,
 	"prompt_type": "text",
 	...
 }
 name: ComicStrip.Draw
 config: {
 	"prompt_type": "image",
-}
 name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
