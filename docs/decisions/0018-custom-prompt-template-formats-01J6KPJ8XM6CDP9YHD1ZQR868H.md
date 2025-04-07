@@ -48,13 +48,11 @@ IKernel kernel = Kernel.Builder
 
 kernel.ImportFunctions(new TimePlugin(), "time");
 
-string templateString = "Today is: {{time.Date}} Is it weekend time (weekend/not weekend)?";
-var promptTemplate = new PromptTemplate(templateString, promptTemplateConfig, kernel.PromptTemplateEngine);
+string templateString = "Today is: {{time.Date}} Is it weekend time (weekend/not weekend)?";kernel.PromptTemplateEngine);
 var kindOfDay = kernel.RegisterSemanticFunction("KindOfDay", promptTemplateConfig, promptTemplate);
 
 
 We have an extension method `var kindOfDay = kernel.CreateSemanticFunction(promptTemplate);` to simplify the process of creating and registering a semantic function, but the expanded format is shown above. The `BasicPromptTemplateEngine` is the default prompt template engine and will be loaded automatically if the package is available and no other prompt template engine is specified.
-**Issues with the current design:**
 1. You need to have a `Kernel` instance to create a semantic function, which contradicts the goal of creating semantic functions once and reusing them across multiple `Kernel` instances.
 2. `Kernel` only supports a single `IPromptTemplateEngine`, so we cannot support using multiple prompt templates simultaneously.
 4. Our semantic function extension methods rely on our implementation of `IPromptTemplate` (i.e., `PromptTemplate`), which stores the template string and uses the `IPromptTemplateEngine` to render it.
@@ -62,7 +60,6 @@ We have an extension method `var kindOfDay = kernel.CreateSemanticFunction(promp
 ## Performance
 
 The `BasicPromptTemplateEngine` uses the `TemplateTokenizer` to parse the template, i.e., extract the blocks. Then it renders the template, i.e., inserts variables and executes functions. Some sample timings for these operations:
-
 | Operation        | Ticks   | Milliseconds |
 | ---------------- | ------- | ------------ |
 | Extract blocks   | 1044427 | 103          |
@@ -100,7 +97,6 @@ public interface IPromptTemplate
 
 A prototype implementation of a Handlebars prompt template engine could look like this:
 
-```csharp
 public class HandlebarsTemplateEngine : IPromptTemplateEngine
 {
     private readonly ILoggerFactory _loggerFactory;
