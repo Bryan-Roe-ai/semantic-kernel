@@ -49,12 +49,6 @@ IKernel kernel = Kernel.Builder
 | ---------------- | ----- | ------------ |
 | Compile template | 66277 | 6            |
 | Render variables | 4173  | 0            |
-
-public interface IPromptTemplate
-{
-    IReadOnlyList<ParameterView> Parameters { get; }
-    Task<string> RenderAsync(SKContext executionContext, CancellationToken cancellationToken = default);
-}
 A prototype implementation of a Handlebars prompt template engine could look like this:
 
 public class HandlebarsTemplateEngine : IPromptTemplateEngine
@@ -62,7 +56,6 @@ public class HandlebarsTemplateEngine : IPromptTemplateEngine
     private readonly ILoggerFactory _loggerFactory;
     public HandlebarsTemplateEngine(ILoggerFactory? loggerFactory = null)
     {
-        this._loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
 
     public async Task<string> RenderAsync(string templateText, SKContext context, CancellationToken cancellationToken = default)
     {
@@ -91,14 +84,10 @@ There is one implementation of `IPromptTemplate` provided in the Semantic Kernel
 
 ## Handlebars Considerations
 
-
-```csharp
 HandlebarsHelper link_to = (writer, context, parameters) =>
 {
     writer.WriteSafeString($"<a href='{context["url"]}'>{context["text"]}</a>");
 };
-
-string source = @"Click here: {{link_to}}";
 
 var data = new
 {
