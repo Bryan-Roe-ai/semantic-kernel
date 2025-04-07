@@ -7,5 +7,8 @@
 # Owners for the java directory and its subdirectories
 /java/ @microsoft/octo-semantickernel-pr-java
 
+# Owners for all files in the root directory
+/* @Microsoft/vscodeazuretoolsdev
+
 # Owners for all files in the vscode-azure-account directory
-* @Microsoft/vscodeazuretoolsdev
+/vscode-azure-account/ @Microsoft/vscodeazuretoolsdev
