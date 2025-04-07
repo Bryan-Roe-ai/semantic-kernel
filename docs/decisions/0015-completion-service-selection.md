@@ -38,7 +38,6 @@ __1. Completion service type identified by the "prompt_type" property.__ This op
 
 ```csharp {"id":"01J6KQ298EJX8WKY1329SQKPDP"}
 if(string.IsNullOrEmpty(promptTemplateConfig.PromptType) || promptTemplateConfig.PromptType == "text")
-{
 this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, this._modelSettings);
     //render the prompt, call the service, process and return result
 else (promptTemplateConfig.PromptType == "chat")
@@ -46,7 +45,6 @@ else (promptTemplateConfig.PromptType == "chat")
 },
 {this._serviceSelector.SelectAIService<IImageGeneration>(context.ServiceProvider, this._modelSettings);
     //render the prompt, call the service, process and return result
-}
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
 	"schema": 1,
@@ -71,14 +69,11 @@ Cons:
 
 - Another property to specify by a prompt developer.
 
-**2. Completion service type identified by prompt content.** The idea behind this option is to analyze the rendered prompt by using regex to check for the presence of specific markers associated with the prompt type. For example, the presence of the `<message role="*"></message>` tag in the rendered prompt might indicate that the prompt is a chat prompt and should be handled by the chat completion service. This approach may work reliably when we have two completion service types - text and chat - since the logic would be straightforward: if the message tag is found in the rendered prompt, handle it with the chat completion service; otherwise, use the text completion service. However, this logic becomes unreliable when we start adding new prompt types, and those prompts lack markers specific to their prompt type. For example, if we add an image prompt, we won't be able to distinguish between a text prompt and an image prompt unless the image prompt has a unique marker identifying it as such.
-
 if (Regex.IsMatch(renderedPrompt, @"<message>.*?</message>"))
 this._serviceSelector.SelectAIService<IChatCompletion>(context.ServiceProvider, this._modelSettings);
 return result
 },
 {this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, this._modelSettings);
-    //render the prompt, call the service, process and return result
 name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
