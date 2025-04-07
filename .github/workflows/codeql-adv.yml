@@ -43,12 +43,12 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4.0.0
       with:
         submodules: true
 
     - name: Cache dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v3.0.0
       with:
         path: |
           ~/.cache
@@ -66,6 +66,10 @@ jobs:
           npm install
         elif [ "${{ matrix.language }}" == "python" ]; then
           pip install -r requirements.txt
+        elif [ "${{ matrix.language }}" == "csharp" ]; then
+          dotnet restore
+        elif [ "${{ matrix.language }}" == "java-kotlin" ]; then
+          ./gradlew build
         fi
 
     - name: Initialize CodeQL
@@ -89,8 +93,14 @@ jobs:
       with:
         category: "/language:${{matrix.language}}"
 
-    - name: Notify team
+    - name: Notify team on failure
       if: failure()
       uses: some-notification-action
       with:
         message: "CodeQL analysis failed for ${{ matrix.language }}"
+
+    - name: Notify team on success
+      if: success()
+      uses: some-notification-action
+      with:
+        message: "CodeQL analysis succeeded for ${{ matrix.language }}"
