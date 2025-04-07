@@ -2,6 +2,10 @@
 # The results are shown as code scanning alerts in GitHub. For more details, visit:
 # https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql
 
+# CodeQL is the code analysis engine developed by GitHub to automate security checks.
+# The results are shown as code scanning alerts in GitHub. For more details, visit:
+# https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql
+
 name: "CodeQL"
 
 on:
@@ -42,9 +46,7 @@ jobs:
           languages: ${{ matrix.language }}
           # If you wish to specify custom queries, you can do so here or in a config file.
           # By default, queries listed here will override any specified in a config file.
-          # Prefix the list here with "+" to use these queries and those in the config file.
-
-          # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#[...]
+          # Prefix the list here with "+"
           queries: +security-extended,security-and-quality,codeql-queries/ssrf-detection.ql
 
       # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
@@ -93,4 +95,3 @@ jobs:
       - name: Trigger Ensure Success Workflow
         run: |
           gh workflow run ensure-success.yml
-
