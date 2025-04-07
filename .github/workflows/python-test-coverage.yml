@@ -24,7 +24,6 @@ jobs:
       - name: Setup filename variables
         run: echo "FILE_ID=${{ github.event.number }}" >> $GITHUB_ENV
       - name: Download coverage
-<<<<<<< main
         continue-on-error: true
         uses: dawidd6/action-download-artifact@v5
         with:
@@ -53,11 +52,8 @@ jobs:
         run: ls python/
       - name: Pytest coverage comment
         id: coverageComment
-        uses: MishaKav/pytest-coverage-comment@main
+        uses: MishaKav/pytest-coverage-comment@v1.0.0
         continue-on-error: true
-=======
-      # Save the PR number to a file since the workflow_run event
-      # in the coverage report workflow does not have access to it
       - name: Save PR number
         run: |
           echo ${{ github.event.number }} > ./pr_number
@@ -73,7 +69,6 @@ jobs:
         run: uv run --frozen pytest -q --junitxml=pytest.xml --cov=semantic_kernel --cov-report=term-missing:skip-covered ./tests/unit | tee python-coverage.txt
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
->>>>>>> upstream/main
         with:
           path: |
             python/python-coverage.txt
