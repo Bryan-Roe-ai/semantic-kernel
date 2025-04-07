@@ -49,58 +49,6 @@ IKernel kernel = Kernel.Builder
 | ---------------- | ----- | ------------ |
 | Compile template | 66277 | 6            |
 | Render variables | 4173  | 0            |
-A prototype implementation of a Handlebars prompt template engine could look like this:
-
-public class HandlebarsTemplateEngine : IPromptTemplateEngine
-{
-    private readonly ILoggerFactory _loggerFactory;
-    public HandlebarsTemplateEngine(ILoggerFactory? loggerFactory = null)
-    {
-
-    public async Task<string> RenderAsync(string templateText, SKContext context, CancellationToken cancellationToken = default)
-    {
-
-        var functionViews = context.Functions.GetFunctionViews();
-        foreach (FunctionView functionView in functionViews)
-        {
-            var skfunction = context.Functions.GetFunction(functionView.PluginName, functionView.Name);
-            handlebars.RegisterHelper($"{functionView.PluginName}_{functionView.Name}", async (writer, hcontext, parameters) =>
-                {
-                    var result = await skfunction.InvokeAsync(context).ConfigureAwait(true);
-                    writer.WriteSafeString(result.GetValue<string>());
-                });
-        }
-
-    }
-}
-
-**Note: This is just a prototype implementation for illustration purposes only.**
-
-Some issues:
-1. The `IPromptTemplate` interface is not used and causes confusion.
-2. There is no way to allow developers to support multiple prompt template formats simultaneously.
-
-There is one implementation of `IPromptTemplate` provided in the Semantic Kernel core package. The `RenderAsync` implementation delegates to the `IPromptTemplateEngine`. The `Parameters` list gets populated with the parameters defined in the `PromptTemplateConfig` and any missing variables defined in the template.
-
-## Handlebars Considerations
-
-HandlebarsHelper link_to = (writer, context, parameters) =>
-{
-    writer.WriteSafeString($"<a href='{context["url"]}'>{context["text"]}</a>");
-};
-
-var data = new
-{
-    url = "https://github.com",
-    text = "Handlebars.Net"
-};
-
-var handlebars = HandlebarsDotNet.Handlebars.Create();
-handlebars.RegisterHelper("link_to", link_to);
-var template = handlebars.Compile(source);
-var result = template(data);
-```
-
 Handlebars allows the helpers to be registered with the `Handlebars` instance either before or after a template is compiled. The optimum would be to have a shared `Handlebars` instance for a specific collection of functions and register the helpers just once. For use cases where the Kernel function collection may have been mutated, we will be forced to create a `Handlebars` instance at render time and then register the helpers. This means we cannot take advantage of the performance improvement provided by compiling the template.
 
 ## Decision Drivers
