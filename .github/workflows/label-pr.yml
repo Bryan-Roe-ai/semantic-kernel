@@ -17,13 +17,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Labeler
+      - name: Apply labels using Labeler
         uses: actions/labeler@v3
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: .github/labeler.yml
 
-      - name: Error handling
+      - name: Handle Errors
         if: failure()
         run: |
           echo "An error occurred while applying labels"
@@ -38,7 +38,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Lint YAML
+      - name: Install and Run YAML Linter
         run: |
           gem install yamllint
           yamllint .github/workflows/label-pr.yml
