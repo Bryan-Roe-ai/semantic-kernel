@@ -44,14 +44,29 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        submodules: true
 
     - name: Cache dependencies
       uses: actions/cache@v3
       with:
-        path: ~/.cache
-        key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+        path: |
+          ~/.cache
+          ~/.m2
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+          ~/.cargo
+        key: ${{ runner.os }}-build-${{ matrix.language }}-${{ hashFiles('**/package-lock.json', '**/pom.xml', '**/build.gradle', '**/Cargo.lock') }}
         restore-keys: |
-          ${{ runner.os }}-
+          ${{ runner.os }}-build-${{ matrix.language }}-
+
+    - name: Set up dependencies
+      run: |
+        if [ "${{ matrix.language }}" == "javascript-typescript" ]; then
+          npm install
+        elif [ "${{ matrix.language }}" == "python" ]; then
+          pip install -r requirements.txt
+        fi
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
@@ -73,3 +88,9 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
+
+    - name: Notify team
+      if: failure()
+      uses: some-notification-action
+      with:
+        message: "CodeQL analysis failed for ${{ matrix.language }}"
