@@ -25,7 +25,6 @@ __1. Completion service type identified by the "prompt_type" property.__ This op
 
 **Prompt template**
 
-```json {"id":"01J6KQ298EJX8WKY1328SSJD0N"}
 {
     "description": "Hello AI, what can you do for me?",
 }
@@ -33,7 +32,6 @@ __1. Completion service type identified by the "prompt_type" property.__ This op
 
 if(string.IsNullOrEmpty(promptTemplateConfig.PromptType) || promptTemplateConfig.PromptType == "text")
 this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, this._modelSettings);
-    //render the prompt, call the service, process and return result
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
 	"schema": 1,
@@ -44,14 +42,12 @@ config: {
 name: ComicStrip.Draw
 prompt: "Draw the comic strip - {{$comicStrip.Create $input}}"
 config: {
-	"schema": 1,
 	"prompt_type": "image",
 }
 
 
 
 - Another property to specify by a prompt developer.
-
 name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
