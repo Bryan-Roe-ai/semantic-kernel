@@ -1,4 +1,3 @@
-```markdown
 ---
 consulted: stephentoub, dluc, ajcvickers, roji
 contact: westey-m
