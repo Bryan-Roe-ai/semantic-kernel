@@ -1,14 +1,17 @@
-fastapi
-uvicorn[standard]
-aiofiles
-python-dotenv
-regex
-openapi-core
-numpy
-openai
-pydantic
-pytest
-poetry
-mypy
-ruff
-bandit
+# Web framework
+fastapi==0.79.0
+uvicorn==0.17.6
+
+# Data validation
+pydantic==1.9.1
+
+# NLP tools
+bert_score==0.3.11
+nltk==3.7
+evaluate==0.1.0
+
+# Build tools
+cmake==3.22.3
+
+# Translation evaluation
+unbabel-comet==1.0.0
