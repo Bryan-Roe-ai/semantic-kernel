@@ -49,20 +49,14 @@ IKernel kernel = Kernel.Builder
 kernel.ImportFunctions(new TimePlugin(), "time");
 
 string templateString = "Today is: {{time.Date}} Is it weekend time (weekend/not weekend)?";
-var promptTemplateConfig = new PromptTemplateConfig();
 var promptTemplate = new PromptTemplate(templateString, promptTemplateConfig, kernel.PromptTemplateEngine);
 var kindOfDay = kernel.RegisterSemanticFunction("KindOfDay", promptTemplateConfig, promptTemplate);
 
-var result = await kernel.RunAsync(kindOfDay);
-Console.WriteLine(result.GetValue<string>());
-```
 
 We have an extension method `var kindOfDay = kernel.CreateSemanticFunction(promptTemplate);` to simplify the process of creating and registering a semantic function, but the expanded format is shown above. The `BasicPromptTemplateEngine` is the default prompt template engine and will be loaded automatically if the package is available and no other prompt template engine is specified.
-
 **Issues with the current design:**
 1. You need to have a `Kernel` instance to create a semantic function, which contradicts the goal of creating semantic functions once and reusing them across multiple `Kernel` instances.
 2. `Kernel` only supports a single `IPromptTemplateEngine`, so we cannot support using multiple prompt templates simultaneously.
-3. `IPromptTemplateEngine` is stateless and must parse the template for each render.
 4. Our semantic function extension methods rely on our implementation of `IPromptTemplate` (i.e., `PromptTemplate`), which stores the template string and uses the `IPromptTemplateEngine` to render it.
 
 ## Performance
@@ -100,7 +94,6 @@ public interface IPromptTemplateEngine
 public interface IPromptTemplate
 {
     IReadOnlyList<ParameterView> Parameters { get; }
-
     Task<string> RenderAsync(SKContext executionContext, CancellationToken cancellationToken = default);
 }
 ```
@@ -285,4 +278,3 @@ public sealed class BasicPromptTemplate : IPromptTemplate
 ## Decision Outcome
 
 Chosen option: "Obsolete `IPromptTemplateEngine` and replace with `IPromptTemplateFactory`", because it addresses the requirements and provides good flexibility for the future.
-```
