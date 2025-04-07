@@ -17,6 +17,9 @@ jobs:
     if: ${{ github.actor == 'dependabot[bot]' }}
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Dependabot metadata
         id: metadata
         uses: dependabot/fetch-metadata@v2.1.1
@@ -30,3 +33,7 @@ jobs:
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Error handling
+        if: failure()
+        run: echo "Error occurred during the auto-merge process"

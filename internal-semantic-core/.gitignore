@@ -709,3 +709,14 @@ swa-cli.config.json
 !/python/.env.example
 
 /semantic-kernel
+
+# Azurite database files
+__azurite_db_blob__.json
+__azurite_db_blob_extent__.json
+__azurite_db_queue__.json
+
+# Binary files
+*.bin
+*.exe
+*.dll
+*.zip

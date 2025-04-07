@@ -63,6 +63,9 @@ jobs:
         path: ./TestResults
       if: ${{ always() }}
 
+    - name: Fix errors within the docker container
+      run: ./fix-errors.sh
+
   build-and-test-windows:
     strategy:
         fail-fast: false
@@ -129,3 +132,6 @@ jobs:
       with:
         name: drop-${{ matrix.os }}-dotnet${{matrix.dotnet}}-${{ matrix.configuration }}
         path: ./out
+
+    - name: Fix errors within the docker container
+      run: ./fix-errors.sh

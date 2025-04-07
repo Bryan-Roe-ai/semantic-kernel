@@ -4,15 +4,15 @@
   "editor.formatOnType": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[csharp]": {
     "editor.defaultFormatter": "ms-dotnettools.csharp",
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit"
     }
   },
-  "editor.bracketPairColorization.enabled": true,
-  "editor.guides.bracketPairs": "active",
-  "editor.defaultFormatter": "vscode.markdown-math",
   "python.formatting.provider": "autopep8",
   "python.formatting.autopep8Args": ["--max-line-length=120"],
   "notebook.output.textLineLimit": 500,
@@ -37,7 +37,6 @@
       "source.fixAll": "explicit"
     }
   },
-  "typescript.updateImportsOnFileMove.enabled": "always",
   "eslint.enable": true,
   "eslint.validate": [
     "javascript",
@@ -83,7 +82,6 @@
     "editor.tabSize": 4,
     "editor.codeActionsOnSave": {
       "source.fixAll": "never"
-    },
     }
   },
   "emeraldwalk.runonsave": {
@@ -100,13 +98,7 @@
   "python.testing.pytestArgs": ["python/tests"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
-  "azureFunctions.deploySubpath": "dotnet\\samples\\CreateChatGptPlugin\\MathPlugin\\azure-function/bin/Release/net6.0/publish",
-  "azureFunctions.projectLanguage": "C#",
-  "azureFunctions.projectRuntime": "~4",
-  "debug.internalConsoleOptions": "neverOpen",
-  "azureFunctions.preDeployTask": "publish (functions)"
-  "azureFunctions.projectSubpath": "samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions",
-  "azureFunctions.deploySubpath": "samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Release/net6.0/publish",
+  "azureFunctions.deploySubpath": "dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function/bin/Release/net8.0/publish",
   "azureFunctions.projectLanguage": "C#",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
@@ -167,9 +159,7 @@
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
-  "C_Cpp_Runner.msvcSecureNoWarnings": false
-}
-  "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build"
+  "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build",
   "intelliphp.inlineSuggestionsEnabled": true,
   "python.analysis.autoImportCompletions": true,
@@ -228,7 +218,4 @@
   "[shellscript]": {
     "editor.defaultFormatter": "Google.cros-ide"
   }
-}
-  "azureFunctions.deploySubpath": "dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function/bin/Release/net8.0/publish",
-  "azureFunctions.projectLanguage": "C#"
 }

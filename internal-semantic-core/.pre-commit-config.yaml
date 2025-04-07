@@ -25,6 +25,11 @@ repos:
       - id: check-ast
         name: Check Valid Python Samples
         types: ["python"]
+      - id: check-binary-files
+        name: Check for Binary Files
+        entry: find . -type f \( -name '*.bin' -o -name '*.exe' -o -name '*.dll' -o -name '*.zip' \) -print
+        language: system
+        types: [file]
   - repo: https://github.com/nbQA-dev/nbQA
     rev: 1.8.5
     hooks:

@@ -8,12 +8,15 @@
       "preLaunchTask": "build (KernelSyntaxExamples)",
       "program": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples/bin/Debug/net6.0/KernelSyntaxExamples.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples",
-      "name": "C#: Concept Samples",
+      "cwd": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples"
+    },
+    {
       "name": "Attach to .NET Functions",
       "type": "coreclr",
       "request": "attach",
       "processId": "${command:azureFunctions.pickProcess}"
+    },
+    {
       "name": "RobotCode: Default",
       "type": "robotcode",
       "request": "launch",
@@ -31,33 +34,6 @@
       "console": "integratedTerminal",
       "justMyCode": true,
       "cwd": "${workspaceFolder}"
-    }
-  ],
-  "id": 1,
-  "name": "Example Project",
-  "description": "A sample JSON structure",
-  "isActive": true,
-  "created": "2024-03-20",
-  "tags": ["sample", "demo", "test"],
-  "settings": {
-    "version": "1.0.0",
-    "debug": false,
-    "maxItems": 100
-  },
-  "items": [
-    {
-      "id": 1,
-      "value": "First item"
-    },
-    {
-      "name": "Attach to .NET Functions",
-      "name": "C#: Process with Dapr",
-      "id": 2,
-      "value": "Second item"
-      "name": "Attach to .NET Functions",
-      "type": "coreclr",
-      "request": "attach",
-      "processId": "${command:azureFunctions.pickProcess}"
     }
   ]
 }

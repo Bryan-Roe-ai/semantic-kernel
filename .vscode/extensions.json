@@ -7,7 +7,7 @@
     "github.copilot",
     "franneck94.c-cpp-runner",
     "ms-azuretools.vscode-azureresourcegroups",
-    "github.vscode-github-actions"
+    "github.vscode-github-actions",
     "ms-dotnettools.dotnet-interactive-vscode",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
@@ -22,7 +22,6 @@
     "huggingface.huggingface-vscode",
     "salesforce.salesforcedx-vscode-core",
     "asf.apache-netbeans-java",
-    "vscjava.vscode-gradle",
     "paiqo.databricks-vscode",
     "github.codespaces",
     "metalbear.mirrord",
@@ -34,24 +33,22 @@
     "ms-dotnettools.vscode-dotnet-runtime",
     "amazonwebservices.amazon-q-vscode",
     "amazonwebservices.aws-toolkit-vscode",
-    "ms-azuretools.vscode-azureresourcegroups",
     "ms-vscode.cpptools",
-    "franneck94.c-cpp-runner",
     "vadimcn.vscode-lldb",
     "atariq11700.debugpy-old",
     "ms-azuretools.vscode-docker",
     "editorconfig.editorconfig",
     "donjayamanne.githistory",
-    "github.vscode-github-actions",
-    "github.copilot",
-    "github.copilot-chat",
-    "ms-azuretools.vscode-azure-github-copilot",
     "eamodio.gitlens",
     "ms-python.vscode-pylance",
     "ms-python.debugpy",
     "ms-toolsai.jupyter-keymap",
     "ms-azure-devops.azure-pipelines",
-    "ms-cst-e.vscode-devskim"
+    "ms-cst-e.vscode-devskim",
+    "dotjoshjohnson.xml",
+    "vscjava.vscode-maven",
+    "redhat.java",
+    "golang.go"
   ],
   "sync.ignoredSettings": [
     "netbeans.format.codeFormatter",
@@ -63,14 +60,4 @@
     "platformio-ide.useDevelopmentPIOCore",
     "editor.formatOnSave"
   ]
-}
-{
-    "recommendations": [
-        "ms-semantic-kernel.semantic-kernel",
-        "dotjoshjohnson.xml",
-        "vscjava.vscode-maven",
-        "redhat.java",
-        "golang.go",
-        "ms-azuretools.vscode-docker"
-    ]
 }

@@ -334,10 +334,10 @@ jobs:
           AzureOpenAIEmbeddings__DeploymentName: ${{ vars.AZUREOPENAIEMBEDDINGS__DEPLOYMENTNAME2 }}
           AzureOpenAIEmbeddings_EastUS__DeploymentName: ${{ vars.AZUREOPENAIEMBEDDINGS_EASTUS__DEPLOYMENTNAME}}
           AzureOpenAI__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
-          AzureOpenAI_EastUS__Endpoint: ${{ secrets.AZUREOPENAI_EASTUS__ENDPOINT }}
-          AzureOpenAI_EastUS__ApiKey: ${{ secrets.AZUREOPENAI_EASTUS__APIKEY }}
           AzureOpenAIEmbeddings__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
           AzureOpenAI__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
+          AzureOpenAI_EastUS__Endpoint: ${{ secrets.AZUREOPENAI_EASTUS__ENDPOINT }}
+          AzureOpenAI_EastUS__ApiKey: ${{ secrets.AZUREOPENAI_EASTUS__APIKEY }}
           AzureOpenAIEmbeddings__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
           Bing__ApiKey: ${{ secrets.BING__APIKEY }}
           OpenAI__ApiKey: ${{ secrets.OPENAI__APIKEY }}
@@ -371,11 +371,29 @@ jobs:
           REDIS_CONNECTION_STRING: ${{ vars.REDIS_CONNECTION_STRING }}
         run: |
           uv run pytest -n logical --dist loadfile --dist worksteal ./tests/integration ./tests/samples -v --junitxml=pytest.xml
-        run: |
+      - name: Fix errors within the docker container
+        run: ./fix-errors.sh
+      - name: Surface failing tests
+        if: always()
+        uses: pmeier/pytest-results-action@main
+        with:
+          path: python/pytest.xml
+          summary: true
+          display-options: fEX
+          fail-on-empty: true
+          title: Test results
+      - name: Minimize uv cache
+        run: uv cache prune --ci
+          if ${{ matrix.os == 'ubuntu-latest' }}; then
+            docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
+          fi
+
           cd python
-          poetry run pytest -n logical --dist loadfile --dist worksteal ./tests/integration ./tests/samples -v --junitxml=pytest.xml
-        run: |
-          uv run pytest -v --log-cli-level=INFO --durations=20 -n logical --dist loadfile --dist worksteal -m "not ollama" ./tests/integration/completions ./tests/integration/embeddings ./tests/samples ./tests/integration/cross_language
+          poetry run pytest -n logical --dist loadfile --dist worksteal ./tests/integration -v
+          poetry run pytest -n logical --dist loadfile --dist worksteal ./tests/samples -v
+          poetry run pytest ./tests/integration -v
+          poetry run pytest ./tests/integration -v
+          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/samples
 
   python-merge-gate-ollama:
     name: Python Pre-Merge Integration Tests - Ollama
@@ -426,6 +444,8 @@ jobs:
         shell: bash
         run: |
           uv run pytest -v --log-cli-level=INFO --durations=0 -n logical --dist loadfile --dist worksteal -m ollama --timeout=300 ./tests/integration/completions ./tests/integration/embeddings
+      - name: Fix errors within the docker container
+        run: ./fix-errors.sh
 
   python-merge-gate-memory:
     name: Python Pre-Merge Integration Tests - Memory (incl samples using those)
