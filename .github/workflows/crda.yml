@@ -24,18 +24,18 @@
 # ℹ️ Configure your repository and the workflow with the following steps:
 # 1. Setup the tool stack based on the project's requirement.
 #    Refer to: https://github.com/redhat-actions/crda/#1-set-up-the-tool-stack
-# 2. (Optional) CRDA action attempt to detect the language and install the
-#    required dependencies for your project. If your project doesn't aligns
+# 2. (Optional) CRDA action attempts to detect the language and install the
+#    required dependencies for your project. If your project doesn't align
 #    with the default dependency installation command mentioned here
-#    https://github.com/redhat-actions/crda/#3-installing-dependencies.
-#    Use the required inputs to setup the same
+#    https://github.com/redhat-actions/crda/#3-installing-dependencies,
+#    use the required inputs to setup the same.
 # 3. (Optional) CRDA action attempts to detect the manifest file if it is
 #    present in the root of the project and named as per the default mentioned
 #    here https://github.com/redhat-actions/crda/#3-installing-dependencies.
-#    If it deviates from the default, use the required inputs to setup the same
+#    If it deviates from the default, use the required inputs to setup the same.
 # 4. Setup Authentication - Create the CRDA_KEY or SNYK_TOKEN.
 #    Refer to: https://github.com/redhat-actions/crda/#4-set-up-authentication
-# 5. (Optional) Upload SARIF file as an Artifact to download and view
+# 5. (Optional) Upload SARIF file as an Artifact to download and view.
 # 6. Commit and push the workflow file to your default branch to trigger a workflow run.
 
 # 👋 Visit our GitHub organization at https://github.com/redhat-actions/ to see our actions and provide feedback.
