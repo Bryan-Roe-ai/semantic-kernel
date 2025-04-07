@@ -1,5 +1,4 @@
 ---
-# Optional elements. Remove any that are not needed.
 status: {proposed | rejected | accepted | deprecated | … | superseded by [ADR-0001](0001-madr-architecture-decisions.md)}
 contact: {person proposing the ADR}
 date: {YYYY-MM-DD when the decision was last updated}
