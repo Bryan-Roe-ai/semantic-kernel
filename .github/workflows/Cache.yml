@@ -1,12 +1,31 @@
-uses: actions/cache@v4.0.2
-with:
-  # Cache dependencies
-  path: |
-    **/node_modules
-    **/packages
-  # Unique key for the cache
-  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-  # Fallback keys to restore cache
-  restore-keys: |
-    ${{ runner.os }}-node-
-    ${{ runner.os }}-
+name: Cache Dependencies
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Cache Node.js dependencies
+      uses: actions/cache@v4.0.2
+      with:
+        # Cache dependencies
+        path: |
+          node_modules
+          packages
+        # Unique key for the cache
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        # Fallback keys to restore cache
+        restore-keys: |
+          ${{ runner.os }}-node-
+          ${{ runner.os }}-
