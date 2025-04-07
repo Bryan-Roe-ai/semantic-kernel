@@ -1,0 +1,32 @@
+name: "Frogbot Scan Pull Request"
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  scan-pull-request:
+    runs-on: ubuntu-latest
+    environment: frogbot
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Run Frogbot scan
+        uses: jfrog/frogbot@v2.11.0
+        env:
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Optional variables
+          # JF_INSTALL_DEPS_CMD: ""
+          # JF_USER: ${{ secrets.JF_USER }}
+          # JF_PASSWORD: ${{ secrets.JF_PASSWORD }}
+          # JF_RELEASES_REPO: ""
+          # JF_DEPS_REPO: ""
