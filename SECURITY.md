@@ -1,6 +1,6 @@
 # Security
 
-Microsoft takes the security of our software products and services seriously, which includes all source code repositories managed through our GitHub organizations, which include [Microsoft](https://github.com/microsoft).
+Microsoft takes the security of our software products and services seriously, which includes all source code repositories managed through our GitHub organizations, which include [Microsoft](https://www.microsoft.com).
 
 If you believe you have found a security vulnerability in any Microsoft-owned repository that meets [Microsoft's definition of a security vulnerability](https://aka.ms/opensource/security/definition), please report it as described below.
 
@@ -10,9 +10,9 @@ If you believe you have found a security vulnerability in any Microsoft-owned re
 
 Instead, please report them to the Microsoft Security Response Center (MSRC) at [https://msrc.microsoft.com/create-report](https://aka.ms/opensource/security/create-report).
 
-If you prefer to submit without logging in, send email to [secure@microsoft.com](mailto:secure@microsoft.com). If possible, encrypt your message with our PGP key; please download it from the [Microsoft Security Response Center](https://aka.ms/opensource/security/pgp).
+If you prefer to submit without logging in, send an email to [secure@microsoft.com](mailto:secure@microsoft.com). If possible, encrypt your message with our PGP key; please download it from the [Microsoft Security Response Center (MSRC)](https://www.microsoft.com/en-us/msrc).
 
-You should receive a response within 24 hours. If for some reason you do not, please follow up via email to ensure we received your original message. Additional information can be found at [Microsoft Security Response Center](https://aka.ms/opensource/security).
+You should receive a response within 24 hours. If for some reason you do not, please follow up via email to ensure we received your original message. Additional information can be found at [Microsoft Security Response Center](https://www.microsoft.com/en-us/msrc).
 
 Please include the requested information listed below (as much as you can provide) to help us better understand the nature and scope of the possible issue:
 - Type of issue (e.g., buffer overflow, SQL injection, cross-site scripting, etc.)
