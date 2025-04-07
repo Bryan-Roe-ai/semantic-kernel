@@ -14,29 +14,34 @@ updates:
       - dependency-name: "Microsoft.Bcl.*"
         update-types: ["version-update:semver-major"]
       - dependency-name: "Moq"
+        update-types: ["version-update:semver-major"]
     labels:
       - ".NET"
       - "dependencies"
+      - "nuget"
+      - "automated-update"
 
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
-    directory: "samples/apps"
+    directory: "/samples/apps"
     schedule:
       interval: "weekly"
       day: "monday"
     labels:
       - "npm"
       - "dependencies"
+      - "automated-update"
 
   # Maintain dependencies for pip
   - package-ecosystem: "pip"
-    directory: "python/"
+    directory: "/python/"
     schedule:
       interval: "weekly"
       day: "monday"
     labels:
       - "python"
       - "dependencies"
+      - "automated-update"
 
   # Maintain dependencies for github-actions
   - package-ecosystem: "github-actions"
@@ -47,6 +52,7 @@ updates:
     labels:
       - "github-actions"
       - "dependencies"
+      - "automated-update"
 
   # Maintain dependencies for devcontainers
   - package-ecosystem: "devcontainers"
@@ -57,3 +63,4 @@ updates:
     labels:
       - "devcontainers"
       - "dependencies"
+      - "automated-update"
