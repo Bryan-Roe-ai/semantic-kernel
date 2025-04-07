@@ -32,7 +32,6 @@ __1. Completion service type identified by the "prompt_type" property.__ This op
     "prompt_type": "<text|chat|image>",
     "models": [...]
 }
-```
 
 
 if(string.IsNullOrEmpty(promptTemplateConfig.PromptType) || promptTemplateConfig.PromptType == "text")
@@ -40,7 +39,6 @@ this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, 
     //render the prompt, call the service, process and return result
 else (promptTemplateConfig.PromptType == "chat")
     var service = this._serviceSelector.SelectAIService<IChatCompletion>(context.ServiceProvider, this._modelSettings);
-},
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
 	"schema": 1,
@@ -59,14 +57,12 @@ config: {
 
 Pros:
 
-- Deterministically specifies which completion service **type** to use, so image prompts won't be rendered by a text completion service, and vice versa.
 
 - Another property to specify by a prompt developer.
 
 if (Regex.IsMatch(renderedPrompt, @"<message>.*?</message>"))
 this._serviceSelector.SelectAIService<IChatCompletion>(context.ServiceProvider, this._modelSettings);
 return result
-},
 name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
