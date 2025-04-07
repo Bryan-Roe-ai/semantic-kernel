@@ -1,5 +1,5 @@
 name: Python Code Quality Checks
-name: Python Lint
+
 on:
   workflow_dispatch:
   pull_request:
@@ -10,7 +10,6 @@ on:
 jobs:
   pre-commit:
     if: '!cancelled()'
-    if: "!cancelled()"
     strategy:
       fail-fast: false
       matrix:
@@ -31,6 +30,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: "poetry"
+      # Add more steps as needed
+
   ruff:
     strategy:
       fail-fast: false
@@ -52,39 +53,30 @@ jobs:
         uses: actions/setup-python@v5
       - name: Install poetry
         run: pipx install poetry
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: "poetry"
-          cache-dependency-path: "python/pyproject.toml"
       - name: Install SemanticKernel
         run: cd python && poetry install --no-ansi
       - name: Run lint
         run: cd python && poetry run ruff check .
+
   black:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.8"]
+        python-version: ["3.10"]
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - run: echo "/root/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
       - name: Install poetry
         run: pipx install poetry
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: "poetry"
-          cache-dependency-path: "python/pyproject.toml"
       - name: Install SemanticKernel
         run: cd python && poetry install --no-ansi
       - name: Run lint
         run: cd python && poetry run black --check .
       - name: Install dependencies
         run: cd python && poetry install
-      - uses: pre-commit/action@v3.0.1
       - name: Restore uv cache
         uses: actions/cache@v4
         with:
@@ -92,21 +84,8 @@ jobs:
           key: uv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/uv.lock') }}
       - name: Install the project
         run: uv sync --all-extras --dev
-      - uses: pre-commit/action@v3.0.1
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Restore uv cache
-        uses: actions/cache@v4
-        with:
-          path: ${{  env.UV_CACHE_DIR  }}
-          key: uv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/uv.lock') }}
-          version: "0.5.x"
-          enable-cache: true
-          cache-suffix: ${{ runner.os }}-${{ matrix.python-version }}
-      - name: Install the project
-        run: uv sync --all-extras --dev
-      - uses: pre-commit/action@v3.0.1
-        name: Run Pre-Commit Hooks
+      - name: Run Pre-Commit Hooks
+        uses: pre-commit/action@v3.0.1
         with:
           extra_args: --config python/.pre-commit-config.yaml --all-files
       - name: Run Mypy
