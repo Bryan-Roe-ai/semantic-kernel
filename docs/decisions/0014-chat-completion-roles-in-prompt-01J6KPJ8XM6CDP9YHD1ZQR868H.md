@@ -16,12 +16,8 @@ runme:
 Prompt:
 
 ```bash {"id":"01J6KQ5B99ZG69EC80EKEXRJF5"}
-{{message role="system"}}
 You are a bank manager. Be helpful, respectful, appreciate diverse language styles.
-{{message role="system"}}
 
-{{message role="user"}}
-I want to {{$input}}
 this.handlebarsEngine.RegisterHelper("user", (EncodedTextWriter output, Context context, Arguments arguments) => {
   //Emit the <message role="user"> tags
 });
@@ -30,12 +26,7 @@ this.handlebarsEngine.RegisterHelper("user", (EncodedTextWriter output, Context 
 Prompt:
 
 ```bash {"id":"01J6KQ5B99ZG69EC80EVVM3K34"}
-{{#system~}}
 You are a bank manager. Be helpful, respectful, appreciate diverse language styles.
-{{~/system}}
-{{#user~}}
-I want to {{$input}}
-{{~/user}}
 ```
 
 Rendered prompt:
@@ -55,7 +46,6 @@ Prompt:
 You are a bank manager. Be helpful, respectful, appreciate diverse language styles.
 </message>
 <message role="user">
-I want to {{$input}}
 </message>
 ```
 
