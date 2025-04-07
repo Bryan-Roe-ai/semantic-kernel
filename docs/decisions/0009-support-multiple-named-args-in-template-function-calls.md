@@ -1,15 +1,15 @@
 consulted: dmytrostruk, matthewbolanos
 contact: dmytrostruk
-date: 2013-06-16T00:00:00Z
+date: 2025-04-07T00:00:00Z
 deciders: shawncal, hario90
 informed: lemillermicrosoft
 status: accepted
 
-# Add support for multiple named arguments in template function calls
+# Add Support for Multiple Named Arguments in Template Function Calls
 
 ## Context and Problem Statement
 
-Native functions now support multiple parameters, populated from context values with the same name. Semantic functions currently only support calling native functions with no more than 1 argument. The purpose of these changes is to add support for calling native functions within semantic functions with multiple named arguments.
+Native functions now support multiple parameters, populated from context values with the same name. Semantic functions currently only support calling native functions with no more than one argument.
 
 ## Decision Drivers
 
@@ -19,83 +19,74 @@ Native functions now support multiple parameters, populated from context values 
 
 ## Considered Options
 
-### Syntax idea 1: Using commas
+### Syntax Idea 1: Using Commas
 
-```handlebars {"id":"01J6KQ1GR1BSXQPVN5ACX5DKBQ"}
+```handlebars
+{{ Skill.MyFunction street="123 Main St", zip="98123", city="Seattle", age=25 }}
+```
+
+**Pros**:
+- Commas could make longer function calls easier to read, especially if spaces before and after the argument separator are allowed.
+
+**Cons**:
+- Guidance doesn't use commas.
+- Spaces are already used as delimiters elsewhere, so the added complexity of supporting commas isn't necessary.
+
+### Syntax Idea 2: JavaScript/C#-Style Delimiter (Colon)
+
+```handlebars
+{{ Skill.MyFunction street="123 Main St": zip="98123": city="Seattle": age=25 }}
+```
+
+**Pros**:
+- Resembles JavaScript Object syntax and C# named argument syntax.
+
+**Cons**:
+- Doesn't align with Guidance syntax which uses equal signs as argument delimiters.
+- Too similar to YAML key/value pairs if we support YAML prompts in the future.
+
+### Syntax Idea 3: Python/Guidance-Style Delimiter
+
+```handlebars
 {{ Skill.MyFunction street="123 Main St" zip="98123" city="Seattle" age=25 }}
 ```
 
-Pros:
+**Pros**:
+- Resembles Python's keyword argument syntax.
+- Resembles Guidance's named argument syntax.
 
-- Commas could make longer function calls easier to read, especially if spaces before and after the arg separator (a colon in this case) are allowed.
+**Cons**:
+- Doesn't align with C# syntax.
 
+### Syntax Idea 4: Allow Whitespace Between Argument Name/Value Delimiter
 
-- Guidance doesn't use commas
-- Spaces are already used as delimiters elsewhere so the added complexity of supporting commas isn't necessary
-
-### Syntax idea 2: JavaScript/C#-Style delimiter (colon)
-
-```handlebars {"id":"01J6KQ1GR1BSXQPVN5AE8XQP6Y"}
-
-{{ Skill.MyFunction street="123 Main St" zip="98123" city="Seattle" age=25 }}
-
-```
-
-Pros:
-
-- Resembles JavaScript Object syntax and C# named argument syntax
-Cons:
-
-- Doesn't align with Guidance syntax which uses equal signs as arg part delimiters
-- Too similar to YAML key/value pairs if we support YAML prompts in the future. It's likely possible to support colons as delimiters but would be better to have a separator that is distinct from normal YAML syntax.
-
-### Syntax idea 3: Python/Guidance-Style delimiter
-
-```handlebars {"id":"01J6KQ1GR1BSXQPVN5AHRX4495"}
+```handlebars
 {{ Skill.MyFunction street="123 Main St" zip="98123" city="Seattle" age=25 }}
 ```
 
-Pros:
+**Pros**:
+- Follows the convention of many programming languages where whitespace flexibility doesn't impact functionality.
 
-- Resembles Python's keyword argument syntax
-- Resembles Guidance's named argument syntax
-Cons:
-
-
-- Doesn't align with C# syntax
-
-### Syntax idea 4: Allow whitespace between arg name/value delimiter
-
-```handlebars {"id":"01J6KQ1GR1BSXQPVN5AKCMBD7G"}
-{{ Skill.MyFunction street="123 Main St" zip="98123" city="Seattle" age=25 }}
-```
-
-Pros:
-
-- Follows the convention followed by many programming languages of whitespace flexibility where spaces, tabs, and newlines within code don't impact a program's functionality
-
-Cons:
-
-- Promotes code that is harder to read unless commas can be used (see [Using Commas](#syntax-idea-1-using-commas))
-- More complexity to support
-- Doesn't align with Guidance which doesn't support spaces before and after the = sign.
+**Cons**:
+- Promotes code that is harder to read unless commas can be used.
+- More complexity to support.
+- Doesn't align with Guidance which doesn't support spaces before and after the `=` sign.
 
 ## Decision Outcome
 
-Additional decisions:
+- Continue supporting up to one positional argument for backward compatibility. Currently, the argument passed to a function is assumed to be the `$input` context variable.
 
-- Continue supporting up to 1 positional argument for backward compatibility. Currently, the argument passed to a function is assumed to be the `$input` context variable.
+**Example**:
 
-Example
-
-```handlebars {"id":"01J6KQ1GR1BSXQPVN5APSHAXWY"}
+```handlebars
 {{ Skill.MyFunction street="123 Main St" zip="98123" city="Seattle" age=25 }}
 ```
 
-- Allow arg values to be defined as strings or variables ONLY, e.g.
+- Allow argument values to be defined as strings or variables ONLY.
 
-```handlebars {"id":"01J6KQ1GR1BSXQPVN5ARY00MQY"}
+```handlebars
 {{ Skill.MyFunction street="123 Main St" zip="98123" city="Seattle" age=25 }}
 ```
 
-If function expects a value other than a string for an argument, the SDK will use the corresponding TypeConverter to parse the string provided when evaluating the expression.
+If the function expects a value other than a string for an argument, the SDK will use the corresponding TypeConverter to parse the string provided when evaluating the expression.
+```
