@@ -1,11 +1,9 @@
-# This workflow will triage pull requests and apply a label based on the
-# paths that are modified in the pull request.
-#
-# To use this workflow, you will need to set up a .github/labeler.yml
-# file with configuration.  For more information, see:
-# https://github.com/actions/labeler
+# This workflow will triage pull requests and apply a label based on the paths that are modified in the pull request.
+# To use this workflow, you will need to set up a .github/labeler.yml file with configuration.
+# For more information, see: https://github.com/actions/labeler
 
 name: Label pull request
+
 on: [pull_request_target]
 
 jobs:
@@ -18,23 +16,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          # Use a cache for the .git directory to speed up the workflow
-          fetch-depth: 0
-
-      - name: Run labeler
-        uses: actions/labeler@v5
-        with:
-          repo-token: "${{ secrets.GH_ACTIONS_PR_WRITE }}"
-
-      - name: Error handling
-        if: failure()
-        run: |
-          echo "An error occurred while applying labels"
-          # Send a notification to Slack
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Labeling failed on PR: ${{ github.event.pull_request.html_url }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
-          # Optionally create an issue to track the failure
-          gh issue create --title "Labeling failed on PR" --body "Labeling failed on PR: ${{ github.event.pull_request.html_url }}"
 
       - name: Cache .git directory
         uses: actions/cache@v2
@@ -46,3 +27,20 @@ jobs:
           key: ${{ runner.os }}-git-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-git-
+
+      - name: Run labeler
+        uses: actions/labeler@v5
+        with:
+          repo-token: "${{ secrets.GH_ACTIONS_PR_WRITE }}"
+
+      - name: Error handling
+        if: failure()
+        run: |
+          echo "An error occurred while applying labels"
+          # Optionally create an issue to track the failure
+          gh issue create --title "Labeling failed on PR" --body "Labeling failed on PR #${{ github.event.pull_request.number }}"
+
+      - name: Notify on Slack
+        if: failure()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Labeling failed on PR #${{ github.event.pull_request.number }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
