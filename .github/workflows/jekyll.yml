@@ -28,20 +28,27 @@ concurrency:
 
 jobs:
   # Build job
-  build:
+  build-jekyll-site:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@<commit-sha>
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.161.0
+        uses: ruby/setup-ruby@<commit-sha>
         with:
           ruby-version: '3.1'
           bundler-cache: true
           cache-version: 0
+      - name: Cache Gems
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
       - name: Setup Pages
         id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@<commit-sha>
       - name: Build with Jekyll
         # Outputs to the './_site' directory by default
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
@@ -50,19 +57,19 @@ jobs:
         continue-on-error: false
       - name: Upload artifact
         # Automatically uploads an artifact from the './_site' directory by default
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@<commit-sha>
 
   # Deployment job
-  deploy:
+  deploy-to-gh-pages:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-jekyll-site
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@<commit-sha>
       - name: Notify on success
         if: success()
         run: echo "Deployment succeeded!"
