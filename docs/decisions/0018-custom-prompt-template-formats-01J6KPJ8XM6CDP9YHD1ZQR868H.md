@@ -45,24 +45,14 @@ IKernel kernel = Kernel.Builder
 4. Our semantic function extension methods rely on our implementation of `IPromptTemplate` (i.e., `PromptTemplate`), which stores the template string and uses the 
 | ---------------- | ------- | ------------ |
 | Render variables | 168     | 0            |
-
-
-**Note: We will use the sample implementation to support the f-string template format.**
-Using `HandlebarsDotNet` for the same use case results in the following timings:
-
 | Operation        | Ticks | Milliseconds |
 | ---------------- | ----- | ------------ |
 | Compile template | 66277 | 6            |
 | Render variables | 4173  | 0            |
-
 **By separating the extract blocks/compile from the render variables operation, it will be possible to optimize performance by compiling templates just once.**
 
 ## Implementing a Custom Prompt Template Engine
 
-There are two interfaces provided:
-
-```csharp
-public interface IPromptTemplateEngine
 {
     Task<string> RenderAsync(string templateText, SKContext context, CancellationToken cancellationToken = default);
 }
@@ -96,11 +86,6 @@ public class HandlebarsTemplateEngine : IPromptTemplateEngine
                 });
         }
 
-        var template = handlebars.Compile(templateText);
-
-        var prompt = template(context.Variables);
-
-        return await Task.FromResult(prompt).ConfigureAwait(true);
     }
 }
 ```
