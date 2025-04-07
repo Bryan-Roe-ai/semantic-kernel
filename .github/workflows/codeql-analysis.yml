@@ -1,11 +1,3 @@
-# CodeQL is the code analysis engine developed by GitHub to automate security checks.
-# The results are shown as code scanning alerts in GitHub. For more details, visit:
-# https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql
-
-# CodeQL is the code analysis engine developed by GitHub to automate security checks.
-# The results are shown as code scanning alerts in GitHub. For more details, visit:
-# https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql
-
 name: "CodeQL"
 
 on:
@@ -28,29 +20,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ "cpp", "csharp", "go", "java", "javascript", "python", "ruby" ]
-        
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
-        # Use only 'java' to analyze code written in Java, Kotlin or both
-        # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
-        # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
+        language: [ "csharp", "python", "java", "cpp", "html" ]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
-          # If you wish to specify custom queries, you can do so here or in a config file.
-          # By default, queries listed here will override any specified in a config file.
-          # Prefix the list here with "+"
           queries: +security-extended,security-and-quality,codeql-queries/ssrf-detection.ql
 
-      # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
-      # If this step fails, then you should remove it and run the build manually (see below)
+      # Autobuild attempts to build any compiled languages (C/C++, C#, Go, or Java).
       - name: Autobuild
         if: ${{ matrix.language != 'java' }}
         uses: github/codeql-action/autobuild@v3
@@ -67,16 +50,6 @@ jobs:
         if: ${{ matrix.language == 'java' }}
         run: ./mvnw -B -DskipTests -Pcompile-jdk21 clean install --file pom.xml
         working-directory: java
-        
-      # ℹ️ Command-line programs to run using the OS shell.
-      # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
-
-      #   If the Autobuild fails above, remove it and uncomment the following three lines.
-      #   modify them (or add more) to build your code if your project, please refer to the EXAMPLE below for guidance.
-
-      # - run: |
-      #     echo "Run, Build Application using script"
-      #     ./location_of_script_within_repo/buildscript.sh
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
