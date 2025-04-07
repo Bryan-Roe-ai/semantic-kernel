@@ -23,7 +23,6 @@ Today, SK runs all text prompts using the text completion service. With the addi
 
 __1. Completion service type identified by the "prompt_type" property.__ This option presumes adding the 'prompt_type' property to the prompt template config model class, 'PromptTemplateConfig.' The property will be specified once by a prompt developer and will be used by the 'SemanticFunction' class to decide which completion service type (not instance) to use when resolving an instance of that particular completion service type.
 
-**Prompt template**
 
 {
     "description": "Hello AI, what can you do for me?",
@@ -31,7 +30,6 @@ __1. Completion service type identified by the "prompt_type" property.__ This op
 
 
 if(string.IsNullOrEmpty(promptTemplateConfig.PromptType) || promptTemplateConfig.PromptType == "text")
-this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, this._modelSettings);
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
 	"schema": 1,
@@ -40,14 +38,12 @@ config: {
 }
 
 name: ComicStrip.Draw
-prompt: "Draw the comic strip - {{$comicStrip.Create $input}}"
 config: {
 	"prompt_type": "image",
 }
 
 
 
-- Another property to specify by a prompt developer.
 name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
