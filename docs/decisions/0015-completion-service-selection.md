@@ -30,7 +30,6 @@ __1. Completion service type identified by the "prompt_type" property.__ This op
     "schema": "1",
     "description": "Hello AI, what can you do for me?",
     "prompt_type": "<text|chat|image>",
-    "models": [...]
 }
 
 
@@ -38,7 +37,7 @@ if(string.IsNullOrEmpty(promptTemplateConfig.PromptType) || promptTemplateConfig
 this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, this._modelSettings);
     //render the prompt, call the service, process and return result
 else (promptTemplateConfig.PromptType == "chat")
-    var service = this._serviceSelector.SelectAIService<IChatCompletion>(context.ServiceProvider, this._modelSettings);
+this._serviceSelector.SelectAIService<IChatCompletion>(context.ServiceProvider, this._modelSettings);
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
 	"schema": 1,
@@ -55,14 +54,12 @@ config: {
 }
 ```
 
-Pros:
 
 
 - Another property to specify by a prompt developer.
 
 if (Regex.IsMatch(renderedPrompt, @"<message>.*?</message>"))
 this._serviceSelector.SelectAIService<IChatCompletion>(context.ServiceProvider, this._modelSettings);
-return result
 name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
