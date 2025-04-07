@@ -13,13 +13,6 @@ runme:
 status: accepted
 ---
 
-# SK prompt syntax for chat completion roles
-
-## Context and Problem Statement
-
-Today, SK does not have the ability to mark a block of text in a prompt as a message with a specific role, such as assistant, system, or user. As a result, SK can't chunk the prompt into the list of messages required by chat completion connectors.
-Additionally, prompts can be defined using a range of template syntaxes supported by various template engines, such as Handlebars, Jinja, and others. Each of these syntaxes may represent chat messages or roles in a distinct way. Consequently, the template engine syntax may leak into SK's domain if no proper abstraction is put in place, coupling SK with the template engines and making it impossible to support new ones.
-<!-- This is an optional element. Feel free to remove. -->
 - It should be possible to mark a block of text in a prompt as a message with a role so that it can be converted into a list of chat messages for use by chat completion connectors.
 - The syntax specific to the template engine message/role should be mapped to the SK message/role syntax to abstract SK from a specific template engine syntax.
 
@@ -39,12 +32,7 @@ I want to {{$input}}
 
 Rendered prompt:
 
-```xml {"id":"01J6KQ5B99ZG69EC80EN8C3S13"}
 <message role="system">
-You are a bank manager. Be helpful, respectful, appreciate diverse language styles.
-</message>
-<message role="user">
-I want to buy a house.
 ```
 this.handlebarsEngine.RegisterHelper("user", (EncodedTextWriter output, Context context, Arguments arguments) => {
   //Emit the <message role="user"> tags
@@ -66,7 +54,6 @@ Rendered prompt:
 
 ```xml {"id":"01J6KQ5B99ZG69EC80EWQ9CTA4"}
 <message role="system">
-You are a bank manager. Be helpful, respectful, appreciate diverse language styles.
 I want to buy a house.
 </message>
 ```
