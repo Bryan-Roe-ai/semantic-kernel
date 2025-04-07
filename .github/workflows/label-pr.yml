@@ -24,7 +24,7 @@ jobs:
             ~/.git-credentials
             ~/.gitconfig
             .git
-          key: ${{ runner.os }}-git-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-git-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-git-
 
