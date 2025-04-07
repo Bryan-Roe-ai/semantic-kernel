@@ -48,8 +48,7 @@ else (promptTemplateConfig.PromptType == "chat")
     //render the prompt, call the service, process and return result
 },
 else (promptTemplateConfig.PromptType == "image")
-{
-    var service = this._serviceSelector.SelectAIService<IImageGeneration>(context.ServiceProvider, this._modelSettings);
+{this._serviceSelector.SelectAIService<IImageGeneration>(context.ServiceProvider, this._modelSettings);
     //render the prompt, call the service, process and return result
 }
 ```
@@ -57,7 +56,6 @@ else (promptTemplateConfig.PromptType == "image")
 **Example**
 
 ```json {"id":"01J6KQ298EJX8WKY132B5884XC"}
-name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
 	"schema": 1,
@@ -91,15 +89,13 @@ if (Regex.IsMatch(renderedPrompt, @"<message>.*?</message>"))
     //render the prompt, call the service, process and return result
 },
 else
-{
-    var service = this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, this._modelSettings);
+{this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, this._modelSettings);
     //render the prompt, call the service, process and return result
 }
 ```
 
 **Example**
 
-```json {"id":"01J6KQ298EJX8WKY132CEZVFTE"}
 name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
