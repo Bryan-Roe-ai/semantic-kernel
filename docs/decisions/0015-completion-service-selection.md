@@ -45,7 +45,6 @@ if(string.IsNullOrEmpty(promptTemplateConfig.PromptType) || promptTemplateConfig
 else (promptTemplateConfig.PromptType == "chat")
 {
     var service = this._serviceSelector.SelectAIService<IChatCompletion>(context.ServiceProvider, this._modelSettings);
-    //render the prompt, call the service, process and return result
 },
 {this._serviceSelector.SelectAIService<IImageGeneration>(context.ServiceProvider, this._modelSettings);
     //render the prompt, call the service, process and return result
@@ -53,7 +52,6 @@ else (promptTemplateConfig.PromptType == "chat")
 ```
 
 **Example**
-
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
 	"schema": 1,
@@ -84,14 +82,13 @@ Cons:
 if (Regex.IsMatch(renderedPrompt, @"<message>.*?</message>"))
 {
     var service = this._serviceSelector.SelectAIService<IChatCompletion>(context.ServiceProvider, this._modelSettings);
-    //render the prompt, call the service, process and return result
+return result
 },
 {this._serviceSelector.SelectAIService<ITextCompletion>(context.ServiceProvider, this._modelSettings);
     //render the prompt, call the service, process and return result
 }
 ```
 
-**Example**
 name: ComicStrip.Create
 prompt: "Generate ideas for a comic strip based on {{$input}}. Design characters, develop the plot, ..."
 config: {
