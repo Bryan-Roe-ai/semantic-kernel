@@ -1,13 +1,12 @@
-# This workflow will triage pull requests and apply a label based on the paths that are modified in the pull request.
-#
-# To use this workflow, you will need to set up a `.github/labeler.yml` file with configuration. For more information, see:
-# https://github.com/actions/labeler
-
 name: Label pull request
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+
+env:
+  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   label:
@@ -23,26 +22,29 @@ jobs:
             echo "Labeler configuration file is missing!"
             exit 1
           fi
+          yamllint .github/labeler.yml # Ensure the file is valid
 
       - name: Apply labels using Labeler
         uses: actions/labeler@v3
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ env.GITHUB_TOKEN }}
           configuration-path: .github/labeler.yml
 
       - name: Handle Errors
         if: failure()
         run: |
           echo "An error occurred while applying labels"
-          # Add additional error handling or logging here
-          # For example, send a notification to Slack
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Labeler workflow failed for PR #${{ github.event.pull_request.number }}."}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"Labeler workflow failed for PR #${{ github.event.pull_request.number }}."}' \
+            ${{ env.SLACK_WEBHOOK }}
 
       - name: Notify Success
         if: success()
         run: |
           echo "Labels successfully applied to PR #${{ github.event.pull_request.number }}"
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Labels successfully applied to PR #${{ github.event.pull_request.number }}."}' ${{ secrets.SLACK_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"Labels successfully applied to PR #${{ github.event.pull_request.number }}."}' \
+            ${{ env.SLACK_WEBHOOK }}
 
   lint:
     runs-on: ubuntu-latest
@@ -63,3 +65,4 @@ jobs:
         run: |
           gem install yamllint
           yamllint .github/workflows
+          yamllint .github/labeler.yml # Lint additional YAML files
