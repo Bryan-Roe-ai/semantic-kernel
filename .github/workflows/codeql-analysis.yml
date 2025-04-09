@@ -7,6 +7,7 @@ on:
     branches: ["main", "experimental*", "feature*", "*-development"]
   schedule:
     - cron: "17 11 * * 2" # Scheduled weekly scan every Tuesday at 11:17 UTC
+  workflow_dispatch: # Allow manual execution for testing or debugging
 
 jobs:
   analyze:
@@ -32,7 +33,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-v2 # Added versioning for freshness
           restore-keys: |
             ${{ runner.os }}-maven-
 
@@ -40,7 +41,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-v2
           restore-keys: |
             ${{ runner.os }}-pip-
 
@@ -48,7 +49,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}-v2
           restore-keys: |
             ${{ runner.os }}-npm-
 
@@ -77,6 +78,18 @@ jobs:
         run: ./mvnw -B -DskipTests -Pcompile-jdk17 clean install --file pom.xml
         working-directory: java
 
+      - name: Run Java Tests # Added Java tests
+        if: ${{ matrix.language == 'java' }}
+        run: ./mvnw test --file pom.xml
+        working-directory: java
+
+      - name: Run Python Linters # Added Python linters and type checks
+        if: ${{ matrix.language == 'python' }}
+        run: |
+          pip install mypy flake8
+          mypy .
+          flake8 .
+
       # Step 5: Perform CodeQL Analysis
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3.1.0
@@ -84,12 +97,19 @@ jobs:
           category: "/language:${{ matrix.language }}"
 
       # Step 6: Run npm audit and fix
-      - name: Run npm audit and fix
+      - name: Run npm audit
         run: |
           npm audit || echo "NPM Audit detected vulnerabilities"
-          npm audit fix
+          npm audit fix --force
 
-      # Step 7: Trigger Ensure Success Workflow (conditional on success)
+      # Step 7: Archive CodeQL Results
+      - name: Upload CodeQL Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: codeql-results
+          path: codeql-results/
+
+      # Step 8: Trigger Ensure Success Workflow (conditional on success)
       - name: Trigger Ensure Success Workflow
         if: ${{ success() }}
         run: |
