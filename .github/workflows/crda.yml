@@ -1,0 +1,64 @@
+name: CRDA Scan
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+  schedule:
+    - cron: "0 0 * * 0" # Run weekly on Sunday
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  crda-scan:
+    permissions:
+      contents: read            # for actions/checkout to fetch code
+      security-events: write    # for redhat-actions/crda to upload SARIF results
+    name: Scan project vulnerabilities with CRDA
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Validate CRDA_KEY and SNYK_TOKEN
+        run: |
+          if [ -z "${{ secrets.CRDA_KEY }}" ] && [ -z "${{ secrets.SNYK_TOKEN }}" ]; then
+            echo "Either CRDA_KEY or SNYK_TOKEN must be set"
+            exit 1
+          fi
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+
+      - name: Install CRDA CLI
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          source: github
+          github_pat: ${{ github.token }}
+          crda: "latest"
+
+      - name: CRDA Scan
+        id: scan
+        uses: redhat-actions/crda@v1
+        with:
+          crda_key: ${{ secrets.CRDA_KEY }}           # Either use crda_key or snyk_token
+          snyk_token: ${{ secrets.SNYK_TOKEN }}
+          upload_artifact: true
