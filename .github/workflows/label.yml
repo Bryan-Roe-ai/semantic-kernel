@@ -20,6 +20,14 @@ jobs:
       pull-requests: write
 
     steps:
+    # Step to validate the existence of the labeler configuration file
+    - name: Validate Labeler Configuration
+      run: |
+        if [ ! -f .github/labeler.yml ]; then
+          echo "Configuration file .github/labeler.yml not found."
+          exit 1
+        fi
+
     # Step to checkout the repository
     - name: Checkout Repository
       uses: actions/checkout@v2.4.0
@@ -32,7 +40,15 @@ jobs:
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
-    # Optional: Step to handle errors
+    # Optional: Step to log the applied labels for better transparency
+    - name: Log Applied Labels
+      run: echo "Labels have been applied successfully."
+
+    # Optional: Step to notify on failure with more detailed output
     - name: Notify on failure
       if: failure()
-      run: echo "Label application failed"
+      run: |
+        echo "Label application failed."
+        curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -d '{"body":"Label application failed. Please check the workflow logs for details."}' \
+          ${{ github.event.pull_request.comments_url }}
