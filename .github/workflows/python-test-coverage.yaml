@@ -1,7 +1,7 @@
 name: Python Test Coverage
 
 on: 
-  pull_request_target:
+  pull_request:
     branches: ["main", "feature*"]
     paths:
       - "python/**"
@@ -18,13 +18,14 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
         os: [ubuntu-latest]
+
     steps:
       # Wait for unit tests to succeed
       - name: Wait for unit tests to succeed
         uses: lewagon/wait-on-check-action@v1.3.4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-          check-name: 'Python Unit Tests (${{ matrix.python-version}}, ${{ matrix.os }})'
+          check-name: 'Python Unit Tests (${{ matrix.python-version }}, ${{ matrix.os }})'
           repo-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
           wait-interval: 10
 
@@ -33,14 +34,21 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
       # Checkout the repository
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
+      # Lint Python files
+      - name: Run Flake8 Linter
+        run: |
+          pip install flake8
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
       # Download coverage and pytest artifacts
       - name: Download coverage and pytest artifacts
@@ -75,6 +83,6 @@ jobs:
         if: failure()
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_CHANNEL: your-slack-channel
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
           SLACK_COLOR: ${{ job.status == 'success' && 'good' || 'danger' }}
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
