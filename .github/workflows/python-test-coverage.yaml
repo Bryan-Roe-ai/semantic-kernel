@@ -2,7 +2,9 @@ name: Python Test Coverage
 
 on: 
   pull_request:
-    branches: ["main", "feature*"]
+    branches: 
+      - "main"
+      - "feature*"
     paths:
       - "python/**"
 
@@ -16,8 +18,16 @@ jobs:
       actions: read
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
-        os: [ubuntu-latest]
+        python-version: 
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+        os: 
+          - ubuntu-latest
+          # Uncomment below for cross-platform testing
+          # - windows-latest
+          # - macos-latest
 
     steps:
       # Wait for unit tests to succeed
@@ -36,6 +46,7 @@ jobs:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
           restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
             ${{ runner.os }}-pip-
 
       # Checkout the repository
@@ -78,6 +89,16 @@ jobs:
           default-branch: "main"
           unique-id-for-comment: python-${{ matrix.python-version }}
 
+      # Enforce coverage threshold
+      - name: Enforce Coverage Threshold
+        run: |
+          COVERAGE=$(cat python-coverage-${{ matrix.os }}-${{ matrix.python-version }}.txt | tail -1)
+          echo "Current coverage: $COVERAGE%"
+          if [ "$COVERAGE" -lt 80 ]; then
+            echo "Coverage below threshold: $COVERAGE%"
+            exit 1
+          fi
+
       # Notify on failure
       - name: Notify Slack
         if: failure()
@@ -85,4 +106,5 @@ jobs:
         env:
           SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
           SLACK_COLOR: ${{ job.status == 'success' && 'good' || 'danger' }}
+          SLACK_MESSAGE: "Workflow failed on branch ${{ github.ref_name }}"
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
