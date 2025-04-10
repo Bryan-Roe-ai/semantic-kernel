@@ -29,3 +29,16 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
           ${{ runner.os }}-
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v4.0.2
+      with:
+        # Cache dependencies
+        path: |
+          ~/.cache/pip
+        # Unique key for the cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        # Fallback keys to restore cache
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          ${{ runner.os }}-

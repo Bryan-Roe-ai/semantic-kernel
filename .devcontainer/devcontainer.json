@@ -4,28 +4,23 @@
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "18"
-    },
-    "ghcr.io/devcontainers/features/python:1": {
-      "version": "3.10"
-    },
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/devcontainers/features/python:1": {},
     "ghcr.io/devcontainers/features/java:1": {
       "version": "17",
       "installMaven": true
     }
   },
-  // Post-attach command to start the npm server
-  "postAttachCommand": "./scripts/start.sh",
-  // Post-create command for setting up permissions and dependencies
-  "postCreateCommand": "./scripts/post-create.sh",
-  // Post-start command for restoring, building, and testing
-  "postStartCommand": "./scripts/post-start.sh",
+  // Post attach command to start the npm server
+  "postAttachCommand": "npm start",
+  // Post create command to set permissions
+  "postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet && sudo chmod +x ./parallel-post-start.sh",
+  // Post start command to restore, build, and install dependencies
+  "postStartCommand": "./parallel-post-start.sh",
   "remoteEnv": {
     "DOTNET_ROOT": "/usr/share/dotnet",
     "MAVEN_HOME": "/usr/share/maven",
-    "PYTHONPATH": "${workspaceFolder}/python",
-    "APP_ENV": "development" // Example environment variable
+    "PYTHONPATH": "${workspaceFolder}/python"
   },
   "customizations": {
     "vscode": {
@@ -39,16 +34,13 @@
         "msjsdiag.debugger-for-chrome",
         "ms-vscode.go",
         "ms-azure-devops.azure-pipelines",
-        "ms-cst-e.vscode-devskim",
-        "ms-azuretools.vscode-docker",
-        "redhat.vscode-yaml"
+        "ms-cst-e.vscode-devskim"
       ]
     }
   },
   "tasks": {
-    "test": "./scripts/test.sh",
-    "build": "./scripts/build.sh",
-    "launch": "./scripts/launch.sh"
-  },
-  "forwardPorts": [3000, 5000]
+    "test": "npm test && pytest && dotnet test && mvn test",
+    "build": "npm install && dotnet build --no-restore && dotnet test --no-build --verbosity normal",
+    "launch": "npm start"
+  }
 }

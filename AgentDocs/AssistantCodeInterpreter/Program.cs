@@ -59,6 +59,14 @@ public static class Program
         blobClient = containerClient.GetBlobClient("PopulationByCountry.csv");
         await blobClient.UploadAsync("PopulationByCountry.csv", true);
 
+        // Parallelize file uploads to Azure Blob Storage
+        var uploadTasks = new List<Task>
+        {
+            blobClient.UploadAsync("PopulationByAdmin1.csv", true),
+            blobClient.UploadAsync("PopulationByCountry.csv", true)
+        };
+        await Task.WhenAll(uploadTasks);
+
         // Azure Cognitive Services integration
         TextAnalyticsClient textAnalyticsClient = new TextAnalyticsClient(new Uri(settings.AzureCognitiveServices.Endpoint), new AzureCliCredential());
 

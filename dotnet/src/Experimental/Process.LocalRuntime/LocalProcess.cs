@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -16,11 +16,7 @@ using Microsoft.VisualStudio.Threading;
 namespace Microsoft.SemanticKernel;
 
 internal delegate bool ProcessEventProxy(ProcessEvent processEvent);
-<<<<<<< HEAD
 internal delegate bool ProcessEventFilter(KernelProcessEvent processEvent);
-=======
-internal delegate bool ProcessEventProxy(ProcessEvent processEvent);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 internal sealed class LocalProcess : LocalStep, IDisposable
 {
@@ -38,11 +34,6 @@ internal sealed class LocalProcess : LocalStep, IDisposable
 
     private readonly ILogger _logger;
 
-<<<<<<< HEAD
-=======
-    private readonly ILogger _logger;
-
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     private JoinableTask? _processTask;
     private CancellationTokenSource? _processCancelSource;
 
@@ -53,12 +44,6 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// <param name="kernel">An instance of <see cref="Kernel"/></param>
     internal LocalProcess(KernelProcess process, Kernel kernel)
         : base(process, kernel)
-<<<<<<< HEAD
-    /// <param name="parentProcessId">Optional. The Id of the parent process if one exists, otherwise null.</param>
-    internal LocalProcess(KernelProcess process, Kernel kernel, string? parentProcessId = null)
-        : base(process, kernel, parentProcessId)
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     {
         Verify.NotNull(process);
         Verify.NotNull(process.Steps);
@@ -98,13 +83,8 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// <param name="kernel">Optional. A <see cref="Kernel"/> to use when executing the process.</param>
     /// <returns>A <see cref="Task"/></returns>
     internal async Task RunOnceAsync(KernelProcessEvent processEvent, Kernel? kernel = null)
-    internal async Task RunOnceAsync(KernelProcessEvent processEvent, Kernel? kernel = null)
     {
-        Verify.NotNull(processEvent);
-        await Task.Yield(); // Ensure that the process has an opportunity to run in a different synchronization context.
         Verify.NotNull(processEvent, nameof(processEvent));
-        Verify.NotNull(processEvent, nameof(processEvent));
-        Verify.NotNullOrWhiteSpace(processEvent.Id, $"{nameof(processEvent)}.{nameof(KernelProcessEvent.Id)}");
         Verify.NotNullOrWhiteSpace(processEvent.Id, $"{nameof(processEvent)}.{nameof(KernelProcessEvent.Id)}");
 
         await Task.Yield(); // Ensure that the process has an opportunity to run in a different synchronization context.
@@ -150,7 +130,6 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// <returns>A <see cref="Task"/></returns>
     internal Task SendMessageAsync(KernelProcessEvent processEvent, Kernel? kernel = null)
     {
-        Verify.NotNull(processEvent);
         Verify.NotNull(processEvent, nameof(processEvent));
         return this._externalEventChannel.Writer.WriteAsync(processEvent).AsTask();
     }
@@ -159,10 +138,6 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     /// Gets the process information.
     /// </summary>
     /// <returns>An instance of <see cref="KernelProcess"/></returns>
-    internal Task<KernelProcess> GetProcessInfoAsync()
-    {
-        return this.ToKernelProcessAsync();
-    }
     internal Task<KernelProcess> GetProcessInfoAsync() => this.ToKernelProcessAsync();
 
     /// <summary>
@@ -180,7 +155,6 @@ internal sealed class LocalProcess : LocalStep, IDisposable
             string errorMessage = "Internal Process Error: The target event id must be specified when sending a message to a step.";
             this.Logger.LogError("{ErrorMessage}", errorMessage);
             throw new KernelException(errorMessage);
-            throw new KernelException("Internal Process Error: The target event id must be specified when sending a message to a step.").Log(this._logger);
         }
 
         string eventId = message.TargetEventId!;
@@ -227,12 +201,8 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     {
                         ParentProcessId = this.Id,
                         EventProxy = this.EventProxy,
-<<<<<<< HEAD
                         LoggerFactory = this.LoggerFactory,
                         EventFilter = this.EventFilter,
-=======
-                        EventProxy = this.EventProxy,
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
                     };
             }
             else if (step is KernelProcessMap mapStep)
@@ -241,19 +211,8 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     new LocalMap(mapStep, this._kernel)
                     {
                         ParentProcessId = this.Id,
-                    };
-<<<<<<< HEAD
                         LoggerFactory = this.LoggerFactory,
                     };
-                var process = new LocalProcess(
-                    process: kernelStep,
-                    kernel: this._kernel,
-                    parentProcessId: this.Id);
-
-                localStep = process;
-=======
-                    };
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             }
             else
             {
@@ -265,18 +224,9 @@ internal sealed class LocalProcess : LocalStep, IDisposable
                     {
                         ParentProcessId = this.Id,
                         EventProxy = this.EventProxy,
-<<<<<<< HEAD
                         LoggerFactory = this.LoggerFactory,
                         EventFilter = this.EventFilter,
                     };
-                localStep = new LocalStep(
-                    stepInfo: step,
-                    kernel: this._kernel,
-                    parentProcessId: this.Id);
-=======
-                        EventProxy = this.EventProxy,
-                    };
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             }
 
             this._steps.Add(localStep);
@@ -455,7 +405,6 @@ internal sealed class LocalProcess : LocalStep, IDisposable
     public void Dispose()
     {
         this._externalEventChannel.Writer.Complete();
-        this._joinableTaskContext.Dispose();
         this._joinableTaskContext.Dispose();
         this._processCancelSource?.Dispose();
     }
