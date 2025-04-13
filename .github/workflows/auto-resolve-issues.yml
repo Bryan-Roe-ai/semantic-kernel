@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2.5.0
+      uses: actions/checkout@v4
 
     - name: Resolve issues
       run: |

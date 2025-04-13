@@ -16,11 +16,11 @@ jobs:
     steps:
     # Check out the repository
     - name: Checkout repository
-      uses: actions/checkout@v3.5.0 # Updated to the latest stable version
+      uses: actions/checkout@v4
 
     # Cache .NET dependencies
     - name: Cache .NET packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
@@ -29,7 +29,7 @@ jobs:
 
     # Set up .NET environment
     - name: Set up .NET
-      uses: actions/setup-dotnet@v3.1.0 # Updated version
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: |
           5.0.x
@@ -37,7 +37,7 @@ jobs:
 
     # Run Microsoft Security DevOps
     - name: Run Microsoft Security DevOps
-      uses: microsoft/security-devops-action@v1.11.0 # Updated to latest version
+      uses: microsoft/security-devops-action@v2
       id: msdo
 
     # Ensure SARIF file exists before uploading
@@ -47,7 +47,7 @@ jobs:
 
     # Upload results to Security tab
     - name: Upload results to Security tab
-      uses: github/codeql-action/upload-sarif@v2.2.0 # Updated version
+      uses: github/codeql-action/upload-sarif@v4
       with:
         sarif_file: ${{ steps.msdo.outputs.sarifFile }}
 
@@ -59,22 +59,22 @@ jobs:
   #       dotnet: [5.0.x, 6.0.x]
   #   steps:
   #   - name: Checkout repository
-  #     uses: actions/checkout@v3.5.0
+  #     uses: actions/checkout@v4
   #   - name: Cache .NET packages
-  #     uses: actions/cache@v3
+  #     uses: actions/cache@v4
   #     with:
   #       path: ~/.nuget/packages
   #       key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
   #       restore-keys: |
   #         ${{ runner.os }}-nuget-
   #   - name: Set up .NET
-  #     uses: actions/setup-dotnet@v3.1.0
+  #     uses: actions/setup-dotnet@v4
   #     with:
   #       dotnet-version: ${{ matrix.dotnet }}
   #   - name: Run Microsoft Security DevOps
-  #     uses: microsoft/security-devops-action@v1.11.0
+  #     uses: microsoft/security-devops-action@v2
   #     id: msdo
   #   - name: Upload results to Security tab
-  #     uses: github/codeql-action/upload-sarif@v2.2.0
+  #     uses: github/codeql-action/upload-sarif@v4
   #     with:
   #       sarif_file: ${{ steps.msdo.outputs.sarifFile }}

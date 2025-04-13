@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Cache files
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.sonar
@@ -40,14 +40,14 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Run Analysis
-        uses: codescan-io/codescan-scanner-action@v1.1.0
+        uses: codescan-io/codescan-scanner-action@v4
         with:
           login: ${{ secrets.CODESCAN_AUTH_TOKEN }}
           organization: ${{ secrets.CODESCAN_ORGANIZATION_KEY }}
           projectKey: ${{ secrets.CODESCAN_PROJECT_KEY }}
 
       - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: codescan.sarif
 

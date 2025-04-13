@@ -14,10 +14,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Cache Node.js dependencies
-      uses: actions/cache@v4.0.2
+      uses: actions/cache@v4
       with:
         # Cache dependencies
         path: |
@@ -31,7 +31,7 @@ jobs:
           ${{ runner.os }}-
 
     - name: Cache Python dependencies
-      uses: actions/cache@v4.0.2
+      uses: actions/cache@v4
       with:
         # Cache dependencies
         path: |

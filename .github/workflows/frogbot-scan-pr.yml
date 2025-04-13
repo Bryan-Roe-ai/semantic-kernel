@@ -27,7 +27,7 @@ jobs:
     steps:
       # Step 1: Checkout the pull request code
       - name: Checkout Pull Request Code
-        uses: actions/checkout@v2.5.0
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
@@ -50,7 +50,7 @@ jobs:
 
       # Step 4: Run Frogbot
       - name: Run Frogbot Security Scan
-        uses: jfrog/frogbot@8fbeca612957ae5f5f0c03a19cb6e59e237026f3  # v2.10.0
+        uses: jfrog/frogbot@v2.10.0
         env:
           # [Mandatory]
           # JFrog platform URL

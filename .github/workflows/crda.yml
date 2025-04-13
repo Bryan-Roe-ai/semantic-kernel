@@ -27,7 +27,7 @@ jobs:
     steps:
       # Step 1: Check out the repository
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Step 2: Validate secrets
       - name: Validate Secrets
@@ -42,7 +42,7 @@ jobs:
         strategy:
           matrix:
             language: [node, python, java]
-        uses: actions/setup-${{ matrix.language }}@v3
+        uses: actions/setup-${{ matrix.language }}@v4
         with:
           node-version: ${{ matrix.language == 'node' && '18' || '' }}
           python-version: ${{ matrix.language == 'python' && '3.11' || '' }}
@@ -50,7 +50,7 @@ jobs:
 
       # Step 4: Install CRDA CLI
       - name: Install CRDA CLI
-        uses: redhat-actions/openshift-tools-installer@v1
+        uses: redhat-actions/openshift-tools-installer@v2
         with:
           source: github
           github_pat: ${{ github.token }}
@@ -59,7 +59,7 @@ jobs:
       # Step 5: Run CRDA scan
       - name: CRDA Scan
         id: scan
-        uses: redhat-actions/crda@v1
+        uses: redhat-actions/crda@v2
         with:
           crda_key: ${{ secrets.CRDA_KEY }}           # Either use crda_key or snyk_token
           snyk_token: ${{ secrets.SNYK_TOKEN }}
@@ -67,7 +67,7 @@ jobs:
 
       # Step 6: Upload SARIF results as an artifact
       - name: Upload SARIF Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: crda-scan-results
           path: results.sarif

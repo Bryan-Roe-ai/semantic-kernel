@@ -109,7 +109,7 @@ jobs:
 
       - name: Azure CLI Login
         if: github.event_name != 'pull_request' && matrix.integration-tests
-        uses: azure/login@v2
+        uses: azure/login@v4
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -154,7 +154,7 @@ jobs:
 
       # Generate test reports and check coverage
       - name: Generate test reports
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.3
+        uses: danielpalme/ReportGenerator-GitHub-Action@v5
         with:
           reports: "./TestResults/Coverage/**/coverage.cobertura.xml"
           targetdir: "./TestResults/Reports"

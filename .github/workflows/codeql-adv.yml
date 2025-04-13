@@ -30,13 +30,13 @@ jobs:
     steps:
     # Checkout the repository with submodules
     - name: Checkout repository
-      uses: actions/checkout@v4.0.0
+      uses: actions/checkout@v4
       with:
         submodules: true
 
     # Cache dependencies based on the language
     - name: Cache dependencies
-      uses: actions/cache@v3.0.0
+      uses: actions/cache@v4
       with:
         path: |
           ~/.cache
@@ -69,7 +69,7 @@ jobs:
 
     # Initialize CodeQL
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
@@ -85,20 +85,20 @@ jobs:
 
     # Perform CodeQL Analysis
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v4
       with:
         category: "/language:${{matrix.language}}"
 
     # Notify the team on failure
     - name: Notify team on failure
       if: failure()
-      uses: slackapi/slack-github-action@v1.23.0
+      uses: slackapi/slack-github-action@v2
       with:
         slack-message: "CodeQL analysis failed for ${{ matrix.language }}"
 
     # Notify the team on success
     - name: Notify team on success
       if: success()
-      uses: slackapi/slack-github-action@v1.23.0
+      uses: slackapi/slack-github-action@v2
       with:
         slack-message: "CodeQL analysis succeeded for ${{ matrix.language }}"

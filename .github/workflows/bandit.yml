@@ -28,7 +28,7 @@ jobs:
 
       # Step 2: Run Bandit Scan
       - name: Run Bandit Scan
-        uses: shundor/python-bandit-scan@v1.1.0
+        uses: shundor/python-bandit-scan@v2
         with:
           path: ./src  # Scan only the main source directory
           level: HIGH  # Report only high-severity issues
@@ -46,7 +46,7 @@ jobs:
 
       # Step 4: Upload results to GitHub Security tab
       - name: Upload Bandit scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: bandit-results.sarif
 
