@@ -27,7 +27,7 @@ jobs:
     steps:
       # Step 1: Check out the repository
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       # Step 2: Validate secrets
       - name: Validate Secrets
@@ -67,7 +67,7 @@ jobs:
 
       # Step 6: Upload SARIF results as an artifact
       - name: Upload SARIF Results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: crda-scan-results
           path: results.sarif

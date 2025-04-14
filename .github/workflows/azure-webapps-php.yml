@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v4
@@ -57,7 +57,7 @@ jobs:
           echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Set up dependency caching for faster installs
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         if: steps.check_files.outputs.files_exists == 'true'
         with:
           path: ${{ steps.composer-cache.outputs.dir }}

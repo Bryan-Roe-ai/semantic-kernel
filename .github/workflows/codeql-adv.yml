@@ -30,13 +30,13 @@ jobs:
     steps:
     # Checkout the repository with submodules
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
       with:
         submodules: true
 
     # Cache dependencies based on the language
     - name: Cache dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v3
       with:
         path: |
           ~/.cache
