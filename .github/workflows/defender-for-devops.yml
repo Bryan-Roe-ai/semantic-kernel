@@ -11,45 +11,44 @@ on:
 
 jobs:
   MSDO:
-    runs-on: windows-latest # Currently, only 'windows-latest' is supported
-
+    runs-on: windows-latest # 'windows-latest' is currently supported
     steps:
-    # Check out the repository
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      # Step 1: Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    # Cache .NET dependencies
-    - name: Cache .NET packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+      # Step 2: Cache .NET dependencies
+      - name: Cache .NET packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
-    # Set up .NET environment
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: |
-          5.0.x
-          6.0.x
+      # Step 3: Set up .NET environment
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            5.0.x
+            6.0.x
 
-    # Run Microsoft Security DevOps
-    - name: Run Microsoft Security DevOps
-      uses: microsoft/security-devops-action@v2
-      id: msdo
+      # Step 4: Run Microsoft Security DevOps
+      - name: Run Microsoft Security DevOps
+        uses: microsoft/security-devops-action@v2
+        id: msdo
 
-    # Ensure SARIF file exists before uploading
-    - name: Check SARIF file existence
-      if: ${{ steps.msdo.outputs.sarifFile != '' && steps.msdo.outputs.sarifFile != null }}
-      run: echo "SARIF file generated successfully."
+      # Step 5: Ensure SARIF file exists before uploading
+      - name: Check SARIF file existence
+        if: ${{ steps.msdo.outputs.sarifFile != '' && steps.msdo.outputs.sarifFile != null }}
+        run: echo "SARIF file generated successfully."
 
-    # Upload results to Security tab
-    - name: Upload results to Security tab
-      uses: github/codeql-action/upload-sarif@v4
-      with:
-        sarif_file: ${{ steps.msdo.outputs.sarifFile }}
+      # Step 6: Upload results to Security tab
+      - name: Upload results to Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ steps.msdo.outputs.sarifFile }}
 
   # Optional: Add a job to test on Ubuntu if supported in the future
   # MSDO_Ubuntu:
