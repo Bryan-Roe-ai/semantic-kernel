@@ -10,7 +10,7 @@ on:
       - main
       - 'release/*'
   schedule:
-    - cron: '0 0 * * *' # Daily at midnight
+    - cron: '0 0 * * 0' # Weekly on Sundays
 
 jobs:
   analyze:
@@ -23,7 +23,7 @@ jobs:
       contents: read
 
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         include:
           - language: c-cpp
@@ -47,13 +47,13 @@ jobs:
             runs-on: 'macos-latest'
 
     steps:
-    # Checkout the repository to fetch the latest code
+    # Checkout the repository
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v3.0.2
 
     # Cache dependencies for Maven
     - name: Cache Maven dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v3.0.11
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -62,7 +62,7 @@ jobs:
 
     # Cache npm dependencies
     - name: Cache npm dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v3.0.11
       with:
         path: ~/.npm
         key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -71,20 +71,38 @@ jobs:
 
     # Cache pip dependencies
     - name: Cache pip dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v3.0.11
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-pip-
 
+    # Cache NuGet dependencies
+    - name: Cache NuGet packages
+      uses: actions/cache@v3.0.11
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    # Cache Gradle dependencies
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3.0.11
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
     # Initialize CodeQL
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v4
+      uses: github/codeql-action/init@v4.0.2
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
-        queries: +security-extended,security-and-quality,+performance-experimental
+        queries: ./codeql-queries,+security-extended,security-and-quality
 
     # Custom build commands for manual build modes
     - if: matrix.build-mode == 'manual'
@@ -93,16 +111,25 @@ jobs:
           jupyter nbconvert --execute --inplace "*.ipynb"
         elif [ "${{ matrix.language }}" == "html" ]; then
           npx html-validator-cli --file=**/*.html
+        elif [ "${{ matrix.language }}" == "python" ]; then
+          python -m unittest discover
         fi
 
     # Perform CodeQL Analysis
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
+      uses: github/codeql-action/analyze@v4.0.2
       with:
         category: "/language:${{ matrix.language }}"
 
+    # Upload CodeQL results
+    - name: Upload CodeQL results
+      uses: actions/upload-artifact@v3.0.2
+      with:
+        name: codeql-results-${{ matrix.language }}
+        path: ./results/${{ matrix.language }}
+
     # Notify on failure
-    - name: Notify on Slack
+    - name: Notify on Slack (Failure)
       if: failure()
       uses: rtCamp/action-slack-notify@v2
       env:
@@ -110,3 +137,13 @@ jobs:
         SLACK_USERNAME: 'CodeQL Bot'
         SLACK_ICON_EMOJI: ':robot:'
         SLACK_CHANNEL: '#alerts'
+
+    # Notify on success
+    - name: Notify on Slack (Success)
+      if: success()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_USERNAME: 'CodeQL Bot'
+        SLACK_ICON_EMOJI: ':white_check_mark:'
+        SLACK_CHANNEL: '#success-alerts'
