@@ -3,7 +3,13 @@ param (
     [double]$CoverageThreshold
 )
 
-$jsonContent = Get-Content $JsonReportPath -Raw | ConvertFrom-Json
+try {
+    $jsonContent = Get-Content $JsonReportPath -Raw | ConvertFrom-Json
+} catch {
+    Write-Error "Failed to read or parse JSON report: $_"
+    exit 1
+}
+
 $coverageBelowThreshold = $false
 
 $nonExperimentalAssemblies = [System.Collections.Generic.HashSet[string]]::new()
@@ -29,14 +35,23 @@ function Get-FormattedValue {
         [float]$Coverage,
         [bool]$UseIcon = $false
     )
-    $formattedNumber = "{0:N1}" -f $Coverage
-    $icon = if (-not $UseIcon) { "" } elseif ($Coverage -ge $CoverageThreshold) { '✅' } else { '❌' }
-    
-    return "$formattedNumber% $icon"
+    try {
+        $formattedNumber = "{0:N1}" -f $Coverage
+        $icon = if (-not $UseIcon) { "" } elseif ($Coverage -ge $CoverageThreshold) { '✅' } else { '❌' }
+        return "$formattedNumber% $icon"
+    } catch {
+        Write-Error "Failed to format coverage value: $_"
+        return "N/A"
+    }
 }
 
-$lineCoverage = $jsonContent.summary.linecoverage
-$branchCoverage = $jsonContent.summary.branchcoverage
+try {
+    $lineCoverage = $jsonContent.summary.linecoverage
+    $branchCoverage = $jsonContent.summary.branchcoverage
+} catch {
+    Write-Error "Failed to extract coverage summary: $_"
+    exit 1
+}
 
 $totalTableData = [PSCustomObject]@{
     'Metric'          = 'Total Coverage'
@@ -49,20 +64,24 @@ $totalTableData | Format-Table -AutoSize
 $assemblyTableData = @()
 
 foreach ($assembly in $jsonContent.coverage.assemblies) {
-    $assemblyName = $assembly.name
-    $assemblyLineCoverage = $assembly.coverage
-    $assemblyBranchCoverage = $assembly.branchcoverage
+    try {
+        $assemblyName = $assembly.name
+        $assemblyLineCoverage = $assembly.coverage
+        $assemblyBranchCoverage = $assembly.branchcoverage
 
-    $isNonExperimentalAssembly = $nonExperimentalAssemblies -contains $assemblyName
+        $isNonExperimentalAssembly = $nonExperimentalAssemblies -contains $assemblyName
 
-    if ($isNonExperimentalAssembly -and ($assemblyLineCoverage -lt $CoverageThreshold -or $assemblyBranchCoverage -lt $CoverageThreshold)) {
-        $coverageBelowThreshold = $true
-    }
+        if ($isNonExperimentalAssembly -and ($assemblyLineCoverage -lt $CoverageThreshold -or $assemblyBranchCoverage -lt $CoverageThreshold)) {
+            $coverageBelowThreshold = $true
+        }
 
-    $assemblyTableData += [PSCustomObject]@{
-        'Assembly Name' = $assemblyName
-        'Line'          = Get-FormattedValue -Coverage $assemblyLineCoverage -UseIcon $isNonExperimentalAssembly
-        'Branch'        = Get-FormattedValue -Coverage $assemblyBranchCoverage -UseIcon $isNonExperimentalAssembly
+        $assemblyTableData += [PSCustomObject]@{
+            'Assembly Name' = $assemblyName
+            'Line'          = Get-FormattedValue -Coverage $assemblyLineCoverage -UseIcon $isNonExperimentalAssembly
+            'Branch'        = Get-FormattedValue -Coverage $assemblyBranchCoverage -UseIcon $isNonExperimentalAssembly
+        }
+    } catch {
+        Write-Error "Failed to process assembly $assemblyName: $_"
     }
 }
 

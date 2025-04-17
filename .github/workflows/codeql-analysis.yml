@@ -27,6 +27,7 @@ jobs:
       # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
+        continue-on-error: false
 
       # Step 2: Cache dependencies for Maven, Python, and npm
       - name: Cache Maven dependencies
@@ -36,6 +37,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}-v2 # Added versioning for freshness
           restore-keys: |
             ${{ runner.os }}-maven-
+        continue-on-error: false
 
       - name: Cache Python dependencies
         uses: actions/cache@v3
@@ -44,6 +46,7 @@ jobs:
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-v2
           restore-keys: |
             ${{ runner.os }}-pip-
+        continue-on-error: false
 
       - name: Cache npm dependencies
         uses: actions/cache@v3
@@ -52,6 +55,7 @@ jobs:
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}-v2
           restore-keys: |
             ${{ runner.os }}-npm-
+        continue-on-error: false
 
       # Step 3: Initialize CodeQL
       - name: Initialize CodeQL
@@ -59,11 +63,13 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           queries: +security-extended,security-and-quality,codeql-queries/ssrf-detection.ql
+        continue-on-error: false
 
       # Step 4: Build and compile code (language-specific)
       - name: Autobuild
         if: ${{ matrix.language != 'java' }}
         uses: github/codeql-action/autobuild@v4
+        continue-on-error: false
 
       - name: Setup JDK
         uses: actions/setup-java@v4
@@ -72,16 +78,19 @@ jobs:
           java-version: 17 # Use LTS version for stability
           distribution: microsoft
           cache: maven
+        continue-on-error: false
 
       - name: Build Java
         if: ${{ matrix.language == 'java' }}
         run: ./mvnw -B -DskipTests -Pcompile-jdk17 clean install --file pom.xml
         working-directory: java
+        continue-on-error: false
 
       - name: Run Java Tests # Added Java tests
         if: ${{ matrix.language == 'java' }}
         run: ./mvnw test --file pom.xml
         working-directory: java
+        continue-on-error: false
 
       - name: Run Python Linters # Added Python linters and type checks
         if: ${{ matrix.language == 'python' }}
@@ -89,18 +98,21 @@ jobs:
           pip install mypy flake8
           mypy .
           flake8 .
+        continue-on-error: false
 
       # Step 5: Perform CodeQL Analysis
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
+        continue-on-error: false
 
       # Step 6: Run npm audit and fix
       - name: Run npm audit
         run: |
           npm audit || echo "NPM Audit detected vulnerabilities"
           npm audit fix --force
+        continue-on-error: false
 
       # Step 7: Archive CodeQL Results
       - name: Upload CodeQL Results
@@ -108,9 +120,11 @@ jobs:
         with:
           name: codeql-results
           path: codeql-results/
+        continue-on-error: false
 
       # Step 8: Trigger Ensure Success Workflow (conditional on success)
       - name: Trigger Ensure Success Workflow
         if: ${{ success() }}
         run: |
           gh workflow run ensure-success.yml
+        continue-on-error: false

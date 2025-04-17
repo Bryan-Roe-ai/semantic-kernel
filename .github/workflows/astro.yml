@@ -37,6 +37,7 @@ jobs:
 
       - name: Run Tests
         run: npm test
+        continue-on-error: false
 
   build:
     name: Build
@@ -87,11 +88,13 @@ jobs:
             --site "${{ steps.pages.outputs.origin }}" \
             --base "${{ steps.pages.outputs.base_path }}"
         working-directory: ${{ env.BUILD_PATH }}
+        continue-on-error: false
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.BUILD_PATH }}/dist
+        continue-on-error: false
 
   deploy:
     name: Deploy
@@ -104,3 +107,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        continue-on-error: false

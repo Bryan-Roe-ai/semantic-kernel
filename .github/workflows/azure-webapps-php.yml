@@ -43,18 +43,21 @@ jobs:
         uses: shivammathur/setup-php@v4
         with:
           php-version: ${{ env.PHP_VERSION }}
+        continue-on-error: false
 
       - name: Check if composer.json exists
         id: check_files
         uses: andstor/file-existence-action@v4
         with:
           files: 'composer.json'
+        continue-on-error: false
 
       - name: Get Composer Cache Directory
         id: composer-cache
         if: steps.check_files.outputs.files_exists == 'true'
         run: |
           echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+        continue-on-error: false
 
       - name: Set up dependency caching for faster installs
         uses: actions/cache@v3
@@ -64,22 +67,26 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
+        continue-on-error: false
 
       - name: Run composer install if composer.json exists
         if: steps.check_files.outputs.files_exists == 'true'
         run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
+        continue-on-error: false
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: php-app
           path: .
+        continue-on-error: false
 
       - name: Set up Docker for containerized deployment
         run: |
           echo "Setting up Docker..."
           docker build -t php-app .
           docker run -d -p 80:80 php-app
+        continue-on-error: false
 
       - name: Verify installations of dependencies
         run: |
@@ -88,6 +95,7 @@ jobs:
           npm list
           pip list
           dotnet --list-sdks
+        continue-on-error: false
 
   deploy:
     permissions:
@@ -103,6 +111,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: php-app
+        continue-on-error: false
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -111,9 +120,11 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: .
+        continue-on-error: false
 
       - name: Run the API server
         run: |
           echo "Running the API server..."
           # Add your commands to run the API server here
           npm start
+        continue-on-error: false

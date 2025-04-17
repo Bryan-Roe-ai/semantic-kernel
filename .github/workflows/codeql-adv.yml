@@ -33,6 +33,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: true
+      continue-on-error: false
 
     # Cache dependencies based on the language
     - name: Cache dependencies
@@ -49,6 +50,7 @@ jobs:
         key: ${{ runner.os }}-build-${{ matrix.language }}-${{ hashFiles('**/package-lock.json', '**/pom.xml', '**/build.gradle', '**/Cargo.lock', '**/requirements.lock') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ matrix.language }}-
+      continue-on-error: false
 
     # Set up dependencies based on the language
     - name: Set up dependencies
@@ -66,6 +68,7 @@ jobs:
         else
           echo "Unsupported language: ${{ matrix.language }}"
           exit 1
+      continue-on-error: false
 
     # Initialize CodeQL
     - name: Initialize CodeQL
@@ -73,6 +76,7 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
+      continue-on-error: false
 
     # Manual build mode placeholder (optional)
     - if: matrix.build-mode == 'manual'
@@ -82,12 +86,14 @@ jobs:
         # Example:
         # make bootstrap
         # make release
+      continue-on-error: false
 
     # Perform CodeQL Analysis
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
       with:
         category: "/language:${{matrix.language}}"
+      continue-on-error: false
 
     # Notify the team on failure
     - name: Notify team on failure
@@ -95,6 +101,7 @@ jobs:
       uses: slackapi/slack-github-action@v2
       with:
         slack-message: "CodeQL analysis failed for ${{ matrix.language }}"
+      continue-on-error: false
 
     # Notify the team on success
     - name: Notify team on success
@@ -102,3 +109,4 @@ jobs:
       uses: slackapi/slack-github-action@v2
       with:
         slack-message: "CodeQL analysis succeeded for ${{ matrix.language }}"
+      continue-on-error: false

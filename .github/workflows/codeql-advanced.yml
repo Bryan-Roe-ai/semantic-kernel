@@ -35,11 +35,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        continue-on-error: false
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '6.x'
+        continue-on-error: false
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
@@ -47,6 +49,7 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
           queries: +security-extended,-and-quality
+        continue-on-error: false
 
       - name: Build code
         if: matrix.build-mode == 'manual'
@@ -55,12 +58,10 @@ jobs:
           echo 'Building code for analysis...'
           bootstrap
           release
+        continue-on-error: false
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           category: language:${{ matrix.language }}
-    -: Perform CodeQL Analysis
-      uses github/codeql-action/analyze4
- with:
-        category:language:${{matrix.language}}"
+        continue-on-error: false
