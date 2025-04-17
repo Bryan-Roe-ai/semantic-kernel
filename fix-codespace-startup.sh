@@ -1,20 +1,5 @@
 #!/bin/bash
 
-# Update package lists
-apt-get update
-
-# Install missing dependencies
-apt-get install -y --no-install-recommends \
-    curl \
-    gnupg \
-    gettext \
-    python3-pip \
-    python3-dev \
-    libpq-dev
-
-# Fix common errors
-# Add any additional commands to fix specific errors here
-
 # Ensure MongoDB is running
 sudo service mongod start
 
@@ -36,4 +21,4 @@ for service in "${services[@]}"; do
   fi
 done
 
-echo "Errors fixed successfully."
+echo "All necessary services are running."

@@ -1,24 +1,25 @@
 {
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-"features": {
-  "ghcr.io/devcontainers/features/git:1": {
-    "version": "2.34.1"
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "2.34.1"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "16"
+    }
   },
-  "ghcr.io/devcontainers/features/github-cli:1": {},
-  "ghcr.io/devcontainers/features/node:1": {
-    "version": "16"
-  }
-},
-"prebuild": "npm install && dotnet restore && mvn dependency:resolve || echo 'Prebuild failed'",
-"postCreateCommand": "sudo chmod -R u+rwX /usr/share/dotnet && sudo chmod +x ./parallel-post-start.sh || echo 'Post-create command failed'",
-"remoteEnv": {
-  "DOTNET_ROOT": "${containerWorkspaceFolder}/dotnet",
-  "PYTHONPATH": "${containerWorkspaceFolder}/python"
-},
-"forwardPorts": [
-  3000, /* Web server */
-  5000  /* API server */
-]
+  "prebuild": "npm install && dotnet restore && mvn dependency:resolve && ./fix-codespace-startup.sh || echo 'Prebuild failed'",
+  "postCreateCommand": "sudo chmod -R u+rwX /usr/share/dotnet && sudo chmod +x ./parallel-post-start.sh || echo 'Post-create command failed'",
+  "postStartCommand": "./fix-codespace-startup.sh || echo 'Post-start command failed'",
+  "remoteEnv": {
+    "DOTNET_ROOT": "${containerWorkspaceFolder}/dotnet",
+    "PYTHONPATH": "${containerWorkspaceFolder}/python"
+  },
+  "forwardPorts": [
+    3000, /* Web server */
+    5000  /* API server */
+  ],
   "customizations": {
     "vscode": {
       "extensions": [

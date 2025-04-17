@@ -35,9 +35,17 @@ jobs:
       - run: echo "Deploying .NET project"
       - run: dotnet publish --no-restore
 
+  verify-codespace-startup:
+    docker:
+      - image: cimg/node:16.8.0
+    steps:
+      - checkout
+      - run: ./fix-codespace-startup.sh
+
 workflows:
   test-flow:
     jobs:
       - test
       - build
       - deploy
+      - verify-codespace-startup
