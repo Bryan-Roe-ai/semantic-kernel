@@ -29,7 +29,7 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      # Step 2: Validate secrets
+      # Step 2: Validate Secrets
       - name: Validate Secrets
         run: |
           if [ -z "${{ secrets.CRDA_KEY }}" ] && [ -z "${{ secrets.SNYK_TOKEN }}" ]; then
@@ -37,23 +37,28 @@ jobs:
             exit 1
           fi
 
-      # Step 3: Set up programming environments (matrix strategy for parallel installation)
-      - name: Set up programming environments
-        strategy:
-          matrix:
-            language: [node, python, java]
-        uses: actions/setup-${{ matrix.language }}@v4
+      # Step 3: Set up programming environments
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.language == 'node' && '18' || '' }}
-          python-version: ${{ matrix.language == 'python' && '3.11' || '' }}
-          java-version: ${{ matrix.language == 'java' && '11' || '' }}
+          node-version: 18
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
 
       # Step 4: Install CRDA CLI
       - name: Install CRDA CLI
         uses: redhat-actions/openshift-tools-installer@v2
         with:
           source: github
-          github_pat: ${{ github.token }}
+          github_pat: ${{ secrets.GITHUB_TOKEN }}
           crda: "latest"
 
       # Step 5: Run CRDA scan
@@ -71,3 +76,28 @@ jobs:
         with:
           name: crda-scan-results
           path: results.sarif
+
+      # Step 7: Cache dependencies (Optional)
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Cache Python modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-python-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-python-
+
+      - name: Cache Java dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-java-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-java-
