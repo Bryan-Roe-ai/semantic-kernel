@@ -11,12 +11,14 @@
       "installMaven": true
     }
   },
+  // Prebuild script to cache dependencies
+  "prebuild": "npm install && dotnet restore && mvn dependency:resolve",
   // Post attach command to start the npm server
   "postAttachCommand": "npm start",
   // Post create command to set permissions
   "postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet && sudo chmod +x ./parallel-post-start.sh",
   // Post start command to restore, build, and install dependencies
-  "postStartCommand": "./parallel-post-start.sh",
+  "postStartCommand": "./parallel-post-start.sh && npm run prebuild",
   "remoteEnv": {
     "DOTNET_ROOT": "/usr/share/dotnet",
     "MAVEN_HOME": "/usr/share/maven",
