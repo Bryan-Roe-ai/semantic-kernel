@@ -9,8 +9,8 @@ on:
     - cron: '0 0 * * 1' # Weekly at midnight UTC on Mondays
 
 permissions:
-  security-events: write
   contents: read
+  security-events: write
 
 jobs:
   analyze:
@@ -26,6 +26,12 @@ jobs:
           build-mode: autobuild
         - language: jupyter-notebook
           build-mode: autobuild
+        - language: java
+          build-mode: autobuild
+        - language: cpp
+          build-mode: autobuild
+        - language: html
+          build-mode: autobuild
 
     steps:
     # Checkout the repository with submodules
@@ -33,7 +39,6 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: true
-      continue-on-error: false
 
     # Cache dependencies based on the language
     - name: Cache dependencies
@@ -47,28 +52,29 @@ jobs:
           ~/.cargo
           ~/.nuget/packages
           .venv
-        key: ${{ runner.os }}-build-${{ matrix.language }}-${{ hashFiles('**/package-lock.json', '**/pom.xml', '**/build.gradle', '**/Cargo.lock', '**/requirements.lock') }}
+        key: ${{ runner.os }}-build-${{ matrix.language }}-${{ hashFiles('**/package-lock.json', '**/pom.xml', '**/build.gradle', '**/*.csproj', '**/Cargo.lock', '**/requirements.txt') }}
         restore-keys: |
           ${{ runner.os }}-build-${{ matrix.language }}-
-      continue-on-error: false
 
     # Set up dependencies based on the language
     - name: Set up dependencies
       run: |
-        if [ "${{ matrix.language }}" == "javascript-typescript" ]; then
-          npm install
+        if [ "${{ matrix.language }}" == "csharp" ]; then
+          dotnet restore
         elif [ "${{ matrix.language }}" == "python" ]; then
           pip install -r requirements.txt
-        elif [ "${{ matrix.language }}" == "csharp" ]; then
-          dotnet restore
-        elif [ "${{ matrix.language }}" == "java-kotlin" ]; then
+        elif [ "${{ matrix.language }}" == "jupyter-notebook" ]; then
+          pip install -r requirements.txt
+          python -m ipykernel install --user
+        elif [ "${{ matrix.language }}" == "java" ]; then
           ./gradlew build
-        elif [ "${{ matrix.language }}" == "other" ]; then
-          echo "No dependencies to set up for 'other' language."
+        elif [ "${{ matrix.language }}" == "cpp" ]; then
+          make
+        elif [ "${{ matrix.language }}" == "html" ]; then
+          echo "No dependencies to set up for HTML."
         else
           echo "Unsupported language: ${{ matrix.language }}"
           exit 1
-      continue-on-error: false
 
     # Initialize CodeQL
     - name: Initialize CodeQL
@@ -76,37 +82,41 @@ jobs:
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
-      continue-on-error: false
-
-    # Manual build mode placeholder (optional)
-    - if: matrix.build-mode == 'manual'
-      shell: bash
-      run: |
-        echo "Insert manual build commands here."
-        # Example:
-        # make bootstrap
-        # make release
-      continue-on-error: false
 
     # Perform CodeQL Analysis
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
       with:
         category: "/language:${{matrix.language}}"
-      continue-on-error: false
+
+    # Debugging Information on Failure
+    - name: Debugging Information
+      if: failure()
+      run: |
+        echo "Runner OS: ${{ runner.os }}"
+        echo "Language: ${{ matrix.language }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Workflow URL: ${{ github.run_url }}"
 
     # Notify the team on failure
     - name: Notify team on failure
       if: failure()
       uses: slackapi/slack-github-action@v2
       with:
-        slack-message: "CodeQL analysis failed for ${{ matrix.language }}"
-      continue-on-error: false
+        slack-message: |
+          CodeQL analysis failed for ${{ matrix.language }}.
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Workflow URL: ${{ github.run_url }}
 
     # Notify the team on success
     - name: Notify team on success
       if: success()
       uses: slackapi/slack-github-action@v2
       with:
-        slack-message: "CodeQL analysis succeeded for ${{ matrix.language }}"
-      continue-on-error: false
+        slack-message: |
+          CodeQL analysis succeeded for ${{ matrix.language }}.
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Workflow URL: ${{ github.run_url }}
