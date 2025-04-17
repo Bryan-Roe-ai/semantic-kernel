@@ -12,10 +12,11 @@ permissions:
   id-token: write # Token permissions for deployment
 
 concurrency:
-  group: "pages-deployment-${{ github.ref }}" # Dynamic group name for environment-specific deployments
-  cancel-in-progress: false # Allow production deployments to complete
+  group: "pages-deployment-${{ github.ref }}" 
+  cancel-in-progress: true # Prevent overlapping deployments
 
 env:
+  NODE_VERSION: "20.x"
   BUILD_PATH: "." # Default value; adjust if using subfolders
 
 jobs:
@@ -29,15 +30,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "^20.0.0" # Use a version range for compatibility
+          node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
 
       - name: Install Dependencies
         run: npm ci
 
+      - name: Lint Code
+        run: npm run lint # Add linting step
+
       - name: Run Tests
         run: npm test
-        continue-on-error: false
 
   build:
     name: Build
@@ -55,13 +58,11 @@ jobs:
             echo "command=install" >> $GITHUB_OUTPUT
             echo "runner=yarn" >> $GITHUB_OUTPUT
             echo "lockfile=yarn.lock" >> $GITHUB_OUTPUT
-            exit 0
           elif [ -f "${{ github.workspace }}/package.json" ]; then
             echo "manager=npm" >> $GITHUB_OUTPUT
             echo "command=ci" >> $GITHUB_OUTPUT
             echo "runner=npx --no-install" >> $GITHUB_OUTPUT
             echo "lockfile=package-lock.json" >> $GITHUB_OUTPUT
-            exit 0
           else
             echo "::error:: No package manager detected. Ensure the repository contains a valid package.json or yarn.lock file."
             exit 1
@@ -70,7 +71,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "^20.0.0"
+          node-version: ${{ env.NODE_VERSION }}
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ env.BUILD_PATH }}/${{ steps.detect-package-manager.outputs.lockfile }}
 
@@ -88,13 +89,11 @@ jobs:
             --site "${{ steps.pages.outputs.origin }}" \
             --base "${{ steps.pages.outputs.base_path }}"
         working-directory: ${{ env.BUILD_PATH }}
-        continue-on-error: false
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ${{ env.BUILD_PATH }}/dist
-        continue-on-error: false
 
   deploy:
     name: Deploy
@@ -105,6 +104,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
-        continue-on-error: false
