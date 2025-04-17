@@ -49,3 +49,23 @@ jobs:
 
       - name: Fix errors within the docker container
         run: ./fix-errors.sh
+
+      - name: Set up Docker for containerized deployment
+        run: |
+          echo "Setting up Docker..."
+          docker build -t trivy-app .
+          docker run -d -p 80:80 trivy-app
+
+      - name: Verify installations of dependencies
+        run: |
+          echo "Verifying installations of dependencies..."
+          # Add your verification commands here
+          npm list
+          pip list
+          dotnet --list-sdks
+
+      - name: Run the API server
+        run: |
+          echo "Running the API server..."
+          # Add your commands to run the API server here
+          npm start

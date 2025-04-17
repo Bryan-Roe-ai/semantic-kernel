@@ -113,3 +113,20 @@ jobs:
       with:
         name: MSIX Package
         path: ${{ env.Wap_Project_Directory }}\AppPackages
+
+    - name: Set up Docker
+      run: |
+        echo "Setting up Docker..."
+        docker --version
+
+    - name: Verify installations of dependencies
+      run: |
+        echo "Verifying installations of dependencies..."
+        npm list
+        pip list
+        dotnet --list-sdks
+
+    - name: Run the API server
+      run: |
+        echo "Running the API server..."
+        npm start

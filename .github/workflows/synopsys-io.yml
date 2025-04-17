@@ -27,6 +27,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to GitHub container registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+
+    - name: Lowercase the repo name and username
+      run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
     - name: Synopsys Intelligent Security Scan
       id: prescription
       uses: synopsys-sig/intelligent-security-scan@v1.6.1
@@ -68,6 +81,20 @@ jobs:
                 --polaris.project.name={{PROJECT_NAME}} --polaris.url=${{secrets.POLARIS_SERVER_URL}} --polaris.token=${{secrets.POLARIS_ACCESS_TOKEN}}
                 --blackduck.project.name={{PROJECT_NAME}}:{{PROJECT_VERSION}} --blackduck.url=${{secrets.BLACKDUCK_URL}} --blackduck.api.token=${{secrets.BLACKDUCK_TOKEN}}
         stage: "WORKFLOW"
+
+    - name: Verify installations of dependencies
+      run: |
+        echo "Verifying installations of dependencies..."
+        # Add your verification commands here
+        npm list
+        pip list
+        dotnet --list-sdks
+
+    - name: Run the API server
+      run: |
+        echo "Running the API server..."
+        # Add your commands to run the API server here
+        npm start
 
     - name: Upload SARIF file
       if: ${{steps.prescription.outputs.sastScan == 'true' }}

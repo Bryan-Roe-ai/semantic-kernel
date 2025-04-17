@@ -35,6 +35,14 @@ jobs:
     - name: Fix errors within the docker container
       run: ./fix-errors.sh
 
+    - name: Verify installations of dependencies
+      run: |
+        echo "Verifying installations of dependencies..."
+        # Add your verification commands here
+        npm list
+        pip list
+        dotnet --list-sdks
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
@@ -49,6 +57,12 @@ jobs:
 
     - name: Fix errors within the docker container
       run: ./fix-errors.sh
+
+    - name: Run the API server
+      run: |
+        echo "Running the API server..."
+        # Add your commands to run the API server here
+        npm start
 
   monitor:
     runs-on: ubuntu-latest
