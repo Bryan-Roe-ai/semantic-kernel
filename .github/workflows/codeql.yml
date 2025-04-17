@@ -2,19 +2,23 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
+      - 'release/*'
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
+      - 'release/*'
   schedule:
-    - cron: '0 0 * * *'  # Daily at midnight
+    - cron: '0 0 * * *' # Daily at midnight
 
 jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    runs-on: ${{ matrix.language == 'swift' && 'macos-latest' || 'ubuntu-latest' }}
     permissions:
       security-events: write
-      packages: read 
+      packages: read
       actions: read
       contents: read
 
@@ -22,61 +26,87 @@ jobs:
       fail-fast: false
       matrix:
         include:
-        - language: c-cpp
-          build-mode: autobuild
-        - language: csharp
-          build-mode: autobuild
-        - language: java-kotlin
-          build-mode: autobuild
-        - language: javascript-typescript
-          build-mode: autobuild
-        - language: python
-          build-mode: autobuild
-        - language: ruby
-          build-mode: autobuild
-        # Add missing languages
-        - language: jupyter-notebook
-          build-mode: manual
-        - language: html
-          build-mode: manual
+          - language: c-cpp
+            build-mode: autobuild
+          - language: csharp
+            build-mode: autobuild
+          - language: java
+            build-mode: autobuild
+          - language: javascript-typescript
+            build-mode: autobuild
+          - language: python
+            build-mode: autobuild
+          - language: ruby
+            build-mode: autobuild
+          - language: jupyter-notebook
+            build-mode: manual
+          - language: html
+            build-mode: manual
+        exclude:
+          - language: jupyter-notebook
+            runs-on: 'macos-latest'
 
     steps:
+    # Checkout the repository to fetch the latest code
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Cache dependencies
+    # Cache dependencies for Maven
+    - name: Cache Maven dependencies
       uses: actions/cache@v3
       with:
-        path: ~/.m2/repository  # Example for Maven
+        path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
 
+    # Cache npm dependencies
+    - name: Cache npm dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
+
+    # Cache pip dependencies
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    # Initialize CodeQL
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
         build-mode: ${{ matrix.build-mode }}
-        queries: +security-extended,security-and-quality
+        queries: +security-extended,security-and-quality,+performance-experimental
 
+    # Custom build commands for manual build modes
     - if: matrix.build-mode == 'manual'
       run: |
-        # Add your custom build commands here
-        make build
+        if [ "${{ matrix.language }}" == "jupyter-notebook" ]; then
+          jupyter nbconvert --execute --inplace "*.ipynb"
+        elif [ "${{ matrix.language }}" == "html" ]; then
+          npx html-validator-cli --file=**/*.html
+        fi
 
+    # Perform CodeQL Analysis
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4
       with:
-        category: "/language:${{matrix.language}}"
+        category: "/language:${{ matrix.language }}"
 
-    - name: Notify on failure
+    # Notify on failure
+    - name: Notify on Slack
       if: failure()
-      uses: actions/github-script@v6
-      with:
-        script: |
-          github.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: 'CodeQL analysis failed. Please review the logs and fix the issues.'
-          })
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_USERNAME: 'CodeQL Bot'
+        SLACK_ICON_EMOJI: ':robot:'
+        SLACK_CHANNEL: '#alerts'
