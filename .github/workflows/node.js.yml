@@ -14,22 +14,23 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        os: [ubuntu-latest, macos-latest, windows-latest] # Test on multiple OS
+        node-version: [18.x, 20.x, 22.x] # Supported Node.js versions
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4 # Pin action version
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: package-lock.json # Improve cache efficiency
+        cache-dependency-path: |
+          package-lock.json
+          npm-shrinkwrap.json # Ensure cache efficiency
 
     - name: Install dependencies
       run: npm ci
@@ -55,8 +56,20 @@ jobs:
         path: dist/
 
     - name: Report test coverage
-      run: npx codecov -t ${{ secrets.CODECOV_TOKEN }}
+      run: |
+        if [ -n "${{ secrets.CODECOV_TOKEN }}" ]; then
+          npx codecov -t ${{ secrets.CODECOV_TOKEN }}
+        else
+          echo "Codecov token not found. Skipping coverage report."
+        fi
       shell: bash
+
+    - name: Notify success
+      if: success()
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        slack-message: "Build succeeded for ${{ github.repository }} on branch ${{ github.ref_name }}."
+        slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
 
     - name: Notify failure
       if: failure()
@@ -64,3 +77,7 @@ jobs:
       with:
         slack-message: "Build failed for ${{ github.repository }} on branch ${{ github.ref_name }}."
         slack-webhook: ${{ secrets.SLACK_WEBHOOK }}
+
+    - name: Cleanup
+      run: rm -rf ./temp
+      shell: bash
