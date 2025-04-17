@@ -18,24 +18,44 @@ jobs:
         with:
           fetch-depth: 0  # Fetch all history for all branches and tags
 
-      # Add caching for dependencies if applicable
-      # - name: Cache dependencies
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: ~/.cache
-      #     key: ${{ runner.os }}-cache-${{ hashFiles('**/lockfiles') }}
-      #     restore-keys: |
-      #       ${{ runner.os }}-cache-
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.9'
 
       - name: Install Dependencies
         run: pip install -r requirements.txt
+
+      - name: Run Tests
+        run: pytest
+
+      - name: Lint Code
+        run: flake8 .
+
+      - name: Format Code
+        run: black --check .
 
       - name: Check workflow status
         run: |
           chmod +x scripts/check-workflow-status.sh
           ./scripts/check-workflow-status.sh
+
+      - name: Notify on Failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.example.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "Workflow Failed"
+          body: "The Ensure Success workflow failed. Please check."
+          to: maintainer@example.com
