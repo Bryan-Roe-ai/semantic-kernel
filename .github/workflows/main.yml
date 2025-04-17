@@ -15,18 +15,68 @@ on:
     branches:
       - main
       - rel/*
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  issues: write
 
 jobs:
+  Lint-YAML:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Lint YAML files
+        uses: github/super-linter@v4
+        with:
+          languages: 'yaml'
+
   Build:
-    # Use template from https://github.com/microsoft/vscode-azuretools/tree/main/.github/workflows
-    uses: microsoft/vscode-azuretools/.github/workflows/jobs.yml@main
-    
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16, 18]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
   DownloadArtifact:
     runs-on: ubuntu-latest
     steps:
-    - name: Download artifact
-      uses: actions/download-artifact@v4.1.7
-      with:
-        name: my-artifact
-        path: ./artifacts
-        merge-multiple: false
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: my-artifact
+          path: ./artifacts
+          merge-multiple: true
+
+  Notify:
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Slack
+        uses: slackapi/slack-github-action@v1.23
+        with:
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          channel-id: C12345678
+          text: "Workflow failed: ${{ github.workflow }}"
