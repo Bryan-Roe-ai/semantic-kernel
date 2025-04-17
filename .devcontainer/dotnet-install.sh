@@ -75,8 +75,34 @@ is_musl_based_distro() {
 
 # Main installation function
 install_dotnet() {
-    # Your installation logic here
-    :
+    local install_dir="${DOTNET_INSTALL_DIR:-$HOME/.dotnet}"
+    local version="latest"
+    local channel="LTS"
+    local architecture="x64"
+    local osname
+    osname=$(get_current_os_name)
+
+    # Download and install .NET SDK
+    local download_link="https://dotnetcli.azureedge.net/dotnet/Sdk/$version/dotnet-sdk-$version-$osname-$architecture.tar.gz"
+    local temp_dir
+    temp_dir=$(mktemp -d)
+    local sdk_tar="$temp_dir/dotnet-sdk.tar.gz"
+
+    log_info "Downloading .NET SDK from $download_link"
+    if command -v curl > /dev/null; then
+        curl -SL -o "$sdk_tar" "$download_link"
+    elif command -v wget > /dev/null; then
+        wget -O "$sdk_tar" "$download_link"
+    fi
+
+    log_info "Extracting .NET SDK to $install_dir"
+    mkdir -p "$install_dir"
+    tar -xzf "$sdk_tar" -C "$install_dir"
+
+    log_info "Cleaning up temporary files"
+    rm -rf "$temp_dir"
+
+    log_info ".NET SDK installation completed"
 }
 
 # Main script execution
