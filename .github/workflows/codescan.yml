@@ -39,6 +39,9 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
+      - name: Run lint
+        run: npm run lint
+
       - name: Run Analysis
         uses: codescan-io/codescan-scanner-action@v4
         with:

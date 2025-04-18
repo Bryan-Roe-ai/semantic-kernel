@@ -39,6 +39,10 @@ jobs:
         uses: actions/checkout@v3
         continue-on-error: false
 
+      # Run lint
+      - name: Run lint
+        run: npm run lint
+
       # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@v4

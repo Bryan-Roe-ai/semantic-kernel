@@ -104,6 +104,10 @@ jobs:
         build-mode: ${{ matrix.build-mode }}
         queries: ./codeql-queries,+security-extended,security-and-quality
 
+    # Run lint
+    - name: Run lint
+      run: npm run lint
+
     # Custom build commands for manual build modes
     - if: matrix.build-mode == 'manual'
       run: |

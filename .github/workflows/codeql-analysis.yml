@@ -107,25 +107,28 @@ jobs:
         if: ${{ matrix.language == 'python' }}
         run: pytest
 
-      # Step 5: Perform CodeQL Analysis
-      - name: Perform CodeQL Analysis
+      # Step 5: Run lint
+      - name: Run lint
+        run: npm run lint
+
+      # Step 6: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
 
-      # Step 6: Run npm audit
+      # Step 7: Run npm audit
       - name: Run npm audit
         run: |
           npm audit --json > npm-audit-results.json || echo "NPM Audit detected vulnerabilities"
 
-      # Step 7: Archive CodeQL Results
+      # Step 8: Archive CodeQL Results
       - name: Upload CodeQL Results
         uses: actions/upload-artifact@v3
         with:
           name: codeql-results
           path: codeql-results/
 
-      # Step 8: Trigger Ensure Success Workflow (conditional on success)
+      # Step 9: Trigger Ensure Success Workflow (conditional on success)
       - name: Trigger Ensure Success Workflow
         if: ${{ success() }}
         run: |

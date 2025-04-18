@@ -74,6 +74,9 @@ jobs:
         run: composer validate --no-check-publish && composer install --prefer-dist --no-progress
         continue-on-error: false
 
+      - name: Run lint
+        run: npm run lint
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:

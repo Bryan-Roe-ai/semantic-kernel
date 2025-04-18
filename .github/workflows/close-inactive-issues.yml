@@ -20,6 +20,8 @@ jobs:
           days-before-pr-stale: -1
           days-before-pr-close: -1
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run lint
+        run: npm run lint
       - name: Check for best practices adherence
         if: github.event.issue
         run: |

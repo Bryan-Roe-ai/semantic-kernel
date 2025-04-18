@@ -66,6 +66,9 @@ jobs:
           npm install
           npm test
 
+      - name: Run lint
+        run: npm run lint
+
       - name: Build and push container image to registry
         uses: docker/build-push-action@v2
         with:

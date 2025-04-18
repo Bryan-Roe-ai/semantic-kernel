@@ -19,6 +19,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cache
 
+      - name: Run lint
+        run: npm run lint
+
       - name: Generate issues
         run: |
           echo "Generating issues based on predefined criteria and templates..."

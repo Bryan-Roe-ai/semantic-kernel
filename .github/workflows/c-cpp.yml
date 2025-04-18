@@ -49,22 +49,26 @@ jobs:
     - name: Build
       run: make
 
-    # Step 6: Run tests
+    # Step 6: Run lint
+    - name: Run lint
+      run: npm run lint
+
+    # Step 7: Run tests
     - name: Run Tests
       run: make check
 
-    # Step 7: Perform a distribution check
+    # Step 8: Perform a distribution check
     - name: Distribution Check
       run: make distcheck
 
-    # Step 8: Upload build artifacts
+    # Step 9: Upload build artifacts
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3
       with:
         name: build-results
         path: ./build
 
-    # Step 9: Debugging information
+    # Step 10: Debugging information
     - name: Debug Info
       if: failure()
       run: |

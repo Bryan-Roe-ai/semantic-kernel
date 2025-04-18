@@ -76,6 +76,10 @@ jobs:
           echo "Unsupported language: ${{ matrix.language }}"
           exit 1
 
+    # Run lint
+    - name: Run lint
+      run: npm run lint
+
     # Initialize CodeQL
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
