@@ -167,5 +167,6 @@
   "processTracking.behavior": {
     "showInStatusBar": true,
     "logToOutputWindow": true
-  }
+  },
+  "aiAutoRun.enable": true
 }

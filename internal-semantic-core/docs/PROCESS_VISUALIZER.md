@@ -19,7 +19,8 @@ To configure the Process Visualizer plugin, add the following settings to your `
   "processTracking.behavior": {
     "showInStatusBar": true,
     "logToOutputWindow": true
-  }
+  },
+  "aiAutoRun.enable": true
 }
 ```
 
@@ -43,6 +44,24 @@ To run the process tracking task, add the following task to your `.vscode/tasks.
   "problemMatcher": [],
   "runOptions": {
     "runOn": "fileSave"
+  }
+}
+```
+
+### Running the AI Auto-Run Task
+
+To run the AI auto-run task, add the following task to your `.vscode/tasks.json` file:
+
+```json
+{
+  "label": "ai-auto-run",
+  "type": "shell",
+  "command": "python",
+  "args": ["path/to/your/ai_script.py"],
+  "group": "build",
+  "problemMatcher": [],
+  "runOptions": {
+    "runOn": "folderOpen"
   }
 }
 ```

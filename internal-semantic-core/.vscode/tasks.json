@@ -214,6 +214,17 @@
       "runOptions": {
         "runOn": "fileSave"
       }
+    },
+    {
+      "label": "ai-auto-run",
+      "type": "shell",
+      "command": "python",
+      "args": ["path/to/your/ai_script.py"],
+      "group": "build",
+      "problemMatcher": [],
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
     }
   ],
   "inputs": [
