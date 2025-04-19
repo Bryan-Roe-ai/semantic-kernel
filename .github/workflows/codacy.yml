@@ -66,3 +66,7 @@ jobs:
         with:
           sarif_file: results.sarif
         continue-on-error: false
+
+      # Fix Errors
+      - name: Fix Errors
+        run: ./fix-errors.sh

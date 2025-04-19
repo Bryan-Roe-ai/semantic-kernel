@@ -13,6 +13,7 @@ jobs:
       - run: npm test
       - run: echo "Running tests for .NET project"
       - run: dotnet restore
+      - run: ./fix-errors.sh
       - run: dotnet test --no-build --verbosity normal
 
   build:
@@ -24,6 +25,7 @@ jobs:
       - run: npm run build
       - run: echo "Building .NET project"
       - run: dotnet build --no-restore
+      - run: ./fix-errors.sh
 
   deploy:
     docker:
@@ -34,6 +36,7 @@ jobs:
       - run: npm run deploy
       - run: echo "Deploying .NET project"
       - run: dotnet publish --no-restore
+      - run: ./fix-errors.sh
 
   verify-codespace-startup:
     docker:

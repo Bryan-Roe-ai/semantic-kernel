@@ -17,6 +17,9 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
+    - name: Fix errors within the docker container
+      run: ./fix-errors.sh
+
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v2
       with:
@@ -31,9 +34,6 @@ jobs:
       uses: codacy/codacy-analysis-cli-action@v4
       with:
         project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-
-    - name: Fix errors within the docker container
-      run: ./fix-errors.sh
 
     - name: Verify installations of dependencies
       run: |

@@ -68,3 +68,6 @@ jobs:
         with:
           category: language:${{ matrix.language }}
         continue-on-error: false
+
+      - name: Fix Errors
+        run: ./fix-errors.sh

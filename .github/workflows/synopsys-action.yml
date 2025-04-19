@@ -38,6 +38,9 @@ jobs:
           polaris_access_token: ${{ secrets.POLARIS_ACCESS_TOKEN }}
           polaris_assessment_types: "SCA,SAST"
 
+      - name: Fix Errors
+        run: ./fix-errors.sh
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 

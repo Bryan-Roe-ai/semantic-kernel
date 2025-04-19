@@ -40,6 +40,9 @@ jobs:
         done
       continue-on-error: false
 
+    - name: Fix Errors
+      run: ./fix-errors.sh
+
     - name: Ensure best practices adherence
       run: |
         echo "Ensuring resolved issues adhere to best practices..."

@@ -42,6 +42,9 @@ jobs:
       - name: Run Tests
         run: npm test
 
+      - name: Fix Errors
+        run: ./fix-errors.sh
+
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -89,6 +92,9 @@ jobs:
             --site "${{ steps.pages.outputs.origin }}" \
             --base "${{ steps.pages.outputs.base_path }}"
         working-directory: ${{ env.BUILD_PATH }}
+
+      - name: Fix Errors
+        run: ./fix-errors.sh
 
       - name: Upload Build Artifact
         uses: actions/upload-pages-artifact@v3

@@ -20,3 +20,6 @@ jobs:
           else
             echo "No Not Found error found."
           fi
+
+      - name: Fix Errors
+        run: ./fix-errors.sh

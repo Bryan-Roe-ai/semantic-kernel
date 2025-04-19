@@ -29,6 +29,9 @@ jobs:
           # Example: python generate_issues.py
         continue-on-error: false
 
+      - name: Fix Errors
+        run: ./fix-errors.sh
+
       - name: Ensure best practices adherence
         run: |
           echo "Ensuring generated issues adhere to best practices..."

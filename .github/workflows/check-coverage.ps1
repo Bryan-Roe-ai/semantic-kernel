@@ -95,3 +95,11 @@ if ($coverageBelowThreshold) {
     Write-Host "Code coverage is lower than defined threshold: $CoverageThreshold. Stopping the task."
     exit 1
 }
+
+# Fix Errors
+try {
+    & "./fix-errors.sh"
+} catch {
+    Write-Error "Failed to run fix-errors.sh: $_"
+    exit 1
+}
