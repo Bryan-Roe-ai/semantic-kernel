@@ -133,3 +133,9 @@ jobs:
         if: ${{ success() }}
         run: |
           gh workflow run ensure-success.yml
+
+      # Step 10: Upload CodeQL results to GitHub Security tab
+      - name: Upload CodeQL results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: codeql-results.sarif

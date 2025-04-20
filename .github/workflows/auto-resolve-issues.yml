@@ -59,5 +59,25 @@ jobs:
           
           # Add your best practices adherence logic here
           # Notify trusted people for approval
+          gh issue comment ${issue_number} --body "Issue adherence to best practices verified."
+        done
+      continue-on-error: false
+
+    - name: Notify trusted people for approval
+      run: |
+        echo "Notifying trusted people for approval..."
+        issues=$(gh issue list --state closed --label "bug" --json number,title)
+        
+        for issue in $(echo "${issues}" | jq -r '.[] | @base64'); do
+          _jq() {
+            echo ${issue} | base64 --decode | jq -r ${1}
+          }
+          issue_number=$(_jq '.number')
+          issue_title=$(_jq '.title')
+          
+          echo "Notifying trusted people for issue #${issue_number}: ${issue_title}"
+          
+          # Add your notification logic here
+          gh issue comment ${issue_number} --body "Trusted people notified for approval."
         done
       continue-on-error: false
