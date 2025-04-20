@@ -36,4 +36,19 @@ for service in "${services[@]}"; do
   fi
 done
 
+# Find and delete binary artifact files
+find . -type f -name '*.bin' -delete
+find . -type f -name '*.exe' -delete
+find . -type f -name '*.dll' -delete
+find . -type f -name '*.zip' -delete
+find . -type f -name '*.json' -delete
+
+# Generate report of deleted files
+echo "Deleted files:" > deleted-files-report.txt
+find . -type f -name '*.bin' -print >> deleted-files-report.txt
+find . -type f -name '*.exe' -print >> deleted-files-report.txt
+find . -type f -name '*.dll' -print >> deleted-files-report.txt
+find . -type f -name '*.zip' -print >> deleted-files-report.txt
+find . -type f -name '*.json' -print >> deleted-files-report.txt
+
 echo "Errors fixed successfully."
