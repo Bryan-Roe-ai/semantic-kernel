@@ -30,8 +30,8 @@ on:
 jobs:
   soos:
     permissions:
-      security-events: write # for uploading code scanning alert info
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+      security-events: write
+      actions: read
     name: SOOS DAST Analysis
     runs-on: ubuntu-latest
     steps:
@@ -49,30 +49,27 @@ jobs:
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
 
       - name: Run SOOS DAST Analysis
-        uses: soos-io/soos-dast-github-action@65d9878d77c8993f3db9e86a92bc2ad3a6e060af
+        uses: soos-io/soos-dast-github-action@v1
         with:
           client_id: ${{ secrets.SOOS_CLIENT_ID }}
           api_key: ${{ secrets.SOOS_API_KEY }}
-          project_name: "<YOUR-PROJECT-NAME>"
+          project_name: ${{ github.repository }}
           scan_mode: "baseline"
-          target_url: "https://www.example.com/"
+          target_url: ${{ secrets.TARGET_URL }}
           output_format: "sarif"
 
       - name: Verify installations of dependencies
         run: |
           echo "Verifying installations of dependencies..."
-          # Add your verification commands here
-          npm list
-          pip list
-          dotnet --list-sdks
+          npm ci
+          pip install -r requirements.txt
+          dotnet restore
 
       - name: Upload SOOS DAST SARIF Report
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
 
-      - name: Run the API server
-        run: |
-          echo "Running the API server..."
-          # Add your commands to run the API server here
-          npm start
+      - name: Notify on completion
+        if: always()
+        run: echo "Workflow completed. Check SARIF report for details."
