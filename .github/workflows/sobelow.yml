@@ -1,15 +1,7 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-#
-# Sobelow is a security-focused static analysis tool for the Phoenix framework. https://sobelow.io/
-#
-# To use this workflow, you must have GitHub Advanced Security (GHAS) enabled for your repository.
-#
-# Instructions:
-# 2. Follow the annotated workflow below and make any necessary modifications then save the workflow to your repository
-#    and review the "Security" tab once the action has run.
+# Sobelow Workflow: Improved and Optimized
+# This workflow integrates Sobelow for security-focused static analysis
+# and includes additional best practices for security, performance, and maintainability.
+
 name: Sobelow
 
 on:
@@ -18,61 +10,76 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '30 19 * * 2'
+    - cron: '30 19 * * 2' # Scheduled to run every Tuesday at 19:30 UTC
 
 permissions:
   contents: read
+  security-events: write # Required for uploading SARIF results
+  actions: read # For private repositories to get Action run statuses
 
 jobs:
   security-scan:
-    permissions:
-      contents: read # for actions/checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
-      actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
+    name: Run Sobelow Security Scan
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-      - id: run-action
+      # Checkout the codebase
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Run Sobelow static analysis
+      - name: Run Sobelow Analysis
         uses: sobelow/action@v1.0.1
-      - name: Upload report
+
+      # Upload SARIF results
+      - name: Upload SARIF Report
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: results.sarif
 
   docker-setup:
+    name: Build and Push Docker Image
     runs-on: ubuntu-latest
     steps:
+      # Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
+      # Log in to GitHub Container Registry
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push Docker image
+
+      # Build and push Docker image
+      - name: Build and Push Docker Image
         run: |
-          docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-          docker push ghcr.io/${{ github.repository }}/my-image-name:$(date +%s)
+          echo "Building and pushing Docker image..."
+          docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}/my-image-name:${{ github.sha }}
+          docker push ghcr.io/${{ github.repository }}/my-image-name:${{ github.sha }}
 
   verify-dependencies:
+    name: Verify Project Dependencies
     runs-on: ubuntu-latest
     needs: docker-setup
     steps:
-      - name: Verify installations of dependencies
-        run: |
-          echo "Verifying installations of dependencies..."
-          # Add your verification commands here
-          npm list
-          pip list
-          dotnet --list-sdks
+      # Verify installations of dependencies
+      - name: Verify Node.js Dependencies
+        run: npm list || echo "NPM dependencies verification failed" && exit 1
+
+      - name: Verify Python Dependencies
+        run: pip list || echo "Python dependencies verification failed" && exit 1
+
+      - name: Verify .NET SDKs
+        run: dotnet --list-sdks || echo ".NET SDKs verification failed" && exit 1
 
   run-api:
+    name: Run API Server
     runs-on: ubuntu-latest
     needs: verify-dependencies
     steps:
-      - name: Run the API server
+      # Run the API server
+      - name: Run the API Server
         run: |
           echo "Running the API server..."
-          # Add your commands to run the API server here
           npm start
