@@ -9,25 +9,23 @@ on:
   pull_request:
     branches: [ "main" ]
   schedule:
-    - cron: '21 7 * * 6' # Adjust scheduled time as needed for your team
+    - cron: '21 7 * * 6'
 
 permissions:
-  contents: read
+  contents: none
+  security-events: write
 
 jobs:
   CodeScan:
     permissions:
-      contents: read # Required for actions/checkout to fetch code
-      security-events: write # Required to upload SARIF results
-      actions: read # Only required for private repositories
+      contents: read
+      security-events: write
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Cache files to optimize performance
       - name: Cache SonarQube files
         uses: actions/cache@v3
         with:
@@ -35,17 +33,14 @@ jobs:
             ~/.sonar
           key: ${{ runner.os }}-sonar-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-sonar
+            ${{ runner.os }}-sonar-
 
-      # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm install --prefer-lockfile
+        run: npm ci
 
-      # Step 4: Run linting
       - name: Run lint
         run: npm run lint
 
-      # Step 5: Run CodeScan analysis
       - name: Run CodeScan Analysis
         uses: codescan-io/codescan-scanner-action@v4
         with:
@@ -53,11 +48,9 @@ jobs:
           organization: ${{ secrets.CODESCAN_ORGANIZATION_KEY }}
           projectKey: ${{ secrets.CODESCAN_PROJECT_KEY }}
 
-      # Step 6: Verify SARIF file exists
       - name: Verify SARIF file
-        run: test -f codescan.sarif
+        run: test -f codescan.sarif || echo "SARIF file not found!" && exit 1
 
-      # Step 7: Upload SARIF file for security scanning
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v4
         with:
