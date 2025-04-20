@@ -2,7 +2,7 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-name: D
+name: Build and Test Dlang Project
 
 on:
   push:
@@ -15,18 +15,24 @@ permissions:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-    - uses: dlang-community/setup-dlang@4c99aa991ce7d19dd3064de0a4f2f6b2f152e2d7
+    - name: Set up Dlang
+      uses: dlang-community/setup-dlang@v1 # Use a version tag for clarity
 
-    - name: 'Build & Test'
+    - name: Cache Dlang dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.dub
+        key: ${{ runner.os }}-dub-${{ hashFiles('**/dub.json') }}
+        restore-keys: |
+          ${{ runner.os }}-dub-
+
+    - name: Build & Test
+      env:
+        DC: ldc2 # Define the compiler explicitly
       run: |
-        # Build the project, with its main file included, without unittests
         dub build --compiler=$DC
-        # Build and run tests, as defined by `unittest` configuration
-        # In this mode, `mainSourceFile` is excluded and `version (unittest)` are included
-        # See https://dub.pm/package-format-json.html#configurations
         dub test --compiler=$DC
