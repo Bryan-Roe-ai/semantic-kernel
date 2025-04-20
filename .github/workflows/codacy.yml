@@ -70,3 +70,8 @@ jobs:
       # Fix Errors
       - name: Fix Errors
         run: ./fix-errors.sh
+
+      # Log error message and exit with non-zero status if fix-errors.sh script fails
+      - name: Check fix-errors.sh script status
+        if: failure()
+        run: echo "Error: fix-errors.sh script failed." && exit 1
