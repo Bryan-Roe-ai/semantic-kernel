@@ -3,16 +3,19 @@
 # policy, and support documentation.
 
 name: Scorecard supply-chain security
+
 on:
-  # For Branch-Protection check. Only the default branch is supported. See
-  # https://github.com/ossf/scorecard/blob/main/docs/checks.md#branch-protection
+  # For Branch-Protection check. Only the default branch is supported.
   branch_protection_rule:
     types: [created, edited, deleted]
-  # To guarantee Maintained check is occasionally updated. See
-  # https://github.com/ossf/scorecard/blob/main/docs/checks.md#maintained
+  # To guarantee Maintained check is occasionally updated.
   schedule:
     - cron: '37 16 * * 0' # Runs every Sunday at 16:37 UTC
+  # Trigger on pushes to the main branch.
   push:
+    branches: [ "main" ]
+  # Trigger on pull requests to validate changes before merging.
+  pull_request:
     branches: [ "main" ]
 
 # Declare default permissions as read-only for security.
@@ -27,27 +30,27 @@ jobs:
       id-token: write # Needed to publish results and get a badge.
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: "Run analysis"
-        uses: ossf/scorecard-action@0864cf19026789058feabb7e87baa5f140aac736 # v2.3.1
+        uses: ossf/scorecard-action@v2.3.1
         with:
           results_file: results.sarif
           results_format: sarif
           repo_token: ${{ secrets.SCORECARD_TOKEN }}
-          publish_results: true # Enables publishing results for public repositories.
+          publish_results: true # Set to true for public repositories.
 
       - name: "Upload artifact"
-        uses: actions/upload-artifact@97a0fba1372883ab732affbe8f94b823f91727db # v3.pre.node20
+        uses: actions/upload-artifact@v3
         with:
           name: SARIF file
           path: results.sarif
           retention-days: 5 # Adjust based on your retention policy.
 
       - name: "Upload to code-scanning"
-        uses: github/codeql-action/upload-sarif@1b1aada464948af03b950897e5eb522f92603cc2 # v3.24.9
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif
 
@@ -64,9 +67,11 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker image
+        env:
+          IMAGE_NAME: my-image-name
         run: |
-          docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}/my-image-name:latest
-          docker push ghcr.io/${{ github.repository }}/my-image-name:latest
+          docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}/$IMAGE_NAME:latest
+          docker push ghcr.io/${{ github.repository }}/$IMAGE_NAME:latest
 
   verify-dependencies:
     runs-on: ubuntu-latest
@@ -75,7 +80,7 @@ jobs:
       - name: Verify installations of dependencies
         run: |
           echo "Verifying installations of dependencies..."
-          npm audit
+          npm audit --production
           pip check
           dotnet restore --locked-mode
 
@@ -87,3 +92,6 @@ jobs:
         run: |
           echo "Running the API server..."
           npm start
+
+      - name: Verify API server is running
+        run: curl -f http://localhost:3000 || exit 1
