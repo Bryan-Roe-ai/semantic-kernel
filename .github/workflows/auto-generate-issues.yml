@@ -4,65 +4,78 @@ on:
   schedule:
     - cron: "0 0 * * *"
 
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   generate-issues:
     runs-on: ubuntu-latest
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Cache dependencies
+      # Step 2: Cache Node.js dependencies (if applicable)
+      - name: Cache Node.js dependencies
         uses: actions/cache@v3
         with:
-          path: ~/.cache
-          key: ${{ runner.os }}-cache
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-cache
+            ${{ runner.os }}-npm-
 
+      # Step 3: Install Node.js dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Run linting
       - name: Run lint
         run: npm run lint
 
+      # Step 5: Generate issues
       - name: Generate issues
         run: |
           echo "Generating issues based on predefined criteria and templates..."
-          # Add your logic here to generate issues based on predefined criteria and templates
-          # Example: python generate_issues.py
+          python scripts/generate_issues.py
         continue-on-error: false
 
+      # Step 6: Fix errors (if any)
       - name: Fix Errors
         run: ./fix-errors.sh
 
+      # Step 7: Ensure best practices adherence
       - name: Ensure best practices adherence
         run: |
           echo "Ensuring generated issues adhere to best practices..."
-          # Add your logic here to ensure generated issues adhere to best practices
-          # Example: python check_best_practices.py
+          python scripts/check_best_practices.py
         continue-on-error: false
 
+      # Step 8: Notify trusted people for approval
       - name: Notify trusted people for approval
         run: |
           echo "Notifying trusted people for approval..."
-          # Add your logic here to notify trusted people for approval
-          # Example: python notify_approvers.py
+          python scripts/notify_approvers.py
         continue-on-error: false
 
   lint:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: [python, node]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Install dependencies
+      # Setup environment and run language-specific linting
+      - name: Setup ${{ matrix.language }}
         run: |
-          python -m pip install --upgrade pip
-          pip install flake8
-
-      - name: Lint code
-        run: |
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          if [ "${{ matrix.language }}" == "python" ]; then
+            python -m pip install --upgrade pip
+            pip install flake8
+            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+            flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          elif [ "${{ matrix.language }}" == "node" ]; then
+            npm install
+            npm run lint
+          fi
