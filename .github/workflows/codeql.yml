@@ -39,12 +39,9 @@ jobs:
           - language: ruby
             build-mode: autobuild
           - language: jupyter-notebook
-            build-mode: manual
+            build-mode: autobuild
           - language: html
-            build-mode: manual
-        exclude:
-          - language: jupyter-notebook
-            runs-on: 'macos-latest'
+            build-mode: autobuild
 
     steps:
     # Checkout the repository
