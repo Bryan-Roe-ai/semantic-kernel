@@ -1,15 +1,13 @@
-# This workflow will triage pull requests and apply a label based on the
-# paths that are modified in the pull request.
-#
-# To use this workflow, you will need to set up a .github/labeler.yml
-# file with configuration. For more information, see:
-# https://github.com/actions/labeler
-
 name: Labeler
 
 on: 
   pull_request_target:
     types: [opened, synchronize, reopened]
+  schedule:
+    - cron: '0 0 * * *' # Daily at midnight
+
+env:
+  LABELER_CONFIG: .github/labeler.yml
 
 jobs:
   label:
@@ -20,35 +18,38 @@ jobs:
       pull-requests: write
 
     steps:
-    # Step to validate the existence of the labeler configuration file
-    - name: Validate Labeler Configuration
-      run: |
-        if [ ! -f .github/labeler.yml ]; then
-          echo "Configuration file .github/labeler.yml not found."
-          exit 1
-        fi
+      # Step to validate the existence of the labeler configuration file
+      - name: Validate Labeler Configuration
+        run: |
+          if [ ! -f $LABELER_CONFIG ]; then
+            echo "Configuration file $LABELER_CONFIG not found."
+            exit 1
+          fi
 
-    # Step to checkout the repository
-    - name: Checkout Repository
-      uses: actions/checkout@v2.4.0
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
+      # Step to validate YAML syntax
+      - name: Validate Labeler Configuration Syntax
+        run: yamllint $LABELER_CONFIG
 
-    # Step to apply labels based on the configuration in .github/labeler.yml
-    - name: Apply Labeler
-      uses: actions/labeler@v4.0.2
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+      # Step to checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v2.4.0
 
-    # Optional: Step to log the applied labels for better transparency
-    - name: Log Applied Labels
-      run: echo "Labels have been applied successfully."
+      # Step to apply labels based on the configuration in .github/labeler.yml
+      - name: Apply Labeler
+        uses: actions/labeler@v4.0.2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
-    # Optional: Step to notify on failure with more detailed output
-    - name: Notify on failure
-      if: failure()
-      run: |
-        echo "Label application failed."
-        curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -d '{"body":"Label application failed. Please check the workflow logs for details."}' \
-          ${{ github.event.pull_request.comments_url }}
+      # Step to log the applied labels for better transparency
+      - name: Log Applied Labels
+        run: |
+          echo "Labels have been applied."
+
+      # Optional: Step to notify on failure with detailed output
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Label application failed."
+          curl -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{"body":"Label application failed. Logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" }' \
+            ${{ github.event.pull_request.comments_url }}
