@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 import { AdditionalApiProperties, AuthHeaderTags } from '../../redux/features/plugins/PluginsState';
 import { ChatMemorySource } from '../models/ChatMemorySource';
@@ -196,5 +196,20 @@ export class ChatService extends BaseService {
 
         return chatUsers;
     };
-}
 
+    public async getAIResponse(userInput: string): Promise<any> {
+        const response = await fetch('https://your-ai-service-url.com/api/ai', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ input: userInput }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to get AI response');
+        }
+
+        return await response.json();
+    }
+}

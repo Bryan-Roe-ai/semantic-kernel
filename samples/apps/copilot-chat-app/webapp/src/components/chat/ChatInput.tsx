@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 import { useMsal } from '@azure/msal-react';
 import { Button, Spinner, Textarea, makeStyles, mergeClasses, shorthands, tokens } from '@fluentui/react-components';
 import { AttachRegular, MicRegular, SendRegular } from '@fluentui/react-icons';
@@ -158,6 +156,27 @@ export const ChatInput: React.FC<ChatInputProps> = ({ isDraggingOver, onDragLeav
         await handleImport(e.dataTransfer?.files[0]);
     };
 
+    const sendUserInputToAI = async (userInput: string) => {
+        try {
+            const response = await fetch('https://your-ai-service-url.com/api/ai', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ input: userInput }),
+            });
+            const data = await response.json();
+            displayAIResponse(data);
+        } catch (error) {
+            console.error('Error sending user input to AI:', error);
+        }
+    };
+
+    const displayAIResponse = (response: any) => {
+        console.log('AI Response:', response);
+        // Implement the logic to display the AI response in the chat interface
+    };
+
     return (
         <div className={classes.root}>
             <div className={classes.typingIndicator}><ChatStatus /></div>
@@ -194,6 +213,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ isDraggingOver, onDragLeav
                         if (event.key === 'Enter' && !event.shiftKey) {
                             event.preventDefault();
                             handleSubmit(value);
+                            sendUserInputToAI(value);
                         }
                     }}
                     onBlur={() => {
@@ -236,4 +256,3 @@ export const ChatInput: React.FC<ChatInputProps> = ({ isDraggingOver, onDragLeav
         </div>
     );
 };
-

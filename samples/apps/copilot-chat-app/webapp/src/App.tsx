@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 import {
     AuthenticatedTemplate,
     UnauthenticatedTemplate,
@@ -96,6 +94,25 @@ const App: FC = () => {
         dispatch(removeAlert(key));
     };
 
+    const runAI = async () => {
+        try {
+            const response = await fetch('https://your-ai-service-url.com/api/ai');
+            const data = await response.json();
+            handleAIResponse(data);
+        } catch (error) {
+            console.error('Error running AI:', error);
+        }
+    };
+
+    const handleAIResponse = (response: any) => {
+        console.log('AI Response:', response);
+        // Implement the logic to update the web page with the AI response
+    };
+
+    useEffect(() => {
+        runAI();
+    }, []);
+
     // TODO: handle error case of missing account information
     return (
         <div>
@@ -153,4 +170,3 @@ const App: FC = () => {
 };
 
 export default App;
-

@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 import { useMsal } from '@azure/msal-react';
 import { makeStyles, shorthands, tokens } from '@fluentui/react-components';
 import debug from 'debug';
@@ -111,6 +109,25 @@ export const ChatRoom: React.FC = () => {
         setShouldAutoScroll(true);
     };
 
+    const handleAIResponse = (response: any) => {
+        console.log('AI Response:', response);
+        // Implement the logic to update the chat interface with the AI response
+    };
+
+    const runAI = async () => {
+        try {
+            const response = await fetch('https://your-ai-service-url.com/api/ai');
+            const data = await response.json();
+            handleAIResponse(data);
+        } catch (error) {
+            console.error('Error running AI:', error);
+        }
+    };
+
+    React.useEffect(() => {
+        runAI();
+    }, []);
+
     return (
         <div className={classes.root} onDragEnter={onDragEnter} onDragOver={onDragEnter} onDragLeave={onDragLeave}>
             <div ref={scrollViewTargetRef} className={classes.scroll}>
@@ -136,4 +153,3 @@ const scrollToTarget = (element: HTMLElement | null) => {
     if (!element) return;
     element.scrollIntoView({ block: 'start', behavior: 'smooth' });
 };
-

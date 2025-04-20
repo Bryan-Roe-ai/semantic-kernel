@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Azure.Identity;
@@ -262,5 +263,37 @@ public static class Program
             clipProcess.StandardInput.Write(content);
             clipProcess.StandardInput.Close();
         }
+    }
+
+    // Method to run the AI automatically within a web page
+    public static async Task RunAIAutomatically()
+    {
+        using HttpClient client = new HttpClient();
+        string aiServiceUrl = "https://your-ai-service-url.com/api/ai";
+
+        while (true)
+        {
+            try
+            {
+                HttpResponseMessage response = await client.GetAsync(aiServiceUrl);
+                response.EnsureSuccessStatusCode();
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+                UpdateWebPage(responseBody);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
+            await Task.Delay(5000); // Wait for 5 seconds before making the next request
+        }
+    }
+
+    // Method to handle the AI response and update the web page
+    private static void UpdateWebPage(string aiResponse)
+    {
+        // Implement the logic to update the web page with the AI response
+        Console.WriteLine($"AI Response: {aiResponse}");
     }
 }

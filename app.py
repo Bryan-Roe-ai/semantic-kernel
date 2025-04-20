@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List
 import logging
+import requests
 
 app = FastAPI()
 
@@ -40,4 +41,16 @@ def test_model():
         return {"status": "Model is running successfully"}
     except Exception as e:
         logging.error(f"Error testing model: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+@app.get("/run-ai")
+def run_ai():
+    try:
+        ai_service_url = "https://your-ai-service-url.com/api/ai"
+        response = requests.get(ai_service_url)
+        response.raise_for_status()
+        ai_response = response.text
+        return {"ai_response": ai_response}
+    except Exception as e:
+        logging.error(f"Error running AI: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
