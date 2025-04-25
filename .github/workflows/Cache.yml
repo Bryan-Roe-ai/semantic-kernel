@@ -32,7 +32,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
           ${{ runner.os }}-
-      continue-on-error: false
 
     - name: Cache Python dependencies
       uses: actions/cache@v3
@@ -46,4 +45,3 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
           ${{ runner.os }}-
-      continue-on-error: false

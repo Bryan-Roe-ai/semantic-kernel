@@ -29,34 +29,27 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run linting
-      - name: Run lint
-        run: npm run lint
-
-      # Step 5: Generate issues
+      # Step 4: Generate issues
       - name: Generate issues
         run: |
           echo "Generating issues based on predefined criteria and templates..."
           python scripts/generate_issues.py
-        continue-on-error: false
 
-      # Step 6: Fix errors (if any)
+      # Step 5: Fix errors (if any)
       - name: Fix Errors
         run: ./fix-errors.sh
 
-      # Step 7: Ensure best practices adherence
+      # Step 6: Ensure best practices adherence
       - name: Ensure best practices adherence
         run: |
           echo "Ensuring generated issues adhere to best practices..."
           python scripts/check_best_practices.py
-        continue-on-error: false
 
-      # Step 8: Notify trusted people for approval
+      # Step 7: Notify trusted people for approval
       - name: Notify trusted people for approval
         run: |
           echo "Notifying trusted people for approval..."
           python scripts/notify_approvers.py
-        continue-on-error: false
 
   lint:
     runs-on: ubuntu-latest

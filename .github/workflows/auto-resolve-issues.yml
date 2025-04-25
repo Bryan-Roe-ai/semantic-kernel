@@ -38,9 +38,9 @@ jobs:
             exit 1
           fi
         done
-      continue-on-error: false
 
     - name: Fix Errors
+      if: failure()
       run: ./fix-errors.sh
 
     - name: Ensure best practices adherence
@@ -61,7 +61,6 @@ jobs:
           # Notify trusted people for approval
           gh issue comment ${issue_number} --body "Issue adherence to best practices verified."
         done
-      continue-on-error: false
 
     - name: Notify trusted people for approval
       run: |
@@ -80,4 +79,3 @@ jobs:
           # Add your notification logic here
           gh issue comment ${issue_number} --body "Trusted people notified for approval."
         done
-      continue-on-error: false

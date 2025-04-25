@@ -27,7 +27,7 @@
 name: Build and deploy a container to an Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: my-actual-app-name  # set this to the name of your Azure Web App
+  AZURE_WEBAPP_NAME: ${{ secrets.AZURE_WEBAPP_NAME }}  # set this to the name of your Azure Web App
 
 on:
   push:
@@ -46,7 +46,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-        continue-on-error: false
 
       - name: Log in to GitHub container registry
         uses: docker/login-action@v2
@@ -54,7 +53,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ github.token }}
-        continue-on-error: false
 
       - name: Lowercase the repo name and username
         run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
@@ -77,7 +75,6 @@ jobs:
           file: ./Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
-        continue-on-error: false
 
       - name: Integrate additional service
         uses: codacy/codacy-analysis-cli-action@v4
@@ -115,7 +112,6 @@ jobs:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           images: 'ghcr.io/${{ env.REPO }}:${{ github.sha }}'
-        continue-on-error: false
 
       - name: Deploy to additional Azure services
         run: |

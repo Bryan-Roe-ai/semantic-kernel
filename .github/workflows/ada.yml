@@ -12,17 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Set up GNAT toolchain
-      run: >
-        sudo apt-get update &&
-        sudo apt-get install gnat gprbuild
+      - name: Set up GNAT toolchain
+        run: >
+          sudo apt-get update &&
+          sudo apt-get install gnat gprbuild
 
-    - name: Build
-      run: gprbuild -j0 -p
+      - name: Build
+        run: gprbuild -j0 -p
 
-    - name: Trigger Ensure Success Workflow
-      run: |
-        gh workflow run ensure-success.yml
+      - name: Trigger Ensure Success Workflow
+        run: |
+          gh workflow run ensure-success.yml

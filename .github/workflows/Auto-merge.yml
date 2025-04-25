@@ -25,7 +25,6 @@ jobs:
         uses: dependabot/fetch-metadata@v3
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
-        continue-on-error: false
 
       - name: Run lint
         run: npm run lint
@@ -37,12 +36,11 @@ jobs:
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        continue-on-error: false
 
       - name: Fix Errors
+        if: failure()
         run: ./fix-errors.sh
 
       - name: Error handling
         if: failure()
         run: echo "Error occurred during the auto-merge process"
-        continue-on-error: false
