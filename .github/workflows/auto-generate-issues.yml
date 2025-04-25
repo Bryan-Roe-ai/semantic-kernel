@@ -37,6 +37,7 @@ jobs:
 
       # Step 5: Fix errors (if any)
       - name: Fix Errors
+        if: failure()
         run: ./fix-errors.sh
 
       # Step 6: Ensure best practices adherence
