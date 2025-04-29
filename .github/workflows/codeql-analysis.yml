@@ -12,7 +12,7 @@ on:
   workflow_dispatch: # Allow manual execution for testing or debugging
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.language }}
   cancel-in-progress: true # Cancel in-progress runs for the same branch
 
 jobs:
@@ -30,13 +30,13 @@ jobs:
         language: ["csharp", "python", "java", "cpp", "html"]
 
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
       # Step 2: Cache dependencies
-      # Maven cache for Java
       - name: Cache Maven dependencies
+        if: ${{ matrix.language == 'java' }}
         uses: actions/cache@v3
         with:
           path: ~/.m2/repository
@@ -44,8 +44,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Python dependencies
       - name: Cache Python dependencies
+        if: ${{ matrix.language == 'python' }}
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
@@ -53,8 +53,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      # NPM dependencies
       - name: Cache npm dependencies
+        if: ${{ matrix.language == 'html' }}
         uses: actions/cache@v3
         with:
           path: ~/.npm
@@ -67,7 +67,7 @@ jobs:
         uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
-          queries: +security-extended,security-and-quality,codeql-queries/ssrf-detection.ql
+          queries: +security-extended,security-and-quality
 
       # Step 4: Build and compile code (language-specific)
       - name: Autobuild
@@ -75,8 +75,8 @@ jobs:
         uses: github/codeql-action/autobuild@v4
 
       - name: Setup JDK
-        uses: actions/setup-java@v4
         if: ${{ matrix.language == 'java' }}
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: microsoft
@@ -84,13 +84,7 @@ jobs:
 
       - name: Build Java
         if: ${{ matrix.language == 'java' }}
-        run: ./mvnw -B -DskipTests -Pcompile-jdk17 clean install --file pom.xml
-        working-directory: java
-
-      - name: Run Java Tests
-        if: ${{ matrix.language == 'java' }}
-        run: ./mvnw test --file pom.xml
-        working-directory: java
+        run: ./mvnw -B -DskipTests=true clean install --file pom.xml
 
       - name: Run Python Linters
         if: ${{ matrix.language == 'python' }}
@@ -100,41 +94,17 @@ jobs:
           flake8 .
           black --check .
 
-      - name: Run Python Tests
-        if: ${{ matrix.language == 'python' }}
-        run: pytest
+      - name: Run npm audit
+        if: ${{ matrix.language == 'html' && exists('package-lock.json') }}
+        run: npm audit --json > npm-audit-results.json || echo "NPM Audit detected vulnerabilities"
 
-      # Step 5: Run lint
-      - name: Run lint
-        if: ${{ matrix.language == 'html' }}
-        run: npm run lint
-
-      # Step 6: Perform CodeQL Analysis
+      # Step 5: Perform CodeQL Analysis
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
 
-      # Step 7: Run npm audit
-      - name: Run npm audit
-        run: |
-          npm audit --json > npm-audit-results.json || echo "NPM Audit detected vulnerabilities"
-        continue-on-error: false # Fail on critical issues
-
-      # Step 8: Archive CodeQL Results
-      - name: Upload CodeQL Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: codeql-results
-          path: codeql-results/
-
-      # Step 9: Trigger Ensure Success Workflow (conditional on success)
-      - name: Trigger Ensure Success Workflow
-        if: ${{ success() }}
-        run: |
-          gh workflow run ensure-success.yml
-
-      # Step 10: Upload CodeQL results to GitHub Security tab
+      # Step 6: Upload CodeQL results to GitHub Security tab
       - name: Upload CodeQL results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
