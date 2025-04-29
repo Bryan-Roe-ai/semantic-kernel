@@ -14,6 +14,7 @@ jobs:
       - run: echo "Running tests for .NET project"
       - run: dotnet restore
       - run: dotnet build
+      - run: dotnet build
       - run: ./fix-errors.sh
       - run: dotnet test --no-build --verbosity normal
 
@@ -27,6 +28,7 @@ jobs:
       - run: echo "Building .NET project"
       - run: dotnet build --no-restore
       - run: dotnet build
+      - run: dotnet build
       - run: ./fix-errors.sh
 
   deploy:
@@ -38,6 +40,7 @@ jobs:
       - run: npm run deploy
       - run: echo "Deploying .NET project"
       - run: dotnet publish --no-restore
+      - run: dotnet build
       - run: dotnet build
       - run: ./fix-errors.sh
 
