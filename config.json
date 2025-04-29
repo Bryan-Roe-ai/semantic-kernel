@@ -87,5 +87,12 @@
     "cosmosDbEndpoint": "your_cosmos_db_endpoint_here",
     "keyVaultEndpoint": "your_key_vault_endpoint_here",
     "azureDevOpsOrganizationUrl": "your_azure_devops_organization_url_here"
+  },
+  "githubPages": {
+    "repository": "your_github_repository_here",
+    "branch": "main",
+    "buildCommand": "docker build -t my-app .",
+    "runCommand": "docker run -p 3000:3000 --env-file .env my-app",
+    "deployCommand": "actions/deploy-pages@v4"
   }
 }

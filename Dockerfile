@@ -131,3 +131,14 @@ RUN docker build -t my-app .
 
 # Run the Docker container
 CMD ["docker", "run", "-p", "3000:3000", "--env-file", ".env", "my-app"]
+
+# Access the web page
+CMD ["open", "http://localhost:3000"]
+
+# Add a new script to automatically fix errors within the docker container
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    && apt-get install -y --no-install-recommends \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && npm cache clean --force \
+    && pip cache purge

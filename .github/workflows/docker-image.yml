@@ -63,6 +63,12 @@ jobs:
         echo "Running the API server..."
         npm start
 
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4
+      with:
+        branch: main
+        folder: build
+
   monitor:
     runs-on: ubuntu-latest
     needs: deploy

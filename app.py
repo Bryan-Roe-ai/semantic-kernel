@@ -54,3 +54,19 @@ def run_ai():
     except Exception as e:
         logging.error(f"Error running AI: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
+class LLMRequest(BaseModel):
+    prompt: str
+
+class LLMResponse(BaseModel):
+    response: str
+
+@app.post("/interact-llm", response_model=LLMResponse)
+def interact_llm(request: LLMRequest):
+    try:
+        # Placeholder for LLM interaction logic
+        llm_response = f"Response to prompt: {request.prompt}"
+        return LLMResponse(response=llm_response)
+    except Exception as e:
+        logging.error(f"Error interacting with LLM: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
