@@ -53,8 +53,11 @@ def run_ai():
         ai_response = response.text
         update_webpage(ai_response)
         return {"ai_response": ai_response}
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         logging.error(f"Error running AI: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+    except Exception as e:
+        logging.error(f"Unexpected error: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
 class LLMRequest(BaseModel):

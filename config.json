@@ -1,20 +1,20 @@
 {
-  "apiKey": "your_api_key_here",
-  "databaseUrl": "your_database_url_here",
-  "secretKey": "your_secret_key_here",
+  "apiKey": "${API_KEY}",
+  "databaseUrl": "${DATABASE_URL}",
+  "secretKey": "${SECRET_KEY}",
   "mongodb": {
-    "url": "your_mongodb_url_here",
+    "url": "${MONGODB_URL}",
     "dbName": "chat-ui",
     "directConnection": false
   },
   "cookie": {
     "name": "chat-ui"
   },
-  "hfAccessToken": "your_hf_access_token_here",
-  "serpapiKey": "your_serpapi_key_here",
+  "hfAccessToken": "${HF_ACCESS_TOKEN}",
+  "serpapiKey": "${SERPAPI_KEY}",
   "openid": {
-    "clientId": "your_openid_client_id_here",
-    "clientSecret": "your_openid_client_secret_here",
+    "clientId": "${OPENID_CLIENT_ID}",
+    "clientSecret": "${OPENID_CLIENT_SECRET}",
     "scopes": "openid profile",
     "providerUrl": "https://huggingface.co"
   },
@@ -67,26 +67,26 @@
   },
   "parquetExport": {
     "dataset": "your_parquet_export_dataset_here",
-    "hfToken": "your_parquet_export_hf_token_here",
-    "secret": "your_parquet_export_secret_here"
+    "hfToken": "${PARQUET_EXPORT_HF_TOKEN}",
+    "secret": "${PARQUET_EXPORT_SECRET}"
   },
   "taskGeneratorSettings": {
     "endpoint": "https://example.com/taskgenerator",
-    "apiKey": "your-api-key",
+    "apiKey": "${TASK_GENERATOR_API_KEY}",
     "topic": "default-topic",
     "difficultyLevel": "default-difficulty",
     "taskType": "default-task-type"
   },
   "aiInteraction": {
-    "openaiApiKey": "your_openai_api_key_here",
-    "azureOpenaiEndpoint": "your_azure_openai_endpoint_here",
-    "azureOpenaiApiKey": "your_azure_openai_api_key_here",
-    "azureOpenaiChatModelDeployment": "your_azure_openai_chat_model_deployment_here",
-    "azureBlobStorageEndpoint": "your_azure_blob_storage_endpoint_here",
-    "azureCognitiveServicesEndpoint": "your_azure_cognitive_services_endpoint_here",
-    "cosmosDbEndpoint": "your_cosmos_db_endpoint_here",
-    "keyVaultEndpoint": "your_key_vault_endpoint_here",
-    "azureDevOpsOrganizationUrl": "your_azure_devops_organization_url_here"
+    "openaiApiKey": "${OPENAI_API_KEY}",
+    "azureOpenaiEndpoint": "${AZURE_OPENAI_ENDPOINT}",
+    "azureOpenaiApiKey": "${AZURE_OPENAI_API_KEY}",
+    "azureOpenaiChatModelDeployment": "${AZURE_OPENAI_CHAT_MODEL_DEPLOYMENT}",
+    "azureBlobStorageEndpoint": "${AZURE_BLOB_STORAGE_ENDPOINT}",
+    "azureCognitiveServicesEndpoint": "${AZURE_COGNITIVE_SERVICES_ENDPOINT}",
+    "cosmosDbEndpoint": "${COSMOS_DB_ENDPOINT}",
+    "keyVaultEndpoint": "${KEY_VAULT_ENDPOINT}",
+    "azureDevOpsOrganizationUrl": "${AZURE_DEVOPS_ORGANIZATION_URL}"
   },
   "githubPages": {
     "repository": "your_github_repository_here",

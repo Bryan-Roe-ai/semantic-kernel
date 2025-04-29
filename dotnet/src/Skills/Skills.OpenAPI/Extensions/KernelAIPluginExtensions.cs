@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -42,9 +40,7 @@ public static class KernelAIPluginExtensions
         Verify.NotNull(kernel);
         Verify.ValidSkillName(skillName);
 
-#pragma warning disable CA2000 // Dispose objects before losing scope. No need to dispose the Http client here. It can either be an internal client using NonDisposableHttpClientHandler or an external client managed by the calling code, which should handle its disposal.
         var internalHttpClient = HttpClientProvider.GetHttpClient(kernel.Config, executionParameters?.HttpClient, kernel.Logger);
-#pragma warning restore CA2000
 
         var pluginContents = await LoadDocumentFromFilePath(
             kernel,
@@ -81,9 +77,7 @@ public static class KernelAIPluginExtensions
         Verify.NotNull(kernel);
         Verify.ValidSkillName(skillName);
 
-#pragma warning disable CA2000 // Dispose objects before losing scope. No need to dispose the Http client here. It can either be an internal client using NonDisposableHttpClientHandler or an external client managed by the calling code, which should handle its disposal.
         var internalHttpClient = HttpClientProvider.GetHttpClient(kernel.Config, executionParameters?.HttpClient, kernel.Logger);
-#pragma warning restore CA2000
 
         var pluginContents = await LoadDocumentFromUri(
             kernel,
@@ -120,9 +114,7 @@ public static class KernelAIPluginExtensions
         Verify.NotNull(kernel);
         Verify.ValidSkillName(skillName);
 
-#pragma warning disable CA2000 // Dispose objects before losing scope. No need to dispose the Http client here. It can either be an internal client using NonDisposableHttpClientHandler or an external client managed by the calling code, which should handle its disposal.
         var internalHttpClient = HttpClientProvider.GetHttpClient(kernel.Config, executionParameters?.HttpClient, kernel.Logger);
-#pragma warning restore CA2000
 
         var pluginContents = await LoadDocumentFromStream(kernel, stream).ConfigureAwait(false);
 
@@ -217,10 +209,18 @@ public static class KernelAIPluginExtensions
             requestMessage.Headers.UserAgent.Add(ProductInfoHeaderValue.Parse(executionParameters!.UserAgent));
         }
 
-        using var response = await internalHttpClient.SendAsync(requestMessage, cancellationToken).ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            using var response = await internalHttpClient.SendAsync(requestMessage, cancellationToken).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+        catch (HttpRequestException ex)
+        {
+            kernel.Logger.LogError(ex, "Error loading document from URI: {Uri}", uri);
+            throw;
+        }
     }
 
     private static async Task<string> LoadDocumentFromFilePath(

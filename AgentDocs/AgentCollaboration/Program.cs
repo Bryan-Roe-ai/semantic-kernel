@@ -243,7 +243,7 @@ public static class Program
 
     public sealed class ClipboardAccess
     {
-        [KernelFunction]
+        [KernelFunction("Copies the provided content to the clipboard.")]
         [Description("Copies the provided content to the clipboard.")]
         public static void SetClipboard(string content)
         {

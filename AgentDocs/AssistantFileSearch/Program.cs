@@ -104,8 +104,6 @@ public static class Program
                 },
                 new Kernel());
 
-        HandleMergeRequestComments();
-
         Console.WriteLine("Creating thread...");
         string threadId = await agent.CreateThreadAsync();
 
@@ -141,13 +139,20 @@ public static class Program
                 Console.WriteLine();
 
                 List<StreamingAnnotationContent> footnotes = [];
-                await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(threadId))
+                try
                 {
-                    // Capture annotations for footnotes
-                    footnotes.AddRange(chunk.Items.OfType<StreamingAnnotationContent>());
+                    await foreach (StreamingChatMessageContent chunk in agent.InvokeStreamingAsync(threadId))
+                    {
+                        // Capture annotations for footnotes
+                        footnotes.AddRange(chunk.Items.OfType<StreamingAnnotationContent>());
 
-                    // Render chunk with replacements for unicode brackets.
-                    Console.Write(chunk.Content.ReplaceUnicodeBrackets());
+                        // Render chunk with replacements for unicode brackets.
+                        Console.Write(chunk.Content.ReplaceUnicodeBrackets());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
                 }
 
                 Console.WriteLine();
@@ -178,14 +183,7 @@ public static class Program
     }
 
     private static string ReplaceUnicodeBrackets(this string content) =>
-        content?.Replace('【', '[').Replace('】', ']');
-
-    private static void HandleMergeRequestComments()
-    {
-        // Implement logic to process comments for optimization or merge
-        Console.WriteLine("Processing merge request comments...");
-        // Add your implementation here
-    }
+        content?.Replace('【', '[').Replace('】', ']') ?? string.Empty;
 
     // Method to handle AI interactions via a web interface
     public static async Task<string> HandleAIInteraction(string userInput)

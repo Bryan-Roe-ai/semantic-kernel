@@ -106,10 +106,17 @@ public static class Program
                     { "repository", "microsoft/semantic-kernel" },
                     { "now", $"{now.ToShortDateString()} {now.ToShortTimeString()}" }
                 };
-            await foreach (ChatMessageContent response in agent.InvokeAsync(history, arguments))
+            try
             {
-                // Display response.
-                Console.WriteLine($"{response.Content}");
+                await foreach (ChatMessageContent response in agent.InvokeAsync(history, arguments))
+                {
+                    // Display response.
+                    Console.WriteLine($"{response.Content}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
 
         } while (!isComplete);

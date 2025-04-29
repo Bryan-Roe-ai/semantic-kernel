@@ -98,11 +98,6 @@ public static class Program
                 },
                 new Kernel());
 
-        HandleMergeRequestComments();
-
-                },
-                new Kernel());
-
         Console.WriteLine("Creating thread...");
         string threadId = await agent.CreateThreadAsync();
 
@@ -132,19 +127,26 @@ public static class Program
                 Console.WriteLine();
 
                 bool isCode = false;
-                await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(threadId))
+                try
                 {
-                    if (isCode != (response.Metadata?.ContainsKey(OpenAIAssistantAgent.CodeInterpreterMetadataKey) ?? false))
+                    await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(threadId))
                     {
-                        Console.WriteLine();
-                        isCode = !isCode;
+                        if (isCode != (response.Metadata?.ContainsKey(OpenAIAssistantAgent.CodeInterpreterMetadataKey) ?? false))
+                        {
+                            Console.WriteLine();
+                            isCode = !isCode;
+                        }
+
+                        // Display response.
+                        Console.Write($"{response.Content}");
+
+                        // Capture file IDs for downloading.
+                        fileIds.AddRange(response.Items.OfType<StreamingFileReferenceContent>().Select(item => item.FileId));
                     }
-
-                    // Display response.
-                    Console.Write($"{response.Content}");
-
-                    // Capture file IDs for downloading.
-                    fileIds.AddRange(response.Items.OfType<StreamingFileReferenceContent>().Select(item => item.FileId));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"An error occurred: {ex.Message}");
                 }
                 Console.WriteLine();
 
@@ -213,13 +215,6 @@ public static class Program
                     });
             }
         }
-    }
-
-    private static void HandleMergeRequestComments()
-    {
-        // Implement logic to process comments for optimization or merge
-        Console.WriteLine("Processing merge request comments...");
-        // Add your implementation here
     }
 
     // Method to handle AI interactions via a web interface
