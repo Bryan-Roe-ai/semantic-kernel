@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List
 import logging
 import requests
+import os
 
 app = FastAPI()
 
@@ -50,6 +51,7 @@ def run_ai():
         response = requests.get(ai_service_url)
         response.raise_for_status()
         ai_response = response.text
+        update_webpage(ai_response)
         return {"ai_response": ai_response}
     except Exception as e:
         logging.error(f"Error running AI: {e}")
@@ -69,4 +71,17 @@ def interact_llm(request: LLMRequest):
         return LLMResponse(response=llm_response)
     except Exception as e:
         logging.error(f"Error interacting with LLM: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
+@app.post("/update-webpage")
+def update_webpage(ai_response: str):
+    try:
+        file_path = os.path.join(os.path.dirname(__file__), "docs", "index.html")
+        with open(file_path, "r") as file:
+            content = file.read()
+        updated_content = content.replace("<div id=\"ai-response\"></div>", f"<div id=\"ai-response\">{ai_response}</div>")
+        with open(file_path, "w") as file:
+            file.write(updated_content)
+    except Exception as e:
+        logging.error(f"Error updating webpage: {e}")
         raise HTTPException(status_code=500, detail="Internal Server Error")

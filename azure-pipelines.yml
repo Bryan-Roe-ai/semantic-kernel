@@ -9,11 +9,26 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+jobs:
+- job: BuildAndDeploy
+  displayName: 'Build and Deploy to GitHub Pages'
+  steps:
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+    displayName: 'Run a multi-line script'
+
+  - script: |
+      docker build -t my-app .
+    displayName: 'Build Docker Image'
+
+  - script: |
+      docker run -p 3000:3000 --env-file .env my-app
+    displayName: 'Run Docker Container'
+
+  - script: |
+      actions/deploy-pages@v4
+    displayName: 'Deploy to GitHub Pages'

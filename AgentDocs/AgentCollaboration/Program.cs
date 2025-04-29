@@ -279,7 +279,7 @@ public static class Program
                 response.EnsureSuccessStatusCode();
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-                UpdateWebPage(responseBody);
+                await UpdateWebPage(responseBody);
             }
             catch (Exception ex)
             {
@@ -291,9 +291,11 @@ public static class Program
     }
 
     // Method to handle the AI response and update the web page
-    private static void UpdateWebPage(string aiResponse)
+    private static async Task UpdateWebPage(string aiResponse)
     {
-        // Implement the logic to update the web page with the AI response
-        Console.WriteLine($"AI Response: {aiResponse}");
+        string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "docs", "index.html");
+        string content = await File.ReadAllTextAsync(filePath);
+        string updatedContent = content.Replace("<div id=\"ai-response\"></div>", $"<div id=\"ai-response\">{aiResponse}</div>");
+        await File.WriteAllTextAsync(filePath, updatedContent);
     }
 }
