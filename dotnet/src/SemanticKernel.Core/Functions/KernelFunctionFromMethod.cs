@@ -78,13 +78,7 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
     /// <param name="returnParameter">Optional return parameter description. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
     /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
     /// <returns>The created <see cref="KernelFunction"/> wrapper for <paramref name="method"/>.</returns>
-<<<<<<< main
-<<<<<<< main
-=======
     [Experimental("SKEXP0120")]
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
     public static KernelFunction Create(
         MethodInfo method,
         JsonSerializerOptions jsonSerializerOptions,
@@ -149,13 +143,6 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
     }
 
     /// <summary>
-<<<<<<< main
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
     /// Creates a <see cref="KernelFunction"/> instance for a method, specified via an <see cref="MethodInfo"/> instance
     /// and an optional target object if the method is an instance method.
     /// </summary>
@@ -164,13 +151,7 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
     /// <param name="target">The target object for the <paramref name="method"/> if it represents an instance method. This should be null if and only if <paramref name="method"/> is a static method.</param>
     /// <param name="options">Optional function creation options.</param>
     /// <returns>The created <see cref="KernelFunction"/> wrapper for <paramref name="method"/>.</returns>
-<<<<<<< main
-<<<<<<< main
-=======
     [Experimental("SKEXP0120")]
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
     public static KernelFunction Create(
         MethodInfo method,
         JsonSerializerOptions jsonSerializerOptions,
@@ -185,10 +166,6 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
         }
 
         MethodDetails methodDetails = GetMethodDetails(options?.FunctionName, method, jsonSerializerOptions, target);
-<<<<<<< main
-<<<<<<< main
-=======
-=======
         var result = new KernelFunctionFromMethod(
             methodDetails.Function,
             methodDetails.Name,
@@ -208,10 +185,6 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
     }
 
     /// <summary>
->>>>>>> upstream/main
-=======
-=======
->>>>>>> origin/main
     /// Creates a <see cref="KernelFunctionMetadata"/> instance for a method, specified via an <see cref="MethodInfo"/> instance.
     /// </summary>
     /// <param name="method">The method to be represented via the created <see cref="KernelFunction"/>.</param>
@@ -254,33 +227,26 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
         Verify.NotNull(method);
 
         MethodDetails methodDetails = GetMethodDetails(options?.FunctionName, method, null);
->>>>>>> upstream/main
         var result = new KernelFunctionFromMethod(
             methodDetails.Function,
             methodDetails.Name,
             options?.Description ?? methodDetails.Description,
             options?.Parameters?.ToList() ?? methodDetails.Parameters,
             options?.ReturnParameter ?? methodDetails.ReturnParameter,
-<<<<<<< main
             jsonSerializerOptions,
-=======
->>>>>>> upstream/main
             options?.AdditionalMetadata);
 
         if (options?.LoggerFactory?.CreateLogger(method.DeclaringType ?? typeof(KernelFunctionFromPrompt)) is ILogger logger &&
             logger.IsEnabled(LogLevel.Trace))
         {
-<<<<<<< main
             logger.LogTrace("Created KernelFunction '{Name}' for '{MethodName}'", result.Name, method.Name);
         }
 
         return result;
-=======
             logger.LogTrace("Created KernelFunctionMetadata '{Name}' for '{MethodName}'", result.Name, method.Name);
         }
 
         return result.Metadata;
->>>>>>> upstream/main
     }
 
     /// <inheritdoc/>
@@ -1833,6 +1799,12 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
 
             object? Process(object? value)
             {
+                //Converting string argument to target parameter type
+                if (value?.GetType() != type && parser is Func<object?, CultureInfo, object>)
+                {
+                    try
+                    {
+                        return parser(value, kernel.Culture);
                 if (type.IsAssignableFrom(value?.GetType()))
                 {
                     return value;
@@ -2168,6 +2140,7 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
     /// Conversion is first attempted using the current culture, and if that fails, it tries again
     /// with the invariant culture. If both fail, an exception is thrown.
     /// </remarks>
+    private static Func<object?, CultureInfo, object?>? GetParser(Type targetType) =>
     private static Func<object?, CultureInfo, object?>? GetConverter(Type targetType) =>
         s_parsers.GetOrAdd(targetType, static targetType =>
         {
@@ -2192,6 +2165,35 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
                         return null;
                     }
 
+                    // Issue #1. Quick fix to prevent the exception thrown by ConvertTo method - System.ArgumentOutOfRangeException : Value cannot be null. (Parameter 'destinationType') (Parameter 'actual')
+                    // Context: UT - KernelFunctionTests2.ItSupportsArgumentsAsIsWithoutConvertingTheirTypeAsync, Line - await AssertParameterType<string?>(null);
+                    // For some reason, the target type that is "string?" in the method signature comes here as a string, and the above statement - 'if (wasNullable && input is null)' is not working.
+                    if (input is null)
+                    {
+                        return null;
+                    }
+
+                    // Issue? #2. Quick fix to prevent the exception thrown by ConvertTo method - System.ArgumentOutOfRangeException : 'EnumConverter' is unable to convert 'System.DayOfWeek' to 'System.DayOfWeek'. (Parameter 'f')
+                    // Context: UT - KernelFunctionTests2.ItSupportsConvertingFromManyTypesAsync, Line - FunctionResult result = await function.InvokeAsync(this._kernel, arguments);
+                    // I think this is helpful logic and it should remain. At least I have not identified any drawbacks of it except of the exception above.
+                    if (targetType == input?.GetType())
+                    {
+                        return input;
+                    }
+
+                    // Just pure experimentation to see how data converters work
+                    object? InnerConvert(CultureInfo ci)
+                    {
+                        // Issue #3. This block can handle 'string' to type conversion but fails on type to type conversion - System.ArgumentOutOfRangeException : Int64Converter cannot convert from System.Int32. (Parameter 'b') exception thrown by the 'ConvertFrom' method.
+                        // Context: UT - KernelFunctionTests2.ItSupportsConvertingFromManyTypesAsync, Line - FunctionResult result = await function.InvokeAsync(this._kernel, arguments);
+                        if (converter.CanConvertFrom(input?.GetType()))
+                        {
+                            return converter.ConvertFrom(context: null, ci, input);
+                        }
+
+                        // Issue #4. This line can handle type -> type conversion but can't handle 'string' to type conversion - System.ArgumentException : Object of type 'System.String' cannot be converted to type 'System.Int32'.
+                        // Context: UT - KernelFunctionTests2.ItSupportsConvertingFromManyTypesAsync, Line - FunctionResult result = await function.InvokeAsync(this._kernel, arguments);
+                        return converter.ConvertTo(input, input?.GetType());
                     object? Convert(CultureInfo culture)
                     {
                         if (input?.GetType() is Type type && converter.CanConvertFrom(type))
@@ -2227,6 +2229,11 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
                     // If that fails, try with the invariant culture and allow any exception to propagate.
                     try
                     {
+                        return InnerConvert(cultureInfo);
+                    }
+                    catch (Exception e) when (!e.IsCriticalException() && cultureInfo != CultureInfo.InvariantCulture)
+                    {
+                        return InnerConvert(CultureInfo.InvariantCulture);
                         return Convert(cultureInfo);
                     }
                     catch (Exception e) when (!e.IsCriticalException() && cultureInfo != CultureInfo.InvariantCulture)
@@ -2260,6 +2267,8 @@ internal sealed partial class KernelFunctionFromMethod : KernelFunction
 
     /// <summary>Parser functions for converting strings to parameter types.</summary>
     private static readonly ConcurrentDictionary<Type, Func<object?, CultureInfo, object?>?> s_parsers = new();
+
+    #endregion
 #if NET6_0_OR_GREATER
     private static readonly MethodInfo s_valueTaskGetAsTaskMethodInfo = typeof(ValueTask<>).GetMethod("AsTask", BindingFlags.Public | BindingFlags.Instance)!;
     private static readonly MemberInfo s_taskGetResultPropertyInfo = typeof(Task<>).GetProperty("Result", BindingFlags.Public | BindingFlags.Instance)!;

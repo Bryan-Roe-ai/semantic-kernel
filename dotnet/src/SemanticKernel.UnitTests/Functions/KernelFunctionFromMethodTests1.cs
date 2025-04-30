@@ -1275,6 +1275,12 @@ public sealed class KernelFunctionFromMethodTests1
     }
 
     [Fact]
+    public async Task ItLogsMethodInvocationAsync()
+    {
+        // Arrange
+        var loggerMock = new Mock<ILogger>();
+        this._logger.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(loggerMock.Object);
+
     public async Task ItCanDeserializeJsonDocumentAsync()
     {
         // Arrange
@@ -1433,9 +1439,6 @@ public sealed class KernelFunctionFromMethodTests1
         Assert.Equal(34, result?.Result);
     }
 
-<<<<<<< main
-<<<<<<< main
-=======
     [Theory]
     [ClassData(typeof(TestJsonSerializerOptionsForTestParameterAndReturnTypes))]
     public void ItCanCreateFunctionMetadata(JsonSerializerOptions? jsos)
@@ -1498,9 +1501,6 @@ public sealed class KernelFunctionFromMethodTests1
         Assert.Equal("""{"type":"object","properties":{"Result":{"type":"integer"}}}""", metadata.ReturnParameter.Schema!.ToString());
     }
 
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
 #pragma warning disable CA1812 // Avoid uninstantiated internal classes
     private sealed class CustomTypeForJsonTests
 #pragma warning restore CA1812 // Avoid uninstantiated internal classes
@@ -1562,6 +1562,49 @@ public sealed class KernelFunctionFromMethodTests1
             s_actual = s_expected;
         }
 
+        var function = KernelFunctionFactory.CreateFromMethod(Method(Test), loggerFactory: this._logger.Object);
+        Assert.NotNull(function);
+
+        // Act
+        await function.InvokeAsync(this._kernel);
+
+        // Assert
+        loggerMock.Verify(x => x.Log(
+            LogLevel.Information,
+            It.IsAny<EventId>(),
+            It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Invoking method")),
+            It.IsAny<Exception>(),
+            It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task ItLogsMethodErrorHandlingAsync()
+    {
+        // Arrange
+        var loggerMock = new Mock<ILogger>();
+        this._logger.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(loggerMock.Object);
+
+        static void Test()
+        {
+            throw new InvalidOperationException("Test exception");
+        }
+
+        var function = KernelFunctionFactory.CreateFromMethod(Method(Test), loggerFactory: this._logger.Object);
+        Assert.NotNull(function);
+
+        // Act
+        await Assert.ThrowsAsync<InvalidOperationException>(() => function.InvokeAsync(this._kernel));
+
+        // Assert
+        loggerMock.Verify(x => x.Log(
+            LogLevel.Error,
+            It.IsAny<EventId>(),
+            It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Error invoking method")),
+            It.IsAny<Exception>(),
+            It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
+    }
+
+    private static MethodInfo Method(Delegate method)
         // Act
         var function = KernelFunctionFactory.CreateFromMethod(Test, loggerFactory: this._logger.Object);
         Assert.NotNull(function);
