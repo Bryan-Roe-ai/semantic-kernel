@@ -36,10 +36,10 @@ services:
       - API_KEY=${API_KEY}
       - DATABASE_URL=${DATABASE_URL}
       - SECRET_KEY=${SECRET_KEY}
-      - OpenAISettings:ApiKey=${OpenAISettings:ApiKey}
-      - OpenAISettings:ChatModel=${OpenAISettings:ChatModel}
-      - AzureOpenAISettings:Endpoint=${AzureOpenAISettings:Endpoint}
-      - AzureOpenAISettings:ChatModelDeployment=${AzureOpenAISettings:ChatModelDeployment}
+      - OpenAISettings__ApiKey=${OpenAISettings__ApiKey}
+      - OpenAISettings__ChatModel=${OpenAISettings__ChatModel}
+      - AzureOpenAISettings__Endpoint=${AzureOpenAISettings__Endpoint}
+      - AzureOpenAISettings__ChatModelDeployment=${AzureOpenAISettings__ChatModelDeployment}
       - AZURE_BLOB_STORAGE_ENDPOINT=${AZURE_BLOB_STORAGE_ENDPOINT}
       - AZURE_COGNITIVE_SERVICES_ENDPOINT=${AZURE_COGNITIVE_SERVICES_ENDPOINT}
       - COSMOS_DB_ENDPOINT=${COSMOS_DB_ENDPOINT}

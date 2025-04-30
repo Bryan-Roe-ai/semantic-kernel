@@ -59,3 +59,6 @@ for lang in "${unsupported_languages[@]}"; do
 done
 
 echo "Errors fixed successfully."
+
+# Ensure the script has executable permissions
+chmod +x ./fix-errors.sh

@@ -5,23 +5,23 @@
   "mongodb": {
     "url": "${MONGODB_URL}",
     "dbName": "chat-ui",
-    "directConnection": false
+    "directConnection": "${MONGODB_DIRECT_CONNECTION}"
   },
   "cookie": {
-    "name": "chat-ui"
+    "name": "${COOKIE_NAME}"
   },
   "hfAccessToken": "${HF_ACCESS_TOKEN}",
   "serpapiKey": "${SERPAPI_KEY}",
   "openid": {
     "clientId": "${OPENID_CLIENT_ID}",
     "clientSecret": "${OPENID_CLIENT_SECRET}",
-    "scopes": "openid profile",
-    "providerUrl": "https://huggingface.co"
+    "scopes": "${OPENID_SCOPES}",
+    "providerUrl": "${OPENID_PROVIDER_URL}"
   },
   "models": [
     {
-      "name": "your_model_name_here",
-      "chatPromptTemplate": "your_model_prompt_template_here",
+      "name": "${MODELS}",
+      "chatPromptTemplate": "${MODEL_PROMPT_TEMPLATE}",
       "preprompt": "",
       "promptExamples": [
         {
@@ -43,10 +43,10 @@
           "url": "http://127.0.0.1:8080"
         }
       ],
-      "parameters": "your_model_params_here"
+      "parameters": "${MODEL_PARAMS}"
     },
     {
-      "name": "model_2",
+      "name": "${OLD_MODELS}",
       "chatPromptTemplate": "template_2",
       "preprompt": "preprompt_2",
       "promptExamples": [
@@ -66,10 +66,10 @@
   ],
   "oldModels": [],
   "public": {
-    "origin": "your_public_origin_here",
-    "sharePrefix": "your_public_share_prefix_here",
-    "googleAnalyticsId": "your_public_google_analytics_id_here",
-    "deprecatedGoogleAnalyticsId": "your_public_deprecated_google_analytics_id_here",
+    "origin": "${PUBLIC_ORIGIN}",
+    "sharePrefix": "${PUBLIC_SHARE_PREFIX}",
+    "googleAnalyticsId": "${PUBLIC_GOOGLE_ANALYTICS_ID}",
+    "deprecatedGoogleAnalyticsId": "${PUBLIC_DEPRECATED_GOOGLE_ANALYTICS_ID}",
     "announcementBanners": [
       {
         "title": "Chat UI is now open sourced on GitHub",
@@ -77,23 +77,23 @@
         "linkHref": "https://github.com/huggingface/chat-ui"
       }
     ],
-    "appName": "your_app_name_here",
-    "appAssets": "chatui",
-    "appColor": "your_app_color_here",
-    "appDataSharing": 1,
-    "appDataDisclaimer": 1
+    "appName": "${PUBLIC_APP_NAME}",
+    "appAssets": "${PUBLIC_APP_ASSETS}",
+    "appColor": "${PUBLIC_APP_COLOR}",
+    "appDataSharing": "${PUBLIC_APP_DATA_SHARING}",
+    "appDataDisclaimer": "${PUBLIC_APP_DATA_DISCLAIMER}"
   },
   "parquetExport": {
-    "dataset": "your_parquet_export_dataset_here",
+    "dataset": "${PARQUET_EXPORT_DATASET}",
     "hfToken": "${PARQUET_EXPORT_HF_TOKEN}",
     "secret": "${PARQUET_EXPORT_SECRET}"
   },
   "taskGeneratorSettings": {
     "endpoint": "https://example.com/taskgenerator",
     "apiKey": "${TASK_GENERATOR_API_KEY}",
-    "topic": "default-topic",
-    "difficultyLevel": "default-difficulty",
-    "taskType": "default-task-type"
+    "topic": "${TASK_GENERATOR_TOPIC}",
+    "difficultyLevel": "${TASK_GENERATOR_DIFFICULTY_LEVEL}",
+    "taskType": "${TASK_GENERATOR_TASK_TYPE}"
   },
   "aiInteraction": {
     "openaiApiKey": "${OPENAI_API_KEY}",
@@ -107,11 +107,11 @@
     "azureDevOpsOrganizationUrl": "${AZURE_DEVOPS_ORGANIZATION_URL}"
   },
   "githubPages": {
-    "repository": "your_github_repository_here",
-    "branch": "main",
-    "buildCommand": "docker build -t my-app .",
-    "runCommand": "docker run -p 3000:3000 --env-file .env my-app",
-    "deployCommand": "actions/deploy-pages@v4"
+    "repository": "${GITHUB_PAGES_REPOSITORY}",
+    "branch": "${GITHUB_PAGES_BRANCH}",
+    "buildCommand": "${GITHUB_PAGES_BUILD_COMMAND}",
+    "runCommand": "${GITHUB_PAGES_RUN_COMMAND}",
+    "deployCommand": "${GITHUB_PAGES_DEPLOY_COMMAND}"
   },
   "securitySettings": {
     "allowedDomains": [
