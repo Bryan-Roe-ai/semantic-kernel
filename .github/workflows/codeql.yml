@@ -101,6 +101,14 @@ jobs:
         build-mode: ${{ matrix.build-mode }}
         queries: ./codeql-queries,+security-extended,security-and-quality
 
+    # Check for unsupported languages
+    - name: Check for Unsupported Languages
+      run: |
+        if [ "${{ matrix.language }}" == "csharp" ]; then
+          echo "Error: Unsupported language 'C#'."
+          exit 1
+        fi
+
     # Run lint
     - name: Run lint
       run: npm run lint

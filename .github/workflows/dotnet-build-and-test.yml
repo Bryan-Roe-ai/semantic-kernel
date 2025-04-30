@@ -110,6 +110,13 @@ jobs:
       - name: Fix Errors
         run: ./fix-errors.sh
 
+      - name: Check for Unsupported Languages
+        run: |
+          if [ "${{ matrix.language }}" == "csharp" ]; then
+            echo "Error: Unsupported language 'C#'."
+            exit 1
+          fi
+
       - name: Azure CLI Login
         if: github.event_name != 'pull_request' && matrix.integration-tests
         uses: azure/login@v4

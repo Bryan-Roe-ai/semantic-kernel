@@ -49,4 +49,13 @@ find . -type f -name '*.exe' -print >> deleted-files-report.txt
 find . -type f -name '*.dll' -print >> deleted-files-report.txt
 find . -type f -name '*.zip' -print >> deleted-files-report.txt
 
+# Check for unsupported languages
+unsupported_languages=("csharp")
+for lang in "${unsupported_languages[@]}"; do
+  if [ "$lang" == "csharp" ]; then
+    echo "Error: Unsupported language 'C#'."
+    exit 1
+  fi
+done
+
 echo "Errors fixed successfully."

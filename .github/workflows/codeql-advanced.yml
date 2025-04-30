@@ -63,6 +63,23 @@ jobs:
           release
         continue-on-error: false
 
+      - name: Set up dependencies
+        run: |
+          if [ "${{ matrix.language }}" == "csharp" ]; then
+            echo "Error: Unsupported language 'C#'."
+            exit 1
+          elif [ "${{ matrix.language }}" == "python" ]; then
+            pip install -r requirements.txt
+          elif [ "${{ matrix.language }}" == "java-kotlin" ]; then
+            ./gradlew build
+          elif [ "${{ matrix.language }}" == "javascript-typescript" ]; then
+            npm install
+          elif [ "${{ matrix.language }}" == "c-cpp" ]; then
+            make
+          else
+            echo "Unsupported language: ${{ matrix.language }}"
+            exit 1
+
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
