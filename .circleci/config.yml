@@ -17,6 +17,10 @@ jobs:
       - run: dotnet build
       - run: ./fix-errors.sh
       - run: dotnet test --no-build --verbosity normal
+      - run: echo "Verifying installations of dependencies..."
+      - run: npm list
+      - run: pip list
+      - run: dotnet --list-sdks
 
   build:
     docker:
@@ -30,6 +34,10 @@ jobs:
       - run: dotnet build
       - run: dotnet build
       - run: ./fix-errors.sh
+      - run: echo "Verifying installations of dependencies..."
+      - run: npm list
+      - run: pip list
+      - run: dotnet --list-sdks
 
   deploy:
     docker:
@@ -43,6 +51,10 @@ jobs:
       - run: dotnet build
       - run: dotnet build
       - run: ./fix-errors.sh
+      - run: echo "Verifying installations of dependencies..."
+      - run: npm list
+      - run: pip list
+      - run: dotnet --list-sdks
 
   verify-codespace-startup:
     docker:
@@ -50,6 +62,10 @@ jobs:
     steps:
       - checkout
       - run: ./fix-codespace-startup.sh
+      - run: echo "Verifying installations of dependencies..."
+      - run: npm list
+      - run: pip list
+      - run: dotnet --list-sdks
 
 workflows:
   test-flow:

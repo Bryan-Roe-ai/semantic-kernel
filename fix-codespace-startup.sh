@@ -22,3 +22,9 @@ for service in "${services[@]}"; do
 done
 
 echo "All necessary services are running."
+
+# Verify installations of dependencies
+echo "Verifying installations of dependencies..."
+npm list
+pip list
+dotnet --list-sdks
