@@ -1,0 +1,47 @@
+name: Cache Dependencies
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Run lint
+      run: npm run lint
+
+    - name: Cache Node.js dependencies
+      uses: actions/cache@v3
+      with:
+        # Cache dependencies
+        path: |
+          node_modules
+          packages
+        # Unique key for the cache
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        # Fallback keys to restore cache
+        restore-keys: |
+          ${{ runner.os }}-node-
+          ${{ runner.os }}-
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        # Cache dependencies
+        path: |
+          ~/.cache/pip
+        # Unique key for the cache
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        # Fallback keys to restore cache
+        restore-keys: |
+          ${{ runner.os }}-pip-
+          ${{ runner.os }}-

@@ -8,8 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.AI.Embeddings;
-using Microsoft.SemanticKernel.Http;
-using Microsoft.SemanticKernel.Services;
+using Microsoft.SemanticKernel.Diagnostics;
 
 namespace Microsoft.SemanticKernel.Connectors.AI.HuggingFace.TextEmbedding;
 
@@ -23,7 +22,6 @@ public sealed class HuggingFaceTextEmbeddingGeneration : ITextEmbeddingGeneratio
     private readonly string _model;
     private readonly string? _endpoint;
     private readonly HttpClient _httpClient;
-    private readonly Dictionary<string, object?> _attributes = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HuggingFaceTextEmbeddingGeneration"/> class.
@@ -36,11 +34,10 @@ public sealed class HuggingFaceTextEmbeddingGeneration : ITextEmbeddingGeneratio
         Verify.NotNull(endpoint);
         Verify.NotNullOrWhiteSpace(model);
 
-        this._model = model;
         this._endpoint = endpoint.AbsoluteUri;
-        this._attributes.Add(AIServiceExtensions.ModelIdKey, this._model);
-        this._attributes.Add(AIServiceExtensions.EndpointKey, this._endpoint);
-        this._httpClient = HttpClientProvider.GetHttpClient();
+        this._model = model;
+
+        this._httpClient = new HttpClient(NonDisposableHttpClientHandler.Instance, disposeHandler: false);
     }
 
     /// <summary>
@@ -55,9 +52,8 @@ public sealed class HuggingFaceTextEmbeddingGeneration : ITextEmbeddingGeneratio
 
         this._model = model;
         this._endpoint = endpoint;
-        this._attributes.Add(AIServiceExtensions.ModelIdKey, this._model);
-        this._attributes.Add(AIServiceExtensions.EndpointKey, this._endpoint);
-        this._httpClient = HttpClientProvider.GetHttpClient();
+
+        this._httpClient = new HttpClient(NonDisposableHttpClientHandler.Instance, disposeHandler: false);
     }
 
     /// <summary>
@@ -70,26 +66,19 @@ public sealed class HuggingFaceTextEmbeddingGeneration : ITextEmbeddingGeneratio
     {
         Verify.NotNullOrWhiteSpace(model);
         Verify.NotNull(httpClient);
-        if (httpClient.BaseAddress == null && string.IsNullOrEmpty(endpoint))
-        {
-            throw new ArgumentException($"The {nameof(httpClient)}.{nameof(HttpClient.BaseAddress)} and {nameof(endpoint)} are both null or empty. Please ensure at least one is provided.");
-        }
 
         this._model = model;
         this._endpoint = endpoint;
         this._httpClient = httpClient;
-        this._attributes.Add(AIServiceExtensions.ModelIdKey, model);
-        this._attributes.Add(AIServiceExtensions.EndpointKey, endpoint ?? httpClient.BaseAddress!.ToString());
+
+        if (httpClient.BaseAddress == null && string.IsNullOrEmpty(endpoint))
+        {
+            throw new ArgumentException("The HttpClient BaseAddress and endpoint are both null or empty. Please ensure at least one is provided.");
+        }
     }
 
     /// <inheritdoc/>
-    public IReadOnlyDictionary<string, object?> Attributes => this._attributes;
-
-    /// <inheritdoc/>
-    public async Task<IList<ReadOnlyMemory<float>>> GenerateEmbeddingsAsync(
-        IList<string> data,
-        Kernel? kernel = null,
-        CancellationToken cancellationToken = default)
+    public async Task<IList<Embedding<float>>> GenerateEmbeddingsAsync(IList<string> data, CancellationToken cancellationToken = default)
     {
         return await this.ExecuteEmbeddingRequestAsync(data, cancellationToken).ConfigureAwait(false);
     }
@@ -102,7 +91,8 @@ public sealed class HuggingFaceTextEmbeddingGeneration : ITextEmbeddingGeneratio
     /// <param name="data">Data to embed.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
     /// <returns>List of generated embeddings.</returns>
-    private async Task<IList<ReadOnlyMemory<float>>> ExecuteEmbeddingRequestAsync(IList<string> data, CancellationToken cancellationToken)
+    /// <exception cref="HttpOperationException">Exception when backend didn't respond with generated embeddings.</exception>
+    private async Task<IList<Embedding<float>>> ExecuteEmbeddingRequestAsync(IList<string> data, CancellationToken cancellationToken)
     {
         var embeddingRequest = new TextEmbeddingRequest
         {
@@ -111,14 +101,17 @@ public sealed class HuggingFaceTextEmbeddingGeneration : ITextEmbeddingGeneratio
 
         using var httpRequestMessage = HttpRequest.CreatePostRequest(this.GetRequestUri(), embeddingRequest);
 
-        httpRequestMessage.Headers.Add("User-Agent", HttpHeaderValues.UserAgent);
+        httpRequestMessage.Headers.Add("User-Agent", Telemetry.HttpUserAgent);
 
-        var response = await this._httpClient.SendWithSuccessCheckAsync(httpRequestMessage, cancellationToken).ConfigureAwait(false);
-        var body = await response.Content.ReadAsStringWithExceptionMappingAsync().ConfigureAwait(false);
+        var response = await this._httpClient.SendAsync(httpRequestMessage, cancellationToken).ConfigureAwait(false);
 
-        var embeddingResponse = JsonSerializer.Deserialize<TextEmbeddingResponse>(body);
+        var responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        return embeddingResponse?.Embeddings?.Select(l => l.Embedding).ToList()!;
+        response.EnsureSuccess(responseContent);
+
+        var embeddingResponse = JsonSerializer.Deserialize<TextEmbeddingResponse>(responseContent);
+
+        return embeddingResponse?.Embeddings?.Select(l => new Embedding<float>(l.Embedding!, transferOwnership: true)).ToList()!;
     }
 
     /// <summary>
@@ -141,7 +134,7 @@ public sealed class HuggingFaceTextEmbeddingGeneration : ITextEmbeddingGeneratio
         }
         else
         {
-            throw new KernelException("No endpoint or HTTP client base address has been provided");
+            throw new SKException("No endpoint or HTTP client base address has been provided");
         }
 
         return new Uri($"{baseUrl!.TrimEnd('/')}/{this._model}");

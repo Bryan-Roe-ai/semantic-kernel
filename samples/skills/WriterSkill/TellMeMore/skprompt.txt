@@ -1,7 +1,4 @@
->>>>>The following is part of a {{$conversationtype}}.
+>>>>>The following is part of a text.
 {{$input}}
 
->>>>>The following is an overview of a previous part of the {{$conversationtype}}, focusing on "{{$focusarea}}".
-{{$previousresults}}
-
->>>>>In 250 words or less, write a verbose and detailed overview of the {{$conversationtype}} focusing solely on "{{$focusarea}}".
+>>>>>In 250 words or less, write a verbose and detailed overview focusing solely on "{{$focusarea}}".

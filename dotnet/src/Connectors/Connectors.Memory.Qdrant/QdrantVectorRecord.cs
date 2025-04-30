@@ -1,16 +1,19 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.SemanticKernel.Text;
+using Microsoft.SemanticKernel.Diagnostics;
 
-namespace Microsoft.SemanticKernel.Connectors.Memory.Qdrant;
+namespace Microsoft.SemanticKernel.Connectors.Qdrant;
 
 /// <summary>
 /// A record structure used by Qdrant that contains an embedding and metadata.
 /// </summary>
+[Experimental("SKEXP0020")]
 public class QdrantVectorRecord
 {
     /// <summary>
@@ -23,7 +26,6 @@ public class QdrantVectorRecord
     /// The embedding data.
     /// </summary>
     [JsonPropertyName("embedding")]
-    [JsonConverter(typeof(ReadOnlyMemoryConverter))]
     public ReadOnlyMemory<float> Embedding { get; }
 
     /// <summary>
@@ -72,13 +74,16 @@ public class QdrantVectorRecord
     /// <returns>Vector record</returns>
     /// <exception cref="KernelException">Qdrant exception</exception>
     public static QdrantVectorRecord FromJsonMetadata(string pointId, ReadOnlyMemory<float> embedding, string json, List<string>? tags = null)
+    /// <exception cref="SKException">Qdrant exception</exception>
+    public static QdrantVectorRecord FromJsonMetadata(string pointId, IEnumerable<float> embedding, string json, List<string>? tags = null)
     {
         var payload = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
-        if (payload != null)
+        if (payload is not null)
         {
             return new QdrantVectorRecord(pointId, embedding, payload, tags);
         }
 
         throw new KernelException("Unable to deserialize record payload");
+        throw new SKException("Unable to deserialize record payload");
     }
 }

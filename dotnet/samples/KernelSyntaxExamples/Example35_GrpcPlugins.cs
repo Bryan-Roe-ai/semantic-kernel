@@ -1,20 +1,20 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Plugins.Grpc;
-using RepoUtils;
+using Xunit;
+using Xunit.Abstractions;
 
-/**
- * This example shows how to use gRPC plugins.
- */
-// ReSharper disable once InconsistentNaming
-public static class Example35_GrpcPlugins
+namespace Examples;
+
+// This example shows how to use gRPC plugins.
+public class Example35_GrpcPlugins : BaseTest
 {
-    public static async Task RunAsync()
+    [Fact(Skip = "Setup crendentials")]
+    public async Task RunAsync()
     {
-        var kernel = new KernelBuilder().WithLoggerFactory(ConsoleLogger.LoggerFactory).Build();
+        Kernel kernel = new();
 
         // Import a gRPC plugin using one of the following Kernel extension methods
         // kernel.ImportGrpcPlugin
@@ -29,6 +29,10 @@ public static class Example35_GrpcPlugins
         // Run
         var result = await kernel.InvokeAsync(plugin["<operation-name>"], arguments);
 
-        Console.WriteLine("Plugin response: {0}", result.GetValue<string>());
+        WriteLine($"Plugin response: {result.GetValue<string>()}");
+    }
+
+    public Example35_GrpcPlugins(ITestOutputHelper output) : base(output)
+    {
     }
 }

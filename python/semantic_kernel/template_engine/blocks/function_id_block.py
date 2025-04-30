@@ -1,94 +1,644 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-from logging import Logger
-from re import match as re_match
-from typing import Optional, Tuple
+import logging
+from re import compile
+<<<<<<< div
+<<<<<<< div
+=======
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+<<<<<<< main
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+<<<<<<< div
+>>>>>>> main
+=======
+>>>>>>> origin/main
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+from typing import TYPE_CHECKING, Any, ClassVar
 
-import pydantic as pdt
+from pydantic import model_validator
 
-from semantic_kernel.orchestration.context_variables import ContextVariables
+from semantic_kernel.exceptions import FunctionIdBlockSyntaxError
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 from semantic_kernel.template_engine.blocks.block import Block
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+=======
+from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Tuple
+
+from pydantic import model_validator
+
+>>>>>>> ms/small_fixes
+>>>>>>> origin/main
+from semantic_kernel.template_engine.blocks.block import Block
+from semantic_kernel.template_engine.blocks.block_errors import FunctionIdBlockSyntaxError
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+=======
+from typing import TYPE_CHECKING, Any, ClassVar, Dict, Optional, Tuple
+
+from pydantic import model_validator
+
+>>>>>>> ms/small_fixes
+from semantic_kernel.template_engine.blocks.block import Block
+from semantic_kernel.template_engine.blocks.block_errors import FunctionIdBlockSyntaxError
+<<<<<<< div
+>>>>>>> main
+=======
+>>>>>>> origin/main
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
 from semantic_kernel.template_engine.blocks.block_types import BlockTypes
+
+if TYPE_CHECKING:
+    from semantic_kernel.functions.kernel_arguments import KernelArguments
+    from semantic_kernel.kernel import Kernel
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+
+logger: logging.Logger = logging.getLogger(__name__)
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+
+FUNCTION_ID_BLOCK_REGEX = (
+    r"^((?P<plugin>[0-9A-Za-z_]+)[.])?(?P<function>[0-9A-Za-z_]+)$"
+)
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< Updated upstream
+
+logger: logging.Logger = logging.getLogger(__name__)
+>>>>>>> Stashed changes
+=======
+
+logger: logging.Logger = logging.getLogger(__name__)
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+<<<<<<< main
+
+FUNCTION_ID_BLOCK_REGEX = (
+    r"^((?P<plugin>[0-9A-Za-z_]+)[.])?(?P<function>[0-9A-Za-z_]+)$"
+)
+
+FUNCTION_ID_BLOCK_MATCHER = compile(FUNCTION_ID_BLOCK_REGEX)
+
+
+=======
+
+<<<<<<< main
+FUNCTION_ID_BLOCK_REGEX = (
+    r"^((?P<plugin>[0-9A-Za-z_]+)[.])?(?P<function>[0-9A-Za-z_]+)$"
+)
+=======
+FUNCTION_ID_BLOCK_REGEX = r"^((?P<plugin>[0-9A-Za-z_]+)[.])?(?P<function>[0-9A-Za-z_]+)$"
+>>>>>>> ms/small_fixes
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+
+FUNCTION_ID_BLOCK_MATCHER = compile(FUNCTION_ID_BLOCK_REGEX)
+
+
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> origin/main
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> origin/main
+>>>>>>> Stashed changes
+=======
+>>>>>>> origin/main
+>>>>>>> Stashed changes
+=======
+>>>>>>> origin/main
+>>>>>>> Stashed changes
+=======
+>>>>>>> origin/main
+>>>>>>> Stashed changes
+=======
+>>>>>>> origin/main
+>>>>>>> Stashed changes
+=======
+>>>>>>> origin/main
+>>>>>>> Stashed changes
+class FunctionIdBlock(Block):
+    """Block to represent a function id. It can be used to call a function from a plugin.
+
+    The content is parsed using a regex, that returns either a plugin and
+    function name or just a function name, depending on the content.
+
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+    Anything other than that and a ValueError is raised.
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+    Anything other than that and a ValueError is raised.
+=======
+<<<<<<< main
+    Anything other than that and a ValueError is raised.
+=======
+    Anything other then that and a ValueError is raised.
+>>>>>>> ms/small_fixes
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+
+    Args:
+        content (str): The content of the block.
+        function_name (Optional[str], optional): The function name.
+        plugin_name (Optional[str], optional): The plugin name.
+
+    Raises:
+        ValueError: If the content does not have valid syntax.
+    """
+
+    type: ClassVar[BlockTypes] = BlockTypes.FUNCTION_ID
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+<<<<<<< main
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+    function_name: str = ""
+    plugin_name: str | None = None
+
+=======
+
+logger: logging.Logger = logging.getLogger(__name__)
+
+<<<<<<< main
+FUNCTION_ID_BLOCK_REGEX = (
+    r"^((?P<plugin>[0-9A-Za-z_]+)[.])?(?P<function>[0-9A-Za-z_]+)$"
+)
+=======
+FUNCTION_ID_BLOCK_REGEX = r"^((?P<plugin>[0-9A-Za-z_]+)[.])?(?P<function>[0-9A-Za-z_]+)$"
+>>>>>>> ms/small_fixes
+
+FUNCTION_ID_BLOCK_MATCHER = compile(FUNCTION_ID_BLOCK_REGEX)
 
 
 class FunctionIdBlock(Block):
-    _skill_name: str = pdt.PrivateAttr()
-    _function_name: str = pdt.PrivateAttr()
+    """Block to represent a function id. It can be used to call a function from a plugin.
 
-    def __init__(self, content: Optional[str] = None, log: Optional[Logger] = None):
-        super().__init__(content=content and content.strip(), log=log)
+    The content is parsed using a regex, that returns either a plugin and
+    function name or just a function name, depending on the content.
 
-        function_name_parts = self.content.split(".")
-        if len(function_name_parts) > 2:
-            self.log.error(f"Invalid function name `{self.content}`")
-            raise ValueError(
-                "A function name can contain at most one dot separating "
-                "the skill name from the function name"
-            )
+<<<<<<< main
+    Anything other than that and a ValueError is raised.
+=======
+    Anything other then that and a ValueError is raised.
+>>>>>>> ms/small_fixes
 
-        if len(function_name_parts) == 2:
-            self._skill_name = function_name_parts[0]
-            self._function_name = function_name_parts[1]
-        else:
-            self._skill_name = ""
-            self._function_name = self.content
+    Args:
+        content (str): The content of the block.
+        function_name (Optional[str], optional): The function name.
+        plugin_name (Optional[str], optional): The plugin name.
 
-    @property
-    def type(self) -> BlockTypes:
-        return BlockTypes.FUNCTION_ID
+    Raises:
+        ValueError: If the content does not have valid syntax.
+    """
 
-    @property
-    def skill_name(self) -> str:
-        return self._skill_name
+    type: ClassVar[BlockTypes] = BlockTypes.FUNCTION_ID
+<<<<<<< main
+    function_name: str = ""
+    plugin_name: str | None = None
 
-    @skill_name.setter
-    def skill_name(self, value: str) -> None:
-        self._skill_name = value
+<<<<<<< div
+>>>>>>> main
+=======
+>>>>>>> origin/main
+=======
+    function_name: str = ""
+    plugin_name: str | None = None
 
-    @property
-    def function_name(self) -> str:
-        return self._function_name
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+=======
+<<<<<<< main
+>>>>>>> origin/main
+    function_name: str = ""
+    plugin_name: str | None = None
 
-    @function_name.setter
-    def function_name(self, value: str) -> None:
-        self._function_name = value
+>>>>>>> Stashed changes
+>>>>>>> head
+    @model_validator(mode="before")
+    @classmethod
+    def parse_content(cls, fields: dict[str, Any]) -> dict[str, Any]:
+        """Parse the content of the function id block and extract the plugin and function name.
 
-    def is_valid(self) -> Tuple[bool, str]:
-        if self.content is None or len(self.content) == 0:
-            error_msg = "The function identifier is empty"
-            return False, error_msg
+        If both are present in the fields, return the fields as is.
+        Otherwise, use the regex to extract the plugin and function name.
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+<<<<<<< div
+=======
+>>>>>>> main
+=======
+>>>>>>> head
+=======
+>>>>>>> origin/main
+=======
+=======
+<<<<<<< main
+=======
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+=======
+=======
+>>>>>>> Stashed changes
+    function_name: Optional[str] = ""
+    plugin_name: Optional[str] = None
 
-        if not re_match(r"^[a-zA-Z0-9_.]*$", self.content):
-            # NOTE: this is not quite the same as
-            # utils.validation.validate_function_name
-            error_msg = (
-                f"The function identifier '{self.content}' contains invalid "
-                "characters. Only alphanumeric chars, underscore and a single "
-                "dot are allowed."
-            )
-            return False, error_msg
+    @model_validator(mode="before")
+    @classmethod
+    def parse_content(cls, fields: Dict[str, Any]) -> Dict[str, Any]:
+        """Parse the content of the function id block and extract the plugin and function name.
 
-        if self._has_more_than_one_dot(self.content):
-            error_msg = (
-                "The function identifier can contain max one '.' "
-                "char separating skill name from function name"
-            )
-            return False, error_msg
+        If both are present in the fields, return the fields as is.
+        Otherwise use the regex to extract the plugin and function name.
+>>>>>>> ms/small_fixes
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> origin/main
+>>>>>>> head
+        """
+        if "plugin_name" in fields and "function_name" in fields:
+            return fields
+        content = fields.get("content", "").strip()
+        matches = FUNCTION_ID_BLOCK_MATCHER.match(content)
+        if not matches:
+            raise FunctionIdBlockSyntaxError(content=content)
+        if plugin := matches.groupdict().get("plugin"):
+            fields["plugin_name"] = plugin
+        fields["function_name"] = matches.group("function")
+        return fields
 
-        return True, ""
-
-    def render(self, _: Optional[ContextVariables] = None) -> str:
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+    def render(self, *_: "Kernel | KernelArguments | None") -> str:
+        """Render the function id block."""
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+    def render(self, *_: "Kernel | KernelArguments | None") -> str:
+        """Render the function id block."""
+=======
+<<<<<<< div
+=======
+>>>>>>> main
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> origin/main
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< main
+    def render(self, *_: "Kernel | KernelArguments | None") -> str:
+        """Render the function id block."""
+=======
+    def render(self, *_: Tuple["Kernel", Optional["KernelArguments"]]) -> str:
+>>>>>>> ms/small_fixes
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> origin/main
+>>>>>>> head
         return self.content
-
-    def _has_more_than_one_dot(self, value: Optional[str]) -> bool:
-        if value is None or len(value) < 2:
-            return False
-
-        count = 0
-        for char in value:
-            if char == ".":
-                count += 1
-                if count > 1:
-                    return True
-
-        return False

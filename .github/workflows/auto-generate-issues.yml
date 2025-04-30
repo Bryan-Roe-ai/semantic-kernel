@@ -1,0 +1,75 @@
+name: Auto Generate Issues
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  generate-issues:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Cache Node.js dependencies (if applicable)
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      # Step 3: Install Node.js dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Generate issues
+      - name: Generate issues
+        run: |
+          echo "Generating issues based on predefined criteria and templates..."
+          python scripts/generate_issues.py
+
+      # Step 5: Fix errors (if any)
+      - name: Fix Errors
+        if: failure()
+        run: ./fix-errors.sh
+
+      # Step 6: Ensure best practices adherence
+      - name: Ensure best practices adherence
+        run: |
+          echo "Ensuring generated issues adhere to best practices..."
+          python scripts/check_best_practices.py
+
+      # Step 7: Notify trusted people for approval
+      - name: Notify trusted people for approval
+        run: |
+          echo "Notifying trusted people for approval..."
+          python scripts/notify_approvers.py
+
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: [python, node]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Setup environment and run language-specific linting
+      - name: Setup ${{ matrix.language }}
+        run: |
+          if [ "${{ matrix.language }}" == "python" ]; then
+            python -m pip install --upgrade pip
+            pip install flake8
+            flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+            flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          elif [ "${{ matrix.language }}" == "node" ]; then
+            npm install
+            npm run lint
+          fi

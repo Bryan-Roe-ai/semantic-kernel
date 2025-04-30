@@ -1,14 +1,14 @@
-# @microsoft/octo-semantickernel-pr-dotnet owns any files in the dotnet
-# directory at the root of the repository and any of its
-# subdirectories.
+# Owners for the dotnet directory and its subdirectories
 /dotnet/ @microsoft/octo-semantickernel-pr-dotnet
 
-# @microsoft/octo-semantickernel-pr-python owns any files in the python
-# directory at the root of the repository and any of its
-# subdirectories.
+# Owners for the python directory and its subdirectories
 /python/ @microsoft/octo-semantickernel-pr-python
 
-# @microsoft/octo-semantickernel-pr-python owns any files in the java
-# directory at the root of the repository and any of its
-# subdirectories.
+# Owners for the java directory and its subdirectories
 /java/ @microsoft/octo-semantickernel-pr-java
+
+# Owners for all files in the root directory
+/* @Microsoft/vscodeazuretoolsdev
+
+# Owners for all files in the vscode-azure-account directory
+/vscode-azure-account/ @Microsoft/vscodeazuretoolsdev

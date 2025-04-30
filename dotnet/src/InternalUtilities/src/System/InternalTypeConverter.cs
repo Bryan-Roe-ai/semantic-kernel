@@ -3,11 +3,15 @@
 using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+
+namespace Microsoft.SemanticKernel;
 
 /// <summary>
 /// Provides internal utility methods for converting types to strings with consideration for CultureInfo.
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal static class InternalTypeConverter
 {
     /// <summary>
@@ -16,17 +20,17 @@ internal static class InternalTypeConverter
     /// <param name="value">The object to convert.</param>
     /// <param name="culture">The CultureInfo to consider during conversion.</param>
     /// <returns>A string representation of the object value, considering the specified CultureInfo.</returns>
-    public static string? ConvertToString(object? value, CultureInfo culture)
+    public static string? ConvertToString(object? value, CultureInfo? culture = null)
     {
-        if (value == null) { return null; }
+        if (value is null) { return null; }
 
         var sourceType = value.GetType();
 
         var converterDelegate = GetTypeToStringConverterDelegate(sourceType);
 
-        return converterDelegate == null
+        return converterDelegate is null
             ? value.ToString()
-            : converterDelegate(value, culture);
+            : converterDelegate(value, culture ?? CultureInfo.InvariantCulture);
     }
 
     /// <summary>
@@ -35,16 +39,16 @@ internal static class InternalTypeConverter
     /// <param name="sourceType">The source Type for which to retrieve the type-to-string converter delegate.</param>
     /// <returns>A Func delegate for converting the source type to a string, considering CultureInfo, or null if no suitable converter is found.</returns>
     private static Func<object?, CultureInfo, string?>? GetTypeToStringConverterDelegate(Type sourceType) =>
-        s_converters.GetOrAdd(sourceType, static sourceType =>
+        s_converters.GetOrAdd(sourceType, (Type innerSourceType) =>
         {
             // Strings just render as themselves.
-            if (sourceType == typeof(string))
+            if (innerSourceType == typeof(string))
             {
                 return (input, cultureInfo) => (string)input!;
             }
 
             // Look up and use a type converter.
-            if (TypeConverterFactory.GetTypeConverter(sourceType) is TypeConverter converter && converter.CanConvertTo(typeof(string)))
+            if (TypeConverterFactory.GetTypeConverter(innerSourceType) is TypeConverter converter && converter.CanConvertTo(typeof(string)))
             {
                 return (input, cultureInfo) =>
                 {

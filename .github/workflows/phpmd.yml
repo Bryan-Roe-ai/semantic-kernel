@@ -1,0 +1,72 @@
+# This workflow uses third-party actions that are not certified by GitHub.
+# Review their terms of service, privacy policy, and documentation before use.
+
+name: PHPMD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '29 21 * * 5' # Runs every Friday at 21:29 UTC. Adjust as needed.
+
+permissions:
+  contents: read # Required for checking out code
+  security-events: write # Enables SARIF result uploads securely
+
+jobs:
+  PHPMD:
+    name: Run PHPMD scanning
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [7.4, 8.0, 8.1] # Test multiple PHP versions for compatibility
+
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@<commit-sha> # Replace <commit-sha> with a specific SHA for security
+
+      # Setup PHP environment
+      - name: Setup PHP
+        uses: shivammathur/setup-php@<commit-sha> # Replace <commit-sha> with a specific SHA for security
+        with:
+          php-version: ${{ matrix.php }} # Use PHP versions from the matrix
+          coverage: none
+          tools: phpmd
+
+      # Run PHP Linter (Pre-check step)
+      - name: Run PHP Linter
+        run: php -l . || exit 1
+
+      # Run PHPMD analysis
+      - name: Run PHPMD
+        run: phpmd . sarif codesize --reportfile phpmd-results.sarif
+        continue-on-error: false # Fail the workflow if PHPMD errors occur
+
+      # Upload analysis results as an artifact for debugging
+      - name: Upload PHPMD results artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: phpmd-results
+          path: phpmd-results.sarif
+
+      # Upload analysis results to GitHub
+      - name: Upload analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@<commit-sha> # Replace <commit-sha> with a specific SHA for security
+        with:
+          sarif_file: phpmd-results.sarif
+          wait-for-processing: true
+
+      # Optional: Notify team via Slack
+      # Uncomment and configure if notifications are needed
+      # - name: Notify team
+      #   uses: slackapi/slack-github-action@v1.23.0
+      #   with:
+      #     channel-id: 'C01234567'
+      #     slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}

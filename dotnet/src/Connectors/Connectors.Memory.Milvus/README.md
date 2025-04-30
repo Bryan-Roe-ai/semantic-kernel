@@ -1,4 +1,4 @@
-# Microsoft.SemanticKernel.Connectors.Memory.Milvus
+# Microsoft.SemanticKernel.Connectors.Milvus
 
 This is an implementation of the Semantic Kernel Memory Store abstraction for the [Milvus vector database](https://milvus.io).
 
@@ -8,26 +8,27 @@ This is an implementation of the Semantic Kernel Memory Store abstraction for th
 
 1. Download the Milvus docker-compose.yml:
 
-```bash
+```bash {"id":"01J6KPSRQ5EYSZQ119T7WWFJFG"}
 wget https://github.com/milvus-io/milvus/releases/download/v2.2.14/milvus-standalone-docker-compose.yml -O docker-compose.yml
 ```
 
 2. Start Milvus:
 
-```bash
+```bash {"id":"01J6KPSRQ5EYSZQ119TAM0AE9C"}
 docker-compose up -d
 ```
 
 3. Use Semantic Kernel with Milvus, connecting to `localhost` with the default (gRPC) port of 1536:
+   > See [Example 14](../../../samples/Concepts/Memory/SemanticTextMemory_Building.cs) and [Example 15](../../../samples/Concepts/Memory/TextMemoryPlugin_MultipleMemoryStore.cs) for more memory usage examples with the kernel.
 
-```csharp
+```csharp {"id":"01J6KPSRQ5EYSZQ119TAPGM556"}
 using MilvusMemoryStore memoryStore = new("localhost");
 
-Kernel kernel = new KernelBuilder()
-    .WithLogger(logger)
-    .WithOpenAITextEmbeddingGenerationService("text-embedding-ada-002", "OPENAI_API_KEY")
-    .WithMemoryStorage(memoryStore)
-    .Build();
+var embeddingGenerator = new OpenAITextEmbeddingGenerationService("text-embedding-ada-002", apiKey);
+
+SemanticTextMemory textMemory = new(memoryStore, embeddingGenerator);
+
+var memoryPlugin = kernel.ImportPluginFromObject(new TextMemoryPlugin(textMemory));
 ```
 
 More information on setting up Milvus can be found [here](https://milvus.io/docs/v2.2.x/install_standalone-docker.md). The `MilvusMemoryStore` constructor provides additional configuration options, such as the vector size, the similarity metric type, etc.

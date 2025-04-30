@@ -1,36 +1,39 @@
----
-# These are optional elements. Feel free to remove any of them.
 status: {proposed | rejected | accepted | deprecated | … | superseded by [ADR-0001](0001-madr-architecture-decisions.md)}
 contact: {person proposing the ADR}
 date: {YYYY-MM-DD when the decision was last updated}
 deciders: {list everyone involved in the decision}
-consulted: {list everyone whose opinions are sought (typically subject-matter experts); and with whom there is a two-way communication}
-informed: {list everyone who is kept up-to-date on progress; and with whom there is a one-way communication}
----
+consulted: {list everyone whose opinions are sought (typically subject-matter experts); with whom there is a two-way communication}
+informed: {list everyone who is kept up-to-date on progress; with whom there is a one-way communication}
 
-# {short title of solved problem and solution}
+# {Short title of solved problem and solution}
 
 ## Context and Problem Statement
 
-{Describe the context and problem statement, e.g., in free form using two to three sentences or in the form of an illustrative story.
-You may want to articulate the problem in form of a question and add links to collaboration boards or issue management systems.}
-
-<!-- This is an optional element. Feel free to remove. -->
+{Describe the context and problem statement in two to three sentences or as an illustrative story. Articulate the problem as a question and add links to collaboration boards or issue management systems.}
 
 ## Decision Drivers
 
-- {decision driver 1, e.g., a force, facing concern, …}
-- {decision driver 2, e.g., a force, facing concern, …}
-- … <!-- numbers of drivers can vary -->
+- {Decision driver 1, e.g., a force, facing concern, …}
+- {Decision driver 2, e.g., a force, facing concern, …}
+
+*It is important to list decision drivers to provide context and rationale for the decision.*
 
 ## Considered Options
 
-- {title of option 1}
-- {title of option 2}
-- {title of option 3}
-- … <!-- numbers of options can vary -->
+- {Title of option 1}
+- {Title of option 2}
+- {Title of option 3}
 
 ## Decision Outcome
 
-Chosen option: "{title of option 1}", because
-{justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force {force} | … | comes out best (see below)}.
+Chosen option: "{Title of option 1}", because
+{Justification. e.g., only option that meets key criteria | resolves force {force} | comes out best (see below)}.
+
+## Validation
+
+{Describe how the implementation of/compliance with the ADR is validated, e.g., by a review or an ArchUnit test.}
+
+## Additional Resources
+
+- [Link to example ADR](#)
+- [Link to documentation on ADRs](#)

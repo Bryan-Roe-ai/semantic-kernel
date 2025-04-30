@@ -6,10 +6,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Pgvector;
 
-namespace Microsoft.SemanticKernel.Connectors.Memory.Postgres;
+namespace Microsoft.SemanticKernel.Connectors.Postgres;
 
 /// <summary>
-/// Interface for client managing postgres database operations.
+/// Interface for client managing postgres database operations for <see cref="PostgresMemoryStore"/>.
 /// </summary>
 public interface IPostgresDbClient
 {

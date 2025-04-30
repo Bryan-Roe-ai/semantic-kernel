@@ -1,4 +1,5 @@
-name: Label issues
+name: Label and Assign Issues
+
 on:
   issues:
     types:
@@ -7,48 +8,71 @@ on:
 
 jobs:
   label_issues:
-    name: "Issue: add labels"
-    if: ${{ github.event.action == 'opened' || github.event.action == 'reopened' }}
+    name: "Issue: Add Labels and Assign"
     runs-on: ubuntu-latest
     permissions:
       issues: write
     steps:
-      - uses: actions/github-script@v6
+      - name: Label issues based on content
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
           script: |
-            // Get the issue body and title
-            const body = context.payload.issue.body
-            let title = context.payload.issue.title
-            
-            // Define the labels array
-            let labels = ["triage"]
-            
-            // Check if the body or the title contains the word 'python' (case-insensitive)
-            if ((body != null && body.match(/python/i)) || (title != null && title.match(/python/i))) {
-              // Add the 'python' label to the array
-              labels.push("python")
-            }
-            
-            // Check if the body or the title contains the word 'java' (case-insensitive)
-            if ((body != null && body.match(/java/i)) || (title != null && title.match(/java/i))) {
-              // Add the 'java' label to the array
-              labels.push("java")
-            }
-            
-            // Check if the body or the title contains the words 'dotnet', '.net', 'c#' or 'csharp' (case-insensitive)
-            if ((body != null && body.match(/.net/i)) || (title != null && title.match(/.net/i)) ||
-                (body != null && body.match(/dotnet/i)) || (title != null && title.match(/dotnet/i)) ||
-                (body != null && body.match(/C#/i)) || (title != null && title.match(/C#/i)) ||
-                (body != null && body.match(/csharp/i)) || (title != null && title.match(/csharp/i))) {
-              // Add the '.NET' label to the array
-              labels.push(".NET")
+            const body = context.payload.issue.body || "";
+            const title = context.payload.issue.title || "";
+            let labels = ["triage"];
+            const criteria = [
+              { keyword: /python/i, label: "python" },
+              { keyword: /java/i, label: "java" },
+              { keyword: /(\.net|dotnet|c#|csharp)/i, label: ".NET" }
+            ];
+            criteria.forEach(({ keyword, label }) => {
+              if (body.match(keyword) || title.match(keyword)) {
+                labels.push(label);
+              }
+            });
+            console.log(`Adding labels: ${labels.join(", ")}`);
+            try {
+              await github.rest.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: labels,
+              });
+            } catch (error) {
+              core.setFailed(`Error adding labels: ${error.message}`);
             }
 
-            // Add the labels to the issue
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: labels
-            });
+      - name: Auto-assign issues based on labels
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
+          script: |
+            const labels = context.payload.issue.labels.map(l => l.name);
+            const assignmentCriteria = {
+              "python": "team-python",
+              "java": "team-java",
+              ".NET": "team-dotnet",
+            };
+            let assignee = null;
+            for (const [label, assigneeName] of Object.entries(assignmentCriteria)) {
+              if (labels.includes(label)) {
+                assignee = assigneeName;
+                break;
+              }
+            }
+            if (assignee) {
+              console.log(`Assigning issue to: ${assignee}`);
+              try {
+                await github.rest.issues.addAssignees({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  assignees: [assignee],
+                });
+              } catch (error) {
+                core.setFailed(`Error assigning issue: ${error.message}`);
+              }
+            } else {
+              console.log("No matching assignee found.");
+            }

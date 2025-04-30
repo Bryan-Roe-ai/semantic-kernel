@@ -1,47 +1,42 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.SemanticKernel.AI.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.AI.OpenAI;
-using Microsoft.SemanticKernel.Connectors.AI.OpenAI.ChatCompletion;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Xunit;
+using Xunit.Abstractions;
 
-/**
- * The following example shows how to use Semantic Kernel with Multiple Results Text Completion as streaming
- */
-// ReSharper disable once InconsistentNaming
-public static class Example44_MultiChatCompletion
+namespace Examples;
+
+// The following example shows how to use Semantic Kernel with Multiple Results Text Completion as streaming
+public class Example44_MultiChatCompletion : BaseTest
 {
-    public static async Task RunAsync()
+    [Fact]
+    public Task AzureOpenAIMultiChatCompletionAsync()
     {
-        await AzureOpenAIMultiChatCompletionAsync();
-        await OpenAIMultiChatCompletionAsync();
-    }
-
-    private static async Task AzureOpenAIMultiChatCompletionAsync()
-    {
-        Console.WriteLine("======== Azure OpenAI - Multiple Chat Completion ========");
+        WriteLine("======== Azure OpenAI - Multiple Chat Completion ========");
 
         AzureOpenAIChatCompletionService chatCompletionService = new(
-            TestConfiguration.AzureOpenAI.ChatDeploymentName,
-            TestConfiguration.AzureOpenAI.ChatModelId,
-            TestConfiguration.AzureOpenAI.Endpoint,
-            TestConfiguration.AzureOpenAI.ApiKey);
+            deploymentName: TestConfiguration.AzureOpenAI.ChatDeploymentName,
+            endpoint: TestConfiguration.AzureOpenAI.Endpoint,
+            apiKey: TestConfiguration.AzureOpenAI.ApiKey,
+            modelId: TestConfiguration.AzureOpenAI.ChatModelId);
 
-        await RunChatAsync(chatCompletionService);
+        return RunChatAsync(chatCompletionService);
     }
 
-    private static async Task OpenAIMultiChatCompletionAsync()
+    [Fact]
+    public Task OpenAIMultiChatCompletionAsync()
     {
-        Console.WriteLine("======== Open AI - Multiple Chat Completion ========");
+        WriteLine("======== Open AI - Multiple Chat Completion ========");
 
         OpenAIChatCompletionService chatCompletionService = new(modelId: TestConfiguration.OpenAI.ChatModelId, TestConfiguration.OpenAI.ApiKey);
 
-        await RunChatAsync(chatCompletionService);
+        return RunChatAsync(chatCompletionService);
     }
 
-    private static async Task RunChatAsync(IChatCompletionService chatCompletionService)
+    private async Task RunChatAsync(IChatCompletionService chatCompletionService)
     {
         var chatHistory = new ChatHistory("You are a librarian, expert about books");
 
@@ -61,23 +56,27 @@ public static class Example44_MultiChatCompletion
         // First bot assistant message
         foreach (var chatMessageChoice in await chatCompletionService.GetChatMessageContentsAsync(chatHistory, chatExecutionSettings))
         {
-            chatHistory.AddMessage(chatMessageChoice!);
+            chatHistory.Add(chatMessageChoice!);
             await MessageOutputAsync(chatHistory);
         }
 
-        Console.WriteLine();
+        WriteLine();
     }
 
     /// <summary>
     /// Outputs the last message of the chat history
     /// </summary>
-    private static Task MessageOutputAsync(ChatHistory chatHistory)
+    private Task MessageOutputAsync(ChatHistory chatHistory)
     {
         var message = chatHistory.Last();
 
-        Console.WriteLine($"{message.Role}: {message.Content}");
-        Console.WriteLine("------------------------");
+        WriteLine($"{message.Role}: {message.Content}");
+        WriteLine("------------------------");
 
         return Task.CompletedTask;
+    }
+
+    public Example44_MultiChatCompletion(ITestOutputHelper output) : base(output)
+    {
     }
 }

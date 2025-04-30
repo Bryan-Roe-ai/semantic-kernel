@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.TemplateEngine.Blocks;
+using Microsoft.SemanticKernel.TemplateEngine;
 using Xunit;
 
-namespace SemanticKernel.UnitTests.TemplateEngine.Blocks;
+namespace SemanticKernel.UnitTests.TemplateEngine;
 
 public class NamedArgBlockTests
 {
@@ -115,11 +115,11 @@ public class NamedArgBlockTests
     public void ArgNameShouldBeNonEmpty()
     {
         // Arrange
-        var target = new NamedArgBlock("='b'");
+        static NamedArgBlock funcToTest() => new("='b'");
 
         // Act + Assert
-        Assert.False(target.IsValid(out var error));
-        Assert.Equal("A named argument must have a name", error);
+        KernelException exception = Assert.Throws<KernelException>(funcToTest);
+        Assert.Equal("A function named argument must contain a name and value separated by a '=' character.", exception.Message);
     }
 
     [Fact]
@@ -242,5 +242,35 @@ public class NamedArgBlockTests
         // Assert
         Assert.IsType<double>(result);
         Assert.Equal(28.2, result);
+    }
+
+    [Fact]
+    public void ItRendersToNullWithNoArgument()
+    {
+        // Arrange
+        var target = new NamedArgBlock("a=$var");
+
+        // Act
+        var result = target.GetValue([]);
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void ItRendersToNullIfArgumentIsNull()
+    {
+        // Arrange
+        var target = new NamedArgBlock("a=$var");
+        var arguments = new KernelArguments()
+        {
+            ["var"] = null
+        };
+
+        // Act
+        var result = target.GetValue(arguments);
+
+        // Assert
+        Assert.Null(result);
     }
 }

@@ -1,0 +1,98 @@
+{
+  "apiKey": "${API_KEY}",
+  "databaseUrl": "${DATABASE_URL}",
+  "secretKey": "${SECRET_KEY}",
+  "mongodb": {
+    "url": "${MONGODB_URL}",
+    "dbName": "chat-ui",
+    "directConnection": false
+  },
+  "cookie": {
+    "name": "chat-ui"
+  },
+  "hfAccessToken": "${HF_ACCESS_TOKEN}",
+  "serpapiKey": "${SERPAPI_KEY}",
+  "openid": {
+    "clientId": "${OPENID_CLIENT_ID}",
+    "clientSecret": "${OPENID_CLIENT_SECRET}",
+    "scopes": "openid profile",
+    "providerUrl": "https://huggingface.co"
+  },
+  "models": [
+    {
+      "name": "your_model_name_here",
+      "chatPromptTemplate": "your_model_prompt_template_here",
+      "preprompt": "",
+      "promptExamples": [
+        {
+          "title": "Python Fibonacci",
+          "prompt": "How can I write a Python function to generate the nth Fibonacci number?"
+        },
+        {
+          "title": "What is a meme?",
+          "prompt": "What is a meme, and what's the history behind this word?"
+        },
+        {
+          "title": "Regex",
+          "prompt": "Create a regex to extract dates from logs"
+        }
+      ],
+      "endpoints": [
+        {
+          "type": "tgi",
+          "url": "http://127.0.0.1:8080"
+        }
+      ],
+      "parameters": "your_model_params_here"
+    }
+  ],
+  "oldModels": [],
+  "public": {
+    "origin": "your_public_origin_here",
+    "sharePrefix": "your_public_share_prefix_here",
+    "googleAnalyticsId": "your_public_google_analytics_id_here",
+    "deprecatedGoogleAnalyticsId": "your_public_deprecated_google_analytics_id_here",
+    "announcementBanners": [
+      {
+        "title": "Chat UI is now open sourced on GitHub",
+        "linkTitle": "GitHub repo",
+        "linkHref": "https://github.com/huggingface/chat-ui"
+      }
+    ],
+    "appName": "your_app_name_here",
+    "appAssets": "chatui",
+    "appColor": "your_app_color_here",
+    "appDataSharing": 1,
+    "appDataDisclaimer": 1
+  },
+  "parquetExport": {
+    "dataset": "your_parquet_export_dataset_here",
+    "hfToken": "${PARQUET_EXPORT_HF_TOKEN}",
+    "secret": "${PARQUET_EXPORT_SECRET}"
+  },
+  "taskGeneratorSettings": {
+    "endpoint": "https://example.com/taskgenerator",
+    "apiKey": "${TASK_GENERATOR_API_KEY}",
+    "topic": "default-topic",
+    "difficultyLevel": "default-difficulty",
+    "taskType": "default-task-type"
+  },
+  "aiInteraction": {
+    "openaiApiKey": "${OPENAI_API_KEY}",
+    "azureOpenaiEndpoint": "${AZURE_OPENAI_ENDPOINT}",
+    "azureOpenaiApiKey": "${AZURE_OPENAI_API_KEY}",
+    "azureOpenaiChatModelDeployment": "${AZURE_OPENAI_CHAT_MODEL_DEPLOYMENT}",
+    "azureBlobStorageEndpoint": "${AZURE_BLOB_STORAGE_ENDPOINT}",
+    "azureCognitiveServicesEndpoint": "${AZURE_COGNITIVE_SERVICES_ENDPOINT}",
+    "cosmosDbEndpoint": "${COSMOS_DB_ENDPOINT}",
+    "keyVaultEndpoint": "${KEY_VAULT_ENDPOINT}",
+    "azureDevOpsOrganizationUrl": "${AZURE_DEVOPS_ORGANIZATION_URL}"
+  },
+  "githubPages": {
+    "repository": "your_github_repository_here",
+    "branch": "main",
+    "buildCommand": "docker build -t my-app .",
+    "runCommand": "docker run -p 3000:3000 --env-file .env my-app",
+    "deployCommand": "actions/deploy-pages@v4"
+  }
+}

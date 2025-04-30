@@ -10,8 +10,8 @@ from semantic_kernel.semantic_functions.prompt_template_config import (
 from semantic_kernel.skill_definition.parameter_view import ParameterView
 from semantic_kernel.template_engine.blocks.block_types import BlockTypes
 from semantic_kernel.template_engine.blocks.var_block import VarBlock
-from semantic_kernel.template_engine.protocols.prompt_templating_engine import (
-    PromptTemplatingEngine,
+from semantic_kernel.template_engine.prompt_template_engine_base import (
+    PromptTemplateEngineBase,
 )
 from semantic_kernel.utils.null_logger import NullLogger
 
@@ -21,14 +21,14 @@ if TYPE_CHECKING:
 
 class PromptTemplate(PromptTemplateBase):
     _template: str
-    _template_engine: PromptTemplatingEngine
+    _template_engine: PromptTemplateEngineBase
     _log: Logger
     _prompt_config: PromptTemplateConfig
 
     def __init__(
         self,
         template: str,
-        template_engine: PromptTemplatingEngine,
+        template_engine: PromptTemplateEngineBase,
         prompt_config: PromptTemplateConfig,
         log: Optional[Logger] = None,
     ) -> None:
@@ -46,18 +46,14 @@ class PromptTemplate(PromptTemplateBase):
                 continue
 
             result.append(
-                ParameterView(
-                    name=param.name,
-                    description=param.description,
-                    default_value=param.default_value,
-                )
+                ParameterView(param.name, param.description, param.default_value)
             )
 
             seen.add(param.name)
 
         blocks = self._template_engine.extract_blocks(self._template)
         for block in blocks:
-            if block.type != BlockTypes.VARIABLE:
+            if block.type != BlockTypes.Variable:
                 continue
             if block is None:
                 continue
@@ -66,9 +62,7 @@ class PromptTemplate(PromptTemplateBase):
             if var_block.name in seen:
                 continue
 
-            result.append(
-                ParameterView(name=var_block.name, description="", default_value="")
-            )
+            result.append(ParameterView(var_block.name, "", ""))
 
             seen.add(var_block.name)
 

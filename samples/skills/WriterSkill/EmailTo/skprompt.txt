@@ -23,9 +23,9 @@ Dexter
 
 +++++
 [Input]
-{{$to}}
-{{$input}}
+{{to}}
+{{bullets}}
 
 Thanks,
-{{$sender}}
+{{sender}}
 +++++

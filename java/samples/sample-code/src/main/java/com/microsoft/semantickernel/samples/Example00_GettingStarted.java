@@ -22,9 +22,28 @@ import java.io.IOException;
 /**
  * Getting started
  * <p>
+<<<<<<< div
+<<<<<<< div
+ * Create a conf.properties file based on the examples files at the root of this
+ * module.
+ * <p>
+=======
+<<<<<<< HEAD
+=======
+ * Create a conf.properties file based on the examples files at the root of this
+ * module.
+ * <p>
+>>>>>>> main
+>>>>>>> main
+=======
+ * Create a conf.properties file based on the examples files at the root of this
+ * module.
+ * <p>
+>>>>>>> head
  * <a href=
  * "https://learn.microsoft.com/en-us/azure/cognitive-services/openai/quickstart">Get
  * started with Azure OpenAI</a>
+ * <a href="https://openai.com/api">Get started with OpenAI API</a>
  * <a href="https://openai.com/product">Get started with OpenAI</a>
  * <p>
  * Refer to the <a href=

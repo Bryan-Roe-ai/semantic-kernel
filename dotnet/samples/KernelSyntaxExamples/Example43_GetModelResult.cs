@@ -1,77 +1,223 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.AI.TextGeneration;
-using Microsoft.SemanticKernel.Connectors.AI.OpenAI;
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+>>>>>>> origin/main
+=======
+<<<<<<< main
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
+<<<<<<< main
+=======
+using Microsoft.SemanticKernel.AI.TextCompletion;
 using Microsoft.SemanticKernel.Connectors.AI.OpenAI.ChatCompletion;
-using Microsoft.SemanticKernel.Http;
+using Microsoft.SemanticKernel.Diagnostics;
+>>>>>>> ms/feature-error-handling
+=======
+>>>>>>> ce2496df6e0c39a7c9c1a70b1e013e81a7b8d9b9
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> origin/main
+>>>>>>> head
 using RepoUtils;
+using Xunit;
+using Xunit.Abstractions;
 
-#pragma warning disable RCS1192 // (Unnecessary usage of verbatim string literal)
+namespace Examples;
 
-// ReSharper disable once InconsistentNaming
-public static class Example43_GetModelResult
+public class Example43_GetModelResult : BaseTest
 {
-    public static async Task RunAsync()
+    [Fact]
+    public async Task GetTokenUsageMetadataAsync()
     {
-        Console.WriteLine("======== Inline Function Definition + Result ========");
+        WriteLine("======== Inline Function Definition + Invocation ========");
 
-        Kernel kernel = new KernelBuilder()
-            .WithOpenAIChatCompletion(
+        // Create kernel
+        Kernel kernel = Kernel.CreateBuilder()
+            .AddOpenAIChatCompletion(
                 modelId: TestConfiguration.OpenAI.ChatModelId,
                 apiKey: TestConfiguration.OpenAI.ApiKey)
             .Build();
 
-        // Function defined using few-shot design pattern
+        // Create function
         const string FunctionDefinition = "Hi, give me 5 book suggestions about: {{$input}}";
+        KernelFunction myFunction = kernel.CreateFunctionFromPrompt(FunctionDefinition);
 
-        var myFunction = kernel.CreateFunctionFromPrompt(FunctionDefinition);
+        // Invoke function through kernel
+        FunctionResult result = await kernel.InvokeAsync(myFunction, new() { ["input"] = "travel" });
 
-        // Using the Kernel InvokeAsync
-        var result = await kernel.InvokeAsync(myFunction, new("sorry I forgot your birthday"));
-        Console.WriteLine(result.GetValue<string>());
-        Console.WriteLine(result.Metadata?["Usage"]?.AsJson());
-        Console.WriteLine();
+        // Display results
+        WriteLine(result.GetValue<string>());
+        WriteLine(result.Metadata?["Usage"]?.AsJson());
+        WriteLine();
+    }
 
-        // Using Chat Completion directly
-        var chatCompletionService = new OpenAIChatCompletionService(
-            modelId: TestConfiguration.OpenAI.ChatModelId,
-            apiKey: TestConfiguration.OpenAI.ApiKey);
-        var prompt = FunctionDefinition.Replace("{{$input}}", $"Translate this date {DateTimeOffset.Now:f} to French format", StringComparison.InvariantCultureIgnoreCase);
-
-        var textContent = await chatCompletionService.GetTextContentAsync(prompt, new OpenAIPromptExecutionSettings() { MaxTokens = 500, Temperature = 1, TopP = 0.5 }, kernel);
-
-        Console.WriteLine(textContent);
-        Console.WriteLine(textContent.Metadata?["Usage"]?.AsJson());
-        Console.WriteLine();
-
-        // Getting the error details
-        kernel = new KernelBuilder()
-            .WithOpenAIChatCompletion(TestConfiguration.OpenAI.ChatModelId, "Invalid Key")
-            .Build();
-        var errorFunction = kernel.CreateFunctionFromPrompt(FunctionDefinition);
-
-#pragma warning disable CA1031 // Do not catch general exception types
-        try
-        {
-            await kernel.InvokeAsync(errorFunction, new("sorry I forgot your birthday"));
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(OutputExceptionDetail(ex));
-        }
-#pragma warning restore CA1031 // Do not catch general exception types
-
-        static string OutputExceptionDetail(Exception? exception)
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+    public Example43_GetModelResult(ITestOutputHelper output) : base(output)
+    {
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+    public Example43_GetModelResult(ITestOutputHelper output) : base(output)
+    {
+=======
+<<<<<<< div
+=======
+>>>>>>> main
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> origin/main
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
+<<<<<<< main
+    public Example43_GetModelResult(ITestOutputHelper output) : base(output)
+    {
+=======
+        string OutputExceptionDetail(Exception? exception)
         {
             return exception switch
             {
-                HttpOperationException httpException => new { StatusCode = httpException.StatusCode?.ToString(), Message = httpException.Message, Response = httpException.ResponseContent }.AsJson(),
-                { } e => e.Message,
+                HttpOperationException httpException => new { StatusCode = httpException.StatusCode.ToString(), httpException.Message, httpException.ResponseContent }.AsJson(),
+                { } e => new { e.Message }.AsJson(),
                 _ => string.Empty
             };
         }
+>>>>>>> ms/feature-error-handling
+=======
+    public Example43_GetModelResult(ITestOutputHelper output) : base(output)
+    {
+>>>>>>> ce2496df6e0c39a7c9c1a70b1e013e81a7b8d9b9
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> origin/main
+>>>>>>> head
     }
 }
