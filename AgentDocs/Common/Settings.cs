@@ -18,8 +18,11 @@ public class Settings
     private CosmosDBSettings cosmosDB;
     private KeyVaultSettings keyVault;
     private AzureDevOpsSettings azureDevOps;
-    private TaskGeneratorSettings taskGenerator; // P8992
+    private TaskGeneratorSettings taskGenerator;
     private GeneralSettings general;
+    private SecuritySettings security; // Pd25f
+    private AdditionalServicesSettings additionalServices; // P045d
+    private OpenIDConnectSettings openIDConnect; // P174c
 
     public AzureOpenAISettings AzureOpenAI => this.azureOpenAI ??= this.GetSettings<Settings.AzureOpenAISettings>();
     public OpenAISettings OpenAI => this.openAI ??= this.GetSettings<Settings.OpenAISettings>();
@@ -30,8 +33,11 @@ public class Settings
     public CosmosDBSettings CosmosDB => this.cosmosDB ??= this.GetSettings<Settings.CosmosDBSettings>();
     public KeyVaultSettings KeyVault => this.keyVault ??= this.GetSettings<Settings.KeyVaultSettings>();
     public AzureDevOpsSettings AzureDevOps => this.azureDevOps ??= this.GetSettings<Settings.AzureDevOpsSettings>();
-    public TaskGeneratorSettings TaskGenerator => this.taskGenerator ??= this.GetSettings<Settings.TaskGeneratorSettings>(); // P8992
+    public TaskGeneratorSettings TaskGenerator => this.taskGenerator ??= this.GetSettings<Settings.TaskGeneratorSettings>();
     public GeneralSettings General => this.general ??= this.GetSettings<Settings.GeneralSettings>();
+    public SecuritySettings Security => this.security ??= this.GetSettings<Settings.SecuritySettings>(); // Pd25f
+    public AdditionalServicesSettings AdditionalServices => this.additionalServices ??= this.GetSettings<Settings.AdditionalServicesSettings>(); // P045d
+    public OpenIDConnectSettings OpenIDConnect => this.openIDConnect ??= this.GetSettings<Settings.OpenIDConnectSettings>(); // P174c
 
     public class OpenAISettings
     {
@@ -84,13 +90,13 @@ public class Settings
         public string OrganizationUrl { get; set; } = string.Empty;
     }
 
-    public class TaskGeneratorSettings // P8992
+    public class TaskGeneratorSettings
     {
         public string Endpoint { get; set; } = string.Empty;
         public string ApiKey { get; set; } = string.Empty;
-        public string Topic { get; set; } = string.Empty; // P5f96
-        public string DifficultyLevel { get; set; } = string.Empty; // P5f96
-        public string TaskType { get; set; } = string.Empty; // P5f96
+        public string Topic { get; set; } = string.Empty;
+        public string DifficultyLevel { get; set; } = string.Empty;
+        public string TaskType { get; set; } = string.Empty;
     }
 
     public class GeneralSettings
@@ -98,6 +104,41 @@ public class Settings
         public string ApiKey { get; set; } = string.Empty;
         public string DatabaseUrl { get; set; } = string.Empty;
         public string SecretKey { get; set; } = string.Empty;
+    }
+
+    public class SecuritySettings // Pd25f
+    {
+        public string[] AllowedDomains { get; set; } = Array.Empty<string>();
+        public RateLimitSettings RateLimit { get; set; } = new RateLimitSettings();
+        public CorsPolicySettings CorsPolicy { get; set; } = new CorsPolicySettings();
+
+        public class RateLimitSettings
+        {
+            public int WindowMs { get; set; } = 60000;
+            public int MaxRequests { get; set; } = 100;
+        }
+
+        public class CorsPolicySettings
+        {
+            public string[] AllowedOrigins { get; set; } = Array.Empty<string>();
+            public string[] AllowedMethods { get; set; } = Array.Empty<string>();
+            public string[] AllowedHeaders { get; set; } = Array.Empty<string>();
+        }
+    }
+
+    public class AdditionalServicesSettings // P045d
+    {
+        public AzureCognitiveServicesSettings AzureCognitiveServices { get; set; } = new AzureCognitiveServicesSettings();
+        public AzureBlobStorageSettings AzureBlobStorage { get; set; } = new AzureBlobStorageSettings();
+        public CosmosDBSettings CosmosDB { get; set; } = new CosmosDBSettings();
+    }
+
+    public class OpenIDConnectSettings // P174c
+    {
+        public string ClientId { get; set; } = string.Empty;
+        public string ClientSecret { get; set; } = string.Empty;
+        public string Scopes { get; set; } = "openid profile";
+        public string ProviderUrl { get; set; } = "https://huggingface.co";
     }
 
     private TSettings GetSettings<TSettings>() =>

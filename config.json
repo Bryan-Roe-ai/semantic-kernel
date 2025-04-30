@@ -44,6 +44,24 @@
         }
       ],
       "parameters": "your_model_params_here"
+    },
+    {
+      "name": "model_2",
+      "chatPromptTemplate": "template_2",
+      "preprompt": "preprompt_2",
+      "promptExamples": [
+        {
+          "title": "Example 2",
+          "prompt": "Prompt 2"
+        }
+      ],
+      "endpoints": [
+        {
+          "type": "tgi",
+          "url": "http://127.0.0.1:8081"
+        }
+      ],
+      "parameters": "params_2"
     }
   ],
   "oldModels": [],
@@ -94,5 +112,43 @@
     "buildCommand": "docker build -t my-app .",
     "runCommand": "docker run -p 3000:3000 --env-file .env my-app",
     "deployCommand": "actions/deploy-pages@v4"
+  },
+  "securitySettings": {
+    "allowedDomains": [
+      "example.com",
+      "anotherexample.com"
+    ],
+    "rateLimit": {
+      "windowMs": 60000,
+      "maxRequests": 100
+    },
+    "corsPolicy": {
+      "allowedOrigins": [
+        "https://example.com",
+        "https://anotherexample.com"
+      ],
+      "allowedMethods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ],
+      "allowedHeaders": [
+        "Content-Type",
+        "Authorization"
+      ]
+    }
+  },
+  "additionalServices": {
+    "azureCognitiveServices": {
+      "endpoint": "${AZURE_COGNITIVE_SERVICES_ENDPOINT}",
+      "apiKey": "${AZURE_COGNITIVE_SERVICES_API_KEY}"
+    },
+    "azureBlobStorage": {
+      "endpoint": "${AZURE_BLOB_STORAGE_ENDPOINT}"
+    },
+    "cosmosDb": {
+      "endpoint": "${COSMOS_DB_ENDPOINT}"
+    }
   }
 }
