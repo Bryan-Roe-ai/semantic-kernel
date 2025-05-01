@@ -9,6 +9,8 @@ services:
         - hf_token
     ports: 
       - "8080:80"
+    environment:
+      - COMPOSE_BAKE=true
     secrets:
       - hf_token
 secrets:
