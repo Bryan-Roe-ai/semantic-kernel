@@ -1,154 +1,46 @@
 {
   "apiKey": "${API_KEY}",
-  "databaseUrl": "${DATABASE_URL}",
-  "secretKey": "${SECRET_KEY}",
-  "mongodb": {
-    "url": "${MONGODB_URL}",
-    "dbName": "chat-ui",
-    "directConnection": "${MONGODB_DIRECT_CONNECTION}"
-  },
-  "cookie": {
-    "name": "${COOKIE_NAME}"
-  },
-  "hfAccessToken": "${HF_ACCESS_TOKEN}",
-  "serpapiKey": "${SERPAPI_KEY}",
-  "openid": {
-    "clientId": "${OPENID_CLIENT_ID}",
-    "clientSecret": "${OPENID_CLIENT_SECRET}",
-    "scopes": "${OPENID_SCOPES}",
-    "providerUrl": "${OPENID_PROVIDER_URL}"
+  "database": {
+    "url": "${DATABASE_URL}",
+    "name": "chat-ui",
+    "poolSize": 10
   },
   "models": [
     {
       "name": "${MODELS}",
-      "chatPromptTemplate": "${MODEL_PROMPT_TEMPLATE}",
-      "preprompt": "",
-      "promptExamples": [
-        {
-          "title": "Python Fibonacci",
-          "prompt": "How can I write a Python function to generate the nth Fibonacci number?"
-        },
-        {
-          "title": "What is a meme?",
-          "prompt": "What is a meme, and what's the history behind this word?"
-        },
-        {
-          "title": "Regex",
-          "prompt": "Create a regex to extract dates from logs"
-        }
-      ],
+      "parameters": "${MODEL_PARAMS}",
       "endpoints": [
         {
           "type": "tgi",
           "url": "http://127.0.0.1:8080"
         }
-      ],
-      "parameters": "${MODEL_PARAMS}"
-    },
-    {
-      "name": "${OLD_MODELS}",
-      "chatPromptTemplate": "template_2",
-      "preprompt": "preprompt_2",
-      "promptExamples": [
-        {
-          "title": "Example 2",
-          "prompt": "Prompt 2"
-        }
-      ],
-      "endpoints": [
-        {
-          "type": "tgi",
-          "url": "http://127.0.0.1:8081"
-        }
-      ],
-      "parameters": "params_2"
-    }
-  ],
-  "oldModels": [],
-  "public": {
-    "origin": "${PUBLIC_ORIGIN}",
-    "sharePrefix": "${PUBLIC_SHARE_PREFIX}",
-    "googleAnalyticsId": "${PUBLIC_GOOGLE_ANALYTICS_ID}",
-    "deprecatedGoogleAnalyticsId": "${PUBLIC_DEPRECATED_GOOGLE_ANALYTICS_ID}",
-    "announcementBanners": [
-      {
-        "title": "Chat UI is now open sourced on GitHub",
-        "linkTitle": "GitHub repo",
-        "linkHref": "https://github.com/huggingface/chat-ui"
-      }
-    ],
-    "appName": "${PUBLIC_APP_NAME}",
-    "appAssets": "${PUBLIC_APP_ASSETS}",
-    "appColor": "${PUBLIC_APP_COLOR}",
-    "appDataSharing": "${PUBLIC_APP_DATA_SHARING}",
-    "appDataDisclaimer": "${PUBLIC_APP_DATA_DISCLAIMER}"
-  },
-  "parquetExport": {
-    "dataset": "${PARQUET_EXPORT_DATASET}",
-    "hfToken": "${PARQUET_EXPORT_HF_TOKEN}",
-    "secret": "${PARQUET_EXPORT_SECRET}"
-  },
-  "taskGeneratorSettings": {
-    "endpoint": "https://example.com/taskgenerator",
-    "apiKey": "${TASK_GENERATOR_API_KEY}",
-    "topic": "${TASK_GENERATOR_TOPIC}",
-    "difficultyLevel": "${TASK_GENERATOR_DIFFICULTY_LEVEL}",
-    "taskType": "${TASK_GENERATOR_TASK_TYPE}"
-  },
-  "aiInteraction": {
-    "openaiApiKey": "${OPENAI_API_KEY}",
-    "azureOpenaiEndpoint": "${AZURE_OPENAI_ENDPOINT}",
-    "azureOpenaiApiKey": "${AZURE_OPENAI_API_KEY}",
-    "azureOpenaiChatModelDeployment": "${AZURE_OPENAI_CHAT_MODEL_DEPLOYMENT}",
-    "azureBlobStorageEndpoint": "${AZURE_BLOB_STORAGE_ENDPOINT}",
-    "azureCognitiveServicesEndpoint": "${AZURE_COGNITIVE_SERVICES_ENDPOINT}",
-    "cosmosDbEndpoint": "${COSMOS_DB_ENDPOINT}",
-    "keyVaultEndpoint": "${KEY_VAULT_ENDPOINT}",
-    "azureDevOpsOrganizationUrl": "${AZURE_DEVOPS_ORGANIZATION_URL}"
-  },
-  "githubPages": {
-    "repository": "${GITHUB_PAGES_REPOSITORY}",
-    "branch": "${GITHUB_PAGES_BRANCH}",
-    "buildCommand": "${GITHUB_PAGES_BUILD_COMMAND}",
-    "runCommand": "${GITHUB_PAGES_RUN_COMMAND}",
-    "deployCommand": "${GITHUB_PAGES_DEPLOY_COMMAND}"
-  },
-  "securitySettings": {
-    "allowedDomains": [
-      "example.com",
-      "anotherexample.com"
-    ],
-    "rateLimit": {
-      "windowMs": 60000,
-      "maxRequests": 100
-    },
-    "corsPolicy": {
-      "allowedOrigins": [
-        "https://example.com",
-        "https://anotherexample.com"
-      ],
-      "allowedMethods": [
-        "GET",
-        "POST",
-        "PUT",
-        "DELETE"
-      ],
-      "allowedHeaders": [
-        "Content-Type",
-        "Authorization"
       ]
     }
-  },
-  "additionalServices": {
-    "azureCognitiveServices": {
-      "endpoint": "${AZURE_COGNITIVE_SERVICES_ENDPOINT}",
-      "apiKey": "${AZURE_COGNITIVE_SERVICES_API_KEY}"
+  ],
+  "security": {
+    "allowedDomains": ["example.com"],
+    "rateLimit": {
+      "windowMs": 60000,
+      "maxRequests": 50
     },
-    "azureBlobStorage": {
-      "endpoint": "${AZURE_BLOB_STORAGE_ENDPOINT}"
-    },
-    "cosmosDb": {
-      "endpoint": "${COSMOS_DB_ENDPOINT}"
+    "corsPolicy": {
+      "allowedOrigins": ["https://example.com"]
     }
+  },
+  "logging": {
+    "level": "info",
+    "destination": "/var/log/app.log"
+  },
+  "public": {
+    "appName": "${PUBLIC_APP_NAME}",
+    "announcementBanners": [
+      {
+        "title": "Chat UI is now open source!",
+        "linkTitle": "GitHub repo",
+        "linkHref": "https://github.com/huggingface/chat-ui",
+        "startDate": "2025-05-01",
+        "endDate": "2025-05-31"
+      }
+    ]
   }
 }
