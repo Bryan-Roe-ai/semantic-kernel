@@ -1,10 +1,16 @@
 #!/bin/bash
 
+# Check for root privileges
+if [ "$EUID" -ne 0 ]; then
+  echo "Please run as root or use sudo."
+  exit 1
+fi
+
 # Update package lists
-apt-get update
+sudo apt-get update
 
 # Install missing dependencies
-apt-get install -y --no-install-recommends \
+sudo apt-get install -y --no-install-recommends \
     curl \
     gnupg \
     gettext \
