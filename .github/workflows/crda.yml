@@ -35,7 +35,6 @@ jobs:
           if [ -z "${{ secrets.CRDA_KEY }}" ] && [ -z "${{ secrets.SNYK_TOKEN }}" ]; then
             echo "Either CRDA_KEY or SNYK_TOKEN must be set"
             exit 1
-          fi
 
       # Step 3: Set up programming environments
       - name: Set up Node.js
