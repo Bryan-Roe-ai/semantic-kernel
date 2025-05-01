@@ -11,7 +11,7 @@
   },
   "prebuild": "npm install && dotnet restore && ./fix-errors.sh && mvn dependency:resolve && ./fix-codespace-startup.sh || echo 'Prebuild failed'",
   "postCreateCommand": "sudo chmod -R u+rwX /usr/share/dotnet && sudo chmod +x ./parallel-post-start.sh || echo 'Post-create command failed'",
-  "postStartCommand": "./fix-codespace-startup.sh && npm list && pip list && dotnet --list-sdks || echo 'Post-start command failed'",
+  "postStartCommand": "./fix-codespace-startup.sh || echo 'Post-start command failed'",
   "remoteEnv": {
     "DOTNET_ROOT": "${containerWorkspaceFolder}/dotnet",
     "PYTHONPATH": "${containerWorkspaceFolder}/python"
@@ -39,9 +39,9 @@
     }
   },
   "tasks": {
-    "test": "npm test && pytest && dotnet test --verbosity normal && mvn test",
-    "build": "npm install && dotnet build --no-restore && ./fix-errors.sh && dotnet test --no-build --verbosity normal",
-    "launch": "npm start"
+    "test": "sudo npm test && pytest && dotnet test --verbosity normal && mvn test",
+    "build": "sudo npm install && dotnet build --no-restore && ./fix-errors.sh && dotnet test --no-build --verbosity normal",
+    "launch": "sudo npm start"
   },
   "forwardPorts": [3000, 5000]
 }
