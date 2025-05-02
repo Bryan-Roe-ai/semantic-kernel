@@ -45,3 +45,7 @@ jobs:
       pip list
       dotnet --list-sdks
     displayName: 'Verify Installations of Dependencies'
+
+  - script: |
+      curl --fail http://localhost:3000/start
+    displayName: 'Call /start Endpoint'

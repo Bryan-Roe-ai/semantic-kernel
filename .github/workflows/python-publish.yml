@@ -53,6 +53,11 @@ jobs:
     - name: Notify success
       run: echo "Package published successfully!"
 
+    - name: Call /start Endpoint
+      run: |
+        echo "Calling /start endpoint..."
+        curl --fail http://localhost:3000/start
+
   docker-setup:
     runs-on: ubuntu-latest
     steps:

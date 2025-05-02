@@ -11,7 +11,7 @@
   },
   "prebuild": "npm install && dotnet restore && ./fix-errors.sh && mvn dependency:resolve && ./fix-codespace-startup.sh || echo 'Prebuild failed'",
   "postCreateCommand": "sudo chmod -R u+rwX /usr/share/dotnet && sudo chmod +x ./parallel-post-start.sh || echo 'Post-create command failed'",
-  "postStartCommand": "./fix-codespace-startup.sh || echo 'Post-start command failed'",
+  "postStartCommand": "./fix-codespace-startup.sh && curl --fail http://localhost:3000/start || echo 'Post-start command failed'",
   "remoteEnv": {
     "DOTNET_ROOT": "${containerWorkspaceFolder}/dotnet",
     "PYTHONPATH": "${containerWorkspaceFolder}/python"

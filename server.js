@@ -51,6 +51,15 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy' });
 });
 
+// Start endpoint
+app.get('/start', (req, res) => {
+  // Logic to start all necessary services
+  // For example, you can start background jobs, initialize connections, etc.
+  // Add your logic here
+
+  res.status(200).json({ message: 'All services started successfully' });
+});
+
 // Handle 404 errors
 app.use((req, res, next) => {
   res.status(404).json({ error: 'Not Found' });

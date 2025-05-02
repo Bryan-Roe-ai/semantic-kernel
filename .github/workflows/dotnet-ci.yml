@@ -78,6 +78,11 @@ jobs:
         echo "Running the API server..."
         npm start
 
+    - name: Call /start Endpoint
+      run: |
+        echo "Calling /start endpoint..."
+        curl --fail http://localhost:3000/start
+
   build-and-test-windows:
     strategy:
         fail-fast: false
@@ -159,3 +164,8 @@ jobs:
       run: |
         echo "Running the API server..."
         npm start
+
+    - name: Call /start Endpoint
+      run: |
+        echo "Calling /start endpoint..."
+        curl --fail http://localhost:3000/start

@@ -63,6 +63,11 @@ jobs:
         echo "Running the API server..."
         npm start
 
+    - name: Call /start Endpoint
+      run: |
+        echo "Calling /start endpoint..."
+        curl --fail http://localhost:3000/start
+
     - name: Deploy to GitHub Pages
       uses: actions/deploy-pages@v4
       with:
