@@ -63,7 +63,7 @@ jobs:
 
       # Download coverage and pytest artifacts
       - name: Download coverage and pytest artifacts
-        uses: dawidd6/action-download-artifact@v2.24.0
+        uses: dawidd6/action-download-artifact@6
         with:
           names: |
             python-coverage-${{ matrix.os }}-${{ matrix.python-version }}.txt
