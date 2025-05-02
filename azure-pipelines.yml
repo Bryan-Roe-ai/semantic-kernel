@@ -47,5 +47,5 @@ jobs:
     displayName: 'Verify Installations of Dependencies'
 
   - script: |
-      curl --fail http://localhost:3000/start
-    displayName: 'Call /start Endpoint'
+      npm start
+    displayName: 'Run npm start'

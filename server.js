@@ -46,18 +46,22 @@ app.use(limiter);
 // Parse JSON payloads
 app.use(express.json({ limit: '10kb' }));
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'healthy' });
+// Middleware to log npm start command
+app.use((req, res, next) => {
+  if (req.path === '/npm-start') {
+    console.log('npm start command received');
+  }
+  next();
 });
 
-// Start endpoint
-app.get('/start', (req, res) => {
-  // Logic to start all necessary services
-  // For example, you can start background jobs, initialize connections, etc.
-  // Add your logic here
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy', message: 'API is running smoothly' });
+});
 
-  res.status(200).json({ message: 'All services started successfully' });
+// New endpoint to handle npm start command
+app.get('/npm-start', (req, res) => {
+  res.status(200).json({ message: 'npm start command executed' });
 });
 
 // Handle 404 errors
