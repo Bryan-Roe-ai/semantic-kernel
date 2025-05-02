@@ -9,7 +9,7 @@ pydantic==1.10.7
 bert_score==0.3.13
 nltk==3.8.1
 evaluate==0.4.0
-unbabel-comet==0.0.5
+unbabel-comet==2.2.6
 
 # Build tools
 cmake==3.26.4
