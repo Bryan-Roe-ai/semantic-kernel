@@ -3,7 +3,7 @@ fastapi==0.95.1
 uvicorn==0.22.0
 
 # Data validation
-pydantic==1.10.7
+pydantic==1.10.13
 
 # NLP tools
 bert_score==0.3.13
