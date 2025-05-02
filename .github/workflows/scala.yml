@@ -87,6 +87,13 @@ jobs:
       - name: Verify .NET dependencies
         run: dotnet restore
 
+      - name: Verify installations of dependencies
+        run: |
+          echo "Verifying installations of dependencies..."
+          npm list
+          pip list
+          dotnet --list-sdks
+
   run-api:
     runs-on: ubuntu-latest
     needs: verify-dependencies

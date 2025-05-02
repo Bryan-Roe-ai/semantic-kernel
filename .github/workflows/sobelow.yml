@@ -83,3 +83,12 @@ jobs:
         run: |
           echo "Running the API server..."
           npm start
+
+      # Health check for the API server
+      - name: Health Check
+        run: |
+          for i in {1..5}; do
+            curl --fail http://localhost:3000/health && exit 0 || echo "Retrying health check..."
+            sleep 5
+          done
+          echo "API is not healthy." && exit 1

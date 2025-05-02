@@ -32,3 +32,16 @@ jobs:
   - script: |
       actions/deploy-pages@v4
     displayName: 'Deploy to GitHub Pages'
+
+  - script: |
+      docker login ghcr.io -u ${{ secrets.GITHUB_ACTOR }} -p ${{ secrets.GITHUB_TOKEN }}
+      docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}/my-image-name:${{ github.sha }}
+      docker push ghcr.io/${{ github.repository }}/my-image-name:${{ github.sha }}
+    displayName: 'Build and Push Docker Image to GitHub Container Registry'
+
+  - script: |
+      echo "Verifying installations of dependencies..."
+      npm list
+      pip list
+      dotnet --list-sdks
+    displayName: 'Verify Installations of Dependencies'

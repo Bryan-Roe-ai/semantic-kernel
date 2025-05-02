@@ -95,3 +95,10 @@ jobs:
 
       - name: Verify API server is running
         run: curl -f http://localhost:3000 || exit 1
+
+      - name: Verify installations of dependencies
+        run: |
+          echo "Verifying installations of dependencies..."
+          npm list
+          pip list
+          dotnet --list-sdks
