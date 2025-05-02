@@ -5,7 +5,8 @@ pydantic==1.10.2
 
 # NLP Tools
 bert-score==0.3.12
-torch>=1.6.0,<2.0.0  # Shared dependency for bert-score and unbabel-comet
+torch>=1.6.0,<2.0.0; python_version < "3.11"  # Ensure compatibility with older Python versions
+torch>=2.0.0; python_version >= "3.11"       # For newer Python versions
 nltk==3.8.1
 evaluate==0.2.2
 unbabel-comet==2.0.0
