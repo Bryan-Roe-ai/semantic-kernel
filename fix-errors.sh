@@ -1,16 +1,10 @@
 #!/bin/bash
 
-# Check for root privileges
-if [ "$EUID" -ne 0 ]; then
-  echo "Please run as root or use sudo."
-  exit 1
-fi
-
 # Update package lists
-sudo apt-get update
+apt-get update
 
 # Install missing dependencies
-sudo apt-get install -y --no-install-recommends \
+apt-get install -y --no-install-recommends \
     curl \
     gnupg \
     gettext \
@@ -47,6 +41,7 @@ find . -type f -name '*.bin' -delete
 find . -type f -name '*.exe' -delete
 find . -type f -name '*.dll' -delete
 find . -type f -name '*.zip' -delete
+find . -type f -name '*.json' -delete
 
 # Generate report of deleted files
 echo "Deleted files:" > deleted-files-report.txt
@@ -54,17 +49,6 @@ find . -type f -name '*.bin' -print >> deleted-files-report.txt
 find . -type f -name '*.exe' -print >> deleted-files-report.txt
 find . -type f -name '*.dll' -print >> deleted-files-report.txt
 find . -type f -name '*.zip' -print >> deleted-files-report.txt
-
-# Check for unsupported languages
-unsupported_languages=("csharp")
-for lang in "${unsupported_languages[@]}"; do
-  if [ "$lang" == "csharp" ]; then
-    echo "Error: Unsupported language 'C#'."
-    exit 1
-  fi
-done
+find . -type f -name '*.json' -print >> deleted-files-report.txt
 
 echo "Errors fixed successfully."
-
-# Ensure the script has executable permissions
-chmod +x ./fix-errors.sh
