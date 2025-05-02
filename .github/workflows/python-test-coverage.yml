@@ -44,7 +44,7 @@ jobs:
         run: echo "FILE_ID=${{ github.event.number }}" >> $GITHUB_ENV
 
       - name: Download coverage
-        uses: dawidd6/action-download-artifact@v5
+        uses: dawidd6/action-download-artifact@6
         with:
           name: python-coverage-${{ env.FILE_ID }}.txt
           github_token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
