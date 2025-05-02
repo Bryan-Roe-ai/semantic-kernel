@@ -39,9 +39,9 @@
     }
   },
   "tasks": {
-    "test": "sudo npm test && pytest && dotnet test --verbosity normal && mvn test",
-    "build": "sudo npm install && dotnet build",
-    "launch": "sudo npm start"
+    "test": "npm test && pytest && dotnet test --verbosity normal && mvn test",
+    "build": "sudo npm install && dotnet build --no-restore && ./fix-errors.sh && dotnet test --no-build --verbosity normal",
+    "launch": "npm start"
   },
   "forwardPorts": [3000, 5000]
 }
