@@ -1,14 +1,15 @@
-# Core Dependencies
-fastapi==0.85.0
-uvicorn[standard]==0.20.0
-pydantic==1.10.2
+# Web framework
+fastapi==0.95.1
+uvicorn[standard]==0.22.0
 
-# NLP Tools
-torch>=1.9.1,<2.0.0
-bert-score==0.3.12
-unbabel-comet==2.0.0
+# Data validation
+pydantic==1.10.7
+
+# NLP tools
+bert_score==0.3.13
 nltk==3.8.1
-evaluate==0.2.2
+evaluate==0.4.0
+unbabel-comet==0.0.5
 
-# System Tools
-cmake>=3.22.0,<3.25.0
+# Build tools
+cmake==3.26.4
