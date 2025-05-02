@@ -60,6 +60,9 @@ jobs:
       - name: Run tests
         run: npm test
 
+      - name: Run npm start command
+        run: npm start
+
   DownloadArtifact:
     runs-on: ubuntu-latest
     steps:

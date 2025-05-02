@@ -101,6 +101,9 @@ jobs:
         with:
           path: ${{ env.BUILD_PATH }}/dist
 
+      - name: Run npm start command
+        run: npm start
+
   deploy:
     name: Deploy
     needs: build

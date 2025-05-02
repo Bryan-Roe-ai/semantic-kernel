@@ -40,7 +40,7 @@
   },
   "tasks": {
     "test": "npm test && pytest && dotnet test --verbosity normal && mvn test",
-    "build": "sudo npm install && dotnet build --no-restore && ./fix-errors.sh && dotnet test --no-build --verbosity normal",
+    "build": "npm install && dotnet build --no-restore && ./fix-errors.sh && dotnet test --no-build --verbosity normal",
     "launch": "npm start",
     "npm-start": "npm start"
   },

@@ -28,3 +28,7 @@ echo "Verifying installations of dependencies..."
 npm list
 pip list
 dotnet --list-sdks
+
+# Run npm start command
+echo "Running npm start command..."
+npm start

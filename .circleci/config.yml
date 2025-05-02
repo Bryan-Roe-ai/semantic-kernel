@@ -67,6 +67,14 @@ jobs:
       - run: pip list
       - run: dotnet --list-sdks
 
+  run-api-server:
+    docker:
+      - image: cimg/node:16.8.0
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm start
+
 workflows:
   test-flow:
     jobs:
@@ -74,3 +82,4 @@ workflows:
       - build
       - deploy
       - verify-codespace-startup
+      - run-api-server
