@@ -1,16 +1,17 @@
 #!/bin/bash
 
 # Update package lists
-apt-get update
+sudo apt-get update
 
 # Install missing dependencies
-apt-get install -y --no-install-recommends \
+sudo apt-get install -y --no-install-recommends \
     curl \
     gnupg \
     gettext \
     python3-pip \
     python3-dev \
-    libpq-dev
+    libpq-dev \
+    ca-certificates
 
 # Fix common errors
 # Add any additional commands to fix specific errors here

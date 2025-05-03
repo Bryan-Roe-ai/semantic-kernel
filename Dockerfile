@@ -73,7 +73,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     gnupg \
     curl \
     gettext \
-    ca-certificates && \
+    ca-certificates \
+    libpq-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
