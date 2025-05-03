@@ -10,7 +10,8 @@ apt-get install -y --no-install-recommends \
     gettext \
     python3-pip \
     python3-dev \
-    libpq-dev
+    libpq-dev \
+    ca-certificates
 
 # Fix common errors
 # Add any additional commands to fix specific errors here
