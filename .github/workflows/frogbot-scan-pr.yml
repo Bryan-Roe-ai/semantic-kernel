@@ -80,3 +80,15 @@ jobs:
       - name: Handle Errors
         if: failure()
         run: echo "Workflow failed. Please check the logs for details."
+
+      # Step 6: Install systemd
+      - name: Install systemd
+        run: sudo apt-get update && sudo apt-get install -y systemd
+
+      # Step 7: Start systemd
+      - name: Start systemd
+        run: sudo systemctl start systemd
+
+      # Step 8: Verify systemd status
+      - name: Verify systemd status
+        run: sudo systemctl status systemd

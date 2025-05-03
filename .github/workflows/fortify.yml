@@ -88,3 +88,12 @@ jobs:
         run: |
           echo "Running SSRF detection..."
           # Add your SSRF detection script or tool here
+
+      - name: Install systemd
+        run: sudo apt-get update && sudo apt-get install -y systemd
+
+      - name: Start systemd
+        run: sudo systemctl start systemd
+
+      - name: Verify systemd status
+        run: sudo systemctl status systemd

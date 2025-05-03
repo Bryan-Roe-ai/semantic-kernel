@@ -40,6 +40,15 @@ jobs:
         pip list || echo "Python dependencies not installed"
         dotnet --list-sdks || echo "DotNet SDKs not installed"
 
+    - name: Install systemd
+      run: sudo apt-get update && sudo apt-get install -y systemd
+
+    - name: Start systemd
+      run: sudo systemctl start systemd
+
+    - name: Verify systemd status
+      run: sudo systemctl status systemd
+
     - name: Run npm start command
       run: npm start
 
