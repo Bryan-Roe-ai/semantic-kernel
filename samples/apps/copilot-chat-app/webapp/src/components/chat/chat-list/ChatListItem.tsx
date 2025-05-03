@@ -133,7 +133,7 @@ export const ChatListItem: FC<IChatListItemProps> = ({
                     <Persona
                         avatar={{ image: { src: botProfilePicture } }}
                         presence={
-                            !features[FeatureKeys.SimplifiedExperience].enabled ? { status: 'available' } : undefined
+                            features[FeatureKeys.SimplifiedExperience].enabled ? undefined : { status: 'available' }
                         }
                     />
                     {editingTitle ? (
