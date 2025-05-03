@@ -137,7 +137,13 @@ export const ChatListItem: FC<IChatListItemProps> = ({
                         }
                     />
                     {editingTitle ? (
-                        <EditChatName name={header} chatId={id} exitEdits={() => setEditingTitle(false)} />
+                        <EditChatName 
+                            name={header} 
+                            chatId={id} 
+                            exitEdits={() => setEditingTitle(false)} 
+                            autoFocus 
+                            aria-label="Edit chat name"
+                        />
                     ) : (
                         <>
                             <div className={classes.body}>
