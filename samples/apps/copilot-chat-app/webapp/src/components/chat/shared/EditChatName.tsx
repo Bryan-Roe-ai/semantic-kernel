@@ -46,7 +46,7 @@ export const EditChatName: React.FC<IEditChatNameProps> = ({ name, chatId, exitE
     const [title = '', setTitle] = useState<string | undefined>(name);
 
     useEffect(() => {
-        if (selectedId !== chatId) exitEdits();
+        if (selectedId !== chatId) {
     }, [chatId, exitEdits, selectedId]);
 
     const onSaveTitleChange = async () => {
