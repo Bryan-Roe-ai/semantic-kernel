@@ -5,7 +5,7 @@ Keep the meaning same, but make them more literary.
 I want you to only reply the correction, the improvements and nothing else, do not write explanations.
 
 Sentence: """
-{{$INPUT}}
+{{INPUT}}
 """
 
 Translation:

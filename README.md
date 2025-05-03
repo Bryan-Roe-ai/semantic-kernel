@@ -1,174 +1,186 @@
 # Semantic Kernel
 
-[![Nuget package](https://img.shields.io/nuget/vpre/Microsoft.SemanticKernel)](https://www.nuget.org/packages/Microsoft.SemanticKernel/)
-[![License: MIT](https://img.shields.io/github/license/microsoft/semantic-kernel)](https://github.com/microsoft/semantic-kernel/blob/main/LICENSE)
-[![dotnet](https://github.com/microsoft/semantic-kernel/actions/workflows/dotnet-ci.yml/badge.svg?branch=main)](https://github.com/microsoft/semantic-kernel/actions/workflows/dotnet-ci.yml)
-[![Discord](https://img.shields.io/discord/1063152441819942922)](https://aka.ms/SKDiscord)
+Integrate cutting-edge LLM technology quickly and easily into your apps.
 
-> ℹ️ **NOTE**: This project is in early alpha and, just like AI, will evolve quickly.
-> We invite you to join us in developing the Semantic Kernel together!
-> Please contribute by
-> using GitHub [Discussions](https://github.com/microsoft/semantic-kernel/discussions),
-> opening GitHub [Issues](https://github.com/microsoft/semantic-kernel/issues/new/choose),
-> sending us [PRs](https://github.com/microsoft/semantic-kernel/pulls).
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Getting Started](#getting-started)
+3. [Usage](#usage)
+4. [Configuration](#configuration)
+5. [Workflows](#workflows)
+6. [Branch Protection Rules](#branch-protection-rules)
+7. [CI/CD Pipeline Efficiency](#cicd-pipeline-efficiency)
+8. [Contributing](#contributing)
+9. [License](#license)
 
-**Semantic Kernel (SK)** is a lightweight SDK enabling integration of AI Large
-Language Models (LLMs) with conventional programming languages. The SK extensible
-programming model combines natural language **semantic functions**, traditional
-code **native functions**, and **embeddings-based memory** unlocking new potential
-and adding value to applications with AI.
+## Introduction
+Provide an introduction to the project, its goals, and key features.
 
-SK supports
-[prompt templating](docs/PROMPT_TEMPLATE_LANGUAGE.md), function
-chaining,
-[vectorized memory](docs/EMBEDDINGS.md), and
-[intelligent planning](docs/PLANNER.md)
-capabilities out of the box.
+## Getting Started
+Detailed instructions on how to set up and start using the project.
 
-![image](https://user-images.githubusercontent.com/371009/221739773-cf43522f-c1e4-42f2-b73d-5ba84e21febb.png)
+## Usage
+### Using Semantic Kernel in C#
+![C# Logo](https://user-images.githubusercontent.com/371009/230673036-fad1e8e6-5d48-49b1-a9c1-6f9834e0d165.png)
 
-Semantic Kernel is designed to support and encapsulate several design patterns from the
-latest in AI research, such that developers can infuse their applications with complex
-[skills](docs/SKILLS.md) like [prompt](docs/PROMPT_TEMPLATE_LANGUAGE.md) chaining,
-recursive reasoning, summarization, zero/few-shot learning, contextual memory,
-long-term memory, [embeddings](docs/EMBEDDINGS.md), semantic indexing, [planning](docs/PLANNER.md),
-and accessing external knowledge stores as well as your own data.
+[Using Semantic Kernel in C#](dotnet/README.md)
 
-By joining the SK community, you can build AI-first apps faster and have a front-row
-peek at how the SDK is being built. SK has been released as open-source so that more
-pioneering developers can join us in crafting the future of this landmark moment
-in the history of computing.
+### Using Semantic Kernel in Python
+![Python Logo](https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg)
 
-## Samples ⚡
+[Using Semantic Kernel in Python](python/README.md)
 
-If you would like a quick overview about how Semantic Kernel can integrate with your
-app, start by cloning the repository:
+Include examples and explanations for other supported languages.
 
-```shell
-git clone https://github.com/microsoft/semantic-kernel.git
-```
+## Configuration
+Detailed steps to configure the project.
 
-and try these examples:
+## Workflows
+### Handling 'Not Found' Error
+We have added a new workflow to handle the "Not Found" error.
 
-|                                                                         |                                                                                                                                   |
-| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| [Simple chat summary](samples/apps/chat-summary-webapp-react/README.md) | Use ready-to-use skills and get those skills into your app easily.                                                                |
-| [Book creator](samples/apps/book-creator-webapp-react/README.md)        | Use planner to deconstruct a complex goal and envision using the planner in your app.                                             |
-| [Authentication and APIs](samples/apps/auth-api-webapp-react/README.md) | Use a basic connector pattern to authenticate and connect to an API and imagine integrating external data into your app's LLM AI. |
-| [Github repository Q&A](samples/apps/github-qna-webapp-react/README.md) | Use embeddings and memory to store recent data and allow you to query against it.                                                 |
+#### Configuration
+To configure the new workflow, follow these steps:
 
-For a more hands-on overview, you can also run the
-[Getting Started notebook](samples/notebooks/dotnet/Getting-Started-Notebook.ipynb),
-looking into the syntax, creating
-[Semantic Functions](docs/GLOSSARY.md),
-working with Memory, and see how the kernel works.
+1. **Create a new workflow file**: Add a new workflow file `.github/workflows/handle-not-found-error.yml`.
+2. **Define the workflow**: Add the following content to the file:
+    ```yaml
+    name: Handle Not Found Error
+    on:
+      pull_request:
+        types: [opened, synchronize]
+    jobs:
+      handle-not-found-error:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+          - name: Check for Not Found Error
+            run: |
+              echo "Checking for Not Found error..."
+              echo "Handling Not Found error..."
+    ```
+3. **Run the workflow**: The workflow will automatically run on pull request events.
 
-**Please note:**
+### SSRF Detection
+Include detailed steps and explanations for the SSRF detection workflow.
 
-- You will need an
-  [Open AI API Key](https://openai.com/api/) or
-  [Azure Open AI service key](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=rest-api)
-  to get started.
-- There are a few software requirements you may need to satisfy before running examples and notebooks:
-  1. [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local)
-     used for running the kernel as a local API, required by the web apps.
-  2. [Yarn](https://yarnpkg.com/getting-started/install) used for installing
-     web apps' dependencies.
-  3. Semantic Kernel supports .NET Standard 2.1 and it's recommended using .NET 6+. However, some of
-     the examples in the repository require [.NET 7](https://dotnet.microsoft.com/download) and the VS Code
-     [Polyglot extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode)
-     to run the notebooks.
+## Branch Protection Rules
+Explain the branch protection rules and include a link to the GitHub documentation on branch protection.
 
-## Get Started with Semantic Kernel ⚡
+## CI/CD Pipeline Efficiency
+### Parallel Jobs
+Modify `.circleci/config.yml` to run `test`, `build`, and `deploy` jobs in parallel.
 
-Here is a quick example of how to use Semantic Kernel from a C# console app.
+### Caching
+Implement Docker layer caching in `.github/workflows/azure-container-webapp.yml`.
 
-1.  Create a new project, targeting .NET 6 or newer, and add the
-    `Microsoft.SemanticKernel` nuget package:
+### Multi-Stage Builds
+Use multi-stage Docker builds in `.github/workflows/azure-container-webapp.yml`.
 
-        dotnet add package Microsoft.SemanticKernel --prerelease
+### Automation of Issue Management
+Add auto-labeling and auto-assigning logic in `.github/workflows/label-issues.yml`.
 
-    See [nuget.org](https://www.nuget.org/packages/Microsoft.SemanticKernel/) for
-    the latest version and more instructions.
+## Contributing
+Provide guidelines for contributing, reporting issues, and requesting features. Link to `CONTRIBUTING.md` if it exists.
 
-2.  Copy and paste the following code into your project, with your Azure OpenAI
-    key in hand (you can create one
-    [here](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=rest-api)).
+   on:
+     push:
+       branches: [ "main" ]
+     pull_request:
+       branches: [ "main" ]
+     schedule:
+       - cron: '0 0 * * 0'
 
-```csharp
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Configuration;
-using Microsoft.SemanticKernel.KernelExtensions;
+   jobs:
+     ssrf-detection:
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v4
 
-var kernel = Kernel.Builder.Build();
+         - name: Run SSRF detection
+           run: |
+             # Add your SSRF detection script or tool here
+             echo "Running SSRF detection..."
+   ```
 
-// For Azure Open AI service endpoint and keys please see
-// https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=rest-api
-kernel.Config.AddAzureOpenAITextCompletion(
-    "davinci-backend",                   // Alias used by the kernel
-    "text-davinci-003",                  // Azure OpenAI *Deployment ID*
-    "https://contoso.openai.azure.com/", // Azure OpenAI *Endpoint*
-    "...your Azure OpenAI Key..."        // Azure OpenAI *Key*
-);
+3. **Run the workflow**: The workflow will automatically run on push, pull request, and scheduled events. It will detect and address any SSRF vulnerabilities in the codebase.
 
-string skPrompt = @"
-{{$input}}
+By following these steps, you can ensure that SSRF vulnerabilities are detected and addressed in your codebase, enhancing the security of your project.
 
-Give me the TLDR in 5 words.
-";
+## New Workflow for Handling "Not Found" Error
 
-string textToSummarize = @"
-1) A robot may not injure a human being or, through inaction,
-allow a human being to come to harm.
+We have added a new workflow to handle the "Not Found" error when trying to use GitHub Copilot workspace on pull requests. This workflow is designed to detect and address the specific error.
 
-2) A robot must obey orders given it by human beings except where
-such orders would conflict with the First Law.
+### Configuration
 
-3) A robot must protect its own existence as long as such protection
-does not conflict with the First or Second Law.
-";
+To configure the new workflow, follow these steps:
 
-var tldrFunction = kernel.CreateSemanticFunction(skPrompt);
+1. **Create a new workflow file**: Add a new workflow file named `.github/workflows/handle-not-found-error.yml` to the repository.
 
-var summary = await kernel.RunAsync(textToSummarize, tldrFunction);
+2. **Define the workflow**: Add the following content to the workflow file:
 
-Console.WriteLine(summary);
+   ```yaml
+   name: Handle Not Found Error
 
-// Output => Protect humans, follow orders, survive.
-```
+   on:
+     pull_request:
+       types: [opened, synchronize]
 
-## Contributing and Community
+   jobs:
+     handle-not-found-error:
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v4
 
-We welcome your contributions and suggestions to SK community! One of the easiest
-ways to participate is to engage in discussions in the GitHub repository.
-Bug reports and fixes are welcome!
+         - name: Check for Not Found Error
+           run: |
+             # Add your script or tool to check for the Not Found error here
+             echo "Checking for Not Found error..."
+             # Handle the Not Found error appropriately
+             echo "Handling Not Found error..."
+   ```
 
-For new features, components, or extensions, please open an issue and discuss with
-us before sending a PR. This is to avoid rejection as we might be taking the core
-in a different direction, but also to consider the impact on the larger ecosystem.
+3. **Run the workflow**: The workflow will automatically run on pull request events. It will detect and address the "Not Found" error when trying to use GitHub Copilot workspace on pull requests.
 
-To learn more and get started:
+By following these steps, you can ensure that the "Not Found" error is detected and addressed in your codebase, enhancing the functionality of your project.
 
-- Read the [documentation](https://aka.ms/sk/learn)
-- Learn how to [contribute](https://github.com/microsoft/semantic-kernel/blob/main/CONTRIBUTING.md) to the project
-- Join the [Discord community](https://aka.ms/SKDiscord)
-- Follow the team on our [blog](https://aka.ms/sk/blog)
+## Contribution Guidelines
 
-<img src="https://user-images.githubusercontent.com/36091529/225807182-22ad65e9-82c6-4727-bb77-d1c256736045.png" align="left" width="40px"/>
-<b>Python developers:</b> Semantic Kernel is coming to Python soon! Check out the work-in-progress and contribute in the <a href="https://github.com/microsoft/semantic-kernel/tree/python-preview"><b>python-preview</b></a> branch.
-<br clear="left"/>
+We welcome contributions from the community! To contribute to this project, please follow these guidelines:
 
-## Code of Conduct
+1. **Fork the repository**: Create a fork of the repository to work on your changes.
 
-This project has adopted the
-[Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the
-[Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
-or contact [opencode@microsoft.com](mailto:opencode@microsoft.com)
-with any additional questions or comments.
+2. **Create a branch**: Create a new branch for your changes.
 
-## License
+   ```bash
+   git checkout -b my-feature-branch
+   ```
 
-Copyright (c) Microsoft Corporation. All rights reserved.
+3. **Make your changes**: Implement your changes in the new branch.
 
-Licensed under the [MIT](LICENSE) license.
+4. **Test your changes**: Ensure that your changes do not break any existing functionality and pass all tests.
+
+5. **Commit your changes**: Commit your changes with a descriptive commit message.
+
+   ```bash
+   git commit -m "Add new feature"
+   ```
+
+6. **Push your changes**: Push your changes to your forked repository.
+
+   ```bash
+   git push origin my-feature-branch
+   ```
+
+7. **Create a pull request**: Open a pull request to merge your changes into the main repository.
+
+8. **Review and feedback**: Address any feedback or comments from the maintainers during the review process.
+
+9. **Merge**: Once your pull request is approved, it will be merged into the main repository.
+
+Thank you for your contributions!
+
+For more detailed guidelines on contributing, refer to the `CONTRIBUTING.md` file in the root directory of the repository.

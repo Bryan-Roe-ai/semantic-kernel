@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.SemanticKernel.Diagnostics;
 using Microsoft.SemanticKernel.TemplateEngine.Blocks;
+using Microsoft.SemanticKernel.Text;
 
 namespace Microsoft.SemanticKernel.TemplateEngine;
 
@@ -32,7 +34,7 @@ namespace Microsoft.SemanticKernel.TemplateEngine;
 /// [letter]         ::= "a" | "b" ... | "z" | "A" | "B" ... | "Z"
 /// [digit]          ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 /// </summary>
-internal class CodeTokenizer
+internal sealed class CodeTokenizer
 {
     private enum TokenTypes
     {
@@ -42,11 +44,11 @@ internal class CodeTokenizer
         FunctionId = 3,
     }
 
-    private readonly ILogger _log;
+    private readonly ILogger _logger;
 
-    public CodeTokenizer(ILogger? log = null)
+    public CodeTokenizer(ILogger? logger = null)
     {
-        this._log = log ?? NullLogger.Instance;
+        this._logger = logger ?? NullLogger.Instance;
     }
 
     /// <summary>
@@ -60,7 +62,7 @@ internal class CodeTokenizer
         text = text?.Trim();
 
         // Render NULL to ""
-        if (string.IsNullOrEmpty(text)) { return new List<Block>(); }
+        if (text.IsNullOrEmpty()) { return new List<Block>(); }
 
         // Track what type of token we're reading
         TokenTypes currentTokenType = TokenTypes.None;
@@ -82,16 +84,16 @@ internal class CodeTokenizer
             switch (nextChar)
             {
                 case Symbols.VarPrefix:
-                    blocks.Add(new VarBlock(text, this._log));
+                    blocks.Add(new VarBlock(text, this._logger));
                     break;
 
                 case Symbols.DblQuote:
                 case Symbols.SglQuote:
-                    blocks.Add(new ValBlock(text, this._log));
+                    blocks.Add(new ValBlock(text, this._logger));
                     break;
 
                 default:
-                    blocks.Add(new FunctionIdBlock(text, this._log));
+                    blocks.Add(new FunctionIdBlock(text, this._logger));
                     break;
             }
 
@@ -150,7 +152,7 @@ internal class CodeTokenizer
                 // When we reach the end of the value
                 if (currentChar == textValueDelimiter)
                 {
-                    blocks.Add(new ValBlock(currentTokenContent.ToString(), this._log));
+                    blocks.Add(new ValBlock(currentTokenContent.ToString(), this._logger));
                     currentTokenContent.Clear();
                     currentTokenType = TokenTypes.None;
                     spaceSeparatorFound = false;
@@ -165,12 +167,12 @@ internal class CodeTokenizer
             {
                 if (currentTokenType == TokenTypes.Variable)
                 {
-                    blocks.Add(new VarBlock(currentTokenContent.ToString(), this._log));
+                    blocks.Add(new VarBlock(currentTokenContent.ToString(), this._logger));
                     currentTokenContent.Clear();
                 }
                 else if (currentTokenType == TokenTypes.FunctionId)
                 {
-                    blocks.Add(new FunctionIdBlock(currentTokenContent.ToString(), this._log));
+                    blocks.Add(new FunctionIdBlock(currentTokenContent.ToString(), this._logger));
                     currentTokenContent.Clear();
                 }
 
@@ -187,8 +189,7 @@ internal class CodeTokenizer
             {
                 if (!spaceSeparatorFound)
                 {
-                    throw new TemplateException(TemplateException.ErrorCodes.SyntaxError,
-                        "Tokens must be separated by one space least");
+                    throw new SKException("Tokens must be separated by one space least");
                 }
 
                 if (IsQuote(currentChar))
@@ -215,20 +216,19 @@ internal class CodeTokenizer
         switch (currentTokenType)
         {
             case TokenTypes.Value:
-                blocks.Add(new ValBlock(currentTokenContent.ToString(), this._log));
+                blocks.Add(new ValBlock(currentTokenContent.ToString(), this._logger));
                 break;
 
             case TokenTypes.Variable:
-                blocks.Add(new VarBlock(currentTokenContent.ToString(), this._log));
+                blocks.Add(new VarBlock(currentTokenContent.ToString(), this._logger));
                 break;
 
             case TokenTypes.FunctionId:
-                blocks.Add(new FunctionIdBlock(currentTokenContent.ToString(), this._log));
+                blocks.Add(new FunctionIdBlock(currentTokenContent.ToString(), this._logger));
                 break;
 
             case TokenTypes.None:
-                throw new TemplateException(TemplateException.ErrorCodes.SyntaxError,
-                    "Tokens must be separated by one space least");
+                throw new SKException("Tokens must be separated by one space least");
         }
 
         return blocks;

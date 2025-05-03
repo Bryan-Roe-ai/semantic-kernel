@@ -1,58 +1,185 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.SemanticKernel.AI.Embeddings;
 using Microsoft.SemanticKernel.AI.Embeddings.VectorOperations;
+using Microsoft.SemanticKernel.Diagnostics;
 using Microsoft.SemanticKernel.Memory.Collections;
-using Microsoft.SemanticKernel.Memory.Storage;
 
 namespace Microsoft.SemanticKernel.Memory;
 
 /// <summary>
 /// A simple volatile memory embeddings store.
-/// TODO: multiple enumerations
 /// </summary>
-/// <typeparam name="TEmbedding">Embedding type</typeparam>
-public class VolatileMemoryStore<TEmbedding> : VolatileDataStore<IEmbeddingWithMetadata<TEmbedding>>, IMemoryStore<TEmbedding>
-    where TEmbedding : unmanaged
+public class VolatileMemoryStore : IMemoryStore
 {
     /// <inheritdoc/>
-    public IAsyncEnumerable<(IEmbeddingWithMetadata<TEmbedding>, double)> GetNearestMatchesAsync(
-        string collection,
-        Embedding<TEmbedding> embedding,
-        int limit = 1,
-        double minRelevanceScore = 0)
+    public Task CreateCollectionAsync(string collectionName, CancellationToken cancellationToken = default)
+    {
+        if (!this._store.TryAdd(collectionName, new ConcurrentDictionary<string, MemoryRecord>()))
+        {
+            return Task.FromException(new SKException($"Could not create collection {collectionName}"));
+        }
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task<bool> DoesCollectionExistAsync(string collectionName, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(this._store.ContainsKey(collectionName));
+    }
+
+    /// <inheritdoc/>
+    public IAsyncEnumerable<string> GetCollectionsAsync(CancellationToken cancellationToken = default)
+    {
+        return this._store.Keys.ToAsyncEnumerable();
+    }
+
+    /// <inheritdoc/>
+    public Task DeleteCollectionAsync(string collectionName, CancellationToken cancellationToken = default)
+    {
+        if (!this._store.TryRemove(collectionName, out _))
+        {
+            return Task.FromException(new SKException($"Could not delete collection {collectionName}"));
+        }
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task<string> UpsertAsync(string collectionName, MemoryRecord record, CancellationToken cancellationToken = default)
+    {
+        Verify.NotNull(record);
+        Verify.NotNull(record.Metadata.Id);
+
+        if (this.TryGetCollection(collectionName, out var collectionDict, create: false))
+        {
+            record.Key = record.Metadata.Id;
+            collectionDict[record.Key] = record;
+        }
+        else
+        {
+            return Task.FromException<string>(new SKException($"Attempted to access a memory collection that does not exist: {collectionName}"));
+        }
+
+        return Task.FromResult(record.Key);
+    }
+
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<string> UpsertBatchAsync(
+        string collectionName,
+        IEnumerable<MemoryRecord> records,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        foreach (var r in records)
+        {
+            yield return await this.UpsertAsync(collectionName, r, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    /// <inheritdoc/>
+    public Task<MemoryRecord?> GetAsync(string collectionName, string key, bool withEmbedding = false, CancellationToken cancellationToken = default)
+    {
+        if (this.TryGetCollection(collectionName, out var collectionDict)
+            && collectionDict.TryGetValue(key, out var dataEntry))
+        {
+            return Task.FromResult<MemoryRecord?>(withEmbedding
+                ? dataEntry
+                : MemoryRecord.FromMetadata(dataEntry.Metadata, embedding: null, key: dataEntry.Key, timestamp: dataEntry.Timestamp));
+        }
+
+        return Task.FromResult<MemoryRecord?>(null);
+    }
+
+    /// <inheritdoc/>
+    public async IAsyncEnumerable<MemoryRecord> GetBatchAsync(
+        string collectionName,
+        IEnumerable<string> keys,
+        bool withEmbeddings = false,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        foreach (var key in keys)
+        {
+            var record = await this.GetAsync(collectionName, key, withEmbeddings, cancellationToken).ConfigureAwait(false);
+
+            if (record != null)
+            {
+                yield return record;
+            }
+        }
+    }
+
+    /// <inheritdoc/>
+    public Task RemoveAsync(string collectionName, string key, CancellationToken cancellationToken = default)
+    {
+        if (this.TryGetCollection(collectionName, out var collectionDict))
+        {
+            collectionDict.TryRemove(key, out MemoryRecord _);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    /// <inheritdoc/>
+    public Task RemoveBatchAsync(string collectionName, IEnumerable<string> keys, CancellationToken cancellationToken = default)
+    {
+        return Task.WhenAll(keys.Select(k => this.RemoveAsync(collectionName, k, cancellationToken)));
+    }
+
+    /// <summary>
+    /// Get the nearest matches to the given embedding in the specified collection.
+    /// </summary>
+    /// <param name="collectionName">The name of the collection to search.</param>
+    /// <param name="embedding">The embedding to compare against.</param>
+    /// <param name="limit">The maximum number of matches to return.</param>
+    /// <param name="minRelevanceScore">The minimum relevance score for a match to be included.</param>
+    /// <param name="withEmbeddings">Whether to include embeddings in the results.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>An async enumerable of tuples containing the matching memory records and their relevance scores.</returns>
+    public IAsyncEnumerable<(MemoryRecord, double)> GetNearestMatchesAsync(
+        string collectionName,
+        Embedding<float> embedding,
+        int limit,
+        double minRelevanceScore = 0.0,
+        bool withEmbeddings = false,
+        CancellationToken cancellationToken = default)
     {
         if (limit <= 0)
         {
-            return AsyncEnumerable.Empty<(IEmbeddingWithMetadata<TEmbedding>, double)>();
+            return AsyncEnumerable.Empty<(MemoryRecord, double)>();
         }
 
-        IEnumerable<DataEntry<IEmbeddingWithMetadata<TEmbedding>>>? embeddingCollection = null;
-        if (this.TryGetCollection(collection, out var collectionDict))
+        ICollection<MemoryRecord>? embeddingCollection = null;
+        if (this.TryGetCollection(collectionName, out var collectionDict))
         {
             embeddingCollection = collectionDict.Values;
         }
 
-        if (embeddingCollection == null || !embeddingCollection.Any())
+        if (embeddingCollection == null || embeddingCollection.Count == 0)
         {
-            return AsyncEnumerable.Empty<(IEmbeddingWithMetadata<TEmbedding>, double)>();
+            return AsyncEnumerable.Empty<(MemoryRecord, double)>();
         }
 
-        EmbeddingReadOnlySpan<TEmbedding> embeddingSpan = new(embedding.AsReadOnlySpan());
+        TopNCollection<MemoryRecord> embeddings = new(limit);
 
-        TopNCollection<IEmbeddingWithMetadata<TEmbedding>> embeddings = new(limit);
-
-        foreach (var item in embeddingCollection)
+        foreach (var record in embeddingCollection)
         {
-            if (item.Value != null)
+            if (record != null)
             {
-                EmbeddingReadOnlySpan<TEmbedding> itemSpan = new(item.Value.Embedding.AsReadOnlySpan());
-                double similarity = embeddingSpan.CosineSimilarity(itemSpan);
+                double similarity = embedding
+                    .AsReadOnlySpan()
+                    .CosineSimilarity(record.Embedding.AsReadOnlySpan());
                 if (similarity >= minRelevanceScore)
                 {
-                    embeddings.Add(new(item.Value, similarity));
+                    var entry = withEmbeddings ? record : MemoryRecord.FromMetadata(record.Metadata, Embedding<float>.Empty, record.Key, record.Timestamp);
+                    embeddings.Add(new(entry, similarity));
                 }
             }
         }
@@ -62,28 +189,59 @@ public class VolatileMemoryStore<TEmbedding> : VolatileDataStore<IEmbeddingWithM
         return embeddings.Select(x => (x.Value, x.Score.Value)).ToAsyncEnumerable();
     }
 
-    #region private ================================================================================
+    /// <inheritdoc/>
+    public async Task<(MemoryRecord, double)?> GetNearestMatchAsync(
+        string collectionName,
+        Embedding<float> embedding,
+        double minRelevanceScore = 0.0,
+        bool withEmbedding = false,
+        CancellationToken cancellationToken = default)
+    {
+        return await this.GetNearestMatchesAsync(
+            collectionName: collectionName,
+            embedding: embedding,
+            limit: 1,
+            minRelevanceScore: minRelevanceScore,
+            withEmbeddings: withEmbedding,
+            cancellationToken: cancellationToken).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    #region protected ================================================================================
 
     /// <summary>
-    /// Calculates the cosine similarity between an <see cref="Embedding{TEmbedding}"/> and an <see cref="IEmbeddingWithMetadata{TEmbedding}"/>
+    /// Try to get the collection with the specified name.
     /// </summary>
-    /// <param name="embedding">The input <see cref="Embedding{TEmbedding}"/> to be compared.</param>
-    /// <param name="embeddingWithData">The input <see cref="IEmbeddingWithMetadata{TEmbedding}"/> to be compared.</param>
-    /// <returns>A tuple consisting of the <see cref="IEmbeddingWithMetadata{TEmbedding}"/> cosine similarity result.</returns>
-    private (IEmbeddingWithMetadata<TEmbedding>, double) PairEmbeddingWithSimilarity(Embedding<TEmbedding> embedding,
-        IEmbeddingWithMetadata<TEmbedding> embeddingWithData)
+    /// <param name="name">The name of the collection.</param>
+    /// <param name="collection">The collection, if found.</param>
+    /// <param name="create">Whether to create the collection if it does not exist.</param>
+    /// <returns>True if the collection was found or created, false otherwise.</returns>
+    protected bool TryGetCollection(
+        string name,
+        [NotNullWhen(true)] out ConcurrentDictionary<string,
+            MemoryRecord>? collection,
+        bool create = false)
     {
-        var similarity = embedding.Vector.ToArray().CosineSimilarity(embeddingWithData.Embedding.Vector.ToArray());
-        return (embeddingWithData, similarity);
+        if (this._store.TryGetValue(name, out collection))
+        {
+            return true;
+        }
+
+        if (create)
+        {
+            collection = new ConcurrentDictionary<string, MemoryRecord>();
+            return this._store.TryAdd(name, collection);
+        }
+
+        collection = null;
+        return false;
     }
 
     #endregion
-}
 
-/// <summary>
-/// Default constructor for a simple volatile memory embeddings store for embeddings.
-/// The default embedding type is <see cref="float"/>.
-/// </summary>
-public class VolatileMemoryStore : VolatileMemoryStore<float>
-{
+    #region private ================================================================================
+
+    private readonly ConcurrentDictionary<string,
+        ConcurrentDictionary<string, MemoryRecord>> _store = new();
+
+    #endregion
 }

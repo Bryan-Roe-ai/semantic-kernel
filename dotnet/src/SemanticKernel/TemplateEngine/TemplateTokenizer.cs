@@ -3,7 +3,9 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.SemanticKernel.Diagnostics;
 using Microsoft.SemanticKernel.TemplateEngine.Blocks;
+using Microsoft.SemanticKernel.Text;
 
 namespace Microsoft.SemanticKernel.TemplateEngine;
 
@@ -31,16 +33,16 @@ namespace Microsoft.SemanticKernel.TemplateEngine;
 /// [letter]         ::= "a" | "b" ... | "z" | "A" | "B" ... | "Z"
 /// [digit]          ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 /// </summary>
-internal class TemplateTokenizer
+internal sealed class TemplateTokenizer
 {
     /// <summary>
     /// Create a new instance of SK tokenizer
     /// </summary>
-    /// <param name="log"></param>
-    public TemplateTokenizer(ILogger? log = null)
+    /// <param name="logger"></param>
+    public TemplateTokenizer(ILogger? logger = null)
     {
-        this._log = log ?? NullLogger.Instance;
-        this._codeTokenizer = new CodeTokenizer(this._log);
+        this._logger = logger ?? NullLogger.Instance;
+        this._codeTokenizer = new CodeTokenizer(this._logger);
     }
 
     /// <summary>
@@ -51,20 +53,20 @@ internal class TemplateTokenizer
     public IList<Block> Tokenize(string? text)
     {
         // An empty block consists of 4 chars: "{{}}"
-        const int EMPTY_CODE_BLOCK_LENGTH = 4;
+        const int EmptyCodeBlockLength = 4;
         // A block shorter than 5 chars is either empty or invalid, e.g. "{{ }}" and "{{$}}"
-        const int MIN_CODE_BLOCK_LENGTH = EMPTY_CODE_BLOCK_LENGTH + 1;
+        const int MinCodeBlockLength = EmptyCodeBlockLength + 1;
 
         // Render NULL to ""
-        if (string.IsNullOrEmpty(text))
+        if (text.IsNullOrEmpty())
         {
-            return new List<Block> { new TextBlock(string.Empty, this._log) };
+            return new List<Block> { new TextBlock(string.Empty, this._logger) };
         }
 
         // If the template is "empty" return the content as a text block
-        if (text.Length < MIN_CODE_BLOCK_LENGTH)
+        if (text.Length < MinCodeBlockLength)
         {
-            return new List<Block> { new TextBlock(text, this._log) };
+            return new List<Block> { new TextBlock(text, this._logger) };
         }
 
         var blocks = new List<Block>();
@@ -132,7 +134,7 @@ internal class TemplateTokenizer
                         // If there is plain text between the current var/val/code block and the previous one, capture that as a TextBlock
                         if (blockStartPos > endOfLastBlock)
                         {
-                            blocks.Add(new TextBlock(text, endOfLastBlock, blockStartPos, this._log));
+                            blocks.Add(new TextBlock(text, endOfLastBlock, blockStartPos, this._logger));
                         }
 
                         // Extract raw block
@@ -140,13 +142,13 @@ internal class TemplateTokenizer
 
                         // Remove "{{" and "}}" delimiters and trim empty chars
                         var contentWithoutDelimiters = contentWithDelimiters
-                            .Substring(2, contentWithDelimiters.Length - EMPTY_CODE_BLOCK_LENGTH)
+                            .Substring(2, contentWithDelimiters.Length - EmptyCodeBlockLength)
                             .Trim();
 
                         if (contentWithoutDelimiters.Length == 0)
                         {
                             // If what is left is empty, consider the raw block a Text Block
-                            blocks.Add(new TextBlock(contentWithDelimiters, this._log));
+                            blocks.Add(new TextBlock(contentWithDelimiters, this._logger));
                         }
                         else
                         {
@@ -157,8 +159,7 @@ internal class TemplateTokenizer
                                 case BlockTypes.Variable:
                                     if (codeBlocks.Count > 1)
                                     {
-                                        throw new TemplateException(TemplateException.ErrorCodes.SyntaxError,
-                                            $"Invalid token detected after the variable: {contentWithoutDelimiters}");
+                                        throw new SKException($"Invalid token detected after the variable: {contentWithoutDelimiters}");
                                     }
 
                                     blocks.Add(codeBlocks[0]);
@@ -167,8 +168,7 @@ internal class TemplateTokenizer
                                 case BlockTypes.Value:
                                     if (codeBlocks.Count > 1)
                                     {
-                                        throw new TemplateException(TemplateException.ErrorCodes.SyntaxError,
-                                            $"Invalid token detected after the value: {contentWithoutDelimiters}");
+                                        throw new SKException($"Invalid token detected after the value: {contentWithoutDelimiters}");
                                     }
 
                                     blocks.Add(codeBlocks[0]);
@@ -177,19 +177,17 @@ internal class TemplateTokenizer
                                 case BlockTypes.FunctionId:
                                     if (codeBlocks.Count > 2)
                                     {
-                                        throw new TemplateException(TemplateException.ErrorCodes.SyntaxError,
-                                            $"Functions support only one parameter: {contentWithoutDelimiters}");
+                                        throw new SKException($"Functions support only one parameter: {contentWithoutDelimiters}");
                                     }
 
-                                    blocks.Add(new CodeBlock(codeBlocks, contentWithoutDelimiters, this._log));
+                                    blocks.Add(new CodeBlock(codeBlocks, contentWithoutDelimiters, this._logger));
                                     break;
 
                                 case BlockTypes.Code:
                                 case BlockTypes.Text:
                                 case BlockTypes.Undefined:
                                 default:
-                                    throw new TemplateException(TemplateException.ErrorCodes.UnexpectedBlockType,
-                                        $"Code tokenizer returned an incorrect first token type {codeBlocks[0].Type:G}");
+                                    throw new SKException($"Code tokenizer returned an incorrect first token type {codeBlocks[0].Type:G}");
                             }
                         }
 
@@ -203,7 +201,7 @@ internal class TemplateTokenizer
         // If there is something left after the last block, capture it as a TextBlock
         if (endOfLastBlock < text.Length)
         {
-            blocks.Add(new TextBlock(text, endOfLastBlock, text.Length, this._log));
+            blocks.Add(new TextBlock(text, endOfLastBlock, text.Length, this._logger));
         }
 
         return blocks;
@@ -211,7 +209,7 @@ internal class TemplateTokenizer
 
     #region private ================================================================================
 
-    private readonly ILogger _log;
+    private readonly ILogger _logger;
     private readonly CodeTokenizer _codeTokenizer;
 
     private static string SubStr(string text, int startIndex, int stopIndex)

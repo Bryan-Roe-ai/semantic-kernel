@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Globalization;
@@ -24,7 +24,7 @@ public static class Example03_Variables
         var variables = new ContextVariables("Today is: ");
         variables.Set("day", DateTimeOffset.Now.ToString("dddd", CultureInfo.CurrentCulture));
 
-        SKContext result = await kernel.RunAsync(variables,
+        SKContext result = await kernel.RunAsync(variables, "fake-model",
             text["AppendDay"],
             text["Uppercase"]);
 

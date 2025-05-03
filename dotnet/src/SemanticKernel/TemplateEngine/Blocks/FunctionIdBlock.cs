@@ -1,13 +1,14 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
+using Microsoft.SemanticKernel.Diagnostics;
 using Microsoft.SemanticKernel.Orchestration;
 
 namespace Microsoft.SemanticKernel.TemplateEngine.Blocks;
 
-internal class FunctionIdBlock : Block, ITextRendering
+internal sealed class FunctionIdBlock : Block, ITextRendering
 {
     internal override BlockTypes Type => BlockTypes.FunctionId;
 
@@ -15,15 +16,20 @@ internal class FunctionIdBlock : Block, ITextRendering
 
     internal string FunctionName { get; } = string.Empty;
 
-    public FunctionIdBlock(string? text, ILogger? log = null)
-        : base(text?.Trim(), log)
+    public FunctionIdBlock(string? text, ILogger? logger = null)
+        : base(text?.Trim(), logger)
     {
         var functionNameParts = this.Content.Split('.');
         if (functionNameParts.Length > 2)
         {
-            this.Log.LogError("Invalid function name `{0}`", this.Content);
-            throw new TemplateException(TemplateException.ErrorCodes.SyntaxError,
-                "A function name can contain at most one dot separating the skill name from the function name");
+            this.Logger.LogError("Invalid function name `{0}`", this.Content);
+            throw new SKException("A function name can contain at most one dot separating the skill name from the function name");
+            this.Logger.LogError("Invalid function name `{FunctionName}`.", this.Content);
+            throw new SKException($"Invalid function name `{this.Content}`. A function name can contain at most one dot separating the skill name from the function name");
+            throw new SKException(
+                SKException.ErrorCodes.SyntaxError,
+                "A function name can contain at most one dot separating the skill name from the function name"
+            );
         }
 
         if (functionNameParts.Length == 2)
@@ -38,7 +44,7 @@ internal class FunctionIdBlock : Block, ITextRendering
 
     public override bool IsValid(out string errorMsg)
     {
-        if (!Regex.IsMatch(this.Content, "^[a-zA-Z0-9_.]*$"))
+        if (!s_validContentRegex.IsMatch(this.Content))
         {
             errorMsg = "The function identifier is empty";
             return false;
@@ -66,4 +72,6 @@ internal class FunctionIdBlock : Block, ITextRendering
         int count = 0;
         return value.Any(t => t == '.' && ++count > 1);
     }
+
+    private static readonly Regex s_validContentRegex = new("^[a-zA-Z0-9_.]*$");
 }

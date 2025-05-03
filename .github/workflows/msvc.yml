@@ -1,0 +1,67 @@
+# This workflow uses actions provided by third parties and is governed by 
+# separate terms of service, privacy policy, and support documentation.
+#
+# For more information, visit:
+# https://github.com/microsoft/msvc-code-analysis-action
+
+name: Microsoft C++ Code Analysis
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    # Runs at 10:22 AM UTC every Friday
+    - cron: '22 10 * * 5'
+
+env:
+  # Path to the CMake build directory.
+  build: '${{ github.workspace }}/build'
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    permissions:
+      contents: read # Required for actions/checkout to fetch code
+      security-events: write # Required for github/codeql-action/upload-sarif to upload SARIF results
+      actions: read # Only required for private repositories
+    name: Analyze
+    runs-on: windows-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Configure the CMake build directory
+      - name: Configure CMake
+        run: cmake -B ${{ env.build }}
+
+      # OPTIONAL: Uncomment the following step if generated source files are used
+      # - name: Build CMake
+      #   run: cmake --build ${{ env.build }}
+
+      # Initialize MSVC Code Analysis
+      - name: Initialize MSVC Code Analysis
+        uses: microsoft/msvc-code-analysis-action@v1
+        id: run-analysis
+        with:
+          cmakeBuildDirectory: ${{ env.build }}
+          # Ruleset file that determines what checks will be run
+          ruleset: ${{ env.RULESET_FILE || 'NativeRecommendedRules.ruleset' }}
+
+      # Upload SARIF file to GitHub Code Scanning Alerts
+      - name: Upload SARIF to GitHub
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ steps.run-analysis.outputs.sarif }}
+
+      # OPTIONAL: Upload SARIF file as an Artifact for debugging
+      # - name: Upload SARIF as an Artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: sarif-file
+      #     path: ${{ steps.run-analysis.outputs.sarif }}
