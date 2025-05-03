@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.SemanticKernel.Http;
 
 namespace Microsoft.SemanticKernel.Plugins.Web;
 
@@ -23,26 +24,15 @@ public sealed class WebFileDownloadPlugin
     public const string FilePathParamName = "filePath";
 
     private readonly ILogger _logger;
-    private readonly HttpClient _httpClient;
+    private static readonly HttpClient _httpClient = HttpClientProvider.GetHttpClient();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WebFileDownloadPlugin"/> class.
     /// </summary>
     /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
-    public WebFileDownloadPlugin(ILoggerFactory? loggerFactory = null) :
-        this(HttpClientProvider.GetHttpClient(), loggerFactory)
+    public WebFileDownloadPlugin(ILoggerFactory? loggerFactory = null)
     {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="WebFileDownloadPlugin"/> class.
-    /// </summary>
-    /// <param name="httpClient">The HTTP client to use for making requests.</param>
-    /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
-    public WebFileDownloadPlugin(HttpClient httpClient, ILoggerFactory? loggerFactory = null)
-    {
-        this._httpClient = httpClient;
-        this._logger = loggerFactory is not null ? loggerFactory.CreateLogger(typeof(WebFileDownloadPlugin)) : NullLogger.Instance;
+        this._logger = loggerFactory?.CreateLogger(typeof(WebFileDownloadPlugin)) ?? NullLogger.Instance;
     }
 
     /// <summary>
@@ -65,11 +55,11 @@ public sealed class WebFileDownloadPlugin
 
         using HttpRequestMessage request = new(HttpMethod.Get, url);
 
-        using HttpResponseMessage response = await this._httpClient.SendWithSuccessCheckAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await _httpClient.SendWithSuccessCheckAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
         this._logger.LogDebug("Response received: {0}", response.StatusCode);
 
-        using Stream webStream = await response.Content.ReadAsStreamAndTranslateExceptionAsync().ConfigureAwait(false);
+        using Stream webStream = await response.Content.ReadAsStreamAndTranslateExceptionAsync(cancellationToken).ConfigureAwait(false);
         using FileStream outputFileStream = new(Environment.ExpandEnvironmentVariables(filePath), FileMode.Create);
 
         await webStream.CopyToAsync(outputFileStream, 81920 /*same value used by default*/, cancellationToken).ConfigureAwait(false);

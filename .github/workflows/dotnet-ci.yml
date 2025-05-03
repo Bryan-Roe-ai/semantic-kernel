@@ -19,6 +19,7 @@ jobs:
         fail-fast: false
         matrix:
           include:
+          - { os: ubuntu-latest, dotnet: '8.0', configuration: Debug }
           - { os: ubuntu-latest, dotnet: '6.0', configuration: Debug }
           - { os: ubuntu-latest, dotnet: '6.0', configuration: Release }
           - { os: ubuntu-latest, dotnet: '7.0', configuration: Release }
@@ -56,11 +57,38 @@ jobs:
         done
 
     - name: Upload dotnet test results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dotnet-testresults-${{ matrix.configuration }}
         path: ./TestResults
       if: ${{ always() }}
+
+    - name: Fix errors within the docker container
+      run: ./fix-errors.sh
+
+    - name: Verify installations of dependencies
+      run: |
+        echo "Verifying installations of dependencies..."
+        npm list
+        pip list
+        dotnet --list-sdks
+
+    - name: Install systemd
+      run: sudo apt-get update && sudo apt-get install -y systemd
+
+    - name: Start systemd
+      run: sudo systemctl start systemd
+
+    - name: Verify systemd status
+      run: sudo systemctl status systemd
+
+    - name: Run the API server
+      run: |
+        echo "Running the API server..."
+        npm start
+
+    - name: Run npm start command
+      run: npm start
 
   build-and-test-windows:
     strategy:
@@ -68,7 +96,7 @@ jobs:
         matrix:
           os: [windows-latest]
           configuration: [Release, Debug]
-          dotnet-version: ['7.0.x']
+          dotnet-version: ['8.0.x']
     runs-on: ${{ matrix.os }}
     env:
       NUGET_CERT_REVOCATION_MODE: offline
@@ -78,13 +106,13 @@ jobs:
         clean: true
 
     - name: Setup .NET SDK ${{ matrix.dotnet-version }}
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GPR_READ_TOKEN }}
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       with:
         path: ~/.nuget/packages
         # Look to see if there is a cache hit for the corresponding requirements file
@@ -122,8 +150,36 @@ jobs:
         done
 
     - name: Upload dotnet test results
+      uses: actions/upload-artifact@v4
+    - name: Archive artifacts ${{ matrix.os }}-${{ matrix.configuration }}
       uses: actions/upload-artifact@v3
       with:
-        name: dotnet-testresults-${{ matrix.configuration }}
-        path: ./TestResults
-      if: ${{ always() }}
+        name: drop-${{ matrix.os }}-dotnet${{matrix.dotnet}}-${{ matrix.configuration }}
+        path: ./out
+
+    - name: Fix errors within the docker container
+      run: ./fix-errors.sh
+
+    - name: Verify installations of dependencies
+      run: |
+        echo "Verifying installations of dependencies..."
+        npm list
+        pip list
+        dotnet --list-sdks
+
+    - name: Install systemd
+      run: sudo apt-get update && sudo apt-get install -y systemd
+
+    - name: Start systemd
+      run: sudo systemctl start systemd
+
+    - name: Verify systemd status
+      run: sudo systemctl status systemd
+
+    - name: Run the API server
+      run: |
+        echo "Running the API server..."
+        npm start
+
+    - name: Run npm start command
+      run: npm start

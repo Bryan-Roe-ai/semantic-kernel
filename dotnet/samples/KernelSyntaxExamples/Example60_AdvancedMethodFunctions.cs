@@ -6,36 +6,32 @@ using System.Globalization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
+using Xunit;
+using Xunit.Abstractions;
 
-/**
- * This example shows different ways how to define and execute method functions using custom and primitive types.
- */
-// ReSharper disable once InconsistentNaming
-public static class Example60_AdvancedMethodFunctions
+namespace Examples;
+
+// This example shows different ways how to define and execute method functions using custom and primitive types.
+public class Example60_AdvancedMethodFunctions : BaseTest
 {
-    public static async Task RunAsync()
-    {
-        await MethodFunctionsChainingAsync();
-    }
-
     #region Method Functions Chaining
 
     /// <summary>
     /// This example executes Function1, which in turn executes Function2.
     /// </summary>
-    private static async Task MethodFunctionsChainingAsync()
+    [Fact]
+    public async Task MethodFunctionsChainingAsync()
     {
-        Console.WriteLine("Running Method Function Chaining example...");
+        WriteLine("Running Method Function Chaining example...");
 
-        var kernel = new KernelBuilder().Build();
+        var kernel = new Kernel();
 
-        var functions = kernel.ImportPluginFromObject<FunctionsChainingPlugin>();
+        var functions = kernel.ImportPluginFromType<FunctionsChainingPlugin>();
 
-        var result = await kernel.InvokeAsync(functions["Function1"]);
-        var customType = result.GetValue<MyCustomType>()!;
+        var customType = await kernel.InvokeAsync<MyCustomType>(functions["Function1"]);
 
-        Console.WriteLine(customType.Number); // 2
-        Console.WriteLine(customType.Text); // From Function1 + From Function2
+        WriteLine($"CustomType.Number: {customType!.Number}"); // 2
+        WriteLine($"CustomType.Text: {customType.Text}"); // From Function1 + From Function2
     }
 
     /// <summary>
@@ -43,14 +39,13 @@ public static class Example60_AdvancedMethodFunctions
     /// </summary>
     private sealed class FunctionsChainingPlugin
     {
-        public const string PluginName = nameof(FunctionsChainingPlugin);
+        private const string PluginName = nameof(FunctionsChainingPlugin);
 
         [KernelFunction]
         public async Task<MyCustomType> Function1Async(Kernel kernel)
         {
             // Execute another function
-            var result = await kernel.InvokeAsync(PluginName, "Function2");
-            var value = result?.GetValue<MyCustomType>()!;
+            var value = await kernel.InvokeAsync<MyCustomType>(PluginName, "Function2");
 
             return new MyCustomType
             {
@@ -96,9 +91,7 @@ public static class Example60_AdvancedMethodFunctions
     /// In this example, object instance is serialized with <see cref="JsonSerializer"/> from System.Text.Json,
     /// but it's possible to convert object to string using any other serialization logic.
     /// </summary>
-#pragma warning disable CA1812 // instantiated by Kernel
     private sealed class MyCustomTypeConverter : TypeConverter
-#pragma warning restore CA1812
     {
         public override bool CanConvertFrom(ITypeDescriptorContext? context, Type sourceType) => true;
 
@@ -122,4 +115,8 @@ public static class Example60_AdvancedMethodFunctions
     }
 
     #endregion
+
+    public Example60_AdvancedMethodFunctions(ITestOutputHelper output) : base(output)
+    {
+    }
 }

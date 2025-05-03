@@ -16,9 +16,9 @@ import com.microsoft.semantickernel.orchestration.RegistrableSkFunction;
 import com.microsoft.semantickernel.orchestration.SKContext;
 import com.microsoft.semantickernel.orchestration.SKFunction;
 import com.microsoft.semantickernel.semanticfunctions.SemanticFunctionConfig;
-import com.microsoft.semantickernel.services.AIService;
-import com.microsoft.semantickernel.services.AIServiceCollection;
-import com.microsoft.semantickernel.services.AIServiceProvider;
+import com.microsoft.semantickernel.aiservices.AIService;
+import com.microsoft.semantickernel.aiservices.AIServiceCollection;
+import com.microsoft.semantickernel.aiservices.AIServiceProvider;
 import com.microsoft.semantickernel.skilldefinition.DefaultSkillCollection;
 import com.microsoft.semantickernel.skilldefinition.FunctionNotFound;
 import com.microsoft.semantickernel.skilldefinition.ReadOnlyFunctionCollection;
@@ -104,6 +104,7 @@ public class DefaultKernel implements Kernel {
         return defaultSkillCollection.getFunction(skill, function, null);
     }
 
+<<<<<<< HEAD
     @Override
     public CompletionSKFunction registerSemanticFunction(
             String skillName, String functionName, SemanticFunctionConfig functionConfig) {
@@ -118,6 +119,20 @@ public class DefaultKernel implements Kernel {
                 .withKernel(this)
                 .build();
     }
+=======
+    /*
+    /// <inheritdoc/>
+    public SKFunction registerSemanticFunction(
+        String skillName, String functionName, SemanticFunctionConfig functionConfig) {
+      // Future-proofing the name not to contain special chars
+      // Verify.ValidSkillName(skillName);
+      // Verify.ValidFunctionName(functionName);
+
+      skillCollection = skillCollection.addSemanticFunction(func);
+
+      return this.createSemanticFunction(skillName, functionName, functionConfig);
+    }*/
+>>>>>>> main
 
     /// <summary>
     /// Import a set of functions from the given skill. The functions must have the `SKFunction`
@@ -235,7 +250,11 @@ public class DefaultKernel implements Kernel {
 
     @Override
     public ReadOnlyFunctionCollection importSkillFromResources(
+<<<<<<< HEAD
             String pluginDirectory, String skillName, String functionName, @Nullable Class clazz) throws KernelException {
+=======
+            String pluginDirectory, String skillName, String functionName, @Nullable Class clazz) {
+>>>>>>> main
         Map<String, SemanticFunctionConfig> skills =
                 KernelExtensions.importSemanticSkillFromResourcesDirectory(
                         pluginDirectory, skillName, functionName, clazz, promptTemplateEngine);

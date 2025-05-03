@@ -21,17 +21,26 @@ jobs:
         os: [ubuntu-latest]
         configuration: [Debug]
     runs-on: ${{ matrix.os }}
-    steps:        
+    steps:
       - uses: actions/checkout@v4
         if: ${{ github.event_name != 'pull_request' }}
         with:
           clean: true
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         if: ${{ github.event_name != 'pull_request' }}
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
+
+      - name: Install systemd
+        run: sudo apt-get update && sudo apt-get install -y systemd
+
+      - name: Start systemd
+        run: sudo systemctl start systemd
+
+      - name: Verify systemd status
+        run: sudo systemctl status systemd
 
       - name: Find projects
         shell: bash
@@ -58,7 +67,7 @@ jobs:
           done
 
       - name: Upload dotnet test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dotnet-testresults-${{ matrix.configuration }}
           path: ./TestResults

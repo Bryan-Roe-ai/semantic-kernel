@@ -1,4 +1,5 @@
 # Copyright (c) Microsoft. All rights reserved.
+
 import os
 
 from semantic_kernel.text import (
@@ -11,9 +12,19 @@ from semantic_kernel.text import (
 NEWLINE = os.linesep
 
 
+def test_split_empty_string():
+    """Test split_plain_text_lines() with empty string"""
+    text = ""
+
+    max_token_per_line = 10
+
+    expected = []
+    split = split_plaintext_lines(text, max_token_per_line)
+    assert expected == split
+
+
 def test_split_plain_text_lines_with_token_count():
     """Test split_plain_text_lines() with external token counter"""
-
     text = "This is a test of the emergency broadcast system. This is only a test."
 
     max_token_per_line = 8
@@ -34,7 +45,6 @@ def test_split_plain_text_lines_with_token_count():
 
 def test_split_plain_text_lines_half():
     """Test split_plain_text_lines() with external token counter"""
-
     text_1 = "This is a test of. cutting. at the half point."
     text_2 = "This is a test of . cutting. at the half point."
 
@@ -51,7 +61,6 @@ def test_split_plain_text_lines_half():
 
 def test_split_plain_text_lines():
     """Test split_plain_text_lines()"""
-
     text = "This is a test of the emergency broadcast system. This is only a test."
 
     max_token_per_line = 13
@@ -66,7 +75,6 @@ def test_split_plain_text_lines():
 
 def test_split_markdown_paragraph():
     """Test split_markdown_paragraph()"""
-
     text = [
         "This is a test of the emergency broadcast system. This is only a test.",
         "We repeat, this is only a test. A unit test.",
@@ -86,7 +94,6 @@ def test_split_markdown_paragraph():
 
 def test_split_text_paragraph():
     """Test _split_text_paragraph()"""
-
     text = [
         "This is a test of the emergency broadcast system. This is only a test.",
         "We repeat, this is only a test. A unit test.",
@@ -105,7 +112,6 @@ def test_split_text_paragraph():
 
 def test_split_markdown_lines():
     """Test split_markdown_lines()"""
-
     text = "This is a test of the emergency broadcast system. This is only a test."
 
     max_token_per_line = 15
@@ -120,7 +126,6 @@ def test_split_markdown_lines():
 
 def test_split_text_paragraph_empty_input():
     """Test split_paragraph() with empty input"""
-
     text = []
     max_token_per_line = 13
 
@@ -131,7 +136,6 @@ def test_split_text_paragraph_empty_input():
 
 def test_split_markdown_paragraph_empty_input():
     """Test split_paragraph() with empty input"""
-
     text = []
     max_token_per_line = 10
 
@@ -142,7 +146,6 @@ def test_split_markdown_paragraph_empty_input():
 
 def test_split_text_paragraph_evenly():
     """Test split_paragraph() with evenly split input"""
-
     text = [
         "This is a test of the emergency broadcast system. This is only a test.",
         "We repeat, this is only a test. A unit test.",
@@ -166,14 +169,13 @@ def test_split_text_paragraph_evenly():
 
 def test_split_text_paragraph_evenly_2():
     """Test split_paragraph() with evenly split input"""
-
     text = [
         "The gentle breeze rustled the autumn leaves on the tree branches. "
         + "She smiled and walked away.",
         "The sun set over the horizon peacefully, the beautiful star. Cats love boxes.",
         "That is something. Incredible news that is. "
-        + "What a beautiful day to be alive. Seriously, this is the end. "
-        + "We're finished once of for all. All set. Ok. ",
+        "What a beautiful day to be alive. Seriously, this is the end. "
+        "We're finished once of for all. All set. Ok. ",
         "Done.",
         "Or is it?",
         "Surprise!",
@@ -195,9 +197,7 @@ def test_split_text_paragraph_evenly_2():
 
 
 def test_split_paragraph_newline():
-    """
-    a plaintext example that splits on \r or \n
-    """
+    """A plaintext example that splits on \r or \n"""
     text = [
         "This is a test of the emergency broadcast system\r\nThis is only a test",
         "We repeat this is only a test\nA unit test",
@@ -218,9 +218,7 @@ def test_split_paragraph_newline():
 
 
 def test_split_paragraph_punctuation():
-    """
-    a plaintext example that splits on ? or !
-    """
+    """A plaintext example that splits on ? or !"""
     text = [
         "This is a test of the emergency broadcast system. This is only a test",
         "We repeat, this is only a test? A unit test",
@@ -242,9 +240,7 @@ def test_split_paragraph_punctuation():
 
 
 def test_split_paragraph_semicolon():
-    """
-    a plaintext example that splits on ;
-    """
+    """A plaintext example that splits on ;"""
     text = [
         "This is a test of the emergency broadcast system; This is only a test",
         "We repeat; this is only a test; A unit test",
@@ -265,9 +261,7 @@ def test_split_paragraph_semicolon():
 
 
 def test_split_paragraph_colon():
-    """
-    a plaintext example that splits on :
-    """
+    """A plaintext example that splits on :"""
     text = [
         "This is a test of the emergency broadcast system: This is only a test",
         "We repeat: this is only a test: A unit test",
@@ -288,9 +282,7 @@ def test_split_paragraph_colon():
 
 
 def test_split_paragraph_commas():
-    """
-    a plaintext example that splits on ,
-    """
+    """A plaintext example that splits on ,"""
     text = [
         "This is a test of the emergency broadcast system, This is only a test",
         "We repeat, this is only a test, A unit test",
@@ -311,9 +303,7 @@ def test_split_paragraph_commas():
 
 
 def test_split_paragraph_closing_brackets():
-    """
-    a plaintext example that splits on closing brackets
-    """
+    """A plaintext example that splits on closing brackets"""
     text = [
         "This is a test of the emergency broadcast system) This is only a test",
         "We repeat) this is only a test) A unit test",
@@ -335,9 +325,7 @@ def test_split_paragraph_closing_brackets():
 
 
 def test_split_paragraph_spaces():
-    """
-    a plaintext example that splits on spaces
-    """
+    """A plaintext example that splits on spaces"""
     text = [
         "This is a test of the emergency broadcast system This is only a test",
         "We repeat this is only a test A unit test",
@@ -358,9 +346,7 @@ def test_split_paragraph_spaces():
 
 
 def test_split_paragraph_hyphens():
-    """
-    a plaintext example that splits on hyphens
-    """
+    """A plaintext example that splits on hyphens"""
     text = [
         "This is a test of the emergency broadcast system-This is only a test",
         "We repeat-this is only a test-A unit test",
@@ -381,9 +367,7 @@ def test_split_paragraph_hyphens():
 
 
 def test_split_paragraph_nodelimiters():
-    """
-    a plaintext example that splits on spaces
-    """
+    """A plaintext example that splits on spaces"""
     text = [
         "Thisisatestoftheemergencybroadcastsystem",
         "Thisisonlyatest",
@@ -405,9 +389,7 @@ def test_split_paragraph_nodelimiters():
 
 
 def test_split_md_on_dot():
-    """
-    a markdown example that splits on .
-    """
+    """A markdown example that splits on ."""
     text = [
         "This is a test of the emergency broadcast\n system.This\n is only a test",
         "We repeat. this is only a test. A unit test",
@@ -428,9 +410,7 @@ def test_split_md_on_dot():
 
 
 def test_split_md_on_colon():
-    """
-    a markdown example that splits on :
-    """
+    """A markdown example that splits on :"""
     text = [
         "This is a test of the emergency broadcast system: This is only a test",
         "We repeat: this is only a test: A unit test",
@@ -451,9 +431,7 @@ def test_split_md_on_colon():
 
 
 def test_split_md_on_punctuation():
-    """
-    a markdown example that splits on punctuation
-    """
+    """A markdown example that splits on punctuation"""
     text = [
         "This is a test of the emergency broadcast\n system?This\n is only a test",
         "We repeat? this is only a test! A unit test",
@@ -474,9 +452,7 @@ def test_split_md_on_punctuation():
 
 
 def test_split_md_on_semicolon():
-    """
-    a markdown example that splits on semicolons
-    """
+    """A markdown example that splits on semicolons"""
     text = [
         "This is a test of the emergency broadcast system; This is only a test",
         "We repeat; this is only a test; A unit test",
@@ -497,9 +473,7 @@ def test_split_md_on_semicolon():
 
 
 def test_split_md_on_commas():
-    """
-    a markdown example that splits on commas
-    """
+    """A markdown example that splits on commas"""
     test = [
         "This is a test of the emergency broadcast system, This is only a test",
         "We repeat, this is only a test, A unit test",
@@ -520,9 +494,7 @@ def test_split_md_on_commas():
 
 
 def test_split_md_on_brackets():
-    """
-    a markdown example that splits on brackets
-    """
+    """A markdown example that splits on brackets"""
     test = [
         "This is a test of the emergency broadcast system) This is only a test.",
         "We repeat [this is only a test] A unit test",
@@ -543,9 +515,7 @@ def test_split_md_on_brackets():
 
 
 def test_split_md_on_spaces():
-    """
-    a markdown example that splits on spaces
-    """
+    """A markdown example that splits on spaces"""
     test = [
         "This is a test of the emergency broadcast system This is only a test",
         "We repeat this is only a test A unit test",

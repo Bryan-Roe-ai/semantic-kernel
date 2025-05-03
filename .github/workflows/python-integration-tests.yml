@@ -1,7 +1,3 @@
-#
-# This workflow will run all python integrations tests.
-#
-
 name: Python Integration Tests
 
 on:
@@ -15,199 +11,224 @@ on:
 
 permissions:
   contents: read
+  id-token: write
+
+env:
+  UV_CACHE_DIR: /tmp/.uv-cache
+  Python_Integration_Tests: Python_Integration_Tests
+  INTEGRATION_TEST_SERVICE_SETUP_EXCEPTION: ${{ true }}
+  AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_EMBEDDING_DEPLOYMENT_NAME }}
+  AZURE_OPENAI_CHAT_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_CHAT_DEPLOYMENT_NAME }}
+  AZURE_OPENAI_TEXT_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_TEXT_DEPLOYMENT_NAME }}
+  AZURE_OPENAI_AUDIO_TO_TEXT_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_AUDIO_TO_TEXT_DEPLOYMENT_NAME }}
+  AZURE_OPENAI_TEXT_TO_AUDIO_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_TEXT_TO_AUDIO_DEPLOYMENT_NAME }}
+  AZURE_OPENAI_TEXT_TO_IMAGE_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_TEXT_TO_IMAGE_DEPLOYMENT_NAME }}
+  AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
+  AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+  BING_API_KEY: ${{ secrets.BING_API_KEY }}
+  OPENAI_CHAT_MODEL_ID: ${{ vars.OPENAI_CHAT_MODEL_ID }}
+  OPENAI_TEXT_MODEL_ID: ${{ vars.OPENAI_TEXT_MODEL_ID }}
+  OPENAI_EMBEDDING_MODEL_ID: ${{ vars.OPENAI_EMBEDDING_MODEL_ID }}
+  OPENAI_AUDIO_TO_TEXT_MODEL_ID: ${{ vars.OPENAI_AUDIO_TO_TEXT_MODEL_ID }}
+  OPENAI_TEXT_TO_AUDIO_MODEL_ID: ${{ vars.OPENAI_TEXT_TO_AUDIO_MODEL_ID }}
+  OPENAI_TEXT_TO_IMAGE_MODEL_ID: ${{ vars.OPENAI_TEXT_TO_IMAGE_MODEL_ID }}
+  OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+  PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+  POSTGRES_CONNECTION_STRING: ${{ secrets.POSTGRES_CONNECTION_STRING }}
+  POSTGRES_MAX_POOL: ${{ vars.POSTGRES_MAX_POOL }}
+  AZURE_AI_SEARCH_API_KEY: ${{ secrets.AZURE_AI_SEARCH_API_KEY }}
+  AZURE_AI_SEARCH_ENDPOINT: ${{ secrets.AZURE_AI_SEARCH_ENDPOINT }}
+  MONGODB_ATLAS_CONNECTION_STRING: ${{ secrets.MONGODB_ATLAS_CONNECTION_STRING }}
+  AZURE_KEY_VAULT_ENDPOINT: ${{ secrets.AZURE_KEY_VAULT_ENDPOINT }}
+  AZURE_KEY_VAULT_CLIENT_ID: ${{ secrets.AZURE_KEY_VAULT_CLIENT_ID }}
+  AZURE_KEY_VAULT_CLIENT_SECRET: ${{ secrets.AZURE_KEY_VAULT_CLIENT_SECRET }}
+  ACA_POOL_MANAGEMENT_ENDPOINT: ${{ secrets.ACA_POOL_MANAGEMENT_ENDPOINT }}
+  MISTRALAI_API_KEY: ${{ secrets.MISTRALAI_API_KEY }}
+  MISTRALAI_CHAT_MODEL_ID: ${{ vars.MISTRALAI_CHAT_MODEL_ID }}
+  MISTRALAI_EMBEDDING_MODEL_ID: ${{ vars.MISTRALAI_EMBEDDING_MODEL_ID }}
+  ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  ANTHROPIC_CHAT_MODEL_ID: ${{ vars.ANTHROPIC_CHAT_MODEL_ID }}
+  OLLAMA_CHAT_MODEL_ID: "${{ vars.OLLAMA_CHAT_MODEL_ID || '' }}"
+  OLLAMA_CHAT_MODEL_ID_IMAGE: "${{ vars.OLLAMA_CHAT_MODEL_ID_IMAGE || '' }}"
+  OLLAMA_CHAT_MODEL_ID_TOOL_CALL: "${{ vars.OLLAMA_CHAT_MODEL_ID_TOOL_CALL || '' }}"
+  OLLAMA_TEXT_MODEL_ID: "${{ vars.OLLAMA_TEXT_MODEL_ID || '' }}"
+  OLLAMA_EMBEDDING_MODEL_ID: "${{ vars.OLLAMA_EMBEDDING_MODEL_ID || '' }}"
+  GOOGLE_AI_GEMINI_MODEL_ID: ${{ vars.GOOGLE_AI_GEMINI_MODEL_ID }}
+  GOOGLE_AI_EMBEDDING_MODEL_ID: ${{ vars.GOOGLE_AI_EMBEDDING_MODEL_ID }}
+  GOOGLE_AI_API_KEY: ${{ secrets.GOOGLE_AI_API_KEY }}
+  VERTEX_AI_PROJECT_ID: ${{ vars.VERTEX_AI_PROJECT_ID }}
+  VERTEX_AI_GEMINI_MODEL_ID: ${{ vars.VERTEX_AI_GEMINI_MODEL_ID }}
+  VERTEX_AI_EMBEDDING_MODEL_ID: ${{ vars.VERTEX_AI_EMBEDDING_MODEL_ID }}
+  REDIS_CONNECTION_STRING: ${{ vars.REDIS_CONNECTION_STRING }}
+  AZURE_COSMOS_DB_NO_SQL_URL: ${{ vars.AZURE_COSMOS_DB_NO_SQL_URL }}
+  AZURE_COSMOS_DB_NO_SQL_KEY: ${{ secrets.AZURE_COSMOS_DB_NO_SQL_KEY }}
 
 jobs:
   paths-filter:
     runs-on: ubuntu-latest
     outputs:
-      pythonChanges: ${{ steps.filter.outputs.python}}
+      pythonChanges: ${{ steps.filter.outputs.python }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
             python:
               - 'python/**'
-      # run only if 'python' files were changed
       - name: python tests
         if: steps.filter.outputs.python == 'true'
         run: echo "Python file"
-      # run only if not 'python' files were changed
       - name: not python tests
         if: steps.filter.outputs.python != 'true'
         run: echo "NOT python file"
 
-  python-merge-gate:
-    needs: paths-filter
-    if: github.event_name != 'pull_request' && github.event_name != 'schedule' && needs.paths-filter.outputs.pythonChanges == 'true'
-    runs-on: ${{ matrix.os }}
-    strategy:
-      max-parallel: 1
-      fail-fast: false
-      matrix:
-        python-version: ["3.11"]
-        os: [ubuntu-latest]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Install dependencies with hnswlib native disabled
-        if: matrix.os == 'macos-latest' && matrix.python-version == '3.11'
-        run: |
-          export HNSWLIB_NO_NATIVE=1
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install poetry pytest
-          cd python && poetry install
-      - name: Install dependencies with hnswlib native enabled
-        if: matrix.os != 'macos-latest' || matrix.python-version != '3.11'
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install poetry pytest
-          cd python
-          poetry install
-      - name: Run Integration Tests
-        id: run_tests
-        shell: bash
-        env: # Set Azure credentials secret as an input
-          HNSWLIB_NO_NATIVE: 1
-          Python_Integration_Tests: Python_Integration_Tests
-          AzureOpenAI__Label: azure-text-davinci-003
-          AzureOpenAIEmbedding__Label: azure-text-embedding-ada-002
-          AzureOpenAI__DeploymentName: ${{ vars.AZUREOPENAI__DEPLOYMENTNAME }}
-          AzureOpenAIChat__DeploymentName: ${{ vars.AZUREOPENAI__CHAT__DEPLOYMENTNAME }}
-          AzureOpenAIEmbeddings__DeploymentName: ${{ vars.AZUREOPENAIEMBEDDINGS__DEPLOYMENTNAME2 }}
-          AzureOpenAI__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
-          AzureOpenAIEmbeddings__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
-          AzureOpenAI__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
-          AzureOpenAIEmbeddings__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
-          Bing__ApiKey: ${{ secrets.BING__APIKEY }}
-          OpenAI__ApiKey: ${{ secrets.OPENAI__APIKEY }}
-          Pinecone__ApiKey: ${{ secrets.PINECONE__APIKEY }}
-          Pinecone__Environment: ${{ secrets.PINECONE__ENVIRONMENT }}
-          Postgres__Connectionstr: ${{secrets.POSTGRES__CONNECTIONSTR}}
-          AZURE_COGNITIVE_SEARCH_ADMIN_KEY: ${{secrets.AZURE_COGNITIVE_SEARCH_ADMIN_KEY}}
-          AZURE_COGNITIVE_SEARCH_ENDPOINT: ${{secrets.AZURE_COGNITIVE_SEARCH_ENDPOINT}}
-          MONGODB_ATLAS_CONNECTION_STRING: ${{secrets.MONGODB_ATLAS_CONNECTION_STRING}}
-        run: |
-          if ${{ matrix.os == 'ubuntu-latest' }}; then
-            docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
-          fi
-
-          cd python
-          poetry run pytest ./tests/integration -v
-
   python-integration-tests:
+    name: Python Integration Tests
     needs: paths-filter
-    if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.paths-filter.outputs.pythonChanges == 'true'
-    runs-on: ${{ matrix.os }}
+    if: needs.paths-filter.outputs.pythonChanges == 'true'
     strategy:
       max-parallel: 1
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.10", "3.11", "3.12"]
         os: [ubuntu-latest, windows-latest, macos-latest]
+    defaults:
+      run:
+        working-directory: python
+    runs-on: ${{ matrix.os }}
+    environment: "integration"
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
+      MEMORY_CONCEPT_SAMPLE: "true"
+      COMPLETIONS_CONCEPT_SAMPLE: "true"
+    services:
+      redis:
+        image: redis/redis-stack-server:latest
+        ports:
+          - 6379:6379
+      weaviate:
+        image: cr.weaviate.io/semitechnologies/weaviate:1.26.6
+        ports:
+          - 8080:8080
+          - 50051:50051
     steps:
       - uses: actions/checkout@v4
+      - name: Set up uv
+        if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest' }}
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Set up uv
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: irm https://astral.sh/uv/install.ps1 | iex
+        shell: powershell
+      - name: Install poetry
+        run: pipx install poetry
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-
+      - name: Restore uv cache
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.UV_CACHE_DIR }}
+          key: uv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/uv.lock') }}
       - name: Install dependencies with hnswlib native disabled
         if: matrix.os == 'macos-latest' && matrix.python-version == '3.11'
         run: |
           export HNSWLIB_NO_NATIVE=1
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install poetry pytest
-          cd python && poetry install
-
+          uv sync --all-extras --dev
       - name: Install dependencies with hnswlib native enabled
         if: matrix.os != 'macos-latest' || matrix.python-version != '3.11'
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      - name: Install Ollama
+        if: matrix.os == 'ubuntu-latest'
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install poetry pytest
-          cd python && poetry install
-
+          if ${{ vars.OLLAMA_MODEL != '' }}; then
+            curl -fsSL https://ollama.com/install.sh | sh
+            ollama serve &
+            sleep 5
+          fi
+      - name: Pull model in Ollama
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          if ${{ vars.OLLAMA_MODEL != '' }}; then
+            ollama pull ${{ vars.OLLAMA_MODEL }}
+            ollama list
+          fi
+      - name: Google auth
+        uses: google-github-actions/auth@v2
+        with:
+          project_id: ${{ vars.VERTEX_AI_PROJECT_ID }}
+          credentials_json: ${{ secrets.VERTEX_AI_SERVICE_ACCOUNT_KEY }}
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+      - name: Setup Redis Stack Server
+        if: matrix.os == 'ubuntu-latest'
+        run: docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
+      - name: Azure CLI Login
+        if: github.event_name != 'pull_request'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       - name: Run Integration Tests
         id: run_tests
         shell: bash
-        env: # Set Azure credentials secret as an input
-          HNSWLIB_NO_NATIVE: 1
-          Python_Integration_Tests: Python_Integration_Tests
-          AzureOpenAI__Label: azure-text-davinci-003
-          AzureOpenAIEmbedding__Label: azure-text-embedding-ada-002
-          AzureOpenAI__DeploymentName: ${{ vars.AZUREOPENAI__DEPLOYMENTNAME }}
-          AzureOpenAIChat__DeploymentName: ${{ vars.AZUREOPENAI__CHAT__DEPLOYMENTNAME }}
-          AzureOpenAIEmbeddings__DeploymentName: ${{ vars.AZUREOPENAIEMBEDDINGS__DEPLOYMENTNAME2 }}
-          AzureOpenAI__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
-          AzureOpenAIEmbeddings__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
-          AzureOpenAI__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
-          AzureOpenAIEmbeddings__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
-          Bing__ApiKey: ${{ secrets.BING__APIKEY }}
-          OpenAI__ApiKey: ${{ secrets.OPENAI__APIKEY }}
-          Pinecone__ApiKey: ${{ secrets.PINECONE__APIKEY }}
-          Pinecone__Environment: ${{ secrets.PINECONE__ENVIRONMENT }}
-          Postgres__Connectionstr: ${{secrets.POSTGRES__CONNECTIONSTR}}
-          AZURE_COGNITIVE_SEARCH_ADMIN_KEY: ${{secrets.AZURE_COGNITIVE_SEARCH_ADMIN_KEY}}
-          AZURE_COGNITIVE_SEARCH_ENDPOINT: ${{secrets.AZURE_COGNITIVE_SEARCH_ENDPOINT}}
-          MONGODB_ATLAS_CONNECTION_STRING: ${{secrets.MONGODB_ATLAS_CONNECTION_STRING}}
         run: |
-          if ${{ matrix.os == 'ubuntu-latest' }}; then
-            docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:latest
-          fi
+          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration ./tests/samples -v --junitxml=pytest.xml
+      - name: Surface failing tests
+        if: always()
+        uses: pmeier/pytest-results-action@main
+        with:
+          path: python/pytest.xml
+          summary: true
+          display-options: fEX
+          fail-on-empty: true
+          title: Test results
+      - name: Minimize uv cache
+        run: uv cache prune --ci
 
-          cd python
-          poetry run pytest ./tests/integration -v
-
-  # This final job is required to satisfy the merge queue. It must only run (or succeed) if no tests failed
   python-integration-tests-check:
     if: always()
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 1
       fail-fast: false
-    needs: [python-merge-gate, python-integration-tests]
+    needs:
+      [
+        python-integration-tests,
+      ]
     steps:
       - name: Get Date
         shell: bash
-        run: |
-          echo "date=$(date +'%m/%d/%Y %H:%M:%S')" >> "$GITHUB_ENV"
-
+        run: echo "date=$(date +'%m/%d/%Y %H:%M:%S')" >> "$GITHUB_ENV"
       - name: Run Type is Daily
         if: ${{ github.event_name == 'schedule' }}
         shell: bash
-        run: |
-          echo "run_type=Daily" >> "$GITHUB_ENV"
-
+        run: echo "run_type=Daily" >> "$GITHUB_ENV"
       - name: Run Type is Manual
         if: ${{ github.event_name == 'workflow_dispatch' }}
         shell: bash
-        run: |
-          echo "run_type=Manual" >> "$GITHUB_ENV"
-
+        run: echo "run_type=Manual" >> "$GITHUB_ENV"
       - name: Run Type is ${{ github.event_name }}
         if: ${{ github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'}}
         shell: bash
-        run: |
-          echo "run_type=${{ github.event_name }}" >> "$GITHUB_ENV"
-
+        run: echo "run_type=${{ github.event_name }}" >> "$GITHUB_ENV"
       - name: Fail workflow if tests failed
         id: check_tests_failed
         if: contains(join(needs.*.result, ','), 'failure')
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: core.setFailed('Integration Tests Failed!')
-
       - name: Fail workflow if tests cancelled
         id: check_tests_cancelled
         if: contains(join(needs.*.result, ','), 'cancelled')
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: core.setFailed('Integration Tests Cancelled!')
-
       - name: Microsoft Teams Notification
         uses: skitionek/notify-microsoft-teams@master
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
@@ -216,8 +237,7 @@ jobs:
           dry_run: ${{ env.run_type != 'Daily' && env.run_type != 'Manual'}}
           job: ${{ toJson(job) }}
           steps: ${{ toJson(steps) }}
-          overwrite: "{title: ` ${{ env.run_type }}: ${{ env.date }} `, text: ` ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`}"
-
+          title: "{title: ` ${{ env.run_type }}: ${{ env.date }} `, text: ` ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`}"
       - name: Microsoft Teams Notification (Dry Run)
         uses: skitionek/notify-microsoft-teams@master
         if: github.ref != 'refs/heads/main'
@@ -226,4 +246,4 @@ jobs:
           dry_run: ${{ env.run_type != 'Daily' && env.run_type != 'Manual'}}
           job: ${{ toJson(job) }}
           steps: ${{ toJson(steps) }}
-          overwrite: "{title: ` ${{ env.run_type }}: ${{ env.date }} `, text: ` ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`}"
+          title: "{title: ` ${{ env.run_type }}: ${{ env.date }} `, text: ` ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`}"

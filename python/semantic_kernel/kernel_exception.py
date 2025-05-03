@@ -3,8 +3,10 @@
 from enum import Enum
 from typing import Optional
 
+from semantic_kernel.diagnostics.sk_exception import SKException
 
-class KernelException(Exception):
+
+class KernelException(SKException):
     class ErrorCodes(Enum):
         # Unknown error.
         UnknownError = -1
@@ -18,16 +20,14 @@ class KernelException(Exception):
         FunctionTypeNotSupported = 3
         # Invalid function type.
         InvalidFunctionType = 4
-        # Invalid service configuration.
-        InvalidServiceConfiguration = 5
-        # Service not found.
-        ServiceNotFound = 6
+        # Invalid backend configuration.
+        InvalidBackendConfiguration = 5
+        # Backend not found.
+        BackendNotFound = 6
         # Skill collection not set.
         SkillCollectionNotSet = 7
-        # Represents an error that occurs when invoking a function.
-        FunctionInvokeError = 8
         # Ambiguous implementation.
-        AmbiguousImplementation = 9
+        AmbiguousImplementation = 8
 
     # The error code.
     _error_code: ErrorCodes

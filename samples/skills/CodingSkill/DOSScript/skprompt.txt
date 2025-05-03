@@ -16,4 +16,3 @@ dir *.pdf
 exit /b %ERRORLEVEL%
 
 {{$input}}
-

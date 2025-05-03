@@ -14,6 +14,7 @@ using Microsoft.SemanticKernel.AI;
 using Microsoft.SemanticKernel.AI.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.AI.OpenAI;
 using Microsoft.SemanticKernel.Experimental.Orchestration;
+using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.Plugins.Core;
 using Microsoft.SemanticKernel.Plugins.Memory;
 using Microsoft.SemanticKernel.Plugins.Web;
@@ -23,6 +24,7 @@ using NCalcPlugins;
 /**
  * This example shows how to use FlowOrchestrator to execute a given flow with interaction with client.
  */
+
 // ReSharper disable once InconsistentNaming
 public static class Example63_FlowOrchestrator
 {
@@ -205,10 +207,18 @@ provides:
         var builder = new KernelBuilder();
 
         return builder
-            .WithAzureOpenAIChatCompletion(
+            .WithAzureChatCompletionService(
                 TestConfiguration.AzureOpenAI.ChatDeploymentName,
                 TestConfiguration.AzureOpenAI.Endpoint,
-                TestConfiguration.AzureOpenAI.ApiKey)
+                TestConfiguration.AzureOpenAI.ApiKey,
+                true,
+                setAsDefault: true)
+            .WithRetryBasic(new()
+            {
+                MaxRetryCount = 3,
+                UseExponentialBackoff = true,
+                MinRetryDelay = TimeSpan.FromSeconds(3),
+            })
             .WithLoggerFactory(loggerFactory);
     }
 
@@ -230,12 +240,12 @@ Do not expose the regex unless asked.
 
         private int MaxTokens { get; set; } = 256;
 
-        private readonly PromptExecutionSettings _chatRequestSettings;
+        private readonly AIRequestSettings _chatRequestSettings;
 
-        public ChatPlugin(Kernel kernel)
+        public ChatPlugin(IKernel kernel)
         {
             this._chat = kernel.GetService<IChatCompletion>();
-            this._chatRequestSettings = new OpenAIPromptExecutionSettings
+            this._chatRequestSettings = new OpenAIRequestSettings
             {
                 MaxTokens = this.MaxTokens,
                 StopSequences = new List<string>() { "Observation:" },
@@ -243,31 +253,33 @@ Do not expose the regex unless asked.
             };
         }
 
-        [KernelFunction("ConfigureEmailAddress")]
+        [SKFunction]
         [Description("Useful to assist in configuration of email address, must be called after email provided")]
+        [SKName("ConfigureEmailAddress")]
         public async Task<string> CollectEmailAsync(
+            [SKName("email_address")]
             [Description("The email address provided by the user, pass no matter what the value is")]
-            string email_address,
-            ContextVariables variables)
+            string email,
+            SKContext context)
         {
             var chat = this._chat.CreateNewChat(SystemPrompt);
             chat.AddUserMessage(Goal);
 
-            ChatHistory? chatHistory = variables.GetChatHistory();
+            ChatHistory? chatHistory = context.GetChatHistory();
             if (chatHistory?.Any() ?? false)
             {
-                chat.AddRange(chatHistory);
+                chat.Messages.AddRange(chatHistory);
             }
 
             if (!string.IsNullOrEmpty(email) && IsValidEmail(email))
             {
-                variables["email_addresses"] = email;
+                context.Variables["email_addresses"] = email;
 
                 return "Thanks for providing the info, the following email would be used in subsequent steps: " + email;
             }
 
-            variables["email_addresses"] = string.Empty;
-            variables.PromptInput();
+            context.Variables["email_addresses"] = string.Empty;
+            context.PromptInput();
 
             return await this._chat.GenerateMessageAsync(chat, this._chatRequestSettings).ConfigureAwait(false);
         }
@@ -282,24 +294,25 @@ Do not expose the regex unless asked.
 
     public sealed class EmailPluginV2
     {
-        [KernelFunction]
+        [SKFunction]
         [Description("Send email")]
+        [SKName("SendEmail")]
         public string SendEmail(
-            [Description("target email addresses")]
-            string email_addresses,
-            [Description("answer, which is going to be the email content")]
+            [SKName("email_addresses")][Description("target email addresses")]
+            string emailAddress,
+            [SKName("answer")][Description("answer, which is going to be the email content")]
             string answer,
-            ContextVariables variables)
+            SKContext context)
         {
             var contract = new Email()
             {
-                Address = email_addresses,
+                Address = emailAddress,
                 Content = answer,
             };
 
             // for demo purpose only
             string emailPayload = JsonSerializer.Serialize(contract, new JsonSerializerOptions() { WriteIndented = true });
-            variables["email"] = emailPayload;
+            context.Variables["email"] = emailPayload;
 
             return "Here's the API contract I will post to mail server: " + emailPayload;
         }

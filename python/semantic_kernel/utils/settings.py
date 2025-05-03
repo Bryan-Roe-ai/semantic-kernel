@@ -1,8 +1,72 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+from typing import Optional, Tuple
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+>>>>>>> origin/main
+=======
+<<<<<<< main
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
 from typing import Dict, Optional, Tuple, Union
 
 from dotenv import dotenv_values
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
 
 def openai_settings_from_dot_env() -> Tuple[str, Optional[str]]:
@@ -13,32 +77,129 @@ def openai_settings_from_dot_env() -> Tuple[str, Optional[str]]:
         Tuple[str, str]: The OpenAI API key, the OpenAI organization ID
     """
 
+    api_key, org_id = None, None
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+    with open(".env", "r") as f:
+        lines = f.readlines()
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+    with open(".env", "r") as f:
+        lines = f.readlines()
+=======
+<<<<<<< div
+=======
+>>>>>>> main
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> origin/main
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
     config = dotenv_values(".env")
     api_key = config.get("OPENAI_API_KEY", None)
     org_id = config.get("OPENAI_ORG_ID", None)
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
-    assert api_key, "OpenAI API key not found in .env file"
+        for line in lines:
+            if line.startswith("OPENAI_API_KEY"):
+                parts = line.split("=")[1:]
+                api_key = "=".join(parts).strip().strip('"')
+                break
+
+            if line.startswith("OPENAI_ORG_ID"):
+                parts = line.split("=")[1:]
+                org_id = "=".join(parts).strip().strip('"')
+                break
+
+    assert api_key is not None, "OpenAI API key not found in .env file"
 
     # It's okay if the org ID is not found (not required)
     return api_key, org_id
 
 
-def azure_openai_settings_from_dot_env(
-    include_deployment: bool = True, include_api_version: bool = False
-) -> Union[Tuple[str, str, str], Tuple[str, str, str, str]]:
-    """
-    Reads the Azure OpenAI API key and endpoint from the .env file.
-
-    Arguments:
-        include_deployment {bool} -- Whether to include the deployment name in the return value
-        include_api_version {bool} -- Whether to include the API version in the return value,
-            when set to True, this will also make the output a Tuple[str, str, str, str].
-
-    Returns:
-        Union[Tuple[str, str, str], Tuple[str, str, str, str]]: The deployment name (or empty), Azure OpenAI API key,
-          the endpoint and optionally the api version
-    """
-
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+def azure_openai_settings_from_dot_env() -> Tuple[str, str]:
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+def azure_openai_settings_from_dot_env() -> Tuple[str, str]:
+=======
     deployment, api_key, endpoint, api_version = None, None, None, None
     config = dotenv_values(".env")
     deployment = config.get("AZURE_OPENAI_DEPLOYMENT_NAME", None)
@@ -48,13 +209,9 @@ def azure_openai_settings_from_dot_env(
 
     # Azure requires the deployment name, the API key and the endpoint URL.
     if include_deployment:
-        assert (
-            deployment is not None
-        ), "Azure OpenAI deployment name not found in .env file"
+        assert deployment is not None, "Azure OpenAI deployment name not found in .env file"
     if include_api_version:
-        assert (
-            api_version is not None
-        ), "Azure OpenAI API version not found in .env file"
+        assert api_version is not None, "Azure OpenAI API version not found in .env file"
 
     assert api_key, "Azure OpenAI API key not found in .env file"
     assert endpoint, "Azure OpenAI endpoint not found in .env file"
@@ -67,64 +224,158 @@ def azure_openai_settings_from_dot_env(
 def azure_openai_settings_from_dot_env_as_dict(
     include_deployment: bool = True, include_api_version: bool = False
 ) -> Dict[str, str]:
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
     """
     Reads the Azure OpenAI API key and endpoint from the .env file.
 
     Returns:
-        Dict[str, str]: The deployment name (or empty), Azure OpenAI API key,
-        endpoint and api version (or empty)
-    """
-    (
-        deployment_name,
-        api_key,
-        endpoint,
-        api_version,
-    ) = azure_openai_settings_from_dot_env(include_deployment, include_api_version)
-    ret = {
-        "api_key": api_key,
-        "endpoint": endpoint,
-    }
-    if include_deployment:
-        ret["deployment_name"] = deployment_name
-    if include_api_version:
-        ret["api_version"] = api_version
-    return ret
-
-
-def postgres_settings_from_dot_env() -> str:
-    """Reads the Postgres connection string from the .env file.
-
-    Returns:
-        str: The Postgres connection string
-    """
-    connection_string = None
-    config = dotenv_values(".env")
-    connection_string = config.get("POSTGRES_CONNECTION_STRING", None)
-
-    assert connection_string, "Postgres connection string not found in .env file"
-
-    return connection_string
-
-
-def pinecone_settings_from_dot_env() -> Tuple[str, Optional[str]]:
-    """
-    Reads the Pinecone API key and Environment from the .env file.
-    Returns:
-        Tuple[str, str]: The Pinecone API key, the Pinecone Environment
+        Tuple[str, str]: The Azure OpenAI API key, the endpoint
     """
 
-    api_key, environment = None, None
+    api_key, endpoint = None, None
     with open(".env", "r") as f:
         lines = f.readlines()
 
         for line in lines:
-            if line.startswith("PINECONE_API_KEY"):
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+            if line.startswith("AZURE_OPENAI_API_KEY"):
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+            if line.startswith("AZURE_OPENAI_API_KEY"):
+=======
+            if line.startswith("OPENAI_API_KEY"):
                 parts = line.split("=")[1:]
                 api_key = "=".join(parts).strip().strip('"')
-                continue
+                break
 
-            if line.startswith("PINECONE_ENVIRONMENT"):
+            if line.startswith("OPENAI_ORG_ID"):
                 parts = line.split("=")[1:]
+                org_id = "=".join(parts).strip().strip('"')
+                break
+
+    assert api_key is not None, "OpenAI API key not found in .env file"
+
+    # It's okay if the org ID is not found (not required)
+    return api_key, org_id
+
+
+def azure_openai_settings_from_dot_env() -> Tuple[str, str]:
+    """
+    Reads the Azure OpenAI API key and endpoint from the .env file.
+
+    Returns:
+        Tuple[str, str]: The Azure OpenAI API key, the endpoint
+    """
+
+    api_key, endpoint = None, None
+            if line.startswith("PINECONE_API_KEY"):
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+                parts = line.split("=")[1:]
+                api_key = "=".join(parts).strip().strip('"')
+                break
+
+            if line.startswith("AZURE_OPENAI_ENDPOINT"):
+                parts = line.split("=")[1:]
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+                endpoint = "=".join(parts).strip().strip('"')
+                break
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+                endpoint = "=".join(parts).strip().strip('"')
+                break
+=======
                 environment = "=".join(parts).strip().strip('"')
                 continue
 
@@ -132,6 +383,163 @@ def pinecone_settings_from_dot_env() -> Tuple[str, Optional[str]]:
     assert environment, "Pinecone environment not found in .env file"
 
     return api_key, environment
+
+
+def astradb_settings_from_dot_env() -> Tuple[str, Optional[str]]:
+    """
+    Reads the Astradb API key and Environment from the .env file.
+    Returns:
+        Tuple[str, str]: The Astradb API key, the Astradb Environment
+    """
+
+    app_token, db_id, region, keyspace = None, None, None, None
+    with open(".env", "r") as f:
+        lines = f.readlines()
+
+        for line in lines:
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+            if line.startswith("AZURE_OPENAI_API_KEY"):
+=======
+            if line.startswith("OPENAI_API_KEY"):
+                parts = line.split("=")[1:]
+                api_key = "=".join(parts).strip().strip('"')
+                break
+
+            if line.startswith("OPENAI_ORG_ID"):
+                parts = line.split("=")[1:]
+                org_id = "=".join(parts).strip().strip('"')
+                break
+
+    assert api_key is not None, "OpenAI API key not found in .env file"
+
+    # It's okay if the org ID is not found (not required)
+    return api_key, org_id
+
+
+def azure_openai_settings_from_dot_env() -> Tuple[str, str]:
+    """
+    Reads the Azure OpenAI API key and endpoint from the .env file.
+
+    Returns:
+        Tuple[str, str]: The Azure OpenAI API key, the endpoint
+    """
+
+    api_key, endpoint = None, None
+            if line.startswith("PINECONE_API_KEY"):
+<<<<<<< div
+>>>>>>> main
+=======
+>>>>>>> origin/main
+>>>>>>> head
+                parts = line.split("=")[1:]
+                api_key = "=".join(parts).strip().strip('"')
+                break
+
+            if line.startswith("AZURE_OPENAI_ENDPOINT"):
+                parts = line.split("=")[1:]
+                endpoint = "=".join(parts).strip().strip('"')
+                break
+
+    # Azure requires both the API key and the endpoint URL.
+    assert api_key is not None, "Azure OpenAI API key not found in .env file"
+    assert endpoint is not None, "Azure OpenAI endpoint not found in .env file"
+
+<<<<<<< main
+    return api_key, endpoint
+=======
+            if line.startswith("ASTRADB_APP_TOKEN"):
+                parts = line.split("=")[1:]
+                app_token = "=".join(parts).strip().strip('"')
+                continue
+
+            if line.startswith("ASTRADB_ID"):
+                parts = line.split("=")[1:]
+                db_id = "=".join(parts).strip().strip('"')
+                continue
+
+            if line.startswith("ASTRADB_REGION"):
+                parts = line.split("=")[1:]
+                region = "=".join(parts).strip().strip('"')
+                continue
+
+            if line.startswith("ASTRADB_KEYSPACE"):
+                parts = line.split("=")[1:]
+                keyspace = "=".join(parts).strip().strip('"')
+                continue
+
+    assert app_token, "Astradb Application token not found in .env file"
+    assert db_id, "Astradb ID not found in .env file"
+    assert region, "Astradb Region not found in .env file"
+    assert keyspace, "Astradb Keyspace name not found in .env file"
+
+    return app_token, db_id, region, keyspace
+
+
+def astradb_settings_from_dot_env() -> Tuple[str, Optional[str]]:
+    """
+    Reads the Astradb API key and Environment from the .env file.
+    Returns:
+        Tuple[str, str]: The Astradb API key, the Astradb Environment
+    """
+
+    app_token, db_id, region, keyspace = None, None, None, None
+    with open(".env", "r") as f:
+        lines = f.readlines()
+
+        for line in lines:
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+            if line.startswith("AZURE_OPENAI_API_KEY"):
+                parts = line.split("=")[1:]
+                api_key = "=".join(parts).strip().strip('"')
+                break
+
+            if line.startswith("AZURE_OPENAI_ENDPOINT"):
+                parts = line.split("=")[1:]
+                endpoint = "=".join(parts).strip().strip('"')
+                break
+
+    # Azure requires both the API key and the endpoint URL.
+    assert api_key is not None, "Azure OpenAI API key not found in .env file"
+    assert endpoint is not None, "Azure OpenAI endpoint not found in .env file"
+
+<<<<<<< main
+    return api_key, endpoint
+=======
+            if line.startswith("ASTRADB_APP_TOKEN"):
+                parts = line.split("=")[1:]
+                app_token = "=".join(parts).strip().strip('"')
+                continue
+
+            if line.startswith("ASTRADB_ID"):
+                parts = line.split("=")[1:]
+                db_id = "=".join(parts).strip().strip('"')
+                continue
+
+            if line.startswith("ASTRADB_REGION"):
+                parts = line.split("=")[1:]
+                region = "=".join(parts).strip().strip('"')
+                continue
+
+            if line.startswith("ASTRADB_KEYSPACE"):
+                parts = line.split("=")[1:]
+                keyspace = "=".join(parts).strip().strip('"')
+                continue
+
+    assert app_token, "Astradb Application token not found in .env file"
+    assert db_id, "Astradb ID not found in .env file"
+    assert region, "Astradb Region not found in .env file"
+    assert keyspace, "Astradb Keyspace name not found in .env file"
+
+    return app_token, db_id, region, keyspace
 
 
 def weaviate_settings_from_dot_env() -> Tuple[Optional[str], str]:
@@ -156,7 +564,7 @@ def bing_search_settings_from_dot_env() -> str:
     """Reads the Bing Search API key from the .env file.
 
     Returns:
-        Tuple[str, str]: The Bing Search API key, the Bing Search endpoint
+        str: The Bing Search API key
     """
 
     api_key = None
@@ -208,9 +616,7 @@ def azure_cosmos_db_settings_from_dot_env() -> Tuple[str, str]:
     cosmos_api = config.get("AZCOSMOS_API")
     cosmos_connstr = config.get("AZCOSMOS_CONNSTR")
 
-    assert (
-        cosmos_connstr is not None
-    ), "Azure Cosmos Connection String not found in .env file"
+    assert cosmos_connstr is not None, "Azure Cosmos Connection String not found in .env file"
 
     return cosmos_api, cosmos_connstr
 
@@ -224,14 +630,14 @@ def redis_settings_from_dot_env() -> str:
     config = dotenv_values(".env")
     connection_string = config.get("REDIS_CONNECTION_STRING", None)
 
-    assert (
-        connection_string is not None
-    ), "Redis connection string not found in .env file"
+    assert connection_string is not None, "Redis connection string not found in .env file"
 
     return connection_string
 
 
-def azure_aisearch_settings_from_dot_env() -> Tuple[str, str]:
+def azure_aisearch_settings_from_dot_env(
+    include_index_name=False,
+) -> Union[Tuple[str, str], Tuple[str, str, str]]:
     """
     Reads the Azure AI Search environment variables for the .env file.
 
@@ -241,8 +647,145 @@ def azure_aisearch_settings_from_dot_env() -> Tuple[str, str]:
     config = dotenv_values(".env")
     api_key = config.get("AZURE_AISEARCH_API_KEY", None)
     url = config.get("AZURE_AISEARCH_URL", None)
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
+    # Azure requires both the API key and the endpoint URL.
+    assert api_key is not None, "Azure OpenAI API key not found in .env file"
+    assert endpoint is not None, "Azure OpenAI endpoint not found in .env file"
+
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+    return api_key, endpoint
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+    return api_key, endpoint
+=======
+    if not include_index_name:
+        return api_key, url
+    else:
+        index_name = config.get("AZURE_AISEARCH_INDEX_NAME", None)
+        assert index_name is not None, "Azure AI Search index name not found in .env file"
+        return api_key, url, index_name
+
+
+def azure_aisearch_settings_from_dot_env_as_dict() -> Dict[str, str]:
+    """
+    Reads the Azure AI Search environment variables including index name from the .env file.
+
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+=======
     assert url is not None, "Azure AI Search URL not found in .env file"
     assert api_key is not None, "Azure AI Search API key not found in .env file"
 
-    return api_key, url
+    if not include_index_name:
+        return api_key, url
+    else:
+        index_name = config.get("AZURE_AISEARCH_INDEX_NAME", None)
+        assert index_name is not None, "Azure AI Search index name not found in .env file"
+        return api_key, url, index_name
+
+
+def azure_aisearch_settings_from_dot_env_as_dict() -> Dict[str, str]:
+    """
+    Reads the Azure AI Search environment variables including index name from the .env file.
+
+<<<<<<< div
+>>>>>>> main
+=======
+>>>>>>> origin/main
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+    Returns:
+        Dict[str, str]: the Azure AI search environment variables
+    """
+    api_key, url, index_name = azure_aisearch_settings_from_dot_env(include_index_name=True)
+    return {"key": api_key, "endpoint": url, "indexName": index_name}
+>>>>>>> ms/small_fixes
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> origin/main
+>>>>>>> head

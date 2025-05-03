@@ -12,12 +12,32 @@ on:
   merge_group:
     branches: ["main"]
 
+env:
+  COVERAGE_THRESHOLD: 80
+  AzureOpenAI__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
+  AzureOpenAI__DeploymentName: ${{ vars.AZUREOPENAI__DEPLOYMENTNAME }}
+  AzureOpenAI__ChatDeploymentName: ${{ vars.AZUREOPENAI__CHATDEPLOYMENTNAME }}
+  AzureOpenAIEmbeddings__DeploymentName: ${{ vars.AZUREOPENAI__EMBEDDING__DEPLOYMENTNAME }}
+  AzureOpenAIEmbeddings__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
+  AzureOpenAI__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
+  AzureOpenAIEmbeddings__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
+  OpenAI__ApiKey: ${{ secrets.OPENAI__APIKEY }}
+  OpenAI__ChatModelId: ${{ vars.OPENAI__CHATMODELID }}
+  OpenAIEmbeddings__ApiKey: ${{ secrets.OPENAIEMBEDDINGS__APIKEY }}
+  OpenAIEmbeddings__ModelId: ${{ vars.OPENAIEMBEDDINGS__MODELID }}
+  Bing__ApiKey: ${{ secrets.BING__APIKEY }}
+  Google__SearchEngineId: ${{ secrets.GOOGLE__SEARCHENGINEID }}
+  Google__ApiKey: ${{ secrets.GOOGLE__APIKEY }}
+  AzureAIInference__ApiKey: ${{ secrets.AZUREAIINFERENCE__APIKEY }}
+  AzureAIInference__Endpoint: ${{ secrets.AZUREAIINFERENCE__ENDPOINT }}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
+  id-token: "write"
 
 jobs:
   paths-filter:
@@ -26,14 +46,16 @@ jobs:
       dotnetChanges: ${{ steps.filter.outputs.dotnet }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v2
+
+      - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
             dotnet:
               - 'dotnet/**'
               - '**/dotnet/**'
-              - 'samples/skills/**'
+              - '.github/workflows/check-coverage.ps1'
+              - '.github/workflows/dotnet-build-and-test.yml'
       # run only if 'dotnet' files were changed
       - name: dotnet tests
         if: steps.filter.outputs.dotnet == 'true'
@@ -49,47 +71,71 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { dotnet: "6.0-jammy", os: "ubuntu", configuration: Debug }
-          - { dotnet: "7.0-jammy", os: "ubuntu", configuration: Release }
           - {
-              dotnet: "8.0-jammy",
-              os: "ubuntu",
+              dotnet: "8.0",
+              os: "ubuntu-latest",
               configuration: Release,
-            }
-          - { dotnet: "6.0", os: "windows", configuration: Release }
-          - {
-              dotnet: "7.0",
-              os: "windows",
-              configuration: Debug,
               integration-tests: true,
+              environment: "integration",
             }
-          - { dotnet: "8.0", os: "windows", configuration: Release }
+          - { dotnet: "8.0", os: "windows-latest", configuration: Debug }
+          - { dotnet: "8.0", os: "windows-latest", configuration: Release }
 
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/dotnet/sdk:${{ matrix.dotnet }}
-      env:
-        NUGET_CERT_REVOCATION_MODE: offline
-        GITHUB_ACTIONS: "true"
-
+    runs-on: ${{ matrix.os }}
+    environment: ${{ matrix.environment }}
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup dotnet ${{ matrix.dotnet }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+
       - name: Build dotnet solutions
+        shell: bash
         run: |
           export SOLUTIONS=$(find ./dotnet/ -type f -name "*.sln" | tr '\n' ' ')
           for solution in $SOLUTIONS; do
-            dotnet build -c ${{ matrix.configuration }} /warnaserror $solution
+            dotnet build $solution -c ${{ matrix.configuration }} --warnaserror
           done
 
       - name: Run Unit Tests
+        shell: bash
         run: |
-          export UT_PROJECTS=$(find ./dotnet -type f -name "*.UnitTests.csproj" | grep -v -E "(Planners.Core.UnitTests.csproj|Experimental.Orchestration.Flow.UnitTests.csproj)" | tr '\n' ' ')
+          export UT_PROJECTS=$(find ./dotnet -type f -name "*.UnitTests.csproj" | grep -v -E "(Experimental.Orchestration.Flow.UnitTests.csproj|Experimental.Assistants.UnitTests.csproj)" | tr '\n' ' ')
           for project in $UT_PROJECTS; do
-            dotnet test -c ${{ matrix.configuration }} $project --no-build -v Normal --logger trx
+            dotnet test -c ${{ matrix.configuration }} $project --no-build -v Normal --logger trx --collect:"XPlat Code Coverage" --results-directory:"TestResults/Coverage/" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute
           done
 
+      - name: Fix Errors
+        run: ./fix-errors.sh
+
+      - name: Check for Unsupported Languages
+        run: |
+          if [ "${{ matrix.language }}" == "csharp" ]; then
+            echo "Error: Unsupported language 'C#'."
+            exit 1
+          fi
+
+      - name: Install systemd
+        run: sudo apt-get update && sudo apt-get install -y systemd
+
+      - name: Start systemd
+        run: sudo systemctl start systemd
+
+      - name: Verify systemd status
+        run: sudo systemctl status systemd
+
+      - name: Azure CLI Login
+        if: github.event_name != 'pull_request' && matrix.integration-tests
+        uses: azure/login@v4
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       - name: Run Integration Tests
+        shell: bash
         if: github.event_name != 'pull_request' && matrix.integration-tests
         run: |
           export INTEGRATION_TEST_PROJECTS=$(find ./dotnet -type f -name "*IntegrationTests.csproj" | grep -v "Experimental.Orchestration.Flow.IntegrationTests.csproj" | tr '\n' ' ')
@@ -97,16 +143,50 @@ jobs:
             dotnet test -c ${{ matrix.configuration }} $project --no-build -v Normal --logger trx
           done
         env:
-          AzureOpenAI__Label: azure-text-davinci-003
-          AzureOpenAIEmbedding__Label: azure-text-embedding-ada-002
-          AzureOpenAI__DeploymentName: ${{ vars.AZUREOPENAI__DEPLOYMENTNAME }}
-          AzureOpenAIEmbeddings__DeploymentName: ${{ vars.AZUREOPENAIEMBEDDING__DEPLOYMENTNAME }}
+          # Azure OpenAI Deployments
           AzureOpenAI__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
+          AzureOpenAI__DeploymentName: ${{ vars.AZUREOPENAI__DEPLOYMENTNAME }}
+          AzureOpenAI__ChatDeploymentName: ${{ vars.AZUREOPENAI__CHATDEPLOYMENTNAME }}
+          AzureOpenAIEmbeddings__DeploymentName: ${{ vars.AZUREOPENAI__EMBEDDING__DEPLOYMENTNAME }}
           AzureOpenAIEmbeddings__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
           AzureOpenAI__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
           AzureOpenAIEmbeddings__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
-          Bing__ApiKey: ${{ secrets.BING__APIKEY }}
+          # OpenAI Models
           OpenAI__ApiKey: ${{ secrets.OPENAI__APIKEY }}
+          OpenAI__ChatModelId: ${{ vars.OPENAI__CHATMODELID }}
+          OpenAIEmbeddings__ApiKey: ${{ secrets.OPENAIEMBEDDINGS__APIKEY }}
+          OpenAIEmbeddings__ModelId: ${{ vars.OPENAIEMBEDDINGS__MODELID }}
+          # Bing Web Search
+          Bing__ApiKey: ${{ secrets.BING__APIKEY }}
+          # Google Web Search
+          Google__SearchEngineId: ${{ secrets.GOOGLE__SEARCHENGINEID }}
+          Google__ApiKey: ${{ secrets.GOOGLE__APIKEY }}
+          # Azure AI Inference Endpoint
+          AzureAIInference__ApiKey: ${{ secrets.AZUREAIINFERENCE__APIKEY }}
+          AzureAIInference__Endpoint: ${{ secrets.AZUREAIINFERENCE__ENDPOINT }}
+          AzureAIInference__ChatModelId: ${{ vars.AZUREAIINFERENCE__CHATMODELID }}
+
+      - name: Integrate additional service
+        uses: codacy/codacy-analysis-cli-action@v4
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
+      # Generate test reports and check coverage
+      - name: Generate test reports
+        uses: danielpalme/ReportGenerator-GitHub-Action@v5
+        with:
+          reports: "./TestResults/Coverage/**/coverage.cobertura.xml"
+          targetdir: "./TestResults/Reports"
+          reporttypes: "JsonSummary"
+          assemblyfilters: "+Microsoft.SemanticKernel.Abstractions;+Microsoft.SemanticKernel.Core;+Microsoft.SemanticKernel.PromptTemplates.Handlebars;+Microsoft.SemanticKernel.Connectors.OpenAI;+Microsoft.SemanticKernel.Connectors.AzureOpenAI;+Microsoft.SemanticKernel.Yaml;+Microsoft.SemanticKernel.Agents.Abstractions;+Microsoft.SemanticKernel.Agents.Core;+Microsoft.SemanticKernel.Agents.OpenAI"
+
+      - name: Check coverage
+        shell: pwsh
+        run: .github/workflows/check-coverage.ps1 -JsonReportPath "TestResults/Reports/Summary.json" -CoverageThreshold $env:COVERAGE_THRESHOLD
+
+      - name: Trigger Ensure Success Workflow
+        run: |
+          gh workflow run ensure-success.yml
 
   # This final job is required to satisfy the merge queue. It must only run (or succeed) if no tests failed
   dotnet-build-and-test-check:
@@ -140,13 +220,13 @@ jobs:
       - name: Fail workflow if tests failed
         id: check_tests_failed
         if: contains(join(needs.*.result, ','), 'failure')
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: core.setFailed('Integration Tests Failed!')
 
       - name: Fail workflow if tests cancelled
         id: check_tests_cancelled
         if: contains(join(needs.*.result, ','), 'cancelled')
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: core.setFailed('Integration Tests Cancelled!')

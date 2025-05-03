@@ -2,16 +2,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Memory;
 
-namespace Microsoft.SemanticKernel.Connectors.Memory.Pinecone;
+namespace Microsoft.SemanticKernel.Connectors.Pinecone;
 
 /// <summary>
 /// Interface for Pinecone memory store that extends the memory store interface
 /// to add support for namespaces
 /// </summary>
+[Experimental("SKEXP0020")]
 public interface IPineconeMemoryStore : IMemoryStore
 {
     /// <summary>

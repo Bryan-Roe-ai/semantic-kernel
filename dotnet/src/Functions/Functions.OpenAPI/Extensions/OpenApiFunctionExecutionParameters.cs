@@ -1,12 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using Microsoft.SemanticKernel.Http;
-using Microsoft.SemanticKernel.Plugins.OpenApi.Authentication;
+using Microsoft.SemanticKernel.Diagnostics;
+using Microsoft.SemanticKernel.Functions.OpenAPI.Authentication;
 
-namespace Microsoft.SemanticKernel.Plugins.OpenApi;
+namespace Microsoft.SemanticKernel.Functions.OpenAPI.Extensions;
 
 /// <summary>
 /// OpenAPI function execution parameters.
@@ -21,7 +20,13 @@ public class OpenApiFunctionExecutionParameters
     /// <summary>
     /// Callback for adding authentication data to HTTP requests.
     /// </summary>
+    [Obsolete("This property will be removed in one of the next releases. Please use the AuthenticateCallbackProvider property instead.")]
     public AuthenticateRequestAsyncCallback? AuthCallback { get; set; }
+
+    /// <summary>
+    /// Provider to get authentication callback.
+    /// </summary>
+    public AuthenticateCallbackProvider? AuthenticateCallbackProvider { get; set; }
 
     /// <summary>
     /// Override for REST API operation server url.
@@ -56,16 +61,11 @@ public class OpenApiFunctionExecutionParameters
     public bool EnablePayloadNamespacing { get; set; }
 
     /// <summary>
-    /// Optional list of HTTP operations to skip when importing the OpenAPI document.
-    /// </summary>
-    public IList<string> OperationsToExclude { get; set; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="OpenApiFunctionExecutionParameters"/> class.
     /// </summary>
     /// <param name="httpClient">The HttpClient to use for sending HTTP requests.</param>
-    /// <param name="authCallback">The callback for adding authentication data to HTTP requests.</param>
     /// <param name="serverUrlOverride">The override for the REST API operation server URL.</param>
+    /// <param name="authCallbackProvider">The provider to return callback for adding authentication data to HTTP requests.</param>
     /// <param name="userAgent">Optional user agent header value.</param>
     /// <param name="ignoreNonCompliantErrors">A flag indicating whether to ignore non-compliant errors or not
     /// If set to true, the operation execution will not throw exceptions for non-compliant documents.
@@ -74,24 +74,21 @@ public class OpenApiFunctionExecutionParameters
     /// If false, the operation payload must be provided via the 'payload' context variable.</param>
     /// <param name="enablePayloadNamespacing">Determines whether payload parameter names are augmented with namespaces.
     /// Namespaces prevent naming conflicts by adding the parent parameter name as a prefix, separated by dots.</param>
-    /// <param name="operationsToExclude">Optional list of operations not to import, e.g. in case they are not supported</param>
     public OpenApiFunctionExecutionParameters(
         HttpClient? httpClient = null,
-        AuthenticateRequestAsyncCallback? authCallback = null,
         Uri? serverUrlOverride = null,
-        string userAgent = HttpHeaderValues.UserAgent,
+        AuthenticateCallbackProvider? authCallbackProvider = null,
+        string userAgent = Telemetry.HttpUserAgent,
         bool ignoreNonCompliantErrors = false,
         bool enableDynamicOperationPayload = false,
-        bool enablePayloadNamespacing = false,
-        IList<string>? operationsToExclude = null)
+        bool enablePayloadNamespacing = false)
     {
         this.HttpClient = httpClient;
-        this.AuthCallback = authCallback;
+        this.AuthenticateCallbackProvider = authCallbackProvider;
         this.ServerUrlOverride = serverUrlOverride;
         this.UserAgent = userAgent;
         this.IgnoreNonCompliantErrors = ignoreNonCompliantErrors;
         this.EnableDynamicPayload = enableDynamicOperationPayload;
         this.EnablePayloadNamespacing = enablePayloadNamespacing;
-        this.OperationsToExclude = operationsToExclude ?? new List<string>();
     }
 }

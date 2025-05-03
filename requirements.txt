@@ -1,0 +1,15 @@
+# Web framework
+fastapi==0.95.1
+uvicorn==0.22.0
+
+# Data validation
+pydantic==2.11.4
+
+# NLP tools
+bert_score==0.3.13
+nltk==3.9.1
+evaluate==0.4.0
+unbabel-comet==2.2.6  # Updated version to avoid installation issues
+
+# Build tools
+cmake==3.26.4

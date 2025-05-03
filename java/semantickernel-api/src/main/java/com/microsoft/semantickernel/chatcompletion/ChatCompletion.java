@@ -6,7 +6,7 @@ import com.azure.ai.openai.models.ChatCompletions;
 import com.microsoft.semantickernel.builders.Buildable;
 import com.microsoft.semantickernel.builders.BuildersSingleton;
 import com.microsoft.semantickernel.builders.SemanticKernelBuilder;
-import com.microsoft.semantickernel.services.AIService;
+import com.microsoft.semantickernel.aiservices.AIService;
 import com.microsoft.semantickernel.textcompletion.TextCompletion;
 import javax.annotation.Nullable;
 import reactor.core.publisher.Flux;
@@ -14,7 +14,14 @@ import reactor.core.publisher.Mono;
 
 public interface ChatCompletion<ChatHistoryType extends ChatHistory>
         extends AIService, TextCompletion, Buildable {
+<<<<<<< AI
 
+=======
+<<<<<<< HEAD
+
+=======
+>>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
+>>>>>>> main
     /**
      * Generate a new chat message
      *
@@ -40,6 +47,10 @@ public interface ChatCompletion<ChatHistoryType extends ChatHistory>
             ChatHistoryType chat, ChatRequestSettings requestSettings);
 
     @SuppressWarnings("unchecked")
+<<<<<<< AI
+=======
+<<<<<<< HEAD
+>>>>>>> main
     static <ChatHistoryType extends ChatHistory, E extends ChatCompletion<ChatHistoryType>>
             Builder<ChatHistoryType> builder() {
         return (Builder<ChatHistoryType>) BuildersSingleton.INST.getInstance(Builder.class);
@@ -47,6 +58,19 @@ public interface ChatCompletion<ChatHistoryType extends ChatHistory>
 
     interface Builder<ChatHistoryType extends ChatHistory>
             extends SemanticKernelBuilder<ChatCompletion<ChatHistoryType>> {
+<<<<<<< AI
+=======
+=======
+>>>>>>> main
+    static <ChatHistoryType extends ChatHistory, E extends ChatCompletion<ChatHistoryType>> Builder<ChatHistoryType> builder() {
+        return (Builder<ChatHistoryType>)BuildersSingleton.INST.getInstance(Builder.class);
+    }
+
+    interface Builder<ChatHistoryType extends ChatHistory> extends SemanticKernelBuilder<ChatCompletion<ChatHistoryType>> {
+<<<<<<< AI
+=======
+>>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
+>>>>>>> main
 
         Builder<ChatHistoryType> withOpenAIClient(OpenAIAsyncClient client);
 

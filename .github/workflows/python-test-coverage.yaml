@@ -1,0 +1,110 @@
+name: Python Test Coverage
+
+on: 
+  pull_request:
+    branches: 
+      - "main"
+      - "feature*"
+    paths:
+      - "python/**"
+
+jobs:
+  python-tests-coverage:
+    name: Create Test Coverage Messages
+    runs-on: ${{ matrix.os }}
+    permissions:
+      pull-requests: write
+      contents: read
+      actions: read
+    strategy:
+      matrix:
+        python-version: 
+          - "3.8"
+          - "3.9"
+          - "3.10"
+          - "3.11"
+        os: 
+          - ubuntu-latest
+          # Uncomment below for cross-platform testing
+          # - windows-latest
+          # - macos-latest
+
+    steps:
+      # Wait for unit tests to succeed
+      - name: Wait for unit tests to succeed
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          check-name: 'Python Unit Tests (${{ matrix.python-version }}, ${{ matrix.os }})'
+          repo-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
+          wait-interval: 10
+
+      # Cache dependencies
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Lint Python files
+      - name: Run Flake8 Linter
+        run: |
+          pip install flake8
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      # Download coverage and pytest artifacts
+      - name: Download coverage and pytest artifacts
+        uses: dawidd6/action-download-artifact@6
+        with:
+          names: |
+            python-coverage-${{ matrix.os }}-${{ matrix.python-version }}.txt
+            pytest-${{ matrix.os }}-${{ matrix.python-version }}.xml
+          github_token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
+          workflow: python-unit-tests.yml
+          search_artifacts: true
+          if_no_artifact_found: warn
+
+      # Add Pytest coverage comment
+      - name: Pytest coverage comment
+        id: coverageComment
+        uses: MishaKav/pytest-coverage-comment@v2.0.0
+        with:
+          github-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
+          pytest-coverage-path: python-coverage-${{ matrix.os }}-${{ matrix.python-version }}.txt
+          coverage-path-prefix: "python/"
+          title: "Python ${{ matrix.python-version }} Test Coverage Report"
+          badge-title: "Py${{ matrix.python-version }} Test Coverage"
+          report-only-changed-files: true
+          junitxml-title: "Python ${{ matrix.python-version }} Unit Test Overview"
+          junitxml-path: pytest-${{ matrix.os }}-${{ matrix.python-version }}.xml
+          default-branch: "main"
+          unique-id-for-comment: python-${{ matrix.python-version }}
+
+      # Enforce coverage threshold
+      - name: Enforce Coverage Threshold
+        run: |
+          COVERAGE=$(cat python-coverage-${{ matrix.os }}-${{ matrix.python-version }}.txt | tail -1)
+          echo "Current coverage: $COVERAGE%"
+          if [ "$COVERAGE" -lt 80 ]; then
+            echo "Coverage below threshold: $COVERAGE%"
+            exit 1
+          fi
+
+      # Notify on failure
+      - name: Notify Slack
+        if: failure()
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+          SLACK_COLOR: ${{ job.status == 'success' && 'good' || 'danger' }}
+          SLACK_MESSAGE: "Workflow failed on branch ${{ github.ref_name }}"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

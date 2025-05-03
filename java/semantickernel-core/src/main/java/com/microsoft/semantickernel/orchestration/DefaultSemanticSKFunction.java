@@ -5,7 +5,10 @@ import com.microsoft.semantickernel.SKBuilders;
 import com.microsoft.semantickernel.memory.NullMemory;
 import com.microsoft.semantickernel.skilldefinition.KernelSkillsSupplier;
 import com.microsoft.semantickernel.skilldefinition.ParameterView;
+<<<<<<< HEAD
 import java.util.Collections;
+=======
+>>>>>>> main
 import java.util.List;
 import javax.annotation.Nullable;
 import reactor.core.publisher.Mono;
@@ -16,9 +19,13 @@ import reactor.core.publisher.Mono;
 // cref="Action"/>,
 /// with additional methods required by the kernel.
 /// </summary>
+<<<<<<< main
 public abstract class DefaultSemanticSKFunction<RequestConfiguration>
         extends AbstractSkFunction<RequestConfiguration>
         implements SKFunction<RequestConfiguration> {
+=======
+public abstract class DefaultSemanticSKFunction extends AbstractSkFunction implements SKFunction {
+>>>>>>> origin/dsgrieve/java-v1-api
 
     public DefaultSemanticSKFunction(
             List<ParameterView> parameters,
@@ -26,6 +33,7 @@ public abstract class DefaultSemanticSKFunction<RequestConfiguration>
             String functionName,
             String description,
             @Nullable KernelSkillsSupplier kernelSkillsSupplier) {
+<<<<<<< HEAD
         super(
                 parameters,
                 skillName,
@@ -33,6 +41,9 @@ public abstract class DefaultSemanticSKFunction<RequestConfiguration>
                 description,
                 Collections.emptyList(),
                 kernelSkillsSupplier);
+=======
+        super(parameters, skillName, functionName, description, kernelSkillsSupplier);
+>>>>>>> main
     }
 
     @Override

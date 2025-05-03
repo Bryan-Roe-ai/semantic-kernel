@@ -1,0 +1,43 @@
+name: Close inactive issues
+on:
+  schedule:
+    - cron: "30 1 * * *"
+
+jobs:
+  close-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@v9.0.0
+        with:
+          days-before-issue-stale: 90
+          days-before-issue-close: 14
+          stale-issue-label: "stale"
+          stale-issue-message: "This issue is stale because it has been open for 90 days with no activity."
+          close-issue-message: "This issue was closed because it has been inactive for 14 days since being marked as stale. Please check the [Discussions](https://github.com/Bryan-Roe/semantic-kernel/discussions) page for related topics or ongoing discussions."
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run lint
+        run: npm run lint
+      - name: Check for best practices adherence
+        if: github.event.issue
+        run: |
+          if ! grep -q "Best Practices Adherence: true" <<< "${{ github.event.issue.body }}"; then
+            echo "Issue does not adhere to best practices. Skipping closure."
+            exit 1
+          fi
+      - name: Verify approval status
+        if: github.event.issue
+        run: |
+          if ! grep -q "Approval Status: Approved" <<< "${{ github.event.issue.body }}"; then
+            echo "Issue has not been approved by a trusted person. Skipping closure."
+            exit 1
+      - name: Check for related discussions
+        if: github.event.issue
+        run: |
+          if ! grep -q "Check Discussions" <<< "${{ github.event.issue.body }}"; then
+            echo "Issue does not mention checking discussions. Skipping closure."
+            exit 1

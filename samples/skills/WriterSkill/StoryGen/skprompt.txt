@@ -7,4 +7,5 @@ synopsis: An outline of the chapter to write
 EMIT WELL FORMED XML ALWAYS. Code should be CDATA. 
 
 
-{{$input}}
+<!-- The input should be a string containing the content to be wrapped in the specified XML tags -->
+{{input}}

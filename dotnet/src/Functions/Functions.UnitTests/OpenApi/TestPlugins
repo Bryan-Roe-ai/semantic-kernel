@@ -1,0 +1,80 @@
+{
+  "apikey-securityV3_0.json": {
+    "type": "apikey",
+    "in": "header",
+    "name": "X-API-KEY"
+  },
+  "documentV2_0.json": {
+    "openapi": "2.0",
+    "info": {
+      "title": "Sample API",
+      "version": "1.0.0"
+    },
+    "paths": {}
+  },
+  "documentV3_0.json": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Sample API",
+      "version": "1.0.0"
+    },
+    "paths": {}
+  },
+  "messages-apiplugin.json": {
+    "type": "object",
+    "properties": {
+      "message": {
+        "type": "string"
+      }
+    }
+  },
+  "multipart-form-data.json": {
+    "type": "object",
+    "properties": {
+      "file": {
+        "type": "string",
+        "format": "binary"
+      }
+    }
+  },
+  "no-securityV3_0.json": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Sample API",
+      "version": "1.0.0"
+    },
+    "paths": {}
+  },
+  "oauth-securityV3_0.json": {
+    "type": "oauth2",
+    "flows": {
+      "authorizationCode": {
+        "authorizationUrl": "https://example.com/oauth/authorize",
+        "tokenUrl": "https://example.com/oauth/token",
+        "scopes": {
+          "read": "Grants read access",
+          "write": "Grants write access"
+        }
+      }
+    }
+  },
+  "openapi_feature_testsV3_0.json": {
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Sample API",
+      "version": "1.0.0"
+    },
+    "paths": {}
+  },
+  "repair-service.json": {
+    "type": "object",
+    "properties": {
+      "serviceId": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      }
+    }
+  }
+}

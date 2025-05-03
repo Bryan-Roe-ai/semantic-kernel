@@ -1,21 +1,23 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.AI.OpenAI;
-using RepoUtils;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Xunit;
+using Xunit.Abstractions;
 
-// ReSharper disable once InconsistentNaming
-public static class Example58_ConfigureExecutionSettings
+namespace Examples;
+
+public sealed class Example58_ConfigureExecutionSettings : BaseTest
 {
     /// <summary>
     /// Show how to configure model execution settings
     /// </summary>
-    public static async Task RunAsync()
+    [Fact]
+    public async Task RunAsync()
     {
-        Console.WriteLine("======== Example58_ConfigureExecutionSettings ========");
+        this.WriteLine("======== Example58_ConfigureExecutionSettings ========");
 
         string serviceId = TestConfiguration.AzureOpenAI.ServiceId;
         string apiKey = TestConfiguration.AzureOpenAI.ApiKey;
@@ -23,20 +25,19 @@ public static class Example58_ConfigureExecutionSettings
         string chatModelId = TestConfiguration.AzureOpenAI.ChatModelId;
         string endpoint = TestConfiguration.AzureOpenAI.Endpoint;
 
-        if (serviceId == null || apiKey == null || chatDeploymentName == null || chatModelId == null || endpoint == null)
+        if (apiKey == null || chatDeploymentName == null || endpoint == null)
         {
-            Console.WriteLine("AzureOpenAI serviceId, modelId, endpoint, apiKey, or deploymentName not found. Skipping example.");
+            this.WriteLine("AzureOpenAI endpoint, apiKey, or deploymentName not found. Skipping example.");
             return;
         }
 
-        Kernel kernel = new KernelBuilder()
-            .WithLoggerFactory(ConsoleLogger.LoggerFactory)
-            .WithAzureOpenAIChatCompletion(
+        Kernel kernel = Kernel.CreateBuilder()
+            .AddAzureOpenAIChatCompletion(
                 deploymentName: chatDeploymentName,
-                modelId: chatModelId,
                 endpoint: endpoint,
                 serviceId: serviceId,
-                apiKey: apiKey)
+                apiKey: apiKey,
+                modelId: chatModelId)
             .Build();
 
         var prompt = "Hello AI, what can you do for me?";
@@ -50,7 +51,7 @@ public static class Example58_ConfigureExecutionSettings
                 MaxTokens = 60,
                 Temperature = 0.7
             }));
-        Console.WriteLine(result.GetValue<string>());
+        this.WriteLine(result.GetValue<string>());
 
         // Option 2:
         // Load prompt template configuration including the execution settings from a JSON payload
@@ -74,11 +75,9 @@ public static class Example58_ConfigureExecutionSettings
         var func = kernel.CreateFunctionFromPrompt(promptConfig);
 
         result = await kernel.InvokeAsync(func);
-        Console.WriteLine(result.GetValue<string>());
+        this.WriteLine(result.GetValue<string>());
 
         /* OUTPUT (using gpt4):
-Hello! As an AI language model, I can help you with a variety of
-
 Hello! As an AI language model, I can help you with a variety of tasks, such as:
 
 1. Answering general questions and providing information on a wide range of topics.
@@ -98,5 +97,9 @@ Hello! As an AI language model, I can help you with a variety of tasks, includin
 3. Assisting with problem-solving and brainstorming ideas.
 4. Providing explanations and
          */
+    }
+
+    public Example58_ConfigureExecutionSettings(ITestOutputHelper output) : base(output)
+    {
     }
 }

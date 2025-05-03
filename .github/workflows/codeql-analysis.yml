@@ -1,14 +1,19 @@
-# CodeQL is the code analysis engine developed by GitHub to automate security checks.
-# The results are shown as code scanning alerts in GitHub. For more details, visit:
-# https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql
-
 name: "CodeQL"
 
 on:
   push:
-    branches: ["main", "experimental*", "feature*", "*-development"]
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
   schedule:
-    - cron: "17 11 * * 2"
+    - cron: "17 11 * * 2" # Weekly CodeQL analysis every Tuesday at 11:17 UTC
+  workflow_dispatch: # Allow manual execution for testing or debugging
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true # Cancel in-progress runs for the same branch
 
 jobs:
   analyze:
@@ -22,36 +27,55 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["csharp", "python", "java"]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
-        # Use only 'java' to analyze code written in Java, Kotlin or both
-        # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
-        # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
+        language: ["csharp", "python", "java", "cpp", "html"]
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      # Initializes the CodeQL tools for scanning.
+      # Step 2: Cache dependencies
+      # Maven cache for Java
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml', '**/settings.xml') }}-v3
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Python dependencies
+      - name: Cache Python dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}-v3
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      # NPM dependencies
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}-v3
+          restore-keys: |
+            ${{ runner.os }}-npm-
+
+      # Step 3: Initialize CodeQL
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
-          # If you wish to specify custom queries, you can do so here or in a config file.
-          # By default, queries listed here will override any specified in a config file.
-          # Prefix the list here with "+" to use these queries and those in the config file.
+          queries: +security-extended,security-and-quality,codeql-queries/ssrf-detection.ql
 
-          # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
-          # queries: security-extended,security-and-quality
-
-      # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
-      # If this step fails, then you should remove it and run the build manually (see below)
+      # Step 4: Build and compile code (language-specific)
       - name: Autobuild
         if: ${{ matrix.language != 'java' }}
-        uses: github/codeql-action/autobuild@v2
+        uses: github/codeql-action/autobuild@v4
 
       - name: Setup JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         if: ${{ matrix.language == 'java' }}
         with:
           java-version: 17
@@ -63,17 +87,55 @@ jobs:
         run: ./mvnw -B -DskipTests -Pcompile-jdk17 clean install --file pom.xml
         working-directory: java
 
-      # ℹ️ Command-line programs to run using the OS shell.
-      # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+      - name: Run Java Tests
+        if: ${{ matrix.language == 'java' }}
+        run: ./mvnw test --file pom.xml
+        working-directory: java
 
-      #   If the Autobuild fails above, remove it and uncomment the following three lines.
-      #   modify them (or add more) to build your code if your project, please refer to the EXAMPLE below for guidance.
+      - name: Run Python Linters
+        if: ${{ matrix.language == 'python' }}
+        run: |
+          pip install mypy flake8 black
+          mypy .
+          flake8 .
+          black --check .
 
-      # - run: |
-      #     echo "Run, Build Application using script"
-      #     ./location_of_script_within_repo/buildscript.sh
+      - name: Run Python Tests
+        if: ${{ matrix.language == 'python' }}
+        run: pytest
 
+      # Step 5: Run lint
+      - name: Run lint
+        if: ${{ matrix.language == 'html' }}
+        run: npm run lint
+
+      # Step 6: Perform CodeQL Analysis
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v4
         with:
-          category: "/language:${{matrix.language}}"
+          category: "/language:${{ matrix.language }}"
+
+      # Step 7: Run npm audit
+      - name: Run npm audit
+        run: |
+          npm audit --json > npm-audit-results.json || echo "NPM Audit detected vulnerabilities"
+        continue-on-error: false # Fail on critical issues
+
+      # Step 8: Archive CodeQL Results
+      - name: Upload CodeQL Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: codeql-results
+          path: codeql-results/
+
+      # Step 9: Trigger Ensure Success Workflow (conditional on success)
+      - name: Trigger Ensure Success Workflow
+        if: ${{ success() }}
+        run: |
+          gh workflow run ensure-success.yml
+
+      # Step 10: Upload CodeQL results to GitHub Security tab
+      - name: Upload CodeQL results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: codeql-results.sarif

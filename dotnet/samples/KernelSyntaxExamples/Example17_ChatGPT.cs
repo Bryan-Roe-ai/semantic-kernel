@@ -1,21 +1,25 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.SemanticKernel.AI.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.AI.OpenAI.ChatCompletion;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Xunit;
+using Xunit.Abstractions;
 
-/**
- * The following example shows how to use Semantic Kernel with OpenAI ChatGPT API
- */
-// ReSharper disable once InconsistentNaming
-public static class Example17_ChatGPT
+namespace Examples;
+
+// The following example shows how to use Semantic Kernel with OpenAI ChatGPT API
+public class Example17_ChatGPT : BaseTest
 {
-    public static async Task RunAsync()
+    [Fact]
+    public async Task OpenAIChatSampleAsync()
     {
-        await AzureOpenAIChatSampleAsync();
-        await OpenAIChatSampleAsync();
+        WriteLine("======== Open AI - ChatGPT ========");
+
+        OpenAIChatCompletionService chatCompletionService = new(TestConfiguration.OpenAI.ChatModelId, TestConfiguration.OpenAI.ApiKey);
+
+        await StartChatAsync(chatCompletionService);
 
         /* Output:
 
@@ -46,32 +50,24 @@ public static class Example17_ChatGPT
         */
     }
 
-    private static async Task OpenAIChatSampleAsync()
+    [Fact]
+    public async Task AzureOpenAIChatSampleAsync()
     {
-        Console.WriteLine("======== Open AI - ChatGPT ========");
-
-        OpenAIChatCompletionService chatCompletionService = new(TestConfiguration.OpenAI.ChatModelId, TestConfiguration.OpenAI.ApiKey);
-
-        await StartChatAsync(chatCompletionService);
-    }
-
-    private static async Task AzureOpenAIChatSampleAsync()
-    {
-        Console.WriteLine("======== Azure Open AI - ChatGPT ========");
+        WriteLine("======== Azure Open AI - ChatGPT ========");
 
         AzureOpenAIChatCompletionService chatCompletionService = new(
-            TestConfiguration.AzureOpenAI.ChatDeploymentName,
-            TestConfiguration.AzureOpenAI.ChatModelId,
-            TestConfiguration.AzureOpenAI.Endpoint,
-            TestConfiguration.AzureOpenAI.ApiKey);
+            deploymentName: TestConfiguration.AzureOpenAI.ChatDeploymentName,
+            endpoint: TestConfiguration.AzureOpenAI.Endpoint,
+            apiKey: TestConfiguration.AzureOpenAI.ApiKey,
+            modelId: TestConfiguration.AzureOpenAI.ChatModelId);
 
         await StartChatAsync(chatCompletionService);
     }
 
-    private static async Task StartChatAsync(IChatCompletionService chatGPT)
+    private async Task StartChatAsync(IChatCompletionService chatGPT)
     {
-        Console.WriteLine("Chat content:");
-        Console.WriteLine("------------------------");
+        WriteLine("Chat content:");
+        WriteLine("------------------------");
 
         var chatHistory = new ChatHistory("You are a librarian, expert about books");
 
@@ -80,8 +76,8 @@ public static class Example17_ChatGPT
         await MessageOutputAsync(chatHistory);
 
         // First bot assistant message
-        string reply = await chatGPT.GetChatMessageContentAsync(chatHistory);
-        chatHistory.AddAssistantMessage(reply);
+        var reply = await chatGPT.GetChatMessageContentAsync(chatHistory);
+        chatHistory.Add(reply);
         await MessageOutputAsync(chatHistory);
 
         // Second user message
@@ -90,20 +86,24 @@ public static class Example17_ChatGPT
 
         // Second bot assistant message
         reply = await chatGPT.GetChatMessageContentAsync(chatHistory);
-        chatHistory.AddAssistantMessage(reply);
+        chatHistory.Add(reply);
         await MessageOutputAsync(chatHistory);
     }
 
     /// <summary>
     /// Outputs the last message of the chat history
     /// </summary>
-    private static Task MessageOutputAsync(ChatHistory chatHistory)
+    private Task MessageOutputAsync(ChatHistory chatHistory)
     {
         var message = chatHistory.Last();
 
-        Console.WriteLine($"{message.Role}: {message.Content}");
-        Console.WriteLine("------------------------");
+        WriteLine($"{message.Role}: {message.Content}");
+        WriteLine("------------------------");
 
         return Task.CompletedTask;
+    }
+
+    public Example17_ChatGPT(ITestOutputHelper output) : base(output)
+    {
     }
 }

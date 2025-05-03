@@ -1,12 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System.IO;
-using System.Reflection;
+using System.Collections.Generic;
 using System.Text.Json;
 using Markdig;
 using Markdig.Syntax;
 using Microsoft.Extensions.Logging;
-using Microsoft.SemanticKernel.AI;
 
 namespace Microsoft.SemanticKernel;
 
@@ -16,47 +14,19 @@ namespace Microsoft.SemanticKernel;
 public static class KernelFunctionMarkdown
 {
     /// <summary>
-    /// Creates a <see cref="KernelFunction"/> instance for a prompt function using the specified markdown resource.
-    /// </summary>
-    /// <param name="resourceName">Resource containing the markdown representation of the <see cref="PromptTemplateConfig"/> to use to create the prompt function</param>
-    /// <param name="functionName">The name of the function.</param>
-    /// <param name="pluginName">The optional name of the plug-in associated with this method.</param>
-    /// <param name="promptTemplateFactory">>Prompt template factory.</param>
-    /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
-    /// <returns>The created <see cref="KernelFunction"/>.</returns>
-    public static KernelFunction FromPromptMarkdownResource(
-        string resourceName,
-        string functionName,
-        string? pluginName = null,
-        IPromptTemplateFactory? promptTemplateFactory = null,
-        ILoggerFactory? loggerFactory = null)
-    {
-        Verify.NotNull(resourceName);
-        Verify.NotNull(functionName);
-
-        using StreamReader reader = new(Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName));
-
-        return FromPromptMarkdown(
-            reader.ReadToEnd(),
-            functionName,
-            pluginName,
-            promptTemplateFactory,
-            loggerFactory);
-    }
-
-    /// <summary>
     /// Creates a <see cref="KernelFunction"/> instance for a prompt function using the specified markdown text.
     /// </summary>
-    /// <param name="text">Markdown representation of the <see cref="PromptTemplateConfig"/> to use to create the prompt function</param>
+    /// <param name="text">Markdown representation of the <see cref="PromptTemplateConfig"/> to use to create the prompt function.</param>
     /// <param name="functionName">The name of the function.</param>
-    /// <param name="pluginName">The optional name of the plug-in associated with this function.</param>
-    /// <param name="promptTemplateFactory">>Prompt template factory.</param>
+    /// <param name="promptTemplateFactory">
+    /// The <see cref="IPromptTemplateFactory"/> to use when interpreting the prompt template configuration into a <see cref="IPromptTemplate"/>.
+    /// If null, a default factory will be used.
+    /// </param>
     /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
     /// <returns>The created <see cref="KernelFunction"/>.</returns>
     public static KernelFunction FromPromptMarkdown(
         string text,
         string functionName,
-        string? pluginName = null,
         IPromptTemplateFactory? promptTemplateFactory = null,
         ILoggerFactory? loggerFactory = null)
     {
@@ -86,10 +56,13 @@ public static class KernelFunctionMarkdown
 
                     case "sk.execution_settings":
                         var modelSettings = codeBlock.Lines.ToString();
-                        var executionSettings = JsonSerializer.Deserialize<PromptExecutionSettings>(modelSettings);
-                        if (executionSettings is not null)
+                        var settingsDictionary = JsonSerializer.Deserialize<Dictionary<string, PromptExecutionSettings>>(modelSettings);
+                        if (settingsDictionary is not null)
                         {
-                            promptFunctionModel.ExecutionSettings.Add(executionSettings);
+                            foreach (var keyValue in settingsDictionary)
+                            {
+                                promptFunctionModel.ExecutionSettings.Add(keyValue.Key, keyValue.Value);
+                            }
                         }
                         break;
                 }

@@ -3,19 +3,22 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Plugins.OpenApi.Authentication;
-using Microsoft.SemanticKernel.Plugins.OpenApi.Model;
-using Microsoft.SemanticKernel.Plugins.OpenApi.OpenAI;
-using RepoUtils;
+using Microsoft.SemanticKernel.Plugins.OpenApi;
 using Resources;
+using Xunit;
+using Xunit.Abstractions;
 
-// ReSharper disable once InconsistentNaming
-public static class Example22_OpenAIPlugin_AzureKeyVault
+namespace Examples;
+
+public class Example22_OpenAIPlugin_AzureKeyVault : BaseTest
 {
     private const string SecretName = "Foo";
     private const string SecretValue = "Bar";
@@ -39,7 +42,8 @@ public static class Example22_OpenAIPlugin_AzureKeyVault
     ///
     ///   5. Replace your tenant ID with the "TENANT_ID" placeholder in dotnet/samples/KernelSyntaxExamples/Resources/22-ai-plugin.json
     /// </summary>
-    public static async Task RunAsync()
+    [Fact(Skip = "Setup credentials")]
+    public async Task RunAsync()
     {
         var authenticationProvider = new OpenAIAuthenticationProvider(
             new Dictionary<string, Dictionary<string, string>>()
@@ -56,7 +60,7 @@ public static class Example22_OpenAIPlugin_AzureKeyVault
             }
         );
 
-        var kernel = new KernelBuilder().WithLoggerFactory(ConsoleLogger.LoggerFactory).Build();
+        Kernel kernel = new();
 
         var openApiSpec = EmbeddedResource.Read("22-openapi.json");
         using var messageStub = new HttpMessageHandlerStub(openApiSpec);
@@ -79,7 +83,7 @@ public static class Example22_OpenAIPlugin_AzureKeyVault
         await GetSecretFromAzureKeyVaultWithRetryAsync(kernel, plugin);
     }
 
-    public static async Task AddSecretToAzureKeyVaultAsync(Kernel kernel, IKernelPlugin plugin)
+    private async Task AddSecretToAzureKeyVaultAsync(Kernel kernel, KernelPlugin plugin)
     {
         // Add arguments for required parameters, arguments for optional ones can be skipped.
         var arguments = new KernelArguments
@@ -98,7 +102,7 @@ public static class Example22_OpenAIPlugin_AzureKeyVault
         Console.WriteLine("SetSecret function result: {0}", result?.Content?.ToString());
     }
 
-    public static async Task GetSecretFromAzureKeyVaultWithRetryAsync(Kernel kernel, IKernelPlugin plugin)
+    private static async Task GetSecretFromAzureKeyVaultWithRetryAsync(Kernel kernel, KernelPlugin plugin)
     {
         // Add arguments for required parameters, arguments for optional ones can be skipped.
         var arguments = new KernelArguments();
@@ -112,9 +116,119 @@ public static class Example22_OpenAIPlugin_AzureKeyVault
 
         Console.WriteLine("GetSecret function result: {0}", result?.Content?.ToString());
     }
+
+    public Example22_OpenAIPlugin_AzureKeyVault(ITestOutputHelper output) : base(output)
+    {
+    }
 }
 
 #region Utility Classes
+
+/// <summary>
+/// Provides authentication for HTTP requests to OpenAI using OAuth or verification tokens.
+/// </summary>
+internal sealed class OpenAIAuthenticationProvider
+{
+    private readonly Dictionary<string, Dictionary<string, string>> _oAuthValues;
+    private readonly Dictionary<string, string> _credentials;
+
+    /// <summary>
+    /// Creates an instance of the <see cref="OpenAIAuthenticationProvider"/> class.
+    /// </summary>
+    /// <param name="oAuthValues">A dictionary containing OAuth values for each authentication scheme.</param>
+    /// <param name="credentials">A dictionary containing credentials for each authentication scheme.</param>
+    public OpenAIAuthenticationProvider(Dictionary<string, Dictionary<string, string>>? oAuthValues = null, Dictionary<string, string>? credentials = null)
+    {
+        this._oAuthValues = oAuthValues ?? new();
+        this._credentials = credentials ?? new();
+    }
+
+    /// <summary>
+    /// Applies the authentication content to the provided HTTP request message.
+    /// </summary>
+    /// <param name="request">The HTTP request message.</param>
+    /// <param name="pluginName">Name of the plugin</param>
+    /// <param name="openAIAuthConfig ">The <see cref="OpenAIAuthenticationConfig"/> used to authenticate.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    public async Task AuthenticateRequestAsync(HttpRequestMessage request, string pluginName, OpenAIAuthenticationConfig openAIAuthConfig, CancellationToken cancellationToken = default)
+    {
+        if (openAIAuthConfig.Type == OpenAIAuthenticationType.None)
+        {
+            return;
+        }
+
+        string scheme = "";
+        string credential = "";
+
+        if (openAIAuthConfig.Type == OpenAIAuthenticationType.OAuth)
+        {
+            var domainOAuthValues = this._oAuthValues[openAIAuthConfig.AuthorizationUrl!.Host]
+                ?? throw new KernelException("No OAuth values found for the provided authorization URL.");
+
+            var values = new Dictionary<string, string>(domainOAuthValues) {
+                { "scope", openAIAuthConfig.Scope ?? "" },
+            };
+
+            using HttpContent? requestContent = openAIAuthConfig.AuthorizationContentType switch
+            {
+                "application/x-www-form-urlencoded" => new FormUrlEncodedContent(values),
+                "application/json" => new StringContent(JsonSerializer.Serialize(values), Encoding.UTF8, "application/json"),
+                _ => throw new KernelException($"Unsupported authorization content type: {openAIAuthConfig.AuthorizationContentType}"),
+            };
+
+            // Request the token
+            using var client = new HttpClient();
+            using var authRequest = new HttpRequestMessage(HttpMethod.Post, openAIAuthConfig.AuthorizationUrl) { Content = requestContent };
+            var response = await client.SendAsync(authRequest, cancellationToken).ConfigureAwait(false);
+
+            response.EnsureSuccessStatusCode();
+
+            // Read the token
+            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            OAuthTokenResponse? tokenResponse;
+            try
+            {
+                tokenResponse = JsonSerializer.Deserialize<OAuthTokenResponse>(responseContent);
+            }
+            catch (JsonException)
+            {
+                throw new KernelException($"Failed to deserialize token response from {openAIAuthConfig.AuthorizationUrl}.");
+            }
+
+            // Get the token type and value
+            scheme = tokenResponse?.TokenType ?? throw new KernelException("No token type found in the response.");
+            credential = tokenResponse?.AccessToken ?? throw new KernelException("No access token found in the response.");
+        }
+        else
+        {
+            var token = openAIAuthConfig.VerificationTokens?[pluginName]
+                ?? throw new KernelException("No verification token found for the provided plugin name.");
+
+            scheme = openAIAuthConfig.AuthorizationType.ToString();
+            credential = token;
+        }
+
+        request.Headers.Authorization = new AuthenticationHeaderValue(scheme, credential);
+    }
+}
+
+/// <summary>
+/// Represents the authentication section for an OpenAI plugin.
+/// </summary>
+internal sealed class OAuthTokenResponse
+{
+    /// <summary>
+    /// The type of access token.
+    /// </summary>
+    [JsonPropertyName("token_type")]
+    public string TokenType { get; set; } = "";
+
+    /// <summary>
+    /// The authorization scope.
+    /// </summary>
+    [JsonPropertyName("access_token")]
+    public string AccessToken { get; set; } = "";
+}
 
 internal sealed class HttpMessageHandlerStub : DelegatingHandler
 {

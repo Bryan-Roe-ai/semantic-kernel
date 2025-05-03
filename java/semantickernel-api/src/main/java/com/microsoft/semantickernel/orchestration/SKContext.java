@@ -1,16 +1,19 @@
 // Copyright (c) Microsoft. All rights reserved.
 package com.microsoft.semantickernel.orchestration;
 
+import javax.annotation.CheckReturnValue;
+
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.builders.Buildable;
 import com.microsoft.semantickernel.builders.BuildersSingleton;
 import com.microsoft.semantickernel.builders.SemanticKernelBuilder;
 import com.microsoft.semantickernel.memory.SemanticTextMemory;
 import com.microsoft.semantickernel.skilldefinition.ReadOnlySkillCollection;
-import javax.annotation.CheckReturnValue;
+
 import reactor.util.annotation.Nullable;
 
 /** Semantic Kernel context. */
+@Deprecated
 public interface SKContext extends Buildable {
 
     SKContext build(
@@ -102,6 +105,10 @@ public interface SKContext extends Buildable {
         Builder withVariables(ContextVariables variables);
 
         /**
+<<<<<<< AI
+=======
+<<<<<<< HEAD
+>>>>>>> main
          * Clones the given context and sets its result to the given error
          *
          * @param toClone context to clone
@@ -112,6 +119,11 @@ public interface SKContext extends Buildable {
         SKContext failed(SKContext toClone, String errorDescription, Exception exception);
 
         /**
+<<<<<<< AI
+=======
+=======
+>>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
+>>>>>>> main
          * Sets the skills
          *
          * @param skills null argument will be ignored
