@@ -31,3 +31,7 @@ jobs:
       - name: Generate ADR Report
         run: |
           python scripts/generate_adr_report.py
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "ADR report generation failed! Check the logs for details."

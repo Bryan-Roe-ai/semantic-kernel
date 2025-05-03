@@ -184,3 +184,62 @@ We welcome contributions from the community! To contribute to this project, plea
 Thank you for your contributions!
 
 For more detailed guidelines on contributing, refer to the `CONTRIBUTING.md` file in the root directory of the repository.
+
+## Setting Up and Using the Repository
+
+### Installation
+
+1. **Clone the repository**:
+
+   ```bash
+   git clone https://github.com/yourusername/sk-api.git
+   cd sk-api
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Install Python dependencies** (if applicable):
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Install .NET dependencies** (if applicable):
+
+   ```bash
+   dotnet restore
+   ```
+
+5. **Install Java dependencies** (if applicable):
+
+   ```bash
+   ./mvnw install
+   ```
+
+### Configuration
+
+1. **Create a configuration file**:
+
+   Create a `config.json` file in the root directory of the repository and add the necessary configuration settings. Refer to the `config.example.json` file for an example configuration.
+
+2. **Set environment variables**:
+
+   Set the required environment variables in your system. You can use a `.env` file to manage environment variables. Refer to the `.env.example` file for the required variables.
+
+### Running the API
+
+1. **Start the API server**:
+
+   ```bash
+   npm start
+   ```
+
+2. **Access the API**:
+
+   Open your web browser and navigate to `http://localhost:3000` to access the API.
+
+For more detailed setup instructions, code snippets, and examples, refer to the [Getting Started Guide](docs/Getting_Started.md).
