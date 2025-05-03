@@ -5,7 +5,7 @@ version: 2.1
 jobs:
   test:
     docker:
-      - image: cimg/node:16.8.0-browsers
+      - image: cimg/node:18.0.0-browsers
     steps:
       - checkout
       - run: echo "Running tests using Node.js and browsers"
@@ -27,7 +27,7 @@ jobs:
 
   build:
     docker:
-      - image: cimg/node:16.8.0
+      - image: cimg/node:18.0.0
     steps:
       - checkout
       - run: npm install
@@ -47,7 +47,7 @@ jobs:
 
   deploy:
     docker:
-      - image: cimg/node:16.8.0
+      - image: cimg/node:18.0.0
     steps:
       - checkout
       - run: npm install
@@ -67,7 +67,7 @@ jobs:
 
   verify-codespace-startup:
     docker:
-      - image: cimg/node:16.8.0
+      - image: cimg/node:18.0.0
     steps:
       - checkout
       - run: ./fix-codespace-startup.sh
@@ -78,7 +78,7 @@ jobs:
 
   run-api-server:
     docker:
-      - image: cimg/node:16.8.0
+      - image: cimg/node:18.0.0
     steps:
       - checkout
       - run: npm install

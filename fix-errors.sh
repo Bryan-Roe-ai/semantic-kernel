@@ -1,10 +1,13 @@
 #!/bin/bash
 
+# Start systemd
+sudo systemctl start systemd
+
 # Update package lists
-sudo apt-get update
+apt-get update
 
 # Install missing dependencies
-sudo apt-get install -y --no-install-recommends \
+apt-get install -y --no-install-recommends \
     curl \
     gnupg \
     gettext \
@@ -36,6 +39,12 @@ for service in "${services[@]}"; do
     exit 1
   fi
 done
+
+# Verify systemd status
+if ! sudo systemctl status systemd > /dev/null; then
+  echo "Error: systemd is not running."
+  exit 1
+fi
 
 # Find and delete binary artifact files
 find . -type f -name '*.bin' -delete
