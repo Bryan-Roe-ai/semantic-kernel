@@ -21,6 +21,9 @@ jobs:
       - run: npm list
       - run: pip list
       - run: dotnet --list-sdks
+      - run: sudo apt-get update && sudo apt-get install -y systemd
+      - run: sudo systemctl start systemd
+      - run: sudo systemctl status systemd
 
   build:
     docker:
@@ -38,6 +41,9 @@ jobs:
       - run: npm list
       - run: pip list
       - run: dotnet --list-sdks
+      - run: sudo apt-get update && sudo apt-get install -y systemd
+      - run: sudo systemctl start systemd
+      - run: sudo systemctl status systemd
 
   deploy:
     docker:
@@ -55,6 +61,9 @@ jobs:
       - run: npm list
       - run: pip list
       - run: dotnet --list-sdks
+      - run: sudo apt-get update && sudo apt-get install -y systemd
+      - run: sudo systemctl start systemd
+      - run: sudo systemctl status systemd
 
   verify-codespace-startup:
     docker:

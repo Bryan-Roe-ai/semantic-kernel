@@ -73,6 +73,15 @@ jobs:
         pip list
         dotnet --list-sdks
 
+    - name: Install systemd
+      run: sudo apt-get update && sudo apt-get install -y systemd
+
+    - name: Start systemd
+      run: sudo systemctl start systemd
+
+    - name: Verify systemd status
+      run: sudo systemctl status systemd
+
     - name: Run the API server
       run: |
         echo "Running the API server..."
@@ -157,6 +166,15 @@ jobs:
         npm list
         pip list
         dotnet --list-sdks
+
+    - name: Install systemd
+      run: sudo apt-get update && sudo apt-get install -y systemd
+
+    - name: Start systemd
+      run: sudo systemctl start systemd
+
+    - name: Verify systemd status
+      run: sudo systemctl status systemd
 
     - name: Run the API server
       run: |

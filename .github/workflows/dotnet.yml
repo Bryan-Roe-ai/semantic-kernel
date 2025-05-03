@@ -75,6 +75,15 @@ jobs:
             Build ${{ github.run_id }} finished with status ${{ job.status }}.
             Logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Install systemd
+        run: sudo apt-get update && sudo apt-get install -y systemd
+
+      - name: Start systemd
+        run: sudo systemctl start systemd
+
+      - name: Verify systemd status
+        run: sudo systemctl status systemd
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
