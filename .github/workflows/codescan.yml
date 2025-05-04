@@ -56,5 +56,11 @@ jobs:
         with:
           sarif_file: codescan.sarif
 
+      - name: Clean up temporary files and directories
+        run: sudo rm -rf /tmp/*
+
+      - name: Prune Docker system
+        run: docker system prune -f
+
     fail-fast: false
     max-parallel: 2

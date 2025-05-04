@@ -20,6 +20,12 @@ jobs:
       - run: pip list
       - run: dotnet --list-sdks
       - run: sudo apt-get update && sudo apt-get install -y systemd
+      - run: echo "Cleaning up temporary files and directories"
+      - run: sudo rm -rf /tmp/*
+      - run: echo "Pruning Docker system"
+      - run: docker system prune -f
+      - run: echo "Verifying available disk space"
+      - run: df -h
 
   build:
     docker:
@@ -35,6 +41,12 @@ jobs:
       - run: pip list
       - run: dotnet --list-sdks
       - run: sudo apt-get update && sudo apt-get install -y systemd
+      - run: echo "Cleaning up temporary files and directories"
+      - run: sudo rm -rf /tmp/*
+      - run: echo "Pruning Docker system"
+      - run: docker system prune -f
+      - run: echo "Verifying available disk space"
+      - run: df -h
 
   deploy:
     docker:
@@ -50,6 +62,12 @@ jobs:
       - run: pip list
       - run: dotnet --list-sdks
       - run: sudo apt-get update && sudo apt-get install -y systemd
+      - run: echo "Cleaning up temporary files and directories"
+      - run: sudo rm -rf /tmp/*
+      - run: echo "Pruning Docker system"
+      - run: docker system prune -f
+      - run: echo "Verifying available disk space"
+      - run: df -h
 
   verify-codespace-startup:
     docker:
@@ -60,6 +78,12 @@ jobs:
       - run: echo "Verifying installations of dependencies..."
       - run: pip list
       - run: dotnet --list-sdks
+      - run: echo "Cleaning up temporary files and directories"
+      - run: sudo rm -rf /tmp/*
+      - run: echo "Pruning Docker system"
+      - run: docker system prune -f
+      - run: echo "Verifying available disk space"
+      - run: df -h
 
   run-api-server:
     docker:
@@ -68,6 +92,12 @@ jobs:
       - checkout
       - run: npm install
       - run: npm start
+      - run: echo "Cleaning up temporary files and directories"
+      - run: sudo rm -rf /tmp/*
+      - run: echo "Pruning Docker system"
+      - run: docker system prune -f
+      - run: echo "Verifying available disk space"
+      - run: df -h
 
 workflows:
   test-flow:

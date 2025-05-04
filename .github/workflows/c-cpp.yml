@@ -75,3 +75,15 @@ jobs:
         uname -a
         lsb_release -a || true
         gcc --version || true
+
+    # Step 11: Clean up temporary files and directories
+    - name: Clean up temporary files and directories
+      run: sudo rm -rf /tmp/*
+
+    # Step 12: Prune Docker system
+    - name: Prune Docker system
+      run: docker system prune -f
+
+    # Step 13: Verify available disk space
+    - name: Verify available disk space
+      run: df -h

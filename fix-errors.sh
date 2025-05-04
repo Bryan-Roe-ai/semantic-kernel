@@ -61,4 +61,10 @@ find . -type f -name '*.dll' -print >> deleted-files-report.txt
 find . -type f -name '*.zip' -print >> deleted-files-report.txt
 find . -type f -name '*.json' -print >> deleted-files-report.txt
 
+# Clean up temporary files and directories
+sudo rm -rf /tmp/*
+
+# Prune Docker system
+docker system prune -f
+
 echo "Errors fixed successfully."

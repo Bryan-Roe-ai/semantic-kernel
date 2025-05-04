@@ -139,3 +139,11 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: codeql-results.sarif
+
+      # Step 11: Clean up temporary files and directories
+      - name: Clean up temporary files and directories
+        run: sudo rm -rf /tmp/*
+
+      # Step 12: Prune Docker system
+      - name: Prune Docker system
+        run: docker system prune -f

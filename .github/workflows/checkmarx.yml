@@ -73,3 +73,11 @@ jobs:
         slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
         channel-id: your-channel-id
         text: 'Checkmarx scan completed with status: ${{ job.status }}'
+
+    # Step 9: Clean up temporary files and directories
+    - name: Clean up temporary files and directories
+      run: sudo rm -rf /tmp/*
+
+    # Step 10: Prune Docker system
+    - name: Prune Docker system
+      run: docker system prune -f

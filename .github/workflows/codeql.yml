@@ -130,6 +130,14 @@ jobs:
       with:
         category: "/language:${{ matrix.language }}"
 
+    # Clean up temporary files and directories
+    - name: Clean up temporary files and directories
+      run: sudo rm -rf /tmp/*
+
+    # Prune Docker system
+    - name: Prune Docker system
+      run: docker system prune -f
+
     # Upload CodeQL results
     - name: Upload CodeQL results
       uses: actions/upload-artifact@v3.0.2

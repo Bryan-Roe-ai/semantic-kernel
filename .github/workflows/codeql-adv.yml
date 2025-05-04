@@ -93,6 +93,14 @@ jobs:
       with:
         category: "/language:${{matrix.language}}"
 
+    # Clean up temporary files and directories
+    - name: Clean up temporary files and directories
+      run: sudo rm -rf /tmp/*
+
+    # Prune Docker system
+    - name: Prune Docker system
+      run: docker system prune -f
+
     # Debugging Information on Failure
     - name: Debugging Information
       if: failure()

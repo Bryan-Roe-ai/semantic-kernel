@@ -45,3 +45,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
           ${{ runner.os }}-
+
+    - name: Clean up temporary files and directories
+      run: sudo rm -rf /tmp/*
+
+    - name: Prune Docker system
+      run: docker system prune -f

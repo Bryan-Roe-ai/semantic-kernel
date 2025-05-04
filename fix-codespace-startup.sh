@@ -23,6 +23,14 @@ done
 
 echo "All necessary services are running."
 
+# Clean up temporary files and directories
+echo "Cleaning up temporary files and directories"
+sudo rm -rf /tmp/*
+
+# Prune Docker system
+echo "Pruning Docker system"
+docker system prune -f
+
 # Verify installations of dependencies
 echo "Verifying installations of dependencies..."
 npm list

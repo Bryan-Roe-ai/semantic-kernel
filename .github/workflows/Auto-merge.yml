@@ -29,6 +29,12 @@ jobs:
       - name: Run lint
         run: npm run lint
 
+      - name: Clean up temporary files and directories
+        run: sudo rm -rf /tmp/*
+
+      - name: Prune Docker system
+        run: docker system prune -f
+
       - name: Enable auto-merge for Dependabot PRs
         # Only if version bump is not a major version change
         if: ${{steps.metadata.outputs.update-type != 'version-update:semver-major'}}

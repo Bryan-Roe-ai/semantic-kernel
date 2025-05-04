@@ -88,3 +88,9 @@ jobs:
 
       - name: Fix Errors
         run: ./fix-errors.sh
+
+      - name: Clean up temporary files and directories
+        run: sudo rm -rf /tmp/*
+
+      - name: Prune Docker system
+        run: docker system prune -f

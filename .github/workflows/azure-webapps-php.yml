@@ -56,6 +56,12 @@ jobs:
       - name: Run PHP lint
         run: phpcs --standard=PSR12 src/
 
+      - name: Clean up temporary files and directories
+        run: sudo rm -rf /tmp/*
+
+      - name: Prune Docker system
+        run: docker system prune -f
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
@@ -73,6 +79,9 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: php-app
+
+      - name: Verify available disk space
+        run: df -h
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v4
