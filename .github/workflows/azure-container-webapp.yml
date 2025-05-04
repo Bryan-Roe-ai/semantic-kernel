@@ -81,10 +81,6 @@ jobs:
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
 
-      - name: Fix errors within the docker container
-        if: failure()
-        run: ./fix-errors.sh
-
       - name: Verify installations of dependencies
         run: |
           echo "Verifying installations of dependencies..."
@@ -100,9 +96,6 @@ jobs:
 
       - name: Verify systemd status
         run: sudo systemctl status systemd
-
-      - name: Run npm start command
-        run: npm start
 
   deploy:
     permissions:
@@ -129,15 +122,6 @@ jobs:
         run: |
           echo "Deploying to additional Azure services..."
           az webapp deployment source config-zip --resource-group myResourceGroup --name ${{ env.AZURE_WEBAPP_NAME }} --src myApp.zip
-
-      - name: Fix errors within the docker container
-        if: failure()
-        run: ./fix-errors.sh
-
-      - name: Run the API server
-        run: |
-          echo "Running the API server..."
-          npm start
 
   monitor:
     runs-on: ubuntu-latest

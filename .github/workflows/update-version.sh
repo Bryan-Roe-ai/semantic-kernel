@@ -80,17 +80,3 @@ else
 fi
 
 echo "DONE"
-
-# Set up Docker for containerized deployment
-echo "Setting up Docker for containerized deployment..."
-docker build -t my-docker-image .
-
-# Verify installations of dependencies
-echo "Verifying installations of dependencies..."
-npm list
-pip list
-dotnet --list-sdks
-
-# Run the API server
-echo "Running the API server..."
-npm start

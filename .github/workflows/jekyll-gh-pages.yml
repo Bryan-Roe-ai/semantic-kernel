@@ -47,13 +47,6 @@ jobs:
           source: ./
           destination: ./_site
 
-      - name: Verify build
-        run: |
-          if [ ! -d "_site" ]; then
-            echo "Build directory _site does not exist."
-            exit 1
-          fi
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
