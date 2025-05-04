@@ -107,24 +107,12 @@ jobs:
             dotnet test -c ${{ matrix.configuration }} $project --no-build -v Normal --logger trx --collect:"XPlat Code Coverage" --results-directory:"TestResults/Coverage/" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute
           done
 
-      - name: Fix Errors
-        run: ./fix-errors.sh
-
       - name: Check for Unsupported Languages
         run: |
           if [ "${{ matrix.language }}" == "csharp" ]; then
             echo "Error: Unsupported language 'C#'."
             exit 1
           fi
-
-      - name: Install systemd
-        run: sudo apt-get update && sudo apt-get install -y systemd
-
-      - name: Start systemd
-        run: sudo systemctl start systemd
-
-      - name: Verify systemd status
-        run: sudo systemctl status systemd
 
       - name: Azure CLI Login
         if: github.event_name != 'pull_request' && matrix.integration-tests

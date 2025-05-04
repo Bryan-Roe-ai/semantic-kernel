@@ -104,6 +104,3 @@ jobs:
       - name: Run the API server
         run: |
           echo "Running the API server..."
-          npm start
-      - name: Run npm start command
-        run: npm start

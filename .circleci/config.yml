@@ -14,16 +14,11 @@ jobs:
       - run: echo "Running tests for .NET project"
       - run: dotnet restore
       - run: dotnet build
-      - run: dotnet build
-      - run: ./fix-errors.sh
       - run: dotnet test --no-build --verbosity normal
       - run: echo "Verifying installations of dependencies..."
-      - run: npm list
       - run: pip list
       - run: dotnet --list-sdks
       - run: sudo apt-get update && sudo apt-get install -y systemd
-      - run: sudo systemctl start systemd
-      - run: sudo systemctl status systemd
 
   build:
     docker:
@@ -34,16 +29,10 @@ jobs:
       - run: npm run build
       - run: echo "Building .NET project"
       - run: dotnet build --no-restore
-      - run: dotnet build
-      - run: dotnet build
-      - run: ./fix-errors.sh
       - run: echo "Verifying installations of dependencies..."
-      - run: npm list
       - run: pip list
       - run: dotnet --list-sdks
       - run: sudo apt-get update && sudo apt-get install -y systemd
-      - run: sudo systemctl start systemd
-      - run: sudo systemctl status systemd
 
   deploy:
     docker:
@@ -54,16 +43,10 @@ jobs:
       - run: npm run deploy
       - run: echo "Deploying .NET project"
       - run: dotnet publish --no-restore
-      - run: dotnet build
-      - run: dotnet build
-      - run: ./fix-errors.sh
       - run: echo "Verifying installations of dependencies..."
-      - run: npm list
       - run: pip list
       - run: dotnet --list-sdks
       - run: sudo apt-get update && sudo apt-get install -y systemd
-      - run: sudo systemctl start systemd
-      - run: sudo systemctl status systemd
 
   verify-codespace-startup:
     docker:
@@ -72,7 +55,6 @@ jobs:
       - checkout
       - run: ./fix-codespace-startup.sh
       - run: echo "Verifying installations of dependencies..."
-      - run: npm list
       - run: pip list
       - run: dotnet --list-sdks
 
@@ -82,7 +64,6 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm start
 
 workflows:
   test-flow:

@@ -102,7 +102,6 @@ jobs:
     - name: Run the API server
       run: |
         echo "Running the API server..."
-        npm start
 
   monitor:
     runs-on: ubuntu-latest
