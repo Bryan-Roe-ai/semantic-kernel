@@ -102,6 +102,12 @@ install_dotnet() {
     log_info "Cleaning up temporary files"
     rm -rf "$temp_dir"
 
+    log_info "Cleaning up temporary directories like /tmp"
+    sudo rm -rf /tmp/*
+
+    log_info "Cleaning up Docker images and containers"
+    docker system prune -f
+
     log_info ".NET SDK installation completed"
 }
 

@@ -10,8 +10,8 @@
     },
     "ghcr.io/devcontainers/features/systemd:1": {}
   },
-  "prebuild": "npm install && dotnet restore && ./fix-errors.sh && mvn dependency:resolve && ./fix-codespace-startup.sh || echo 'Prebuild failed'",
-  "postCreateCommand": "sudo chmod -R u+rwX /usr/share/dotnet && sudo chmod +x ./parallel-post-start.sh && sudo systemctl start systemd || echo 'Post-create command failed'",
+  "prebuild": "npm install && dotnet restore && ./fix-errors.sh && mvn dependency:resolve && ./fix-codespace-startup.sh || echo 'Prebuild failed' && sudo rm -rf /tmp/*",
+  "postCreateCommand": "sudo chmod -R u+rwX /usr/share/dotnet && sudo chmod +x ./parallel-post-start.sh && sudo systemctl start systemd || echo 'Post-create command failed' && docker system prune -f",
   "postStartCommand": "./fix-codespace-startup.sh && sudo systemctl status systemd || echo 'Post-start command failed'",
   "remoteEnv": {
     "DOTNET_ROOT": "${containerWorkspaceFolder}/dotnet",
