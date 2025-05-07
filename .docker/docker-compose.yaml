@@ -60,5 +60,15 @@ services:
     volumes:
       - mongo-data:/data/db
 
+  chat-bot:
+    image: ghcr.io/${{ github.repository }}/my-image-name:${{ env.IMAGE_TAG }}
+    ports:
+      - "8080:8080"
+    environment:
+      - CHAT_BOT_API_KEY=${CHAT_BOT_API_KEY}
+      - CHAT_BOT_MODEL=${CHAT_BOT_MODEL}
+      - CHAT_BOT_ENDPOINT=${CHAT_BOT_ENDPOINT}
+      - CHAT_BOT_SECRET=${CHAT_BOT_SECRET}
+
 volumes:
   mongo-data:
