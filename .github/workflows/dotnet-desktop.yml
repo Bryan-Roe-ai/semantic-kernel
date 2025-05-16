@@ -45,21 +45,19 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     strategy:
       matrix:
         configuration: [Debug, Release]
+        dotnet-version: [8.0.x]  # Expand versions as needed
 
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+    runs-on: windows-latest
 
     env:
-      Solution_Name: your-solution-name                         # Replace with your solution name, i.e. MyWpfApp.sln.
-      Test_Project_Path: your-test-project-path                 # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
-      Wap_Project_Directory: your-wap-project-directory-name    # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
-      Wap_Project_Path: your-wap-project-path                   # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
+      Solution_Name: MyApp.sln                     # <<-- Set your actual solution name
+      Test_Project_Path: MyApp.Tests/MyApp.Tests.csproj     # <<-- Set your actual test project path
+      Wap_Project_Directory: MyApp.Package         # <<-- Set your actual WAP project directory
+      Wap_Project_Path: MyApp.Package/MyApp.Package.wapproj # <<-- Set your actual WAP project path
 
     steps:
     - name: Checkout
@@ -67,61 +65,61 @@ jobs:
       with:
         fetch-depth: 0
 
-    # Install the .NET Core workload
-    - name: Install .NET Core
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ matrix.dotnet-version }}
 
-    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2
 
-    # Execute all unit tests in the solution
-    - name: Execute unit tests
-      run: dotnet test
+    - name: Restore NuGet packages
+      run: dotnet restore ${{ env.Solution_Name }}
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+    - name: Run static code analysis (dotnet format)
+      run: dotnet format --verify-no-changes
 
-    # Decode the base 64 encoded pfx and save the Signing_Certificate
-    - name: Decode the pfx
+    - name: Build solution
+      run: msbuild $env:Solution_Name /p:Configuration=${{ matrix.configuration }}
+
+    - name: Run unit tests with coverage
+      run: dotnet test ${{ env.Test_Project_Path }} --configuration ${{ matrix.configuration }} --collect:"XPlat Code Coverage"
+
+    - name: Upload coverage results
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-coverage
+        path: '**/TestResults/**/*.xml'
+
+    - name: Restore app for packaging
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=${{ matrix.configuration }}
+
+    - name: Decode the pfx certificate
+      if: ${{ secrets.Base64_Encoded_Pfx != '' }}
       run: |
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
         $certificatePath = Join-Path -Path $env:Wap_Project_Directory -ChildPath GitHubActionsWorkflow.pfx
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
-    # Create the app package by building and packaging the Windows Application Packaging project
     - name: Create the app package
-      run: msbuild $env:Wap_Project_Path /p:Configuration=$env:Configuration /p:UapAppxPackageBuildMode=$env:Appx_Package_Build_Mode /p:AppxBundle=$env:Appx_Bundle /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
-      env:
-        Appx_Bundle: Always
-        Appx_Bundle_Platforms: x86|x64
-        Appx_Package_Build_Mode: StoreUpload
-        Configuration: ${{ matrix.configuration }}
+      run: msbuild $env:Wap_Project_Path /p:Configuration=${{ matrix.configuration }} /p:UapAppxPackageBuildMode=StoreUpload /p:AppxBundle=Always /p:AppxBundlePlatforms="x86|x64" /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
 
-    # Remove the pfx
-    - name: Remove the pfx
-      run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx
+    - name: Remove the pfx certificate
+      if: ${{ secrets.Base64_Encoded_Pfx != '' }}
+      run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx -ErrorAction SilentlyContinue
 
-    # Upload the MSIX package: https://github.com/marketplace/actions/upload-a-build-artifact
-    - name: Upload build artifacts
+    - name: Upload MSIX package
       uses: actions/upload-artifact@v3
       with:
         name: MSIX Package
         path: ${{ env.Wap_Project_Directory }}\AppPackages
 
-    - name: Set up Docker
-      run: |
-        echo "Setting up Docker..."
-        docker --version
-
-    - name: Verify installations of dependencies
-      run: |
-        echo "Verifying installations of dependencies..."
-        npm list
-        pip list
-        dotnet --list-sdks
+    # Optional: Add notifications or further post-processing steps here
