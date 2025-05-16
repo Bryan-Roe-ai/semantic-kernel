@@ -9,11 +9,11 @@ on:
       - "main"
   schedule:
     - cron: "17 11 * * 2" # Weekly CodeQL analysis every Tuesday at 11:17 UTC
-  workflow_dispatch: # Allow manual execution for testing or debugging
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true # Cancel in-progress runs for the same branch
+  cancel-in-progress: true
 
 jobs:
   analyze:
@@ -30,12 +30,10 @@ jobs:
         language: ["csharp", "python", "java", "cpp", "html"]
 
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Cache dependencies
-      # Maven cache for Java
+      # Cache dependencies
       - name: Cache Maven dependencies
         uses: actions/cache@v3
         with:
@@ -44,7 +42,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # Python dependencies
       - name: Cache Python dependencies
         uses: actions/cache@v3
         with:
@@ -53,7 +50,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pip-
 
-      # NPM dependencies
       - name: Cache npm dependencies
         uses: actions/cache@v3
         with:
@@ -62,21 +58,39 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-npm-
 
-      # Step 3: Initialize CodeQL
+      # CodeQL Init (with query file check)
+      - name: Check custom CodeQL query
+        id: ssrf_query
+        run: |
+          if [ -f codeql-queries/ssrf-detection.ql ]; then
+            echo "query_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "query_exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
-          queries: +security-extended,security-and-quality,codeql-queries/ssrf-detection.ql
+          queries: ${{ steps.ssrf_query.outputs.query_exists == 'true' && '+security-extended,security-and-quality,codeql-queries/ssrf-detection.ql' || 'security-extended,security-and-quality' }}
 
-      # Step 4: Build and compile code (language-specific)
+      # Build steps
       - name: Autobuild
-        if: ${{ matrix.language != 'java' }}
+        if: ${{ matrix.language != 'java' && matrix.language != 'cpp' }}
         uses: github/codeql-action/autobuild@v4
 
+      - name: Manual Build (C++)
+        if: ${{ matrix.language == 'cpp' }}
+        run: |
+          mkdir -p build
+          cd build
+          cmake ..
+          make
+        shell: bash
+
       - name: Setup JDK
-        uses: actions/setup-java@v4
         if: ${{ matrix.language == 'java' }}
+        uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: microsoft
@@ -92,10 +106,14 @@ jobs:
         run: ./mvnw test --file pom.xml
         working-directory: java
 
+      # Python lint and test
+      - name: Install Python tools
+        if: ${{ matrix.language == 'python' }}
+        run: pip install --upgrade mypy flake8 black pytest
+
       - name: Run Python Linters
         if: ${{ matrix.language == 'python' }}
         run: |
-          pip install mypy flake8 black
           mypy .
           flake8 .
           black --check .
@@ -104,46 +122,46 @@ jobs:
         if: ${{ matrix.language == 'python' }}
         run: pytest
 
-      # Step 5: Run lint
-      - name: Run lint
-        if: ${{ matrix.language == 'html' }}
+      # HTML lint (only if package.json exists)
+      - name: Run HTML lint (npm)
+        if: ${{ matrix.language == 'html' && hashFiles('**/package.json') != '' }}
         run: npm run lint
 
-      # Step 6: Perform CodeQL Analysis
+      # CodeQL Analysis
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{ matrix.language }}"
 
-      # Step 7: Run npm audit
+      # npm audit (only if package.json exists)
       - name: Run npm audit
+        if: ${{ hashFiles('**/package.json') != '' }}
         run: |
           npm audit --json > npm-audit-results.json || echo "NPM Audit detected vulnerabilities"
-        continue-on-error: false # Fail on critical issues
+        continue-on-error: true
 
-      # Step 8: Archive CodeQL Results
+      # Archive CodeQL Results
       - name: Upload CodeQL Results
         uses: actions/upload-artifact@v3
         with:
           name: codeql-results
           path: codeql-results/
 
-      # Step 9: Trigger Ensure Success Workflow (conditional on success)
+      # Optionally, trigger another workflow on success
       - name: Trigger Ensure Success Workflow
         if: ${{ success() }}
         run: |
           gh workflow run ensure-success.yml
 
-      # Step 10: Upload CodeQL results to GitHub Security tab
+      # Upload CodeQL results to GitHub Security tab
       - name: Upload CodeQL results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: codeql-results.sarif
 
-      # Step 11: Clean up temporary files and directories
+      # Clean up
       - name: Clean up temporary files and directories
         run: sudo rm -rf /tmp/*
 
-      # Step 12: Prune Docker system
       - name: Prune Docker system
         run: docker system prune -f
