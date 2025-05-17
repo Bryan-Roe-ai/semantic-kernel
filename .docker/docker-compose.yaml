@@ -45,12 +45,6 @@ services:
       - COSMOS_DB_ENDPOINT=${COSMOS_DB_ENDPOINT}
       - KEY_VAULT_ENDPOINT=${KEY_VAULT_ENDPOINT}
       - AZURE_DEVOPS_ORGANIZATION_URL=${AZURE_DEVOPS_ORGANIZATION_URL}
-    command: >
-      sh -c "
-      sudo rm -rf /tmp/* &&
-      docker system prune -f &&
-      npm start
-      "
 
   db:
     image: mongo:latest
