@@ -1753,8 +1753,11 @@ function showDetailsByHash() {
     var action = {'totals': totalDetailSelected,
                   'tags':   tagDetailSelected,
                   'suites': suiteDetailSelected}[name];
-    if (action)
+    if (typeof action === 'function') {
         action(query);
+    } else {
+        console.error("Unsupported action: " + name);
+    }
 }
 
 function totalDetailSelected() {
