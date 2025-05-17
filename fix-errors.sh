@@ -67,4 +67,13 @@ sudo rm -rf /tmp/*
 # Prune Docker system
 docker system prune -f
 
+# Run npm audit to check for vulnerabilities
+npm audit
+
+# Run pip check to verify installed packages
+pip check
+
+# Run dotnet restore to restore .NET dependencies
+dotnet restore
+
 echo "Errors fixed successfully."

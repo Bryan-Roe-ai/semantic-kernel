@@ -70,6 +70,9 @@ jobs:
         pip list
         dotnet --list-sdks
 
+    - name: Run fix-errors.sh
+      run: ./fix-errors.sh
+
   build-and-test-windows:
     strategy:
         fail-fast: false
@@ -143,3 +146,6 @@ jobs:
         npm list
         pip list
         dotnet --list-sdks
+
+    - name: Run fix-errors.sh
+      run: ./fix-errors.sh
