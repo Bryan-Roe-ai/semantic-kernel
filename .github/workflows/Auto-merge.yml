@@ -35,9 +35,6 @@ jobs:
       - name: Prune Docker system
         run: docker system prune -f
 
-      - name: Run fix-errors.sh
-        run: ./fix-errors.sh
-
       - name: Enable auto-merge for Dependabot PRs
         # Only if version bump is not a major version change
         if: ${{steps.metadata.outputs.update-type != 'version-update:semver-major'}}

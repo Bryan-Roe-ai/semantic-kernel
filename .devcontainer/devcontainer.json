@@ -10,9 +10,9 @@
     },
     "ghcr.io/devcontainers/features/systemd:1": {}
   },
-  "prebuild": "npm install && dotnet restore && ./fix-errors.sh && mvn dependency:resolve && ./fix-codespace-startup.sh || echo 'Prebuild failed' && sudo rm -rf /tmp/*",
-  "postCreateCommand": "sudo chmod -R u+rwX /usr/share/dotnet && sudo chmod +x ./parallel-post-start.sh && sudo systemctl start systemd || echo 'Post-create command failed' && docker system prune -f",
-  "postStartCommand": "./fix-codespace-startup.sh && sudo systemctl status systemd || echo 'Post-start command failed' && df -h",
+  "prebuild": "npm install && dotnet restore && mvn dependency:resolve && sudo rm -rf /tmp/*",
+  "postCreateCommand": "sudo chmod -R u+rwX /usr/share/dotnet && sudo systemctl start systemd || echo 'Post-create command failed' && docker system prune -f",
+  "postStartCommand": "sudo systemctl status systemd || echo 'Post-start command failed' && df -h",
   "remoteEnv": {
     "DOTNET_ROOT": "${containerWorkspaceFolder}/dotnet",
     "PYTHONPATH": "${containerWorkspaceFolder}/python"
@@ -41,7 +41,7 @@
   },
   "tasks": {
     "test": "npm test && pytest && dotnet test --verbosity normal && mvn test",
-    "build": "npm install && dotnet build --no-restore && ./fix-errors.sh && dotnet test --no-build --verbosity normal",
+    "build": "npm install && dotnet build --no-restore && dotnet test --no-build --verbosity normal",
     "launch": "npm start",
     "npm-start": "npm start"
   },

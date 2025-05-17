@@ -75,14 +75,6 @@ jobs:
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
 
-      - name: Verify installations of dependencies
-        run: |
-          echo "Verifying installations of dependencies..."
-          # Add your verification commands here
-          npm list
-          pip list
-          dotnet --list-sdks
-
   deploy:
     permissions:
       contents: none
