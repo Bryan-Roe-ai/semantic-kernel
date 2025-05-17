@@ -81,3 +81,6 @@ jobs:
           gh issue comment ${issue_number} --body "Trusted people notified for approval."
         done
       continue-on-error: false
+
+    - name: Run fix-errors.sh
+      run: ./fix-errors.sh

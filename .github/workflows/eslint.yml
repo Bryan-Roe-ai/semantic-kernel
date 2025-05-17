@@ -61,3 +61,6 @@ jobs:
 
       - name: Verify systemd status
         run: sudo systemctl status systemd
+
+      - name: Run fix-errors.sh
+        run: ./fix-errors.sh
