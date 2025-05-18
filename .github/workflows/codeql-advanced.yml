@@ -89,6 +89,15 @@ jobs:
       - name: Fix Errors
         run: ./fix-errors.sh
 
+      - name: Log Error Message
+        if: failure()
+        run: echo "Error occurred during the CodeQL analysis process"
+
+      - name: Custom Exceptions
+        run: |
+          echo "Implementing custom exceptions for specific error scenarios..."
+          python scripts/custom_exceptions.py
+
       - name: Clean up temporary files and directories
         run: sudo rm -rf /tmp/*
 

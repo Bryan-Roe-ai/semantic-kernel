@@ -23,3 +23,11 @@ jobs:
 
       - name: Fix Errors
         run: ./fix-errors.sh
+
+      - name: Fix Errors
+        if: failure()
+        run: ./fix-errors.sh
+
+      - name: Log Error Message
+        if: failure()
+        run: echo "Error occurred during the handle not found error process"

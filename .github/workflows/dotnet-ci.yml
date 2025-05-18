@@ -71,7 +71,12 @@ jobs:
         dotnet --list-sdks
 
     - name: Run fix-errors.sh
+      if: failure()
       run: ./fix-errors.sh
+
+    - name: Log Error Message
+      if: failure()
+      run: echo "Error occurred during the build and test process"
 
   build-and-test-windows:
     strategy:
@@ -148,4 +153,9 @@ jobs:
         dotnet --list-sdks
 
     - name: Run fix-errors.sh
+      if: failure()
       run: ./fix-errors.sh
+
+    - name: Log Error Message
+      if: failure()
+      run: echo "Error occurred during the build and test process"

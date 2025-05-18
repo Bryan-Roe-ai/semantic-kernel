@@ -72,3 +72,11 @@ jobs:
           name: dotnet-testresults-${{ matrix.configuration }}
           path: ./TestResults
         if: ${{ github.event_name != 'pull_request' && always() }}
+
+      - name: Fix Errors
+        if: failure()
+        run: ./fix-errors.sh
+
+      - name: Log Error Message
+        if: failure()
+        run: echo "Error occurred during the integration tests process"

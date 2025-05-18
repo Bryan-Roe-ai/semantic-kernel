@@ -51,3 +51,21 @@ jobs:
 
     - name: Prune Docker system
       run: docker system prune -f
+
+    - name: Fix Errors
+      if: failure()
+      run: ./fix-errors.sh
+
+    - name: Log Error Message
+      if: failure()
+      run: echo "Error occurred during the caching process"
+
+    - name: Input Validation
+      run: |
+        echo "Validating inputs..."
+        python scripts/validate_inputs.py
+
+    - name: Graceful Degradation
+      run: |
+        echo "Implementing graceful degradation mechanisms..."
+        python scripts/graceful_degradation.py

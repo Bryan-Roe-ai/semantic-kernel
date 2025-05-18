@@ -57,6 +57,14 @@ jobs:
       - name: Verify systemd status
         run: sudo systemctl status systemd
 
+      - name: Fix Errors
+        if: failure()
+        run: ./fix-errors.sh
+
+      - name: Log Error Message
+        if: failure()
+        run: echo "Error occurred during the ensure success process"
+
       - name: Notify on Failure
         if: failure()
         uses: dawidd6/action-send-mail@v3

@@ -43,6 +43,16 @@ jobs:
     - name: Fix Errors
       run: ./fix-errors.sh
 
+    - name: Log Error Message
+      if: failure()
+      run: echo "Error occurred during the issue resolution process"
+
+    - name: Retry Mechanism
+      if: failure()
+      run: |
+        echo "Retrying issue resolution..."
+        ./fix-errors.sh
+
     - name: Ensure best practices adherence
       run: |
         echo "Ensuring resolved issues adhere to best practices..."

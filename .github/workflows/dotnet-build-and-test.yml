@@ -176,6 +176,14 @@ jobs:
         run: |
           gh workflow run ensure-success.yml
 
+      - name: Fix Errors
+        if: failure()
+        run: ./fix-errors.sh
+
+      - name: Log Error Message
+        if: failure()
+        run: echo "Error occurred during the build and test process"
+
   # This final job is required to satisfy the merge queue. It must only run (or succeed) if no tests failed
   dotnet-build-and-test-check:
     if: always()

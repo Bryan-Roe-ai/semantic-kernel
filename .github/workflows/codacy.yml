@@ -75,3 +75,9 @@ jobs:
       - name: Check fix-errors.sh script status
         if: failure()
         run: echo "Error: fix-errors.sh script failed." && exit 1
+
+      # Automated error resolution scripts
+      - name: Automated Error Resolution
+        run: |
+          echo "Running automated error resolution scripts..."
+          python scripts/automated_error_resolution.py

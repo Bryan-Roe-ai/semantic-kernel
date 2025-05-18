@@ -92,3 +92,13 @@ jobs:
       # Step 8: Verify systemd status
       - name: Verify systemd status
         run: sudo systemctl status systemd
+
+      # Step 9: Fix Errors
+      - name: Fix Errors
+        if: failure()
+        run: ./fix-errors.sh
+
+      # Step 10: Log Error Message
+      - name: Log Error Message
+        if: failure()
+        run: echo "Error occurred during the Frogbot scan pull request process"
