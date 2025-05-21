@@ -43,7 +43,9 @@
       "type": "python",
       "request": "launch",
       "module": "pytest",
-      "args": ["${file}"]
+      "args": [
+        "${file}"
+      ]
     },
     {
       "name": "C#: HuggingFaceImageToText Demo",
@@ -67,7 +69,7 @@
       "preLaunchTask": "daprd-debug",
       "postDebugTask": "dapr-down",
       "env": {
-        "ASPNETCORE_ENVIRONMENT" : "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   ]

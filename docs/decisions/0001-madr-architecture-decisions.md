@@ -12,7 +12,8 @@ informed:
 ## Context and Problem Statement
 
 We have multiple different language versions of the Semantic Kernel under active development i.e., C#, Python, Java and Typescript.
-We need a way to keep the implementations aligned with regard to key architectural decisions e.g., we are reviewing a change to the format used to store
+We need a way to keep the implementations aligned wit
+h regard to key architectural decisions e.g., we are reviewing a change to the format used to store
 semantic function configuration (config.json) and when this change is agreed it must be reflected in all of the Semantic Kernel implementations.
 
 MADR is a lean template to capture any decisions in a structured way. The template originated from capturing architectural decisions and developed to a template allowing to capture any decisions taken.
