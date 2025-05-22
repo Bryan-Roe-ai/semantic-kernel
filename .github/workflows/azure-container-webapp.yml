@@ -109,6 +109,9 @@ jobs:
             dotnet build && break || sleep 10;
           done
 
+      - name: Run Docker security scan
+        run: trivy image --severity CRITICAL,HIGH --no-progress --exit-code 1 ghcr.io/${{ env.REPO }}:${{ github.sha }}
+
   deploy:
     permissions:
       contents: none
@@ -137,6 +140,11 @@ jobs:
         run: |
           echo "Deploying to additional Azure services..."
           az webapp deployment source config-zip --resource-group myResourceGroup --name ${{ env.AZURE_WEBAPP_NAME }} --src myApp.zip
+
+      - name: Use Docker secrets for managing sensitive information
+        run: |
+          echo "Setting up Docker secrets..."
+          docker secret create my_secret_key /path/to/secret/file
 
   monitor:
     runs-on: ubuntu-latest

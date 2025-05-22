@@ -136,4 +136,15 @@ else
   echo "Logrotate configuration file not found. Skipping log rotation."
 fi
 
+# Implement security scanning tools
+trivy image --severity CRITICAL,HIGH --no-progress --exit-code 1 ghcr.io/${GITHUB_REPOSITORY}/my-app:latest
+
+# Use Docker secrets for managing sensitive information
+if [ -f /run/secrets/DB_PASSWORD ]; then
+  export DB_PASSWORD=$(cat /run/secrets/DB_PASSWORD)
+else
+  echo "Error: Docker secret DB_PASSWORD not found."
+  exit 1
+fi
+
 echo "Errors fixed successfully."

@@ -45,6 +45,14 @@ services:
       - COSMOS_DB_ENDPOINT=${COSMOS_DB_ENDPOINT}
       - KEY_VAULT_ENDPOINT=${KEY_VAULT_ENDPOINT}
       - AZURE_DEVOPS_ORGANIZATION_URL=${AZURE_DEVOPS_ORGANIZATION_URL}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '512M'
+        reservations:
+          cpus: '0.25'
+          memory: '256M'
 
   db:
     image: mongo:latest
@@ -53,6 +61,14 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongo-data:/data/db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '512M'
+        reservations:
+          cpus: '0.25'
+          memory: '256M'
 
   chat-bot:
     image: ghcr.io/${{ github.repository }}/my-image-name:${{ env.IMAGE_TAG }}
@@ -63,6 +79,14 @@ services:
       - CHAT_BOT_MODEL=${CHAT_BOT_MODEL}
       - CHAT_BOT_ENDPOINT=${CHAT_BOT_ENDPOINT}
       - CHAT_BOT_SECRET=${CHAT_BOT_SECRET}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '512M'
+        reservations:
+          cpus: '0.25'
+          memory: '256M'
 
 volumes:
   mongo-data:

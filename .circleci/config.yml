@@ -139,6 +139,21 @@ jobs:
             dotnet build && break || sleep 10;
           done
 
+  docker-tasks:
+    docker:
+      - image: cimg/node:18.0.0
+    steps:
+      - checkout
+      - run: echo "Building Docker image"
+      - run: docker build -t my-app .
+      - run: echo "Running Docker container"
+      - run: docker run -p 3000:3000 --env-file .env my-app
+      - run: echo "Pushing Docker image to registry"
+      - run: docker login ghcr.io -u $GITHUB_ACTOR -p $GITHUB_TOKEN
+      - run: docker push ghcr.io/${GITHUB_REPOSITORY}/my-app:latest
+      - run: echo "Running Docker security scan"
+      - run: trivy image --severity CRITICAL,HIGH --no-progress --exit-code 1 ghcr.io/${GITHUB_REPOSITORY}/my-app:latest
+
 workflows:
   test-flow:
     jobs:
@@ -147,3 +162,4 @@ workflows:
       - deploy
       - verify-codespace-startup
       - run-api-server
+      - docker-tasks
