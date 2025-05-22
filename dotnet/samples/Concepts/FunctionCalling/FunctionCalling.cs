@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Text;
 using Microsoft.SemanticKernel;
@@ -460,7 +460,7 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
         ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(
-            "Good morning! Whatâ€™s the current time and latest news headlines?",
+            "Good morning! What’s the current time and latest news headlines?",
             settings,
             kernel);
 
@@ -487,7 +487,7 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
         ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(
-            "Good morning! Whatâ€™s the current time and latest news headlines?",
+            "Good morning! What’s the current time and latest news headlines?",
             settings,
             kernel);
 
@@ -515,7 +515,7 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
         ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(
-            "Good morning! Whatâ€™s the current time and latest news headlines?",
+            "Good morning! What’s the current time and latest news headlines?",
             settings,
             kernel);
 

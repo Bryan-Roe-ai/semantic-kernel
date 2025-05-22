@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -34,7 +34,7 @@ internal sealed class CommandResponse
     internal sealed class Generation
     {
         /// <summary>
-        /// The reason why the model finished generating tokens. COMPLETE - the model sent back a finished reply. MAX_TOKENS â€“ the reply was cut off because the model reached the maximum number of tokens for its context length. ERROR â€“ something went wrong when generating the reply. ERROR_TOXIC â€“ the model generated a reply that was deemed toxic. finish_reason is returned only when is_finished=true. (Not always returned).
+        /// The reason why the model finished generating tokens. COMPLETE - the model sent back a finished reply. MAX_TOKENS – the reply was cut off because the model reached the maximum number of tokens for its context length. ERROR – something went wrong when generating the reply. ERROR_TOXIC – the model generated a reply that was deemed toxic. finish_reason is returned only when is_finished=true. (Not always returned).
         /// </summary>
         [JsonPropertyName("finish_reason")]
         public string? FinishReason { get; set; }

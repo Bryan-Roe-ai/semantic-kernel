@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Azure.Identity;
 using Microsoft.Extensions.Configuration;
@@ -36,7 +36,7 @@ internal sealed class Program
                     apiKey: null);
 
             serviceIds.Add("lmstudio");
-            Console.WriteLine("â€¢ LMStudio - Use \"lmstudio\" in the prompt.");
+            Console.WriteLine("• LMStudio - Use \"lmstudio\" in the prompt.");
         }
 
         Console.ForegroundColor = ConsoleColor.Cyan;
@@ -49,7 +49,7 @@ internal sealed class Program
                 endpoint: new Uri(config["Ollama:Endpoint"] ?? "http://localhost:11434"));
 
             serviceIds.Add("ollama");
-            Console.WriteLine("â€¢ Ollama - Use \"ollama\" in the prompt.");
+            Console.WriteLine("• Ollama - Use \"ollama\" in the prompt.");
         }
 
         if (config["AzureOpenAI:Endpoint"] is not null)
@@ -72,7 +72,7 @@ internal sealed class Program
             }
 
             serviceIds.Add("azureopenai");
-            Console.WriteLine("â€¢ Azure OpenAI Added - Use \"azureopenai\" in the prompt.");
+            Console.WriteLine("• Azure OpenAI Added - Use \"azureopenai\" in the prompt.");
         }
 
         if (config["OpenAI:ApiKey"] is not null)
@@ -83,7 +83,7 @@ internal sealed class Program
                 apiKey: config["OpenAI:ApiKey"]!);
 
             serviceIds.Add("openai");
-            Console.WriteLine("â€¢ OpenAI Added - Use \"openai\" in the prompt.");
+            Console.WriteLine("• OpenAI Added - Use \"openai\" in the prompt.");
         }
 
         if (config["Onnx:ModelPath"] is not null)
@@ -94,7 +94,7 @@ internal sealed class Program
                 modelPath: config["Onnx:ModelPath"]!);
 
             serviceIds.Add("onnx");
-            Console.WriteLine("â€¢ ONNX Added - Use \"onnx\" in the prompt.");
+            Console.WriteLine("• ONNX Added - Use \"onnx\" in the prompt.");
         }
 
         if (config["AzureAIInference:Endpoint"] is not null)
@@ -106,7 +106,7 @@ internal sealed class Program
                 apiKey: config["AzureAIInference:ApiKey"]);
 
             serviceIds.Add("azureai");
-            Console.WriteLine("â€¢ Azure AI Inference Added - Use \"azureai\" in the prompt.");
+            Console.WriteLine("• Azure AI Inference Added - Use \"azureai\" in the prompt.");
         }
 
         // Adding a custom filter to capture router selected service id

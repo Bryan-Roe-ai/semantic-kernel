@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -30,7 +30,7 @@ public sealed class MongoDBVectorStoreTests
         Assert.Throws<NotSupportedException>(() => sut.GetCollection<Guid, MongoDBHotelModel>("collection"));
     }
 
-#pragma warning disable CS0618 // IMongoDBVectorStoreRecordCollectionFactoryß is obsolete
+#pragma warning disable CS0618 // IMongoDBVectorStoreRecordCollectionFactory� is obsolete
     [Fact]
     public void GetCollectionWithFactoryReturnsCustomCollection()
     {

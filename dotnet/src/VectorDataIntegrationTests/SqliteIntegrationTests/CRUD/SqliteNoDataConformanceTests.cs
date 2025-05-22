@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using SqliteIntegrationTests.Support;
 using VectorDataSpecificationTests.CRUD;

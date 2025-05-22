@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.Extensions.VectorData;
 using VectorDataSpecificationTests.VectorSearch;
@@ -17,7 +17,7 @@ public class WeaviateVectorSearchDistanceFunctionComplianceTests_NamedVectors(We
     public override Task EuclideanDistance() => Assert.ThrowsAsync<NotSupportedException>(base.EuclideanDistance);
 
     /// <summary>
-    /// Tests vector search using <see cref="DistanceFunction.NegativeDotProductSimilarity"/>, computing -(u Â· v) as a distance metric per Weaviate's convention.
+    /// Tests vector search using <see cref="DistanceFunction.NegativeDotProductSimilarity"/>, computing -(u · v) as a distance metric per Weaviate's convention.
     /// Expects scores of -1 (exact match), 1 (opposite), and 0 (orthogonal), sorted ascending ([0, 2, 1]), with lower scores indicating closer matches.
     /// <see href="https://weaviate.io/developers/weaviate/config-refs/distances#available-distance-metrics"/>.
     /// </summary>
@@ -34,7 +34,7 @@ public class WeaviateVectorSearchDistanceFunctionComplianceTests_UnnamedVector(W
     public override Task EuclideanDistance() => Assert.ThrowsAsync<NotSupportedException>(base.EuclideanDistance);
 
     /// <summary>
-    /// Tests vector search using <see cref="DistanceFunction.NegativeDotProductSimilarity"/>, computing -(u Â· v) as a distance metric per Weaviate's convention.
+    /// Tests vector search using <see cref="DistanceFunction.NegativeDotProductSimilarity"/>, computing -(u · v) as a distance metric per Weaviate's convention.
     /// Expects scores of -1 (exact match), 1 (opposite), and 0 (orthogonal), sorted ascending ([0, 2, 1]), with lower scores indicating closer matches.
     /// <see href="https://weaviate.io/developers/weaviate/config-refs/distances#available-distance-metrics"/>.
     /// </summary>

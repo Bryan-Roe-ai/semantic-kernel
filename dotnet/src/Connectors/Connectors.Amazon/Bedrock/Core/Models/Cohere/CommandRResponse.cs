@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -17,13 +17,13 @@ internal sealed class CommandRResponse
     public string? ResponseId { get; set; }
 
     /// <summary>
-    /// The modelâ€™s response to chat message input.
+    /// The model’s response to chat message input.
     /// </summary>
     [JsonPropertyName("text")]
     public string? Text { get; set; }
 
     /// <summary>
-    /// Unique identifier for chat completion, used with Feedback endpoint on Cohereâ€™s platform.
+    /// Unique identifier for chat completion, used with Feedback endpoint on Cohere’s platform.
     /// </summary>
     [JsonPropertyName("generation_id")]
     public string? GenerationId { get; set; }

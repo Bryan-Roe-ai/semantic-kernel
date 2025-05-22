@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -24,7 +24,7 @@ public class OpenAI_ChatCompletionWithVision(ITestOutputHelper output) : BaseTes
 
         chatHistory.AddUserMessage(
         [
-            new TextContent("Whatâ€™s in this image?"),
+            new TextContent("What’s in this image?"),
             new ImageContent(new Uri(ImageUri))
         ]);
 
@@ -48,7 +48,7 @@ public class OpenAI_ChatCompletionWithVision(ITestOutputHelper output) : BaseTes
 
         chatHistory.AddUserMessage(
         [
-            new TextContent("Whatâ€™s in this image?"),
+            new TextContent("What’s in this image?"),
             new ImageContent(imageBytes, "image/jpg")
         ]);
 
@@ -72,7 +72,7 @@ public class OpenAI_ChatCompletionWithVision(ITestOutputHelper output) : BaseTes
 
         chatHistory.AddUserMessage(
         [
-            new TextContent("Whatâ€™s in this image?"),
+            new TextContent("What’s in this image?"),
             new ImageContent(imageBytes, "image/jpg") { Metadata = new Dictionary<string, object?> { ["ChatImageDetailLevel"] = "high" } }
         ]);
 

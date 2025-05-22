@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -120,7 +120,7 @@ internal static class CommandRRequest
         public IList<CohereCommandRTools.Tool>? Tools { get; set; }
 
         /// <summary>
-        /// A list of results from invoking tools recommended by the model in the previous chat turn. Results are used to produce a text response and are referenced in citations. When using tool_results, tools must be passed as well. Each tool_result contains information about how it was invoked, as well as a list of outputs in the form of dictionaries. Cohereâ€™s unique fine-grained citation logic requires the output to be a list. In case the output is just one item, such as {"status": 200}, you should still wrap it inside a list.
+        /// A list of results from invoking tools recommended by the model in the previous chat turn. Results are used to produce a text response and are referenced in citations. When using tool_results, tools must be passed as well. Each tool_result contains information about how it was invoked, as well as a list of outputs in the form of dictionaries. Cohere’s unique fine-grained citation logic requires the output to be a list. In case the output is just one item, such as {"status": 200}, you should still wrap it inside a list.
         /// </summary>
         [JsonPropertyName("tool_results")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
@@ -134,7 +134,7 @@ internal static class CommandRRequest
         public IList<string>? StopSequences { get; set; }
 
         /// <summary>
-        /// Specify true, to send the userâ€™s message to the model without any preprocessing, otherwise false.
+        /// Specify true, to send the user’s message to the model without any preprocessing, otherwise false.
         /// </summary>
         [JsonPropertyName("raw_prompting")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

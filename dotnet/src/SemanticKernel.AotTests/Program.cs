@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using SemanticKernel.AotTests.UnitTests.Core.Functions;
 using SemanticKernel.AotTests.UnitTests.Core.Plugins;

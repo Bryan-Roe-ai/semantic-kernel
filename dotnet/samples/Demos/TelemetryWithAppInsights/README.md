@@ -1,4 +1,4 @@
-﻿# Semantic Kernel Telemetry with AppInsights
+# Semantic Kernel Telemetry with AppInsights
 
 This sample project shows how a .Net application can be configured to send Semantic Kernel telemetry to Application Insights.
 

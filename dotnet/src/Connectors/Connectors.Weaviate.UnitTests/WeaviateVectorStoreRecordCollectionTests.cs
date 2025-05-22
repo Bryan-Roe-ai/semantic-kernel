@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -108,8 +108,8 @@ public sealed class WeaviateVectorStoreRecordCollectionTests : IDisposable
     [InlineData("contains*specialCharacters")]
     [InlineData("contains(specialCharacters")]
     [InlineData("contains)specialCharacters")]
-    [InlineData("containsNonAsciiĄ")]
-    [InlineData("containsNonAsciią")]
+    [InlineData("containsNonAsciiA")]
+    [InlineData("containsNonAsciia")]
     public void CollectionCtorRejectsInvalidNames(string collectionName)
     {
         ArgumentException argumentException = Assert.Throws<ArgumentException>(() => new WeaviateVectorStoreRecordCollection<Guid, WeaviateHotel>(this._mockHttpClient, collectionName));

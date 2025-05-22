@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "GetCurrentWeatherForCity",
   "description": "Provides current weather information for a specified city.",
   "template_format": "handlebars",

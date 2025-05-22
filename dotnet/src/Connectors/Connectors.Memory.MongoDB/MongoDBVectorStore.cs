@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -54,7 +54,7 @@ public sealed class MongoDBVectorStore : IVectorStore
         where TKey : notnull
         where TRecord : notnull
     {
-#pragma warning disable CS0618 // IMongoDBVectorStoreRecordCollectionFactoryß is obsolete
+#pragma warning disable CS0618 // IMongoDBVectorStoreRecordCollectionFactory� is obsolete
         if (this._options.VectorStoreCollectionFactory is not null)
         {
             return this._options.VectorStoreCollectionFactory.CreateVectorStoreRecordCollection<TKey, TRecord>(this._mongoDatabase, name, vectorStoreRecordDefinition);

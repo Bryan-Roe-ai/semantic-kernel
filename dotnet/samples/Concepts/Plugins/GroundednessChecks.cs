@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -161,8 +161,6 @@ which are not grounded in the original.";
 }
 
 /* Example Output:
-======== Groundedness Checks ========
-======== Extract Entities ========
 <entities>
 - Milan
 - Beaufort
@@ -170,28 +168,23 @@ which are not grounded in the original.";
 - Mary
 </entities>
 
-======== Reference Check ========
 <ungrounded_entities>
 - Milan
 - Zurich
 - Mary
 </ungrounded_entities>
 
-======== Excise Entities ========
 My father, a respected resident of a city, was a close friend of a merchant named Beaufort who, after a series of
 misfortunes, moved to another city in poverty. My father was upset by his friend's troubles and sought him out,
 finding him in a mean street. Beaufort had saved a small sum of money, but it was not enough to support him and
 his daughter. The daughter procured work to eek out a living, but after ten months her father died, leaving
 her a beggar. My father came to her aid and two years later they married.
 
-======== Planning - Groundedness Checks ========
-======== Goal: ========
 Make a summary of the following text. Then make a list of entities
 related to people and places (such as John, Jane, mother, brother, Paris, Rome) which are present in the summary.
 Take this list of entities, and from it make another list of those which are not
 grounded in the original input text. Finally, rewrite your summary to remove the entities
 which are not grounded in the original.
-======== Plan ========
 {{!-- Step 0: Extract key values --}}
 {{set "inputText" @root.groundingText}}
 
@@ -209,6 +202,5 @@ which are not grounded in the original.
 
 {{!-- Step 5: Output the final summary --}}
 {{json finalSummary}}
-======== Result ========
 Born in Geneva to a distinguished family, the narrator's father held various honorable public positions. He married late in life after helping his impoverished friend Beaufort and his daughter Caroline. Beaufort, once wealthy, fell into poverty and moved to another location, where the narrator's father found him after ten months. Beaufort eventually fell ill and died, leaving his daughter Caroline an orphan. The narrator's father took her in, and two years later, they married.
 */

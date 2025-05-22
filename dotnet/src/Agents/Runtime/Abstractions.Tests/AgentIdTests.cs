@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using FluentAssertions;
@@ -16,7 +16,7 @@ public class AgentIdTests()
     [InlineData("invalid\u007Fkey")] // DEL character (127) is outside ASCII 32-126 range
     [InlineData("invalid\u0000key")] // NULL character is outside ASCII 32-126 range
     [InlineData("invalid\u0010key")] // Control character is outside ASCII 32-126 range
-    [InlineData("InvalidKey💀")] // Control character is outside ASCII 32-126 range
+    [InlineData("InvalidKey??")] // Control character is outside ASCII 32-126 range
     public void AgentIdShouldThrowArgumentExceptionWithInvalidKey(string? invalidKey)
     {
         // Act & Assert

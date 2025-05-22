@@ -1,4 +1,4 @@
-﻿# Integration Tests
+# Integration Tests
 
 ## Requirements
 

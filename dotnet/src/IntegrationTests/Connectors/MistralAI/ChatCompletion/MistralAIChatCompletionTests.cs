@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -329,7 +329,7 @@ public sealed class MistralAIChatCompletionTests : IDisposable
         Assert.NotNull(response);
         Assert.Single(response);
         Assert.Contains("Paris", response[0].Content, System.StringComparison.Ordinal);
-        Assert.Contains("12Â°C", response[0].Content, System.StringComparison.Ordinal);
+        Assert.Contains("12°C", response[0].Content, System.StringComparison.Ordinal);
     }
 
     [Fact(Skip = "This test is for manual verification.")]
@@ -485,7 +485,7 @@ public sealed class MistralAIChatCompletionTests : IDisposable
         Assert.NotNull(response);
         Assert.Single(response);
         Assert.Contains("Paris", response[0].Content, System.StringComparison.Ordinal);
-        Assert.Contains("12Â°C", response[0].Content, System.StringComparison.Ordinal);
+        Assert.Contains("12°C", response[0].Content, System.StringComparison.Ordinal);
         Assert.Contains("GetWeather", invokedFunctions);
     }
 
@@ -514,7 +514,7 @@ public sealed class MistralAIChatCompletionTests : IDisposable
         Assert.NotNull(result2);
         Assert.Single(result2);
         Assert.Contains("Marseille", result2[0].Content, System.StringComparison.Ordinal);
-        Assert.Contains("12Â°C", result2[0].Content, System.StringComparison.Ordinal);
+        Assert.Contains("12°C", result2[0].Content, System.StringComparison.Ordinal);
     }
 
     public sealed class WeatherPlugin
@@ -523,7 +523,7 @@ public sealed class MistralAIChatCompletionTests : IDisposable
         [Description("Get the current weather in a given location.")]
         public string GetWeather(
             [Description("The city and department, e.g. Marseille, 13")] string location
-            ) => $"12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy\nLocation: {location}";
+            ) => $"12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy\nLocation: {location}";
     }
 
     public sealed class AnonymousPlugin

@@ -1,4 +1,4 @@
-﻿---
+---
 # These are optional elements. Feel free to remove any of them.
 status: { accepted }
 contact: { Tao Chen }

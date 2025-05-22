@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
@@ -87,7 +87,7 @@ public class AutoFunctionInvocationFiltering(ITestOutputHelper output) : BaseTes
         // Output:
         // Request #0. Function call: HelperFunctions.GetCurrentUtcTime.
         // Request #0. Function call: HelperFunctions.GetWeatherForCity.
-        // The current UTC time is {time of execution}, and the current weather in Boston is 61°F and rainy.
+        // The current UTC time is {time of execution}, and the current weather in Boston is 61�F and rainy.
     }
 
     /// <summary>Shows available syntax for auto function invocation filter.</summary>

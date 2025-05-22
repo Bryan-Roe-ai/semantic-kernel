@@ -1,4 +1,4 @@
-﻿# Native-AOT Tests
+# Native-AOT Tests
 This test application is used to test the Semantic Kernel Native-AOT compatible API by publishing the application in a Native-AOT mode, analyzing the API using AOT compiler, and running the tests against the API.
 
 ## Running Tests

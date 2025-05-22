@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 #pragma warning disable VSTHRD111 // Use ConfigureAwait(bool)
 #pragma warning disable CA1050 // Declare types in namespaces
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task

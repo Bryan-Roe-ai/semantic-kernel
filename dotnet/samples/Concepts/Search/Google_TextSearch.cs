@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Text.Json;
 using Google.Apis.Http;
@@ -27,27 +27,27 @@ public class Google_TextSearch(ITestOutputHelper output) : BaseTest(output)
 
         // Search and return results as string items
         KernelSearchResults<string> stringResults = await textSearch.SearchAsync(query, new() { Top = 4, Skip = 0 });
-        Console.WriteLine("â€”â€”â€” String Results â€”â€”â€”\n");
+        Console.WriteLine("——— String Results ———\n");
         await foreach (string result in stringResults.Results)
         {
             Console.WriteLine(result);
-            Console.WriteLine(new string('â€”', HorizontalRuleLength));
+            Console.WriteLine(new string('—', HorizontalRuleLength));
         }
 
         // Search and return results as TextSearchResult items
         KernelSearchResults<TextSearchResult> textResults = await textSearch.GetTextSearchResultsAsync(query, new() { Top = 4, Skip = 4 });
-        Console.WriteLine("\nâ€”â€”â€” Text Search Results â€”â€”â€”\n");
+        Console.WriteLine("\n——— Text Search Results ———\n");
         await foreach (TextSearchResult result in textResults.Results)
         {
             Console.WriteLine($"Name:  {result.Name}");
             Console.WriteLine($"Value: {result.Value}");
             Console.WriteLine($"Link:  {result.Link}");
-            Console.WriteLine(new string('â€”', HorizontalRuleLength));
+            Console.WriteLine(new string('—', HorizontalRuleLength));
         }
 
         // Search and return results as Google.Apis.CustomSearchAPI.v1.Data.Result items
         KernelSearchResults<object> fullResults = await textSearch.GetSearchResultsAsync(query, new() { Top = 4, Skip = 8 });
-        Console.WriteLine("\nâ€”â€”â€” Google Web Page Results â€”â€”â€”\n");
+        Console.WriteLine("\n——— Google Web Page Results ———\n");
         await foreach (Google.Apis.CustomSearchAPI.v1.Data.Result result in fullResults.Results)
         {
             Console.WriteLine($"Title:       {result.Title}");
@@ -55,7 +55,7 @@ public class Google_TextSearch(ITestOutputHelper output) : BaseTest(output)
             Console.WriteLine($"Link:        {result.Link}");
             Console.WriteLine($"DisplayLink: {result.DisplayLink}");
             Console.WriteLine($"Kind:        {result.Kind}");
-            Console.WriteLine(new string('â€”', HorizontalRuleLength));
+            Console.WriteLine(new string('—', HorizontalRuleLength));
         }
     }
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using Grpc.Net.Client;
 using Microsoft.SemanticKernel;
 using ProcessWithCloudEvents.Grpc.DocumentationGenerator;

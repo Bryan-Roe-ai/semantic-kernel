@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -278,7 +278,7 @@ public sealed class MistralClientTests : MistralTestBase
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12Â°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
+        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
         Assert.Equal("mistral-large-latest", response[0].ModelId);
         Assert.Equal(2, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -332,7 +332,7 @@ public sealed class MistralClientTests : MistralTestBase
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12Â°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
+        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
         Assert.Equal("mistral-large-latest", response[0].ModelId);
         Assert.Equal(2, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -370,7 +370,7 @@ public sealed class MistralClientTests : MistralTestBase
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12Â°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
+        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
         Assert.Equal("mistral-large-latest", response[0].ModelId);
         Assert.Equal(2, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -453,7 +453,7 @@ public sealed class MistralClientTests : MistralTestBase
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", response[0].Content);
+        Assert.Equal("12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", response[0].Content);
         Assert.Null(response[0].ModelId);
         Assert.Equal(1, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -497,7 +497,7 @@ public sealed class MistralClientTests : MistralTestBase
         var lastMessageContent = streamingContent[^1] as StreamingChatMessageContent;
         Assert.NotNull(lastMessageContent);
 
-        Assert.Equal("12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", lastMessageContent.Content);
+        Assert.Equal("12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", lastMessageContent.Content);
         Assert.Equal(AuthorRole.Tool, lastMessageContent.Role);
     }
 
@@ -578,7 +578,7 @@ public sealed class MistralClientTests : MistralTestBase
         var content = new ChatMessageContent()
         {
             Role = AuthorRole.Tool,
-            Items = [new FunctionResultContent("12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy"), new FunctionResultContent("15:20:44")],
+            Items = [new FunctionResultContent("12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy"), new FunctionResultContent("15:20:44")],
         };
 
         // Act
@@ -777,7 +777,7 @@ public sealed class MistralClientTests : MistralTestBase
         [Description("Get the current weather in a given location.")]
         public string GetWeather(
             [Description("The city and department, e.g. Marseille, 13")] string location
-        ) => "12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy";
+        ) => "12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy";
     }
 
     internal enum TemperatureUnit { Celsius, Fahrenheit }

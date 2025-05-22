@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Concurrent;
@@ -846,13 +846,13 @@ public class FunctionCallsProcessorTests
     public void ItShouldSerializeFunctionResultsWithStringProperties()
     {
         // Arrange
-        var functionResult = new { Text = "ﾃｽﾄ" };
+        var functionResult = new { Text = "???" };
 
         // Act
         var result = FunctionCallsProcessor.ProcessFunctionResult(functionResult);
 
         // Assert
-        Assert.Equal("{\"Text\":\"ﾃｽﾄ\"}", result);
+        Assert.Equal("{\"Text\":\"???\"}", result);
     }
 
     [Fact]

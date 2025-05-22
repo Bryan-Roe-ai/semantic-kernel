@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 #pragma warning disable SYSLIB1006 // Multiple logging methods cannot use the same event id within a class
 

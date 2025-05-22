@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using Microsoft.SemanticKernel;
 using Step03.Models;
 namespace Step03.Steps;

@@ -1,4 +1,4 @@
-﻿name: ToolAgent
+name: ToolAgent
 template_format: semantic-kernel
 description: An agent that is configured to auto-invoke plugins.
 execution_settings:

@@ -1,4 +1,4 @@
-﻿name: AnalysisMaster
+name: AnalysisMaster
 template: Perform comprehensive analysis and provide accurate insights and recommendations on the topics and data sets provided.
 template_format: handlebars
 description: |

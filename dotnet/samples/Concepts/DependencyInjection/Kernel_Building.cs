@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 // ==========================================================================================================
 // The easier way to instantiate the Semantic Kernel is to use KernelBuilder.

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -32,7 +32,7 @@ public class Ollama_ChatCompletionWithVision(ITestOutputHelper output) : BaseTes
 
         chatHistory.AddUserMessage(
         [
-            new TextContent("What’s in this image?"),
+            new TextContent("What�s in this image?"),
             new ImageContent(imageBytes, "image/jpg")
         ]);
 

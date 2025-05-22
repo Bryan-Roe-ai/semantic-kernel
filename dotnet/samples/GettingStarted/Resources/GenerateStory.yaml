@@ -1,4 +1,4 @@
-﻿name: GenerateStory
+name: GenerateStory
 template: |
   Tell a story about {{$topic}} that is {{$length}} sentences long.
 template_format: semantic-kernel

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Azure;
 using Azure.AI.OpenAI;
@@ -135,7 +135,7 @@ public class VectorStore_HybridSearch_Simple_AzureAISearch(ITestOutputHelper out
             Key = "3",
             Category = "External Definitions",
             Term = "RAG",
-            Definition = "Retrieval Augmented Generation - a term that refers to the process of retrieving additional data to provide as context to an LLM to use when generating a response (completion) to a user’s question (prompt)."
+            Definition = "Retrieval Augmented Generation - a term that refers to the process of retrieving additional data to provide as context to an LLM to use when generating a response (completion) to a user�s question (prompt)."
         };
     }
 }

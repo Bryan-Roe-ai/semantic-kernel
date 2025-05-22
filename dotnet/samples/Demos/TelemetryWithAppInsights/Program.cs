@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Diagnostics;
@@ -480,7 +480,7 @@ public sealed class Program
     public sealed class WeatherPlugin
     {
         [KernelFunction]
-        public string GetWeather(string location) => $"Weather in {location} is 70°F.";
+        public string GetWeather(string location) => $"Weather in {location} is 70�F.";
     }
 
     public sealed class LocationPlugin

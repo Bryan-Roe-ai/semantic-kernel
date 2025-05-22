@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.IO;
@@ -144,7 +144,7 @@ public sealed class GeminiChatCompletionTests(ITestOutputHelper output) : TestsB
     {
         // Arrange
         var chatHistory = new ChatHistory();
-        chatHistory.AddUserMessage("Finish this sentence: He knew the sea’s...");
+        chatHistory.AddUserMessage("Finish this sentence: He knew the sea�s...");
 
         // Setup initial cached content
         var cachedContentJson = File.ReadAllText(Path.Combine("Resources", "gemini_cached_content.json"))

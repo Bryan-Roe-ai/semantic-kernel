@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
 using Microsoft.SemanticKernel;
@@ -44,6 +44,6 @@ public sealed class MistralAI_StreamingFunctionCalling(ITestOutputHelper output)
         [Description("Get the current weather in a given location.")]
         public string GetWeather(
             [Description("The city and department, e.g. Marseille, 13")] string location
-        ) => "17°C\nWind: 23 KMPH\nHumidity: 59%\nMostly cloudy";
+        ) => "17�C\nWind: 23 KMPH\nHumidity: 59%\nMostly cloudy";
     }
 }

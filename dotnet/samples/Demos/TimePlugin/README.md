@@ -1,4 +1,4 @@
-﻿# Time Plugin - Demo Application
+# Time Plugin - Demo Application
 
 This is an example how you can easily use Plugins with the Power of Auto Function Calling from AI Models. 
 
@@ -22,22 +22,22 @@ This sample uses function calling capable models and has been tested with the fo
 
 | Model type      | Model name/id             |       Model version | Supported |
 | --------------- | ------------------------- | ------------------: | --------- |
-| Chat Completion | gpt-3.5-turbo             |                0125 | ✅        |
-| Chat Completion | gpt-3.5-turbo-1106        |                1106 | ✅        |
-| Chat Completion | gpt-3.5-turbo-0613        |                0613 | ✅        |
-| Chat Completion | gpt-3.5-turbo-0301        |                0301 | ❌        |
-| Chat Completion | gpt-3.5-turbo-16k         |                0613 | ✅        |
-| Chat Completion | gpt-4                     |                0613 | ✅        |
-| Chat Completion | gpt-4-0613                |                0613 | ✅        |
-| Chat Completion | gpt-4-0314                |                0314 | ❌        |
-| Chat Completion | gpt-4-turbo               |          2024-04-09 | ✅        |
-| Chat Completion | gpt-4-turbo-2024-04-09    |          2024-04-09 | ✅        |
-| Chat Completion | gpt-4-turbo-preview       |        0125-preview | ✅        |
-| Chat Completion | gpt-4-0125-preview        |        0125-preview | ✅        |
-| Chat Completion | gpt-4-vision-preview      | 1106-vision-preview | ✅        |
-| Chat Completion | gpt-4-1106-vision-preview | 1106-vision-preview | ✅        |
+| Chat Completion | gpt-3.5-turbo             |                0125 | ?        |
+| Chat Completion | gpt-3.5-turbo-1106        |                1106 | ?        |
+| Chat Completion | gpt-3.5-turbo-0613        |                0613 | ?        |
+| Chat Completion | gpt-3.5-turbo-0301        |                0301 | ?        |
+| Chat Completion | gpt-3.5-turbo-16k         |                0613 | ?        |
+| Chat Completion | gpt-4                     |                0613 | ?        |
+| Chat Completion | gpt-4-0613                |                0613 | ?        |
+| Chat Completion | gpt-4-0314                |                0314 | ?        |
+| Chat Completion | gpt-4-turbo               |          2024-04-09 | ?        |
+| Chat Completion | gpt-4-turbo-2024-04-09    |          2024-04-09 | ?        |
+| Chat Completion | gpt-4-turbo-preview       |        0125-preview | ?        |
+| Chat Completion | gpt-4-0125-preview        |        0125-preview | ?        |
+| Chat Completion | gpt-4-vision-preview      | 1106-vision-preview | ?        |
+| Chat Completion | gpt-4-1106-vision-preview | 1106-vision-preview | ?        |
 
-ℹ️ OpenAI Models older than 0613 version do not support function calling.
+?? OpenAI Models older than 0613 version do not support function calling.
 
 ## Configuring the sample
 

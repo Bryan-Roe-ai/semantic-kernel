@@ -1,4 +1,4 @@
-﻿# Experimental Flow Orchestrator Integration Tests
+# Experimental Flow Orchestrator Integration Tests
 
 ## Requirements
 

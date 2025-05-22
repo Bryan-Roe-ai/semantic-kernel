@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -153,7 +153,7 @@ public sealed class MaxTokensWithFilters(ITestOutputHelper output) : BaseTest(ou
                 "A young governess brings music and joy to a family in Austria.",
                 "A young girl is swept away to a magical land and embarks on an adventurous journey home.",
                 "A celebration of the golden age of Hollywood with iconic musical numbers.",
-                "A young boy discovers he’s a wizard and begins his journey at Hogwarts School of Witchcraft and Wizardry."
+                "A young boy discovers he�s a wizard and begins his journey at Hogwarts School of Witchcraft and Wizardry."
             ];
         }
     }

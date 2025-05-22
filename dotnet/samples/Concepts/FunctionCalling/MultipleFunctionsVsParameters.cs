@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
 using System.Text.Json;
@@ -91,8 +91,8 @@ public class MultipleFunctionsVsParameters(ITestOutputHelper output) : BaseTest(
         Console.WriteLine("Prompt: Show me the invoices for VN123.");
         Console.WriteLine(await kernel.InvokePromptAsync("Show me the invoices for VN123.", new(settings)));
         Console.WriteLine("----------------------------------------------------");
-        Console.WriteLine("Prompt: Zeigen Sie mir die Rechnungen fÃ¼r Contoso Industries.");
-        Console.WriteLine(await kernel.InvokePromptAsync("Zeigen Sie mir die Rechnungen fÃ¼r Contoso Industries.", new(settings)));
+        Console.WriteLine("Prompt: Zeigen Sie mir die Rechnungen für Contoso Industries.");
+        Console.WriteLine(await kernel.InvokePromptAsync("Zeigen Sie mir die Rechnungen für Contoso Industries.", new(settings)));
         Console.WriteLine("----------------------------------------------------");
     }
 

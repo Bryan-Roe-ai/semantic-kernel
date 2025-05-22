@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Text;
 using Microsoft.Data.SqlClient;
@@ -30,7 +30,7 @@ public class SqlServerCommandBuilderTests
     [InlineData("name", "@name_")] // typical name
     [InlineData("na me", "@na_")] // contains a whitespace, an illegal parameter name character
     [InlineData("123", "@_")] // starts with a digit, also not allowed
-    [InlineData("ĄŻŚĆ_doesNotStartWithAscii", "@_")] // starts with a non-ASCII character
+    [InlineData("AZSC_doesNotStartWithAscii", "@_")] // starts with a non-ASCII character
     public void AppendParameterName(string propertyName, string expectedPrefix)
     {
         StringBuilder builder = new();

@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <PropertyGroup>
     <!-- Default properties inherited by all projects. Projects can override. -->
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel.Connectors.Redis;
 using SemanticKernel.IntegrationTests.Connectors.Memory.Xunit;

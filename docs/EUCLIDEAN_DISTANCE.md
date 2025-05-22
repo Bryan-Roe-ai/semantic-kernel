@@ -1,4 +1,4 @@
-﻿# Euclidean Distance
+# Euclidean Distance
 
 Euclidean distance is a mathematical concept that measures the straight-line distance
 between two points in a Euclidean space. It is named after the ancient Greek mathematician

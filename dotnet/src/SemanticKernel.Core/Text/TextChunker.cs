@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -52,7 +52,7 @@ public static class TextChunker
     public delegate int TokenCounter(string input);
 
     private static readonly char[] s_spaceChar = [' '];
-    private static readonly string?[] s_plaintextSplitOptions = ["\n\r", ".。．", "?!", ";", ":", ",，、", ")]}", " ", "-", null];
+    private static readonly string?[] s_plaintextSplitOptions = ["\n\r", ".?.", "?!", ";", ":", ",,?", ")]}", " ", "-", null];
     private static readonly string?[] s_markdownSplitOptions = [".\u3002\uFF0E", "?!", ";", ":", ",\uFF0C\u3001", ")]}", " ", "-", "\n\r", null];
 
     /// <summary>
