@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Kernel AI Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .chat-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        .message {
+            padding: 8px 15px;
+            margin: 5px 0;
+            border-radius: 18px;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .user-message {
+            background-color: #0084ff;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+        .ai-message {
+            background-color: #e9e9eb;
+            color: black;
+            align-self: flex-start;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #0084ff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0073e6;
+        }
+        .message-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        .config-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+        #loading-indicator {
+            display: none;
+            color: #0084ff;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>Semantic Kernel AI Chat</h1>
+    
+    <div class="config-container">
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('chat-tab')">General Chat</div>
+            <div class="tab" onclick="switchTab('linkedin-tab')">LinkedIn</div>
+            <div class="tab" onclick="switchTab('config-tab')">Configuration</div>
+        </div>
+        
+        <div id="chat-tab" class="tab-content" style="display: block;">
+            <p>This tab uses a general chat endpoint. Select a plugin to use:</p>
+            <select id="plugin-selector">
+                <option value="chat">Chat</option>
+                <option value="summarize">Summarize</option>
+                <option value="writer">Writer</option>
+            </select>
+        </div>
+        
+        <div id="linkedin-tab" class="tab-content" style="display: none;">
+            <p>To use the LinkedIn skills, please enter your authentication token:</p>
+            <input type="password" id="auth-token" placeholder="LinkedIn Auth Token">
+        </div>
+        
+        <div id="config-tab" class="tab-content" style="display: none;">
+            <h3>API Configuration</h3>
+            <div>
+                <label for="api-base-url">Base URL:</label>
+                <input type="text" id="api-base-url" value="http://localhost:7071/api" style="width: 300px;">
+            </div>
+        </div>
+    </div>
+    
+    <div class="chat-container">
+        <div class="chat-messages" id="chat-messages">
+            <div class="message-container">
+                <div class="message ai-message">Hello! I'm your AI assistant powered by Semantic Kernel. How can I help you today?</div>
+            </div>
+        </div>
+        <div id="loading-indicator">AI is thinking...</div>
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const authTokenInput = document.getElementById('auth-token');
+        const apiBaseUrlInput = document.getElementById('api-base-url');
+        const pluginSelector = document.getElementById('plugin-selector');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        
+        let currentTab = 'chat-tab';
+
+        // Function to switch tabs
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            
+            document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).style.display = 'block';
+            
+            currentTab = tabId;
+        }
+
+        // Function to add a message to the chat
+        function addMessage(content, isUser) {
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'message-container';
+            
+            const message = document.createElement('div');
+            message.className = isUser ? 'message user-message' : 'message ai-message';
+            
+            // Check if the content appears to be JSON
+            try {
+                if (typeof content === 'string' && (content.trim().startsWith('{') || content.trim().startsWith('['))) {
+                    const jsonData = JSON.parse(content);
+                    const pre = document.createElement('pre');
+                    pre.textContent = JSON.stringify(jsonData, null, 2);
+                    message.appendChild(pre);
+                } else {
+                    message.textContent = content;
+                }
+            } catch (e) {
+                // Not valid JSON, just use text
+                message.textContent = content;
+            }
+            
+            messageContainer.appendChild(message);
+            chatMessages.appendChild(messageContainer);
+            
+            // Auto scroll to the bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Function to send a message
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            // Display user message
+            addMessage(message, true);
+            userInput.value = '';
+            
+            // Show loading indicator
+            loadingIndicator.style.display = 'block';
+            
+            try {
+                let response;
+                const baseUrl = apiBaseUrlInput.value.trim();
+                
+                if (currentTab === 'linkedin-tab') {
+                    const authToken = authTokenInput.value.trim();
+                    if (!authToken) {
+                        throw new Error('LinkedIn authentication token is required');
+                    }
+                    
+                    // Call the LinkedIn skill endpoint
+                    response = await fetch(`${baseUrl}/linkedin/post`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            authToken,
+                            text: message
+                        })
+                    });
+                } else {
+                    // General chat endpoint
+                    const plugin = pluginSelector.value;
+                    response = await fetch(`${baseUrl}/${plugin}/chat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            input: message
+                        })
+                    });
+                }
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error(`Endpoint not found. Make sure the AI Function app is running and the endpoint exists.`);
+                    } else {
+                        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+                    }
+                }
+                
+                // Try to parse as JSON first
+                let data;
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    data = await response.json();
+                    addMessage(JSON.stringify(data), false);
+                } else {
+                    data = await response.text();
+                    addMessage(data, false);
+                }
+            } catch (error) {
+                addMessage(`Error: ${error.message}. Please make sure the AI functions app is running correctly.`, false);
+            } finally {
+                // Hide loading indicator
+                loadingIndicator.style.display = 'none';
+            }
+        }
+
+        // Send message on Enter key
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
