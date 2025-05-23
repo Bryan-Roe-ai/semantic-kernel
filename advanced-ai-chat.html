@@ -12,12 +12,12 @@
             max-width: 1000px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f0f2f5;
-            color: #333;
+            background-color: #181a1b;
+            color: #e0e0e0;
         }
 
         .chat-container {
-            background-color: white;
+            background-color: #23272a;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             padding: 20px;
@@ -34,7 +34,7 @@
             padding: 15px;
             border: 1px solid #e0e0e0;
             border-radius: 8px;
-            background-color: #fafafa;
+            background-color: #222326;
         }
 
         .message-container {
@@ -84,16 +84,16 @@
         }
 
         .user-message {
-            background-color: #0084ff;
-            color: white;
+            background-color: #0056b3;
+            color: #fff;
             align-self: flex-end;
             margin-left: auto;
             border-bottom-right-radius: 4px;
         }
 
         .ai-message {
-            background-color: #f0f0f0;
-            color: #333;
+            background-color: #2c2f34;
+            color: #e0e0e0;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
         }
@@ -123,7 +123,8 @@
         .tab {
             padding: 12px 24px;
             cursor: pointer;
-            background-color: #f8f8f8;
+            background-color: #23272a;
+            color: #e0e0e0;
             border: 1px solid #e0e0e0;
             border-bottom: none;
             margin-right: 2px;
@@ -134,15 +135,15 @@
         }
 
         .tab:hover {
-            background-color: #f0f0f0;
+            background-color: #181a1b;
         }
 
         .tab.active {
-            background-color: white;
+            background-color: #181a1b;
             border-bottom: 2px solid white;
             margin-bottom: -1px;
             border-top: 2px solid #0084ff;
-            color: #0084ff;
+            color: #4fc3f7;
         }
 
         .tab-content {
@@ -236,8 +237,8 @@
 
         .plugin-badge {
             display: inline-block;
-            background-color: #f0f0f0;
-            color: #666;
+            background-color: #23272a;
+            color: #4fc3f7;
             padding: 3px 8px;
             border-radius: 12px;
             font-size: 12px;
@@ -252,6 +253,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
+            color: #b0b0b0;
         }
 
         .settings-group input,
@@ -259,35 +261,19 @@
             margin-right: 15px;
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
+            background-color: #23272a;
+            color: #e0e0e0;
+            border: 1px solid #444;
             border-radius: 8px;
             font-size: 15px;
-        }
-
-        .dark-mode-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 18px;
-            color: #666;
-            cursor: pointer;
-            padding: 5px 10px;
-            margin-top: 4px;
-            border-radius: 20px;
-        }
-
-        .dark-mode-toggle:hover {
-            background-color: #f0f0f0;
         }
 
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            background-color: #333;
-            color: white;
+            background-color: #23272a;
+            color: #4fc3f7;
             padding: 10px 20px;
             border-radius: 4px;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
@@ -315,8 +301,8 @@
 
         .image-upload label {
             cursor: pointer;
-            background-color: #f0f0f0;
-            color: #666;
+            background-color: #23272a;
+            color: #4fc3f7;
             border: none;
             width: 40px;
             height: 40px;
@@ -328,7 +314,7 @@
         }
 
         .image-upload label:hover {
-            background-color: #e0e0e0;
+            background-color: #181a1b;
         }
 
         .image-preview {
@@ -338,6 +324,7 @@
             margin-bottom: 10px;
             border-radius: 8px;
             display: none;
+            background-color: #23272a;
         }
 
         .input-container {
@@ -345,12 +332,15 @@
             gap: 12px;
             position: relative;
             align-items: center;
+            background-color: #23272a;
         }
 
         #user-input {
             flex-grow: 1;
             padding: 14px 20px;
-            border: 1px solid #ddd;
+            background-color: #23272a;
+            color: #e0e0e0;
+            border: 1px solid #444;
             border-radius: 24px;
             font-size: 16px;
             outline: none;
@@ -358,14 +348,14 @@
         }
 
         #user-input:focus {
-            border-color: #0084ff;
-            box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.2);
+            border-color: #4fc3f7;
+            box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.2);
         }
 
         button {
             padding: 12px 20px;
-            background-color: #0084ff;
-            color: white;
+            background-color: #4fc3f7;
+            color: #181a1b;
             border: none;
             border-radius: 24px;
             cursor: pointer;
@@ -377,7 +367,7 @@
         }
 
         button:hover {
-            background-color: #0073e6;
+            background-color: #0288d1;
             transform: translateY(-1px);
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
@@ -390,8 +380,8 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            background-color: #0084ff;
-            color: white;
+            background-color: #0056b3;
+            color: #fff;
             padding: 5px 10px;
             border-radius: 10px;
             z-index: 10;
@@ -432,6 +422,11 @@
             float: right;
         }
 
+        /* Remove dark-mode-toggle button */
+        .dark-mode-toggle {
+            display: none !important;
+        }
+
         /* Add more styles as needed */
     </style>
 </head>
@@ -463,7 +458,6 @@
             </div>
         </div>
     </div>
-    <button class="dark-mode-toggle" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
     <div class="header">
         <img src="https://raw.githubusercontent.com/microsoft/semantic-kernel/main/docs/images/sk-title.png"
             alt="Semantic Kernel Logo" class="header-logo">
@@ -605,11 +599,6 @@
         }
         function closeModal() {
             document.getElementById('shortcuts-modal').style.display = 'none';
-        }
-
-        // Utility: Dark mode
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
         }
 
         // Update temperature value display
