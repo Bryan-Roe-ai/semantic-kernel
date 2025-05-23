@@ -439,11 +439,11 @@
 <body>
     <div class="notification" id="notification"></div>
     <!-- Keyboard Shortcuts Modal -->
-    <div id="shortcuts-modal" class="modal">
+    <div id="shortcuts-modal" class="modal" style="display:none;">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Keyboard Shortcuts</h3>
-                <button class="close-modal">&times;</button>
+                <button class="close-modal" id="close-shortcuts-modal">&times;</button>
             </div>
             <div class="keyboard-shortcut">
                 <span>Clear chat history</span>
@@ -524,10 +524,6 @@
             <div class="settings-group">
                 <label for="api-base-url">Backend API Base URL:</label>
                 <input type="text" id="api-base-url" value="http://127.0.0.1:8000">
-            </div>
-            <div class="settings-group">
-                <label for="lm-studio-url">LM Studio API URL:</label>
-                <input type="text" id="lm-studio-url" value="http://localhost:1234/v1/chat/completions">
             </div>
             <div class="settings-group">
                 <label for="model-selector">AI Model:</label>
@@ -628,7 +624,6 @@
         function getAISettings() {
             return {
                 apiBaseUrl: document.getElementById('api-base-url').value.trim(),
-                lmStudioUrl: document.getElementById('lm-studio-url').value.trim(),
                 model: document.getElementById('model-selector').value,
                 systemPrompt: document.getElementById('system-prompt').value.trim(),
                 maxTokens: parseInt(document.getElementById('max-tokens').value, 10),
@@ -706,6 +701,7 @@
             // Collect AI settings
             const aiSettings = getAISettings();
             try {
+                // Always POST to /api/chat on your backend, not directly to LM Studio
                 const response = await fetch(`${aiSettings.apiBaseUrl}/api/chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -772,6 +768,10 @@
                     const tabId = tab.getAttribute('data-tab');
                     switchTab(tabId);
                 });
+            });
+            document.getElementById('close-shortcuts-modal').addEventListener('click', closeModal);
+            document.getElementById('shortcuts-modal').addEventListener('click', function (e) {
+                if (e.target === this) closeModal();
             });
             // TODO: Populate plugin/function selectors and models from backend
             // TODO: Add event listeners for new-file-btn, save-file-btn, delete-file-btn, run-plugin-btn
