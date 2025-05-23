@@ -1,14 +1,14 @@
 # Save as backend.py and run with: uvicorn backend:app --reload
 
-from fastapi import FastAPI, Query
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Query  # type: ignore
+from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
 import requests
 from typing import List, Dict, Any, Optional
 
-app = FastAPI()
-app.add_middleware(
+app: FastAPI = FastAPI()
+app.add_middleware(  # type: ignore
     CORSMiddleware,
     allow_origins=["*"],  # Adjust for production
     allow_methods=["*"],
@@ -26,7 +26,6 @@ class FileDeleteRequest(BaseModel):
 
 class ChatRequest(BaseModel):
     message: str
-    agentic: Dict[str, Any] = {}
     system: Optional[str] = None  # Optional system prompt
     model: Optional[str] = None  # Optional model override
     temperature: Optional[float] = None  # Optional temperature override
@@ -36,7 +35,7 @@ class ChatRequest(BaseModel):
 # LM Studio API endpoint (do NOT append /api/chat)
 LM_STUDIO_URL = os.environ.get("LM_STUDIO_URL", "http://localhost:1234/v1/chat/completions")
 
-@app.get("/files/list")
+@app.get("/files/list")  # type: ignore
 def list_files() -> List[str]:
     files: List[str] = []
     for root, _, filenames in os.walk(BASE_DIR):
@@ -44,9 +43,8 @@ def list_files() -> List[str]:
             rel_path = os.path.relpath(os.path.join(root, f), BASE_DIR)
             files.append(rel_path)
     return files
-
-@app.get("/files/read")
-def read_file(path: str = Query(...)):
+@app.get("/files/read")  # type: ignore
+def read_file(path: str = Query(...)) -> Dict[str, Any]:
     abs_path = os.path.abspath(os.path.join(BASE_DIR, path))
     if not abs_path.startswith(BASE_DIR):
         return {"error": "Invalid path"}
@@ -57,8 +55,8 @@ def read_file(path: str = Query(...)):
     except Exception as e:
         return {"error": str(e)}
 
-@app.post("/files/write")
-def write_file(req: FileWriteRequest):
+@app.post("/files/write")  # type: ignore
+def write_file(req: FileWriteRequest) -> Dict[str, str]:
     abs_path = os.path.abspath(os.path.join(BASE_DIR, req.path))
     if not abs_path.startswith(BASE_DIR):
         return {"error": "Invalid path"}
@@ -70,8 +68,8 @@ def write_file(req: FileWriteRequest):
     except Exception as e:
         return {"error": str(e)}
 
-@app.post("/files/delete")
-def delete_file(req: FileDeleteRequest):
+@app.post("/files/delete")  # type: ignore
+def delete_file(req: FileDeleteRequest) -> Dict[str, str]:
     abs_path = os.path.abspath(os.path.join(BASE_DIR, req.path))
     if not abs_path.startswith(BASE_DIR):
         return {"error": "Invalid path"}
@@ -80,8 +78,9 @@ def delete_file(req: FileDeleteRequest):
         return {"status": "OK"}
     except Exception as e:
         return {"error": str(e)}
-@app.post("/api/chat")
-def chat_endpoint(req: ChatRequest):
+
+@app.post("/api/chat")  # type: ignore
+def chat_endpoint(req: ChatRequest) -> Dict[str, str]:
     # Build messages array for LM Studio
     messages: List[Dict[str, str]] = []
     if req.system:
@@ -89,10 +88,10 @@ def chat_endpoint(req: ChatRequest):
     messages.append({"role": "user", "content": req.message})
     # Compose payload for LM Studio
     payload: Dict[str, Any] = {
-        "model": req.model or req.agentic.get("model", "microsoft/phi-4-mini-reasoning"),
+        "model": req.model or "microsoft/phi-4-mini-reasoning",
         "messages": messages,
-        "max_tokens": req.max_tokens if req.max_tokens is not None else req.agentic.get("turnLimit", -1),
-        "temperature": req.temperature if req.temperature is not None else req.agentic.get("temperature", 0.7),
+        "max_tokens": req.max_tokens if req.max_tokens is not None else -1,
+        "temperature": req.temperature if req.temperature is not None else 0.7,
         "stream": req.stream if req.stream is not None else False,
     }
     # Only POST to LM_STUDIO_URL, do not append /api/chat

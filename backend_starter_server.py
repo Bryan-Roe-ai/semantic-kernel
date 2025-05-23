@@ -12,6 +12,7 @@ import subprocess
 import sys
 import threading
 import webbrowser
+from typing import Any
 
 PORT = 9500
 
@@ -68,8 +69,8 @@ class BackendStarterHandler(BaseHTTPRequestHandler):
             print("Backend server started successfully")
         except Exception as e:
             print(f"Error starting backend: {e}")
-    
-    def log_message(self, format, *args):
+    def log_message(self, format: str, *args: Any) -> None:
+    def log_message(self, format: str, *args) -> None:
         # Quieter logging
         if args and any('favicon' in str(arg) for arg in args):
             return

@@ -464,31 +464,11 @@
             display: none;
         }
 
-        .agentic-option-label {
-            margin-bottom: 8px;
-        }
-
-        #agentic-options-panel {
+        /* Hide the shortcuts modal by default */
+        #shortcuts-modal {
             display: none;
-            position: absolute;
-            right: 20px;
-            top: 60px;
-            z-index: 1000;
-            background: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 2px 12px #0002;
-            padding: 16px;
-            min-width: 260px;
         }
 
-        #agentic-turns,
-        #agentic-turns-panel {
-            width: 48px;
-            margin-left: 4px;
-        }
-
-        .file-action-button.agentic-close-btn,
         .file-action-button {
             margin-top: 8px;
             float: right;
@@ -501,12 +481,12 @@
 
         /* Add more styles as needed */
     </style>
-</head>
+    <div id="shortcuts-modal" class="modal">
 
 <body>
     <div class="notification" id="notification"></div>
     <!-- Keyboard Shortcuts Modal -->
-    <div id="shortcuts-modal" class="modal" style="display:none;">
+    <div id="shortcuts-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Keyboard Shortcuts</h3>
@@ -649,19 +629,6 @@
             </div>
             <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
             <button class="send-button"><i class="fas fa-paper-plane"></i> Send</button>
-            <label class="agentic-option-label agentic-margin-bottom"><input type="checkbox" id="agentic-file-autoshow">
-                Auto-show file changes in chat</label>
-            <label class="agentic-option-label"><input type="checkbox" id="agentic-thought-autoshow"> Auto-show new
-                thoughts in chat</label>
-            <label class="agentic-option-label agentic-margin-bottom"><input type="checkbox"
-                    id="agentic-verbose-reasoning"> Verbose agent reasoning</label>
-            <label class="agentic-option-label"><input type="checkbox" id="agentic-turn-limit" checked> Limit agent
-                turns: <input type="number" id="agentic-turns" value="4" min="2" max="20"></label>
-        </div>
-        <div id="agentic-options-panel">
-            <!-- Agentic options panel content can be dynamically rendered here if needed -->
-            <button class="file-action-button agentic-close-btn" onclick="closeAgenticOptions()"><i
-                    class="fas fa-times"></i> Close</button>
         </div>
     </div>
     <script>
@@ -760,24 +727,16 @@
             renderMessage({ sender: 'user', text });
             input.value = '';
             showLoading(true);
-            // Collect agentic options
-            const agenticOptions = {
-                fileAutoShow: document.getElementById('agentic-file-autoshow').checked,
-                thoughtAutoShow: document.getElementById('agentic-thought-autoshow').checked,
-                verboseReasoning: document.getElementById('agentic-verbose-reasoning').checked,
-                turnLimitEnabled: document.getElementById('agentic-turn-limit').checked,
-                turnLimit: parseInt(document.getElementById('agentic-turns').value, 10)
-            };
+            
             // Collect AI settings
             const aiSettings = getAISettings();
             try {
-                // Always POST to /api/chat on your backend, not directly to LM Studio
+                // Send request to backend
                 const response = await fetch(`${aiSettings.apiBaseUrl}/api/chat`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         message: text,
-                        agentic: agenticOptions,
                         system: aiSettings.systemPrompt,
                         model: aiSettings.model,
                         temperature: aiSettings.temperature,
@@ -807,10 +766,7 @@
             showNotification('Delete file (not implemented)');
         }
 
-        // Agentic options panel (stub)
-        function closeAgenticOptions() {
-            document.getElementById('agentic-options-panel').style.display = 'none';
-        }
+        // Removed agentic options panel functionality
 
         // Function to update the backend status indicator
         function updateBackendStatus(status) {
