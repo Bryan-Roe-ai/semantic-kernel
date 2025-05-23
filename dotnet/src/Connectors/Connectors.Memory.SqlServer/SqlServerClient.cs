@@ -64,6 +64,11 @@ internal sealed class SqlServerClient : ISqlServerClient
             cmd.CommandText = $"""
                 IF OBJECT_ID(N'{fullTableName}', N'U') IS NULL
                 CREATE TABLE {fullTableName} (
+                    [key] nvarchar(255) collate Latin1_General_100_BIN2 not null,
+                    [key] nvarchar(255) collate latin1_general_bin2 not null,
+                    [metadata] {metadataType} not null,
+                    [embedding] varbinary(8000),
+                    [timestamp] datetimeoffset,
                     [key] NVARCHAR(255) COLLATE Latin1_General_100_BIN2 NOT NULL,
                     [metadata] JSON NOT NULL,
                     [embedding] VECTOR({this._embeddingsDimensionsCount}),

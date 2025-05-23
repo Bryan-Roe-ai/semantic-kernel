@@ -65,7 +65,9 @@ class AstraDBMemoryStore(MemoryStoreBase):
                 env_file_encoding=env_file_encoding,
             )
         except ValidationError as ex:
-            raise MemoryConnectorInitializationError("Failed to create AstraDB settings.", ex) from ex
+            raise MemoryConnectorInitializationError(
+                "Failed to create AstraDB settings.", ex
+            ) from ex
 
         self._embedding_dim = embedding_dim
         self._similarity = similarity
@@ -80,7 +82,9 @@ class AstraDBMemoryStore(MemoryStoreBase):
             astra_id=astradb_settings.db_id,
             astra_region=astradb_settings.region,
             astra_application_token=(
-                astradb_settings.app_token.get_secret_value() if astradb_settings.app_token else None
+                astradb_settings.app_token.get_secret_value()
+                if astradb_settings.app_token
+                else None
             ),
             keyspace_name=astradb_settings.keyspace,
             embedding_dim=embedding_dim,
@@ -113,15 +117,20 @@ class AstraDBMemoryStore(MemoryStoreBase):
         Returns:
             None
         """
-        dimension_num = dimension_num if dimension_num is not None else self._embedding_dim
+        dimension_num = (
+            dimension_num if dimension_num is not None else self._embedding_dim
+        )
         distance_type = distance_type if distance_type is not None else self._similarity
 
         if dimension_num > MAX_DIMENSIONALITY:
             raise ValueError(
-                f"Dimensionality of {dimension_num} exceeds " + f"the maximum allowed value of {MAX_DIMENSIONALITY}."
+                f"Dimensionality of {dimension_num} exceeds "
+                + f"the maximum allowed value of {MAX_DIMENSIONALITY}."
             )
 
-        result = await self._client.create_collection(collection_name, dimension_num, distance_type)
+        result = await self._client.create_collection(
+            collection_name, dimension_num, distance_type
+        )
         if result is True:
             logger.info(f"Collection {collection_name} created.")
 
@@ -167,11 +176,15 @@ class AstraDBMemoryStore(MemoryStoreBase):
         """
         filter = {"_id": record._id}
         update = {"$set": build_payload(record)}
-        status = await self._client.update_document(collection_name, filter, update, True)
+        status = await self._client.update_document(
+            collection_name, filter, update, True
+        )
 
         return status.get("upsertedId", record._id)
 
-    async def upsert_batch(self, collection_name: str, records: list[MemoryRecord]) -> list[str]:
+    async def upsert_batch(
+        self, collection_name: str, records: list[MemoryRecord]
+    ) -> list[str]:
         """Upsert a batch of memory records into the data store.
 
         Does not guarantee that the collection exists.
@@ -185,9 +198,13 @@ class AstraDBMemoryStore(MemoryStoreBase):
         Returns:
             List[str]: The unique identifiers for the memory record.
         """
-        return await asyncio.gather(*[self.upsert(collection_name, record) for record in records])
+        return await asyncio.gather(
+            *[self.upsert(collection_name, record) for record in records]
+        )
 
-    async def get(self, collection_name: str, key: str, with_embedding: bool = False) -> MemoryRecord:
+    async def get(
+        self, collection_name: str, key: str, with_embedding: bool = False
+    ) -> MemoryRecord:
         """Gets a record. Does not guarantee that the collection exists.
 
         Args:
@@ -313,7 +330,11 @@ class AstraDBMemoryStore(MemoryStoreBase):
         )
 
         if min_relevance_score:
-            matches = [match for match in matches if match["$similarity"] >= min_relevance_score]
+            matches = [
+                match
+                for match in matches
+                if match["$similarity"] >= min_relevance_score
+            ]
 
         return (
             [

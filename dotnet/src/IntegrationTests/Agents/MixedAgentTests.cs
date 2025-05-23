@@ -45,6 +45,11 @@ public sealed class MixedAgentTests
         // Arrange, Act & Assert
         await this.VerifyAgentExecutionAsync(
             this.CreateChatCompletionKernel(openAISettings),
+            OpenAIClientProvider.ForOpenAI(openAISettings.ApiKey),
+            OpenAIClientProvider.ForOpenAI(openAISettings.ApiKey),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
+            OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
             OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(openAISettings.ApiKey)),
             openAISettings.ChatModelId!,
             useNewFunctionCallingModel);
@@ -65,7 +70,9 @@ public sealed class MixedAgentTests
         // Arrange, Act & Assert
         await this.VerifyAgentExecutionAsync(
             this.CreateChatCompletionKernel(azureOpenAISettings),
+            OpenAIClientProvider.ForAzureOpenAI(azureOpenAISettings.ApiKey, new Uri(azureOpenAISettings.Endpoint)),
             OpenAIClientProvider.ForAzureOpenAI(new AzureCliCredential(), new Uri(azureOpenAISettings.Endpoint)),
+            azureOpenAISettings.ChatDeploymentName!);
             azureOpenAISettings.ChatDeploymentName!,
             useNewFunctionCallingModel);
     }
@@ -95,8 +102,31 @@ public sealed class MixedAgentTests
         chatAgent.Kernel.Plugins.Add(plugin);
 
         // Configure assistant agent with the plugin.
+<<<<<<< HEAD
+        OpenAIAssistantAgent assistantAgent =
+            await OpenAIAssistantAgent.CreateAsync(
+                kernel: new(),
+                kernel: new(),
+                kernel: new(),
+                kernel: new(),
+                config,
+                new(modelName)
+                {
+                    Name = "Assistant",
+                    Instructions = "Answer questions about the menu."
+                });
+                });
+                },
+                new Kernel());
+                },
+                new Kernel());
+                },
+                new Kernel());
+        assistantAgent.Kernel.Plugins.Add(plugin);
+=======
         Assistant definition = await clientProvider.AssistantClient.CreateAssistantAsync(modelName, instructions: "Answer questions about the menu.");
         OpenAIAssistantAgent assistantAgent = new(definition, clientProvider.AssistantClient, [plugin]);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Act & Assert
         try
@@ -152,6 +182,9 @@ public sealed class MixedAgentTests
         IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
 
         kernelBuilder.AddAzureOpenAIChatCompletion(
+            configuration.ChatDeploymentName!,
+            configuration.Endpoint,
+            configuration.ApiKey);
             deploymentName: configuration.ChatDeploymentName!,
             endpoint: configuration.Endpoint,
             credentials: new AzureCliCredential());

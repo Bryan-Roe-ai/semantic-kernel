@@ -148,7 +148,7 @@ public class Step01_Processes(ITestOutputHelper output) : BaseTest(output, redir
         /// <returns>A <see cref="ValueTask"/></returns>
         public override ValueTask ActivateAsync(KernelProcessStepState<ChatBotState> state)
         {
-            _state = state.State;
+            _state = state.State ?? new();
             return ValueTask.CompletedTask;
         }
 

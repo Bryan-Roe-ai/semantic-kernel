@@ -14,7 +14,8 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Planning;
 using OpenAI.Chat;
-
+using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
+using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
 using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
 
 namespace Planners;
@@ -333,6 +334,11 @@ public class AutoFunctionCallingPlanning(ITestOutputHelper output) : BaseTest(ou
                 usage is ChatTokenUsage completionsUsage &&
                 completionsUsage is not null)
             {
+                tokens += completionsUsage.TotalTokens;
+                tokens += completionsUsage.TotalTokens;
+                tokens += completionsUsage.TotalTokenCount;
+                tokens += completionsUsage.TotalTokenCount;
+                tokens += completionsUsage.TotalTokenCount;
                 tokens += completionsUsage.TotalTokenCount;
             }
         }

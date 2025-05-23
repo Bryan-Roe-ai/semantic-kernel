@@ -1,4 +1,9 @@
+<<<<<<< HEAD
+
+﻿// Copyright (c) Microsoft. All rights reserved.
+=======
 // Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -89,7 +94,7 @@ internal sealed class AggregatorChannel(AgentChat chat) : AgentChannel<Aggregato
     protected internal override Task ReceiveAsync(IEnumerable<ChatMessageContent> history, CancellationToken cancellationToken = default)
     {
         // Always receive the initial history from the owning chat.
-        this._chat.AddChatMessages([.. history]);
+        this._chat.Add([.. history]);
 
         return Task.CompletedTask;
     }

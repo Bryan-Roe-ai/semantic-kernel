@@ -1,9 +1,13 @@
 // Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Agents.Internal;
@@ -20,11 +24,13 @@ namespace Microsoft.SemanticKernel.Agents.Chat;
 public class KernelFunctionSelectionStrategy(KernelFunction function, Kernel kernel) : SelectionStrategy
 {
     /// <summary>
+    /// The default value for <see cref="KernelFunctionTerminationStrategy.AgentVariableName"/>.
     /// The default value for <see cref="KernelFunctionSelectionStrategy.AgentsVariableName"/>.
     /// </summary>
     public const string DefaultAgentsVariableName = "_agents_";
 
     /// <summary>
+    /// The default value for <see cref="KernelFunctionTerminationStrategy.HistoryVariableName"/>.
     /// The default value for <see cref="KernelFunctionSelectionStrategy.HistoryVariableName"/>.
     /// </summary>
     public const string DefaultHistoryVariableName = "_history_";
@@ -57,7 +63,19 @@ public class KernelFunctionSelectionStrategy(KernelFunction function, Kernel ker
     public KernelFunction Function { get; } = function;
 
     /// <summary>
+<<<<<<< HEAD
+    /// When set, will use <see cref="SelectionStrategy.InitialAgent"/> in the event of a failure to select an agent.
+    /// </summary>
+    public bool UseInitialAgentAsFallback { get; init; }
+
+    /// <summary>
+    /// The <see cref="Microsoft.SemanticKernel.Kernel"/> used when invoking <see cref="KernelFunctionSelectionStrategy.Function"/>.
+    /// </summary>
+    public Kernel Kernel => kernel;
+    /// Only include agent name in history when invoking <see cref="KernelFunctionTerminationStrategy.Function"/>.
+=======
     /// Gets a value that indicates whether only the agent name is included in the history when invoking <see cref="KernelFunctionTerminationStrategy.Function"/>.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
     public bool EvaluateNameOnly { get; init; }
 
@@ -81,12 +99,14 @@ public class KernelFunctionSelectionStrategy(KernelFunction function, Kernel ker
     protected sealed override async Task<Agent> SelectAgentAsync(IReadOnlyList<Agent> agents, IReadOnlyList<ChatMessageContent> history, CancellationToken cancellationToken = default)
     {
         history = await history.ReduceAsync(this.HistoryReducer, cancellationToken).ConfigureAwait(false);
-
         KernelArguments originalArguments = this.Arguments ?? [];
         KernelArguments arguments =
             new(originalArguments, originalArguments.ExecutionSettings?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value))
             {
                 { this.AgentsVariableName, string.Join(",", agents.Select(a => a.Name)) },
+                { this.HistoryVariableName, JsonSerializer.Serialize(history) }, // TODO: GitHub Task #5894
+                { this.HistoryVariableName, JsonSerializer.Serialize(history) }, // TODO: GitHub Task #5894
+                { this.HistoryVariableName, ChatMessageForPrompt.Format(history) },
                 { this.HistoryVariableName, ChatMessageForPrompt.Format(history, this.EvaluateNameOnly) },
             };
 

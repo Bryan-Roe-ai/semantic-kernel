@@ -5,7 +5,9 @@ from typing import Annotated, Any, TypeVar
 
 from pydantic import Field, model_validator
 
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai.function_choice_behavior import (
+    FunctionChoiceBehavior,
+)
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 
 logger = logging.getLogger(__name__)
@@ -26,6 +28,81 @@ class PromptExecutionSettings(KernelBaseModel):
         extension_data (Dict[str, Any]): Any additional data to send with the request.
         function_choice_behavior (FunctionChoiceBehavior | None): The function choice behavior settings.
 
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+    Parameters:
+        service_id (str): The service ID to use for the request.
+        extension_data (Dict[str, Any], optional): Any additional data to send with the request. Defaults to None.
+        kwargs (Any): Additional keyword arguments,
+            these are attempted to parse into the keys of the specific prompt execution settings.
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
     Methods:
         prepare_settings_dict: Prepares the settings as a dictionary for sending to the AI service.
         update_from_prompt_execution_settings: Update the keys from another prompt execution settings object.
@@ -38,6 +115,22 @@ class PromptExecutionSettings(KernelBaseModel):
 
     @model_validator(mode="before")
     @classmethod
+<<<<<<< HEAD
+    def parse_function_choice_behavior(
+        cls: type[_T], data: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Parse the function choice behavior data."""
+        function_choice_behavior_data = data.get("function_choice_behavior")
+        if function_choice_behavior_data:
+            if isinstance(function_choice_behavior_data, str):
+                data["function_choice_behavior"] = FunctionChoiceBehavior.from_string(
+                    function_choice_behavior_data
+                )
+            elif isinstance(function_choice_behavior_data, dict):
+                data["function_choice_behavior"] = FunctionChoiceBehavior.from_dict(
+                    function_choice_behavior_data
+                )
+=======
     def parse_function_choice_behavior(cls: type[_T], data: Any) -> dict[str, Any]:
         """Parse the function choice behavior data."""
         if isinstance(data, dict):
@@ -47,7 +140,19 @@ class PromptExecutionSettings(KernelBaseModel):
                     data["function_choice_behavior"] = FunctionChoiceBehavior.from_string(function_choice_behavior_data)
                 elif isinstance(function_choice_behavior_data, dict):
                     data["function_choice_behavior"] = FunctionChoiceBehavior.from_dict(function_choice_behavior_data)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         return data
+    def parse_function_choice_behavior(cls, data: dict[str, Any]) -> dict[str, Any] | None:
+        """Parse the function choice behavior data."""
+        if data:
+            function_choice_behavior_data = data.get("function_choice_behavior")
+            if function_choice_behavior_data:
+                if isinstance(function_choice_behavior_data, str):
+                    data["function_choice_behavior"] = FunctionChoiceBehavior.from_string(function_choice_behavior_data)
+                elif isinstance(function_choice_behavior_data, dict):
+                    data["function_choice_behavior"] = FunctionChoiceBehavior.from_dict(function_choice_behavior_data)
+            return data
+        return None
 
     def __init__(self, service_id: str | None = None, **kwargs: Any):
         """Initialize the prompt execution settings.
@@ -61,7 +166,9 @@ class PromptExecutionSettings(KernelBaseModel):
         function_choice_behavior = kwargs.pop("function_choice_behavior", None)
         extension_data.update(kwargs)
         super().__init__(
-            service_id=service_id, extension_data=extension_data, function_choice_behavior=function_choice_behavior
+            service_id=service_id,
+            extension_data=extension_data,
+            function_choice_behavior=function_choice_behavior,
         )
         self.unpack_extension_data()
 
@@ -80,7 +187,65 @@ class PromptExecutionSettings(KernelBaseModel):
             exclude={
                 "service_id",
                 "extension_data",
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
                 "structured_json_response",
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+                "structured_json_response",
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+                "structured_json_response",
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+                "structured_json_response",
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
             },
             exclude_none=True,
             by_alias=True,
@@ -118,5 +283,8 @@ class PromptExecutionSettings(KernelBaseModel):
     def pack_extension_data(self) -> None:
         """Update the extension data from the prompt execution settings."""
         for key in self.model_fields_set:
-            if key not in ["service_id", "extension_data"] and getattr(self, key) is not None:
+            if (
+                key not in ["service_id", "extension_data"]
+                and getattr(self, key) is not None
+            ):
                 self.extension_data[key] = getattr(self, key)

@@ -30,6 +30,9 @@ Auto function invocation can cause a side effect where a single call to get_chat
 
 ### Two new abstract methods
 
+```python
+@abstractmethod
+async def _send_chat_request(
 > Revision: In order to not break existing customers who have implemented their own AI connectors, these two methods are not decorated with the `@abstractmethod` decorator, but instead throw an exception if they are not implemented in the built-in AI connectors.
 
 ```python
@@ -38,6 +41,12 @@ async def _inner_get_chat_message_content(
     chat_history: ChatHistory,
     settings: PromptExecutionSettings
 ) -> list[ChatMessageContent]:
+    pass
+```
+
+```python
+@abstractmethod
+async def _send_streaming_chat_request(
     raise NotImplementedError
 ```
 
@@ -47,6 +56,7 @@ async def _inner_get_streaming_chat_message_content(
     chat_history: ChatHistory,
     settings: PromptExecutionSettings
 ) -> AsyncGenerator[list[StreamingChatMessageContent], Any]:
+    pass
     raise NotImplementedError
 ```
 

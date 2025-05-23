@@ -6,6 +6,7 @@ using Resources;
 namespace Step05;
 
 /// <summary>
+/// DEV HARNESS
 /// Demonstrate usage of <see cref="KernelProcessMap"/> for a map-reduce operation.
 /// </summary>
 public class Step05_MapReduce : BaseTest
@@ -14,6 +15,9 @@ public class Step05_MapReduce : BaseTest
     protected override bool ForceOpenAI => true;
 
     /// <summary>
+    /// Factor to increase the scale of the content processed.
+    /// Factor to increase the scale of the content processed to highlight the characteristics of
+    /// each approach: map vs linear.
     /// Factor to increase the scale of the content processed.
     /// </summary>
     private const int ScaleFactor = 100;
@@ -28,6 +32,9 @@ public class Step05_MapReduce : BaseTest
 
         for (int count = 0; count < ScaleFactor; ++count)
         {
+            content.AppendLine(File.ReadAllText("Grimms-The-King-of-the-Golden-Mountain.txt"));
+            content.AppendLine(File.ReadAllText("Grimms-The-Water-of-Life.txt"));
+            content.AppendLine(File.ReadAllText("Grimms-The-White-Snake.txt"));
             content.AppendLine(EmbeddedResource.Read("Grimms-The-King-of-the-Golden-Mountain.txt"));
             content.AppendLine(EmbeddedResource.Read("Grimms-The-Water-of-Life.txt"));
             content.AppendLine(EmbeddedResource.Read("Grimms-The-White-Snake.txt"));
@@ -39,6 +46,7 @@ public class Step05_MapReduce : BaseTest
     [Fact]
     public async Task RunMapReduceAsync()
     {
+        KernelProcess process = SetupMapReduceProcess(nameof(RunMapReduceAsync), "Start");
         // Define the process
         KernelProcess process = SetupMapReduceProcess(nameof(RunMapReduceAsync), "Start");
 
@@ -61,6 +69,34 @@ public class Step05_MapReduce : BaseTest
         }
     }
 
+    [Fact]
+    public async Task RunLinearAsync()
+    {
+        Dictionary<string, int> counts = [];
+
+        string[] words = this._sourceContent.Split([' ', '\n', '\r', '.', ',', '’'], StringSplitOptions.RemoveEmptyEntries);
+        foreach (string word in words)
+        {
+            if (s_notInteresting.Contains(word))
+            {
+                continue;
+            }
+
+            counts.TryGetValue(word.Trim(), out int count);
+            counts[word] = ++count;
+        }
+
+        var sorted =
+            from kvp in counts
+            orderby kvp.Value descending
+            select kvp;
+
+        foreach (var result in sorted.Take(10))
+        {
+            Console.WriteLine($"{result.Key}: {result.Value}");
+        }
+    }
+
     private KernelProcess SetupMapReduceProcess(string processName, string inputEventId)
     {
         ProcessBuilder process = new(processName);
@@ -70,6 +106,11 @@ public class Step05_MapReduce : BaseTest
             .OnInputEvent(inputEventId)
             .SendEventTo(new ProcessFunctionTargetBuilder(chunkStep));
 
+        ProcessMapBuilder mapStep = process.AddMapStepFromType<CountStep>();
+        chunkStep
+            .OnEvent(ChunkStep.EventId)
+            .SendEventTo(new ProcessFunctionTargetBuilder(mapStep));
+            .SendEventTo(mapStep);
         ProcessMapBuilder mapStep = process.AddMapStepFromType<CountStep>();
         chunkStep
             .OnEvent(ChunkStep.EventId)

@@ -15,4 +15,17 @@ namespace SemanticKernel.IntegrationTests.Connectors.Memory.Redis;
 public class RedisVectorStoreTests(RedisVectorStoreFixture fixture)
     : BaseVectorStoreTests<string, RedisHotel>(new RedisVectorStore(fixture.Database))
 {
+<<<<<<< HEAD
+    // If null, all tests will be enabled
+    private const string SkipReason = "This test is for manual verification";
+
+    [Fact(Skip = SkipReason)]
+    [Fact]
+    public async Task ItCanGetAListOfExistingCollectionNamesAsync()
+    public override async Task ItCanGetAListOfExistingCollectionNamesAsync()
+    {
+        await base.ItCanGetAListOfExistingCollectionNamesAsync();
+    }
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 }

@@ -19,14 +19,26 @@ from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter import 
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter_style import (
     RestApiParameterStyle,
 )
+<<<<<<< HEAD
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload import (
+    RestApiOperationPayload,
+)
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload_property import (
+    RestApiOperationPayloadProperty,
+=======
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload import RestApiPayload
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload_property import (
     RestApiPayloadProperty,
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 )
 from semantic_kernel.connectors.openapi_plugin.openapi_function_execution_parameters import (
     OpenAPIFunctionExecutionParameters,
 )
-from semantic_kernel.connectors.openapi_plugin.openapi_manager import OpenApiParser, OpenApiRunner, RestApiOperation
+from semantic_kernel.connectors.openapi_plugin.openapi_manager import (
+    OpenApiParser,
+    OpenApiRunner,
+    RestApiOperation,
+)
 from semantic_kernel.exceptions import FunctionExecutionException
 
 directory = os.path.dirname(os.path.realpath(__file__))
@@ -120,7 +132,13 @@ def test_parse_invalid_format():
 
 
 def test_url_join_with_trailing_slash():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="GET", server_url="https://example.com/", path="test/path"
+    )
+=======
     operation = RestApiOperation(id="test", method="GET", servers=["https://example.com/"], path="test/path")
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     base_url = "https://example.com/"
     path = "test/path"
     expected_url = "https://example.com/test/path"
@@ -128,7 +146,13 @@ def test_url_join_with_trailing_slash():
 
 
 def test_url_join_without_trailing_slash():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="GET", server_url="https://example.com", path="test/path"
+    )
+=======
     operation = RestApiOperation(id="test", method="GET", servers=["https://example.com"], path="test/path")
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     base_url = "https://example.com"
     path = "test/path"
     expected_url = "https://example.com/test/path"
@@ -136,7 +160,16 @@ def test_url_join_without_trailing_slash():
 
 
 def test_url_join_base_path_with_path():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com/base/",
+        path="test/path",
+    )
+=======
     operation = RestApiOperation(id="test", method="GET", servers="https://example.com/base/", path="test/path")
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     base_url = "https://example.com/base/"
     path = "test/path"
     expected_url = "https://example.com/base/test/path"
@@ -144,7 +177,13 @@ def test_url_join_base_path_with_path():
 
 
 def test_url_join_with_leading_slash_in_path():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="GET", server_url="https://example.com/", path="/test/path"
+    )
+=======
     operation = RestApiOperation(id="test", method="GET", servers=["https://example.com/"], path="/test/path")
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     base_url = "https://example.com/"
     path = "/test/path"
     expected_url = "https://example.com/test/path"
@@ -152,7 +191,13 @@ def test_url_join_with_leading_slash_in_path():
 
 
 def test_url_join_base_path_without_trailing_slash():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="GET", server_url="https://example.com/base", path="test/path"
+    )
+=======
     operation = RestApiOperation(id="test", method="GET", servers="https://example.com/base", path="test/path")
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     base_url = "https://example.com/base"
     path = "test/path"
     expected_url = "https://example.com/base/test/path"
@@ -161,12 +206,28 @@ def test_url_join_base_path_without_trailing_slash():
 
 def test_build_headers_with_required_parameter():
     parameters = [
+<<<<<<< HEAD
+        RestApiOperationParameter(
+            name="Authorization",
+            type="string",
+            location=RestApiOperationParameterLocation.HEADER,
+            is_required=True,
+        )
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com",
+        path="test/path",
+        params=parameters,
+=======
         RestApiParameter(
             name="Authorization", type="string", location=RestApiParameterLocation.HEADER, is_required=True
         )
     ]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com"], path="test/path", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {"Authorization": "Bearer token"}
     expected_headers = {"Authorization": "Bearer token"}
@@ -205,12 +266,28 @@ def test_rest_api_operation_freeze():
 
 def test_build_headers_missing_required_parameter():
     parameters = [
+<<<<<<< HEAD
+        RestApiOperationParameter(
+            name="Authorization",
+            type="string",
+            location=RestApiOperationParameterLocation.HEADER,
+            is_required=True,
+        )
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com",
+        path="test/path",
+        params=parameters,
+=======
         RestApiParameter(
             name="Authorization", type="string", location=RestApiParameterLocation.HEADER, is_required=True
         )
     ]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com"], path="test/path", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {}
     with pytest.raises(
@@ -222,12 +299,28 @@ def test_build_headers_missing_required_parameter():
 
 def test_build_headers_with_optional_parameter():
     parameters = [
+<<<<<<< HEAD
+        RestApiOperationParameter(
+            name="Authorization",
+            type="string",
+            location=RestApiOperationParameterLocation.HEADER,
+            is_required=False,
+        )
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com",
+        path="test/path",
+        params=parameters,
+=======
         RestApiParameter(
             name="Authorization", type="string", location=RestApiParameterLocation.HEADER, is_required=False
         )
     ]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com"], path="test/path", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {"Authorization": "Bearer token"}
     expected_headers = {"Authorization": "Bearer token"}
@@ -236,12 +329,28 @@ def test_build_headers_with_optional_parameter():
 
 def test_build_headers_missing_optional_parameter():
     parameters = [
+<<<<<<< HEAD
+        RestApiOperationParameter(
+            name="Authorization",
+            type="string",
+            location=RestApiOperationParameterLocation.HEADER,
+            is_required=False,
+        )
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com",
+        path="test/path",
+        params=parameters,
+=======
         RestApiParameter(
             name="Authorization", type="string", location=RestApiParameterLocation.HEADER, is_required=False
         )
     ]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com"], path="test/path", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {}
     expected_headers = {}
@@ -250,6 +359,27 @@ def test_build_headers_missing_optional_parameter():
 
 def test_build_headers_multiple_parameters():
     parameters = [
+<<<<<<< HEAD
+        RestApiOperationParameter(
+            name="Authorization",
+            type="string",
+            location=RestApiOperationParameterLocation.HEADER,
+            is_required=True,
+        ),
+        RestApiOperationParameter(
+            name="Content-Type",
+            type="string",
+            location=RestApiOperationParameterLocation.HEADER,
+            is_required=False,
+        ),
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com",
+        path="test/path",
+        params=parameters,
+=======
         RestApiParameter(
             name="Authorization", type="string", location=RestApiParameterLocation.HEADER, is_required=True
         ),
@@ -259,29 +389,70 @@ def test_build_headers_multiple_parameters():
     ]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com"], path="test/path", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {"Authorization": "Bearer token", "Content-Type": "application/json"}
-    expected_headers = {"Authorization": "Bearer token", "Content-Type": "application/json"}
+    expected_headers = {
+        "Authorization": "Bearer token",
+        "Content-Type": "application/json",
+    }
     assert operation.build_headers(arguments) == expected_headers
 
 
 def test_build_operation_url_with_override():
+<<<<<<< HEAD
+    parameters = [
+        RestApiOperationParameter(
+            name="id",
+            type="string",
+            location=RestApiOperationParameterLocation.PATH,
+            is_required=True,
+        )
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com/",
+        path="/resource/{id}",
+        params=parameters,
+=======
     parameters = [RestApiParameter(name="id", type="string", location=RestApiParameterLocation.PATH, is_required=True)]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com/"], path="/resource/{id}", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {"id": "123"}
     server_url_override = urlparse("https://override.com")
     expected_url = "https://override.com/resource/123"
-    assert operation.build_operation_url(arguments, server_url_override=server_url_override) == expected_url
+    assert (
+        operation.build_operation_url(
+            arguments, server_url_override=server_url_override
+        )
+        == expected_url
+    )
 
 
 def test_build_operation_url_without_override():
+<<<<<<< HEAD
+    parameters = [
+        RestApiOperationParameter(
+            name="id",
+            type="string",
+            location=RestApiOperationParameterLocation.PATH,
+            is_required=True,
+        )
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com/",
+=======
     parameters = [RestApiParameter(name="id", type="string", location=RestApiParameterLocation.PATH, is_required=True)]
     operation = RestApiOperation(
         id="test",
         method="GET",
         servers=[{"url": "https://example.com/"}],
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         path="/resource/{id}",
         params=parameters,
     )
@@ -290,6 +461,18 @@ def test_build_operation_url_without_override():
     assert operation.build_operation_url(arguments) == expected_url
 
 
+<<<<<<< HEAD
+def test_get_server_url_with_override():
+    operation = RestApiOperation(
+        id="test", method="GET", server_url="https://example.com", path="/resource/{id}"
+    )
+    server_url_override = urlparse("https://override.com")
+    expected_url = "https://override.com/"
+    assert (
+        operation.get_server_url(server_url_override=server_url_override).geturl()
+        == expected_url
+    )
+=======
 def test_get_server_url_with_parse_result_override():
     operation = RestApiOperation(
         id="test",
@@ -363,23 +546,45 @@ def test_get_server_url_with_override():
     server_url_override = "https://override.com"
     expected_url = "https://override.com/"
     assert operation.get_server_url(server_url_override=server_url_override) == expected_url
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 def test_get_server_url_without_override():
     operation = RestApiOperation(
+<<<<<<< HEAD
+        id="test", method="GET", server_url="https://example.com", path="/resource/{id}"
+=======
         id="test",
         method="GET",
         servers=[{"url": "https://example.com"}],
         path="/resource/{id}",
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     expected_url = "https://example.com/"
     assert operation.get_server_url() == expected_url
 
 
 def test_build_path_with_required_parameter():
+<<<<<<< HEAD
+    parameters = [
+        RestApiOperationParameter(
+            name="id",
+            type="string",
+            location=RestApiOperationParameterLocation.PATH,
+            is_required=True,
+        )
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com/",
+        path="/resource/{id}",
+        params=parameters,
+=======
     parameters = [RestApiParameter(name="id", type="string", location=RestApiParameterLocation.PATH, is_required=True)]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com/"], path="/resource/{id}", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {"id": "123"}
     expected_path = "/resource/123"
@@ -387,9 +592,26 @@ def test_build_path_with_required_parameter():
 
 
 def test_build_path_missing_required_parameter():
+<<<<<<< HEAD
+    parameters = [
+        RestApiOperationParameter(
+            name="id",
+            type="string",
+            location=RestApiOperationParameterLocation.PATH,
+            is_required=True,
+        )
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com/",
+        path="/resource/{id}",
+        params=parameters,
+=======
     parameters = [RestApiParameter(name="id", type="string", location=RestApiParameterLocation.PATH, is_required=True)]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com/"], path="/resource/{id}", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {}
     with pytest.raises(
@@ -401,11 +623,33 @@ def test_build_path_missing_required_parameter():
 
 def test_build_path_with_optional_and_required_parameters():
     parameters = [
+<<<<<<< HEAD
+        RestApiOperationParameter(
+            name="id",
+            type="string",
+            location=RestApiOperationParameterLocation.PATH,
+            is_required=True,
+        ),
+        RestApiOperationParameter(
+            name="optional",
+            type="string",
+            location=RestApiOperationParameterLocation.PATH,
+            is_required=False,
+        ),
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com/",
+        path="/resource/{id}/{optional}",
+        params=parameters,
+=======
         RestApiParameter(name="id", type="string", location=RestApiParameterLocation.PATH, is_required=True),
         RestApiParameter(name="optional", type="string", location=RestApiParameterLocation.PATH, is_required=False),
     ]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com/"], path="/resource/{id}/{optional}", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {"id": "123"}
     expected_path = "/resource/123/{optional}"
@@ -414,10 +658,26 @@ def test_build_path_with_optional_and_required_parameters():
 
 def test_build_query_string_with_required_parameter():
     parameters = [
+<<<<<<< HEAD
+        RestApiOperationParameter(
+            name="query",
+            type="string",
+            location=RestApiOperationParameterLocation.QUERY,
+            is_required=True,
+        )
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com/",
+        path="/resource",
+        params=parameters,
+=======
         RestApiParameter(name="query", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
     ]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com/"], path="/resource", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {"query": "value"}
     expected_query_string = "query=value"
@@ -426,10 +686,26 @@ def test_build_query_string_with_required_parameter():
 
 def test_build_query_string_missing_required_parameter():
     parameters = [
+<<<<<<< HEAD
+        RestApiOperationParameter(
+            name="query",
+            type="string",
+            location=RestApiOperationParameterLocation.QUERY,
+            is_required=True,
+        )
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com/",
+        path="/resource",
+        params=parameters,
+=======
         RestApiParameter(name="query", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
     ]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com/"], path="/resource", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {}
     with pytest.raises(
@@ -441,6 +717,27 @@ def test_build_query_string_missing_required_parameter():
 
 def test_build_query_string_with_optional_and_required_parameters():
     parameters = [
+<<<<<<< HEAD
+        RestApiOperationParameter(
+            name="required_param",
+            type="string",
+            location=RestApiOperationParameterLocation.QUERY,
+            is_required=True,
+        ),
+        RestApiOperationParameter(
+            name="optional_param",
+            type="string",
+            location=RestApiOperationParameterLocation.QUERY,
+            is_required=False,
+        ),
+    ]
+    operation = RestApiOperation(
+        id="test",
+        method="GET",
+        server_url="https://example.com/",
+        path="/resource",
+        params=parameters,
+=======
         RestApiParameter(
             name="required_param", type="string", location=RestApiParameterLocation.QUERY, is_required=True
         ),
@@ -450,6 +747,7 @@ def test_build_query_string_with_optional_and_required_parameters():
     ]
     operation = RestApiOperation(
         id="test", method="GET", servers=["https://example.com/"], path="/resource", params=parameters
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     arguments = {"required_param": "required_value"}
     expected_query_string = "required_param=required_value"
@@ -475,7 +773,15 @@ def test_create_payload_artificial_parameter_with_text_plain():
         schema="Test schema",
     )
     operation = RestApiOperation(
+<<<<<<< HEAD
+        id="test",
+        method="POST",
+        server_url="https://example.com/",
+        path="/resource",
+        request_body=request_body,
+=======
         id="test", method="POST", servers=["https://example.com/"], path="/resource", request_body=request_body
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     expected_parameter = RestApiParameter(
         name=operation.PAYLOAD_ARGUMENT_NAME,
@@ -508,11 +814,26 @@ def test_create_payload_artificial_parameter_with_object():
             schema=None,
         )
     ]
+<<<<<<< HEAD
+    request_body = RestApiOperationPayload(
+        media_type="application/json",
+        properties=properties,
+        description="Test description",
+        schema="Test schema",
+    )
+    operation = RestApiOperation(
+        id="test",
+        method="POST",
+        server_url="https://example.com/",
+        path="/resource",
+        request_body=request_body,
+=======
     request_body = RestApiPayload(
         media_type="application/json", properties=properties, description="Test description", schema="Test schema"
     )
     operation = RestApiOperation(
         id="test", method="POST", servers=["https://example.com/"], path="/resource", request_body=request_body
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     expected_parameter = RestApiParameter(
         name=operation.PAYLOAD_ARGUMENT_NAME,
@@ -534,8 +855,15 @@ def test_create_payload_artificial_parameter_with_object():
 
 
 def test_create_payload_artificial_parameter_without_request_body():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="POST", server_url="https://example.com/", path="/resource"
+    )
+    expected_parameter = RestApiOperationParameter(
+=======
     operation = RestApiOperation(id="test", method="POST", servers=["https://example.com/"], path="/resource")
     expected_parameter = RestApiParameter(
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         name=operation.PAYLOAD_ARGUMENT_NAME,
         type="object",
         is_required=True,
@@ -555,8 +883,15 @@ def test_create_payload_artificial_parameter_without_request_body():
 
 
 def test_create_content_type_artificial_parameter():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="POST", server_url="https://example.com/", path="/resource"
+    )
+    expected_parameter = RestApiOperationParameter(
+=======
     operation = RestApiOperation(id="test", method="POST", servers=["https://example.com/"], path="/resource")
     expected_parameter = RestApiParameter(
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         name=operation.CONTENT_TYPE_ARGUMENT_NAME,
         type="string",
         is_required=False,
@@ -574,21 +909,68 @@ def test_create_content_type_artificial_parameter():
 
 
 def test_get_property_name_with_namespacing_and_root_property():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="POST", server_url="https://example.com/", path="/resource"
+    )
+    property = RestApiOperationPayloadProperty(
+        name="child", type="string", properties=[], description="Property description"
+    )
+    result = operation._get_property_name(
+        property, root_property_name="root", enable_namespacing=True
+    )
+=======
     operation = RestApiOperation(id="test", method="POST", servers=["https://example.com/"], path="/resource")
     property = RestApiPayloadProperty(name="child", type="string", properties=[], description="Property description")
     result = operation._get_property_name(property, root_property_name="root", enable_namespacing=True)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     assert result == "root.child"
 
 
 def test_get_property_name_without_namespacing():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="POST", server_url="https://example.com/", path="/resource"
+    )
+    property = RestApiOperationPayloadProperty(
+        name="child", type="string", properties=[], description="Property description"
+    )
+    result = operation._get_property_name(
+        property, root_property_name="root", enable_namespacing=False
+    )
+=======
     operation = RestApiOperation(id="test", method="POST", servers=["https://example.com/"], path="/resource")
     property = RestApiPayloadProperty(name="child", type="string", properties=[], description="Property description")
     result = operation._get_property_name(property, root_property_name="root", enable_namespacing=False)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     assert result == "child"
 
 
 def test_get_payload_parameters_with_metadata_and_text_plain():
     properties = [
+<<<<<<< HEAD
+        RestApiOperationPayloadProperty(
+            name="prop1",
+            type="string",
+            properties=[],
+            description="Property description",
+        )
+    ]
+    request_body = RestApiOperationPayload(
+        media_type=RestApiOperation.MEDIA_TYPE_TEXT_PLAIN,
+        properties=properties,
+        description="Test description",
+    )
+    operation = RestApiOperation(
+        id="test",
+        method="POST",
+        server_url="https://example.com/",
+        path="/resource",
+        request_body=request_body,
+    )
+    result = operation.get_payload_parameters(
+        operation, use_parameters_from_metadata=True, enable_namespacing=True
+=======
         RestApiPayloadProperty(name="prop1", type="string", properties=[], description="Property description")
     ]
     request_body = RestApiPayload(
@@ -596,28 +978,60 @@ def test_get_payload_parameters_with_metadata_and_text_plain():
     )
     operation = RestApiOperation(
         id="test", method="POST", servers=["https://example.com/"], path="/resource", request_body=request_body
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
-    result = operation.get_payload_parameters(operation, use_parameters_from_metadata=True, enable_namespacing=True)
     assert len(result) == 1
     assert result[0].name == operation.PAYLOAD_ARGUMENT_NAME
 
 
 def test_get_payload_parameters_with_metadata_and_json():
     properties = [
+<<<<<<< HEAD
+        RestApiOperationPayloadProperty(
+            name="prop1",
+            type="string",
+            properties=[],
+            description="Property description",
+        )
+    ]
+    request_body = RestApiOperationPayload(
+        media_type="application/json",
+        properties=properties,
+        description="Test description",
+    )
+    operation = RestApiOperation(
+        id="test",
+        method="POST",
+        server_url="https://example.com/",
+        path="/resource",
+        request_body=request_body,
+    )
+    result = operation.get_payload_parameters(
+        operation, use_parameters_from_metadata=True, enable_namespacing=True
+=======
         RestApiPayloadProperty(name="prop1", type="string", properties=[], description="Property description")
     ]
     request_body = RestApiPayload(media_type="application/json", properties=properties, description="Test description")
     operation = RestApiOperation(
         id="test", method="POST", servers=["https://example.com/"], path="/resource", request_body=request_body
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
-    result = operation.get_payload_parameters(operation, use_parameters_from_metadata=True, enable_namespacing=True)
     assert len(result) == len(properties)
     assert result[0].name == properties[0].name
 
 
 def test_get_payload_parameters_without_metadata():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="POST", server_url="https://example.com/", path="/resource"
+    )
+    result = operation.get_payload_parameters(
+        operation, use_parameters_from_metadata=False, enable_namespacing=False
+    )
+=======
     operation = RestApiOperation(id="test", method="POST", servers=["https://example.com/"], path="/resource")
     result = operation.get_payload_parameters(operation, use_parameters_from_metadata=False, enable_namespacing=False)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     assert len(result) == 2
     assert result[0].name == operation.PAYLOAD_ARGUMENT_NAME
     assert result[1].name == operation.CONTENT_TYPE_ARGUMENT_NAME
@@ -635,15 +1049,33 @@ def test_get_payload_parameters_raises_exception():
         Exception,
         match="Payload parameters cannot be retrieved from the `test` operation payload metadata because it is missing.",  # noqa: E501
     ):
-        operation.get_payload_parameters(operation, use_parameters_from_metadata=True, enable_namespacing=False)
+        operation.get_payload_parameters(
+            operation, use_parameters_from_metadata=True, enable_namespacing=False
+        )
 
 
 def test_get_default_response():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="GET", server_url="https://example.com/", path="/resource"
+    )
+    responses = {
+        "200": RestApiOperationExpectedResponse(
+            description="Success",
+            media_type="application/json",
+            schema={"type": "object"},
+        ),
+        "default": RestApiOperationExpectedResponse(
+            description="Default response",
+            media_type="application/json",
+            schema={"type": "object"},
+=======
     operation = RestApiOperation(id="test", method="GET", servers=["https://example.com/"], path="/resource")
     responses = {
         "200": RestApiExpectedResponse(description="Success", media_type="application/json", schema={"type": "object"}),
         "default": RestApiExpectedResponse(
             description="Default response", media_type="application/json", schema={"type": "object"}
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         ),
     }
     preferred_responses = ["200", "default"]
@@ -652,10 +1084,21 @@ def test_get_default_response():
 
 
 def test_get_default_response_with_default():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="GET", server_url="https://example.com/", path="/resource"
+    )
+    responses = {
+        "default": RestApiOperationExpectedResponse(
+            description="Default response",
+            media_type="application/json",
+            schema={"type": "object"},
+=======
     operation = RestApiOperation(id="test", method="GET", servers=["https://example.com/"], path="/resource")
     responses = {
         "default": RestApiExpectedResponse(
             description="Default response", media_type="application/json", schema={"type": "object"}
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         )
     }
     preferred_responses = ["200", "default"]
@@ -664,7 +1107,13 @@ def test_get_default_response_with_default():
 
 
 def test_get_default_response_none():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="GET", server_url="https://example.com/", path="/resource"
+    )
+=======
     operation = RestApiOperation(id="test", method="GET", servers=["https://example.com/"], path="/resource")
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     responses = {}
     preferred_responses = ["200", "default"]
     result = operation.get_default_response(responses, preferred_responses)
@@ -672,15 +1121,33 @@ def test_get_default_response_none():
 
 
 def test_get_default_return_parameter_with_response():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="GET", server_url="https://example.com/", path="/resource"
+    )
+    responses = {
+        "200": RestApiOperationExpectedResponse(
+            description="Success",
+            media_type="application/json",
+            schema={"type": "object"},
+        ),
+        "default": RestApiOperationExpectedResponse(
+            description="Default response",
+            media_type="application/json",
+            schema={"type": "object"},
+=======
     operation = RestApiOperation(id="test", method="GET", servers=["https://example.com/"], path="/resource")
     responses = {
         "200": RestApiExpectedResponse(description="Success", media_type="application/json", schema={"type": "object"}),
         "default": RestApiExpectedResponse(
             description="Default response", media_type="application/json", schema={"type": "object"}
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         ),
     }
     operation.responses = responses
-    result = operation.get_default_return_parameter(preferred_responses=["200", "default"])
+    result = operation.get_default_return_parameter(
+        preferred_responses=["200", "default"]
+    )
     assert result.name == "return"
     assert result.description == "Success"
     assert result.type_ == "object"
@@ -688,10 +1155,18 @@ def test_get_default_return_parameter_with_response():
 
 
 def test_get_default_return_parameter_none():
+<<<<<<< HEAD
+    operation = RestApiOperation(
+        id="test", method="GET", server_url="https://example.com/", path="/resource"
+    )
+=======
     operation = RestApiOperation(id="test", method="GET", servers=["https://example.com/"], path="/resource")
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     responses = {}
     operation.responses = responses
-    result = operation.get_default_return_parameter(preferred_responses=["200", "default"])
+    result = operation.get_default_return_parameter(
+        preferred_responses=["200", "default"]
+    )
     assert result is not None
     assert result.name == "return"
 
@@ -709,8 +1184,12 @@ def openapi_runner():
 def openapi_runner_with_url_override():
     parser = OpenApiParser()
     parsed_doc = parser.parse(openapi_document)
-    exec_settings = OpenAPIFunctionExecutionParameters(server_url_override="http://urloverride.com")
-    operations = parser.create_rest_api_operations(parsed_doc, execution_settings=exec_settings)
+    exec_settings = OpenAPIFunctionExecutionParameters(
+        server_url_override="http://urloverride.com"
+    )
+    operations = parser.create_rest_api_operations(
+        parsed_doc, execution_settings=exec_settings
+    )
     runner = OpenApiRunner(parsed_openapi_document=parsed_doc)
     return runner, operations
 
@@ -722,8 +1201,12 @@ def openapi_runner_with_auth_callback():
 
     parser = OpenApiParser()
     parsed_doc = parser.parse(openapi_document)
-    exec_settings = OpenAPIFunctionExecutionParameters(server_url_override="http://urloverride.com")
-    operations = parser.create_rest_api_operations(parsed_doc, execution_settings=exec_settings)
+    exec_settings = OpenAPIFunctionExecutionParameters(
+        server_url_override="http://urloverride.com"
+    )
+    operations = parser.create_rest_api_operations(
+        parsed_doc, execution_settings=exec_settings
+    )
     runner = OpenApiRunner(
         parsed_openapi_document=parsed_doc,
         auth_callback=dummy_auth_callback,
@@ -794,7 +1277,9 @@ async def test_run_operation_with_invalid_request(mock_request, openapi_runner):
     request_body = {"title": "Buy milk"}
     mock_request.return_value.__aenter__.return_value.text.return_value = 400
     with pytest.raises(Exception):
-        await runner.run_operation(operation, headers=headers, request_body=request_body)
+        await runner.run_operation(
+            operation, headers=headers, request_body=request_body
+        )
 
 
 @patch("aiohttp.ClientSession.request")
@@ -805,7 +1290,9 @@ async def test_run_operation_with_error(mock_request, openapi_runner):
     request_body = {"title": "Buy milk", "completed": False}
     mock_request.side_effect = Exception("Error")
     with pytest.raises(Exception):
-        await runner.run_operation(operation, headers=headers, request_body=request_body)
+        await runner.run_operation(
+            operation, headers=headers, request_body=request_body
+        )
 
 
 def test_invalid_server_url_override():

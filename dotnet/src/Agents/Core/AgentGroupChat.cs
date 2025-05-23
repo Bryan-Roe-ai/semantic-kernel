@@ -41,11 +41,18 @@ public sealed class AgentGroupChat : AgentChat
     /// </summary>
     public override IReadOnlyList<Agent> Agents => this._agents.AsReadOnly();
 
+    public override IReadOnlyList<Agent> Agents => this._agents.AsReadOnly();
+
     /// <summary>
     /// Add an <see cref="Agent"/> to the chat.
     /// </summary>
+<<<<<<< HEAD
+    /// <param name="agent">The <see cref="KernelAgent"/> to add.</param>
+    public void Add(Agent agent)
+=======
     /// <param name="agent">The <see cref="Agent"/> to add.</param>
     public void AddAgent(Agent agent)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         if (this._agentIds.Add(agent.Id))
         {
@@ -70,6 +77,8 @@ public sealed class AgentGroupChat : AgentChat
         this.EnsureCompletionStatus();
 
         this.Logger.LogAgentGroupChatInvokingAgents(nameof(InvokeAsync), this.Agents);
+
+        bool isComplete = false;
 
         for (int index = 0; index < this.ExecutionSettings.TerminationStrategy.MaximumIterations; index++)
         {
@@ -121,10 +130,29 @@ public sealed class AgentGroupChat : AgentChat
             }
 
             if (this.IsComplete)
+
+                if (message.Role == AuthorRole.Assistant)
+                {
+                    var task = this.ExecutionSettings.TerminationStrategy.ShouldTerminateAsync(agent, this.History, cancellationToken);
+                    isComplete = await task.ConfigureAwait(false);
+                }
+
+                yield return message;
+            }
+
+            if (isComplete)
+
+                yield return message;
+            }
+
+            if (this.IsComplete)
+
             {
                 break;
             }
         }
+
+        this.IsComplete = isComplete;
 
         this.Logger.LogAgentGroupChatYield(nameof(InvokeAsync), this.IsComplete);
     }
@@ -146,6 +174,10 @@ public sealed class AgentGroupChat : AgentChat
 
         this.Logger.LogAgentGroupChatInvokingAgent(nameof(InvokeAsync), agent.GetType(), agent.Id, agent.GetDisplayName());
 
+        if (isJoining)
+        {
+            this.Add(agent);
+        }
         this.AddAgent(agent);
 
         await foreach (ChatMessageContent message in base.InvokeAgentAsync(agent, cancellationToken).ConfigureAwait(false))

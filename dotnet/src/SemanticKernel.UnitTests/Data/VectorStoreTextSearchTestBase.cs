@@ -3,12 +3,19 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+<<<<<<< HEAD
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.SemanticKernel;
+=======
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.InMemory;
+>>>>>>> main
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 
@@ -26,8 +33,16 @@ public class VectorStoreTextSearchTestBase
     [Obsolete("VectorStoreTextSearch with ITextEmbeddingGenerationService is obsolete")]
     public static async Task<VectorStoreTextSearch<DataModelWithRawEmbedding>> CreateVectorStoreTextSearchWithEmbeddingGenerationServiceAsync()
     {
+<<<<<<< HEAD
+        var vectorStore = new VolatileVectorStore();
+=======
         var vectorStore = new InMemoryVectorStore();
+<<<<<<< HEAD
+>>>>>>> main
+        var vectorSearch = vectorStore.GetCollection<Guid, DataModel>("records");
+=======
         var vectorSearch = vectorStore.GetCollection<Guid, DataModelWithRawEmbedding>("records");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         var stringMapper = new DataModelTextSearchStringMapper();
         var resultMapper = new DataModelTextSearchResultMapper();
         using var embeddingService = new MockTextEmbeddingGenerator();
@@ -41,7 +56,13 @@ public class VectorStoreTextSearchTestBase
     /// </summary>
     public static async Task<VectorStoreTextSearch<DataModelWithRawEmbedding>> CreateVectorStoreTextSearchWithEmbeddingGeneratorAsync()
     {
+<<<<<<< HEAD
+        var vectorStore = new VolatileVectorStore();
+=======
         var vectorStore = new InMemoryVectorStore();
+<<<<<<< HEAD
+>>>>>>> main
+=======
         var vectorSearch = vectorStore.GetCollection<Guid, DataModelWithRawEmbedding>("records");
         var stringMapper = new DataModelTextSearchStringMapper();
         var resultMapper = new DataModelTextSearchResultMapper();
@@ -58,6 +79,7 @@ public class VectorStoreTextSearchTestBase
     {
         using var embeddingGenerator = new MockTextEmbeddingGenerator();
         var vectorStore = new InMemoryVectorStore(new() { EmbeddingGenerator = embeddingGenerator });
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         var vectorSearch = vectorStore.GetCollection<Guid, DataModel>("records");
         var stringMapper = new DataModelTextSearchStringMapper();
         var resultMapper = new DataModelTextSearchResultMapper();
@@ -153,10 +175,21 @@ public class VectorStoreTextSearchTestBase
         public TextSearchResult MapFromResultToTextSearchResult(object result)
             => result switch
             {
+<<<<<<< HEAD
+<<<<<<< HEAD
+                return new TextSearchResult(name: dataModel.Key.ToString(), value: dataModel.Text);
+=======
+                return new TextSearchResult(value: dataModel.Text) { Name = dataModel.Key.ToString() };
+>>>>>>> main
+            }
+            throw new ArgumentException("Invalid result type.");
+        }
+=======
                 DataModel dataModel => new TextSearchResult(value: dataModel.Text) { Name = dataModel.Key.ToString() },
                 DataModelWithRawEmbedding dataModelWithRawEmbedding => new TextSearchResult(value: dataModelWithRawEmbedding.Text) { Name = dataModelWithRawEmbedding.Key.ToString() },
                 _ => throw new ArgumentException("Invalid result type.")
             };
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     /// <summary>
@@ -185,6 +218,33 @@ public class VectorStoreTextSearchTestBase
     }
 
     /// <summary>
+<<<<<<< HEAD
+    /// Decorator for a <see cref="IVectorizedSearch{TRecord}"/> that generates embeddings for text search queries.
+    /// </summary>
+    public sealed class VectorizedSearchWrapper<TRecord>(IVectorizedSearch<TRecord> vectorizedSearch, ITextEmbeddingGenerationService textEmbeddingGeneration) : IVectorizableTextSearch<TRecord>
+    {
+        /// <inheritdoc/>
+<<<<<<< HEAD
+        public async IAsyncEnumerable<VectorSearchResult<TRecord>> VectorizableTextSearchAsync(string searchText, VectorSearchOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            var vectorizedQuery = await textEmbeddingGeneration!.GenerateEmbeddingAsync(searchText, cancellationToken: cancellationToken).ConfigureAwait(false);
+
+            await foreach (var result in vectorizedSearch.VectorizedSearchAsync(vectorizedQuery, options, cancellationToken))
+            {
+                yield return result;
+            }
+=======
+        public async Task<VectorSearchResults<TRecord>> VectorizableTextSearchAsync(string searchText, VectorSearchOptions? options = null, CancellationToken cancellationToken = default)
+        {
+            var vectorizedQuery = await textEmbeddingGeneration!.GenerateEmbeddingAsync(searchText, cancellationToken: cancellationToken).ConfigureAwait(false);
+            return await vectorizedSearch.VectorizedSearchAsync(vectorizedQuery, options, cancellationToken);
+>>>>>>> main
+        }
+    }
+
+    /// <summary>
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// Sample model class that represents a record entry.
     /// </summary>
     /// <remarks>

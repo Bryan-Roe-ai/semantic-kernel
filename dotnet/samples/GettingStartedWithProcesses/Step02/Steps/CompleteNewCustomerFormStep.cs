@@ -56,7 +56,8 @@ public class CompleteNewCustomerFormStep : KernelProcessStep<NewCustomerFormStat
 
     public override ValueTask ActivateAsync(KernelProcessStepState<NewCustomerFormState> state)
     {
-        _state = state.State;
+        _state = state.State ?? new();
+        _state.newCustomerForm ??= new();
         return ValueTask.CompletedTask;
     }
 

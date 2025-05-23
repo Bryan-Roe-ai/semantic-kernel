@@ -6,6 +6,17 @@ import os
 from collections.abc import Callable, Coroutine
 from typing import Any
 
+from semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion import (
+    OpenAIChatCompletion,
+)
+from semantic_kernel.contents import AuthorRole
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.contents.streaming_chat_message_content import (
+    StreamingChatMessageContent,
+)
+from semantic_kernel.filters.filter_types import FilterTypes
+from semantic_kernel.functions.function_result import FunctionResult
+from semantic_kernel.kernel import Kernel
 from semantic_kernel import Kernel
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
 from semantic_kernel.contents import AuthorRole, ChatHistory, StreamingChatMessageContent
@@ -18,7 +29,10 @@ logger = logging.getLogger(__name__)
 kernel = Kernel()
 kernel.add_service(OpenAIChatCompletion(service_id="chat-gpt"))
 kernel.add_plugin(
-    parent_directory=os.path.join(os.path.dirname(os.path.realpath(__file__)), "resources"), plugin_name="chat"
+    parent_directory=os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "resources"
+    ),
+    plugin_name="chat",
 )
 
 
@@ -37,6 +51,24 @@ async def streaming_exception_handling(
 ):
     await next(context)
 
+<<<<<<< HEAD
+    async def override_stream(stream):
+        try:
+            async for partial in stream:
+                yield partial
+        except Exception as e:
+            yield [
+                StreamingChatMessageContent(
+                    role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}"
+                )
+                StreamingChatMessageContent(role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}", choice_index=0)
+            ]
+
+    stream = context.result.value
+    context.result = FunctionResult(
+        function=context.result.function, value=override_stream(stream)
+    )
+=======
     if context.is_streaming:
 
         async def override_stream(stream):
@@ -52,6 +84,7 @@ async def streaming_exception_handling(
 
         stream = context.result.value
         context.result = FunctionResult(function=context.result.function, value=override_stream(stream))
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 
 async def chat(chat_history: ChatHistory) -> bool:
@@ -71,7 +104,10 @@ async def chat(chat_history: ChatHistory) -> bool:
     print("ChatBot:> ", end="")
     streamed_chunks: list[StreamingChatMessageContent] = []
     responses = kernel.invoke_stream(
-        function_name="chat", plugin_name="chat", user_input=user_input, chat_history=chat_history
+        function_name="chat",
+        plugin_name="chat",
+        user_input=user_input,
+        chat_history=chat_history,
     )
     async for message in responses:
         if isinstance(message[0], StreamingChatMessageContent) and message[0].role == AuthorRole.ASSISTANT:
@@ -80,7 +116,13 @@ async def chat(chat_history: ChatHistory) -> bool:
     print("")
     chat_history.add_user_message(user_input)
     if streamed_chunks:
+<<<<<<< HEAD
+        streaming_chat_message = reduce(
+            lambda first, second: first + second, streamed_chunks
+        )
+=======
         streaming_chat_message = sum(streamed_chunks[1:], streamed_chunks[0])
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         chat_history.add_message(streaming_chat_message)
     return True
 

@@ -20,7 +20,24 @@ The sample can be configured by using the command line with .NET [Secret Manager
 
 ### Using .NET [Secret Manager](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets)
 
+```powershell {"id":"01J6KPYX4BC26XACCKK1Q6NTKV"}
+# OpenAI (Not required if using Azure OpenAI)
 ```powershell
+<<<<<<< main
+dotnet user-secrets set "OpenAI:ApiKey" "... your api key ... "
+dotnet user-secrets set "OpenAI:ModelId" ".. Openai model id .. " (default: gpt-4o)
+
+dotnet user-secrets set "Anthropic:ApiKey" "... your api key ... "
+dotnet user-secrets set "Anthropic:ModelId" "... Anthropic model id .. " (default: claude-3-5-sonnet-20240620)
+
+dotnet user-secrets set "Ollama:ModelId" ".. Ollama model id .. "
+dotnet user-secrets set "Ollama:Endpoint" ".. Ollama endpoint .. " (default: http://localhost:11434)
+
+dotnet user-secrets set "LMStudio:Endpoint" ".. LM Studio endpoint .. " (default: http://localhost:1234)
+
+dotnet user-secrets set "Onnx:ModelId" ".. Onnx model id .. "
+dotnet user-secrets set "Onnx:ModelPath" ".. your Onnx model folder path .."
+=======
 dotnet user-secrets set "OpenAI:ApiKey" ".. api key .."
 dotnet user-secrets set "OpenAI:ChatModelId" ".. chat completion model .." (default: gpt-4o)
 dotnet user-secrets set "AzureOpenAI:Endpoint" ".. endpoint .."
@@ -34,6 +51,7 @@ dotnet user-secrets set "Ollama:ModelId" ".. model id .."
 dotnet user-secrets set "Ollama:Endpoint" ".. endpoint .." (default: http://localhost:11434)
 dotnet user-secrets set "Onnx:ModelId" ".. model id .."
 dotnet user-secrets set "Onnx:ModelPath" ".. model folder path .."
+>>>>>>> microsoft/main
 ```
 
 ## Running the sample
@@ -42,7 +60,7 @@ After configuring the sample, to build and run the console application just hit 
 
 To build and run the console application from the terminal use the following commands:
 
-```powershell
+```powershell {"id":"01J6KPYX4BC26XACCKK2QMWVNY"}
 dotnet build
 dotnet run
 ```
@@ -60,3 +78,18 @@ dotnet run
 > **User** > LMStudio, what is Jupiter? Keep it simple.
 
 > **Assistant** > Jupiter is the fifth planet from the Sun in our Solar System and one of its gas giants alongside Saturn, Uranus, and Neptune. It's famous for having a massive storm called the Great Red Spot that has been raging for hundreds of years.
+<<<<<<< HEAD
+
+> **User** > AzureAI, what is Jupiter? Keep it simple.
+
+> **Assistant** > Jupiter is the fifth planet from the Sun in our Solar System and one of its gas giants alongside Saturn, Uranus, and Neptune. It's famous for having a massive storm called the Great Red Spot that has been raging for hundreds of years.
+
+> **User** > Anthropic, what is Jupiter? Keep it simple.
+
+> **Assistant** > Jupiter is the fifth planet from the Sun in our Solar System and one of its gas giants alongside Saturn, Uranus, and Neptune. It's famous for having a massive storm called the Great Red Spot that has been raging for hundreds of years.
+
+> **User** > ONNX, what is Jupiter? Keep it simple.
+
+> **Assistant** > Jupiter is the fifth planet from the Sun in our Solar System and one of its gas giants alongside Saturn, Uranus, and Neptune. It's famous for having a massive storm called the Great Red Spot that has been raging for hundreds of years.
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

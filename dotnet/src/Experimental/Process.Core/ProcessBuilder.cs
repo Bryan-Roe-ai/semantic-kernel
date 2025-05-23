@@ -177,10 +177,75 @@ public sealed partial class ProcessBuilder : ProcessStepBuilder
         return builder;
     }
 
-    #region Public Interface
+    /// <summary>
+    /// Add the provided step builder to the process.
+    /// </summary>
+    /// <remarks>
+    /// Utilized by <see cref="ProcessMapBuilder"/> only.
+    /// </remarks>
+    internal void AddStepFromBuilder(ProcessStepBuilder stepBuilder)
+    {
+        this._steps.Add(stepBuilder);
+    }
 
     /// <summary>
-    /// A read-only collection of steps in the process.
+    /// Check to ensure stepName is not used yet in another step
+    /// </summary>
+    private bool StepNameAlreadyExists(string stepName)
+    {
+        return this._steps.Select(step => step.Name).Contains(stepName);
+    }
+
+    /// <summary>
+    /// Verify step is unique and add to the process.
+    /// </summary>
+    private TBuilder AddStep<TBuilder>(TBuilder builder, IReadOnlyList<string>? aliases) where TBuilder : ProcessStepBuilder
+    {
+        if (this.StepNameAlreadyExists(builder.Name))
+        {
+            throw new InvalidOperationException($"Step name {builder.Name} is already used, assign a different name for step");
+        }
+
+        if (aliases != null && aliases.Count > 0)
+        {
+            builder.Aliases = aliases;
+        }
+
+        this._steps.Add(builder);
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Check to ensure stepName is not used yet in another step
+    /// </summary>
+    private bool StepNameAlreadyExists(string stepName)
+    {
+        return this._steps.Select(step => step.Name).Contains(stepName);
+    }
+
+    /// <summary>
+    /// Verify step is unique and add to the process.
+    /// </summary>
+    private TBuilder AddStep<TBuilder>(TBuilder builder, IReadOnlyList<string>? aliases) where TBuilder : ProcessStepBuilder
+    {
+        if (this.StepNameAlreadyExists(builder.Name))
+        {
+            throw new InvalidOperationException($"Step name {builder.Name} is already used, assign a different name for step");
+        }
+
+        if (aliases != null && aliases.Count > 0)
+        {
+            builder.Aliases = aliases;
+        }
+
+        this._steps.Add(builder);
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Add the provided step builder to the process.
     /// </summary>
     public IReadOnlyList<ProcessStepBuilder> Steps => this._steps.AsReadOnly();
 
@@ -401,6 +466,31 @@ public sealed partial class ProcessBuilder : ProcessStepBuilder
     }
 
     /// <summary>
+<<<<<<< HEAD
+    /// Adds a map operation to the process that accepts an enumerable input parameter and
+    /// processes each individual parameter value by the specified map operation (TStep).
+    /// Results are coalesced into a result set of the same dimension as the input set.
+    /// </summary>
+    /// <param name="process">The target for the map operation</param>
+    /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
+    /// <returns>An instance of <see cref="ProcessMapBuilder"/></returns>
+    public ProcessMapBuilder AddMapStepFromProcess(ProcessBuilder process, IReadOnlyList<string>? aliases = null)
+    {
+        process.HasParentProcess = true;
+
+        ProcessMapBuilder mapBuilder = new(process);
+
+        return this.AddStep(mapBuilder, aliases);
+    }
+
+    /// <summary>
+    /// Provides an instance of <see cref="ProcessStepEdgeBuilder"/> for defining an edge to a
+    /// step inside the process for a given external event.
+    /// </summary>
+    /// <param name="eventId">The Id of the external event.</param>
+    /// <returns>An instance of <see cref="ProcessStepEdgeBuilder"/></returns>
+    public ProcessEdgeBuilder OnExternalEvent(string eventId)
+=======
     /// Adds proxy step to the process that allows emitting events externally. For making use of it, there should be an implementation
     /// of <see cref="IExternalKernelProcessMessageChannel"/> passed.
     /// For now, the current implementation only allows for 1 implementation of <see cref="IExternalKernelProcessMessageChannel"/> at the time.
@@ -459,6 +549,7 @@ public sealed partial class ProcessBuilder : ProcessStepBuilder
     /// <param name="eventId">The Id of the external event.</param>
     /// <returns>An instance of <see cref="ProcessEdgeBuilder"/></returns>
     public ProcessEdgeBuilder OnInputEvent(string eventId)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         return new ProcessEdgeBuilder(this, eventId);
     }

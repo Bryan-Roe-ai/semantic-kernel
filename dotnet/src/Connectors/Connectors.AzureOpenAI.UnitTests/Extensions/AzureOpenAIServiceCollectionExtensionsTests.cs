@@ -64,6 +64,11 @@ public sealed class AzureOpenAIServiceCollectionExtensionsTests : IDisposable
     {
         // Arrange
         var credentials = DelegatedTokenCredential.Create((_, _) => new AccessToken());
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var builder = Kernel.CreateBuilder();
 
@@ -111,6 +116,11 @@ public sealed class AzureOpenAIServiceCollectionExtensionsTests : IDisposable
     {
         // Arrange
         var credentials = DelegatedTokenCredential.Create((_, _) => new AccessToken());
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var builder = Kernel.CreateBuilder();
 
@@ -202,6 +212,11 @@ public sealed class AzureOpenAIServiceCollectionExtensionsTests : IDisposable
     {
         // Arrange
         var credentials = DelegatedTokenCredential.Create((_, _) => new AccessToken());
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var builder = Kernel.CreateBuilder();
 
@@ -238,7 +253,19 @@ public sealed class AzureOpenAIServiceCollectionExtensionsTests : IDisposable
     {
         // Arrange
         var credentials = DelegatedTokenCredential.Create((_, _) => new AccessToken());
+
+        var client = new AzureOpenAIClient(new Uri("https://endpoint"), "key");
+
+        var client = new AzureOpenAIClient(new Uri("https://endpoint"), "key");
+
         var client = new AzureOpenAIClient(new Uri("http://endpoint"), new ApiKeyCredential("key"));
+
+        var client = new AzureOpenAIClient(new Uri("http://endpoint"), new ApiKeyCredential("key"));
+
+        var client = new AzureOpenAIClient(new Uri("http://endpoint"), new ApiKeyCredential("key"));
+
+        var client = new AzureOpenAIClient(new Uri("http://endpoint"), new ApiKeyCredential("key"));
+
         var builder = Kernel.CreateBuilder();
 
         builder.Services.AddSingleton<AzureOpenAIClient>(client);

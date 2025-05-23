@@ -59,6 +59,15 @@ class BinaryContent(KernelContent):
         """Create a Binary Content object, either from a data_uri or data.
 
         Args:
+<<<<<<< HEAD
+            uri (Url | None): The reference uri of the content.
+            data_uri (DataUrl | None): The data uri of the content.
+            data (str | bytes | None): The data of the content.
+            data_format (str | None): The format of the data (e.g. base64).
+            mime_type (str | None): The mime type of the image, only used with data.
+            kwargs (Any): Any additional arguments:
+                inner_content (Any): The inner content of the response,
+=======
             uri: The reference uri of the content.
             data_uri: The data uri of the content.
             data: The data of the content.
@@ -66,6 +75,7 @@ class BinaryContent(KernelContent):
             mime_type: The mime type of the content, not always relevant.
             kwargs: Any additional arguments:
                 inner_content: The inner content of the response,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     this should hold all the information from the response so even
                     when not creating a subclass a developer can leverage the full thing.
                 ai_model_id: The id of the AI model that generated this response.
@@ -73,6 +83,28 @@ class BinaryContent(KernelContent):
         """
         temp_data_uri: DataUri | None = None
         if data_uri:
+<<<<<<< HEAD
+            _data_uri = DataUri.from_data_uri(data_uri, self.default_mime_type)
+            if "metadata" in kwargs:
+                kwargs["metadata"].update(_data_uri.parameters)
+            else:
+                kwargs["metadata"] = _data_uri.parameters
+        elif data:
+            if isinstance(data, str):
+                _data_uri = DataUri(
+                    data_str=data,
+                    data_format=data_format,
+                    mime_type=mime_type or self.default_mime_type,
+                )
+            else:
+                _data_uri = DataUri(
+                    data_bytes=data,
+                    data_format=data_format,
+                    mime_type=mime_type or self.default_mime_type,
+                )
+        if uri is not None:
+            uri = FilePath(uri) if os.path.exists(uri) else Url(uri)
+=======
             temp_data_uri = DataUri.from_data_uri(data_uri, self.default_mime_type)
             kwargs.setdefault("metadata", {})
             kwargs["metadata"].update(temp_data_uri.parameters)
@@ -99,6 +131,7 @@ class BinaryContent(KernelContent):
                     raise ContentInitializationError("URI must be a file path, not a directory.")
             elif isinstance(uri, str):
                 uri = Url(uri)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         super().__init__(uri=uri, **kwargs)
         self._data_uri = temp_data_uri
@@ -182,7 +215,9 @@ class BinaryContent(KernelContent):
     def from_element(cls: type[_T], element: Element) -> _T:
         """Create an instance from an Element."""
         if element.tag != cls.tag:
-            raise ContentInitializationError(f"Element tag is not {cls.tag}")  # pragma: no cover
+            raise ContentInitializationError(
+                f"Element tag is not {cls.tag}"
+            )  # pragma: no cover
 
         if element.text:
             return cls(data_uri=element.text, uri=element.get("uri", None))

@@ -20,6 +20,9 @@ jobs:
         matrix:
           include:
           - { os: ubuntu-latest, dotnet: '8.0', configuration: Debug }
+          - { os: ubuntu-latest, dotnet: '6.0', configuration: Debug }
+          - { os: ubuntu-latest, dotnet: '6.0', configuration: Release }
+          - { os: ubuntu-latest, dotnet: '7.0', configuration: Release }
           - { os: ubuntu-latest, dotnet: '8.0', configuration: Release }
 
     runs-on: ${{ matrix.os }}
@@ -60,6 +63,21 @@ jobs:
         name: dotnet-testresults-${{ matrix.configuration }}
         path: ./TestResults
       if: ${{ always() }}
+
+    - name: Verify installations of dependencies
+      run: |
+        echo "Verifying installations of dependencies..."
+        npm list
+        pip list
+        dotnet --list-sdks
+
+    - name: Run fix-errors.sh
+      if: failure()
+      run: ./fix-errors.sh
+
+    - name: Log Error Message
+      if: failure()
+      run: echo "Error occurred during the build and test process"
 
   build-and-test-windows:
     strategy:
@@ -123,7 +141,23 @@ jobs:
 
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v4
+    - name: Archive artifacts ${{ matrix.os }}-${{ matrix.configuration }}
+      uses: actions/upload-artifact@v3
       with:
-        name: dotnet-testresults-${{ matrix.configuration }}
-        path: ./TestResults
-      if: ${{ always() }}
+        name: drop-${{ matrix.os }}-dotnet${{matrix.dotnet}}-${{ matrix.configuration }}
+        path: ./out
+
+    - name: Verify installations of dependencies
+      run: |
+        echo "Verifying installations of dependencies..."
+        npm list
+        pip list
+        dotnet --list-sdks
+
+    - name: Run fix-errors.sh
+      if: failure()
+      run: ./fix-errors.sh
+
+    - name: Log Error Message
+      if: failure()
+      run: echo "Error occurred during the build and test process"

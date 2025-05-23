@@ -1,6 +1,9 @@
 // Copyright (c) Microsoft. All rights reserved.
 
+<<<<<<< HEAD
+=======
 using System;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +20,6 @@ public static class SqliteServiceCollectionExtensions
     /// <summary>
     /// Register a SQLite <see cref="IVectorStore"/> with the specified service ID
     /// and where the SQLite <see cref="SqliteConnection"/> is retrieved from the dependency injection container.
-    /// In this case vector search extension loading should be handled manually.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to register the <see cref="IVectorStore"/> on.</param>
     /// <param name="options">Optional options to further configure the <see cref="IVectorStore"/>.</param>
@@ -28,11 +30,26 @@ public static class SqliteServiceCollectionExtensions
         this IServiceCollection services,
         SqliteVectorStoreOptions? options = default,
         string? serviceId = default)
+<<<<<<< HEAD
+    {
+        services.AddKeyedTransient<IVectorStore>(
+            serviceId,
+            (sp, obj) =>
+            {
+                var connection = sp.GetRequiredService<SqliteConnection>();
+                var selectedOptions = options ?? sp.GetService<SqliteVectorStoreOptions>();
+
+                return new SqliteVectorStore(connection, options);
+            });
+
+        return services;
+    }
+=======
         => throw new InvalidOperationException("Use AddSqliteVectorStore with connectionString instead.");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     /// <summary>
     /// Register a SQLite <see cref="IVectorStore"/> with the specified service ID.
-    /// <see cref="SqliteConnection"/> instance will be initialized, connection will be opened and vector search extension with be loaded.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/> to register the <see cref="IVectorStore"/> on.</param>
     /// <param name="connectionString">Connection string for <see cref="SqliteConnection"/>.</param>
@@ -44,14 +61,32 @@ public static class SqliteServiceCollectionExtensions
         string connectionString,
         SqliteVectorStoreOptions? options = default,
         string? serviceId = default)
+<<<<<<< HEAD
+    {
+        services.AddKeyedSingleton<IVectorStore>(
+            serviceId,
+            (sp, obj) =>
+            {
+                var connection = new SqliteConnection(connectionString);
+                var extensionName = GetExtensionName(options?.VectorSearchExtensionName);
+
+                connection.LoadExtension(extensionName);
+
+                var selectedOptions = options ?? sp.GetService<SqliteVectorStoreOptions>();
+                return new SqliteVectorStore(connection, options);
+            });
+
+        return services;
+    }
+=======
         => services.AddKeyedSingleton<IVectorStore>(
             serviceId,
             (sp, _) => new SqliteVectorStore(connectionString, options ?? sp.GetService<SqliteVectorStoreOptions>() ?? new() { EmbeddingGenerator = sp.GetService<IEmbeddingGenerator>() }));
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     /// <summary>
     /// Register a SQLite <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> and <see cref="IVectorSearch{TRecord}"/> with the specified service ID
     /// and where the SQLite <see cref="SqliteConnection"/> is retrieved from the dependency injection container.
-    /// In this case vector search extension loading should be handled manually.
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TRecord">The type of the record.</typeparam>
@@ -67,11 +102,32 @@ public static class SqliteServiceCollectionExtensions
         SqliteVectorStoreRecordCollectionOptions<TRecord>? options = default,
         string? serviceId = default)
         where TKey : notnull
+<<<<<<< HEAD
+    {
+        services.AddKeyedTransient<IVectorStoreRecordCollection<TKey, TRecord>>(
+            serviceId,
+            (sp, obj) =>
+            {
+                var connection = sp.GetRequiredService<SqliteConnection>();
+                var selectedOptions = options ?? sp.GetService<SqliteVectorStoreRecordCollectionOptions<TRecord>>();
+
+                return (new SqliteVectorStoreRecordCollection<TRecord>(connection, collectionName, selectedOptions) as IVectorStoreRecordCollection<TKey, TRecord>)!;
+            });
+
+        AddVectorizedSearch<TKey, TRecord>(services, serviceId);
+
+        return services;
+    }
+
+    /// <summary>
+    /// Register a SQLite <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> and <see cref="IVectorizedSearch{TRecord}"/> with the specified service ID.
+=======
         => throw new InvalidOperationException("Use AddSqliteVectorStore with connectionString instead.");
 
     /// <summary>
     /// Register a SQLite <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> and <see cref="IVectorSearch{TRecord}"/> with the specified service ID.
     /// <see cref="SqliteConnection"/> instance will be initialized, connection will be opened and vector search extension with be loaded.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TRecord">The type of the record.</typeparam>
@@ -92,6 +148,19 @@ public static class SqliteServiceCollectionExtensions
     {
         services.AddKeyedSingleton<IVectorStoreRecordCollection<TKey, TRecord>>(
             serviceId,
+<<<<<<< HEAD
+            (sp, obj) =>
+            {
+                var connection = new SqliteConnection(connectionString);
+                var extensionName = GetExtensionName(options?.VectorSearchExtensionName);
+
+                connection.LoadExtension(extensionName);
+
+                var selectedOptions = options ?? sp.GetService<SqliteVectorStoreRecordCollectionOptions<TRecord>>();
+
+                return (new SqliteVectorStoreRecordCollection<TRecord>(connection, collectionName, selectedOptions) as IVectorStoreRecordCollection<TKey, TRecord>)!;
+            });
+=======
             (sp, _) => (
                 new SqliteVectorStoreRecordCollection<TKey, TRecord>(
                     connectionString,
@@ -101,6 +170,7 @@ public static class SqliteServiceCollectionExtensions
                         EmbeddingGenerator = sp.GetService<IEmbeddingGenerator>()
                     })
                     as IVectorStoreRecordCollection<TKey, TRecord>)!);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         AddVectorizedSearch<TKey, TRecord>(services, serviceId);
 

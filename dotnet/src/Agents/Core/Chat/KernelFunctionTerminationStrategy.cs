@@ -1,9 +1,13 @@
 // Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Agents.Internal;
@@ -47,7 +51,16 @@ public class KernelFunctionTerminationStrategy(KernelFunction function, Kernel k
     public KernelArguments? Arguments { get; init; }
 
     /// <summary>
+<<<<<<< HEAD
+    /// The <see cref="KernelFunction"/> invoked as termination criteria.
+    /// </summary>
+    public KernelFunction Function { get; } = function;
+
+    /// <summary>
+    /// The <see cref="Microsoft.SemanticKernel.Kernel"/> used when invoking <see cref="KernelFunctionTerminationStrategy.Function"/>.
+=======
     /// Gets the <see cref="Microsoft.SemanticKernel.Kernel"/> used when invoking <see cref="KernelFunctionTerminationStrategy.Function"/>.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
     public Kernel Kernel => kernel;
 
@@ -67,6 +80,9 @@ public class KernelFunctionTerminationStrategy(KernelFunction function, Kernel k
     /// </summary>
     public Func<FunctionResult, bool> ResultParser { get; init; } = (_) => true;
 
+    /// <inheritdoc/>
+    protected sealed override async Task<bool> ShouldAgentTerminateAsync(Agent agent, IReadOnlyList<ChatMessageContent> history, CancellationToken cancellationToken = default)
+    {
     /// <summary>
     /// Gets an optional <see cref="IChatHistoryReducer"/> to reduce the history.
     /// </summary>
@@ -82,6 +98,9 @@ public class KernelFunctionTerminationStrategy(KernelFunction function, Kernel k
             new(originalArguments, originalArguments.ExecutionSettings?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value))
             {
                 { this.AgentVariableName, agent.Name ?? agent.Id },
+                { this.HistoryVariableName, JsonSerializer.Serialize(history) }, // TODO: GitHub Task #5894
+                { this.HistoryVariableName, JsonSerializer.Serialize(history) }, // TODO: GitHub Task #5894
+                { this.HistoryVariableName, ChatMessageForPrompt.Format(history) },
                 { this.HistoryVariableName, ChatMessageForPrompt.Format(history, this.EvaluateNameOnly) },
             };
 

@@ -1,5 +1,22 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+<<<<<<< HEAD
+import logging
+from abc import abstractmethod
+from collections.abc import Awaitable, Callable
+from typing import TYPE_CHECKING, Any, TypeVar
+
+from semantic_kernel.data.kernel_search_result import KernelSearchResult
+from semantic_kernel.data.search_base import SearchBase
+from semantic_kernel.data.text_search_options import TextSearchOptions
+from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
+from semantic_kernel.utils.experimental_decorator import experimental_class
+
+if TYPE_CHECKING:
+    from semantic_kernel.data.search_options_base import SearchOptions
+    from semantic_kernel.data.text_search_result import TextSearchResult
+
+=======
 import json
 import logging
 import sys
@@ -26,10 +43,41 @@ else:
 
 TSearchResult = TypeVar("TSearchResult")
 TSearchFilter = TypeVar("TSearchFilter", bound="SearchFilter")
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 TMapInput = TypeVar("TMapInput")
 
 logger = logging.getLogger(__name__)
 
+<<<<<<< HEAD
+
+@experimental_class
+class TextSearch(SearchBase):
+    """The base class for all text searches."""
+
+    @abstractmethod
+    async def get_text_search_result(
+        self, options: "SearchOptions | None" = None, **kwargs: Any
+    ) -> "KernelSearchResult[TextSearchResult]":
+        """Search for text, returning a KernelSearchResult with TextSearchResults."""
+        ...
+
+    @property
+    def _search_function_map(self) -> dict[str, Callable[..., Awaitable[KernelSearchResult[Any]]]]:
+        """Get the search function map.
+
+        Can be overwritten by subclasses.
+        """
+        return {
+            "search": self.search,
+            "get_text_search_result": self.get_text_search_result,
+            "get_text_search_results": self.get_text_search_result,
+            "get_search_result": self.get_search_result,
+            "get_search_results": self.get_search_result,
+        }
+
+    @property
+    def _get_options_class(self) -> type["SearchOptions"]:
+=======
 # region: Filters
 
 
@@ -241,6 +289,7 @@ class TextSearch:
     @property
     def options_class(self) -> type["SearchOptions"]:
         """The options class for the search."""
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         return TextSearchOptions
 
     @staticmethod
@@ -258,7 +307,11 @@ class TextSearch:
                 type_object=str,
             ),
             KernelParameterMetadata(
+<<<<<<< HEAD
+                name="count",
+=======
                 name="top",
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                 description="Number of results to return.",
                 type="int",
                 is_required=False,
@@ -274,6 +327,8 @@ class TextSearch:
                 type_object=int,
             ),
         ]
+<<<<<<< HEAD
+=======
 
     @staticmethod
     def _default_return_parameter_metadata() -> KernelParameterMetadata:
@@ -553,3 +608,4 @@ class TextSearch:
     ) -> "KernelSearchResults[Any]":
         """Search for text, returning a KernelSearchResult with the results directly from the service."""
         ...
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

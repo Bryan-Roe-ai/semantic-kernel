@@ -210,7 +210,66 @@ public sealed class WeaviateVectorStoreRecordCollectionTests(WeaviateVectorStore
         Assert.Equal(10, getResult.HotelRating);
     }
 
+<<<<<<< HEAD
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+    #region private
+
+    private WeaviateHotel CreateTestHotel(Guid hotelId, string? hotelName = null)
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+    #region private
+
+    private WeaviateHotel CreateTestHotel(Guid hotelId, string? hotelName = null)
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
+    [Theory]
+=======
     [Theory(Skip = SkipReason)]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     [InlineData(true)]
     [InlineData(false)]
     public async Task VectorizedSearchReturnsValidResultsByDefaultAsync(bool includeVectors)
@@ -228,12 +287,29 @@ public sealed class WeaviateVectorStoreRecordCollectionTests(WeaviateVectorStore
         await sut.UpsertAsync([hotel4, hotel2, hotel3, hotel1]);
 
         // Act
-        var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), top: 3, new()
+<<<<<<< HEAD
+<<<<<<< main
+        var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), new()
         {
             IncludeVectors = includeVectors
         }).ToListAsync();
 
         // Assert
+=======
+        var actual = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), new()
+=======
+        var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), top: 3, new()
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+        {
+            IncludeVectors = includeVectors
+        }).ToListAsync();
+
+        // Assert
+<<<<<<< HEAD
+        var searchResults = await actual.Results.ToListAsync();
+>>>>>>> upstream/main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         var ids = searchResults.Select(l => l.Record.HotelId.ToString()).ToList();
 
         Assert.Equal("11111111-1111-1111-1111-111111111111", ids[0]);
@@ -265,12 +341,30 @@ public sealed class WeaviateVectorStoreRecordCollectionTests(WeaviateVectorStore
         await sut.UpsertAsync([hotel4, hotel2, hotel3, hotel1]);
 
         // Act
+<<<<<<< HEAD
+<<<<<<< main
+        var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), new()
+        {
+            Top = 2,
+            Skip = 2
+        }).ToListAsync();
+
+        // Assert
+=======
+        var actual = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), new()
+=======
         var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), top: 2, new()
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         {
             Skip = 2
         }).ToListAsync();
 
         // Assert
+<<<<<<< HEAD
+        var searchResults = await actual.Results.ToListAsync();
+>>>>>>> upstream/main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         var ids = searchResults.Select(l => l.Record.HotelId.ToString()).ToList();
 
         Assert.Equal("33333333-3333-3333-3333-333333333333", ids[0]);
@@ -297,12 +391,30 @@ public sealed class WeaviateVectorStoreRecordCollectionTests(WeaviateVectorStore
         await sut.UpsertAsync([hotel4, hotel2, hotel3, hotel1]);
 
         // Act
+<<<<<<< HEAD
+<<<<<<< main
+        var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), new()
+        {
+            Filter = filter,
+            Top = 4,
+        }).ToListAsync();
+
+        // Assert
+=======
+        var actual = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), new()
+=======
         var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), top: 4, new()
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         {
             OldFilter = filter,
         }).ToListAsync();
 
         // Assert
+<<<<<<< HEAD
+        var searchResults = await actual.Results.ToListAsync();
+>>>>>>> upstream/main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         var actualIds = searchResults.Select(l => l.Record.HotelId.ToString()).ToList();
 
         Assert.Equal(expectedIds, actualIds);
@@ -340,12 +452,31 @@ public sealed class WeaviateVectorStoreRecordCollectionTests(WeaviateVectorStore
         await sut.UpsertAsync([hotel4, hotel2, hotel5, hotel3, hotel1]);
 
         // Act
+<<<<<<< HEAD
+<<<<<<< main
+        var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([40f, 40f, 40f, 40f]), new()
+        {
+            Filter = filter,
+            Top = 4,
+        }).ToListAsync();
+
+        // Assert
+
+=======
+        var actual = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([40f, 40f, 40f, 40f]), new()
+=======
         var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([40f, 40f, 40f, 40f]), top: 4, new()
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         {
             OldFilter = filter,
         }).ToListAsync();
 
         // Assert
+<<<<<<< HEAD
+        var searchResults = await actual.Results.ToListAsync();
+>>>>>>> upstream/main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         var actualIds = searchResults.Select(l => l.Record.HotelId.ToString()).ToList();
 
         Assert.Single(actualIds);
@@ -353,8 +484,55 @@ public sealed class WeaviateVectorStoreRecordCollectionTests(WeaviateVectorStore
         Assert.Equal(expectedId, actualIds[0]);
     }
 
+<<<<<<< HEAD
+<<<<<<< main
+    public static TheoryData<VectorSearchFilter, List<string>> VectorizedSearchWithFilterData => new()
+    {
+        {
+            new VectorSearchFilter().EqualTo(nameof(WeaviateHotel.HotelName), "My Hotel 22222222-2222-2222-2222-222222222222"),
+            ["22222222-2222-2222-2222-222222222222"]
+        },
+        {
+            new VectorSearchFilter().AnyTagEqualTo(nameof(WeaviateHotel.Tags), "t2"),
+            [
+                "11111111-1111-1111-1111-111111111111",
+                "22222222-2222-2222-2222-222222222222",
+                "33333333-3333-3333-3333-333333333333",
+                "44444444-4444-4444-4444-444444444444"
+            ]
+        },
+        {
+            new VectorSearchFilter()
+                .EqualTo(nameof(WeaviateHotel.HotelName), "My Hotel 22222222-2222-2222-2222-222222222222")
+                .AnyTagEqualTo(nameof(WeaviateHotel.Tags), "t2"),
+            ["22222222-2222-2222-2222-222222222222"]
+        },
+        {
+            new VectorSearchFilter()
+                .EqualTo(nameof(WeaviateHotel.HotelName), "non-existent-hotel")
+                .AnyTagEqualTo(nameof(WeaviateHotel.Tags), "non-existent-tag"),
+            []
+        }
+    };
+
+    public static TheoryData<VectorSearchFilter> VectorizedSearchWithFilterAndDifferentDataTypesData => new()
+    {
+        { new VectorSearchFilter().EqualTo(nameof(WeaviateHotel.HotelId), new Guid("55555555-5555-5555-5555-555555555555")) },
+        { new VectorSearchFilter().EqualTo(nameof(WeaviateHotel.HotelName), "Test hotel name") },
+        { new VectorSearchFilter().EqualTo(nameof(WeaviateHotel.HotelCode), 88) },
+        { new VectorSearchFilter().EqualTo(nameof(WeaviateHotel.HotelRating), 7.9f) },
+        { new VectorSearchFilter().EqualTo(nameof(WeaviateHotel.ParkingIncluded), false) },
+        { new VectorSearchFilter().EqualTo(nameof(WeaviateHotel.Timestamp), new DateTimeOffset(new DateTime(2024, 9, 22, 15, 59, 42))) }
+    };
+
+=======
+>>>>>>> upstream/main
+    [Fact]
+    public async Task ItCanUpsertAndRetrieveUsingTheGenericMapperAsync()
+=======
     [Fact(Skip = SkipReason)]
     public async Task ItCanUpsertAndRetrieveUsingDynamicMappingAsync()
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         // Arrange
         var hotelId = new Guid("55555555-5555-5555-5555-555555555555");
@@ -442,6 +620,49 @@ public sealed class WeaviateVectorStoreRecordCollectionTests(WeaviateVectorStore
         Guid hotelId,
         string? hotelName = null,
         ReadOnlyMemory<float>? embedding = null)
+<<<<<<< main
+<<<<<<< main
+=======
+<<<<<<< div
+=======
+>>>>>>> div
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
     {
         return new WeaviateHotel
         {
@@ -452,7 +673,79 @@ public sealed class WeaviateVectorStoreRecordCollectionTests(WeaviateVectorStore
             ParkingIncluded = true,
             Tags = { "t1", "t2" },
             Description = "This is a great hotel.",
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+            DescriptionEmbedding = new[] { 30f, 31f, 32f, 33f },
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+            DescriptionEmbedding = new[] { 30f, 31f, 32f, 33f },
+=======
             DescriptionEmbedding = embedding ?? new[] { 30f, 31f, 32f, 33f },
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+            DescriptionEmbedding = embedding ?? new[] { 30f, 31f, 32f, 33f },
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+            DescriptionEmbedding = embedding ?? new[] { 30f, 31f, 32f, 33f },
+>>>>>>> upstream/main
+=======
+<<<<<<< div
+=======
+            DescriptionEmbedding = embedding ?? new[] { 30f, 31f, 32f, 33f },
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
+>>>>>>> div
             Timestamp = new DateTime(2024, 8, 28, 10, 11, 12)
         };
     }
@@ -470,8 +763,75 @@ public sealed class WeaviateVectorStoreRecordCollectionTests(WeaviateVectorStore
                 new VectorStoreRecordDataProperty("HotelRating", typeof(float)),
                 new VectorStoreRecordDataProperty("Tags", typeof(List<string>)),
                 new VectorStoreRecordDataProperty("Description", typeof(string)),
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+                new VectorStoreRecordDataProperty("Timestamp", typeof(DateTime)),
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+                new VectorStoreRecordDataProperty("Timestamp", typeof(DateTime)),
+=======
                 new VectorStoreRecordDataProperty("Timestamp", typeof(DateTimeOffset)),
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+                new VectorStoreRecordDataProperty("Timestamp", typeof(DateTimeOffset)),
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+                new VectorStoreRecordDataProperty("Timestamp", typeof(DateTimeOffset)),
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
+                new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(ReadOnlyMemory<float>?)) { Dimensions = 4, IndexKind = IndexKind.Hnsw, DistanceFunction = DistanceFunction.CosineDistance }
+=======
                 new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(ReadOnlyMemory<float>?), 4) { IndexKind = IndexKind.Hnsw, DistanceFunction = DistanceFunction.CosineDistance }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             ]
         };
     }

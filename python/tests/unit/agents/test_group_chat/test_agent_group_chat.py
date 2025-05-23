@@ -139,6 +139,7 @@ async def test_invoke_with_complete_chat(agents, termination_strategy):
             pass
 
 
+@pytest.mark.asyncio
 async def test_invoke_agent_with_none_defined_errors(agents):
     group_chat = AgentGroupChat()
 
@@ -147,6 +148,7 @@ async def test_invoke_agent_with_none_defined_errors(agents):
             pass
 
 
+@pytest.mark.asyncio
 async def test_invoke_selection_strategy_error(agents, selection_strategy):
     group_chat = AgentGroupChat(agents=agents, selection_strategy=selection_strategy)
 

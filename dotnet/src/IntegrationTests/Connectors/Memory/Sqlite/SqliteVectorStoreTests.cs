@@ -2,9 +2,6 @@
 
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.VectorData;
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Sqlite;
 using SemanticKernel.IntegrationTests.Connectors.Memory.Xunit;
 using Xunit;
@@ -19,6 +16,14 @@ namespace SemanticKernel.IntegrationTests.Connectors.Memory.Sqlite;
 public sealed class SqliteVectorStoreTests(SqliteVectorStoreFixture fixture)
     : BaseVectorStoreTests<string, SqliteHotel<string>>(new SqliteVectorStore(fixture.ConnectionString))
 {
+<<<<<<< HEAD
+    private const string? SkipReason = "SQLite vector search extension is required";
+
+    [Fact(Skip = SkipReason)]
+    public override async Task ItCanGetAListOfExistingCollectionNamesAsync()
+    {
+        await base.ItCanGetAListOfExistingCollectionNamesAsync();
+=======
     [VectorStoreFact]
     public async Task ItCanGetAListOfExistingCollectionNamesWhenRegisteredWithDIAsync()
     {
@@ -43,5 +48,6 @@ public sealed class SqliteVectorStoreTests(SqliteVectorStoreFixture fixture)
         // Assert
         Assert.Contains("ListCollectionNames1", collectionNames);
         Assert.Contains("ListCollectionNames1", collectionNames);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 }

@@ -5,6 +5,10 @@
     "ChatModelId": "gpt-4o",
     "ApiKey": ""
   },
+  "AzureOpenAI": {
+    "ServiceId": "azure-gpt-35-turbo-instruct",
+    "DeploymentName": "gpt-35-turbo-instruct",
+    "ChatDeploymentName": "gpt-4o",
   "AzureAIInference": {
     "ServiceId": "azure-ai-inference",
     "Endpoint": "",
@@ -57,6 +61,16 @@
     "ModelId": "dall-e-2",
     "ApiKey": ""
   },
+  "OpenAITextToImage": {
+    "ServiceId": "dall-e-2",
+    "ModelId": "dall-e-2",
+    "ApiKey": ""
+  },
+  "AzureOpenAITextToImage": {
+    "ServiceId": "azure-dalle3",
+    "DeploymentName": "dall-e-3",
+    "Endpoint": "",
+    "ApiKey": ""
   "AzureOpenAITextToImage": {
     "ServiceId": "azure-dalle3",
     "DeploymentName": "Dalle3",

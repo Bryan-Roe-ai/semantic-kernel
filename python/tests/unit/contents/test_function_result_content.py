@@ -48,7 +48,9 @@ class AccountBalanceNonFrozen(KernelBaseModel):
 
 
 def test_init():
-    frc = FunctionResultContent(id="test", name="test-function", result="test-result", metadata={"test": "test"})
+    frc = FunctionResultContent(
+        id="test", name="test-function", result="test-result", metadata={"test": "test"}
+    )
     assert frc.name == "test-function"
     assert frc.function_name == "function"
     assert frc.plugin_name == "test"
@@ -63,7 +65,9 @@ def test_init():
 
 
 def test_init_from_names():
-    frc = FunctionResultContent(id="test", function_name="Function", plugin_name="Test", result="test-result")
+    frc = FunctionResultContent(
+        id="test", function_name="Function", plugin_name="Test", result="test-result"
+    )
     assert frc.name == "Test-Function"
     assert frc.function_name == "Function"
     assert frc.plugin_name == "Test"
@@ -77,9 +81,20 @@ def test_init_from_names():
         "Hello world!",
         123,
         {"test": "test"},
-        FunctionResult(function=Mock(spec=KernelFunctionMetadata), value="Hello world!"),
+        FunctionResult(
+            function=Mock(spec=KernelFunctionMetadata), value="Hello world!"
+        ),
         TextContent(text="Hello world!"),
         ChatMessageContent(role="user", content="Hello world!"),
+        ChatMessageContent(
+            role="user", items=[ImageContent(uri="https://example.com")]
+        ),
+        ChatMessageContent(
+            role="user",
+            items=[
+                FunctionResultContent(id="test", name="test", result="Hello world!")
+            ],
+        ),
         ChatMessageContent(role="user", items=[ImageContent(uri="https://example.com")]),
         ChatMessageContent(role="user", items=[FunctionResultContent(id="test", name="test", result="Hello world!")]),
         [1, 2, 3],
@@ -106,9 +121,14 @@ def test_init_from_names():
 )
 def test_from_fcc_and_result(result: any):
     fcc = FunctionCallContent(
-        id="test", name="test-function", arguments='{"input": "world"}', metadata={"test": "test"}
+        id="test",
+        name="test-function",
+        arguments='{"input": "world"}',
+        metadata={"test": "test"},
     )
-    frc = FunctionResultContent.from_function_call_content_and_result(fcc, result, {"test2": "test2"})
+    frc = FunctionResultContent.from_function_call_content_and_result(
+        fcc, result, {"test2": "test2"}
+    )
     assert frc.name == "test-function"
     assert frc.function_name == "function"
     assert frc.plugin_name == "test"

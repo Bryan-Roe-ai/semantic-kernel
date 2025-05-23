@@ -11,7 +11,12 @@ namespace Microsoft.SemanticKernel;
 /// </summary>
 public class ProcessStepEdgeBuilder
 {
+<<<<<<< HEAD
+    internal ProcessFunctionTargetBuilder? OutputTarget { get; private set; }
+    internal ProcessFunctionTargetBuilder? Target { get; set; }
+=======
     internal ProcessTargetBuilder? Target { get; set; }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     /// <summary>
     /// The event data that the edge fires on.
@@ -63,6 +68,13 @@ public class ProcessStepEdgeBuilder
     internal KernelProcessEdge Build(ProcessBuilder? processBuilder = null)
     {
         Verify.NotNull(this.Source?.Id);
+<<<<<<< HEAD
+        Verify.NotNull(this.OutputTarget);
+
+        return new KernelProcessEdge(this.Source.Id, this.OutputTarget.Build());
+        Verify.NotNull(this.Target);
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         if (this.Target is null || this.Source?.Id is null)
         {
@@ -113,12 +125,22 @@ public class ProcessStepEdgeBuilder
     /// <exception cref="ArgumentException"></exception>
     internal virtual ProcessStepEdgeBuilder SendEventTo_Internal(ProcessTargetBuilder target)
     {
+        if (this.OutputTarget is not null)
         if (this.Target is not null)
         {
             throw new InvalidOperationException("An output target has already been set.");
         }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+        this.OutputTarget = outputTarget;
+        this.Target = outputTarget;
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+        if (this.Source is ProcessMapBuilder && target.Step is ProcessMapBuilder)
+=======
         if (target is ProcessFunctionTargetBuilder functionTargetBuilder)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         {
             if (functionTargetBuilder.Step is ProcessMapBuilder && this.Source is ProcessMapBuilder)
             {
@@ -163,12 +185,14 @@ public class ProcessStepEdgeBuilder
     /// </summary>
     public virtual void StopProcess()
     {
+        if (this.OutputTarget is not null)
         if (this.Target is not null)
         {
             throw new InvalidOperationException("An output target has already been set.");
         }
 
         var outputTarget = new ProcessFunctionTargetBuilder(EndStep.Instance);
+        this.OutputTarget = outputTarget;
         this.Target = outputTarget;
         this.Source.LinkTo(ProcessConstants.EndStepName, this);
     }

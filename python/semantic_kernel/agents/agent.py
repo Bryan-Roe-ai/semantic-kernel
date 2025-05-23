@@ -406,8 +406,15 @@ class Agent(KernelBaseModel, ABC):
             A list of channel keys.
         """
         if not self.channel_type:
+<<<<<<< HEAD
+            raise NotImplementedError(
+                "Unable to get channel keys. Channel type not configured."
+            )
+        return [self.channel_type.__name__]
+=======
             raise NotImplementedError("Unable to get channel keys. Channel type not configured.")
         yield self.channel_type.__name__
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     async def create_channel(self) -> AgentChannel:
         """Create a channel.
@@ -416,7 +423,9 @@ class Agent(KernelBaseModel, ABC):
             An instance of AgentChannel.
         """
         if not self.channel_type:
-            raise NotImplementedError("Unable to create channel. Channel type not configured.")
+            raise NotImplementedError(
+                "Unable to create channel. Channel type not configured."
+            )
         return self.channel_type()
 
     # endregion

@@ -4,9 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Connectors.Weaviate;
+using Microsoft.SemanticKernel.Data;
+=======
 using Microsoft.Extensions.VectorData;
 using Microsoft.Extensions.VectorData.ConnectorSupport;
 using Microsoft.SemanticKernel.Connectors.Weaviate;
+>>>>>>> main
 using Xunit;
 
 namespace SemanticKernel.Connectors.Weaviate.UnitTests;

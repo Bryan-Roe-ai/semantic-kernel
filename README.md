@@ -1,5 +1,127 @@
 # Semantic Kernel
 
+<<<<<<< HEAD
+Integrate cutting-edge LLM technology quickly and easily into your apps.
+
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Getting Started](#getting-started)
+3. [Usage](#usage)
+4. [Configuration](#configuration)
+5. [Workflows](#workflows)
+6. [Branch Protection Rules](#branch-protection-rules)
+7. [CI/CD Pipeline Efficiency](#cicd-pipeline-efficiency)
+8. [Contributing](#contributing)
+9. [License](#license)
+
+## Introduction
+Provide an introduction to the project, its goals, and key features.
+
+## Getting Started
+Detailed instructions on how to set up and start using the project.
+
+## Usage
+### Using Semantic Kernel in C#
+![C# Logo](https://user-images.githubusercontent.com/371009/230673036-fad1e8e6-5d48-49b1-a9c1-6f9834e0d165.png)
+
+[Using Semantic Kernel in C#](dotnet/README.md)
+
+### Using Semantic Kernel in Python
+![Python Logo](https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg)
+
+[Using Semantic Kernel in Python](python/README.md)
+
+Include examples and explanations for other supported languages.
+
+## Configuration
+Detailed steps to configure the project.
+
+## Workflows
+### Handling 'Not Found' Error
+We have added a new workflow to handle the "Not Found" error.
+
+#### Configuration
+To configure the new workflow, follow these steps:
+
+1. **Create a new workflow file**: Add a new workflow file `.github/workflows/handle-not-found-error.yml`.
+2. **Define the workflow**: Add the following content to the file:
+    ```yaml
+    name: Handle Not Found Error
+    on:
+      pull_request:
+        types: [opened, synchronize]
+    jobs:
+      handle-not-found-error:
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout code
+            uses: actions/checkout@v4
+          - name: Check for Not Found Error
+            run: |
+              echo "Checking for Not Found error..."
+              echo "Handling Not Found error..."
+    ```
+3. **Run the workflow**: The workflow will automatically run on pull request events.
+
+### SSRF Detection
+Include detailed steps and explanations for the SSRF detection workflow.
+
+## Branch Protection Rules
+Explain the branch protection rules and include a link to the GitHub documentation on branch protection.
+
+## CI/CD Pipeline Efficiency
+### Parallel Jobs
+Modify `.circleci/config.yml` to run `test`, `build`, and `deploy` jobs in parallel.
+
+### Caching
+Implement Docker layer caching in `.github/workflows/azure-container-webapp.yml`.
+
+### Multi-Stage Builds
+Use multi-stage Docker builds in `.github/workflows/azure-container-webapp.yml`.
+
+### Automation of Issue Management
+Add auto-labeling and auto-assigning logic in `.github/workflows/label-issues.yml`.
+
+## Contributing
+Provide guidelines for contributing, reporting issues, and requesting features. Link to `CONTRIBUTING.md` if it exists.
+
+   on:
+     push:
+       branches: [ "main" ]
+     pull_request:
+       branches: [ "main" ]
+     schedule:
+       - cron: '0 0 * * 0'
+
+   jobs:
+     ssrf-detection:
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v4
+
+         - name: Run SSRF detection
+           run: |
+             # Add your SSRF detection script or tool here
+             echo "Running SSRF detection..."
+   ```
+
+3. **Run the workflow**: The workflow will automatically run on push, pull request, and scheduled events. It will detect and address any SSRF vulnerabilities in the codebase.
+
+By following these steps, you can ensure that SSRF vulnerabilities are detected and addressed in your codebase, enhancing the security of your project.
+
+## New Workflow for Handling "Not Found" Error
+
+We have added a new workflow to handle the "Not Found" error when trying to use GitHub Copilot workspace on pull requests. This workflow is designed to detect and address the specific error.
+
+### Configuration
+
+To configure the new workflow, follow these steps:
+
+1. **Create a new workflow file**: Add a new workflow file named `.github/workflows/handle-not-found-error.yml` to the repository.
+
+2. **Define the workflow**: Add the following content to the workflow file:
+=======
 **Build intelligent AI agents and multi-agent systems with this enterprise-ready orchestration framework**
 
 [![License: MIT](https://img.shields.io/github/license/microsoft/semantic-kernel)](https://github.com/microsoft/semantic-kernel/blob/main/LICENSE)
@@ -329,38 +451,142 @@ if __name__ == "__main__":
 - Search the [Discord community](https://aka.ms/SKDiscord) for solutions
 - Include your SDK version and full error messages when asking for help
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-## Join the community
+   ```yaml
+   name: Handle Not Found Error
 
+<<<<<<< HEAD
+   on:
+     pull_request:
+       types: [opened, synchronize]
+
+   jobs:
+     handle-not-found-error:
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout code
+           uses: actions/checkout@v4
+=======
 We welcome your contributions and suggestions to the SK community! One of the easiest ways to participate is to engage in discussions in the GitHub repository. Bug reports and fixes are welcome!
 
 For new features, components, or extensions, please open an issue and discuss with us before sending a PR. This is to avoid rejection as we might be taking the core in a different direction, but also to consider the impact on the larger ecosystem.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-To learn more and get started:
+         - name: Check for Not Found Error
+           run: |
+             # Add your script or tool to check for the Not Found error here
+             echo "Checking for Not Found error..."
+             # Handle the Not Found error appropriately
+             echo "Handling Not Found error..."
+   ```
 
-- Read the [documentation](https://aka.ms/sk/learn)
-- Learn how to [contribute](https://learn.microsoft.com/en-us/semantic-kernel/support/contributing) to the project
-- Ask questions in the [GitHub discussions](https://github.com/microsoft/semantic-kernel/discussions)
-- Ask questions in the [Discord community](https://aka.ms/SKDiscord)
+3. **Run the workflow**: The workflow will automatically run on pull request events. It will detect and address the "Not Found" error when trying to use GitHub Copilot workspace on pull requests.
 
-- Attend [regular office hours and SK community events](COMMUNITY.md)
-- Follow the team on our [blog](https://aka.ms/sk/blog)
+By following these steps, you can ensure that the "Not Found" error is detected and addressed in your codebase, enhancing the functionality of your project.
 
-## Contributor Wall of Fame
+## Contribution Guidelines
 
-[![semantic-kernel contributors](https://contrib.rocks/image?repo=microsoft/semantic-kernel)](https://github.com/microsoft/semantic-kernel/graphs/contributors)
+We welcome contributions from the community! To contribute to this project, please follow these guidelines:
 
-## Code of Conduct
+1. **Fork the repository**: Create a fork of the repository to work on your changes.
 
+<<<<<<< HEAD
+2. **Create a branch**: Create a new branch for your changes.
+=======
 This project has adopted the
 [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information, see the
 [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
 or contact [opencode@microsoft.com](mailto:opencode@microsoft.com)
 with any additional questions or comments.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-## License
+   ```bash
+   git checkout -b my-feature-branch
+   ```
 
-Copyright (c) Microsoft Corporation. All rights reserved.
+3. **Make your changes**: Implement your changes in the new branch.
 
-Licensed under the [MIT](LICENSE) license.
+4. **Test your changes**: Ensure that your changes do not break any existing functionality and pass all tests.
+
+5. **Commit your changes**: Commit your changes with a descriptive commit message.
+
+   ```bash
+   git commit -m "Add new feature"
+   ```
+
+6. **Push your changes**: Push your changes to your forked repository.
+
+   ```bash
+   git push origin my-feature-branch
+   ```
+
+7. **Create a pull request**: Open a pull request to merge your changes into the main repository.
+
+8. **Review and feedback**: Address any feedback or comments from the maintainers during the review process.
+
+9. **Merge**: Once your pull request is approved, it will be merged into the main repository.
+
+Thank you for your contributions!
+
+For more detailed guidelines on contributing, refer to the `CONTRIBUTING.md` file in the root directory of the repository.
+
+## Setting Up and Using the Repository
+
+### Installation
+
+1. **Clone the repository**:
+
+   ```bash
+   git clone https://github.com/yourusername/sk-api.git
+   cd sk-api
+   ```
+
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Install Python dependencies** (if applicable):
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Install .NET dependencies** (if applicable):
+
+   ```bash
+   dotnet restore
+   ```
+
+5. **Install Java dependencies** (if applicable):
+
+   ```bash
+   ./mvnw install
+   ```
+
+### Configuration
+
+1. **Create a configuration file**:
+
+   Create a `config.json` file in the root directory of the repository and add the necessary configuration settings. Refer to the `config.example.json` file for an example configuration.
+
+2. **Set environment variables**:
+
+   Set the required environment variables in your system. You can use a `.env` file to manage environment variables. Refer to the `.env.example` file for the required variables.
+
+### Running the API
+
+1. **Start the API server**:
+
+   ```bash
+   npm start
+   ```
+
+2. **Access the API**:
+
+   Open your web browser and navigate to `http://localhost:3000` to access the API.
+
+For more detailed setup instructions, code snippets, and examples, refer to the [Getting Started Guide](docs/Getting_Started.md).

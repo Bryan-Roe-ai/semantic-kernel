@@ -14,6 +14,27 @@ if sys.version_info >= (3, 12):
 else:
     from typing_extensions import override  # pragma: no cover
 
+<<<<<<< HEAD
+<<<<<<< HEAD:python/semantic_kernel/connectors/memory/volatile/volatile_store.py
+
+from semantic_kernel.connectors.memory.volatile.volatile_collection import (
+    VolatileCollection,
+)
+from semantic_kernel.data.vector_store import VectorStore
+from semantic_kernel.data.vector_store_model_definition import (
+    VectorStoreRecordDefinition,
+)
+from semantic_kernel.data.vector_store_record_collection import (
+    VectorStoreRecordCollection,
+)
+=======
+from semantic_kernel.connectors.memory.in_memory.in_memory_collection import InMemoryVectorCollection
+from semantic_kernel.data import VectorStore, VectorStoreRecordCollection, VectorStoreRecordDefinition
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/semantic_kernel/connectors/memory/in_memory/in_memory_store.py
+from semantic_kernel.utils.experimental_decorator import experimental_class
+
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 logger: logging.Logger = logging.getLogger(__name__)
 
 TModel = TypeVar("TModel")

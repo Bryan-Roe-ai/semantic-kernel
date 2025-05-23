@@ -4,15 +4,33 @@ from unittest.mock import AsyncMock, MagicMock
 
 from pytest import raises
 
+<<<<<<< HEAD
+from semantic_kernel.data.vector_store_model_definition import (
+    VectorStoreRecordDefinition,
+)
+from semantic_kernel.data.vector_store_record_fields import (
+=======
 from semantic_kernel import Kernel
 from semantic_kernel.data import (
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     VectorStoreRecordDataField,
     VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
     VectorStoreRecordVectorField,
 )
+<<<<<<< HEAD
+<<<<<<< HEAD
+from semantic_kernel.data.vector_store_record_utils import VectorStoreRecordUtils
+from semantic_kernel.exceptions.memory_connector_exceptions import (
+    VectorStoreModelException,
+)
+from semantic_kernel.kernel import Kernel
+=======
+=======
 from semantic_kernel.data.vector_search import add_vector_to_records
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.exceptions import VectorStoreModelException
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 async def test_add_vector_to_records(data_model_definition):
@@ -27,7 +45,9 @@ async def test_add_vector_wrong_fields():
     data_model = VectorStoreRecordDefinition(
         fields={
             "id": VectorStoreRecordKeyField(),
-            "content": VectorStoreRecordDataField(has_embedding=True, embedding_property_name="id"),
+            "content": VectorStoreRecordDataField(
+                has_embedding=True, embedding_property_name="id"
+            ),
             "vector": VectorStoreRecordVectorField(),
         }
     )

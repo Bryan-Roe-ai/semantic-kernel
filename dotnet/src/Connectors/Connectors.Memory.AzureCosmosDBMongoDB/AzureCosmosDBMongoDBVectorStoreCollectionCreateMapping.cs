@@ -2,8 +2,15 @@
 
 using System;
 using System.Collections.Generic;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Data;
+=======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
+>>>>>>> main
+=======
 using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using MongoDB.Bson;
 
 namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
@@ -108,7 +115,18 @@ internal static class AzureCosmosDBMongoDBVectorStoreCollectionCreateMapping
     /// More information about Azure CosmosDB for MongoDB index kinds here: <see href="https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/vector-search" />.
     /// </summary>
     private static string GetIndexKind(string? indexKind, string vectorPropertyName)
+<<<<<<< HEAD
+    {
+<<<<<<< HEAD
+        return indexKind switch
+=======
+        var vectorPropertyIndexKind = AzureCosmosDBMongoDBVectorStoreCollectionSearchMapping.GetVectorPropertyIndexKind(indexKind);
+
+        return vectorPropertyIndexKind switch
+>>>>>>> main
+=======
         => AzureCosmosDBMongoDBVectorStoreCollectionSearchMapping.GetVectorPropertyIndexKind(indexKind) switch
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         {
             IndexKind.Hnsw => "vector-hnsw",
             IndexKind.IvfFlat => "vector-ivf",
@@ -119,7 +137,18 @@ internal static class AzureCosmosDBMongoDBVectorStoreCollectionCreateMapping
     /// More information about Azure CosmosDB for MongoDB distance functions here: <see href="https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/vector-search" />.
     /// </summary>
     private static string GetDistanceFunction(string? distanceFunction, string vectorPropertyName)
+<<<<<<< HEAD
+    {
+<<<<<<< HEAD
+        return distanceFunction switch
+=======
+        var vectorPropertyDistanceFunction = AzureCosmosDBMongoDBVectorStoreCollectionSearchMapping.GetVectorPropertyDistanceFunction(distanceFunction);
+
+        return vectorPropertyDistanceFunction switch
+>>>>>>> main
+=======
         => AzureCosmosDBMongoDBVectorStoreCollectionSearchMapping.GetVectorPropertyDistanceFunction(distanceFunction) switch
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         {
             DistanceFunction.CosineDistance => "COS",
             DistanceFunction.DotProductSimilarity => "IP",

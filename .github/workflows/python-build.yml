@@ -13,9 +13,17 @@ jobs:
     if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'python-')
     name: Python Build Assets and add to Release
     runs-on: ubuntu-latest
+<<<<<<< HEAD
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, 3.10]
+    permissions:
+      contents: write
+=======
     environment: "integration"
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     env:
-      UV_PYTHON: "3.10"
+      UV_PYTHON: ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v4
       - name: Set up uv
@@ -24,12 +32,36 @@ jobs:
           version: "0.5.x"
           enable-cache: true
           cache-suffix: ${{ runner.os }}-${{ matrix.python-version }}
+<<<<<<< HEAD
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+      - name: Install dependencies
+        run: |
+          cd python
+          pip install -r requirements.txt
+      - name: Clean workspace
+        run: |
+          cd python
+          rm -rf build dist *.egg-info
+=======
           cache-dependency-glob: "**/uv.lock"
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       - name: Check version
         run: |
           echo "Building and uploading Python package version: ${{ github.event.release.tag_name }}"
+          echo "Python version: $(python --version)"
+          echo "Pip version: $(pip --version)"
       - name: Build the package
-        run: cd python && make build
+        run: cd python && make build || { echo 'Build failed'; exit 1; }
       - name: Release
         uses: softprops/action-gh-release@v2
         with:

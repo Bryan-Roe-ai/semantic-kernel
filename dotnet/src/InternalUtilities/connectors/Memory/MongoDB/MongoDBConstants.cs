@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
@@ -64,3 +66,4 @@ internal static class MongoDBConstants
         typeof(ReadOnlyMemory<double>?)
     ];
 }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

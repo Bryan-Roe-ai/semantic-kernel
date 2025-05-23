@@ -7,6 +7,7 @@ namespace Microsoft.SemanticKernel;
 /// <summary>
 /// Represents the state of a <see cref="KernelProcess"/>.
 /// </summary>
+public sealed class KernelProcessState : KernelProcessStepState
 [DataContract]
 public sealed record KernelProcessState : KernelProcessStepState
 {

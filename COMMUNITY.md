@@ -1,4 +1,4 @@
-# Welcome to the Semantic Kernel Community!
+# Welcome to the Semantic Kernel Community
 
 Below are some ways that you can get involved in the SK Community.
 
@@ -27,4 +27,20 @@ If you are unable to make it live, all meetings will be recorded and posted onli
 
 This is a great place to ask questions, share your projects, and get help from the community.
 
+Join our Discord:
+[https://aka.ms/SKDiscord](https://aka.ms/SKDiscord)
+
+## Ways to Get Involved
+
+There are several ways for the community to get involved with the Semantic Kernel project:
+
+1. **Participate in Discussions**: Join the conversation on GitHub and Discord to share your ideas, ask questions, and provide feedback.
+2. **Report Issues**: If you encounter any bugs or issues, please report them on GitHub. This helps us improve the project and address any problems.
+3. **Submit Pull Requests**: Contribute to the project by submitting pull requests with bug fixes, new features, or improvements.
+4. **Attend Community Meetings**: Join our regular community meetings or webinars to discuss the project's progress, gather feedback, and encourage collaboration.
+5. **Recognize Active Contributors**: We appreciate and recognize active contributors by featuring them in a `CONTRIBUTORS.md` file or on the project's website.
+
+## Community Recognition
+
+We value and appreciate the contributions of our community members. To recognize and reward active contributors, we feature them in a `CONTRIBUTORS.md` file or on the project's website. This helps highlight the efforts of individuals who have made significant contributions to the project.
 Join using our discord link: [aka.ms/SKDiscord](https://aka.ms/SKDiscord)

@@ -7,6 +7,25 @@ from typing import TYPE_CHECKING, Any, Final
 
 from prance import ResolvingParser
 
+<<<<<<< HEAD
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import (
+    RestApiOperation,
+)
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_expected_response import (
+    RestApiOperationExpectedResponse,
+)
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_parameter import (
+    RestApiOperationParameter,
+)
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_parameter_location import (
+    RestApiOperationParameterLocation,
+)
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload import (
+    RestApiOperationPayload,
+)
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload_property import (
+    RestApiOperationPayloadProperty,
+=======
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_expected_response import (
     RestApiExpectedResponse,
 )
@@ -18,6 +37,7 @@ from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter_locatio
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload import RestApiPayload
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload_property import (
     RestApiPayloadProperty,
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_security_requirement import RestApiSecurityRequirement
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_security_scheme import RestApiSecurityScheme
@@ -61,6 +81,9 @@ class OpenApiParser:
         for param in parameters:
             name: str = param["name"]
             if not param.get("in"):
+                raise PluginInitializationError(
+                    f"Parameter {name} is missing 'in' field"
+                )
                 raise PluginInitializationError(f"Parameter {name} is missing 'in' field")
             if param.get("content", None) is not None:
                 # The schema and content fields are mutually exclusive.
@@ -84,7 +107,9 @@ class OpenApiParser:
             )
         return result
 
-    def _get_payload_properties(self, operation_id, schema, required_properties, level=0):
+    def _get_payload_properties(
+        self, operation_id, schema, required_properties, level=0
+    ):
         if schema is None:
             return []
 
@@ -103,7 +128,9 @@ class OpenApiParser:
                 name=property_name,
                 type=property_schema.get("type", None),
                 is_required=property_name in required_properties,
-                properties=self._get_payload_properties(operation_id, property_schema, required_properties, level + 1),
+                properties=self._get_payload_properties(
+                    operation_id, property_schema, required_properties, level + 1
+                ),
                 description=property_schema.get("description", None),
                 schema=property_schema,
                 default_value=default_value,
@@ -123,13 +150,19 @@ class OpenApiParser:
         if content is None:
             return None
 
-        media_type = next((mt for mt in OpenApiParser.SUPPORTED_MEDIA_TYPES if mt in content), None)
+        media_type = next(
+            (mt for mt in OpenApiParser.SUPPORTED_MEDIA_TYPES if mt in content), None
+        )
         if media_type is None:
-            raise Exception(f"Neither of the media types of {operation_id} is supported.")
+            raise Exception(
+                f"Neither of the media types of {operation_id} is supported."
+            )
 
         media_type_metadata = content[media_type]
         payload_properties = self._get_payload_properties(
-            operation_id, media_type_metadata["schema"], media_type_metadata["schema"].get("required", set())
+            operation_id,
+            media_type_metadata["schema"],
+            media_type_metadata["schema"].get("required", set()),
         )
         return RestApiPayload(
             media_type,
@@ -141,11 +174,20 @@ class OpenApiParser:
     def _create_response(self, responses: dict[str, Any]) -> Generator[tuple[str, RestApiExpectedResponse], None, None]:
         for response_key, response_value in responses.items():
             media_type = next(
-                (mt for mt in OpenApiParser.SUPPORTED_MEDIA_TYPES if mt in response_value.get("content", {})), None
+                (
+                    mt
+                    for mt in OpenApiParser.SUPPORTED_MEDIA_TYPES
+                    if mt in response_value.get("content", {})
+                ),
+                None,
             )
             if media_type is not None:
-                matching_schema = response_value["content"][media_type].get("schema", {})
-                description = response_value.get("description") or matching_schema.get("description", "")
+                matching_schema = response_value["content"][media_type].get(
+                    "schema", {}
+                )
+                description = response_value.get("description") or matching_schema.get(
+                    "description", ""
+                )
                 yield (
                     response_key,
                     RestApiExpectedResponse(
@@ -256,7 +298,9 @@ class OpenApiParser:
 
                 parameters = details.get("parameters", [])
                 parsed_params = self._parse_parameters(parameters)
-                request_body = self._create_rest_api_operation_payload(operationId, details.get("requestBody", None))
+                request_body = self._create_rest_api_operation_payload(
+                    operationId, details.get("requestBody", None)
+                )
                 responses = dict(self._create_response(details.get("responses", {})))
 
                 operation_security = details.get("security", [])

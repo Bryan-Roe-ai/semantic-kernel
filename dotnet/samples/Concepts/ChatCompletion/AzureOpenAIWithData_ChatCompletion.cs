@@ -232,6 +232,7 @@ public class AzureOpenAIWithData_ChatCompletion(ITestOutputHelper output) : Base
             IndexName = TestConfiguration.AzureAISearch.IndexName
         };
     }
+#pragma warning restore AOAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
     /// <summary>
     /// Returns a collection of <see cref="ChatCitation"/>.

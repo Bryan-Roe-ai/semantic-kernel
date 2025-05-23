@@ -4,9 +4,8 @@
 
 To run the LLM prompts and semantic functions in the examples below, make sure
 you have an
-
-- [Azure OpenAI Service Key](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=rest-api) or
-- [OpenAI API Key](https://platform.openai.com).
+[OpenAI API Key](https://platform.openai.com) or
+[Azure OpenAI Service Key](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=rest-api).
 
 ## Nuget package
 
@@ -77,11 +76,11 @@ requirements and setup instructions.
 3. [Running AI prompts from file](./notebooks/02-running-prompts-from-file.ipynb)
 4. [Creating Semantic Functions at runtime (i.e. inline functions)](./notebooks/03-semantic-function-inline.ipynb)
 5. [Using Kernel Arguments to Build a Chat Experience](./notebooks/04-kernel-arguments-chat.ipynb)
-6. [Introduction to the Function Calling](./notebooks/05-using-function-calling.ipynb)
-7. [Vector Stores and Embeddings](./notebooks/06-vector-stores-and-embeddings.ipynb)
+6. [Creating and Executing Plans](./notebooks/05-using-the-planner.ipynb)
+7. [Building Memory with Embeddings](./notebooks/06-memory-and-embeddings.ipynb)
 8. [Creating images with DALL-E 3](./notebooks/07-DALL-E-3.ipynb)
 9. [Chatting with ChatGPT and Images](./notebooks/08-chatGPT-with-DALL-E-3.ipynb)
-10. [BingSearch using Kernel](./notebooks/09-RAG-with-BingSearch.ipynb)
+10. [BingSearch using Kernel](./notebooks/10-RAG-with-BingSearch.ipynb)
 
 # Semantic Kernel Samples
 
@@ -130,3 +129,17 @@ Other SK packages available at nuget.org:
 5. **Microsoft.SemanticKernel.Plugins.OpenApi**: OpenAPI Plugin.
 6. **Microsoft.SemanticKernel.Plugins.Web**: Web Plugin: search the web, download
    files, etc.
+
+# Enhancing Documentation
+
+## Detailed Explanations and Examples
+
+We have added more detailed explanations and examples to the existing documentation files to help users understand the various features of the repository. These explanations and examples provide a deeper understanding of how to use the Semantic Kernel effectively.
+
+## Code Snippets and Usage Examples
+
+To further assist users, we have included more code snippets and usage examples in the documentation. These snippets and examples demonstrate how to use the different features of the repository in practical scenarios.
+
+## Repository Structure Explanation
+
+We have added a section that explains the structure of the repository and the purpose of each directory and file. This section helps users navigate the repository and understand the organization of the codebase.

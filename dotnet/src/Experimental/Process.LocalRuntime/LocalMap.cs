@@ -56,7 +56,7 @@ internal sealed class LocalMap : LocalStep
                     processContext.StartWithEventAsync(
                         new KernelProcessEvent
                         {
-                            Id = startEventId,
+                            Id = ProcessConstants.MapEventId,
                             Data = value
                         });
 #pragma warning restore CA2000 // Dispose objects before losing scope

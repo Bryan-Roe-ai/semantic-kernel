@@ -1,0 +1,39 @@
+name: Makefile CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache
+        key: ${{ runner.os }}-make-${{ hashFiles('**/Makefile') }}
+        restore-keys: |
+          ${{ runner.os }}-make-
+
+    - name: Configure
+      run: ./configure
+
+    - name: Install dependencies
+      run: make
+
+    - name: Run check
+      run: make check
+
+    - name: Run distcheck
+      run: make distcheck
+
+    - name: Notify Slack
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        payload: '{"text":"Build ${{ github.workflow }} finished with status ${{ job.status }}."}'

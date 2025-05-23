@@ -22,6 +22,11 @@ public sealed class ProcessTestFixture : IDisposable, IAsyncLifetime
     /// <returns></returns>
     public async Task InitializeAsync()
     {
+        if (this._process is not null && !this._process.HasExited)
+        {
+            return;
+        }
+
         this._httpClient = new HttpClient();
         await this.StartTestHostAsync();
     }
@@ -34,11 +39,11 @@ public sealed class ProcessTestFixture : IDisposable, IAsyncLifetime
     {
         try
         {
-            string workingDirectory = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\..\..\Process.IntegrationTestHost.Dapr"));
+            string workingDirectory = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../../../Process.IntegrationTestHost.Dapr"));
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = "dapr",
-                Arguments = "run --app-id daprprocesstests --app-port 5200 --dapr-http-port 3500 -- dotnet run --urls http://localhost:5200",
+                Arguments = $"run --app-id daprprocesstests --app-port 5200 --dapr-http-port 3500 -- dotnet run --urls http://localhost:5200",
                 WorkingDirectory = workingDirectory,
                 RedirectStandardOutput = false,
                 RedirectStandardError = false,
@@ -65,7 +70,7 @@ public sealed class ProcessTestFixture : IDisposable, IAsyncLifetime
         var processStartInfo = new ProcessStartInfo
         {
             FileName = "dapr",
-            Arguments = "stop --app-id daprprocesstests",
+            Arguments = $"stop --app-id daprprocesstests",
             RedirectStandardOutput = false,
             RedirectStandardError = false,
             UseShellExecute = true,

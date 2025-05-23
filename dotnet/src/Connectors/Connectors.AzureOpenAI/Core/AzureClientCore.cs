@@ -60,6 +60,11 @@ internal partial class AzureClientCore : ClientCore
         this.Logger = logger ?? NullLogger.Instance;
         this.DeploymentName = deploymentName;
         this.Endpoint = new Uri(endpoint);
+        this.Client = new AzureOpenAIClient(this.Endpoint, apiKey, options);
+        this.Client = new AzureOpenAIClient(this.Endpoint, new ApiKeyCredential(apiKey), options);
+        this.Client = new AzureOpenAIClient(this.Endpoint, new ApiKeyCredential(apiKey), options);
+        this.Client = new AzureOpenAIClient(this.Endpoint, new ApiKeyCredential(apiKey), options);
+        this.Client = new AzureOpenAIClient(this.Endpoint, new ApiKeyCredential(apiKey), options);
         this.Client = new AzureOpenAIClient(this.Endpoint, new ApiKeyCredential(apiKey), options);
         this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
 
@@ -128,6 +133,15 @@ internal partial class AzureClientCore : ClientCore
     /// <returns>An instance of <see cref="OpenAIClientOptions"/>.</returns>
     internal static AzureOpenAIClientOptions GetAzureOpenAIClientOptions(HttpClient? httpClient, string? serviceVersion = null)
     {
+        AzureOpenAIClientOptions options = serviceVersion is not null
+            ? new(serviceVersion.Value) { ApplicationId = HttpHeaderConstant.Values.UserAgent }
+            : new() { ApplicationId = HttpHeaderConstant.Values.UserAgent };
+            ? new(serviceVersion.Value) { ApplicationId = HttpHeaderConstant.Values.UserAgent }
+            : new() { ApplicationId = HttpHeaderConstant.Values.UserAgent };
+            ? new(serviceVersion.Value) { UserAgentApplicationId = HttpHeaderConstant.Values.UserAgent }
+            : new() { UserAgentApplicationId = HttpHeaderConstant.Values.UserAgent };
+            ? new(serviceVersion.Value) { UserAgentApplicationId = HttpHeaderConstant.Values.UserAgent }
+            : new() { UserAgentApplicationId = HttpHeaderConstant.Values.UserAgent };
         AzureOpenAIClientOptions.ServiceVersion? sdkVersion = null;
         if (serviceVersion is not null)
         {
@@ -149,6 +163,8 @@ internal partial class AzureClientCore : ClientCore
         AzureOpenAIClientOptions options = sdkVersion is not null
             ? new AzureOpenAIClientOptions(sdkVersion.Value)
             : new();
+            ? new(serviceVersion.Value) { UserAgentApplicationId = HttpHeaderConstant.Values.UserAgent }
+            : new() { UserAgentApplicationId = HttpHeaderConstant.Values.UserAgent };
 
         options.UserAgentApplicationId = HttpHeaderConstant.Values.UserAgent;
         options.AddPolicy(CreateRequestHeaderPolicy(HttpHeaderConstant.Names.SemanticKernelVersion, HttpHeaderConstant.Values.GetAssemblyVersion(typeof(AzureClientCore))), PipelinePosition.PerCall);

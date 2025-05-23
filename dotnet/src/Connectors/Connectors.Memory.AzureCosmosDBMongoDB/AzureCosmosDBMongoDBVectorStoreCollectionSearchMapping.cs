@@ -2,9 +2,23 @@
 
 using System;
 using System.Linq;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Data;
+=======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
+<<<<<<< main
+<<<<<<< main
+>>>>>>> main
+=======
+=======
 using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel.Connectors.MongoDB;
+>>>>>>> upstream/main
+=======
+>>>>>>> main
+>>>>>>> origin/main
 using MongoDB.Bson;
 
 namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
@@ -14,13 +28,30 @@ namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
 /// </summary>
 internal static class AzureCosmosDBMongoDBVectorStoreCollectionSearchMapping
 {
+<<<<<<< main
+<<<<<<< main
+=======
+>>>>>>> origin/main
+<<<<<<< HEAD
+=======
+    /// <summary>Returns index kind specified on vector property or default <see cref="AzureCosmosDBMongoDBConstants.DefaultIndexKind"/>.</summary>
+    public static string GetVectorPropertyIndexKind(string? indexKind) => !string.IsNullOrWhiteSpace(indexKind) ? indexKind! : AzureCosmosDBMongoDBConstants.DefaultIndexKind;
+<<<<<<< main
+=======
     /// <summary>Returns index kind specified on vector property or default <see cref="MongoDBConstants.DefaultIndexKind"/>.</summary>
     public static string GetVectorPropertyIndexKind(string? indexKind) => !string.IsNullOrWhiteSpace(indexKind) ? indexKind! : MongoDBConstants.DefaultIndexKind;
+>>>>>>> upstream/main
+=======
+>>>>>>> origin/main
 
-    /// <summary>Returns distance function specified on vector property or default <see cref="MongoDBConstants.DefaultDistanceFunction"/>.</summary>
-    public static string GetVectorPropertyDistanceFunction(string? distanceFunction) => !string.IsNullOrWhiteSpace(distanceFunction) ? distanceFunction! : MongoDBConstants.DefaultDistanceFunction;
+    /// <summary>Returns distance function specified on vector property or default <see cref="AzureCosmosDBMongoDBConstants.DefaultDistanceFunction"/>.</summary>
+    public static string GetVectorPropertyDistanceFunction(string? distanceFunction) => !string.IsNullOrWhiteSpace(distanceFunction) ? distanceFunction! : AzureCosmosDBMongoDBConstants.DefaultDistanceFunction;
 
+<<<<<<< HEAD
+>>>>>>> main
+=======
 #pragma warning disable CS0618 // VectorSearchFilter is obsolete
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <summary>
     /// Build Azure CosmosDB MongoDB filter from the provided <see cref="VectorSearchFilter"/>.
     /// </summary>

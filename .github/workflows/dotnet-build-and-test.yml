@@ -14,6 +14,22 @@ on:
 
 env:
   COVERAGE_THRESHOLD: 80
+  AzureOpenAI__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
+  AzureOpenAI__DeploymentName: ${{ vars.AZUREOPENAI__DEPLOYMENTNAME }}
+  AzureOpenAI__ChatDeploymentName: ${{ vars.AZUREOPENAI__CHATDEPLOYMENTNAME }}
+  AzureOpenAIEmbeddings__DeploymentName: ${{ vars.AZUREOPENAI__EMBEDDING__DEPLOYMENTNAME }}
+  AzureOpenAIEmbeddings__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
+  AzureOpenAI__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
+  AzureOpenAIEmbeddings__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
+  OpenAI__ApiKey: ${{ secrets.OPENAI__APIKEY }}
+  OpenAI__ChatModelId: ${{ vars.OPENAI__CHATMODELID }}
+  OpenAIEmbeddings__ApiKey: ${{ secrets.OPENAIEMBEDDINGS__APIKEY }}
+  OpenAIEmbeddings__ModelId: ${{ vars.OPENAIEMBEDDINGS__MODELID }}
+  Bing__ApiKey: ${{ secrets.BING__APIKEY }}
+  Google__SearchEngineId: ${{ secrets.GOOGLE__SEARCHENGINEID }}
+  Google__ApiKey: ${{ secrets.GOOGLE__APIKEY }}
+  AzureAIInference__ApiKey: ${{ secrets.AZUREAIINFERENCE__APIKEY }}
+  AzureAIInference__Endpoint: ${{ secrets.AZUREAIINFERENCE__ENDPOINT }}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -30,9 +46,14 @@ jobs:
       dotnetChanges: ${{ steps.filter.outputs.dotnet }}
     steps:
       - uses: actions/checkout@v4
+<<<<<<< HEAD
+
+      - uses: dorny/paths-filter@v3
+=======
         with:
           persist-credentials: false
       - uses: dorny/paths-filter@v2
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         id: filter
         with:
           filters: |
@@ -70,12 +91,17 @@ jobs:
     environment: ${{ matrix.environment }}
     steps:
       - uses: actions/checkout@v4
+<<<<<<< HEAD
+
+=======
         with:
           persist-credentials: false
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       - name: Setup dotnet ${{ matrix.dotnet }}
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet }}
+
       - name: Build dotnet solutions
         shell: bash
         run: |
@@ -92,13 +118,16 @@ jobs:
             dotnet test -c ${{ matrix.configuration }} $project --no-build -v Normal --logger trx --collect:"XPlat Code Coverage" --results-directory:"TestResults/Coverage/" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByAttribute=GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute
           done
 
-      - name: Run AOT Unit Tests
-        shell: pwsh
-        run: .github/workflows/test-aot-compatibility.ps1 ${{ matrix.dotnet }}
+      - name: Check for Unsupported Languages
+        run: |
+          if [ "${{ matrix.language }}" == "csharp" ]; then
+            echo "Error: Unsupported language 'C#'."
+            exit 1
+          fi
 
       - name: Azure CLI Login
         if: github.event_name != 'pull_request' && matrix.integration-tests
-        uses: azure/login@v2
+        uses: azure/login@v4
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -118,29 +147,15 @@ jobs:
           AzureOpenAI__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
           AzureOpenAI__DeploymentName: ${{ vars.AZUREOPENAI__DEPLOYMENTNAME }}
           AzureOpenAI__ChatDeploymentName: ${{ vars.AZUREOPENAI__CHATDEPLOYMENTNAME }}
+          AzureOpenAIEmbeddings__DeploymentName: ${{ vars.AZUREOPENAI__EMBEDDING__DEPLOYMENTNAME }}
           AzureOpenAIEmbeddings__Endpoint: ${{ secrets.AZUREOPENAI__ENDPOINT }}
-          AzureOpenAIEmbeddings__DeploymentName: ${{ vars.AZUREOPENAIEMBEDDING__DEPLOYMENTNAME }}
-          AzureOpenAITextToAudio__Endpoint: ${{ secrets.AZUREOPENAITEXTTOAUDIO__ENDPOINT }}
-          AzureOpenAITextToAudio__DeploymentName: ${{ vars.AZUREOPENAITEXTTOAUDIO__DEPLOYMENTNAME }}
-          AzureOpenAIAudioToText__Endpoint: ${{ secrets.AZUREOPENAIAUDIOTOTEXT__ENDPOINT }}
-          AzureOpenAIAudioToText__DeploymentName: ${{ vars.AZUREOPENAIAUDIOTOTEXT__DEPLOYMENTNAME }}
-          AzureOpenAITextToImage__Endpoint: ${{ secrets.AZUREOPENAITEXTTOIMAGE__ENDPOINT }}
-          AzureOpenAITextToImage__DeploymentName: ${{ vars.AZUREOPENAITEXTTOIMAGE__DEPLOYMENTNAME }}
-          Planners__AzureOpenAI__Endpoint: ${{ secrets.PLANNERS__AZUREOPENAI__ENDPOINT }}
-          Planners__AzureOpenAI__DeploymentName: ${{ vars.PLANNERS__AZUREOPENAI__DEPLOYMENTNAME }}
+          AzureOpenAI__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
+          AzureOpenAIEmbeddings__ApiKey: ${{ secrets.AZUREOPENAI__APIKEY }}
           # OpenAI Models
           OpenAI__ApiKey: ${{ secrets.OPENAI__APIKEY }}
           OpenAI__ChatModelId: ${{ vars.OPENAI__CHATMODELID }}
           OpenAIEmbeddings__ApiKey: ${{ secrets.OPENAIEMBEDDINGS__APIKEY }}
           OpenAIEmbeddings__ModelId: ${{ vars.OPENAIEMBEDDINGS__MODELID }}
-          OpenAITextToAudio__ApiKey: ${{ secrets.OPENAITEXTTOAUDIO__APIKEY }}
-          OpenAITextToAudio__ModelId: ${{ vars.OPENAITEXTTOAUDIO__MODELID }}
-          OpenAIAudioToText__ApiKey: ${{ secrets.OPENAIAUDIOTOTEXT__APIKEY }}
-          OpenAIAudioToText__ModelId: ${{ vars.OPENAIAUDIOTOTEXT__MODELID }}
-          OpenAITextToImage__ApiKey: ${{ secrets.OPENAITEXTTOIMAGE__APIKEY }}
-          OpenAITextToImage__ModelId: ${{ vars.OPENAITEXTTOIMAGE__MODELID }}
-          Planners__OpenAI__ApiKey: ${{ secrets.PLANNERS__OPENAI__APIKEY }}
-          Planners__OpenAI__ModelId: ${{ vars.PLANNERS__OPENAI__MODELID }}
           # Bing Web Search
           Bing__ApiKey: ${{ secrets.BING__APIKEY }}
           # Google Web Search
@@ -155,8 +170,21 @@ jobs:
           AzureAI__ConnectionString: ${{ secrets.AZUREAI__CONNECTIONSTRING }}
           AzureAI__ChatModelId: ${{ vars.AZUREAI__CHATMODELID }}
 
+      - name: Integrate additional service
+        uses: codacy/codacy-analysis-cli-action@v4
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
       # Generate test reports and check coverage
       - name: Generate test reports
+<<<<<<< HEAD
+        uses: danielpalme/ReportGenerator-GitHub-Action@v5
+        with:
+          reports: "./TestResults/Coverage/**/coverage.cobertura.xml"
+          targetdir: "./TestResults/Reports"
+          reporttypes: "JsonSummary"
+          assemblyfilters: "+Microsoft.SemanticKernel.Abstractions;+Microsoft.SemanticKernel.Core;+Microsoft.SemanticKernel.PromptTemplates.Handlebars;+Microsoft.SemanticKernel.Connectors.OpenAI;+Microsoft.SemanticKernel.Connectors.AzureOpenAI;+Microsoft.SemanticKernel.Yaml;+Microsoft.SemanticKernel.Agents.Abstractions;+Microsoft.SemanticKernel.Agents.Core;+Microsoft.SemanticKernel.Agents.OpenAI"
+=======
         uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
         with:
           reports: "./TestResults/Coverage/**/coverage.cobertura.xml"
@@ -168,10 +196,35 @@ jobs:
         with:
           name: CoverageReport-${{ matrix.os }}-${{ matrix.dotnet }}-${{ matrix.configuration }} # Artifact name
           path: ./TestResults/Reports # Directory containing files to upload
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
       - name: Check coverage
         shell: pwsh
         run: .github/workflows/check-coverage.ps1 -JsonReportPath "TestResults/Reports/Summary.json" -CoverageThreshold $env:COVERAGE_THRESHOLD
+
+      - name: Trigger Ensure Success Workflow
+        run: |
+          gh workflow run ensure-success.yml
+
+      - name: Fix Errors
+        if: failure()
+        run: ./fix-errors.sh
+
+      - name: Log Error Message
+        if: failure()
+        run: echo "Error occurred during the build and test process"
+
+      - name: Increase memory limit for Docker containers
+        run: echo "DOCKER_OPTS=\"--default-ulimit nofile=1024:4096 --memory=4g\"" | sudo tee -a /etc/default/docker
+
+      - name: Restart Docker service
+        run: sudo service docker restart
+
+      - name: Handle out-of-memory errors by retrying the build process
+        run: |
+          for i in {1..3}; do
+            dotnet build && break || sleep 10;
+          done
 
   # This final job is required to satisfy the merge queue. It must only run (or succeed) if no tests failed
   dotnet-build-and-test-check:
@@ -205,13 +258,13 @@ jobs:
       - name: Fail workflow if tests failed
         id: check_tests_failed
         if: contains(join(needs.*.result, ','), 'failure')
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: core.setFailed('Integration Tests Failed!')
 
       - name: Fail workflow if tests cancelled
         id: check_tests_cancelled
         if: contains(join(needs.*.result, ','), 'cancelled')
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: core.setFailed('Integration Tests Cancelled!')

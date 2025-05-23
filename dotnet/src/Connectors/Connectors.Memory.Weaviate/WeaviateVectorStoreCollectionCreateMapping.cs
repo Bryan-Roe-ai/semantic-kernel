@@ -22,7 +22,80 @@ internal static class WeaviateVectorStoreCollectionCreateMapping
     /// <param name="hasNamedVectors">Gets a value indicating whether the vectors in the store are named and multiple vectors are supported, or whether there is just a single unnamed vector in Weaviate collection.</param>
     /// <param name="model">The model.</param>
     /// <returns>Weaviate collection schema.</returns>
+<<<<<<< HEAD
+    public static WeaviateCollectionSchema MapToSchema(
+        string collectionName,
+        IEnumerable<VectorStoreRecordDataProperty> dataProperties,
+        IEnumerable<VectorStoreRecordVectorProperty> vectorProperties,
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+        Dictionary<string, string> storagePropertyNames)
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+        Dictionary<string, string> storagePropertyNames)
+=======
+        IReadOnlyDictionary<string, string> storagePropertyNames)
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+        IReadOnlyDictionary<string, string> storagePropertyNames)
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+        IReadOnlyDictionary<string, string> storagePropertyNames)
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
+=======
     public static WeaviateCollectionSchema MapToSchema(string collectionName, bool hasNamedVectors, VectorStoreRecordModel model)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         var schema = new WeaviateCollectionSchema(collectionName);
 

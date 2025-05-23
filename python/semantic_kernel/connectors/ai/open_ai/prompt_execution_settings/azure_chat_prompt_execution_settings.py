@@ -13,7 +13,9 @@ from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_pro
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 
 if TYPE_CHECKING:
-    from semantic_kernel.connectors.memory.azure_cognitive_search.azure_ai_search_settings import AzureAISearchSettings
+    from semantic_kernel.connectors.memory.azure_cognitive_search.azure_ai_search_settings import (
+        AzureAISearchSettings,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +24,9 @@ class AzureChatRequestBase(KernelBaseModel):
     """Base class for Azure Chat requests."""
 
     model_config = ConfigDict(
-        alias_generator=AliasGenerator(validation_alias=to_camel, serialization_alias=to_snake),
+        alias_generator=AliasGenerator(
+            validation_alias=to_camel, serialization_alias=to_snake
+        ),
         use_enum_values=True,
         extra="allow",
     )
@@ -31,7 +35,9 @@ class AzureChatRequestBase(KernelBaseModel):
 class ConnectionStringAuthentication(AzureChatRequestBase):
     """Connection string authentication."""
 
-    type: Annotated[Literal["ConnectionString", "connection_string"], AfterValidator(to_snake)] = "connection_string"
+    type: Annotated[
+        Literal["ConnectionString", "connection_string"], AfterValidator(to_snake)
+    ] = "connection_string"
     connection_string: str | None = None
 
 
@@ -69,7 +75,9 @@ class AccessTokenAuthentication(AzureChatRequestBase):
 class AzureEmbeddingDependency(AzureChatRequestBase):
     """Azure embedding dependency."""
 
-    type: Annotated[Literal["DeploymentName", "deployment_name"], AfterValidator(to_snake)] = "deployment_name"
+    type: Annotated[
+        Literal["DeploymentName", "deployment_name"], AfterValidator(to_snake)
+    ] = "deployment_name"
     deployment_name: str | None = None
 
 
@@ -120,7 +128,10 @@ class AzureAISearchDataSourceParameters(AzureDataSourceParameters):
 
     endpoint: str | None = None
     query_type: Annotated[
-        Literal["simple", "semantic", "vector", "vectorSimpleHybrid", "vectorSemanticHybrid"], AfterValidator(to_snake)
+        Literal[
+            "simple", "semantic", "vector", "vectorSimpleHybrid", "vectorSemanticHybrid"
+        ],
+        AfterValidator(to_snake),
     ] = "simple"
     authentication: (
         ApiKeyAuthentication
@@ -138,19 +149,27 @@ class AzureAISearchDataSource(AzureChatRequestBase):
     parameters: Annotated[dict, AzureAISearchDataSourceParameters]
 
     @classmethod
-    def from_azure_ai_search_settings(cls, azure_ai_search_settings: "AzureAISearchSettings", **kwargs: Any):
+    def from_azure_ai_search_settings(
+        cls, azure_ai_search_settings: "AzureAISearchSettings", **kwargs: Any
+    ):
         """Create an instance from Azure AI Search settings."""
         kwargs["parameters"] = {
             "endpoint": str(azure_ai_search_settings.endpoint),
             "index_name": azure_ai_search_settings.index_name,
             "authentication": {
-                "key": azure_ai_search_settings.api_key.get_secret_value() if azure_ai_search_settings.api_key else None
+                "key": (
+                    azure_ai_search_settings.api_key.get_secret_value()
+                    if azure_ai_search_settings.api_key
+                    else None
+                )
             },
         }
         return cls(**kwargs)
 
 
-DataSource = Annotated[Union[AzureAISearchDataSource, AzureCosmosDBDataSource], Field(discriminator="type")]
+DataSource = Annotated[
+    Union[AzureAISearchDataSource, AzureCosmosDBDataSource], Field(discriminator="type")
+]
 
 
 class ExtraBody(KernelBaseModel):

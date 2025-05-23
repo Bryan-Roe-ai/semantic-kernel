@@ -4,18 +4,32 @@ import logging
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urlparse
 
+<<<<<<< HEAD
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import (
+    RestApiOperation,
+)
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_parameter import (
+    RestApiOperationParameter,
+)
+from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_run_options import (
+    RestApiOperationRunOptions,
+)
+=======
 from semantic_kernel.connectors.openapi_plugin.const import OperationExtensions
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import RestApiOperation
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter import RestApiParameter
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_run_options import RestApiRunOptions
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_security_requirement import RestApiSecurityRequirement
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_uri import Uri
 from semantic_kernel.connectors.openapi_plugin.openapi_parser import OpenApiParser
 from semantic_kernel.connectors.openapi_plugin.openapi_runner import OpenApiRunner
 from semantic_kernel.exceptions.function_exceptions import FunctionExecutionException
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
-from semantic_kernel.functions.kernel_function_from_method import KernelFunctionFromMethod
+from semantic_kernel.functions.kernel_function_from_method import (
+    KernelFunctionFromMethod,
+)
 from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
 from semantic_kernel.schema.kernel_json_schema_builder import TYPE_MAPPING
 from semantic_kernel.utils.feature_stage_decorator import experimental
@@ -62,7 +76,17 @@ def create_functions_from_openapi(
             raise FunctionExecutionException(f"Error parsing OpenAPI document: {openapi_document_path}")
 
     parser = OpenApiParser()
+<<<<<<< HEAD
+    if (parsed_doc := parser.parse(openapi_document_path)) is None:
+        raise FunctionExecutionException(
+            f"Error parsing OpenAPI document: {openapi_document_path}"
+        )
+    operations = parser.create_rest_api_operations(
+        parsed_doc, execution_settings=execution_settings
+    )
+=======
     operations = parser.create_rest_api_operations(parsed_doc, execution_settings=execution_settings)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     global_security_requirements = parsed_doc.get("security", [])
 
@@ -74,10 +98,27 @@ def create_functions_from_openapi(
         parsed_openapi_document=parsed_doc,
         auth_callback=auth_callback,
         http_client=execution_settings.http_client if execution_settings else None,
-        enable_dynamic_payload=execution_settings.enable_dynamic_payload if execution_settings else True,
-        enable_payload_namespacing=execution_settings.enable_payload_namespacing if execution_settings else False,
+        enable_dynamic_payload=(
+            execution_settings.enable_dynamic_payload if execution_settings else True
+        ),
+        enable_payload_namespacing=(
+            execution_settings.enable_payload_namespacing
+            if execution_settings
+            else False
+        ),
     )
 
+<<<<<<< HEAD
+    return [
+        _create_function_from_operation(
+            openapi_runner,
+            operation,
+            plugin_name,
+            execution_parameters=execution_settings,
+        )
+        for operation in operations.values()
+    ]
+=======
     functions = []
     for operation in operations.values():
         try:
@@ -96,6 +137,7 @@ def create_functions_from_openapi(
             raise FunctionExecutionException(error_msg) from ex
 
     return functions
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 @experimental
@@ -111,8 +153,12 @@ def _create_function_from_operation(
 
     rest_operation_params: list[RestApiParameter] = operation.get_parameters(
         operation=operation,
-        add_payload_params_from_metadata=getattr(execution_parameters, "enable_dynamic_payload", True),
-        enable_payload_spacing=getattr(execution_parameters, "enable_payload_namespacing", False),
+        add_payload_params_from_metadata=getattr(
+            execution_parameters, "enable_dynamic_payload", True
+        ),
+        enable_payload_spacing=getattr(
+            execution_parameters, "enable_payload_namespacing", False
+        ),
     )
 
     @kernel_function(
@@ -146,15 +192,25 @@ def _create_function_from_operation(
 
             options = RestApiRunOptions(
                 server_url_override=(
-                    urlparse(execution_parameters.server_url_override) if execution_parameters else None
+                    urlparse(execution_parameters.server_url_override)
+                    if execution_parameters
+                    else None
                 ),
-                api_host_url=Uri(document_uri).get_left_part() if document_uri is not None else None,
+                api_host_url=(
+                    Uri(document_uri).get_left_part()
+                    if document_uri is not None
+                    else None
+                ),
             )
 
             return await runner.run_operation(operation, kernel_arguments, options)
         except Exception as e:
-            logger.error(f"Error running OpenAPI operation: {operation.id}", exc_info=True)
-            raise FunctionExecutionException(f"Error running OpenAPI operation: {operation.id}") from e
+            logger.error(
+                f"Error running OpenAPI operation: {operation.id}", exc_info=True
+            )
+            raise FunctionExecutionException(
+                f"Error running OpenAPI operation: {operation.id}"
+            ) from e
 
     parameters: list[KernelParameterMetadata] = [
         KernelParameterMetadata(
@@ -166,9 +222,7 @@ def _create_function_from_operation(
             schema_data=(
                 p.schema
                 if p.schema is not None and isinstance(p.schema, dict)
-                else {"type": f"{p.type}"}
-                if p.type
-                else None
+                else {"type": f"{p.type}"} if p.type else None
             ),
         )
         for p in rest_operation_params

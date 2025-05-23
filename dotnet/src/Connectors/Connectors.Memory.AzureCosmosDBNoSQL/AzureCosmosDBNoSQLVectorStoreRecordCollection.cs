@@ -34,8 +34,75 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
     where TRecord : notnull
 #pragma warning restore CA1711 // Identifiers should not have incorrect
 {
+<<<<<<< HEAD
+    /// <summary>The name of this database for telemetry purposes.</summary>
+    private const string DatabaseName = "AzureCosmosDBNoSQL";
+
+    /// <summary>A set of types that a key on the provided model may have.</summary>
+
+    /// <summary>A <see cref="HashSet{T}"/> of types that a key on the provided model may have.</summary>
+
+    private static readonly HashSet<Type> s_supportedKeyTypes =
+    [
+        typeof(string)
+    ];
+
+    /// <summary>A set of types that data properties on the provided model may have.</summary>
+    private static readonly HashSet<Type> s_supportedDataTypes =
+    [
+        typeof(string),
+        typeof(int),
+        typeof(long),
+        typeof(double),
+        typeof(float),
+        typeof(bool),
+        typeof(DateTimeOffset),
+        typeof(int?),
+        typeof(long?),
+        typeof(double?),
+        typeof(float?),
+        typeof(bool?),
+        typeof(DateTimeOffset?),
+    ];
+
+    /// <summary>A set of types that vector properties on the provided model may have, based on <see cref="VectorDataType"/> enumeration.</summary>
+
+    /// <summary>A <see cref="HashSet{T}"/> of types that data properties on the provided model may have.</summary>
+    private static readonly HashSet<Type> s_supportedDataTypes =
+    [
+        typeof(bool),
+        typeof(bool?),
+        typeof(string),
+        typeof(int),
+        typeof(int?),
+        typeof(long),
+        typeof(long?),
+        typeof(float),
+        typeof(float?),
+        typeof(double),
+        typeof(double?),
+        typeof(DateTimeOffset),
+        typeof(DateTimeOffset?),
+    ];
+
+    /// <summary>A <see cref="HashSet{T}"/> of types that vector properties on the provided model may have, based on <see cref="VectorDataType"/> enumeration.</summary>
+
+    private static readonly HashSet<Type> s_supportedVectorTypes =
+    [
+        // Float32
+        typeof(ReadOnlyMemory<float>),
+        typeof(ReadOnlyMemory<float>?),
+        // Uint8
+        typeof(ReadOnlyMemory<byte>),
+        typeof(ReadOnlyMemory<byte>?),
+        // Int8
+        typeof(ReadOnlyMemory<sbyte>),
+        typeof(ReadOnlyMemory<sbyte>?),
+    ];
+=======
     /// <summary>Metadata about vector store record collection.</summary>
     private readonly VectorStoreRecordCollectionMetadata _collectionMetadata;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     /// <summary>The default options for vector search.</summary>
     private static readonly VectorSearchOptions<TRecord> s_defaultVectorSearchOptions = new();
@@ -49,12 +116,38 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
     /// <summary>Optional configuration options for this class.</summary>
     private readonly AzureCosmosDBNoSQLVectorStoreRecordCollectionOptions<TRecord> _options;
 
+<<<<<<< HEAD
+    /// <summary>A definition of the current storage model.</summary>
+    private readonly VectorStoreRecordDefinition _vectorStoreRecordDefinition;
+
+    /// <summary>A helper to access property information for the current data model and record definition.</summary>
+    private readonly VectorStoreRecordPropertyReader _propertyReader;
+
+    /// <summary>The storage names of all non vector fields on the current model.</summary>
+    private readonly List<string> _nonVectorStoragePropertyNames = [];
+
+    /// <summary>A dictionary that maps from a property name to the storage name that should be used when serializing it to json for data and vector properties.</summary>
+    private readonly Dictionary<string, string> _storagePropertyNames = [];
+
+    /// <summary>The storage name of the key field for the collections that this class is used with.</summary>
+    private readonly string _keyStoragePropertyName;
+
+    /// <summary>The key property of the current storage model.</summary>
+    private readonly VectorStoreRecordKeyProperty _keyProperty;
+
+    /// <summary>The property name to use as partition key.</summary>
+    private readonly string _partitionKeyPropertyName;
+
+    /// <summary>The storage property name to use as partition key.</summary>
+    private readonly string _partitionKeyStoragePropertyName;
+=======
     /// <summary>The model for this collection.</summary>
     private readonly VectorStoreRecordModel _model;
 
     // TODO: Refactor this into the model (Co)
     /// <summary>The property to use as partition key.</summary>
     private readonly VectorStoreRecordPropertyModel _partitionKeyProperty;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     /// <summary>The mapper to use when mapping between the consumer data model and the Azure CosmosDB NoSQL record.</summary>
     private readonly ICosmosNoSQLMapper<TRecord> _mapper;
@@ -93,6 +186,28 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
         this._database = database;
         this.Name = name;
         this._options = options ?? new();
+        this._vectorStoreRecordDefinition = this._options.VectorStoreRecordDefinition ?? VectorStoreRecordPropertyReader.CreateVectorStoreRecordDefinitionFromType(typeof(TRecord), true);
+        var jsonSerializerOptions = this._options.JsonSerializerOptions ?? JsonSerializerOptions.Default;
+
+        // Validate property types.
+        var properties = VectorStoreRecordPropertyReader.SplitDefinitionAndVerify(typeof(TRecord).Name, this._vectorStoreRecordDefinition, supportsMultipleVectors: true, requiresAtLeastOneVector: false);
+        VectorStoreRecordPropertyReader.VerifyPropertyTypes([properties.KeyProperty], s_supportedKeyTypes, "Key");
+        VectorStoreRecordPropertyReader.VerifyPropertyTypes(properties.DataProperties, s_supportedDataTypes, "Data", supportEnumerable: true);
+        VectorStoreRecordPropertyReader.VerifyPropertyTypes(properties.VectorProperties, s_supportedVectorTypes, "Vector");
+
+        // Get storage names and store for later use.
+        this._keyProperty = properties.KeyProperty;
+        this._storagePropertyNames = VectorStoreRecordPropertyReader.BuildPropertyNameToJsonPropertyNameMap(properties, typeof(TRecord), jsonSerializerOptions);
+
+        // Assign mapper.
+        this._mapper = this._options.JsonObjectCustomMapper ??
+            new AzureCosmosDBNoSQLVectorStoreRecordMapper<TRecord>(
+                this._storagePropertyNames[this._keyProperty.DataModelPropertyName],
+                this._storagePropertyNames,
+                jsonSerializerOptions);
+
+        // Use Azure CosmosDB NoSQL reserved key property name as storage key property name.
+        this._storagePropertyNames[this._keyProperty.DataModelPropertyName] = AzureCosmosDBNoSQLConstants.ReservedKeyPropertyName;
         var jsonSerializerOptions = this._options.JsonSerializerOptions ?? JsonSerializerOptions.Default;
         this._model = new AzureCosmosDBNoSQLVectorStoreModelBuilder()
             .Build(typeof(TRecord), this._options.VectorStoreRecordDefinition, this._options.EmbeddingGenerator, jsonSerializerOptions);
@@ -102,6 +217,27 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
             ? (new AzureCosmosDBNoSQLDynamicDataModelMapper(this._model, jsonSerializerOptions) as ICosmosNoSQLMapper<TRecord>)!
             : new AzureCosmosDBNoSQLVectorStoreRecordMapper<TRecord>(this._model, this._options.JsonSerializerOptions);
 
+<<<<<<< HEAD
+        // Use Azure CosmosDB NoSQL reserved key property name as storage key property name.
+        this._storagePropertyNames[this._propertyReader.KeyPropertyName] = AzureCosmosDBNoSQLConstants.ReservedKeyPropertyName;
+        
+        this._keyStoragePropertyName = AzureCosmosDBNoSQLConstants.ReservedKeyPropertyName;
+
+        // If partition key is not provided, use key property as a partition key.
+        this._partitionKeyPropertyName = !string.IsNullOrWhiteSpace(this._options.PartitionKeyPropertyName) ?
+            this._options.PartitionKeyPropertyName! :
+            this._keyProperty.DataModelPropertyName;
+
+        VerifyPartitionKeyProperty(this._partitionKeyPropertyName, this._vectorStoreRecordDefinition);
+
+        this._partitionKeyStoragePropertyName = this._storagePropertyNames[this._partitionKeyPropertyName];
+
+        this._nonVectorStoragePropertyNames = properties.DataProperties
+            .Cast<VectorStoreRecordProperty>()
+            .Concat([properties.KeyProperty])
+
+            this._propertyReader.KeyPropertyName;
+=======
         // Setup partition key property
         if (this._options.PartitionKeyPropertyName is not null)
         {
@@ -114,6 +250,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
             {
                 throw new ArgumentException("Partition key property must be string.");
             }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
             this._partitionKeyProperty = property;
         }
@@ -418,7 +555,56 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
     }
 
     /// <inheritdoc />
+<<<<<<< HEAD
+    public Task DeleteAsync(AzureCosmosDBNoSQLCompositeKey key, DeleteRecordOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return this.InternalDeleteAsync([key], cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task DeleteBatchAsync(IEnumerable<AzureCosmosDBNoSQLCompositeKey> keys, DeleteRecordOptions? options = null, CancellationToken cancellationToken = default)
+    {
+        return this.InternalDeleteAsync(keys, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    Task<AzureCosmosDBNoSQLCompositeKey> IVectorStoreRecordCollection<AzureCosmosDBNoSQLCompositeKey, TRecord>.UpsertAsync(TRecord record, UpsertRecordOptions? options, CancellationToken cancellationToken)
+    {
+        return this.InternalUpsertAsync(record, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    async IAsyncEnumerable<AzureCosmosDBNoSQLCompositeKey> IVectorStoreRecordCollection<AzureCosmosDBNoSQLCompositeKey, TRecord>.UpsertBatchAsync(
+        IEnumerable<TRecord> records,
+        UpsertRecordOptions? options,
+        [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        Verify.NotNull(records);
+
+        var tasks = records.Select(record => this.InternalUpsertAsync(record, cancellationToken));
+
+        var keys = await Task.WhenAll(tasks).ConfigureAwait(false);
+
+        foreach (var key in keys)
+        {
+            if (key is not null)
+            {
+                yield return key;
+            }
+        }
+    }
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<VectorSearchResult<TRecord>> VectorizedSearchAsync<TVector>(
+        TVector vector,
+        VectorSearchOptions? options = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+
+    /// <inheritdoc />
+    public Task<VectorSearchResults<TRecord>> VectorizedSearchAsync<TVector>(
+=======
     public IAsyncEnumerable<VectorSearchResult<TRecord>> SearchEmbeddingAsync<TVector>(
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         TVector vector,
         int top,
         VectorSearchOptions<TRecord>? options = null,
@@ -580,6 +766,54 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
                 $"The provided vector type {vectorType.FullName} is not supported by the Azure CosmosDB NoSQL connector. " +
                 $"Supported types are: {string.Join(", ", AzureCosmosDBNoSQLVectorStoreModelBuilder.s_supportedVectorTypes.Select(l => l.FullName))}");
         }
+<<<<<<< HEAD
+
+        var searchOptions = options ?? s_defaultVectorSearchOptions;
+        var vectorProperty = this.GetVectorPropertyForSearch(searchOptions.VectorPropertyName);
+
+        if (vectorProperty is null)
+        {
+            throw new InvalidOperationException("The collection does not have any vector properties, so vector search is not possible.");
+        }
+
+        var fields = new List<string>(searchOptions.IncludeVectors ? this._storagePropertyNames.Values : this._nonVectorStoragePropertyNames);
+        var vectorPropertyName = this._storagePropertyNames[vectorProperty.DataModelPropertyName];
+
+        var queryDefinition = AzureCosmosDBNoSQLVectorStoreCollectionQueryBuilder.BuildSearchQuery(
+            vector,
+            fields,
+            this._storagePropertyNames,
+            vectorPropertyName,
+            ScorePropertyName,
+            searchOptions);
+
+        await foreach (var jsonObject in this.GetItemsAsync<JsonObject>(queryDefinition, cancellationToken).ConfigureAwait(false))
+        {
+            var score = jsonObject[ScorePropertyName]?.AsValue().GetValue<double>();
+
+            // Remove score from result object for mapping.
+            jsonObject.Remove(ScorePropertyName);
+
+            var record = VectorStoreErrorHandler.RunModelConversion(
+                DatabaseName,
+                this.CollectionName,
+                OperationName,
+                () => this._mapper.MapFromStorageToDataModel(jsonObject, new() { IncludeVectors = searchOptions.IncludeVectors }));
+
+            yield return new VectorSearchResult<TRecord>(record, score);
+        }
+    }
+
+        var searchResults = this.GetItemsAsync<JsonObject>(queryDefinition, cancellationToken);
+        var mappedResults = this.MapSearchResultsAsync(
+            searchResults,
+            ScorePropertyName,
+            OperationName,
+            searchOptions,
+            cancellationToken);
+        return Task.FromResult(new VectorSearchResults<TRecord>(mappedResults));
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     private async Task<T> RunOperationAsync<T>(string operationName, Func<Task<T>> operation)
@@ -600,6 +834,38 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
         }
     }
 
+<<<<<<< HEAD
+    private static void VerifyPartitionKeyProperty(string partitionKeyPropertyName, VectorStoreRecordDefinition definition)
+    {
+        var partitionKeyProperty = definition.Properties
+
+    private static void VerifyPartitionKeyProperty(string partitionKeyPropertyName, VectorStoreRecordDefinition definition)
+    {
+        var partitionKeyProperty = definition.Properties
+
+    private static void VerifyPartitionKeyProperty(string partitionKeyPropertyName, IReadOnlyList<VectorStoreRecordProperty> properties)
+    {
+        var partitionKeyProperty = properties
+
+    private static void VerifyPartitionKeyProperty(string partitionKeyPropertyName, IReadOnlyList<VectorStoreRecordProperty> properties)
+    {
+        var partitionKeyProperty = properties
+
+            .FirstOrDefault(l => l.DataModelPropertyName.Equals(partitionKeyPropertyName, StringComparison.Ordinal));
+
+        if (partitionKeyProperty is null)
+        {
+            throw new ArgumentException("Partition key property must be part of record definition.");
+        }
+
+        if (partitionKeyProperty.PropertyType != typeof(string))
+        {
+            throw new ArgumentException("Partition key property must be string.");
+        }
+    }
+
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <summary>
     /// Returns instance of <see cref="ContainerProperties"/> with applied indexing policy.
     /// More information here: <see href="https://learn.microsoft.com/en-us/azure/cosmos-db/nosql/how-to-manage-indexing-policy"/>.
@@ -609,6 +875,10 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
         // Process Vector properties.
         var embeddings = new Collection<Azure.Cosmos.Embedding>();
         var vectorIndexPaths = new Collection<VectorIndexPath>();
+
+        foreach (var property in this._vectorStoreRecordDefinition.Properties.OfType<VectorStoreRecordVectorProperty>())
+
+        foreach (var property in this._propertyReader.VectorProperties)
 
         var indexingPolicy = new IndexingPolicy
         {
@@ -654,7 +924,16 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
         // Process Data properties.
         foreach (var property in this._model.DataProperties)
         {
+<<<<<<< HEAD
+            // Process Data properties.
+            foreach (var property in this._vectorStoreRecordDefinition.Properties.OfType<VectorStoreRecordDataProperty>())
+            foreach (var property in this._vectorStoreRecordDefinition.Properties.OfType<VectorStoreRecordDataProperty>())
+            foreach (var property in this._propertyReader.DataProperties)
+            foreach (var property in this._propertyReader.DataProperties)
+            if (property.IsFilterable || property.IsFullTextSearchable)
+=======
             if (property.IsIndexed || property.IsFullTextIndexed)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             {
                 indexingPolicy.IncludedPaths.Add(new IncludedPath { Path = $"/{property.StorageName}/?" });
             }
@@ -726,11 +1005,146 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
             Type type when type == typeof(ReadOnlyMemory<sbyte>) || type == typeof(ReadOnlyMemory<sbyte>?) => VectorDataType.Int8,
             _ => throw new InvalidOperationException($"Data type '{vectorDataType}' for {nameof(VectorStoreRecordVectorProperty)} '{vectorPropertyName}' is not supported by the Azure CosmosDB NoSQL VectorStore.")
         };
+<<<<<<< HEAD
+    }
+
+    private async IAsyncEnumerable<TRecord> InternalGetAsync(
+        IEnumerable<AzureCosmosDBNoSQLCompositeKey> keys,
+        GetRecordOptions? options = null,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        Verify.NotNull(keys);
+
+        const string OperationName = "GetItemQueryIterator";
+
+        var includeVectors = options?.IncludeVectors ?? false;
+        var fields = new List<string>(includeVectors ? this._storagePropertyNames.Values : this._nonVectorStoragePropertyNames);
+        var queryDefinition = AzureCosmosDBNoSQLVectorStoreCollectionQueryBuilder.BuildSelectQuery(
+            this._keyStoragePropertyName,
+            this._partitionKeyStoragePropertyName,
+            keys.ToList(),
+            fields);
+
+        await foreach (var jsonObject in this.GetItemsAsync<JsonObject>(queryDefinition, cancellationToken).ConfigureAwait(false))
+        var queryDefinition = this.GetSelectQuery(keys.ToList(), fields);
+
+        await foreach (var jsonObject in this.GetItemsAsync<JsonObject>(queryDefinition, cancellationToken).ConfigureAwait(false))
+        {
+            yield return VectorStoreErrorHandler.RunModelConversion(
+                DatabaseName,
+                this.CollectionName,
+                OperationName,
+                () => this._mapper.MapFromStorageToDataModel(jsonObject, new() { IncludeVectors = includeVectors }));
+        }
+    }
+
+    private async Task<AzureCosmosDBNoSQLCompositeKey> InternalUpsertAsync(
+        TRecord record,
+        CancellationToken cancellationToken)
+    {
+        Verify.NotNull(record);
+
+        const string OperationName = "UpsertItem";
+
+        var jsonObject = VectorStoreErrorHandler.RunModelConversion(
+                DatabaseName,
+                this.CollectionName,
+                OperationName,
+                () => this._mapper.MapFromDataToStorageModel(record));
+
+        var keyValue = jsonObject.TryGetPropertyValue(this._keyStoragePropertyName, out var jsonKey) ? jsonKey?.ToString() : null;
+        var partitionKeyValue = jsonObject.TryGetPropertyValue(this._partitionKeyStoragePropertyName, out var jsonPartitionKey) ? jsonPartitionKey?.ToString() : null;
+
+        if (string.IsNullOrWhiteSpace(keyValue))
+        {
+            throw new VectorStoreOperationException($"Key property {this._keyProperty.DataModelPropertyName} is not initialized.");
+            throw new VectorStoreOperationException($"Key property {this._propertyReader.KeyPropertyName} is not initialized.");
+
+        }
+
+        if (string.IsNullOrWhiteSpace(partitionKeyValue))
+        {
+            throw new VectorStoreOperationException($"Partition key property {this._partitionKeyPropertyName} is not initialized.");
+        }
+
+        await this.RunOperationAsync(OperationName, () =>
+            this._database
+                .GetContainer(this.CollectionName)
+                .UpsertItemAsync(jsonObject, new PartitionKey(partitionKeyValue), cancellationToken: cancellationToken))
+            .ConfigureAwait(false);
+
+        return new AzureCosmosDBNoSQLCompositeKey(keyValue!, partitionKeyValue!);
+    }
+
+    private async Task InternalDeleteAsync(IEnumerable<AzureCosmosDBNoSQLCompositeKey> keys, CancellationToken cancellationToken)
+    {
+        Verify.NotNull(keys);
+
+        var tasks = keys.Select(key =>
+        {
+            Verify.NotNullOrWhiteSpace(key.RecordKey);
+            Verify.NotNullOrWhiteSpace(key.PartitionKey);
+
+            return this.RunOperationAsync("DeleteItem", () =>
+                this._database
+                    .GetContainer(this.CollectionName)
+                    .DeleteItemAsync<JsonObject>(key.RecordKey, new PartitionKey(key.PartitionKey), cancellationToken: cancellationToken));
+        });
+
+        await Task.WhenAll(tasks).ConfigureAwait(false);
+    }
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     private async IAsyncEnumerable<T> GetItemsAsync<T>(QueryDefinition queryDefinition, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
         var iterator = this._database
             .GetContainer(this.Name)
+            .GetItemQueryIterator<T>(queryDefinition);
+    private QueryDefinition GetSelectQuery(List<AzureCosmosDBNoSQLCompositeKey> keys, List<string> fields)
+    {
+        Verify.True(keys.Count > 0, "At least one key should be provided.", nameof(keys));
+
+        const string WhereClauseDelimiter = " OR ";
+        const string SelectClauseDelimiter = ",";
+
+        const string RecordKeyVariableName = "rk";
+        const string PartitionKeyVariableName = "pk";
+
+        const string TableVariableName = "x";
+
+        var selectClauseArguments = string.Join(SelectClauseDelimiter,
+            fields.Select(field => $"{TableVariableName}.{field}"));
+
+        var whereClauseArguments = string.Join(WhereClauseDelimiter,
+            keys.Select((key, index) =>
+                $"({TableVariableName}.{this._keyStoragePropertyName} = @{RecordKeyVariableName}{index} AND " +
+                $"{TableVariableName}.{this._partitionKeyStoragePropertyName} = @{PartitionKeyVariableName}{index})"));
+
+        var query = $"SELECT {selectClauseArguments} FROM {TableVariableName} WHERE {whereClauseArguments}";
+
+        var queryDefinition = new QueryDefinition(query);
+
+        for (var i = 0; i < keys.Count; i++)
+        {
+            var recordKey = keys[i].RecordKey;
+            var partitionKey = keys[i].PartitionKey;
+
+            Verify.NotNullOrWhiteSpace(recordKey);
+            Verify.NotNullOrWhiteSpace(partitionKey);
+
+            queryDefinition.WithParameter($"@{RecordKeyVariableName}{i}", recordKey);
+            queryDefinition.WithParameter($"@{PartitionKeyVariableName}{i}", partitionKey);
+        }
+
+        return queryDefinition;
+    }
+
+    private async IAsyncEnumerable<JsonObject> GetItemsAsync(QueryDefinition queryDefinition, [EnumeratorCancellation] CancellationToken cancellationToken)
+    private async IAsyncEnumerable<T> GetItemsAsync<T>(QueryDefinition queryDefinition, [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
+        var iterator = this._database
+            .GetContainer(this.CollectionName)
             .GetItemQueryIterator<T>(queryDefinition);
 
         while (iterator.HasMoreResults)
@@ -779,12 +1193,47 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollection<TKey, TRecord>
             IEnumerable<string> k => k.Select(key => new AzureCosmosDBNoSQLCompositeKey(recordKey: key, partitionKey: key)),
             IEnumerable<object> k => k.Select(key => key switch
             {
+<<<<<<< HEAD
+                return vectorProperty;
+            }
+
+            throw new InvalidOperationException($"The {typeof(TRecord).FullName} type does not have a vector property named '{vectorFieldName}'.");
+        }
+
+        // If vector property is not provided in options, return first vector property from schema.
+        return this._firstVectorProperty;
+        return this._propertyReader.VectorProperty;
+    }
+
+    /// <summary>
+    /// Returns custom mapper, generic data model mapper or default record mapper.
+    /// </summary>
+    private IVectorStoreRecordMapper<TRecord, JsonObject> InitializeMapper(JsonSerializerOptions jsonSerializerOptions)
+    {
+        if (this._options.JsonObjectCustomMapper is not null)
+        {
+            return this._options.JsonObjectCustomMapper;
+        }
+
+        if (typeof(TRecord) == typeof(VectorStoreGenericDataModel<string>))
+        {
+            var mapper = new AzureCosmosDBNoSQLGenericDataModelMapper(this._propertyReader.Properties, this._storagePropertyNames, jsonSerializerOptions);
+            return (mapper as IVectorStoreRecordMapper<TRecord, JsonObject>)!;
+        }
+
+        return new AzureCosmosDBNoSQLVectorStoreRecordMapper<TRecord>(
+            this._storagePropertyNames[this._propertyReader.KeyPropertyName],
+            this._storagePropertyNames,
+            jsonSerializerOptions);
+    }
+=======
                 string s => new AzureCosmosDBNoSQLCompositeKey(recordKey: s, partitionKey: s),
                 AzureCosmosDBNoSQLCompositeKey ck => ck,
                 _ => throw new ArgumentException($"Invalid key type '{key.GetType().Name}'.")
             }),
             _ => throw new UnreachableException()
         };
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     #endregion
 }

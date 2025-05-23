@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+using System;
+using Microsoft.SemanticKernel.Memory;
+=======
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
@@ -11,9 +15,30 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Conventions;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-namespace Microsoft.SemanticKernel.Connectors.MongoDB;
+namespace Microsoft.SemanticKernel.Connectors.Memory.MongoDB;
 
+<<<<<<< HEAD
+internal sealed class MongoDBVectorStoreRecordMapper
+{
+	public MongoDBVectorStoreRecord ToRecord(MemoryRecord record)
+	{
+		return new MongoDBVectorStoreRecord
+		{
+			Id = record.Metadata.Id,
+			Embedding = record.Embedding.ToArray(),
+			Metadata = record.Metadata.ToMongoMetadata()
+		};
+	}
+
+	public MemoryRecord ToMemoryRecord(MongoDBVectorStoreRecord record)
+	{
+		return MemoryRecord.FromMetadata(
+			record.Metadata.ToMemoryMetadata(),
+			record.Embedding);
+	}
+=======
 [ExcludeFromCodeCoverage]
 #pragma warning disable CS0618 // IVectorStoreRecordMapper is obsolete
 internal sealed class MongoDBVectorStoreRecordMapper<TRecord> : IMongoDBMapper<TRecord>
@@ -117,4 +142,5 @@ internal sealed class MongoDBVectorStoreRecordMapper<TRecord> : IMongoDBMapper<T
 
         return BsonSerializer.Deserialize<TRecord>(storageModel);
     }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 }

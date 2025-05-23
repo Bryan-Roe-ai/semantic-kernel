@@ -8,13 +8,25 @@ from google.generativeai.types.text_types import BatchEmbeddingDict
 from numpy import array, ndarray
 from pydantic import ValidationError
 
+<<<<<<< HEAD
+from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
+    EmbeddingGeneratorBase,
+)
+=======
 from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.connectors.ai.google.google_ai.google_ai_prompt_execution_settings import (
     GoogleAIEmbeddingPromptExecutionSettings,
 )
-from semantic_kernel.connectors.ai.google.google_ai.google_ai_settings import GoogleAISettings
-from semantic_kernel.connectors.ai.google.google_ai.services.google_ai_base import GoogleAIBase
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.connectors.ai.google.google_ai.google_ai_settings import (
+    GoogleAISettings,
+)
+from semantic_kernel.connectors.ai.google.google_ai.services.google_ai_base import (
+    GoogleAIBase,
+)
+from semantic_kernel.connectors.ai.prompt_execution_settings import (
+    PromptExecutionSettings,
+)
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError
 
 if sys.version_info >= (3, 12):
@@ -59,9 +71,13 @@ class GoogleAITextEmbedding(GoogleAIBase, EmbeddingGeneratorBase):
                 env_file_encoding=env_file_encoding,
             )
         except ValidationError as e:
-            raise ServiceInitializationError(f"Failed to validate Google AI settings: {e}") from e
+            raise ServiceInitializationError(
+                f"Failed to validate Google AI settings: {e}"
+            ) from e
         if not google_ai_settings.embedding_model_id:
-            raise ServiceInitializationError("The Google AI embedding model ID is required.")
+            raise ServiceInitializationError(
+                "The Google AI embedding model ID is required."
+            )
 
         super().__init__(
             ai_model_id=google_ai_settings.embedding_model_id,

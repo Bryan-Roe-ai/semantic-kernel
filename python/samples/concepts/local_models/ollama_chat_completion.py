@@ -5,7 +5,13 @@ import asyncio
 
 from openai import AsyncOpenAI
 
+<<<<<<< HEAD
+from semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion import (
+    OpenAIChatCompletion,
+)
+=======
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.kernel import Kernel
@@ -36,7 +42,11 @@ openAIClient: AsyncOpenAI = AsyncOpenAI(
     api_key="fake-key",  # This cannot be an empty string, use a fake key
     base_url="http://localhost:11434/v1",
 )
-kernel.add_service(OpenAIChatCompletion(service_id=service_id, ai_model_id="phi3", async_client=openAIClient))
+kernel.add_service(
+    OpenAIChatCompletion(
+        service_id=service_id, ai_model_id="phi3", async_client=openAIClient
+    )
+)
 
 settings = kernel.get_prompt_execution_settings_from_service_id(service_id)
 settings.max_completion_tokens = 2000
@@ -53,7 +63,9 @@ chat_function = kernel.add_function(
 
 chat_history = ChatHistory(system_message=system_message)
 chat_history.add_user_message("Hi there, who are you?")
-chat_history.add_assistant_message("I am Mosscap, a chat bot. I'm trying to figure out what people need")
+chat_history.add_assistant_message(
+    "I am Mosscap, a chat bot. I'm trying to figure out what people need"
+)
 
 
 async def chat() -> bool:
@@ -70,7 +82,9 @@ async def chat() -> bool:
         print("\n\nExiting chat...")
         return False
 
-    answer = await kernel.invoke(chat_function, KernelArguments(user_input=user_input, chat_history=chat_history))
+    answer = await kernel.invoke(
+        chat_function, KernelArguments(user_input=user_input, chat_history=chat_history)
+    )
     chat_history.add_user_message(user_input)
     chat_history.add_assistant_message(str(answer))
     print(f"Mosscap:> {answer}")

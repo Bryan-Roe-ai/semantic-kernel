@@ -1,8 +1,17 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
+<<<<<<< HEAD
+using System.Collections.Generic;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Data;
+=======
+using Microsoft.Extensions.VectorData;
+>>>>>>> main
+=======
 using Microsoft.Extensions.VectorData;
 using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Qdrant.Client.Grpc;
 
 namespace Microsoft.SemanticKernel.Connectors.Qdrant;

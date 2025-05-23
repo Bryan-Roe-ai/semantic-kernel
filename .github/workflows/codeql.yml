@@ -1,0 +1,166 @@
+name: "CodeQL"
+
+on:
+  push:
+    branches:
+      - main
+      - 'release/*'
+  pull_request:
+    branches:
+      - main
+      - 'release/*'
+  schedule:
+    - cron: '0 0 * * 0' # Weekly on Sundays
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: ${{ matrix.language == 'swift' && 'macos-latest' || 'ubuntu-latest' }}
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - language: c-cpp
+            build-mode: autobuild
+          - language: csharp
+            build-mode: autobuild
+          - language: java
+            build-mode: autobuild
+          - language: javascript-typescript
+            build-mode: autobuild
+          - language: python
+            build-mode: autobuild
+          - language: ruby
+            build-mode: autobuild
+          - language: jupyter-notebook
+            build-mode: autobuild
+          - language: html
+            build-mode: autobuild
+
+    steps:
+    # Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v3.0.2
+
+    # Cache dependencies for Maven
+    - name: Cache Maven dependencies
+      uses: actions/cache@v3.0.11
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    # Cache npm dependencies
+    - name: Cache npm dependencies
+      uses: actions/cache@v3.0.11
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
+
+    # Cache pip dependencies
+    - name: Cache pip dependencies
+      uses: actions/cache@v3.0.11
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    # Cache NuGet dependencies
+    - name: Cache NuGet packages
+      uses: actions/cache@v3.0.11
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    # Cache Gradle dependencies
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v3.0.11
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    # Initialize CodeQL
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v4.0.2
+      with:
+        languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
+        queries: ./codeql-queries,+security-extended,security-and-quality
+
+    # Check for unsupported languages
+    - name: Check for Unsupported Languages
+      run: |
+        if [ "${{ matrix.language }}" == "csharp" ]; then
+          echo "Error: Unsupported language 'C#'."
+          exit 1
+        fi
+
+    # Run lint
+    - name: Run lint
+      run: npm run lint
+
+    # Custom build commands for manual build modes
+    - if: matrix.build-mode == 'manual'
+      run: |
+        if [ "${{ matrix.language }}" == "jupyter-notebook" ]; then
+          jupyter nbconvert --execute --inplace "*.ipynb"
+        elif [ "${{ matrix.language }}" == "html" ]; then
+          npx html-validator-cli --file=**/*.html
+        elif [ "${{ matrix.language }}" == "python" ]; then
+          python -m unittest discover
+        fi
+
+    # Perform CodeQL Analysis
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v4.0.2
+      with:
+        category: "/language:${{ matrix.language }}"
+
+    # Clean up temporary files and directories
+    - name: Clean up temporary files and directories
+      run: sudo rm -rf /tmp/*
+
+    # Prune Docker system
+    - name: Prune Docker system
+      run: docker system prune -f
+
+    # Upload CodeQL results
+    - name: Upload CodeQL results
+      uses: actions/upload-artifact@v3.0.2
+      with:
+        name: codeql-results-${{ matrix.language }}
+        path: ./results/${{ matrix.language }}
+
+    # Notify on failure
+    - name: Notify on Slack (Failure)
+      if: failure()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_USERNAME: 'CodeQL Bot'
+        SLACK_ICON_EMOJI: ':robot:'
+        SLACK_CHANNEL: '#alerts'
+
+    # Notify on success
+    - name: Notify on Slack (Success)
+      if: success()
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_USERNAME: 'CodeQL Bot'
+        SLACK_ICON_EMOJI: ':white_check_mark:'
+        SLACK_CHANNEL: '#success-alerts'

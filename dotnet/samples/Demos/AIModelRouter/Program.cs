@@ -8,6 +8,7 @@ using Microsoft.SemanticKernel;
 #pragma warning disable SKEXP0001
 #pragma warning disable SKEXP0010
 #pragma warning disable SKEXP0070
+#pragma warning disable CA2249 // Consider using 'string.Contains' instead of 'string.IndexOf'
 
 namespace AIModelRouter;
 
@@ -20,6 +21,19 @@ internal sealed class Program
         var config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
 
         ServiceCollection services = new();
+
+        // Adding multiple connectors targeting different providers / models.
+        services.AddKernel()                /* LMStudio model is selected in server side. */
+            .AddOpenAIChatCompletion(serviceId: "lmstudio", modelId: "N/A", endpoint: new Uri("http://localhost:1234"), apiKey: null)
+            .AddOllamaChatCompletion(serviceId: "ollama", modelId: "phi3", endpoint: new Uri("http://localhost:11434"))
+            .AddOpenAIChatCompletion(serviceId: "openai", modelId: "gpt-4o", apiKey: config["OpenAI:ApiKey"]!)
+        services
+            .AddKernel()
+            .AddOpenAIChatCompletion(
+                serviceId: "lmstudio",
+                modelId: "N/A", // LMStudio model is pre defined in the UI List box.
+                endpoint: new Uri(config["LMStudio:Endpoint"] ?? "http://localhost:1234"),
+                apiKey: null);
 
         Console.ForegroundColor = ConsoleColor.DarkCyan;
         Console.WriteLine("======== AI Services Added ========");
@@ -109,6 +123,16 @@ internal sealed class Program
             Console.WriteLine("• Azure AI Inference Added - Use \"azureai\" in the prompt.");
         }
 
+        if (config["Anthropic:ApiKey"] is not null)
+        {
+            services.AddAnthropicChatCompletion(
+                serviceId: "anthropic",
+                modelId: config["Anthropic:ModelId"] ?? "claude-3-5-sonnet-20240620",
+                apiKey: config["Anthropic:ApiKey"]!);
+
+            Console.WriteLine("â€¢ Anthropic Added - Use \"anthropic\" in the prompt.");
+        }
+
         // Adding a custom filter to capture router selected service id
         services.AddSingleton<IPromptRenderFilter>(new SelectedServiceFilter());
 
@@ -127,6 +151,7 @@ internal sealed class Program
             // Find the best service to use based on the user's input
             KernelArguments arguments = new(new PromptExecutionSettings()
             {
+                ServiceId = router.FindService(userMessage, ["lmstudio", "ollama", "openai", "onnx", "azureai", "anthropic"])
                 ServiceId = router.GetService(userMessage, serviceIds)
             });
 

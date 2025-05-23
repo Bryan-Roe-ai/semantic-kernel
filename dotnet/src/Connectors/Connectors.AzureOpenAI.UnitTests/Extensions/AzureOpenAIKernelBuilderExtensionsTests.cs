@@ -34,6 +34,11 @@ public sealed class AzureOpenAIKernelBuilderExtensionsTests
     {
         // Arrange
         var credentials = DelegatedTokenCredential.Create((_, _) => new AccessToken());
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var builder = Kernel.CreateBuilder();
 
@@ -73,6 +78,12 @@ public sealed class AzureOpenAIKernelBuilderExtensionsTests
     {
         // Arrange
         var credentials = DelegatedTokenCredential.Create((_, _) => new AccessToken());
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var builder = Kernel.CreateBuilder();
 
@@ -161,6 +172,11 @@ public sealed class AzureOpenAIKernelBuilderExtensionsTests
     {
         // Arrange
         var credentials = DelegatedTokenCredential.Create((_, _) => new AccessToken());
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("http://localhost"), "key");
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var client = new AzureOpenAIClient(new Uri("https://localhost"), new ApiKeyCredential("key"));
         var builder = Kernel.CreateBuilder();
 
@@ -197,6 +213,11 @@ public sealed class AzureOpenAIKernelBuilderExtensionsTests
     {
         // Arrange
         var credentials = DelegatedTokenCredential.Create((_, _) => new AccessToken());
+        var client = new AzureOpenAIClient(new Uri("https://endpoint"), "key");
+        var client = new AzureOpenAIClient(new Uri("https://endpoint"), "key");
+        var client = new AzureOpenAIClient(new Uri("https://endpoint"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://endpoint"), new ApiKeyCredential("key"));
+        var client = new AzureOpenAIClient(new Uri("https://endpoint"), new ApiKeyCredential("key"));
         var client = new AzureOpenAIClient(new Uri("https://endpoint"), new ApiKeyCredential("key"));
         var builder = Kernel.CreateBuilder();
 

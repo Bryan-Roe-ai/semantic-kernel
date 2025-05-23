@@ -8,12 +8,21 @@ from pytest import mark, param
 from samples.learn_resources.ai_services import main as ai_services
 from samples.learn_resources.configuring_prompts import main as configuring_prompts
 from samples.learn_resources.creating_functions import main as creating_functions
+<<<<<<< HEAD
+from samples.learn_resources.functions_within_prompts import (
+    main as functions_within_prompts,
+)
+from samples.learn_resources.planner import main as planner
+=======
 from samples.learn_resources.functions_within_prompts import main as functions_within_prompts
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from samples.learn_resources.plugin import main as plugin
 from samples.learn_resources.serializing_prompts import main as serializing_prompts
 from samples.learn_resources.templates import main as templates
 from samples.learn_resources.using_the_kernel import main as using_the_kernel
 from samples.learn_resources.your_first_prompt import main as your_first_prompt
+from tests.samples.samples_utils import retry
+from tests.samples.test_samples_utils import retry
 from tests.utils import retry
 
 # These environment variable names are used to control which samples are run during integration testing.
@@ -108,4 +117,8 @@ async def test_learn_resources(func, responses, monkeypatch):
         await retry(lambda: func(delay=10), reset=reset)
         return
 
+    await retry(lambda: func(), reset=reset)
+        await retry(lambda: func(delay=10))
+        return
+    await retry(lambda: func())
     await retry(lambda: func(), reset=reset, retries=5)

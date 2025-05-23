@@ -9,18 +9,49 @@ namespace Microsoft.SemanticKernel;
 /// <summary>
 /// Contains information about a Step in a Process including it's state and edges.
 /// </summary>
+public class KernelProcessStepInfo
+{
 public record KernelProcessStepInfo
 {
     private KernelProcessStepState _state;
 
     /// <summary>
+    /// A mapping of output edges from the Step using the .
+    /// </summary>
+    private readonly Dictionary<string, List<KernelProcessEdge>> _outputEdges;
+
+    /// <summary>
     /// The type of the inner step.
     /// </summary>
+    internal Type InnerStepType { get; }
+
+    /// <summary>
+    /// A read-only collection of event Ids that this Step can emit.
+    /// </summary>
+    public IReadOnlyCollection<string> EventIds => this._outputEdges.Keys.ToArray();
     public Type InnerStepType { get; }
 
     /// <summary>
     /// The state of the Step.
     /// </summary>
+    public KernelProcessStepState State { get; }
+
+    /// <summary>
+    /// Retrieves the output edges for a given event Id. Returns an empty list if the event Id is not found.
+    /// </summary>
+    /// <param name="eventId">The Id of an event.</param>
+    /// <returns>An <see cref="IReadOnlyCollection{T}"/> where T is <see cref="KernelProcessEdge"/></returns>
+    protected IReadOnlyCollection<KernelProcessEdge> GetOutputEdges(string eventId)
+    {
+        if (this._outputEdges.TryGetValue(eventId, out List<KernelProcessEdge>? edges))
+        {
+            return edges.AsReadOnly();
+        }
+
+        return [];
+    }
+
+    /// <summary>
     public KernelProcessStepState State
     {
         get => this._state;
@@ -39,7 +70,8 @@ public record KernelProcessStepInfo
     /// <summary>
     /// A read-only dictionary of output edges from the Step.
     /// </summary>
-    public IReadOnlyDictionary<string, IReadOnlyCollection<KernelProcessEdge>> Edges { get; }
+    public IReadOnlyDictionary<string, IReadOnlyCollection<KernelProcessEdge>> Edges =>
+        this._outputEdges.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyCollection<KernelProcessEdge>)kvp.Value.AsReadOnly());
 
     /// <summary>
     /// A dictionary of input mappings for the grouped edges.
@@ -56,7 +88,14 @@ public record KernelProcessStepInfo
         Verify.NotNull(state);
 
         this.InnerStepType = innerStepType;
+<<<<<<< main
+        this._outputEdges = edges;
+        this.State = state;
         this.Edges = edges.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyCollection<KernelProcessEdge>)kvp.Value.AsReadOnly());
+=======
+        this._outputEdges = edges;
+        this.State = state;
+>>>>>>> origin/main
         this._state = state;
         this.IncomingEdgeGroups = incomingEdgeGroups;
 

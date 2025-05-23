@@ -30,12 +30,15 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
+=======
     <InternalsVisibleTo Include="SemanticKernel.Connectors.Pinecone.UnitTests" />
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VectorData.Abstractions\VectorData.Abstractions.csproj" />
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     <ProjectReference Include="..\..\SemanticKernel.Core\SemanticKernel.Core.csproj" />
   </ItemGroup>
 

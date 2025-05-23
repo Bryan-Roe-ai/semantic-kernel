@@ -53,7 +53,14 @@ public class AzureCosmosDBNoSQLVectorStoreFixture : IAsyncLifetime, IDisposable
             .AddUserSecrets<AzureCosmosDBNoSQLVectorStoreFixture>()
             .Build();
 
+<<<<<<< HEAD
+        var connectionString = GetConnectionString(configuration);
+        var options = new CosmosClientOptions { Serializer = new CosmosSystemTextJsonSerializer(JsonSerializerOptions.Default) };
+
+        this._cosmosClient = new CosmosClient(connectionString, options);
+=======
         return configuration[ConnectionStringKey];
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     public async Task InitializeAsync()

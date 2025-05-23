@@ -1,7 +1,100 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+﻿// Copyright (c) Microsoft. All rights reserved.
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
+using System;
+<<<<<<< main
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+﻿// Copyright (c) Microsoft. All rights reserved.
+
+using System;
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Text.Json;
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+using System.Text.Json;
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
 using Azure;
 using Azure.Core;
 using Azure.Core.Serialization;
@@ -14,6 +107,81 @@ using Microsoft.SemanticKernel.Connectors.AzureAISearch;
 using Microsoft.SemanticKernel.Http;
 
 namespace Microsoft.SemanticKernel;
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+using Azure.Search.Documents.Indexes;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel.Data;
+
+namespace Microsoft.SemanticKernel.Connectors.AzureAISearch;
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
 
 /// <summary>
 /// Extension methods to register Azure AI Search <see cref="IVectorStore"/> instances on an <see cref="IServiceCollection"/>.
@@ -65,6 +233,153 @@ public static class AzureAISearchServiceCollectionExtensions
             serviceId,
             (sp, obj) =>
             {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+<<<<<<< main
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+<<<<<<< main
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+<<<<<<< main
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
+                var selectedOptions = options ?? sp.GetService<AzureAISearchVectorStoreOptions>();
+                var searchClientOptions = BuildSearchClientOptions(selectedOptions?.JsonSerializerOptions);
+                var searchIndexClient = new SearchIndexClient(endpoint, tokenCredential, searchClientOptions);
+
+                // Construct the vector store.
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+                var searchIndexClient = new SearchIndexClient(endpoint, tokenCredential);
+=======
+>>>>>>> ms/features/bugbash-prep
+                var selectedOptions = options ?? sp.GetService<AzureAISearchVectorStoreOptions>();
+                var searchClientOptions = BuildSearchClientOptions(selectedOptions?.JsonSerializerOptions);
+                var searchIndexClient = new SearchIndexClient(endpoint, tokenCredential, searchClientOptions);
+
+                // Construct the vector store.
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
+                return new AzureAISearchVectorStore(
+                    searchIndexClient,
+                    selectedOptions);
+=======
                 options ??= sp.GetService<AzureAISearchVectorStoreOptions>() ?? new()
                 {
                     EmbeddingGenerator = sp.GetService<IEmbeddingGenerator>()
@@ -74,6 +389,7 @@ public static class AzureAISearchServiceCollectionExtensions
 
                 // Construct the vector store.
                 return new AzureAISearchVectorStore(searchIndexClient, options);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             });
 
         return services;
@@ -97,11 +413,75 @@ public static class AzureAISearchServiceCollectionExtensions
             serviceId,
             (sp, obj) =>
             {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+<<<<<<< main
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+<<<<<<< main
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+<<<<<<< main
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
+                var selectedOptions = options ?? sp.GetService<AzureAISearchVectorStoreOptions>();
+                var searchClientOptions = BuildSearchClientOptions(selectedOptions?.JsonSerializerOptions);
+=======
                 options ??= sp.GetService<AzureAISearchVectorStoreOptions>() ?? new()
                 {
                     EmbeddingGenerator = sp.GetService<IEmbeddingGenerator>()
                 };
                 var searchClientOptions = BuildSearchClientOptions(options?.JsonSerializerOptions);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                 var searchIndexClient = new SearchIndexClient(endpoint, credential, searchClientOptions);
 
                 // Construct the vector store.
@@ -126,7 +506,11 @@ public static class AzureAISearchServiceCollectionExtensions
         string collectionName,
         AzureAISearchVectorStoreRecordCollectionOptions<TRecord>? options = default,
         string? serviceId = default)
+<<<<<<< HEAD
+            where TRecord : class
+=======
         where TRecord : notnull
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         // If we are not constructing the SearchIndexClient, add the IVectorStore as transient, since we
         // cannot make assumptions about how SearchIndexClient is being managed.
@@ -167,7 +551,11 @@ public static class AzureAISearchServiceCollectionExtensions
         TokenCredential tokenCredential,
         AzureAISearchVectorStoreRecordCollectionOptions<TRecord>? options = default,
         string? serviceId = default)
+<<<<<<< HEAD
+            where TRecord : class
+=======
         where TRecord : notnull
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         Verify.NotNull(endpoint);
         Verify.NotNull(tokenCredential);
@@ -211,7 +599,254 @@ public static class AzureAISearchServiceCollectionExtensions
         AzureKeyCredential credential,
         AzureAISearchVectorStoreRecordCollectionOptions<TRecord>? options = default,
         string? serviceId = default)
+<<<<<<< HEAD
+            where TRecord : class
+    {
+        Verify.NotNull(endpoint);
+        Verify.NotNull(credential);
+
+        services.AddKeyedSingleton<IVectorStoreRecordCollection<string, TRecord>>(
+            serviceId,
+            (sp, obj) =>
+            {
+                var selectedOptions = options ?? sp.GetService<AzureAISearchVectorStoreRecordCollectionOptions<TRecord>>();
+                var searchClientOptions = BuildSearchClientOptions(selectedOptions?.JsonSerializerOptions);
+                var searchIndexClient = new SearchIndexClient(endpoint, credential, searchClientOptions);
+
+                // Construct the vector store.
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+                var searchIndexClient = new SearchIndexClient(endpoint, credential);
+=======
+>>>>>>> ms/features/bugbash-prep
+                var selectedOptions = options ?? sp.GetService<AzureAISearchVectorStoreOptions>();
+                var searchClientOptions = BuildSearchClientOptions(selectedOptions?.JsonSerializerOptions);
+                var searchIndexClient = new SearchIndexClient(endpoint, credential, searchClientOptions);
+
+                // Construct the vector store.
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
+                return new AzureAISearchVectorStore(
+=======
+                return new AzureAISearchVectorStoreRecordCollection<TRecord>(
+>>>>>>> upstream/main
+                    searchIndexClient,
+                    collectionName,
+                    selectedOptions);
+            });
+
+        AddVectorizedSearch<TRecord>(services, serviceId);
+
+        return services;
+    }
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+
+    /// <summary>
+    /// Register an Azure AI Search <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/>, <see cref="IVectorizedSearch{TRecord}"/> and <see cref="IVectorizableTextSearch{TRecord}"/> with the
+    /// specified service ID and where <see cref="SearchIndexClient"/> is retrieved from the dependency injection container.
+    /// </summary>
+    /// <typeparam name="TRecord">The type of the data model that the collection should contain.</typeparam>
+    /// <param name="services">The <see cref="IServiceCollection"/> to register the <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> on.</param>
+    /// <param name="collectionName">The name of the collection that this <see cref="AzureAISearchVectorStoreRecordCollection{TRecord}"/> will access.</param>
+    /// <param name="options">Optional configuration options to pass to the <see cref="AzureAISearchVectorStoreRecordCollection{TRecord}"/>.</param>
+    /// <param name="serviceId">An optional service id to use as the service key.</param>
+    /// <returns>The service collection.</returns>
+    public static IServiceCollection AddAzureAISearchVectorStoreRecordCollection<TRecord>(
+        this IServiceCollection services,
+        string collectionName,
+        AzureAISearchVectorStoreRecordCollectionOptions<TRecord>? options = default,
+        string? serviceId = default)
+    {
+        // If we are not constructing the SearchIndexClient, add the IVectorStore as transient, since we
+        // cannot make assumptions about how SearchIndexClient is being managed.
+        services.AddKeyedTransient<IVectorStoreRecordCollection<string, TRecord>>(
+            serviceId,
+            (sp, obj) =>
+            {
+                var searchIndexClient = sp.GetRequiredService<SearchIndexClient>();
+                var selectedOptions = options ?? sp.GetService<AzureAISearchVectorStoreRecordCollectionOptions<TRecord>>();
+
+                return new AzureAISearchVectorStoreRecordCollection<TRecord>(
+                    searchIndexClient,
+                    collectionName,
+                    selectedOptions);
+            });
+
+        AddVectorizedSearch<TRecord>(services, serviceId);
+        AddVectorizableTextSearch<TRecord>(services, serviceId);
+
+        return services;
+    }
+
+    /// <summary>
+    /// Register an Azure AI Search <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/>, <see cref="IVectorizedSearch{TRecord}"/> and <see cref="IVectorizableTextSearch{TRecord}"/> with the
+    /// provided <see cref="Uri"/> and <see cref="TokenCredential"/> and the specified service ID.
+    /// </summary>
+    /// <typeparam name="TRecord">The type of the data model that the collection should contain.</typeparam>
+    /// <param name="services">The <see cref="IServiceCollection"/> to register the <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> on.</param>
+    /// <param name="collectionName">The name of the collection that this <see cref="AzureAISearchVectorStoreRecordCollection{TRecord}"/> will access.</param>
+    /// <param name="endpoint">The service endpoint for Azure AI Search.</param>
+    /// <param name="tokenCredential">The credential to authenticate to Azure AI Search with.</param>
+    /// <param name="options">Optional configuration options to pass to the <see cref="AzureAISearchVectorStoreRecordCollection{TRecord}"/>.</param>
+    /// <param name="serviceId">An optional service id to use as the service key.</param>
+    /// <returns>The service collection.</returns>
+    public static IServiceCollection AddAzureAISearchVectorStoreRecordCollection<TRecord>(
+        this IServiceCollection services,
+        string collectionName,
+        Uri endpoint,
+        TokenCredential tokenCredential,
+        AzureAISearchVectorStoreRecordCollectionOptions<TRecord>? options = default,
+        string? serviceId = default)
+    {
+        Verify.NotNull(endpoint);
+        Verify.NotNull(tokenCredential);
+
+        services.AddKeyedSingleton<IVectorStoreRecordCollection<string, TRecord>>(
+            serviceId,
+            (sp, obj) =>
+            {
+                var selectedOptions = options ?? sp.GetService<AzureAISearchVectorStoreRecordCollectionOptions<TRecord>>();
+                var searchClientOptions = BuildSearchClientOptions(selectedOptions?.JsonSerializerOptions);
+                var searchIndexClient = new SearchIndexClient(endpoint, tokenCredential, searchClientOptions);
+
+                // Construct the vector store.
+                return new AzureAISearchVectorStoreRecordCollection<TRecord>(
+                    searchIndexClient,
+                    collectionName,
+                    selectedOptions);
+            });
+
+        AddVectorizedSearch<TRecord>(services, serviceId);
+        AddVectorizableTextSearch<TRecord>(services, serviceId);
+
+        return services;
+    }
+
+    /// <summary>
+    /// Register an Azure AI Search <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/>, <see cref="IVectorizedSearch{TRecord}"/> and <see cref="IVectorizableTextSearch{TRecord}"/> with the
+    /// provided <see cref="Uri"/> and <see cref="AzureKeyCredential"/> and the specified service ID.
+    /// </summary>
+    /// <typeparam name="TRecord">The type of the data model that the collection should contain.</typeparam>
+    /// <param name="services">The <see cref="IServiceCollection"/> to register the <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> on.</param>
+    /// <param name="collectionName">The name of the collection that this <see cref="AzureAISearchVectorStoreRecordCollection{TRecord}"/> will access.</param>
+    /// <param name="endpoint">The service endpoint for Azure AI Search.</param>
+    /// <param name="credential">The credential to authenticate to Azure AI Search with.</param>
+    /// <param name="options">Optional configuration options to pass to the <see cref="AzureAISearchVectorStoreRecordCollection{TRecord}"/>.</param>
+    /// <param name="serviceId">An optional service id to use as the service key.</param>
+    /// <returns>The service collection.</returns>
+    public static IServiceCollection AddAzureAISearchVectorStoreRecordCollection<TRecord>(
+        this IServiceCollection services,
+        string collectionName,
+        Uri endpoint,
+        AzureKeyCredential credential,
+        AzureAISearchVectorStoreRecordCollectionOptions<TRecord>? options = default,
+        string? serviceId = default)
+=======
         where TRecord : notnull
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         Verify.NotNull(endpoint);
         Verify.NotNull(credential);
@@ -232,9 +867,12 @@ public static class AzureAISearchServiceCollectionExtensions
             });
 
         AddVectorizedSearch<TRecord>(services, serviceId);
+        AddVectorizableTextSearch<TRecord>(services, serviceId);
 
         return services;
     }
+=======
+>>>>>>> upstream/main
 
     /// <summary>
     /// Also register the <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> with the given <paramref name="serviceId"/> as a <see cref="IVectorSearch{TRecord}"/>.
@@ -253,6 +891,26 @@ public static class AzureAISearchServiceCollectionExtensions
     }
 
     /// <summary>
+<<<<<<< main
+    /// Also register the <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> with the given <paramref name="serviceId"/> as a <see cref="IVectorizableTextSearch{TRecord}"/>.
+    /// </summary>
+    /// <typeparam name="TRecord">The type of the data model that the collection should contain.</typeparam>
+    /// <param name="services">The service collection to register on.</param>
+    /// <param name="serviceId">The service id that the registrations should use.</param>
+    private static void AddVectorizableTextSearch<TRecord>(IServiceCollection services, string? serviceId)
+        where TRecord : class
+    {
+        services.AddKeyedTransient<IVectorizableTextSearch<TRecord>>(
+            serviceId,
+            (sp, obj) =>
+            {
+                return (sp.GetRequiredKeyedService<IVectorStoreRecordCollection<string, TRecord>>(serviceId) as IVectorizableTextSearch<TRecord>)!;
+            });
+    }
+
+    /// <summary>
+=======
+>>>>>>> upstream/main
     /// Build a <see cref="SearchClientOptions"/> instance, using the provided <see cref="JsonSerializerOptions"/> if it's not null and add the SK user agent string.
     /// </summary>
     /// <param name="jsonSerializerOptions">Optional <see cref="JsonSerializerOptions"/> to add to the options if provided.</param>
@@ -268,4 +926,47 @@ public static class AzureAISearchServiceCollectionExtensions
 
         return searchClientOptions;
     }
+<<<<<<< main
+<<<<<<< main
+=======
+<<<<<<< div
+=======
+>>>>>>> div
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
 }

@@ -5,9 +5,15 @@ from unittest.mock import MagicMock, Mock, patch
 
 from pytest import fixture, mark, raises
 
-from semantic_kernel.connectors.memory.azure_ai_search.azure_ai_search_collection import AzureAISearchCollection
-from semantic_kernel.connectors.memory.azure_ai_search.azure_ai_search_settings import AzureAISearchSettings
-from semantic_kernel.connectors.memory.azure_ai_search.azure_ai_search_store import AzureAISearchStore
+from semantic_kernel.connectors.memory.azure_ai_search.azure_ai_search_collection import (
+    AzureAISearchCollection,
+)
+from semantic_kernel.connectors.memory.azure_ai_search.azure_ai_search_settings import (
+    AzureAISearchSettings,
+)
+from semantic_kernel.connectors.memory.azure_ai_search.azure_ai_search_store import (
+    AzureAISearchStore,
+)
 from semantic_kernel.connectors.memory.azure_ai_search.utils import (
     SearchClientWrapper,
     SearchIndexClientWrapper,
@@ -56,7 +62,9 @@ def mock_list_collection_names():
 
 @fixture
 def mock_upsert():
-    with patch(f"{BASE_PATH_SEARCH_CLIENT}.merge_or_upload_documents") as mock_merge_or_upload_documents:
+    with patch(
+        f"{BASE_PATH_SEARCH_CLIENT}.merge_or_upload_documents"
+    ) as mock_merge_or_upload_documents:
         from azure.search.documents.models import IndexingResult
 
         result = MagicMock(spec=IndexingResult)
@@ -68,7 +76,11 @@ def mock_upsert():
 @fixture
 def mock_get():
     with patch(f"{BASE_PATH_SEARCH_CLIENT}.get_document") as mock_get_document:
-        mock_get_document.return_value = {"id": "id1", "content": "content", "vector": [1.0, 2.0, 3.0]}
+        mock_get_document.return_value = {
+            "id": "id1",
+            "content": "content",
+            "vector": [1.0, 2.0, 3.0],
+        }
         yield mock_get_document
 
 
@@ -80,11 +92,15 @@ def mock_delete():
 
 @fixture
 def collection(azure_ai_search_unit_test_env, data_model_definition):
-    return AzureAISearchCollection(data_model_type=dict, data_model_definition=data_model_definition)
+    return AzureAISearchCollection(
+        data_model_type=dict, data_model_definition=data_model_definition
+    )
 
 
 def test_init(azure_ai_search_unit_test_env, data_model_definition):
-    collection = AzureAISearchCollection(data_model_type=dict, data_model_definition=data_model_definition)
+    collection = AzureAISearchCollection(
+        data_model_type=dict, data_model_definition=data_model_definition
+    )
     assert collection is not None
     assert collection.data_model_type is dict
     assert collection.data_model_definition == data_model_definition
@@ -106,7 +122,9 @@ def test_init_with_type(azure_ai_search_unit_test_env, data_model_type):
 def test_init_endpoint_fail(azure_ai_search_unit_test_env, data_model_definition):
     with raises(VectorStoreInitializationException):
         AzureAISearchCollection(
-            data_model_type=dict, data_model_definition=data_model_definition, env_file_path="test.env"
+            data_model_type=dict,
+            data_model_definition=data_model_definition,
+            env_file_path="test.env",
         )
 
 
@@ -114,7 +132,9 @@ def test_init_endpoint_fail(azure_ai_search_unit_test_env, data_model_definition
 def test_init_index_fail(azure_ai_search_unit_test_env, data_model_definition):
     with raises(VectorStoreInitializationException):
         AzureAISearchCollection(
-            data_model_type=dict, data_model_definition=data_model_definition, env_file_path="test.env"
+            data_model_type=dict,
+            data_model_definition=data_model_definition,
+            env_file_path="test.env",
         )
 
 
@@ -137,7 +157,9 @@ def test_init_with_clients(azure_ai_search_unit_test_env, data_model_definition)
     assert collection.search_client == search_client
 
 
-def test_init_with_search_index_client(azure_ai_search_unit_test_env, data_model_definition):
+def test_init_with_search_index_client(
+    azure_ai_search_unit_test_env, data_model_definition
+):
     search_index_client = MagicMock(spec=SearchIndexClientWrapper)
     with patch(
         "semantic_kernel.connectors.memory.azure_ai_search.azure_ai_search_collection.get_search_client"
@@ -159,8 +181,13 @@ def test_init_with_search_index_client(azure_ai_search_unit_test_env, data_model
         assert collection.search_client == search_client
 
 
-def test_init_with_search_index_client_fail(azure_ai_search_unit_test_env, data_model_definition):
+def test_init_with_search_index_client_fail(
+    azure_ai_search_unit_test_env, data_model_definition
+):
     search_index_client = MagicMock(spec=SearchIndexClientWrapper)
+    with raises(
+        MemoryConnectorInitializationError, match="Collection name is required."
+    ):
     with raises(VectorStoreInitializationException, match="Collection name is required."):
         AzureAISearchCollection(
             data_model_type=dict,
@@ -175,6 +202,8 @@ def test_init_with_clients_fail(azure_ai_search_unit_test_env, data_model_defini
     search_client._index_name = "test-index-name"
 
     with raises(
+        MemoryConnectorInitializationError,
+        match="Search client and search index client have different index names.",
         VectorStoreInitializationException, match="Search client and search index client have different index names."
     ):
         AzureAISearchCollection(
@@ -190,7 +219,9 @@ async def test_upsert(collection, mock_upsert):
     ids = await collection._inner_upsert({"id": "id1", "name": "test"})
     assert ids[0] == "id1"
 
-    ids = await collection.upsert(record={"id": "id1", "content": "content", "vector": [1.0, 2.0, 3.0]})
+    ids = await collection.upsert(
+        record={"id": "id1", "content": "content", "vector": [1.0, 2.0, 3.0]}
+    )
     assert ids == "id1"
 
 
@@ -239,7 +270,9 @@ async def test_create_index_from_index_fail(collection, mock_create_collection):
 
 @mark.parametrize("distance_function", [("cosine_distance")])
 def test_data_model_definition_to_azure_ai_search_index(data_model_definition):
-    index = data_model_definition_to_azure_ai_search_index("test", data_model_definition)
+    index = data_model_definition_to_azure_ai_search_index(
+        "test", data_model_definition
+    )
     assert index is not None
     assert index.name == "test"
     assert len(index.fields) == 3
@@ -251,6 +284,10 @@ async def test_vector_store_fail(azure_ai_search_unit_test_env):
         AzureAISearchStore(env_file_path="test.env")
 
 
+@mark.asyncio
+async def test_vector_store_list_collection_names(
+    vector_store, mock_list_collection_names
+):
 async def test_vector_store_list_collection_names(vector_store, mock_list_collection_names):
     assert vector_store.search_index_client is not None
     collection_names = await vector_store.list_collection_names()
@@ -268,7 +305,9 @@ def test_get_collection(vector_store, data_model_definition):
     assert collection.collection_name == "test"
     assert collection.search_index_client == vector_store.search_index_client
     assert collection.search_client is not None
-    assert collection.search_client._endpoint == vector_store.search_index_client._endpoint
+    assert (
+        collection.search_client._endpoint == vector_store.search_index_client._endpoint
+    )
     assert vector_store.vector_record_collections["test"] == collection
 
 
@@ -276,7 +315,13 @@ def test_get_collection(vector_store, data_model_definition):
 def test_get_search_index_client(azure_ai_search_unit_test_env):
     from azure.core.credentials import AzureKeyCredential, TokenCredential
 
+<<<<<<< HEAD
+    settings = AzureAISearchSettings.create(
+        **azure_ai_search_unit_test_env, env_file_path="test.env"
+    )
+=======
     settings = AzureAISearchSettings(**azure_ai_search_unit_test_env, env_file_path="test.env")
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     azure_credential = MagicMock(spec=AzureKeyCredential)
     client = get_search_index_client(settings, azure_credential=azure_credential)

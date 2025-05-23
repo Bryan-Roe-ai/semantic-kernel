@@ -46,6 +46,10 @@ TAG_CONTENT_MAP = {
     FUNCTION_CALL_CONTENT_TAG: FunctionCallContent,
     FUNCTION_RESULT_CONTENT_TAG: FunctionResultContent,
     IMAGE_CONTENT_TAG: ImageContent,
+}
+
+ITEM_TYPES = (
+    AnnotationContent | ImageContent | TextContent | FunctionResultContent | FunctionCallContent | FileReferenceContent
     STREAMING_FILE_REFERENCE_CONTENT_TAG: StreamingFileReferenceContent,
     STREAMING_ANNOTATION_CONTENT_TAG: StreamingAnnotationContent,
 }
@@ -72,6 +76,18 @@ class ChatMessageContent(KernelContent):
     """This is the class for chat message response content.
 
     All Chat Completion Services should return an instance of this class as response.
+from typing import Optional
+from xml.etree import ElementTree
+from xml.etree.ElementTree import Element
+
+from semantic_kernel.contents.chat_role import ChatRole
+from semantic_kernel.contents.kernel_content import KernelContent
+
+
+class ChatMessageContent(KernelContent):
+    """This is the base class for chat message response content.
+
+    All Chat Completion Services should return a instance of this class as response.
     Or they can implement their own subclass of this class and return an instance.
 
     Args:
@@ -92,7 +108,15 @@ class ChatMessageContent(KernelContent):
     tag: ClassVar[str] = CHAT_MESSAGE_CONTENT_TAG
     role: AuthorRole
     name: str | None = None
+<<<<<<< HEAD
+    items: list[ITEM_TYPES] = Field(
+        default_factory=list, discriminator=DISCRIMINATOR_FIELD
+    )
+    items: list[Annotated[ITEM_TYPES, Field(..., discriminator=DISCRIMINATOR_FIELD)]] = Field(default_factory=list)
+    items: list[Annotated[ITEM_TYPES, Field(discriminator=DISCRIMINATOR_FIELD)]] = Field(default_factory=list)
+=======
     items: list[CMC_ITEM_TYPES] = Field(default_factory=list)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     encoding: str | None = None
     finish_reason: FinishReason | None = None
     status: Status | None = None
@@ -239,7 +263,13 @@ class ChatMessageContent(KernelContent):
         """
         root = Element(self.tag)
         for field in self.model_fields_set:
-            if field not in ["role", "name", "encoding", "finish_reason", "ai_model_id"]:
+            if field not in [
+                "role",
+                "name",
+                "encoding",
+                "finish_reason",
+                "ai_model_id",
+            ]:
                 continue
             value = getattr(self, field)
             if isinstance(value, Enum):
@@ -260,15 +290,24 @@ class ChatMessageContent(KernelContent):
             ChatMessageContent - The new instance of ChatMessageContent or a subclass.
         """
         if element.tag != cls.tag:
+            raise ContentInitializationError(
+                f"Element tag is not {cls.tag}"
+            )  # pragma: no cover
             raise ContentInitializationError(f"Element tag is not {cls.tag}")  # pragma: no cover
+            raise ContentInitializationError(f"Element tag is not {cls.tag}")
         kwargs: dict[str, Any] = {key: value for key, value in element.items()}
         items: list[KernelContent] = []
         if element.text:
             items.append(TextContent(text=unescape(element.text)))
         for child in element:
             if child.tag not in TAG_CONTENT_MAP:
-                logger.warning('Unknown tag "%s" in ChatMessageContent, treating as text', child.tag)
-                text = ElementTree.tostring(child, encoding="unicode", short_empty_elements=False)
+                logger.warning(
+                    'Unknown tag "%s" in ChatMessageContent, treating as text',
+                    child.tag,
+                )
+                text = ElementTree.tostring(
+                    child, encoding="unicode", short_empty_elements=False
+                )
                 items.append(TextContent(text=unescape(text) or ""))
             else:
                 items.append(TAG_CONTENT_MAP[child.tag].from_element(child))  # type: ignore
@@ -288,15 +327,27 @@ class ChatMessageContent(KernelContent):
         return cls(**kwargs)
 
     def to_prompt(self) -> str:
+    role: ChatRole
+    content: Optional[str] = None
+    encoding: Optional[str] = None
+
+    def __str__(self) -> str:
+        return self.content or ""
+
+    def to_prompt(self, root_key: str) -> str:
         """Convert the ChatMessageContent to a prompt.
 
         Returns:
             str - The prompt from the ChatMessageContent.
         """
         root = self.to_element()
-        return ElementTree.tostring(root, encoding=self.encoding or "unicode", short_empty_elements=False)
+        return ElementTree.tostring(
+            root, encoding=self.encoding or "unicode", short_empty_elements=False
+        )
 
-    def to_dict(self, role_key: str = "role", content_key: str = "content") -> dict[str, Any]:
+    def to_dict(
+        self, role_key: str = "role", content_key: str = "content"
+    ) -> dict[str, Any]:
         """Serialize the ChatMessageContent to a dictionary.
 
         Returns:
@@ -305,8 +356,14 @@ class ChatMessageContent(KernelContent):
         ret: dict[str, Any] = {
             role_key: self.role.value,
         }
-        if self.role == AuthorRole.ASSISTANT and any(isinstance(item, FunctionCallContent) for item in self.items):
-            ret["tool_calls"] = [item.to_dict() for item in self.items if isinstance(item, FunctionCallContent)]
+        if self.role == AuthorRole.ASSISTANT and any(
+            isinstance(item, FunctionCallContent) for item in self.items
+        ):
+            ret["tool_calls"] = [
+                item.to_dict()
+                for item in self.items
+                if isinstance(item, FunctionCallContent)
+            ]
         else:
             ret[content_key] = self._parse_items()
         if self.role == AuthorRole.TOOL:
@@ -330,5 +387,36 @@ class ChatMessageContent(KernelContent):
 
     def __hash__(self) -> int:
         """Return the hash of the chat message content."""
+<<<<<<< HEAD
+        return hash(
+            (
+                self.tag,
+                self.role,
+                self.content,
+                self.encoding,
+                self.finish_reason,
+                *self.items,
+            )
+        )
+
+        root = Element(root_key)
+        root.set("role", self.role.value)
+        root.text = self.content or ""
+        return ElementTree.tostring(root, encoding=self.encoding or "unicode")
+
+    @classmethod
+    def from_element(cls, element: Element) -> "ChatMessageContent":
+        """Create a new instance of ChatMessageContent from a prompt.
+
+        Args:
+            prompt: str - The prompt to create the ChatMessageContent from.
+
+        Returns:
+            ChatMessageContent - The new instance of ChatMessageContent.
+        """
+        args = {"role": element.get("role", ChatRole.USER.value), "content": element.text}
+        return cls(**args)
+=======
         hashable_items = [make_hashable(item) for item in self.items] if self.items else []
         return hash((self.tag, self.role, self.content, self.encoding, self.finish_reason, *hashable_items))
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

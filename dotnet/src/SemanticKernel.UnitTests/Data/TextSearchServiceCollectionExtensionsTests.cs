@@ -2,9 +2,13 @@
 
 using System;
 using Microsoft.Extensions.DependencyInjection;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel;
+=======
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.InMemory;
+>>>>>>> main
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 using Xunit;
@@ -20,8 +24,17 @@ public class TextSearchServiceCollectionExtensionsTests : VectorStoreTextSearchT
         using var embeddingGenerator = new MockTextEmbeddingGenerator();
 
         var services = new ServiceCollection();
+<<<<<<< HEAD
+<<<<<<< HEAD
+        var vectorStore = new VolatileVectorStore();
+=======
+        var vectorStore = new InMemoryVectorStore();
+>>>>>>> main
+        var vectorSearch = vectorStore.GetCollection<Guid, DataModel>("records");
+=======
         var vectorStore = new InMemoryVectorStore(new() { EmbeddingGenerator = embeddingGenerator });
         var collection = vectorStore.GetCollection<Guid, DataModel>("records");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         var stringMapper = new DataModelTextSearchStringMapper();
         var resultMapper = new DataModelTextSearchResultMapper();
 
@@ -44,8 +57,20 @@ public class TextSearchServiceCollectionExtensionsTests : VectorStoreTextSearchT
         using var embeddingGenerator = new MockTextEmbeddingGenerator();
 
         var services = new ServiceCollection();
+<<<<<<< HEAD
+<<<<<<< HEAD
+        var vectorStore = new VolatileVectorStore();
+=======
+        var vectorStore = new InMemoryVectorStore();
+>>>>>>> main
+        var vectorSearch = vectorStore.GetCollection<Guid, DataModel>("records");
+        var stringMapper = new DataModelTextSearchStringMapper();
+        var resultMapper = new DataModelTextSearchResultMapper();
+        var textGeneration = new MockTextEmbeddingGenerationService();
+=======
         var vectorStore = new InMemoryVectorStore(new() { EmbeddingGenerator = embeddingGenerator });
         var collection = vectorStore.GetCollection<Guid, DataModel>("records");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Act
         services.AddSingleton<IVectorSearch<DataModel>>(collection);

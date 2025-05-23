@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Create an XML plan step by step, to satisfy the goal given, with the available functions. -->
+
+[AVAILABLE FUNCTIONS]
+$input
+[END AVAILABLE FUNCTIONS]
+
+<plan_template>
+    To create a plan, follow these steps:
+    0. The plan should be as short as possible.
+    1. Create a plan in this format:
+       <goal>Goal description here</goal>
+       <plan>
+         <function.FunctionName input="$INPUT" output="$variableName" />
+         <function.AnotherFunction input="$variableName" output="$result" />
+       </plan>
+</plan_template>

@@ -91,6 +91,7 @@ public class WeaviateVectorStoreFixture : IAsyncLifetime
             new ImagesCreateParameters
             {
                 FromImage = Image,
+                Tag = "latest",
                 Tag = Tag,
             },
             null,
@@ -98,6 +99,7 @@ public class WeaviateVectorStoreFixture : IAsyncLifetime
 
         var container = await client.Containers.CreateContainerAsync(new CreateContainerParameters()
         {
+            Image = Image,
             Image = $"{Image}:{Tag}",
             HostConfig = new HostConfig()
             {

@@ -7,7 +7,65 @@ from unittest.mock import Mock
 
 import pytest
 
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
 from semantic_kernel.connectors.utils.structured_output_schema import generate_structured_output_response_format_schema
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+from semantic_kernel.connectors.utils.structured_output_schema import generate_structured_output_response_format_schema
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+from semantic_kernel.connectors.utils.structured_output_schema import generate_structured_output_response_format_schema
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+from semantic_kernel.connectors.utils.structured_output_schema import generate_structured_output_response_format_schema
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.schema.kernel_json_schema_builder import KernelJsonSchemaBuilder
 
@@ -58,7 +116,9 @@ class MockModel:
         "name": Mock(description="The name of the model"),
         "is_active": Mock(description="Whether the model is active"),
         "tags": Mock(description="Tags associated with the model"),
-        "status": Mock(description="The status of the model, either as an integer or a string"),
+        "status": Mock(
+            description="The status of the model, either as an integer or a string"
+        ),
         "scores": Mock(description="The scores associated with the model"),
         "optional_field": Mock(description="An optional field that can be null"),
         "metadata": Mock(description="The optional metadata description"),
@@ -66,6 +126,42 @@ class MockModel:
     }
 
 
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
 class PydanticStep(KernelBaseModel):
     explanation: str
     output: str
@@ -86,6 +182,40 @@ class NonPydanticReasoning:
     final_answer: str
 
 
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
 def test_build_with_kernel_base_model():
     expected_schema = {
         "type": "object",
@@ -152,13 +282,17 @@ def test_build_model_schema():
         "required": ["name", "age"],
         "description": "A model",
     }
-    result = KernelJsonSchemaBuilder.build_model_schema(ExampleModel, description="A model")
+    result = KernelJsonSchemaBuilder.build_model_schema(
+        ExampleModel, description="A model"
+    )
     assert result == expected_schema
 
 
 def test_build_from_type_name():
     expected_schema = {"type": "string", "description": "A simple string"}
-    result = KernelJsonSchemaBuilder.build_from_type_name("str", description="A simple string")
+    result = KernelJsonSchemaBuilder.build_from_type_name(
+        "str", description="A simple string"
+    )
     assert result == expected_schema
 
 
@@ -169,7 +303,9 @@ def test_build_from_type_name_with_union():
             {"type": "integer", "description": "The value"},
         ]
     }
-    result = KernelJsonSchemaBuilder.build_from_type_name("str, int", description="The value")
+    result = KernelJsonSchemaBuilder.build_from_type_name(
+        "str, int", description="The value"
+    )
     assert result == expected_schema
 
 
@@ -389,6 +525,42 @@ def test_handle_complex_type():
     schema = KernelJsonSchemaBuilder.handle_complex_type(str, "Description")
     expected_schema = {"type": "string", "description": "Description"}
     assert schema == expected_schema
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
 
 
 def test_build_schema_with_pydantic_structured_output():
@@ -455,3 +627,37 @@ def test_build_schema_with_nonpydantic_structured_output():
     }
 
     assert structured_output_schema == expected_schema
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head

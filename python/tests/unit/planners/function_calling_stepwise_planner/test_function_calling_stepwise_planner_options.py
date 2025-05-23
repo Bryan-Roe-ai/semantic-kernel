@@ -15,14 +15,25 @@ from semantic_kernel.planners.function_calling_stepwise_planner.function_calling
         (None, 0.1, None, None),
     ],
 )
-def test_calculate_token_limits(max_tokens, max_tokens_ratio, expected_max_completion, expected_max_prompt):
+def test_calculate_token_limits(
+    max_tokens, max_tokens_ratio, expected_max_completion, expected_max_prompt
+):
     options_data = {"max_tokens": max_tokens, "max_tokens_ratio": max_tokens_ratio}
     options = FunctionCallingStepwisePlannerOptions(**options_data)
 
+<<<<<<< HEAD
+    assert (
+        options.max_completion_tokens == expected_max_completion
+    ), "max_completion_tokens did not match expected value"
+    assert (
+        options.max_prompt_tokens == expected_max_prompt
+    ), "max_prompt_tokens did not match expected value"
+=======
     assert options.max_completion_tokens == expected_max_completion, (
         "max_completion_tokens did not match expected value"
     )
     assert options.max_prompt_tokens == expected_max_prompt, "max_prompt_tokens did not match expected value"
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 def test_defaults():
@@ -30,9 +41,15 @@ def test_defaults():
     options = FunctionCallingStepwisePlannerOptions()
     assert options.max_tokens_ratio == 0.1, "Default max_tokens_ratio not applied"
     assert options.max_iterations == 15, "Default max_iterations not applied"
-    assert options.min_iteration_time_ms == 100, "Default min_iteration_time_ms not applied"
-    assert options.max_completion_tokens is None, "max_completion_tokens should be None when max_tokens is not set"
-    assert options.max_prompt_tokens is None, "max_prompt_tokens should be None when max_tokens is not set"
+    assert (
+        options.min_iteration_time_ms == 100
+    ), "Default min_iteration_time_ms not applied"
+    assert (
+        options.max_completion_tokens is None
+    ), "max_completion_tokens should be None when max_tokens is not set"
+    assert (
+        options.max_prompt_tokens is None
+    ), "max_prompt_tokens should be None when max_tokens is not set"
 
 
 @pytest.mark.parametrize(

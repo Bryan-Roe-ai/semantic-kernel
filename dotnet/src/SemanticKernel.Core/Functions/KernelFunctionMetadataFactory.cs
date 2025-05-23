@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Text.Json;
 using Microsoft.Extensions.Logging;
 
 namespace Microsoft.SemanticKernel;
@@ -25,8 +24,6 @@ public static class KernelFunctionMetadataFactory
     /// Methods decorated with <see cref="KernelFunctionAttribute"/> will be included in the plugin.
     /// Attributed methods must all have different names; overloads are not supported.
     /// </remarks>
-    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     public static IEnumerable<KernelFunctionMetadata> CreateFromType(Type instanceType, ILoggerFactory? loggerFactory = null)
     {
         Verify.NotNull(instanceType);
@@ -50,6 +47,8 @@ public static class KernelFunctionMetadataFactory
 
         return functionMetadata;
     }
+<<<<<<< HEAD
+=======
 
     /// <summary>
     /// Creates a <see cref="KernelFunctionMetadata"/> enumeration for a method, specified via an <see cref="MethodInfo"/> instance.
@@ -85,4 +84,5 @@ public static class KernelFunctionMetadataFactory
 
         return functionMetadata;
     }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 }

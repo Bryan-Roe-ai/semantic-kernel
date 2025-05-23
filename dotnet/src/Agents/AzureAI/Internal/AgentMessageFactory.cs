@@ -1,8 +1,16 @@
+<<<<<<< HEAD
+﻿// Copyright (c) Microsoft. All rights reserved.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Azure.AI.Projects;
+=======
 // Copyright (c) Microsoft. All rights reserved.
 using System.Collections.Generic;
 using System.Linq;
 using Azure.AI.Projects;
 using Microsoft.SemanticKernel.ChatCompletion;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 namespace Microsoft.SemanticKernel.Agents.AzureAI.Internal;
 
@@ -15,8 +23,12 @@ namespace Microsoft.SemanticKernel.Agents.AzureAI.Internal;
 internal static class AgentMessageFactory
 {
     /// <summary>
+<<<<<<< HEAD
+    /// %%%
+=======
     /// Translate metadata from a <see cref="ChatMessageContent"/> to be used for a <see cref="ThreadMessage"/> or
     /// <see cref="ThreadMessageOptions"/>.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
     /// <param name="message">The message content.</param>
     public static Dictionary<string, string> GetMetadata(ChatMessageContent message)
@@ -24,6 +36,59 @@ internal static class AgentMessageFactory
         return message.Metadata?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToString() ?? string.Empty) ?? [];
     }
 
+<<<<<<< HEAD
+    ///// <summary>
+    ///// Translates <see cref="ChatMessageContent.Items"/> into enumeration of <see cref="MessageContent"/>.
+    ///// </summary>
+    ///// <param name="message">The message content.</param>
+    //public static IEnumerable<MessageContent> GetMessageContents(ChatMessageContent message) // %%%
+    //{
+    //    bool hasTextContent = message.Items.OfType<TextContent>().Any();
+    //    foreach (KernelContent content in message.Items)
+    //    {
+    //        if (content is TextContent textContent)
+    //        {
+    //            yield return new MessageTextContent(content.ToString());
+    //        }
+    //        else if (content is ImageContent imageContent)
+    //        {
+    //            if (imageContent.Uri != null)
+    //            {
+    //                yield return MessageContent.FromImageUri(imageContent.Uri);
+    //            }
+    //            else if (!string.IsNullOrWhiteSpace(imageContent.DataUri))
+    //            {
+    //                yield return MessageContent.FromImageUri(new(imageContent.DataUri!));
+    //            }
+    //        }
+    //        else if (content is FileReferenceContent fileContent)
+    //        {
+    //            yield return MessageContent.FromImageFileId(fileContent.FileId);
+    //        }
+    //        else if (content is FunctionResultContent resultContent && resultContent.Result != null && !hasTextContent)
+    //        {
+    //            // Only convert a function result when text-content is not already present
+    //            yield return MessageContent.FromText(FunctionCallsProcessor.ProcessFunctionResult(resultContent.Result));
+    //        }
+    //    }
+    //}
+
+    internal static IEnumerable<ThreadMessageOptions> GetThreadMessages(IReadOnlyList<ChatMessageContent>? messages)
+    {
+        //if (options?.Messages is not null)
+        //{
+        //    foreach (ChatMessageContent message in options.Messages)
+        //    {
+        //        AzureAIP.ThreadMessageOptions threadMessage = new(
+        //            role: message.Role == AuthorRole.User ? AzureAIP.MessageRole.User : AzureAIP.MessageRole.Agent,
+        //            content: AgentMessageFactory.GetMessageContents(message));
+
+        //        createOptions.InitialMessages.Add(threadMessage);
+        //    }
+        //}
+
+        throw new NotImplementedException();
+=======
     /// <summary>
     /// Translate attachments from a <see cref="ChatMessageContent"/> to be used for a <see cref="ThreadMessage"/> or
     /// </summary>
@@ -94,5 +159,6 @@ internal static class AgentMessageFactory
                 yield return toolDefinition;
             }
         }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 }

@@ -1,4 +1,8 @@
 # Euclidean Distance
+<<<<<<< HEAD
+# Euclidean distance
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 Euclidean distance is a mathematical concept that measures the straight-line distance
 between two points in a Euclidean space. It is named after the ancient Greek mathematician
@@ -10,6 +14,13 @@ $$d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
 For higher dimensions, this formula can be generalized to:
 
 $$d(p, q) = \sqrt{\sum\limits_{i\=1}^{n} (q_i - p_i)^2}$$
+Euclidean distance is based on the Pythagorean theorem and can be expressed as:
+
+    d = √(x2 - x1)² + (y2 - y1)²
+
+In higher dimensions, this formula can be generalized to:
+
+    d = √(x2 - x1)² + (y2 - y1)² + ... + (zn - zn-1)²
 
 Euclidean distance has many applications in computer science and artificial intelligence,
 particularly when working with [embeddings](EMBEDDINGS.md). Embeddings are numerical

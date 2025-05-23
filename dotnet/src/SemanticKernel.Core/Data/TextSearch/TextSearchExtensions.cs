@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,8 +26,6 @@ public static class TextSearchExtensions
     /// <param name="pluginName">The name for the plugin.</param>
     /// <param name="description">A description of the plugin.</param>
     /// <returns>A <see cref="KernelPlugin"/> instance with a Search operation that calls the provided <see cref="ITextSearch.SearchAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
-    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     public static KernelPlugin CreateWithSearch(this ITextSearch textSearch, string pluginName, string? description = null)
     {
         Verify.NotNull(textSearch);
@@ -41,6 +38,8 @@ public static class TextSearchExtensions
     /// Creates a plugin from an ITextSearch implementation.
     /// </summary>
     /// <remarks>
+<<<<<<< HEAD
+=======
     /// The plugin will have a single function called `Search` which
     /// will return a <see cref="IEnumerable{String}"/>
     /// </remarks>
@@ -61,6 +60,7 @@ public static class TextSearchExtensions
     /// Creates a plugin from an ITextSearch implementation.
     /// </summary>
     /// <remarks>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// The plugin will have a single function called `GetSearchResults` which
     /// will return a <see cref="IEnumerable{TextSearchResult}"/>
     /// </remarks>
@@ -68,8 +68,6 @@ public static class TextSearchExtensions
     /// <param name="pluginName">The name for the plugin.</param>
     /// <param name="description">A description of the plugin.</param>
     /// <returns>A <see cref="KernelPlugin"/> instance with a GetTextSearchResults operation that calls the provided <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
-    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     public static KernelPlugin CreateWithGetTextSearchResults(this ITextSearch textSearch, string pluginName, string? description = null)
     {
         Verify.NotNull(textSearch);
@@ -87,6 +85,8 @@ public static class TextSearchExtensions
     /// </remarks>
     /// <param name="textSearch">The instance of ITextSearch to be used by the plugin.</param>
     /// <param name="pluginName">The name for the plugin.</param>
+<<<<<<< HEAD
+=======
     /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
     /// <param name="description">A description of the plugin.</param>
     /// <returns>A <see cref="KernelPlugin"/> instance with a GetTextSearchResults operation that calls the provided <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
@@ -107,10 +107,9 @@ public static class TextSearchExtensions
     /// </remarks>
     /// <param name="textSearch">The instance of ITextSearch to be used by the plugin.</param>
     /// <param name="pluginName">The name for the plugin.</param>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <param name="description">A description of the plugin.</param>
     /// <returns>A <see cref="KernelPlugin"/> instance with a GetSearchResults operation that calls the provided <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
-    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     public static KernelPlugin CreateWithGetSearchResults(this ITextSearch textSearch, string pluginName, string? description = null)
     {
         Verify.NotNull(textSearch);
@@ -118,6 +117,8 @@ public static class TextSearchExtensions
 
         return KernelPluginFactory.CreateFromFunctions(pluginName, description, [textSearch.CreateGetSearchResults()]);
     }
+<<<<<<< HEAD
+=======
 
     /// <summary>
     /// Creates a plugin from an ITextSearch implementation.
@@ -138,6 +139,7 @@ public static class TextSearchExtensions
 
         return KernelPluginFactory.CreateFromFunctions(pluginName, description, [textSearch.CreateGetSearchResults(jsonSerializerOptions)]);
     }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     #endregion
 
     #region KernelFunction factory methods
@@ -148,8 +150,6 @@ public static class TextSearchExtensions
     /// <param name="options">Optional KernelFunctionFromMethodOptions which allow the KernelFunction metadata to be specified.</param>
     /// <param name="searchOptions">Optional TextSearchOptions which override the options provided when the function is invoked.</param>
     /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.SearchAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
-    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     public static KernelFunction CreateSearch(this ITextSearch textSearch, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
     {
         async Task<IEnumerable<string>> SearchAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken, int count = 2, int skip = 0)
@@ -181,6 +181,8 @@ public static class TextSearchExtensions
     }
 
     /// <summary>
+<<<<<<< HEAD
+=======
     /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.SearchAsync(string, TextSearchOptions?, CancellationToken)"/>.
     /// </summary>
     /// <param name="textSearch">The ITextSearch instance to use.</param>
@@ -220,14 +222,13 @@ public static class TextSearchExtensions
     }
 
     /// <summary>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
     /// </summary>
     /// <param name="textSearch">The ITextSearch instance to use.</param>
     /// <param name="options">Optional KernelFunctionFromMethodOptions which allow the KernelFunction metadata to be specified.</param>
     /// <param name="searchOptions">Optional TextSearchOptions which override the options provided when the function is invoked.</param>
     /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
-    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     public static KernelFunction CreateGetTextSearchResults(this ITextSearch textSearch, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
     {
         async Task<IEnumerable<TextSearchResult>> GetTextSearchResultAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken, int count = 2, int skip = 0)
@@ -258,6 +259,8 @@ public static class TextSearchExtensions
     }
 
     /// <summary>
+<<<<<<< HEAD
+=======
     /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
     /// </summary>
     /// <param name="textSearch">The ITextSearch instance to use.</param>
@@ -296,14 +299,13 @@ public static class TextSearchExtensions
     }
 
     /// <summary>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
     /// </summary>
     /// <param name="textSearch">The ITextSearch instance to use.</param>
     /// <param name="options">Optional KernelFunctionFromMethodOptions which allow the KernelFunction metadata to be specified.</param>
     /// <param name="searchOptions">Optional TextSearchOptions which override the options provided when the function is invoked.</param>
     /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
-    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     public static KernelFunction CreateGetSearchResults(this ITextSearch textSearch, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
     {
         async Task<IEnumerable<object>> GetSearchResultAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken, int count = 2, int skip = 0)
@@ -332,6 +334,8 @@ public static class TextSearchExtensions
                 GetSearchResultAsync,
                 options);
     }
+<<<<<<< HEAD
+=======
 
     /// <summary>
     /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
@@ -371,88 +375,59 @@ public static class TextSearchExtensions
                 options);
     }
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     #endregion
 
     #region private
     /// <summary>
     /// Create the default <see cref="KernelFunctionFromMethodOptions"/> for <see cref="ITextSearch.SearchAsync(string, TextSearchOptions?, CancellationToken)"/>.
     /// </summary>
-    [RequiresUnreferencedCode("Uses reflection for generating JSON schema for method parameters and return type, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection for generating JSON schema for method parameters and return type, making it incompatible with AOT scenarios.")]
     private static KernelFunctionFromMethodOptions DefaultSearchMethodOptions() =>
         new()
         {
             FunctionName = "Search",
             Description = "Perform a search for content related to the specified query and return string results",
-            Parameters = GetDefaultKernelParameterMetadata(),
+            Parameters =
+            [
+                new KernelParameterMetadata("query") { Description = "What to search for", IsRequired = true },
+                new KernelParameterMetadata("count") { Description = "Number of results", IsRequired = false, DefaultValue = 2 },
+                new KernelParameterMetadata("skip") { Description = "Number of results to skip", IsRequired = false, DefaultValue = 0 },
+            ],
             ReturnParameter = new() { ParameterType = typeof(KernelSearchResults<string>) },
-        };
-
-    /// <summary>
-    /// Create the default <see cref="KernelFunctionFromMethodOptions"/> for <see cref="ITextSearch.SearchAsync(string, TextSearchOptions?, CancellationToken)"/>.
-    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> used for generating JSON schema for method parameters and return type.</param>
-    /// </summary>
-    private static KernelFunctionFromMethodOptions DefaultSearchMethodOptions(JsonSerializerOptions jsonSerializerOptions) =>
-        new()
-        {
-            FunctionName = "Search",
-            Description = "Perform a search for content related to the specified query and return string results",
-            Parameters = CreateDefaultKernelParameterMetadata(jsonSerializerOptions),
-            ReturnParameter = new(jsonSerializerOptions) { ParameterType = typeof(KernelSearchResults<string>) },
         };
 
     /// <summary>
     /// Create the default <see cref="KernelFunctionFromMethodOptions"/> for <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
     /// </summary>
-    [RequiresUnreferencedCode("Uses reflection for generating JSON schema for method parameters and return type, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection for generating JSON schema for method parameters and return type, making it incompatible with AOT scenarios.")]
     private static KernelFunctionFromMethodOptions DefaultGetTextSearchResultsMethodOptions() =>
         new()
         {
             FunctionName = "GetTextSearchResults",
             Description = "Perform a search for content related to the specified query. The search will return the name, value and link for the related content.",
-            Parameters = GetDefaultKernelParameterMetadata(),
+            Parameters =
+            [
+                new KernelParameterMetadata("query") { Description = "What to search for", IsRequired = true },
+                new KernelParameterMetadata("count") { Description = "Number of results", IsRequired = false, DefaultValue = 2 },
+                new KernelParameterMetadata("skip") { Description = "Number of results to skip", IsRequired = false, DefaultValue = 0 },
+            ],
             ReturnParameter = new() { ParameterType = typeof(KernelSearchResults<TextSearchResult>) },
-        };
-
-    /// <summary>
-    /// Create the default <see cref="KernelFunctionFromMethodOptions"/> for <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
-    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> used for generating JSON schema for method parameters and return type.</param>
-    /// </summary>
-    private static KernelFunctionFromMethodOptions DefaultGetTextSearchResultsMethodOptions(JsonSerializerOptions jsonSerializerOptions) =>
-        new()
-        {
-            FunctionName = "GetTextSearchResults",
-            Description = "Perform a search for content related to the specified query. The search will return the name, value and link for the related content.",
-            Parameters = CreateDefaultKernelParameterMetadata(jsonSerializerOptions),
-            ReturnParameter = new(jsonSerializerOptions) { ParameterType = typeof(KernelSearchResults<TextSearchResult>) },
         };
 
     /// <summary>
     /// Create the default <see cref="KernelFunctionFromMethodOptions"/> for <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
     /// </summary>
-    [RequiresUnreferencedCode("Uses reflection for generating JSON schema for method parameters and return type, making it incompatible with AOT scenarios.")]
-    [RequiresDynamicCode("Uses reflection for generating JSON schema for method parameters and return type, making it incompatible with AOT scenarios.")]
     private static KernelFunctionFromMethodOptions DefaultGetSearchResultsMethodOptions() =>
         new()
         {
             FunctionName = "GetSearchResults",
             Description = "Perform a search for content related to the specified query.",
-            Parameters = GetDefaultKernelParameterMetadata(),
+            Parameters =
+            [
+                new KernelParameterMetadata("query") { Description = "What to search for", IsRequired = true },
+                new KernelParameterMetadata("count") { Description = "Number of results", IsRequired = false, DefaultValue = 2 },
+                new KernelParameterMetadata("skip") { Description = "Number of results to skip", IsRequired = false, DefaultValue = 0 },
+            ],
             ReturnParameter = new() { ParameterType = typeof(KernelSearchResults<TextSearchResult>) },
-        };
-
-    /// <summary>
-    /// Create the default <see cref="KernelFunctionFromMethodOptions"/> for <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
-    /// </summary>
-    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> used for generating JSON schema for method parameters and return type.</param>
-    private static KernelFunctionFromMethodOptions DefaultGetSearchResultsMethodOptions(JsonSerializerOptions jsonSerializerOptions) =>
-        new()
-        {
-            FunctionName = "GetSearchResults",
-            Description = "Perform a search for content related to the specified query.",
-            Parameters = CreateDefaultKernelParameterMetadata(jsonSerializerOptions),
-            ReturnParameter = new(jsonSerializerOptions) { ParameterType = typeof(KernelSearchResults<TextSearchResult>) },
         };
 
     /// <summary>

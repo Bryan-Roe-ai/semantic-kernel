@@ -2,8 +2,15 @@
 
 using System;
 using System.Linq;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Data;
+=======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
+>>>>>>> main
+=======
 using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 namespace Microsoft.SemanticKernel.Connectors.AzureAISearch;
 

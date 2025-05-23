@@ -13,9 +13,30 @@ from semantic_kernel.template_engine.blocks.block_errors import (
 )
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
-from semantic_kernel.functions.kernel_function_from_method import KernelFunctionFromMethod
+from semantic_kernel.functions.kernel_function_from_method import (
+    KernelFunctionFromMethod,
+)
 from semantic_kernel.functions.kernel_plugin import KernelPlugin
 from semantic_kernel.kernel import Kernel
+from pytest import mark, raises
+
+from semantic_kernel.functions.kernel_arguments import KernelArguments
+from semantic_kernel.functions.kernel_function import KernelFunction
+from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
+from semantic_kernel.functions.kernel_plugin import KernelPlugin
+from semantic_kernel.functions.kernel_plugin_collection import (
+    KernelPluginCollection,
+)
+from semantic_kernel.kernel import Kernel
+from semantic_kernel.template_engine.blocks.block_errors import (
+    CodeBlockRenderError,
+    CodeBlockSyntaxError,
+    CodeBlockTokenError,
+    FunctionIdBlockSyntaxError,
+    NamedArgBlockSyntaxError,
+    ValBlockSyntaxError,
+    VarBlockSyntaxError,
+)
 from semantic_kernel.template_engine.blocks.block_types import BlockTypes
 from semantic_kernel.template_engine.blocks.code_block import CodeBlock
 from semantic_kernel.template_engine.blocks.function_id_block import FunctionIdBlock
@@ -36,12 +57,48 @@ def test_init():
 
 
 class TestCodeBlockRendering:
+    @mark.asyncio
     async def test_it_throws_if_a_plugins_are_empty(self, kernel: Kernel):
+
+
+class TestCodeBlockRendering:
+    @mark.asyncio
+    async def test_it_throws_if_a_plugins_are_empty(self, kernel: Kernel):
+
+
+class TestCodeBlockRendering:
+    def setup_method(self):
+        self.kernel = Kernel()
+
+    @mark.asyncio
+    async def test_it_throws_if_a_plugins_are_empty(self):
         target = CodeBlock(
             content="functionName",
         )
         assert target.tokens[0].type == BlockTypes.FUNCTION_ID
-        with raises(CodeBlockRenderException, match="Function `functionName` not found"):
+        with raises(CodeBlockRenderError, match="Plugin collection not set in kernel"):
+            await target.render_code(self.kernel, KernelArguments())
+
+    @mark.asyncio
+    async def test_it_throws_if_a_plugins_are_empty(self):
+        target = CodeBlock(
+            content="functionName",
+        )
+        assert target.tokens[0].type == BlockTypes.FUNCTION_ID
+        with raises(CodeBlockRenderError, match="Plugin collection not set in kernel"):
+            await target.render_code(self.kernel, KernelArguments())
+
+class TestCodeBlockRendering:
+    @mark.asyncio
+    async def test_it_throws_if_a_plugins_are_empty(self, kernel: Kernel):tp
+    async def test_it_throws_if_a_function_doesnt_exist(self):
+        target = CodeBlock(
+            content="functionName",
+        )
+        assert target.tokens[0].type == BlockTypes.FUNCTION_ID
+        with raises(
+            CodeBlockRenderException, match="Function `functionName` not found"
+        ):
             await target.render_code(kernel, KernelArguments())
 
     async def test_it_throws_if_a_function_doesnt_exist(self, kernel: Kernel):
@@ -50,7 +107,9 @@ class TestCodeBlockRendering:
         )
         assert target.tokens[0].type == BlockTypes.FUNCTION_ID
         kernel.add_plugin(KernelPlugin(name="test", functions=[]))
-        with raises(CodeBlockRenderException, match="Function `functionName` not found"):
+        with raises(
+            CodeBlockRenderException, match="Function `functionName` not found"
+        ):
             await target.render_code(kernel, KernelArguments())
 
     async def test_it_throws_if_a_function_call_throws(self, kernel: Kernel):
@@ -72,23 +131,148 @@ class TestCodeBlockRendering:
         with raises(CodeBlockRenderException, match="test.funcName"):
             await target.render_code(kernel, KernelArguments())
 
+    @mark.asyncio
+    async def test_it_renders_code_block_consisting_of_just_a_var_block1(
+        self, kernel: Kernel
+    ):
     async def test_it_renders_code_block_consisting_of_just_a_var_block1(self, kernel: Kernel):
         code_block = CodeBlock(
             content="$var",
         )
         result = await code_block.render_code(kernel, KernelArguments(var="foo"))
+        
+
+    @mark.asyncio
+    async def test_it_throws_if_a_function_doesnt_exist(self, kernel: Kernel):
+        self.kernel.plugins = KernelPluginCollection()
+        dkp = KernelPlugin(name="test", functions=[])
+        self.kernel.plugins.add(dkp)
+        with raises(CodeBlockRenderError, match="Function `functionName` not found"):
+            await target.render_code(self.kernel, KernelArguments())
+
+    @mark.asyncio
+    async def test_it_throws_if_a_function_call_throws(self):
+        def invoke():
+            raise Exception("error")
+
+        function = KernelFunction(
+            function_name="funcName",
+            plugin_name="pluginName",
+            description="",
+            function=invoke,
+            parameters=[],
+            return_parameter=None,
+            is_prompt=False,
+        )
+
+        dkp = KernelPlugin(name="test", functions=[function])
+        plugins = KernelPluginCollection()
+        plugins.add(dkp)
+        kernel = Kernel()
+        kernel.plugins = plugins
+
+
+    @mark.asyncio
+    async def test_it_throws_if_a_function_doesnt_exist(self, kernel: Kernel):
+        self.kernel.plugins = KernelPluginCollection()
+        dkp = KernelPlugin(name="test", functions=[])
+        self.kernel.plugins.add(dkp)
+        with raises(CodeBlockRenderError, match="Function `functionName` not found"):
+            await target.render_code(self.kernel, KernelArguments())
+
+    @mark.asyncio
+    async def test_it_throws_if_a_function_call_throws(self):
+        def invoke():
+            raise Exception("error")
+
+        function = KernelFunction(
+            function_name="funcName",
+            plugin_name="pluginName",
+            description="",
+            function=invoke,
+            parameters=[],
+            return_parameter=None,
+            is_prompt=False,
+        )
+
+        dkp = KernelPlugin(name="test", functions=[function])
+        plugins = KernelPluginCollection()
+        plugins.add(dkp)
+        kernel = Kernel()
+        kernel.plugins = plugins
+
+        target = CodeBlock(
+            content="functionName",
+        )
+        assert target.tokens[0].type == BlockTypes.FUNCTION_ID
+        kernel.add_plugin(KernelPlugin(name="test", functions=[]))
+        with raises(
+            CodeBlockRenderException, match="Function `functionName` not found"
+        ):
+            await target.render_code(kernel, KernelArguments())
+
+    @mark.asyncio
+    async def test_it_throws_if_a_function_call_throws(self, kernel: Kernel):
+        @kernel_function(name="funcName")
+        def invoke():
+            raise Exception("function exception")
+
+        function = KernelFunctionFromMethod(
+            method=invoke,
+            plugin_name="pluginName",
+        )
+
+        kernel.add_function(plugin_name="test", function=function)
+
+        target = CodeBlock(
+            content="test.funcName",
+        )
+
+        with raises(CodeBlockRenderException, match="test.funcName"):
+            await target.render_code(kernel, KernelArguments())
+
+    @mark.asyncio
+    async def test_it_renders_code_block_consisting_of_just_a_var_block1(
+        self, kernel: Kernel
+    ):
+        code_block = CodeBlock(
+            content="$var",
+        )
+        result = await code_block.render_code(kernel, KernelArguments(var="foo"))
+        with raises(CodeBlockRenderError):
+            await target.render_code(kernel, KernelArguments())
+
+    @mark.asyncio
+    async def test_it_renders_code_block_consisting_of_just_a_var_block1(self):
+        code_block = CodeBlock(
+            content="$var",
+        )
+        result = await code_block.render_code(self.kernel, KernelArguments(var="foo"))
 
         assert result == "foo"
 
+    @mark.asyncio
+    async def test_it_renders_code_block_consisting_of_just_a_val_block1(
+        self, kernel: Kernel
+    ):
     async def test_it_renders_code_block_consisting_of_just_a_val_block1(self, kernel: Kernel):
         code_block = CodeBlock(
             content="'ciao'",
         )
         result = await code_block.render_code(kernel, KernelArguments())
+        u
+        
+    async def test_it_renders_code_block_consisting_of_just_a_val_block1(self):
+        code_block = CodeBlock(
+            content="'ciao'",
+        )
+        result = await code_block.render_code(self.kernel, KernelArguments())
 
         assert result == "ciao"
 
+    @mark.asyncio
     async def test_it_invokes_function_cloning_all_variables(self, kernel: Kernel):
+    async def test_it_invokes_function_cloning_all_variables(self):
         # Set up initial context variables
         arguments = KernelArguments(input="zero", var1="uno", var2="due")
 
@@ -118,6 +302,25 @@ class TestCodeBlockRendering:
         )
 
         kernel.add_plugin(KernelPlugin(name="test", functions=[function]))
+        function = KernelFunctionFromMethod(
+            method=invoke,
+            plugin_name="pluginName",
+        )
+
+        kernel.add_plugin(KernelPlugin(name="test", functions=[function]))
+        function = KernelFunction(
+            function_name="funcName",
+            plugin_name="pluginName",
+            description="",
+            function=invoke,
+            parameters=[KernelParameterMetadata(name="arguments", description="", default_value=None, required=True)],
+            return_parameter=None,
+            is_prompt=False,
+        )
+
+        dkp = KernelPlugin(name="test", functions=[function])
+        kernel = Kernel()
+        kernel.plugins.add(dkp)
 
         # Create a CodeBlock with the FunctionIdBlock and render it with the context
         code_block = CodeBlock(
@@ -156,6 +359,9 @@ class TestCodeBlockRendering:
         # Define the function to be invoked, which modifies the canary variable
         @kernel_function(name="funcName")
         def invoke(arguments: "KernelArguments"):
+        @kernel_function(name="funcName")
+        def invoke(arguments: "KernelArguments"):
+        def invoke(arguments):
             nonlocal canary
             canary = arguments["varName"]
             return arguments["varName"]
@@ -167,6 +373,25 @@ class TestCodeBlockRendering:
         )
 
         kernel.add_plugin(KernelPlugin(name="test", functions=[function]))
+        function = KernelFunctionFromMethod(
+            method=invoke,
+            plugin_name="pluginName",
+        )
+
+        kernel.add_plugin(KernelPlugin(name="test", functions=[function]))
+        function = KernelFunction(
+            function=invoke,
+            plugin_name="pluginName",
+            function_name="funcName",
+            description="",
+            parameters=[KernelParameterMetadata(name="arguments", description="", default_value=None, required=True)],
+            return_parameter=None,
+            is_prompt=False,
+        )
+
+        dkp = KernelPlugin(name="test", functions=[function])
+        kernel = Kernel()
+        kernel.plugins.add(dkp)
 
         # Create a CodeBlock with the FunctionIdBlock and VarBlock,
         # and render it with the context
@@ -206,6 +431,25 @@ class TestCodeBlockRendering:
         )
 
         kernel.add_plugin(KernelPlugin(name="test", functions=[function]))
+        function = KernelFunctionFromMethod(
+            method=invoke,
+            plugin_name="pluginName",
+        )
+
+        kernel.add_plugin(KernelPlugin(name="test", functions=[function]))
+        function = KernelFunction(
+            function=invoke,
+            plugin_name="pluginName",
+            function_name="funcName",
+            description="",
+            parameters=[KernelParameterMetadata(name="arguments", description="", default_value=None, required=True)],
+            return_parameter=None,
+            is_prompt=False,
+        )
+
+        dkp = KernelPlugin(name="test", functions=[function])
+        kernel = Kernel()
+        kernel.plugins.add(dkp)
 
         # Create a CodeBlock with the FunctionIdBlock and ValBlock,
         # and render it with the context
@@ -220,6 +464,7 @@ class TestCodeBlockRendering:
         # Check that the canary value matches the value
         assert canary == VALUE
 
+    @mark.asyncio
     async def test_it_invokes_function_with_multiple_arguments(self, kernel: Kernel):
         # Define a value to be used in the test
         VALUE = "value"
@@ -227,6 +472,14 @@ class TestCodeBlockRendering:
         code_block = CodeBlock(
             content=" ",
             tokens=[
+                FunctionIdBlock(
+                    content="test.funcName",
+                    plugin_name="test",
+                    function_name="funcName",
+                    validated=True,
+                ),
+                FunctionIdBlock(content="test.funcName", plugin_name="test", function_name="funcName", validated=True),
+                FunctionIdBlock(content="test.funcName", plugin_name="test", function_name="funcName", validated=True),
                 FunctionIdBlock(content="test.funcName", plugin_name="test", function_name="funcName", validated=True),
                 ValBlock(content=f'"{VALUE}"'),
                 NamedArgBlock(content="arg1=$arg1"),
@@ -250,6 +503,23 @@ class TestCodeBlockRendering:
         )
 
         kernel.add_plugin(KernelPlugin(name="test", functions=[function]))
+        function = KernelFunction(
+            function=invoke,
+            plugin_name="pluginName",
+            function_name="funcName",
+            description="",
+            parameters=[
+                KernelParameterMetadata(name="input", description="", default_value=None, required=True),
+                KernelParameterMetadata(name="arg1", description="", default_value=None, required=True),
+                KernelParameterMetadata(name="arg2", description="", default_value=None, required=True),
+            ],
+            return_parameter=None,
+            is_prompt=False,
+        )
+
+        dkp = KernelPlugin(name="test", functions=[function])
+        kernel = Kernel()
+        kernel.plugins.add(dkp)
 
         # Create a CodeBlock with the FunctionIdBlock and ValBlock,
         # and render it with the context
@@ -260,7 +530,17 @@ class TestCodeBlockRendering:
         # Check that the canary value matches the value
         assert canary == f"{VALUE} arg1 arg2"
 
+    @mark.asyncio
     async def test_it_invokes_function_with_only_named_arguments(self, kernel: Kernel):
+        code_block = CodeBlock(
+            content=" ",
+            tokens=[
+                FunctionIdBlock(
+                    content="test.funcName",
+                    plugin_name="test",
+                    function_name="funcName",
+                ),
+    async def test_it_invokes_function_with_only_named_arguments(self):
         code_block = CodeBlock(
             content=" ",
             tokens=[
@@ -286,6 +566,22 @@ class TestCodeBlockRendering:
         )
 
         kernel.add_plugin(KernelPlugin(name="test", functions=[function]))
+        function = KernelFunction(
+            function=invoke,
+            plugin_name="pluginName",
+            function_name="funcName",
+            description="",
+            parameters=[
+                KernelParameterMetadata(name="arg1", description="", default_value=None, required=True),
+                KernelParameterMetadata(name="arg2", description="", default_value=None, required=True),
+            ],
+            return_parameter=None,
+            is_prompt=False,
+        )
+
+        dkp = KernelPlugin(name="test", functions=[function])
+        kernel = Kernel()
+        kernel.plugins.add(dkp)
 
         # Create a CodeBlock with the FunctionIdBlock and ValBlock,
         # and render it with the context
@@ -296,7 +592,17 @@ class TestCodeBlockRendering:
         # Check that the canary value matches the value
         assert canary == "arg1 arg2"
 
+    @mark.asyncio
     async def test_it_fails_on_function_without_args(self, kernel: Kernel):
+        code_block = CodeBlock(
+            content=" ",
+            tokens=[
+                FunctionIdBlock(
+                    content="test.funcName",
+                    plugin_name="test",
+                    function_name="funcName",
+                ),
+    async def test_it_fails_on_function_without_args(self):
         code_block = CodeBlock(
             content=" ",
             tokens=[
@@ -317,6 +623,19 @@ class TestCodeBlockRendering:
         )
 
         kernel.add_plugin(KernelPlugin(name="test", functions=[function]))
+        function = KernelFunction(
+            function=invoke,
+            plugin_name="test",
+            function_name="funcName",
+            description="",
+            parameters=[],
+            return_parameter=None,
+            is_prompt=False,
+        )
+
+        dkp = KernelPlugin(name="test", functions=[function])
+        kernel = Kernel()
+        kernel.plugins.add(dkp)
 
         # Create a CodeBlock with the FunctionIdBlock and ValBlock,
         # and render it with the context
@@ -441,7 +760,9 @@ def test_block_validation(token0, token1, token2):
         "invalid_named_arg_val",
     ],
 )
-def test_positional_validation(token0, token0valid, token1, token1valid, token2, token2valid):
+def test_positional_validation(
+    token0, token0valid, token1, token1valid, token2, token2valid
+):
     if not token1 and not token2valid:
         mark.skipif(f"{token0} {token1} {token2}", reason="Not applicable")
         return

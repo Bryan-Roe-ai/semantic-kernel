@@ -4,8 +4,15 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Data;
+=======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
+>>>>>>> main
+=======
 using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using NRedisStack.Search;
 
 namespace Microsoft.SemanticKernel.Connectors.Redis;

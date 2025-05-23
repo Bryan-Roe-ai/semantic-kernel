@@ -24,23 +24,18 @@ public sealed class WebFileDownloadPlugin
     /// </summary>
     public const string FilePathParamName = "filePath";
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="WebFileDownloadPlugin"/> class.
-    /// </summary>
-    /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
-    public WebFileDownloadPlugin(ILoggerFactory? loggerFactory = null) :
-        this(HttpClientProvider.GetHttpClient(), loggerFactory)
-    {
-    }
+<<<<<<< HEAD
+    private readonly ILogger _logger;
+    private static readonly HttpClient _httpClient = HttpClientProvider.GetHttpClient();
 
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <summary>
     /// Initializes a new instance of the <see cref="WebFileDownloadPlugin"/> class.
     /// </summary>
-    /// <param name="httpClient">The HTTP client to use for making requests.</param>
     /// <param name="loggerFactory">The <see cref="ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
-    public WebFileDownloadPlugin(HttpClient httpClient, ILoggerFactory? loggerFactory = null)
+    public WebFileDownloadPlugin(ILoggerFactory? loggerFactory = null)
     {
-        this._httpClient = httpClient;
         this._logger = loggerFactory?.CreateLogger(typeof(WebFileDownloadPlugin)) ?? NullLogger.Instance;
     }
 
@@ -102,7 +97,7 @@ public sealed class WebFileDownloadPlugin
 
         using HttpRequestMessage request = new(HttpMethod.Get, url);
 
-        using HttpResponseMessage response = await this._httpClient.SendWithSuccessCheckAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await _httpClient.SendWithSuccessCheckAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
 
         // Check the content length if provided
         if (response.Content.Headers.ContentLength.HasValue && response.Content.Headers.ContentLength.Value > this.MaximumDownloadSize)

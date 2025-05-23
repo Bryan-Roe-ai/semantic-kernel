@@ -30,7 +30,9 @@ chat_function = kernel.add_function(
         template="{{$history}}{{$request}}",
         description="Chat with the assistant",
         input_variables=[
-            InputVariable(name="request", description="The user input", is_required=True),
+            InputVariable(
+                name="request", description="The user input", is_required=True
+            ),
             InputVariable(
                 name="history",
                 description="The history of the conversation",
@@ -73,7 +75,9 @@ chat_function_intent = kernel.add_function(
         description="Chat with the assistant",
         template_format="handlebars",
         input_variables=[
-            InputVariable(name="request", description="The user input", is_required=True),
+            InputVariable(
+                name="request", description="The user input", is_required=True
+            ),
             InputVariable(
                 name="chat_history",
                 description="The history of the conversation",
@@ -99,15 +103,20 @@ few_shot_examples = [
     ChatHistory(
         messages=[
             ChatMessageContent(
-                role=AuthorRole.USER, content="Can you send a very quick approval to the marketing team?"
+                role=AuthorRole.USER,
+                content="Can you send a very quick approval to the marketing team?",
             ),
             ChatMessageContent(role=AuthorRole.SYSTEM, content="Intent:"),
-            ChatMessageContent(role=AuthorRole.ASSISTANT, content="ContinueConversation"),
+            ChatMessageContent(
+                role=AuthorRole.ASSISTANT, content="ContinueConversation"
+            ),
         ]
     ),
     ChatHistory(
         messages=[
-            ChatMessageContent(role=AuthorRole.USER, content="Thanks, I'm done for now"),
+            ChatMessageContent(
+                role=AuthorRole.USER, content="Thanks, I'm done for now"
+            ),
             ChatMessageContent(role=AuthorRole.SYSTEM, content="Intent:"),
             ChatMessageContent(role=AuthorRole.ASSISTANT, content="EndConversation"),
         ]

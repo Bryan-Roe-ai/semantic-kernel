@@ -3,7 +3,9 @@
 import importlib
 from typing import TYPE_CHECKING, Any
 
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.connectors.ai.prompt_execution_settings import (
+    PromptExecutionSettings,
+)
 
 if TYPE_CHECKING:
     from transformers import GenerationConfig
@@ -33,7 +35,13 @@ class HuggingFacePromptExecutionSettings(PromptExecutionSettings):
 
         return GenerationConfig(
             **self.model_dump(
-                include={"max_new_tokens", "pad_token_id", "eos_token_id", "temperature", "top_p"},
+                include={
+                    "max_new_tokens",
+                    "pad_token_id",
+                    "eos_token_id",
+                    "temperature",
+                    "top_p",
+                },
                 exclude_unset=False,
                 exclude_none=True,
                 by_alias=True,

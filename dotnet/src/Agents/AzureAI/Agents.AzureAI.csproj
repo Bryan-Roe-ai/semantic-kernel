@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+﻿<Project Sdk="Microsoft.NET.Sdk">
+=======
 <Project Sdk="Microsoft.NET.Sdk">
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
   <PropertyGroup>
     <!-- THIS PROPERTY GROUP MUST COME FIRST -->
@@ -7,7 +11,11 @@
     <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
     <NoWarn>$(NoWarn);SKEXP0110</NoWarn>
     <EnablePackageValidation>false</EnablePackageValidation>
+<<<<<<< HEAD
+    <VersionSuffix>alpha</VersionSuffix>
+=======
     <VersionSuffix>preview</VersionSuffix>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   </PropertyGroup>
 
   <Import Project="$(RepoRoot)/dotnet/nuget/nuget-package.props" />
@@ -15,12 +23,19 @@
   <PropertyGroup>
     <!-- NuGet Package Settings -->
     <Title>Semantic Kernel Agents - AzureAI</Title>
+<<<<<<< HEAD
+    <Description>Defines core a concrete Agent based on the Azure AI Agent API.</Description>
+=======
     <Description>Defines a concrete Agent based on the Azure AI Agent API.</Description>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/azure/Policies/GeneratedActionPipelinePolicy.cs" Link="%(RecursiveDir)Azure/%(Filename)%(Extension)" />
+<<<<<<< HEAD
+=======
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/planning/Schema/JsonSchemaFunctionParameters.cs" Link="%(RecursiveDir)Schema/%(Filename)%(Extension)" />
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Diagnostics/*" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Http/*" Link="%(RecursiveDir)Http/%(Filename)%(Extension)" />
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/*" Link="%(RecursiveDir)Text/%(Filename)%(Extension)" />
@@ -30,15 +45,21 @@
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/connectors/AI/**/*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
+<<<<<<< HEAD
+=======
   <Import Project="$(RepoRoot)/dotnet/src/InternalUtilities/agents/AgentUtilities.props" />
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   <ItemGroup>
     <ProjectReference Include="..\Abstractions\Agents.Abstractions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.AI.Projects" />
+<<<<<<< HEAD
+=======
     <PackageReference Include="Azure.Identity" />
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   </ItemGroup>
 
   <ItemGroup>
@@ -46,4 +67,8 @@
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 
+<<<<<<< HEAD
 </Project>
+=======
+</Project>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

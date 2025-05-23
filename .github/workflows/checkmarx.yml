@@ -1,0 +1,83 @@
+name: CxFlow
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '15 23 * * 6' # Scheduled to run every Saturday at 23:15 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  checkmarx-scan: # Renamed job for clarity
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+      security-events: write
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # Step 2: Cache Node.js modules to improve performance
+    - name: Cache Node.js modules
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # Step 4: Run linting to check code quality
+    - name: Run lint
+      run: npm run lint
+
+    # Step 5: Run Checkmarx CxFlow Action
+    - name: Run Checkmarx CxFlow Action
+      uses: checkmarx-ts/checkmarx-cxflow-github-action@v1.2.3
+      with:
+        project: ${{ secrets.CHECKMARX_PROJECT }}
+        team: ${{ secrets.CHECKMARX_TEAMS }}
+        checkmarx_url: ${{ secrets.CHECKMARX_URL }}
+        checkmarx_username: ${{ secrets.CHECKMARX_USERNAME }}
+        checkmarx_password: ${{ secrets.CHECKMARX_PASSWORD }}
+        checkmarx_client_secret: ${{ secrets.CHECKMARX_CLIENT_SECRET }}
+        scanners: sast
+        params: --namespace=${{ github.repository_owner }} --repo-name=${{ github.event.repository.name }} --branch=${{ github.ref }}
+
+    # Step 6: Validate SARIF file to ensure it exists
+    - name: Validate SARIF file
+      run: test -f cx.sarif && echo "SARIF file exists" || echo "SARIF file is missing"
+
+    # Step 7: Upload SARIF file for analysis
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2.3.4
+      with:
+        sarif_file: cx.sarif
+
+    # Step 8: Notify team about the scan results
+    - name: Notify Team
+      if: always() # Always notify regardless of success or failure
+      uses: slackapi/slack-github-action@v1.23
+      with:
+        slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+        channel-id: your-channel-id
+        text: 'Checkmarx scan completed with status: ${{ job.status }}'
+
+    # Step 9: Clean up temporary files and directories
+    - name: Clean up temporary files and directories
+      run: sudo rm -rf /tmp/*
+
+    # Step 10: Prune Docker system
+    - name: Prune Docker system
+      run: docker system prune -f

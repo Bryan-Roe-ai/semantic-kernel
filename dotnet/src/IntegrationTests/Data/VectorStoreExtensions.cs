@@ -4,8 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
 using Microsoft.Extensions.AI;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Extensions.VectorData;
+>>>>>>> main
 using Microsoft.SemanticKernel.Embeddings;
 
 namespace Microsoft.SemanticKernel.Data;
@@ -32,7 +38,11 @@ public static class VectorStoreExtensions
 
     /// <summary>
     /// Create a <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> from a list of strings by:
+<<<<<<< HEAD
+    /// 1. Creating an instance of <see cref="VolatileVectorStoreRecordCollection{TKey, TRecord}"/>
+=======
     /// 1. Getting an instance of <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/>
+>>>>>>> main
     /// 2. Generating embeddings for each string.
     /// 3. Creating a record with a valid key for each string and it's embedding.
     /// 4. Insert the records into the collection.
@@ -69,7 +79,11 @@ public static class VectorStoreExtensions
 
     /// <summary>
     /// Create a <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> from a list of strings by:
+<<<<<<< HEAD
+    /// 1. Creating an instance of <see cref="VolatileVectorStoreRecordCollection{TKey, TRecord}"/>
+=======
     /// 1. Getting an instance of <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/>
+>>>>>>> main
     /// 2. Generating embeddings for each string.
     /// 3. Creating a record with a valid key for each string and it's embedding.
     /// 4. Insert the records into the collection.

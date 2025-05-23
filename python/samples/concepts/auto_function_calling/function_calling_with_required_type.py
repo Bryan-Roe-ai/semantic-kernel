@@ -6,6 +6,19 @@ from functools import reduce
 from typing import TYPE_CHECKING
 
 from semantic_kernel import Kernel
+from semantic_kernel.connectors.ai.function_choice_behavior import (
+    FunctionChoiceBehavior,
+)
+from semantic_kernel.connectors.ai.open_ai import (
+    OpenAIChatCompletion,
+    OpenAIChatPromptExecutionSettings,
+)
+from semantic_kernel.contents import ChatHistory
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.function_call_content import FunctionCallContent
+from semantic_kernel.contents.streaming_chat_message_content import (
+    StreamingChatMessageContent,
+)
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior, FunctionChoiceType
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAIChatPromptExecutionSettings
 from semantic_kernel.contents import ChatHistory
@@ -93,7 +106,9 @@ history = ChatHistory()
 
 history.add_system_message(system_message)
 history.add_user_message("Hi there, who are you?")
-history.add_assistant_message("I am Mosscap, a chat bot. I'm trying to figure out what people need.")
+history.add_assistant_message(
+    "I am Mosscap, a chat bot. I'm trying to figure out what people need."
+)
 
 arguments = KernelArguments(settings=execution_settings)
 
@@ -149,6 +164,10 @@ async def handle_streaming(
             print(str(message[0]), end="")
 
     if streamed_chunks:
+        streaming_chat_message = reduce(
+            lambda first, second: first + second, streamed_chunks
+        )
+        if hasattr(streaming_chat_message, "content"):
         streaming_chat_message = reduce(lambda first, second: first + second, streamed_chunks)
         if hasattr(streaming_chat_message, "content") and streaming_chat_message.content:
             print(streaming_chat_message.content)
@@ -185,8 +204,15 @@ async def chat() -> bool:
         # If tools are used, and auto invoke tool calls is False, the response will be of type
         # ChatMessageContent with information about the tool calls, which need to be sent
         # back to the model to get the final response.
-        function_calls = [item for item in result.value[-1].items if isinstance(item, FunctionCallContent)]
-        if not execution_settings.function_choice_behavior.auto_invoke_kernel_functions and len(function_calls) > 0:
+        function_calls = [
+            item
+            for item in result.value[-1].items
+            if isinstance(item, FunctionCallContent)
+        ]
+        if (
+            not execution_settings.function_choice_behavior.auto_invoke_kernel_functions
+            and len(function_calls) > 0
+        ):
             print_tool_calls(result.value[0])
             return True
 

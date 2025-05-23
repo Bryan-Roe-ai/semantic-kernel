@@ -3,8 +3,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Data;
+=======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
+>>>>>>> main
+using Moq;
+=======
 using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Qdrant.Client.Grpc;
 using Xunit;
 

@@ -41,12 +41,24 @@ class WeaviateSettings(KernelBaseSettings):
     @classmethod
     def validate_settings(cls, data: Any) -> dict[str, Any]:
         """Validate Weaviate settings."""
+<<<<<<< HEAD
+        if not data.get("use_embed") and not data.get("url"):
+            raise ValidationError(
+                "Weaviate config must have either url or use_embed set"
+            )
+        enabled = sum([
+            cls.is_using_weaviate_cloud(data),
+            cls.is_using_local_weaviate(data),
+            cls.is_using_client_embedding(data),
+        ])
+=======
         if isinstance(data, dict):
             enabled = sum([
                 cls.is_using_weaviate_cloud(data),
                 cls.is_using_local_weaviate(data),
                 cls.is_using_client_embedding(data),
             ])
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
             if enabled == 0:
                 raise ServiceInvalidExecutionSettingsError(

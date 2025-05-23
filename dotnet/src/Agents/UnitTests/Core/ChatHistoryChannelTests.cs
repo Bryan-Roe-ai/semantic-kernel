@@ -1,5 +1,8 @@
 // Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+=======
 using System;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
@@ -27,6 +30,9 @@ public class ChatHistoryChannelTests
         ChatHistoryChannel channel = new();
 
         // Act & Assert
+        Mock<Agent> agent = new(); // Not a IChatHistoryHandler
+        ChatHistoryChannel channel = new(); // Requires IChatHistoryHandler
+
         await Assert.ThrowsAsync<KernelException>(() => channel.InvokeAsync(agent.Object).ToArrayAsync().AsTask());
     }
 

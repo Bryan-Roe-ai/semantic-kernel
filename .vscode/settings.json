@@ -6,14 +6,15 @@
   "editor.formatOnType": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[csharp]": {
     "editor.defaultFormatter": "ms-dotnettools.csharp",
     "editor.codeActionsOnSave": {
       "source.fixAll": "explicit"
     }
   },
-  "editor.bracketPairColorization.enabled": true,
-  "editor.guides.bracketPairs": "active",
   "python.formatting.provider": "autopep8",
   "python.formatting.autopep8Args": [
     "--max-line-length=120"
@@ -42,7 +43,6 @@
       "source.fixAll": "explicit"
     }
   },
-  "typescript.updateImportsOnFileMove.enabled": "always",
   "eslint.enable": true,
   "eslint.validate": [
     "javascript",
@@ -71,13 +71,15 @@
     "**/Thumbs.db": true
   },
   "cSpell.words": [
-    "Dapr",
-    "Partitioner",
-    "Pregel",
-    "Prompty",
-    "SKEXP",
+    "autogen",
+    "partitioner",
+    "dapr",
+    "partitioner",
+    "pregel",
+    "prompty",
+    "skexp",
     "superstep",
-    "Supersteps",
+    "supersteps",
     "typeref",
     "uninstantiated"
   ],
@@ -104,8 +106,12 @@
   ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
+<<<<<<< HEAD
+  "azureFunctions.deploySubpath": "dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function/bin/Release/net8.0/publish",
+=======
   "azureFunctions.projectSubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions",
   "azureFunctions.deploySubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Release/net6.0/publish",
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   "azureFunctions.projectLanguage": "C#",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
@@ -166,5 +172,68 @@
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
+<<<<<<< HEAD
+  "C_Cpp_Runner.msvcSecureNoWarnings": false,
+  "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build",
+  "intelliphp.inlineSuggestionsEnabled": true,
+  "python.analysis.autoImportCompletions": true,
+  "netbeans.jdkhome": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
+  "netbeans.project.jdkhome": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
+  "terminal.integrated.env.windows": {
+    "JAVA_HOME": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+    "PATH": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot\\bin;${env:PATH}"
+  },
+  "dbt.dbtIntegration": "cloud",
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[git-commit]": {
+    "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "maven.view": "flat",
+  "java.jdt.ls.java.home": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
+  "terminal.integrated.env.linux": {
+    "JAVA_HOME": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
+    "PATH": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23/bin:${env:PATH}"
+  },
+  "maven.terminal.customEnv": [
+    {
+      "environmentVariable": "JAVA_HOME",
+      "value": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23"
+    }
+  ],
+  "notebook.defaultFormatter": "GitHub.copilot",
+  "databricks.sensitiveValueStore": "VSCodeSettings",
+  "[code-text-binary]": {
+    "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.acceptSuggestionOnEnter": "on",
+  "[toml]": {
+    "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[plaintext]": {
+    "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "[msbuild]": {
+    "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "[shellscript]": {
+    "editor.defaultFormatter": "Google.cros-ide"
+  }
+}
+=======
   "C_Cpp_Runner.msvcSecureNoWarnings": false
 }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

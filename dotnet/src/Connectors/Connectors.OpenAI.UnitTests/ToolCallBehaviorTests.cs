@@ -106,6 +106,13 @@ public sealed class ToolCallBehaviorTests
         var options = kernelFunctions.ConfigureOptions(kernel);
 
         // Assert
+        Assert.Equal(ChatToolChoice.Auto, options.Choice);
+
+        Assert.Equal(ChatToolChoice.Auto, options.Choice);
+
+        Assert.NotNull(options.Choice);
+        Assert.NotNull(options.Choice);
+        Assert.NotNull(options.Choice);
         Assert.NotNull(options.Choice);
         this.AssertTools(options.Tools);
     }
@@ -166,6 +173,13 @@ public sealed class ToolCallBehaviorTests
         var options = enabledFunctions.ConfigureOptions(kernel);
 
         // Assert
+        Assert.Equal(ChatToolChoice.Auto, options.Choice);
+
+        Assert.Equal(ChatToolChoice.Auto, options.Choice);
+
+        Assert.NotNull(options.Choice);
+        Assert.NotNull(options.Choice);
+        Assert.NotNull(options.Choice);
         Assert.NotNull(options.Choice);
         this.AssertTools(options.Tools);
     }

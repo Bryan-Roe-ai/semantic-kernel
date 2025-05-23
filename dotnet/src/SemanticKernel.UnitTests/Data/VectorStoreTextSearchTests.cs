@@ -3,7 +3,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+<<<<<<< HEAD
+=======
 using Microsoft.SemanticKernel.Connectors.InMemory;
+>>>>>>> main
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 using Xunit;
@@ -16,7 +19,13 @@ public class VectorStoreTextSearchTests : VectorStoreTextSearchTestBase
     public void CanCreateVectorStoreTextSearchWithEmbeddingGenerationService()
     {
         // Arrange.
+<<<<<<< HEAD
+        var vectorStore = new VolatileVectorStore();
+=======
         var vectorStore = new InMemoryVectorStore();
+<<<<<<< HEAD
+>>>>>>> main
+=======
         var vectorSearch = vectorStore.GetCollection<Guid, DataModelWithRawEmbedding>("records");
         var stringMapper = new DataModelTextSearchStringMapper();
         var resultMapper = new DataModelTextSearchResultMapper();
@@ -35,6 +44,7 @@ public class VectorStoreTextSearchTests : VectorStoreTextSearchTestBase
     {
         // Arrange.
         var vectorStore = new InMemoryVectorStore(new() { EmbeddingGenerator = new MockTextEmbeddingGenerator() });
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         var vectorSearch = vectorStore.GetCollection<Guid, DataModel>("records");
         var stringMapper = new DataModelTextSearchStringMapper();
         var resultMapper = new DataModelTextSearchResultMapper();
@@ -50,7 +60,32 @@ public class VectorStoreTextSearchTests : VectorStoreTextSearchTestBase
     public async Task CanSearchAsync()
     {
         // Arrange.
+<<<<<<< HEAD
+<<<<<<< HEAD
+        var vectorStore = new VolatileVectorStore();
+=======
+        var vectorStore = new InMemoryVectorStore();
+>>>>>>> main
+        var vectorSearch = vectorStore.GetCollection<Guid, DataModel>("records");
+        var vectorizableTextSearch = new VectorizedSearchWrapper<DataModel>(vectorSearch, new MockTextEmbeddingGenerationService());
+        var stringMapper = new DataModelTextSearchStringMapper();
+        var resultMapper = new DataModelTextSearchResultMapper();
+
+        // Act.
+        var sut = new VectorStoreTextSearch<DataModel>(vectorizableTextSearch, stringMapper, resultMapper);
+
+        // Assert.
+        Assert.NotNull(sut);
+    }
+
+    [Fact]
+    public async Task CanSearchWithVectorizedSearchAsync()
+    {
+        // Arrange.
+        var sut = await CreateVectorStoreTextSearchFromVectorizedSearchAsync();
+=======
         var sut = await CreateVectorStoreTextSearchAsync();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Act.
         KernelSearchResults<string> searchResults = await sut.SearchAsync("What is the Semantic Kernel?", new() { Top = 2, Skip = 0 });

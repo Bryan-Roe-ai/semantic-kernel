@@ -4,11 +4,18 @@ This connector uses [Azure Data Explorer (Kusto)](https://learn.microsoft.com/az
 
 ## Quick Start
 
+<<<<<<< HEAD
+1. Create a cluster and database in Azure Data Explorer (Kusto) - see https://learn.microsoft.com/en-us/azure/data-explorer/create-cluster-and-database?tabs=free
+2. To use Kusto as a semantic memory store, use the following code:
+
+   > See [Example 14](../../../samples/Concepts/Memory/SemanticTextMemory_Building.cs) and [Example 15](../../../samples/Concepts/Memory/TextMemoryPlugin_MultipleMemoryStore.cs) for more memory usage examples with the kernel.
+=======
 1. Create a cluster and database in Azure Data Explorer (Kusto) - see https://learn.microsoft.com/azure/data-explorer/create-cluster-and-database?tabs=free
 
 2. To use Kusto as a semantic memory store, use the following code:
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-```csharp
+```csharp {"id":"01J6KPNSDA8KM2K36VWNEPCD6P"}
 using Kusto.Data;
 
 var connectionString = new KustoConnectionStringBuilder("https://kvc123.eastus.kusto.windows.net").WithAadUserPromptAuthentication();

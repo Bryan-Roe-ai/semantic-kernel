@@ -1,4 +1,8 @@
 // Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+// Copyright (c) Microsoft. All rights reserved.
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI.Assistants;
@@ -12,6 +16,7 @@ namespace Microsoft.SemanticKernel.Agents.OpenAI.Internal;
 /// </summary>
 internal static class AssistantCreationOptionsFactory
 {
+    public static AssistantCreationOptions CreateAssistantCreationOptions(this PromptTemplateConfig templateConfig, OpenAIAssistantCapabilities capabilities)
     public static AssistantCreationOptions CreateAssistantOptions(this PromptTemplateConfig templateConfig, OpenAIAssistantCapabilities capabilities)
     {
         AssistantCreationOptions assistantCreationOptions = capabilities.CreateAssistantCreationOptions(templateConfig.TemplateFormat);
@@ -23,6 +28,7 @@ internal static class AssistantCreationOptionsFactory
         return assistantCreationOptions;
     }
 
+    public static AssistantCreationOptions CreateAssistantCreationOptions(this OpenAIAssistantDefinition definition)
     public static AssistantCreationOptions CreateAssistantOptions(this OpenAIAssistantDefinition definition)
     {
         AssistantCreationOptions assistantCreationOptions = definition.CreateAssistantCreationOptions(PromptTemplateConfig.SemanticKernelTemplateFormat);

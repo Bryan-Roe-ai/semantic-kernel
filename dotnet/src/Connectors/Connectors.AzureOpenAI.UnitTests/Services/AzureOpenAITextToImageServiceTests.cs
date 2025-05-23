@@ -12,6 +12,8 @@ using Azure.AI.OpenAI;
 using Azure.Core;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+using Microsoft.SemanticKernel.Services;
+using Moq;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Services;
 using Microsoft.SemanticKernel.TextToImage;
@@ -37,6 +39,9 @@ public sealed class AzureOpenAITextToImageServiceTests : IDisposable
         {
             ResponseToReturn = new HttpResponseMessage(System.Net.HttpStatusCode.OK)
             {
+                Content = new StringContent(File.ReadAllText("./TestData/text-to-image-response.txt"))
+                Content = new StringContent(File.ReadAllText("./TestData/text-to-image-response.txt"))
+                Content = new StringContent(File.ReadAllText("./TestData/text-to-image-response.json"))
                 Content = new StringContent(File.ReadAllText("./TestData/text-to-image-response.json"))
             }
         };
@@ -58,6 +63,11 @@ public sealed class AzureOpenAITextToImageServiceTests : IDisposable
         Assert.Equal("model", sut.Attributes[AIServiceExtensions.ModelIdKey]);
 
         // Case #3
+        sut = new AzureOpenAITextToImageService("deployment", new AzureOpenAIClient(new Uri("https://api-host/"), "api-key"), "model", loggerFactory: this._mockLoggerFactory.Object);
+        sut = new AzureOpenAITextToImageService("deployment", new AzureOpenAIClient(new Uri("https://api-host/"), "api-key"), "model", loggerFactory: this._mockLoggerFactory.Object);
+        sut = new AzureOpenAITextToImageService("deployment", new AzureOpenAIClient(new Uri("https://api-host/"), new ApiKeyCredential("api-key")), "model", loggerFactory: this._mockLoggerFactory.Object);
+        sut = new AzureOpenAITextToImageService("deployment", new AzureOpenAIClient(new Uri("https://api-host/"), new ApiKeyCredential("api-key")), "model", loggerFactory: this._mockLoggerFactory.Object);
+        sut = new AzureOpenAITextToImageService("deployment", new AzureOpenAIClient(new Uri("https://api-host/"), new ApiKeyCredential("api-key")), "model", loggerFactory: this._mockLoggerFactory.Object);
         sut = new AzureOpenAITextToImageService("deployment", new AzureOpenAIClient(new Uri("https://api-host/"), new ApiKeyCredential("api-key")), "model", loggerFactory: this._mockLoggerFactory.Object);
         Assert.Equal("deployment", sut.Attributes[AzureClientCore.DeploymentNameKey]);
         Assert.Equal("model", sut.Attributes[AIServiceExtensions.ModelIdKey]);
@@ -87,6 +97,10 @@ public sealed class AzureOpenAITextToImageServiceTests : IDisposable
         Assert.NotNull(request);
         Assert.Equal("description", request["prompt"]?.ToString());
         Assert.Equal("deployment", request["model"]?.ToString());
+        Assert.Equal("url", request["response_format"]?.ToString());
+        Assert.Equal("url", request["response_format"]?.ToString());
+        Assert.Null(request["response_format"]);
+        Assert.Null(request["response_format"]);
         Assert.Null(request["response_format"]);
         Assert.Equal($"{width}x{height}", request["size"]?.ToString());
     }

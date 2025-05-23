@@ -33,6 +33,8 @@
   <ItemGroup>
     <ProjectReference Include="..\VectorData.Abstractions\VectorData.Abstractions.csproj" />
     <ProjectReference Include="..\..\SemanticKernel.Core\SemanticKernel.Core.csproj" />
+    <ProjectReference Include="..\..\Plugins\Plugins.Memory\Plugins.Memory.csproj" />
+    <ProjectReference Include="..\..\SemanticKernel\SemanticKernel.csproj" />
   </ItemGroup>
 
   <ItemGroup>

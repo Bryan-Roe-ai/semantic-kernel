@@ -70,10 +70,11 @@ public class FunctionCallContentTests
         };
 
         // Act
-        var exception = await Assert.ThrowsAsync<JsonException>(() => sut.InvokeAsync(kernel));
+        var resultContent = await sut.InvokeAsync(kernel);
 
         // Assert
-        Assert.Equal("Error: Function call arguments were invalid JSON.", exception.Message);
+        Assert.NotNull(resultContent);
+        Assert.Equal("Error: Function call arguments were invalid JSON.", resultContent.Result);
     }
 
     [Fact]

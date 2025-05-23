@@ -3,7 +3,9 @@
 
 import semantic_kernel.connectors.ai.open_ai as sk_oai
 from semantic_kernel.kernel import Kernel
-from semantic_kernel.planners.sequential_planner.sequential_planner_parser import SequentialPlanParser
+from semantic_kernel.planners.sequential_planner.sequential_planner_parser import (
+    SequentialPlanParser,
+)
 from tests.integration.fakes.email_plugin_fake import EmailPluginFake
 from tests.integration.fakes.summarize_plugin_fake import SummarizePluginFake
 from tests.integration.fakes.writer_plugin_fake import WriterPluginFake
@@ -15,6 +17,86 @@ async def test_can_call_to_plan_from_xml():
     kernel.add_service(
         sk_oai.AzureChatCompletion(
             service_id="text_completion",
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+>>>>>>> origin/main
+=======
+<<<<<<< main
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< main
+=======
+            deployment_name=deployment_name,
+            endpoint=endpoint,
+            api_key=api_key,
+>>>>>>> ms/small_fixes
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> origin/main
+>>>>>>> head
         ),
     )
     kernel.add_plugin(EmailPluginFake(), "email")
@@ -31,10 +113,99 @@ async def test_can_call_to_plan_from_xml():
 """
     goal = "Summarize an input, translate to french, and e-mail to John Doe"
 
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
     plan = SequentialPlanParser.to_plan_from_xml(plan_string, goal, kernel)
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< main
+    plan = SequentialPlanParser.to_plan_from_xml(plan_string, goal, kernel)
+=======
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+>>>>>>> origin/main
+=======
+<<<<<<< main
+    plan = SequentialPlanParser.to_plan_from_xml(plan_string, goal, kernel)
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< main
+    plan = SequentialPlanParser.to_plan_from_xml(plan_string, goal, kernel)
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< main
+    plan = SequentialPlanParser.to_plan_from_xml(plan_string, goal, kernel)
+=======
+    plan = SequentialPlanParser.to_plan_from_xml(
+        plan_string,
+        goal,
+        SequentialPlanParser.get_plugin_function(kernel),
+    )
+>>>>>>> ms/small_fixes
+<<<<<<< div
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< head
+>>>>>>> head
+>>>>>>> origin/main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< div
+>>>>>>> main
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> origin/main
+>>>>>>> head
 
     assert plan is not None
-    assert plan.description == "Summarize an input, translate to french, and e-mail to John Doe"
+    assert (
+        plan.description
+        == "Summarize an input, translate to french, and e-mail to John Doe"
+    )
 
     assert len(plan._steps) == 4
     step = plan._steps[0]

@@ -67,11 +67,29 @@ public sealed class OpenAIChatCompletionService : IChatCompletionService, ITextG
             HttpClient? httpClient = null,
             ILoggerFactory? loggerFactory = null)
     {
+        Uri? internalClientEndpoint = null;
+        var providedEndpoint = endpoint ?? httpClient?.BaseAddress;
+        if (providedEndpoint is not null)
+        {
+            // As OpenAI Client automatically adds the chat completions endpoint, we remove it to avoid duplication.
+            const string PathAndQueryPattern = "v1/chat/completions";
+            var providedEndpointText = providedEndpoint.ToString();
+            int index = providedEndpointText.IndexOf(PathAndQueryPattern, StringComparison.OrdinalIgnoreCase);
+            if (index >= 0)
+            {
+                internalClientEndpoint = new Uri($"{providedEndpointText.Substring(0, index)}{providedEndpointText.Substring(index + PathAndQueryPattern.Length)}");
+            }
+            else
+            {
+                internalClientEndpoint = providedEndpoint;
+            }
+        }
+
         this._client = new(
             modelId,
             apiKey,
             organization,
-            endpoint ?? httpClient?.BaseAddress,
+            internalClientEndpoint,
             httpClient,
             loggerFactory?.CreateLogger(typeof(OpenAIChatCompletionService)));
     }

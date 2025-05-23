@@ -25,6 +25,8 @@ from tests.integration.completions.chat_completion_test_base import (
     vertex_ai_setup,
 )
 from tests.integration.completions.completion_test_base import ServiceType
+from tests.integration.completions.test_utils import retry
+from tests.integration.utils import retry
 from tests.utils import retry
 
 pytestmark = pytest.mark.parametrize(
@@ -255,7 +257,6 @@ pytestmark = pytest.mark.parametrize(
                 ChatMessageContent(role=AuthorRole.USER, items=[TextContent(text="Where was it made?")]),
             ],
             {},
-            marks=pytest.mark.skip(reason="Skipping due to occasional throttling from Bedrock."),
             id="bedrock_anthropic_claude_image_input_file",
         ),
     ],

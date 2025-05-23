@@ -1,7 +1,12 @@
 // Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+using System.Diagnostics;
+using Azure.AI.OpenAI;
+=======
 
 using System;
 using System.ClientModel.Primitives;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Diagnostics;
 using Azure.AI.OpenAI.Chat;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -37,6 +42,26 @@ internal partial class AzureClientCore
         {
             return base.CreateChatCompletionOptions(executionSettings, chatHistory, toolCallingConfig, kernel);
         }
+<<<<<<< HEAD
+
+        var options = new ChatCompletionOptions
+        {
+            MaxTokens = executionSettings.MaxTokens,
+            MaxTokens = executionSettings.MaxTokens,
+            MaxOutputTokenCount = executionSettings.MaxTokens,
+            MaxOutputTokenCount = executionSettings.MaxTokens,
+            MaxOutputTokenCount = executionSettings.MaxTokens,
+            Temperature = (float?)executionSettings.Temperature,
+            TopP = (float?)executionSettings.TopP,
+            FrequencyPenalty = (float?)executionSettings.FrequencyPenalty,
+            PresencePenalty = (float?)executionSettings.PresencePenalty,
+            Seed = executionSettings.Seed,
+            EndUserId = executionSettings.User,
+            TopLogProbabilityCount = executionSettings.TopLogprobs,
+            IncludeLogProbabilities = executionSettings.Logprobs,
+            StoredOutputEnabled = executionSettings.Store,
+        };
+=======
         ChatCompletionOptions options = ModelReaderWriter.Read<ChatCompletionOptions>(BinaryData.FromString("{\"stream_options\":{\"include_usage\":true}}")!)!;
         options.MaxOutputTokenCount = executionSettings.MaxTokens;
         options.Temperature = (float?)executionSettings.Temperature;
@@ -67,10 +92,29 @@ internal partial class AzureClientCore
             options.SetUserSecurityContext(azureSettings.UserSecurityContext);
 #pragma warning restore AOAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         var responseFormat = GetResponseFormat(executionSettings);
         if (responseFormat is not null)
         {
+            options.ResponseFormat = responseFormat;
+        }
+
+        if (toolCallingConfig.Choice is not null)
+        {
+            options.ToolChoice = toolCallingConfig.Choice;
+            ResponseFormat = GetResponseFormat(azureSettings) ?? ChatResponseFormat.Text,
+            ToolChoice = toolCallingConfig.Choice
+            ResponseFormat = GetResponseFormat(azureSettings) ?? ChatResponseFormat.Text,
+            ToolChoice = toolCallingConfig.Choice
+        };
+
+        var responseFormat = GetResponseFormat(executionSettings);
+        if (responseFormat is not null)
+        {
+#pragma warning disable AOAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+            options.AddDataSource(azureSettings.AzureChatDataSource);
+#pragma warning restore AOAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             options.ResponseFormat = responseFormat;
         }
 

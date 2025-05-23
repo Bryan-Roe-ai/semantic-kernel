@@ -35,8 +35,17 @@ class MockChannel(AgentChannel):
 class MockAgent(Agent):
     """A mock agent for testing purposes."""
 
+<<<<<<< HEAD
+    def __init__(
+        self,
+        name: str = "Test Agent",
+        description: str = "A test agent",
+        id: str = None,
+    ):
+=======
     channel_type: ClassVar[type[AgentChannel]] = MockChannel
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     def __init__(self, name: str = "Test-Agent", description: str = "A test agent", id: str = None):
         args = {
             "name": name,

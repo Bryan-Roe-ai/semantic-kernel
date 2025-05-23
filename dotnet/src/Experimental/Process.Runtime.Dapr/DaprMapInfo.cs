@@ -16,6 +16,11 @@ public sealed record DaprMapInfo : DaprStepInfo
     /// The map operation
     /// </summary>
     public required DaprStepInfo Operation { get; init; }
+<<<<<<< HEAD
+    public required DaprProcessInfo MapStep { get; init; }
+=======
+    public required DaprStepInfo Operation { get; init; }
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     /// <summary>
     /// Initializes a new instance of the <see cref="KernelProcessMap"/> class from this instance of <see cref="DaprMapInfo"/>.
@@ -25,6 +30,11 @@ public sealed record DaprMapInfo : DaprStepInfo
     public KernelProcessMap ToKernelProcessMap()
     {
         KernelProcessStepInfo processStepInfo = this.ToKernelProcessStepInfo();
+<<<<<<< HEAD
+        var processStepInfo = this.ToKernelProcessStepInfo();
+=======
+        KernelProcessStepInfo processStepInfo = this.ToKernelProcessStepInfo();
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         if (this.State is not KernelProcessMapState state)
         {
             throw new KernelException($"Unable to read state from map with name '{this.State.Name}' and Id '{this.State.Id}'.");
@@ -34,8 +44,19 @@ public sealed record DaprMapInfo : DaprStepInfo
             this.Operation is DaprProcessInfo processInfo
                 ? processInfo.ToKernelProcess()
                 : this.Operation.ToKernelProcessStepInfo();
+<<<<<<< HEAD
+        KernelProcess mapOperation = this.MapStep.ToKernelProcess();
 
         return new KernelProcessMap(state, operationStep, this.Edges);
+        return new KernelProcessMap(state, mapOperation, this.Edges);
+=======
+        KernelProcessStepInfo operationStep =
+            this.Operation is DaprProcessInfo processInfo
+                ? processInfo.ToKernelProcess()
+                : this.Operation.ToKernelProcessStepInfo();
+
+        return new KernelProcessMap(state, operationStep, this.Edges);
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     }
 
     /// <summary>
@@ -52,6 +73,10 @@ public sealed record DaprMapInfo : DaprStepInfo
                 ? DaprProcessInfo.FromKernelProcess(processOperation)
                 : DaprStepInfo.FromKernelStepInfo(processMap.Operation);
         DaprStepInfo mapStepInfo = DaprStepInfo.FromKernelStepInfo(processMap);
+<<<<<<< HEAD
+        DaprStepInfo daprStepInfo = DaprStepInfo.FromKernelStepInfo(processMap);
+
+        DaprProcessInfo daprProcess = DaprProcessInfo.FromKernelProcess(processMap.Operation);
 
         return new DaprMapInfo
         {
@@ -59,6 +84,24 @@ public sealed record DaprMapInfo : DaprStepInfo
             State = mapStepInfo.State,
             Edges = mapStepInfo.Edges,
             Operation = operationInfo,
+            InnerStepDotnetType = daprStepInfo.InnerStepDotnetType,
+            State = daprStepInfo.State,
+            Edges = daprStepInfo.Edges,
+            MapStep = daprProcess,
+=======
+        DaprStepInfo operationInfo =
+            processMap.Operation is KernelProcess processOperation
+                ? DaprProcessInfo.FromKernelProcess(processOperation)
+                : DaprStepInfo.FromKernelStepInfo(processMap.Operation);
+        DaprStepInfo mapStepInfo = DaprStepInfo.FromKernelStepInfo(processMap);
+
+        return new DaprMapInfo
+        {
+            InnerStepDotnetType = mapStepInfo.InnerStepDotnetType,
+            State = mapStepInfo.State,
+            Edges = mapStepInfo.Edges,
+            Operation = operationInfo,
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         };
     }
 }

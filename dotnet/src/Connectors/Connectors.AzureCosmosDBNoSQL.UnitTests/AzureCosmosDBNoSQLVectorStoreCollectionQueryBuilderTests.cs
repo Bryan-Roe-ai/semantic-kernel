@@ -2,9 +2,18 @@
 
 using System;
 using System.Collections.Generic;
+<<<<<<< HEAD
+using System.Linq;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Connectors.AzureCosmosDBNoSQL;
+using Microsoft.SemanticKernel.Data;
+=======
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Extensions.VectorData;
 using Microsoft.Extensions.VectorData.ConnectorSupport;
 using Microsoft.SemanticKernel.Connectors.AzureCosmosDBNoSQL;
+>>>>>>> main
 using Xunit;
 
 namespace SemanticKernel.Connectors.AzureCosmosDBNoSQL.UnitTests;
@@ -181,6 +190,34 @@ public sealed class AzureCosmosDBNoSQLVectorStoreCollectionQueryBuilderTests
     }
 
     [Fact]
+<<<<<<< HEAD
+    public void BuildSearchQueryWithUnsupportedFilterThrowsException()
+    {
+        // Arrange
+        var vector = new ReadOnlyMemory<float>([1f, 2f, 3f]);
+        var vectorPropertyName = "test_property_1";
+        var fields = this._storagePropertyNames.Values.ToList();
+
+        var filter = new VectorSearchFilter();
+
+        ((List<FilterClause>)filter.FilterClauses).Add(new UnsupportedFilterClause());
+
+        var searchOptions = new VectorSearchOptions { Filter = filter, Skip = 5, Top = 10 };
+
+        // Act & Assert
+        Assert.Throws<NotSupportedException>(() =>
+            AzureCosmosDBNoSQLVectorStoreCollectionQueryBuilder.BuildSearchQuery(
+                vector,
+                fields,
+                this._storagePropertyNames,
+                vectorPropertyName,
+                ScorePropertyName,
+                searchOptions));
+    }
+
+    [Fact]
+=======
+>>>>>>> main
     public void BuildSelectQueryByDefaultReturnsValidQueryDefinition()
     {
         // Arrange
@@ -227,6 +264,17 @@ public sealed class AzureCosmosDBNoSQLVectorStoreCollectionQueryBuilderTests
         Assert.Equal("@pk0", queryParameters[1].Name);
         Assert.Equal("TestProperty1", queryParameters[1].Value);
     }
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+    #region private
+
+    private sealed class UnsupportedFilterClause : FilterClause;
+
+    #endregion
+=======
+>>>>>>> main
+=======
 
     [Fact]
     public void BuildSearchQueryWithHybridFieldsReturnsValidHybridQueryDefinition()
@@ -278,4 +326,5 @@ public sealed class AzureCosmosDBNoSQLVectorStoreCollectionQueryBuilderTests
 #pragma warning disable CA1812 // An internal class that is apparently never instantiated. If so, remove the code from the assembly.
     private sealed class DummyType;
 #pragma warning restore CA1812
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 }

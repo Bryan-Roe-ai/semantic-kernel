@@ -481,6 +481,132 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests
     }
 
     [Fact]
+<<<<<<< HEAD
+    public async Task UpsertWithCustomMapperWorksCorrectlyAsync()
+    {
+        // Arrange
+        var hotel = new AzureCosmosDBNoSQLHotel("key") { HotelName = "Test Name" };
+
+        var mockMapper = new Mock<IVectorStoreRecordMapper<AzureCosmosDBNoSQLHotel, JsonObject>>();
+
+        mockMapper
+            .Setup(l => l.MapFromDataToStorageModel(It.IsAny<AzureCosmosDBNoSQLHotel>()))
+            .Returns(new JsonObject { ["id"] = "key", ["my_name"] = "Test Name" });
+
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(
+            this._mockDatabase.Object,
+            "collection",
+            new() { JsonObjectCustomMapper = mockMapper.Object });
+
+        // Act
+        var result = await sut.UpsertAsync(hotel);
+
+        // Assert
+        Assert.Equal("key", result);
+
+        this._mockContainer.Verify(l => l.UpsertItemAsync<JsonNode>(
+            It.Is<JsonNode>(node =>
+                node["id"]!.ToString() == "key" &&
+                node["my_name"]!.ToString() == "Test Name"),
+            new PartitionKey("key"),
+            It.IsAny<ItemRequestOptions>(),
+            It.IsAny<CancellationToken>()),
+            Times.Once());
+    }
+
+    [Fact]
+    public async Task GetWithCustomMapperWorksCorrectlyAsync()
+    {
+        // Arrange
+        const string RecordKey = "key";
+
+        var jsonObject = new JsonObject { ["id"] = RecordKey, ["HotelName"] = "Test Name" };
+
+        var mockFeedResponse = new Mock<FeedResponse<JsonObject>>();
+        mockFeedResponse
+            .Setup(l => l.Resource)
+            .Returns([jsonObject]);
+
+        var mockFeedIterator = new Mock<FeedIterator<JsonObject>>();
+        mockFeedIterator
+            .SetupSequence(l => l.HasMoreResults)
+            .Returns(true)
+            .Returns(false);
+
+        mockFeedIterator
+            .Setup(l => l.ReadNextAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(mockFeedResponse.Object);
+
+        this._mockContainer
+            .Setup(l => l.GetItemQueryIterator<JsonObject>(
+                It.IsAny<QueryDefinition>(),
+                It.IsAny<string>(),
+                It.IsAny<QueryRequestOptions>()))
+            .Returns(mockFeedIterator.Object);
+
+        var mockMapper = new Mock<IVectorStoreRecordMapper<AzureCosmosDBNoSQLHotel, JsonObject>>();
+
+        mockMapper
+            .Setup(l => l.MapFromStorageToDataModel(It.IsAny<JsonObject>(), It.IsAny<StorageToDataModelMapperOptions>()))
+            .Returns(new AzureCosmosDBNoSQLHotel(RecordKey) { HotelName = "Name from mapper" });
+
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(
+            this._mockDatabase.Object,
+            "collection",
+            new() { JsonObjectCustomMapper = mockMapper.Object });
+
+        // Act
+        var result = await sut.GetAsync(RecordKey);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(RecordKey, result.HotelId);
+        Assert.Equal("Name from mapper", result.HotelName);
+    }
+
+<<<<<<< main
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+<<<<<<< HEAD
+=======
+>>>>>>> upstream/main
+    [Fact]
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public async Task VectorizedSearchReturnsValidRecordAsync()
     {
         // Arrange
@@ -521,7 +647,18 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests
             "collection");
 
         // Act
+<<<<<<< HEAD
+<<<<<<< main
+        var results = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([1f, 2f, 3f])).ToListAsync();
+
+=======
+        var actual = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([1f, 2f, 3f]));
+
+        var results = await actual.Results.ToListAsync();
+>>>>>>> upstream/main
+=======
         var results = await sut.SearchEmbeddingAsync(new ReadOnlyMemory<float>([1f, 2f, 3f]), top: 3).ToListAsync();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         var result = results[0];
 
         // Assert
@@ -541,7 +678,15 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests
 
         // Act & Assert
         await Assert.ThrowsAsync<NotSupportedException>(async () =>
+<<<<<<< HEAD
+<<<<<<< main
+            await sut.VectorizedSearchAsync(new List<double>([1, 2, 3])).ToListAsync());
+=======
+            await (await sut.VectorizedSearchAsync(new List<double>([1, 2, 3]))).Results.ToListAsync());
+>>>>>>> upstream/main
+=======
             await sut.SearchEmbeddingAsync(new List<double>([1, 2, 3]), top: 3).ToListAsync());
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     [Fact]
@@ -556,9 +701,58 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await sut.SearchEmbeddingAsync(new ReadOnlyMemory<float>([1f, 2f, 3f]), top: 3, searchOptions).ToListAsync());
+<<<<<<< HEAD
+<<<<<<< main
+            await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([1f, 2f, 3f]), searchOptions).ToListAsync());
     }
 
+=======
+>>>>>>> 6d73513a859ab2d05e01db3bc1d405827799e34b
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+<<<<<<< main
+=======
+            await (await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([1f, 2f, 3f]), searchOptions)).Results.ToListAsync());
+=======
+            await sut.SearchEmbeddingAsync(new ReadOnlyMemory<float>([1f, 2f, 3f]), top: 3, searchOptions).ToListAsync());
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+    }
+
+>>>>>>> upstream/main
+=======
+>>>>>>> head
+>>>>>>> div
     public static TheoryData<List<string>, string, bool> CollectionExistsData => new()
     {
         { ["collection-2"], "collection-2", true },

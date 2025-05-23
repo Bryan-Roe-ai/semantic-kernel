@@ -82,6 +82,7 @@ public class LocalProcessTests
     }
 
     /// <summary>
+    /// Validates that the <see cref="LocalProcess"/> assigns and Id to the process if one is not already set.
     /// Verify that the function  level error handler is called when a function fails.
     /// </summary>
     [Fact]
@@ -166,9 +167,18 @@ public class LocalProcessTests
     /// </summary>
     [Fact]
     public void ProcessWithSubprocessAndInvalidTargetThrows()
+<<<<<<< HEAD
+    public async Task ProcessWithSubprocessAndInvalidTargetThrowsAsync()
     {
         // Arrange
         ProcessBuilder process = new(nameof(ProcessWithSubprocessAndInvalidTargetThrows));
+        ProcessBuilder process = new(nameof(ProcessWithSubprocessAndInvalidTargetThrowsAsync));
+=======
+    public void ProcessWithSubprocessAndInvalidTargetThrows()
+    {
+        // Arrange
+        ProcessBuilder process = new(nameof(ProcessWithSubprocessAndInvalidTargetThrows));
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         ProcessBuilder subProcess = new("SubProcess");
         ProcessStepBuilder innerStep = subProcess.AddStepFromType<TestStep>("InnerStep");
@@ -186,6 +196,19 @@ public class LocalProcessTests
 
         KernelProcess processInstance = process.Build();
         Kernel kernel = new();
+<<<<<<< HEAD
+
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            () =>
+                processInstance.StartAsync(
+                    kernel,
+                    new KernelProcessEvent
+                    {
+                        Id = "Start"
+                    }));
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     }
 
     /// <summary>
@@ -228,6 +251,7 @@ public class LocalProcessTests
     }
 
     /// <summary>
+    /// A class that represents a step for testing.
     /// A class that represents a step for testing.
     /// </summary>
     private sealed class TestStep : KernelProcessStep

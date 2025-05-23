@@ -6,8 +6,8 @@ on:
     paths:
       - "python/semantic_kernel/**"
       - "python/tests/unit/**"
+
 env:
-  # Configure a constant location for the uv cache
   UV_CACHE_DIR: /tmp/.uv-cache
 
 jobs:
@@ -21,22 +21,81 @@ jobs:
       UV_PYTHON: "3.10"
     steps:
       - uses: actions/checkout@v4
-      # Save the PR number to a file since the workflow_run event
-      # in the coverage report workflow does not have access to it
-      - name: Save PR number
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.UV_PYTHON }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
         run: |
-          echo ${{ github.event.number }} > ./pr_number
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Setup filename variables
+        run: echo "FILE_ID=${{ github.event.number }}" >> $GITHUB_ENV
+
+      - name: Download coverage
+        uses: dawidd6/action-download-artifact@6
+        with:
+          name: python-coverage-${{ env.FILE_ID }}.txt
+          github_token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
+          workflow: python-unit-tests.yml
+          search_artifacts: true
+          if_no_artifact_found: warn
+
+      - name: Download pytest
+        uses: dawidd6/action-download-artifact@6
+        with:
+          name: pytest-${{ env.FILE_ID }}.xml
+          github_token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
+          workflow: python-unit-tests.yml
+          search_artifacts: true
+          if_no_artifact_found: warn
+
+      - name: Download Files
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GH_ACTIONS_PR_WRITE }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: python/
+          merge-multiple: true
+
+      - name: Display structure of downloaded files
+        run: ls python/
+
+      - name: Pytest coverage comment
+        id: coverageComment
+        uses: MishaKav/pytest-coverage-comment@v1.0.0
+
+      - name: Save PR number
+        run: echo ${{ github.event.number }} > ./pr_number
+
       - name: Set up uv
         uses: astral-sh/setup-uv@v5
         with:
           version: "0.5.x"
           enable-cache: true
           cache-suffix: ${{ runner.os }}-${{ env.UV_PYTHON }}
+<<<<<<< HEAD
+
+=======
           cache-dependency-glob: "**/uv.lock"
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       - name: Install the project
         run: uv sync --all-extras --dev
+
       - name: Test with pytest
         run: uv run --frozen pytest -q --junitxml=pytest.xml --cov=semantic_kernel --cov-report=term-missing:skip-covered ./tests/unit | tee python-coverage.txt
+
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:

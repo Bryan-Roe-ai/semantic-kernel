@@ -9,7 +9,10 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+<<<<<<< HEAD
+=======
 using Microsoft.SemanticKernel.Agents;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel.Process;
 using Microsoft.SemanticKernel.Process.Internal;
 using Microsoft.SemanticKernel.Process.Runtime;
@@ -18,9 +21,12 @@ using Microsoft.VisualStudio.Threading;
 namespace Microsoft.SemanticKernel;
 
 internal delegate bool ProcessEventProxy(ProcessEvent processEvent);
+internal delegate bool ProcessEventFilter(KernelProcessEvent processEvent);
 
 internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
 {
+    private const string EndProcessId = "Microsoft.SemanticKernel.Process.EndStep";
+
     private readonly JoinableTaskFactory _joinableTaskFactory;
     private readonly JoinableTaskContext _joinableTaskContext;
     private readonly Channel<KernelProcessEvent> _externalEventChannel;
@@ -30,6 +36,7 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
     internal readonly List<KernelProcessStepInfo> _stepsInfos;
     internal readonly List<LocalStep> _steps = [];
     internal readonly KernelProcess _process;
+    internal readonly Kernel _kernel;
 
     private readonly ILogger _logger;
 
@@ -45,9 +52,12 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
     internal LocalProcess(KernelProcess process, Kernel kernel)
         : base(process, kernel)
     {
+        Verify.NotNull(process);
         Verify.NotNull(process.Steps);
+        Verify.NotNull(kernel);
 
         this._stepsInfos = new List<KernelProcessStepInfo>(process.Steps);
+        this._kernel = kernel;
         this._process = process;
         this._initializeTask = new Lazy<ValueTask>(this.InitializeProcessAsync);
         this._externalEventChannel = Channel.CreateUnbounded<KernelProcessEvent>();
@@ -170,22 +180,24 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
     internal Task<KernelProcess> GetProcessInfoAsync() => this.ToKernelProcessAsync();
 
     /// <summary>
-    /// Handles a <see cref="ProcessMessage"/> that has been sent to the process. This happens only in the case
+    /// Handles a <see cref="LocalMessage"/> that has been sent to the process. This happens only in the case
     /// of a process (this one) running as a step within another process (this one's parent). In this case the
     /// entire sub-process should be executed within a single superstep.
     /// </summary>
     /// <param name="message">The message to process.</param>
     /// <returns>A <see cref="Task"/></returns>
     /// <exception cref="KernelException"></exception>
-    internal override async Task HandleMessageAsync(ProcessMessage message)
+    internal override async Task HandleMessageAsync(LocalMessage message)
     {
         if (string.IsNullOrWhiteSpace(message.TargetEventId))
         {
-            throw new KernelException("Internal Process Error: The target event id must be specified when sending a message to a step.").Log(this._logger);
+            string errorMessage = "Internal Process Error: The target event id must be specified when sending a message to a step.";
+            this.Logger.LogError("{ErrorMessage}", errorMessage);
+            throw new KernelException(errorMessage);
         }
 
         string eventId = message.TargetEventId!;
-        if (this._outputEdges.TryGetValue(eventId, out List<KernelProcessEdge>? edges) && edges is not null)
+        if (this._outputEdges!.TryGetValue(eventId, out List<KernelProcessEdge>? edges) && edges is not null)
         {
             // Create the external event that will be used to start the nested process. Since this event came
             // from outside this processes, we set the visibility to internal so that it's not emitted back out again.
@@ -263,7 +275,12 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
                         ParentProcessId = this.Id,
                         RootProcessId = this.RootProcessId,
                         EventProxy = this.EventProxy,
+<<<<<<< HEAD
+                        LoggerFactory = this.LoggerFactory,
+                        EventFilter = this.EventFilter,
+=======
                         ExternalMessageChannel = this.ExternalMessageChannel,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     };
             }
             else if (step is KernelProcessMap mapStep)
@@ -272,6 +289,7 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
                     new LocalMap(mapStep, this._kernel)
                     {
                         ParentProcessId = this.Id,
+                        LoggerFactory = this.LoggerFactory,
                     };
             }
             else if (step is KernelProcessProxy proxyStep)
@@ -302,7 +320,13 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
                     new LocalStep(step, this._kernel)
                     {
                         ParentProcessId = this.Id,
+<<<<<<< HEAD
+                        EventProxy = this.EventProxy,
+                        LoggerFactory = this.LoggerFactory,
+                        EventFilter = this.EventFilter,
+=======
                         EventProxy = this.EventProxy
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     };
             }
 
@@ -325,7 +349,7 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
     private async Task Internal_ExecuteAsync(Kernel? kernel = null, int maxSupersteps = 100, bool keepAlive = true, TimeSpan? timeout = null, CancellationToken cancellationToken = default)
     {
         Kernel localKernel = kernel ?? this._kernel;
-        Queue<ProcessMessage> messageChannel = new();
+        Queue<LocalMessage> messageChannel = new();
 
         try
         {
@@ -381,6 +405,7 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
         }
         catch (Exception ex)
         {
+            this.Logger?.LogError("An error occurred while running the process: {ErrorMessage}.", ex.Message);
             this._logger?.LogError(ex, "An error occurred while running the process.");
             throw;
         }
@@ -492,11 +517,11 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
     }
 
     /// <summary>
-    /// Processes external events that have been sent to the process, translates them to <see cref="ProcessMessage"/>s, and enqueues
+    /// Processes external events that have been sent to the process, translates them to <see cref="LocalMessage"/>s, and enqueues
     /// them to the provided message channel so that they can be processed in the next superstep.
     /// </summary>
     /// <param name="messageChannel">The message channel where messages should be enqueued.</param>
-    private void EnqueueExternalMessages(Queue<ProcessMessage> messageChannel)
+    private void EnqueueExternalMessages(Queue<LocalMessage> messageChannel)
     {
         while (this._externalEventChannel.Reader.TryRead(out var externalEvent))
         {
@@ -504,7 +529,11 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
             {
                 foreach (var edge in edges)
                 {
+<<<<<<< HEAD
+                    LocalMessage message = LocalMessageFactory.CreateFromEdge(edge, externalEvent.Data);
+=======
                     ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, externalEvent.Id, externalEvent.Data);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     messageChannel.Enqueue(message);
                 }
             }
@@ -512,12 +541,16 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
     }
 
     /// <summary>
-    /// Processes events emitted by the given step in the last superstep, translates them to <see cref="ProcessMessage"/>s, and enqueues
+    /// Processes events emitted by the given step in the last superstep, translates them to <see cref="LocalMessage"/>s, and enqueues
     /// them to the provided message channel so that they can be processed in the next superstep.
     /// </summary>
     /// <param name="step">The step containing outgoing events to process.</param>
     /// <param name="messageChannel">The message channel where messages should be enqueued.</param>
+<<<<<<< HEAD
+    private void EnqueueStepMessages(LocalStep step, Queue<LocalMessage> messageChannel)
+=======
     private async Task EnqueueStepMessagesAsync(LocalStep step, Queue<ProcessMessage> messageChannel)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         var allStepEvents = step.GetAllEvents();
         foreach (ProcessEvent stepEvent in allStepEvents)
@@ -528,7 +561,18 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
                 base.EmitEvent(stepEvent);
             }
 
+<<<<<<< HEAD
+            // Get the edges for the event and queue up the messages to be sent to the next steps.
+            bool foundEdge = false;
+            foreach (KernelProcessEdge edge in step.GetEdgeForEvent(stepEvent.QualifiedId))
+            {
+                LocalMessage message = LocalMessageFactory.CreateFromEdge(edge, stepEvent.Data);
+                messageChannel.Enqueue(message);
+                foundEdge = true;
+            }
+=======
             await this.EnqueueEdgesAsync(step.GetEdgeForEvent(stepEvent.QualifiedId), messageChannel, stepEvent).ConfigureAwait(false);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
             //// Get the edges for the event and queue up the messages to be sent to the next steps.
             //bool foundEdge = false;
@@ -633,10 +677,13 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
     {
         this._externalEventChannel.Writer.Complete();
         this._joinableTaskContext.Dispose();
+<<<<<<< HEAD
+=======
         foreach (var step in this._steps)
         {
             await step.DeinitializeStepAsync().ConfigureAwait(false);
         }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         this._processCancelSource?.Dispose();
     }
 }

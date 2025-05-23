@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.OpenApi.ApiManifest;
-using Microsoft.OpenApi.Readers;
+using Microsoft.OpenApi.Reader;
 using Microsoft.OpenApi.Services;
 using Microsoft.SemanticKernel.Http;
 using Microsoft.SemanticKernel.Plugins.OpenApi;
@@ -147,11 +147,24 @@ public static class ApiManifestKernelExtensions
                 DocumentLoader.LoadDocumentFromFilePathAsStream(parsedDescriptionUrl.LocalPath,
                     logger);
 
+<<<<<<< HEAD
+            // TODO: Refactor the code to the new readers available in the OpenAPI.NET V2
+            ReadResult documentReadResult = await OpenApiModelFactory.LoadAsync(
+                input: openApiDocumentStream,
+                format: "TBD",
+                settings: new OpenApiReaderSettings()
+                {
+                    BaseUrl = new(apiDescriptionUrl)
+                },
+                cancellationToken).ConfigureAwait(false);
+
+=======
             var documentReadResult = await new OpenApiStreamReader(new()
             {
                 BaseUrl = parsedDescriptionUrl
             }
             ).ReadAsync(openApiDocumentStream, cancellationToken).ConfigureAwait(false);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             var openApiDocument = documentReadResult.OpenApiDocument;
             var openApiDiagnostic = documentReadResult.OpenApiDiagnostic;
 
@@ -197,7 +210,7 @@ public static class ApiManifestKernelExtensions
                 openApiFunctionExecutionParameters?.EnableDynamicPayload ?? false,
                 openApiFunctionExecutionParameters?.EnablePayloadNamespacing ?? false);
 
-            var server = filteredOpenApiDocument.Servers.FirstOrDefault();
+            var server = filteredOpenApiDocument.Servers?.FirstOrDefault();
             if (server?.Url is null)
             {
                 logger.LogWarning("Server URI not found. Plugin: {0}", pluginName);

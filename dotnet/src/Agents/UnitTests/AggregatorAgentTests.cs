@@ -1,4 +1,7 @@
+<<<<<<< HEAD
+=======
 // Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +50,7 @@ public class AggregatorAgentTests
         AgentGroupChat uberChat = new();
 
         // Add message to outer chat (no agent has joined)
-        uberChat.AddChatMessage(new ChatMessageContent(AuthorRole.User, "test uber"));
+        uberChat.Add(new ChatMessageContent(AuthorRole.User, "test uber"));
 
         // Act
         var messages = await uberChat.GetChatMessagesAsync().ToArrayAsync();
@@ -172,6 +175,43 @@ public class AggregatorAgentTests
         Assert.Equal(agent1Review.Name, messages[1].AuthorName);
         Assert.Equal(agent2Exec.Name, messages[2].AuthorName);
         Assert.Equal(agent2Review.Name, messages[3].AuthorName);
+    }
+
+    /// <summary>
+    /// Verify termination strategy of <see cref="AggregatorAgent"/> with different agents.
+    /// </summary>
+    [Fact]
+    public async Task VerifyAggregatorAgentTerminationStrategyAsync()
+    {
+        // Arrange
+        Agent agent1 = CreateMockAgent("First");
+        Agent agent2 = CreateMockAgent("Second");
+        Agent agent3 = CreateMockAgent("Third");
+
+        AgentGroupChat groupChat =
+            new(agent1, agent2, agent3)
+            {
+                ExecutionSettings =
+                    new()
+                    {
+                        TerminationStrategy =
+                        {
+                            MaximumIterations = 3
+                        }
+                    }
+            };
+
+        AggregatorAgent uberAgent = new(() => groupChat) { Mode = AggregatorMode.Nested };
+        AgentGroupChat uberChat = new();
+
+        // Add message to outer chat (no agent has joined)
+        uberChat.Add(new ChatMessageContent(AuthorRole.User, "test uber"));
+
+        // Act
+        var messages = await uberChat.InvokeAsync(uberAgent).ToArrayAsync();
+
+        // Assert
+        Assert.Equal(3, messages.Length); // 3 iterations as per termination strategy
     }
 
     private static MockAgent CreateMockAgent(string agentName) => new() { Name = agentName, Response = [new(AuthorRole.Assistant, $"{agentName} -> test") { AuthorName = agentName }] };

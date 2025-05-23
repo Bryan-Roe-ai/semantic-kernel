@@ -10,7 +10,13 @@ if sys.version_info >= (3, 12):
 else:
     from typing_extensions import override  # pragma: no cover
 
+<<<<<<< HEAD
+from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
+    EmbeddingGeneratorBase,
+)
+=======
 from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_prompt_execution_settings import (
     OpenAIEmbeddingPromptExecutionSettings,
 )
@@ -18,7 +24,9 @@ from semantic_kernel.connectors.ai.open_ai.services.open_ai_handler import OpenA
 from semantic_kernel.utils.feature_stage_decorator import experimental
 
 if TYPE_CHECKING:
-    from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+    from semantic_kernel.connectors.ai.prompt_execution_settings import (
+        PromptExecutionSettings,
+    )
 
 
 @experimental
@@ -33,7 +41,9 @@ class OpenAITextEmbeddingBase(OpenAIHandler, EmbeddingGeneratorBase):
         batch_size: int | None = None,
         **kwargs: Any,
     ) -> ndarray:
-        raw_embeddings = await self.generate_raw_embeddings(texts, settings, batch_size, **kwargs)
+        raw_embeddings = await self.generate_raw_embeddings(
+            texts, settings, batch_size, **kwargs
+        )
         return array(raw_embeddings)
 
     @override
@@ -53,7 +63,9 @@ class OpenAITextEmbeddingBase(OpenAIHandler, EmbeddingGeneratorBase):
             kwargs (Dict[str, Any]): Additional arguments to pass to the request.
         """
         if not settings:
-            settings = OpenAIEmbeddingPromptExecutionSettings(ai_model_id=self.ai_model_id)
+            settings = OpenAIEmbeddingPromptExecutionSettings(
+                ai_model_id=self.ai_model_id
+            )
         else:
             if not isinstance(settings, OpenAIEmbeddingPromptExecutionSettings):
                 settings = self.get_prompt_execution_settings_from_settings(settings)

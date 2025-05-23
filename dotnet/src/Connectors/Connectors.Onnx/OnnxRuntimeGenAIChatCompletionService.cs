@@ -97,7 +97,65 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
         using var generator = new Generator(this.GetModel(), generatorParams);
         generator.AppendTokenSequences(tokens);
 
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
         bool removeNextTokenStartingWithSpace = true;
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+        bool removeNextTokenStartingWithSpace = true;
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+=======
+        bool removeNextTokenStartingWithSpace = true;
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+=======
+        bool removeNextTokenStartingWithSpace = true;
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
         while (!generator.IsDone())
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -107,10 +165,55 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
                 generator.GenerateNextToken();
 
                 var outputTokens = generator.GetSequence(0);
+<<<<<<< HEAD
+                var newToken = outputTokens.Slice(outputTokens.Length - 1, 1);
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+                var output = this.GetTokenizer().Decode(newToken);
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+                var output = this.GetTokenizer().Decode(newToken);
+=======
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+                var output = this.GetTokenizer().Decode(newToken);
+=======
+>>>>>>> Stashed changes
+=======
+                var output = this.GetTokenizer().Decode(newToken);
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+                string output = this.GetTokenizer().Decode(newToken);
+=======
                 var newToken = outputTokens[outputTokens.Length - 1];
 
                 using var tokenizerStream = this.GetTokenizer().CreateStream();
                 string output = tokenizerStream.Decode(newToken);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
                 if (removeNextTokenStartingWithSpace && output[0] == ' ')
                 {
@@ -118,6 +221,40 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
                     output = output.TrimStart();
                 }
 
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
                 return output;
             }, cancellationToken).ConfigureAwait(false);
         }

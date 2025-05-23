@@ -28,6 +28,14 @@ OUTPUT_TOKENS = "gen_ai.usage.output_tokens"
 ADDRESS = "server.address"
 
 # Activity events
+<<<<<<< HEAD
+PROMPT_EVENT = "gen_ai.content.prompt"
+COMPLETION_EVENT = "gen_ai.content.completion"
+
+# Activity event attributes
+PROMPT_EVENT_PROMPT = "gen_ai.prompt"
+COMPLETION_EVENT_COMPLETION = "gen_ai.completion"
+=======
 EVENT_NAME = "event.name"
 SYSTEM_MESSAGE = "gen_ai.system.message"
 USER_MESSAGE = "gen_ai.user.message"
@@ -46,3 +54,4 @@ ROLE_EVENT_MAP = {
     AuthorRole.ASSISTANT: ASSISTANT_MESSAGE,
     AuthorRole.TOOL: TOOL_MESSAGE,
 }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

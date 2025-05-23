@@ -4,9 +4,10 @@
     <VersionPrefix>1.51.0</VersionPrefix>
     <PackageVersion Condition="'$(VersionSuffix)' != ''">$(VersionPrefix)-$(VersionSuffix)</PackageVersion>
     <PackageVersion Condition="'$(VersionSuffix)' == ''">$(VersionPrefix)</PackageVersion>
-
     <Configurations>Debug;Release;Publish</Configurations>
     <IsPackable>true</IsPackable>
+    <!-- Package validation. Baseline Version should be lower or equal to current version. -->
+ <PackageValidationBaselineVersion>1.21.1</PackageValidationBaselineVersion>
 
     <!-- Package validation. Baseline Version should be the latest version available on NuGet. -->
     <PackageValidationBaselineVersion>1.50.0</PackageValidationBaselineVersion>
@@ -31,7 +32,6 @@
     <Description>Empowers app owners to integrate cutting-edge LLM technology quickly and easily into their apps.</Description>
     <PackageTags>AI, Artificial Intelligence, SDK</PackageTags>
     <PackageId>$(AssemblyName)</PackageId>
-
     <!-- Required license, copyright, and repo information. Packages can override. -->
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>

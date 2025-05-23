@@ -28,6 +28,10 @@ except ValidationError as e:
 # you can pass the path to the file to the constructor. This will still look at the same names of the settings as above,
 # but will try to load them from the file
 try:
+    # this will try to load the settings from the file at the given path
+    service = OpenAIChatCompletion(
+        service_id="openai_chat_service", env_file_path="path/to/env_file"
+    )
     # This will try to load the settings from the file at the given path
     service = OpenAIChatCompletion(service_id="openai_chat_service", env_file_path="path/to/env_file")
 except ValidationError as e:

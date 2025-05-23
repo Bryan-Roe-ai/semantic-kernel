@@ -275,7 +275,7 @@ internal sealed class HuggingFaceMessageApiClient
     private ChatCompletionRequest CreateChatRequest(
         ChatHistory chatHistory,
         HuggingFacePromptExecutionSettings huggingFaceExecutionSettings,
-        string? modelId)
+        string modelId)
     {
         HuggingFaceClient.ValidateMaxTokens(huggingFaceExecutionSettings.MaxTokens);
 

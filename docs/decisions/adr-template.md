@@ -1,14 +1,11 @@
----
-# These are optional elements. Feel free to remove any of them.
 status: {proposed | rejected | accepted | deprecated | … | superseded by [ADR-0001](0001-madr-architecture-decisions.md)}
 contact: {person proposing the ADR}
 date: {YYYY-MM-DD when the decision was last updated}
 deciders: {list everyone involved in the decision}
 consulted: {list everyone whose opinions are sought (typically subject-matter experts); and with whom there is a two-way communication}
 informed: {list everyone who is kept up-to-date on progress; and with whom there is a one-way communication}
----
 
-# {short title of solved problem and solution}
+# {Short Title of Solved Problem and Solution}
 
 ## Context and Problem Statement
 
@@ -19,61 +16,60 @@ You may want to articulate the problem in form of a question and add links to co
 
 ## Decision Drivers
 
-- {decision driver 1, e.g., a force, facing concern, …}
-- {decision driver 2, e.g., a force, facing concern, …}
+- {Decision driver 1, e.g., a force, facing concern, …}
+- {Decision driver 2, e.g., a force, facing concern, …}
 - … <!-- numbers of drivers can vary -->
+
+* It is important to list decision drivers to provide context and rationale for the decision.
 
 ## Considered Options
 
-- {title of option 1}
-- {title of option 2}
-- {title of option 3}
+- {Title of option 1}
+- {Title of option 2}
+- {Title of option 3}
 - … <!-- numbers of options can vary -->
 
 ## Decision Outcome
 
-Chosen option: "{title of option 1}", because
-{justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force {force} | … | comes out best (see below)}.
+Chosen option: "{Title of option 1}", because
+{Justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force {force} | … | comes out best (see below)}.
 
 <!-- This is an optional element. Feel free to remove. -->
 
 ### Consequences
 
-- Good, because {positive consequence, e.g., improvement of one or more desired qualities, …}
-- Bad, because {negative consequence, e.g., compromising one or more desired qualities, …}
+- **Good:** {Positive consequence, e.g., improvement of one or more desired qualities, …}
+- **Bad:** {Negative consequence, e.g., compromising one or more desired qualities, …}
 - … <!-- numbers of consequences can vary -->
 
 <!-- This is an optional element. Feel free to remove. -->
 
 ## Validation
 
-{describe how the implementation of/compliance with the ADR is validated. E.g., by a review or an ArchUnit test}
-
-<!-- This is an optional element. Feel free to remove. -->
+{Describe how the implementation of/compliance with the ADR is validated. E.g., by a review or an ArchUnit test}
 
 ## Pros and Cons of the Options
 
-### {title of option 1}
+### {Title of option 1}
 
 <!-- This is an optional element. Feel free to remove. -->
 
-{example | description | pointer to more information | …}
+{Example | description | pointer to more information | …}
 
-- Good, because {argument a}
-- Good, because {argument b}
-<!-- use "neutral" if the given argument weights neither for good nor bad -->
-- Neutral, because {argument c}
-- Bad, because {argument d}
+- **Good:** {Argument a}
+- **Good:** {Argument b}
+- **Neutral:** {Argument c}
+- **Bad:** {Argument d}
 - … <!-- numbers of pros and cons can vary -->
 
-### {title of other option}
+### {Title of other option}
 
-{example | description | pointer to more information | …}
+{Example | description | pointer to more information | …}
 
-- Good, because {argument a}
-- Good, because {argument b}
-- Neutral, because {argument c}
-- Bad, because {argument d}
+- **Good:** {Argument a}
+- **Good:** {Argument b}
+- **Neutral:** {Argument c}
+- **Bad:** {Argument d}
 - …
 
 <!-- This is an optional element. Feel free to remove. -->

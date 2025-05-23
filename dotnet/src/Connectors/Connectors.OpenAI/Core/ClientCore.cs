@@ -13,6 +13,12 @@ using Microsoft.Extensions.Logging.Abstractions;
 #pragma warning disable IDE0005 // Using directive is unnecessary
 using Microsoft.SemanticKernel.Connectors.FunctionCalling;
 #pragma warning restore IDE0005 // Using directive is unnecessary
+#pragma warning disable IDE0005 // Using directive is unnecessary
+using Microsoft.SemanticKernel.Connectors.FunctionCalling;
+#pragma warning restore IDE0005 // Using directive is unnecessary
+#pragma warning disable IDE0005 // Using directive is unnecessary
+using Microsoft.SemanticKernel.Connectors.FunctionCalling;
+#pragma warning restore IDE0005 // Using directive is unnecessary
 using Microsoft.SemanticKernel.Http;
 using Microsoft.SemanticKernel.Services;
 using OpenAI;
@@ -39,7 +45,7 @@ internal partial class ClientCore
     /// <summary>
     /// Default OpenAI API endpoint.
     /// </summary>
-    private const string OpenAIV1Endpoint = "https://api.openai.com/v1";
+    private const string OpenAIEndpoint = "https://api.openai.com/";
 
     /// <summary>
     /// Identifier of the default model to use
@@ -92,6 +98,14 @@ internal partial class ClientCore
 
         this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
 
+        this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
+
+        this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
+
+        this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
+
+        this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
+
         // Empty constructor will be used when inherited by a specialized Client.
         if (modelId is null
             && apiKey is null
@@ -114,7 +128,7 @@ internal partial class ClientCore
         if (this.Endpoint is null)
         {
             Verify.NotNullOrWhiteSpace(apiKey); // For Public OpenAI Endpoint a key must be provided.
-            this.Endpoint = new Uri(OpenAIV1Endpoint);
+            this.Endpoint = new Uri(OpenAIEndpoint);
         }
         else if (string.IsNullOrEmpty(apiKey))
         {
@@ -132,6 +146,11 @@ internal partial class ClientCore
             this.AddAttribute(ClientCore.OrganizationKey, organizationId);
         }
 
+        this.Client = new OpenAIClient(apiKey!, options);
+        this.Client = new OpenAIClient(apiKey!, options);
+        this.Client = new OpenAIClient(new ApiKeyCredential(apiKey!), options);
+        this.Client = new OpenAIClient(new ApiKeyCredential(apiKey!), options);
+        this.Client = new OpenAIClient(new ApiKeyCredential(apiKey!), options);
         this.Client = new OpenAIClient(new ApiKeyCredential(apiKey!), options);
     }
 
@@ -159,6 +178,10 @@ internal partial class ClientCore
 
         this.Logger = logger ?? NullLogger.Instance;
         this.Client = openAIClient;
+        this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
+        this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
+        this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
+        this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
         this.FunctionCallsProcessor = new FunctionCallsProcessor(this.Logger);
     }
 
@@ -195,6 +218,9 @@ internal partial class ClientCore
     {
         OpenAIClientOptions options = new()
         {
+            ApplicationId = HttpHeaderConstant.Values.UserAgent,
+            ApplicationId = HttpHeaderConstant.Values.UserAgent,
+            UserAgentApplicationId = HttpHeaderConstant.Values.UserAgent,
             UserAgentApplicationId = HttpHeaderConstant.Values.UserAgent,
             Endpoint = endpoint
         };
