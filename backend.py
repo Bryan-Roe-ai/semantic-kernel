@@ -4,7 +4,7 @@ from fastapi import FastAPI, Query, File, UploadFile
 from typing import Annotated, List, Dict, Any, Optional
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
-from fastapi.responses import JSONResponse
+# removed unused import
 from pydantic import BaseModel
 import os
 import requests

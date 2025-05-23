@@ -56,12 +56,17 @@
             box-shadow: 0 2px 8px var(--light-shadow);
             display: flex;
             flex-direction: column;
-            scrollbar-width: thin;
             position: relative;
         }
 
         #chatLog::-webkit-scrollbar {
-            width: 8px;
+        @supports (scrollbar-width: thin) {
+            #chatLog {
+                scrollbar-width: thin;
+            }
+        }
+        
+                #chatLog::-webkit-scrollbar {
         }
 
         #chatLog::-webkit-scrollbar-track {
@@ -1160,6 +1165,45 @@
             }
         }
     </style>
+    <script>
+        // Dark mode toggle logic
+        function setDarkMode(enabled) {
+            document.body.classList.toggle('dark-mode', enabled);
+            localStorage.setItem('darkMode', enabled ? '1' : '0');
+        }
+        window.addEventListener('DOMContentLoaded', function() {
+            // Add dark mode toggle button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.id = 'darkModeToggle';
+            toggleBtn.textContent = '🌙 Dark Mode';
+            toggleBtn.style.position = 'fixed';
+            toggleBtn.style.top = '18px';
+            toggleBtn.style.right = '24px';
+            toggleBtn.style.zIndex = 1000;
+            toggleBtn.style.background = '#222';
+            toggleBtn.style.color = '#fff';
+            toggleBtn.style.border = 'none';
+            toggleBtn.style.padding = '8px 16px';
+            toggleBtn.style.borderRadius = '8px';
+            toggleBtn.style.cursor = 'pointer';
+            toggleBtn.style.opacity = '0.85';
+            toggleBtn.style.fontWeight = 'bold';
+            toggleBtn.style.fontSize = '1em';
+            document.body.appendChild(toggleBtn);
+
+            // Restore dark mode preference
+            const darkPref = localStorage.getItem('darkMode');
+            if (darkPref === '1') setDarkMode(true);
+
+            toggleBtn.onclick = function() {
+                const enabled = !document.body.classList.contains('dark-mode');
+                setDarkMode(enabled);
+                toggleBtn.textContent = enabled ? '☀️ Light Mode' : '🌙 Dark Mode';
+            };
+            // Set initial button text
+            toggleBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️ Light Mode' : '🌙 Dark Mode';
+        });
+    </script>
 </head>
 
 <body>
