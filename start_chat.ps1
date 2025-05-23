@@ -14,7 +14,8 @@ try {
     $pythonVersion = (python --version 2>&1)
     if ($pythonVersion -match "Python (\d+\.\d+\.\d+)") {
         Write-Host "✅ Python $($Matches[1]) detected" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "❌ Python not found or not responding correctly" -ForegroundColor Red
         Write-Host "Please install Python 3.8 or higher from https://www.python.org/downloads/"
         Write-Host "Make sure to check 'Add Python to PATH' during installation."
@@ -22,7 +23,8 @@ try {
         Read-Host "Press Enter to exit"
         exit 1
     }
-} catch {
+}
+catch {
     Write-Host "❌ Python not found in PATH" -ForegroundColor Red
     Write-Host "Please install Python 3.8 or higher from https://www.python.org/downloads/"
     Write-Host "Make sure to check 'Add Python to PATH' during installation."
@@ -72,7 +74,8 @@ if ($runSetup -eq "y" -or $runSetup -eq "Y") {
         if ($continueAnyway -ne "y" -and $continueAnyway -ne "Y") {
             exit 1
         }
-    } else {
+    }
+    else {
         Write-Host "✅ Setup completed successfully" -ForegroundColor Green
     }
     

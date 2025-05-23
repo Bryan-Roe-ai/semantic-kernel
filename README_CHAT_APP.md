@@ -27,6 +27,7 @@ python start_chat_unified.py
 ```
 
 Or for Windows users, simply double-click:
+
 ```
 start_ai_chat.bat
 ```
@@ -40,6 +41,7 @@ python setup.py
 ```
 
 This script will:
+
 - Check Python version compatibility
 - Install all required dependencies
 - Create necessary directories
@@ -56,6 +58,7 @@ python test_backend.py
 ```
 
 This script will check:
+
 - If the backend server is running
 - If LM Studio is accessible
 - If the chat functionality is working correctly
