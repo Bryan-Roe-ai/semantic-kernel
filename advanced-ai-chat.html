@@ -776,7 +776,7 @@
                 <i class="fas fa-plug"></i> Plugins
             </div>
             <div class="tab" onclick="switchTab('files-tab')">
-                <i class="fas fa-folder"></i> Files
+                <i class="fas fa-folder-open"></i> Files
             </div>
             <div class="tab" onclick="switchTab('config-tab')">
                 <i class="fas fa-cog"></i> Settings
@@ -828,45 +828,31 @@
         <div id="files-tab" class="tab-content" style="display: none;">
             <div class="files-container">
                 <div class="files-header">
-                    <h3>File System Access</h3>
-                    <p>Interact with files that the AI can access and modify.</p>
+                    <h3>Workspace Files</h3>
+                    <p>Browse, view, and edit files in your workspace.</p>
                 </div>
-                
                 <div class="files-actions">
-                    <div class="settings-group">
-                        <label for="files-base-path">Working Directory:</label>
-                        <div class="path-input-container">
-                            <input type="text" id="files-base-path" placeholder="Enter file system path">
-                            <button onclick="browseDirectory()" class="path-browse-button"><i class="fas fa-folder-open"></i></button>
-                        </div>
+                    <div class="path-input-container">
+                        <input type="text" id="file-path-input" placeholder="/path/to/file.txt" style="flex:1;">
+                        <button class="file-action-button" onclick="refreshFileList()"><i class="fas fa-sync"></i> Refresh</button>
                     </div>
-                    
                     <div class="button-group">
-                        <button onclick="refreshFileList()" class="file-action-button"><i class="fas fa-sync-alt"></i> Refresh</button>
-                        <button onclick="createNewFile()" class="file-action-button"><i class="fas fa-plus"></i> New File</button>
-                        <button onclick="createNewFolder()" class="file-action-button"><i class="fas fa-folder-plus"></i> New Folder</button>
+                        <button class="file-action-button" onclick="createFile()"><i class="fas fa-plus"></i> New File</button>
+                        <button class="file-action-button" onclick="deleteFile()"><i class="fas fa-trash"></i> Delete</button>
+                        <button class="file-action-button" onclick="saveFile()"><i class="fas fa-save"></i> Save</button>
                     </div>
                 </div>
-                
                 <div class="files-browser-container">
-                    <div class="files-browser" id="files-browser">
-                        <div class="file-explorer-empty">
-                            <i class="fas fa-folder-open fa-4x"></i>
-                            <p>Enter a path above and click Refresh to view files</p>
-                        </div>
-                    </div>
-                    
+                    <div class="files-browser" id="files-browser"></div>
                     <div class="file-preview-container">
                         <div class="file-preview-header">
                             <h4 id="file-preview-name">No file selected</h4>
                             <div class="file-preview-actions">
-                                <button id="save-file-button" onclick="saveFileContent()" disabled><i class="fas fa-save"></i> Save</button>
-                                <button id="share-with-ai-button" onclick="shareFileWithAI()" disabled><i class="fas fa-robot"></i> Share with AI</button>
+                                <button class="file-action-button" onclick="saveFile()"><i class="fas fa-save"></i> Save</button>
                             </div>
                         </div>
                         <div class="file-preview-content">
-                            <textarea id="file-content-editor" placeholder="File content will appear here..." disabled></textarea>
-                            <div id="image-content-preview" style="display: none;"></div>
+                            <textarea id="file-content-editor" placeholder="Select a file to view/edit..." disabled></textarea>
                         </div>
                     </div>
                 </div>
@@ -950,6 +936,7 @@
             <button onclick="clearChat()" class="control-button"><i class="fas fa-trash"></i> Clear Chat</button>
             <button onclick="copyConversation()" class="control-button"><i class="fas fa-copy"></i> Copy Chat</button>
             <button onclick="showModal()" class="control-button"><i class="fas fa-keyboard"></i> Shortcuts</button>
+            <button onclick="injectFileListToChat()" class="control-button"><i class="fas fa-folder"></i> Show Files</button>
             <span class="chat-tip"><i class="fas fa-lightbulb"></i> Tip: Press ? for keyboard shortcuts</span>
         </div>
     </div>
@@ -1565,13 +1552,13 @@
         
         // Focus the input field
         userInput.focus();
+
         // File system functionality
         let currentDirectory = "";
         let selectedFile = null;
         let fileHasChanges = false;
-        const basePathInput = document.getElementById('files-base-path');
+        const basePathInput = document.getElementById('file-path-input');
         const filesBrowser = document.getElementById('files-browser');
-        const fileContentEditor = document.getElementById('file-content-editor');
         const filePreviewName = document.getElementById('file-preview-name');
         const saveFileButton = document.getElementById('save-file-button');
         const shareWithAIButton = document.getElementById('share-with-ai-button');
@@ -1880,184 +1867,6 @@ Please help me understand or modify this content.`, true);
             fileHasChanges = true;
         });
         
-        // Handle file commands typed in chat
-        function handleFileCommand(command) {
-            const parts = command.trim().split(' ');
-            const action = parts[0]?.toLowerCase();
-            
-            switch (action) {
-                case 'list':
-                    // List files in working directory
-                    listFilesInChat();
-                    break;
-                    
-                case 'read':
-                    // Read file content
-                    if (parts.length < 2) {
-                        addMessage("Please specify a filename to read", false);
-                        return;
-                    }
-                    readFileInChat(parts.slice(1).join(' '));
-                    break;
-                    
-                case 'write':
-                    // Write to file
-                    if (parts.length < 3) {
-                        addMessage("Usage: /file write filename content", false);
-                        return;
-                    }
-                    const filename = parts[1];
-                    const content = parts.slice(2).join(' ');
-                    writeFileInChat(filename, content);
-                    break;
-                    
-                case 'delete':
-                    // Delete file
-                    if (parts.length < 2) {
-                        addMessage("Please specify a filename to delete", false);
-                        return;
-                    }
-                    deleteFileInChat(parts.slice(1).join(' '));
-                    break;
-                    
-                case 'help':
-                    // Show help
-                    showFileCommandHelp();
-                    break;
-                    
-                default:
-                    addMessage(`Unknown file command: ${action}. Type "/file help" for available commands.`, false);
-            }
-        }
-        
-        // List files in chat
-        async function listFilesInChat() {
-            try {
-                const baseDir = basePathInput.value.trim() || currentDirectory;
-                const files = await readDirectory(baseDir);
-                
-                let messageText = `Files in directory ${baseDir}:\n\n`;
-                
-                // List folders
-                const folders = files.filter(file => file.isDirectory);
-                if (folders.length > 0) {
-                    messageText += "📁 Folders:\n";
-                    folders.forEach(folder => {
-                        messageText += `- ${folder.name}/\n`;
-                    });
-                    messageText += "\n";
-                }
-                
-                // List files
-                const filesList = files.filter(file => !file.isDirectory);
-                if (filesList.length > 0) {
-                    messageText += "📄 Files:\n";
-                    filesList.forEach(file => {
-                        messageText += `- ${file.name}\n`;
-                    });
-                }
-                
-                addMessage(messageText, false);
-            } catch (error) {
-                addMessage(`Error listing files: ${error.message}`, false);
-            }
-        }
-        
-        // Read file in chat
-        async function readFileInChat(filename) {
-            try {
-                const baseDir = basePathInput.value.trim() || currentDirectory;
-                const filePath = `${baseDir}\\${filename}`;
-                const content = localStorage.getItem(`fileContent_${filePath}`);
-                
-                if (content === null) {
-                    addMessage(`File not found: ${filename}`, false);
-                    return;
-                }
-                
-                let messageText = `📄 Contents of file "${filename}":\n\n\`\`\`\n${content}\n\`\`\``;
-                addMessage(messageText, false);
-                
-                // Add to conversation history as a system message for context
-                addFileToContext(filename, content);
-                
-            } catch (error) {
-                addMessage(`Error reading file: ${error.message}`, false);
-            }
-        }
-        
-        // Write file in chat
-        async function writeFileInChat(filename, content) {
-            try {
-                const baseDir = basePathInput.value.trim() || currentDirectory;
-                const filePath = `${baseDir}\\${filename}`;
-                
-                // Check if file exists
-                const files = JSON.parse(localStorage.getItem(`fileDir_${baseDir}`) || '[]');
-                let fileExists = files.some(file => file.name === filename && !file.isDirectory);
-                
-                // Add or update file
-                if (!fileExists) {
-                    files.push({ name: filename, isDirectory: false });
-                    localStorage.setItem(`fileDir_${baseDir}`, JSON.stringify(files));
-                }
-                
-                // Write content
-                localStorage.setItem(`fileContent_${filePath}`, content);
-                
-                addMessage(`✓ File "${filename}" has been ${fileExists ? 'updated' : 'created'}.`, false);
-                
-            } catch (error) {
-                addMessage(`Error writing file: ${error.message}`, false);
-            }
-        }
-        
-        // Delete file in chat
-        async function deleteFileInChat(filename) {
-            try {
-                const baseDir = basePathInput.value.trim() || currentDirectory;
-                const filePath = `${baseDir}\\${filename}`;
-                
-                // Check if file exists
-                const files = JSON.parse(localStorage.getItem(`fileDir_${baseDir}`) || '[]');
-                const fileIndex = files.findIndex(file => file.name === filename && !file.isDirectory);
-                
-                if (fileIndex === -1) {
-                    addMessage(`File not found: ${filename}`, false);
-                    return;
-                }
-                
-                // Remove from directory listing
-                files.splice(fileIndex, 1);
-                localStorage.setItem(`fileDir_${baseDir}`, JSON.stringify(files));
-                
-                // Remove content
-                localStorage.removeItem(`fileContent_${filePath}`);
-                
-                addMessage(`✓ File "${filename}" has been deleted.`, false);
-                
-            } catch (error) {
-                addMessage(`Error deleting file: ${error.message}`, false);
-            }
-        }
-        
-        // Show file command help
-        function showFileCommandHelp() {
-            const helpText = `
-**File Command Help**
-
-Available commands:
-- \`/file list\` - List all files in the current directory
-- \`/file read filename\` - Read and display the contents of a file
-- \`/file write filename content\` - Create or update a file with the specified content
-- \`/file delete filename\` - Delete a file
-- \`/file help\` - Show this help message
-
-You can also use the Files tab to browse and manage files visually.
-`;
-            addMessage(helpText, false);
-        }
-        
         // Update API to handle files
         function addFileToContext(filePath, fileContent) {
             // Store the file in conversation context
@@ -2065,6 +1874,39 @@ You can also use the Files tab to browse and manage files visually.
                 role: "system",
                 content: `File loaded: ${filePath}\n\n${fileContent}`
             });
+        }
+
+        // --- File Reference in Chat ---
+        let lastFileList = [];
+        let lastFileContents = {};
+
+        async function injectFileListToChat() {
+            // Fetch file list from backend (stub: replace with real API call)
+            // Example: const resp = await fetch('/api/files?path=/');
+            // lastFileList = await resp.json();
+            // For now, use a placeholder:
+            lastFileList = [
+                'README.md', 'LICENSE', 'advanced-ai-chat.html', 'ai-chat.html', 'semantic-kernel/app.py', 'semantic-kernel/BR-AI.txt'
+            ];
+            const fileListMsg = 'Workspace files available to the AI:\n' + lastFileList.map(f => '- ' + f).join('\n');
+            conversationHistory.push({ role: 'system', content: fileListMsg });
+            addMessage(fileListMsg, false);
+        }
+
+        async function handleFileCommand(filename) {
+            // Fetch file content from backend (stub: replace with real API call)
+            // Example: const resp = await fetch(`/api/files/read?path=${encodeURIComponent(filename)}`);
+            // const content = await resp.text();
+            // For now, use a placeholder:
+            let content = '';
+            if (filename === 'README.md') content = 'This is the README file.';
+            else if (filename === 'LICENSE') content = 'MIT License...';
+            else if (filename === 'advanced-ai-chat.html') content = '...HTML source...';
+            else content = '(File not found or not loaded)';
+            lastFileContents[filename] = content;
+            const fileMsg = `Content of ${filename}:\n\n` + content;
+            conversationHistory.push({ role: 'system', content: fileMsg });
+            addMessage(fileMsg, false);
         }
     </script>
 </body>
