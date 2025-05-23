@@ -49,6 +49,9 @@ start_chat.bat     # Windows Command Prompt
 - All advanced features plus:
 - Plugin selection and usage
 - Direct plugin invocation
+- File uploads and processing
+- Data visualization capabilities
+- Chat history persistence
 - Visual plugin results
 
 ## Backend API
@@ -58,12 +61,18 @@ The `backend.py` serves as a bridge between the web interfaces and LM Studio's A
 - `/ping` - Check if the backend is running
 - `/api/chat` - Send chat messages to LM Studio
 - `/api/plugins` - List available plugins
-- `/api/run_plugin` - Execute a specific plugin
-- `/files/list` and `/files/read` - File operations
+- `/api/run_plugin` - Execute directory-based plugins
+- `/api/run_python` - Execute Python-based plugins
+- `/files/list` and `/files/read` - Basic file operations
+- `/api/upload` - Upload files to the server
+- `/api/files` - List all uploaded files
+- `/api/download/{filename}` - Download uploaded files
 
 ## Plugins
 
-Plugins are stored in the `plugins/` directory with this structure:
+Plugins are stored in the `plugins/` directory and come in two types:
+
+### Directory-based Plugins
 
 ```
 plugins/
@@ -73,10 +82,27 @@ plugins/
 │  │  ├─ config.json   # Configuration
 ```
 
+### Python-based Plugins
+
+```
+plugins/
+├─ PluginNameFunctions.py  # Python plugin class
+```
+
 Sample plugins are included:
+
+#### Directory-based Plugins:
 
 - `math/calculate` - Performs calculations
 - `text/summarize` - Summarizes text
+
+#### Python-based Plugins:
+
+- `MathFunctions.py` - Advanced math operations
+- `TextFunctions.py` - Text processing utilities
+- `FileOperationsFunctions.py` - File system operations
+- `DataAnalysisFunctions.py` - Data analysis and visualization
+- `DataFunctions.py` - Data format conversion utilities
 
 ## Customization
 
@@ -89,9 +115,41 @@ Sample plugins are included:
 - **Connection errors**: Ensure both LM Studio API and backend servers are running
 - **API errors**: Check that LM Studio has a model loaded and API enabled
 - **Plugin errors**: Verify plugin directory structure and prompt templates
+- **File upload issues**: Make sure the `uploads` directory exists and has write permissions
+- **Python plugin errors**: Install required Python packages (matplotlib, numpy) for data analysis plugins
+- **Chart generation failures**: Ensure matplotlib is installed for visualization features
 
 ## System Requirements
 
 - Python 3.9 or higher
 - LM Studio with API server enabled
 - Web browser supporting modern JavaScript
+- Optional: matplotlib and numpy for data visualization plugins
+
+## New Features
+
+### File Uploads
+
+The interface now supports uploading files that can be processed by plugins:
+
+- Upload files via the paperclip icon in the chat interface
+- Reference uploaded files in your chat messages
+- Process CSV and JSON files with data analysis plugins
+
+### Data Analysis
+
+New data analysis plugins offer advanced capabilities:
+
+- `DataAnalysis.AnalyzeCsv` - Extract statistics and insights from CSV files
+- `DataAnalysis.ParseJson` - Navigate and extract data from JSON structures
+- `DataAnalysis.GenerateChart` - Create visualizations (bar, line, scatter, pie charts)
+
+### Chat History
+
+Chat conversations are now saved in your browser's local storage:
+
+- Conversations persist between sessions
+- Visual indicators for older conversations
+- Clear chat button to start fresh
+
+See `UPDATES.md` for more details on the latest features.

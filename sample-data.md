@@ -1,6 +1,7 @@
 # Sample Data for Plugin Testing
 
 ## JSON Sample
+
 ```json
 {
   "name": "John Smith",
@@ -26,6 +27,7 @@
 ```
 
 ## CSV Sample
+
 ```
 name,age,email,department,salary
 John Smith,35,john.smith@company.com,Engineering,85000
@@ -36,6 +38,7 @@ David Wilson,45,dwilson@company.com,Finance,105000
 ```
 
 ## Text Sample
+
 Email addresses can be found throughout this document:
 support@example.com, user123@gmail.com, and contact@mydomain.org
 
@@ -43,12 +46,14 @@ For technical inquiries, please contact tech-support@company.net
 or developer@sample.io for developer resources.
 
 ## Math Expressions Sample
+
 √16 = ?
-(3 + 4) * 5 = ?
+(3 + 4) \* 5 = ?
 25% of 80 = ?
 sin(30°) = ?
 
 ## File Structure Sample
+
 ```
 project/
 ├── src/

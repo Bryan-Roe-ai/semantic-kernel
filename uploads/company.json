@@ -1,0 +1,67 @@
+{
+  "company": "Acme Inc.",
+  "established": 1985,
+  "locations": [
+    {
+      "city": "New York",
+      "employees": 250,
+      "departments": [
+        "Sales",
+        "Marketing",
+        "Engineering"
+      ]
+    },
+    {
+      "city": "San Francisco",
+      "employees": 150,
+      "departments": [
+        "Engineering",
+        "Product",
+        "Design"
+      ]
+    },
+    {
+      "city": "Austin",
+      "employees": 75,
+      "departments": [
+        "Support",
+        "Sales"
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": "prod-001",
+      "name": "Widget Pro",
+      "price": 129.99,
+      "inStock": true,
+      "features": [
+        "AI-powered",
+        "Cloud connectivity",
+        "Real-time analytics"
+      ]
+    },
+    {
+      "id": "prod-002",
+      "name": "Super Gadget",
+      "price": 199.99,
+      "inStock": false,
+      "features": [
+        "Wireless charging",
+        "Voice control",
+        "Extended battery"
+      ]
+    }
+  ],
+  "financials": {
+    "revenue": 25000000,
+    "expenses": 18000000,
+    "profit": 7000000,
+    "fiscalYear": 2023
+  },
+  "contacts": {
+    "sales": "sales@acme.com",
+    "support": "support@acme.com",
+    "media": "media@acme.com"
+  }
+}
