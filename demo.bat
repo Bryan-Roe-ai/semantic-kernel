@@ -36,11 +36,13 @@ echo Server started and interface launched!
 echo.
 echo TIPS:
 echo - Make sure LM Studio API server is running at http://localhost:1234
-echo - Upload a file by clicking the paperclip icon
+echo - Upload a file by clicking the paperclip icon (automatic analysis will be performed)
+echo - Click on a file in the sidebar to see its analysis
 echo - Try commands like:
 echo   - "Analyze the employees.csv file"
 echo   - "Generate a bar chart from employees.csv with city as x-axis and salary as y-axis"
 echo   - "Parse the company.json file and extract the products"
+echo   - "Summarize the text from the uploaded file"
 echo.
 echo Press Ctrl+C to stop the server when finished
 echo.

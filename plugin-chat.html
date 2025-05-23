@@ -266,6 +266,82 @@
             }
         }
 
+        /* File analysis styles */
+        .analysis-details {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        .sample-table-container {
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .sample-table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 12px;
+        }
+
+        .sample-table th {
+            background-color: #e9ecef;
+            padding: 6px;
+            text-align: left;
+            border: 1px solid #dee2e6;
+        }
+
+        .sample-table td {
+            padding: 4px 6px;
+            border: 1px solid #dee2e6;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .text-preview {
+            background-color: #f1f1f1;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 100px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* File upload button styling */
+        .file-upload-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-left: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .file-upload-label:hover {
+            background-color: #4caf50;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .file-upload-label:hover {
+            background-color: #e0e0e0;
+        }
+
+        .upload-icon {
+            font-size: 18px;
+        }
+
         .file-upload-label {
             display: inline-flex;
             align-items: center;
@@ -523,6 +599,51 @@
             document.getElementById('chat').innerHTML = '<div class="ai"><strong>AI:</strong> Chat cleared. How can I help you today?</div>';
         }
 
+        // Show file analysis for an existing file
+        async function showFileAnalysis(filename) {
+            try {
+                const chat = document.getElementById('chat');
+
+                // Show loading message
+                chat.innerHTML += `<div class="plugin"><strong>Analyzing file:</strong> ${filename}...</div>`;
+                chat.scrollTop = chat.scrollHeight;
+
+                const response = await fetch(`http://localhost:8000/api/analyze/${filename}`);
+
+                if (response.ok) {
+                    const analysis = await response.json();
+
+                    // Replace loading message with analysis
+                    const analysisHtml = renderFileAnalysis(analysis, filename);
+
+                    // Remove the loading message and add the analysis
+                    const lastElement = chat.lastElementChild;
+                    if (lastElement && lastElement.textContent.includes('Analyzing file:')) {
+                        lastElement.remove();
+                    }
+
+                    chat.innerHTML += `<div class="ai">${analysisHtml}</div>`;
+                    chat.scrollTop = chat.scrollHeight;
+
+                    // Save chat history
+                    saveChatHistory();
+                } else {
+                    const lastElement = chat.lastElementChild;
+                    if (lastElement && lastElement.textContent.includes('Analyzing file:')) {
+                        lastElement.remove();
+                    }
+
+                    chat.innerHTML += `<div class="ai" style="color:red;"><strong>Error:</strong> Failed to analyze file.</div>`;
+                    chat.scrollTop = chat.scrollHeight;
+                }
+            } catch (error) {
+                console.error('Error analyzing file:', error);
+                const chat = document.getElementById('chat');
+                chat.innerHTML += `<div class="ai" style="color:red;"><strong>Error:</strong> Failed to analyze file: ${error.message}</div>`;
+                chat.scrollTop = chat.scrollHeight;
+            }
+        }
+
         async function usePlugin(pluginId, functionId, pluginType) {
             const inputText = document.getElementById('input').value.trim() || 'Please help with this.';
 
@@ -571,6 +692,113 @@
             else return (bytes / 1048576).toFixed(1) + ' MB';
         }
 
+        // Render file analysis results
+        function renderFileAnalysis(analysis, filename) {
+            if (!analysis || analysis.error) {
+                return `<strong>Automatic File Analysis:</strong> Failed to analyze file. ${analysis?.error || ''}`;
+            }
+
+            let html = `<strong>Automatic File Analysis:</strong><br>${analysis.summary}<br><br>`;
+
+            // Different rendering based on file type
+            switch (analysis.type) {
+                case 'csv':
+                    html += `<div class="analysis-details">
+                        <strong>CSV Structure:</strong><br>
+                        - Headers: ${analysis.details.headers ? analysis.details.headers.join(', ') : 'None'}<br>
+                        - Rows: ${analysis.details.rowCount || 'Unknown'}<br>
+                    `;
+
+                    // If we have a sample, show it as a mini table
+                    if (analysis.details.sample && analysis.details.sample.length > 0) {
+                        html += `<strong>Sample data:</strong><br>
+                        <div class="sample-table-container">
+                            <table class="sample-table">
+                                <tr>
+                                    ${analysis.details.headers.map(h => `<th>${h}</th>`).join('')}
+                                </tr>`;
+
+                        analysis.details.sample.forEach(row => {
+                            html += `<tr>
+                                ${analysis.details.headers.map(h => `<td>${row[h] || ''}</td>`).join('')}
+                            </tr>`;
+                        });
+
+                        html += `</table>
+                        </div>`;
+                    }
+
+                    html += `</div>`;
+
+                    // Add a suggestion for data analysis
+                    html += `<br><strong>Suggested actions:</strong><br>
+                        - Try "Analyze the ${filename} file"<br>
+                        - Try "Generate a bar chart from ${filename} with ${analysis.details.headers[0]} as x-axis and ${analysis.details.headers[1]} as y-axis"`;
+                    break;
+
+                case 'json':
+                    html += `<div class="analysis-details">
+                        <strong>JSON Structure:</strong><br>
+                        - Type: ${analysis.details.objectType || 'Unknown'}<br>`;
+
+                    if (analysis.details.keyCount) {
+                        html += `- Keys: ${analysis.details.keyCount}<br>`;
+                        if (analysis.details.topLevelKeys && analysis.details.topLevelKeys.length > 0) {
+                            html += `- Top-level keys: ${analysis.details.topLevelKeys.join(', ')}${analysis.details.hasMoreKeys ? '...' : ''}<br>`;
+                        }
+                    } else if (analysis.details.length) {
+                        html += `- Items: ${analysis.details.length}<br>`;
+                    }
+
+                    html += `</div>`;
+
+                    // Add a suggestion for JSON parsing
+                    html += `<br><strong>Suggested actions:</strong><br>
+                        - Try "Parse the ${filename} file"`;
+                    break;
+
+                case 'text':
+                    html += `<div class="analysis-details">
+                        <strong>Text Content:</strong><br>
+                        - Lines: ${analysis.details.lineCount || 'Unknown'}<br>
+                        - Words: ${analysis.details.wordCount || 'Unknown'}<br>
+                        - Characters: ${analysis.details.charCount || 'Unknown'}<br>`;
+
+                    if (analysis.details.preview) {
+                        html += `<br><strong>Preview:</strong><br>
+                        <pre class="text-preview">${analysis.details.preview}</pre>`;
+                    }
+
+                    html += `</div>`;
+                    break;
+
+                case 'image':
+                    html += `<div class="analysis-details">
+                        <strong>Image Details:</strong><br>
+                        - Format: ${analysis.details.format || analysis.details.mimeType || 'Unknown'}<br>`;
+
+                    if (analysis.details.dimensions) {
+                        html += `- Dimensions: ${analysis.details.dimensions}<br>`;
+                    }
+
+                    if (analysis.details.mode) {
+                        html += `- Color mode: ${analysis.details.mode}<br>`;
+                    }
+
+                    html += `- File size: ${formatFileSize(analysis.details.fileSize || 0)}<br>
+                        </div>`;
+                    break;
+
+                default:
+                    html += `<div class="analysis-details">
+                        File type: ${analysis.type || 'Unknown'}<br>
+                        No detailed analysis available for this file type.
+                        </div>`;
+            }
+
+            return html;
+        }
+
         // Function to load uploaded files
         async function loadUploadedFiles() {
             try {
@@ -612,11 +840,14 @@
                                 <div class="plugin-description">${file.size}</div>
                             `;
 
-                            // Add click handler to insert file reference
-                            fileItem.addEventListener('click', () => {
+                            // Add click handler to insert file reference and show analysis
+                            fileItem.addEventListener('click', async () => {
                                 const input = document.getElementById('input');
                                 input.value += ` [File: ${file.name}]`;
                                 input.focus();
+
+                                // Show file analysis when clicked
+                                await showFileAnalysis(file.name);
                             });
 
                             filesList.appendChild(fileItem);
@@ -646,14 +877,19 @@
                 const response = await fetch('http://localhost:8000/api/upload', {
                     method: 'POST',
                     body: formData
-                });
-
-                if (response.ok) {
+                }); if (response.ok) {
                     const data = await response.json();
 
                     // Add file upload message to chat
                     const chat = document.getElementById('chat');
                     chat.innerHTML += `<div class="plugin"><strong>File uploaded:</strong> ${data.originalName} (${data.size})</div>`;
+
+                    // If automatic analysis is available, show it
+                    if (data.analysis) {
+                        const analysisHtml = renderFileAnalysis(data.analysis, data.filename);
+                        chat.innerHTML += `<div class="ai">${analysisHtml}</div>`;
+                    }
+
                     chat.scrollTop = chat.scrollHeight;
 
                     // Reset file upload UI

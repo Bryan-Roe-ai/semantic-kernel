@@ -18,6 +18,15 @@ import inspect
 import shutil
 import base64
 from datetime import datetime
+import csv
+import mimetypes
+
+# Try to import PIL for image analysis, but don't fail if not available
+try:
+    from PIL import Image
+    PIL_AVAILABLE = True
+except ImportError:
+    PIL_AVAILABLE = False
 
 app: FastAPI = FastAPI()
 app.add_middleware(  # type: ignore
@@ -296,9 +305,33 @@ def delete_file(req: FileDeleteRequest) -> Dict[str, str]:
     except Exception as e:
         return {"error": str(e)}
 
+# Import the file analyzer module
+from file_analyzer import FileAnalyzer
+
 # Create uploads directory if it doesn't exist
 UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
 os.makedirs(UPLOADS_DIR, exist_ok=True)
+
+def auto_analyze_file(filename: str) -> Dict[str, Any]:
+    """
+    Automatically analyze a file based on its extension
+    
+    Args:
+        filename: The name of the file in the uploads directory
+    
+    Returns:
+        Dictionary with analysis results
+    """
+    try:
+        file_path = os.path.join(UPLOADS_DIR, filename)
+        if not os.path.exists(file_path):
+            return {"error": f"File not found: {filename}"}
+        
+        # Use the FileAnalyzer class to analyze the file
+        return FileAnalyzer.analyze_file(file_path)
+        
+    except Exception as e:
+        return {"error": f"Analysis failed: {str(e)}"}
 
 @app.post("/api/upload")
 async def upload_file(file: UploadFile = File(...)):
@@ -313,15 +346,23 @@ async def upload_file(file: UploadFile = File(...)):
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
             
-        # Return the file info
+        # Get file info
         file_size = os.path.getsize(file_path)
         size_str = f"{file_size} bytes"
         if file_size > 1024:
             size_str = f"{file_size / 1024:.1f} KB"
         if file_size > 1024 * 1024:
             size_str = f"{file_size / (1024 * 1024):.1f} MB"
+        
+        # Automatically analyze the file based on its type
+        analysis = auto_analyze_file(filename)
             
-        return {"filename": filename, "originalName": file.filename, "size": size_str}
+        return {
+            "filename": filename, 
+            "originalName": file.filename, 
+            "size": size_str,
+            "analysis": analysis
+        }
     except Exception as e:
         return JSONResponse(
             status_code=500,
@@ -373,6 +414,19 @@ def download_file(filename: str):
         filename=filename,
         media_type="application/octet-stream"
     )
+    
+@app.get("/api/analyze/{filename}")
+def analyze_file_endpoint(filename: str):
+    """Analyze a file from the uploads directory"""
+    file_path = os.path.join(UPLOADS_DIR, filename)
+    if not os.path.exists(file_path):
+        return JSONResponse(
+            status_code=404,
+            content={"error": "File not found"}
+        )
+        
+    analysis = auto_analyze_file(filename)
+    return analysis
 
 @app.post("/api/chat")
 def chat_endpoint(req: ChatRequest) -> Dict[str, str]:
