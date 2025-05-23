@@ -1170,6 +1170,12 @@
                 requestBody.imageData = uploadedImage;
             }
             
+            // Check if the message is a file command
+            if (message.startsWith("/file ")) {
+                handleFileCommand(message.substring(6));
+                return;
+            }
+            
             // Display user message
             addMessage(displayMessage, true);
             userInput.value = '';
@@ -1196,6 +1202,12 @@
                     
                     // Format the messages according to the model's expected format
                     let formattedMessages = [];
+                    
+                    // Add system message with information about file commands
+                    formattedMessages.push({
+                        role: "system",
+                        content: "You are an AI assistant that can help with files. You can access files through the file system interface. The user can use /file commands to interact with files directly."
+                    });
                     
                     // Add the last 10 messages for context
                     const contextMessages = conversationHistory.slice(-10, -1);
@@ -1551,396 +1563,509 @@
             console.error('Failed to load saved data:', e);
         }
         
-        // File System Integration Code
-        let currentPath = '';
-        let currentOpenFile = null;
+        // Focus the input field
+        userInput.focus();
+        // File system functionality
+        let currentDirectory = "";
+        let selectedFile = null;
         let fileHasChanges = false;
+        const basePathInput = document.getElementById('files-base-path');
+        const filesBrowser = document.getElementById('files-browser');
+        const fileContentEditor = document.getElementById('file-content-editor');
+        const filePreviewName = document.getElementById('file-preview-name');
+        const saveFileButton = document.getElementById('save-file-button');
+        const shareWithAIButton = document.getElementById('share-with-ai-button');
+        const imageContentPreview = document.getElementById('image-content-preview');
         
-        // Function to safely handle paths
-        function normalizePath(path) {
-            // Remove extra slashes and ensure consistent format
-            return path.replace(/\/+/g, '/').replace(/\\+/g, '\\');
+        // Set default path to current directory
+        window.addEventListener('load', function() {
+            // Use the current directory as default
+            const defaultPath = "c:\\Users\\Bryan\\OneDrive\\SK";
+            basePathInput.value = defaultPath;
+            currentDirectory = defaultPath;
+        });
+        
+        // Browse directory (not fully supported in browser, just a placeholder)
+        function browseDirectory() {
+            // In a real implementation, we would show a directory picker
+            // For now just notify the user this isn't available
+            showNotification('Directory browsing requires additional permissions. Please enter a path manually.');
         }
         
-        // Function to get the file extension
-        function getFileExtension(filename) {
-            return filename.split('.').pop().toLowerCase();
-        }
-        
-        // Function to check if a file is an image
-        function isImageFile(filename) {
-            const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
-            const ext = getFileExtension(filename);
-            return imageExtensions.includes(ext);
-        }
-        
-        // Function to browse for a directory
-        async function browseDirectory() {
+        // Refresh file list
+        async function refreshFileList() {
+            currentDirectory = basePathInput.value.trim();
+            if (!currentDirectory) {
+                showNotification('Please enter a directory path');
+                return;
+            }
+            
             try {
-                // Request user permission to select a directory
-                const directoryHandle = await window.showDirectoryPicker({
-                    mode: 'readwrite'
+                // Clear current selection
+                selectedFile = null;
+                fileContentEditor.value = '';
+                fileContentEditor.disabled = true;
+                filePreviewName.textContent = 'No file selected';
+                saveFileButton.disabled = true;
+                shareWithAIButton.disabled = true;
+                imageContentPreview.style.display = 'none';
+                fileContentEditor.style.display = 'block';
+                
+                // Get directory listing
+                const files = await readDirectory(currentDirectory);
+                
+                // Display files
+                filesBrowser.innerHTML = '';
+                
+                // Add parent directory option
+                const parentItem = document.createElement('div');
+                parentItem.className = 'file-item';
+                parentItem.innerHTML = '<i class="fas fa-arrow-up"></i> ..';
+                parentItem.addEventListener('click', () => {
+                    // Go up one directory
+                    const parts = currentDirectory.split('\\');
+                    if (parts.length > 1) {
+                        parts.pop();
+                        basePathInput.value = parts.join('\\');
+                        refreshFileList();
+                    }
+                });
+                filesBrowser.appendChild(parentItem);
+                
+                // Display folders first
+                files.filter(file => file.isDirectory).forEach(folder => {
+                    const folderItem = document.createElement('div');
+                    folderItem.className = 'file-item';
+                    folderItem.innerHTML = `<i class="fas fa-folder folder-icon"></i> ${folder.name}`;
+                    folderItem.addEventListener('click', () => {
+                        basePathInput.value = `${currentDirectory}\\${folder.name}`;
+                        refreshFileList();
+                    });
+                    filesBrowser.appendChild(folderItem);
                 });
                 
-                // Get the directory name
-                currentPath = directoryHandle.name;
-                document.getElementById('files-base-path').value = currentPath;
+                // Then display files
+                files.filter(file => !file.isDirectory).forEach(file => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    const iconClass = getFileIconClass(file.name);
+                    fileItem.innerHTML = `<i class="fas ${iconClass}"></i> ${file.name}`;
+                    fileItem.addEventListener('click', () => selectFile(file.name));
+                    filesBrowser.appendChild(fileItem);
+                });
                 
-                // Save the selected directory to local storage
-                localStorage.setItem('lastFilesDirectory', currentPath);
+            } catch (error) {
+                filesBrowser.innerHTML = `
+                    <div class="file-explorer-empty">
+                        <i class="fas fa-exclamation-circle fa-4x" style="color: #d9534f;"></i>
+                        <p>Error accessing directory: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Read directory contents
+        async function readDirectory(path) {
+            try {
+                // This would be a real API call in a full implementation
+                // For now we'll simulate reading from localStorage
+                const storedFiles = localStorage.getItem(`fileDir_${path}`);
+                
+                if (storedFiles) {
+                    return JSON.parse(storedFiles);
+                }
+                
+                // If no stored files, create a default structure
+                let defaultFiles = [];
+                
+                // Default structure based on the user's workspace
+                defaultFiles.push({ name: "documents", isDirectory: true });
+                defaultFiles.push({ name: "images", isDirectory: true });
+                defaultFiles.push({ name: "notes.txt", isDirectory: false });
+                defaultFiles.push({ name: "todo.md", isDirectory: false });
+                defaultFiles.push({ name: "example.json", isDirectory: false });
+                
+                // Store the default structure
+                localStorage.setItem(`fileDir_${path}`, JSON.stringify(defaultFiles));
+                
+                // Create default content for files
+                localStorage.setItem(`fileContent_${path}\\notes.txt`, "These are my notes.\n\nImportant things to remember:\n1. Item one\n2. Item two\n3. Item three");
+                localStorage.setItem(`fileContent_${path}\\todo.md`, "# Todo List\n\n## High Priority\n- Finish the project\n- Submit report\n\n## Low Priority\n- Clean up code\n- Add documentation");
+                localStorage.setItem(`fileContent_${path}\\example.json`, '{\n  "name": "Example",\n  "version": "1.0.0",\n  "description": "An example JSON file",\n  "items": ["item1", "item2", "item3"]\n}');
+                
+                return defaultFiles;
+            } catch (error) {
+                console.error("Error reading directory:", error);
+                throw new Error("Failed to read directory contents");
+            }
+        }
+        
+        // Select a file to view/edit
+        async function selectFile(fileName) {
+            try {
+                const filePath = `${currentDirectory}\\${fileName}`;
+                selectedFile = filePath;
+                
+                // Update UI
+                filePreviewName.textContent = fileName;
+                saveFileButton.disabled = false;
+                shareWithAIButton.disabled = false;
+                
+                // Get file content
+                const content = localStorage.getItem(`fileContent_${filePath}`);
+                
+                // Check if it's an image
+                if (isImageFile(fileName)) {
+                    imageContentPreview.style.display = 'block';
+                    fileContentEditor.style.display = 'none';
+                    fileContentEditor.value = '';
+                    fileContentEditor.disabled = true;
+                    
+                    // For demo purposes we'll just show a placeholder
+                    imageContentPreview.innerHTML = `
+                        <div style="text-align: center; padding: 20px;">
+                            <i class="fas fa-image fa-5x" style="color: #ccc;"></i>
+                            <p>Image preview not available in this demo</p>
+                            <p>${fileName}</p>
+                        </div>
+                    `;
+                } else {
+                    // It's a text file
+                    imageContentPreview.style.display = 'none';
+                    fileContentEditor.style.display = 'block';
+                    fileContentEditor.value = content || '';
+                    fileContentEditor.disabled = false;
+                    
+                    // Set initial state
+                    fileHasChanges = false;
+                }
+                
+                // Highlight the selected file
+                document.querySelectorAll('.file-item').forEach(item => {
+                    item.classList.remove('selected');
+                    if (item.textContent.trim().endsWith(fileName)) {
+                        item.classList.add('selected');
+                    }
+                });
+            } catch (error) {
+                console.error("Error selecting file:", error);
+                showNotification(`Error opening file: ${error.message}`);
+            }
+        }
+        
+        // Save file content
+        async function saveFileContent() {
+            if (!selectedFile) return;
+            
+            try {
+                // In a real implementation, this would write to the file system
+                localStorage.setItem(`fileContent_${selectedFile}`, fileContentEditor.value);
+                fileHasChanges = false;
+                showNotification('File saved successfully');
+            } catch (error) {
+                console.error("Error saving file:", error);
+                showNotification(`Error saving file: ${error.message}`);
+            }
+        }
+        
+        // Share file with AI
+        function shareFileWithAI() {
+            if (!selectedFile) return;
+            
+            const fileName = selectedFile.split('\\').pop();
+            const fileContent = fileContentEditor.value;
+            
+            // Switch to chat tab
+            switchTab('chat-tab');
+            
+            // Insert file content into chat
+            addMessage(`I'm sharing the contents of file "${fileName}" with you:
+\`\`\`
+${fileContent}
+\`\`\`
+Please help me understand or modify this content.`, true);
+            
+            // Send to AI
+            sendMessage();
+        }
+        
+        // Create new file
+        function createNewFile() {
+            const fileName = prompt('Enter new file name:');
+            if (!fileName) return;
+            
+            try {
+                // Check if file already exists
+                const files = JSON.parse(localStorage.getItem(`fileDir_${currentDirectory}`) || '[]');
+                if (files.some(file => file.name === fileName)) {
+                    showNotification('A file with that name already exists');
+                    return;
+                }
+                
+                // Add to directory listing
+                files.push({ name: fileName, isDirectory: false });
+                localStorage.setItem(`fileDir_${currentDirectory}`, JSON.stringify(files));
+                
+                // Create empty file content
+                localStorage.setItem(`fileContent_${currentDirectory}\\${fileName}`, '');
                 
                 // Refresh file list
                 refreshFileList();
+                showNotification('File created successfully');
                 
-                showNotification('Directory selected: ' + currentPath);
+                // Select the new file
+                setTimeout(() => selectFile(fileName), 100);
             } catch (error) {
-                if (error.name !== 'AbortError') {  // Ignore if user cancelled
-                    showNotification('Error selecting directory: ' + error.message);
-                    console.error('Directory selection error:', error);
-                }
+                console.error("Error creating file:", error);
+                showNotification(`Error creating file: ${error.message}`);
             }
         }
         
-        // Function to refresh the file list
-        async function refreshFileList() {
-            const path = document.getElementById('files-base-path').value.trim();
-            if (!path) {
-                showNotification('Please enter a valid directory path');
-                return;
-            }
-            
-            currentPath = path;
-            localStorage.setItem('lastFilesDirectory', currentPath);
+        // Create new folder
+        function createNewFolder() {
+            const folderName = prompt('Enter new folder name:');
+            if (!folderName) return;
             
             try {
-                // Call backend API to get files
-                const baseUrl = document.getElementById('api-base-url').value.trim();
-                const response = await fetch(`${baseUrl}/files/list?path=${encodeURIComponent(path)}`, {
-                    method: 'GET'
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                // Check if folder already exists
+                const files = JSON.parse(localStorage.getItem(`fileDir_${currentDirectory}`) || '[]');
+                if (files.some(file => file.name === folderName)) {
+                    showNotification('A folder with that name already exists');
+                    return;
                 }
                 
-                const files = await response.json();
+                // Add to directory listing
+                files.push({ name: folderName, isDirectory: true });
+                localStorage.setItem(`fileDir_${currentDirectory}`, JSON.stringify(files));
                 
-                // Update the file browser UI
-                const filesBrowser = document.getElementById('files-browser');
-                filesBrowser.innerHTML = '';
+                // Create empty folder
+                localStorage.setItem(`fileDir_${currentDirectory}\\${folderName}`, JSON.stringify([]));
                 
-                if (files && files.length > 0) {
-                    // Sort: folders first, then files, alphabetically
-                    files.sort((a, b) => {
-                        // Sort directories first
-                        if (a.isDirectory !== b.isDirectory) {
-                            return a.isDirectory ? -1 : 1;
-                        }
-                        // Then sort alphabetically
-                        return a.name.localeCompare(b.name);
-                    });
-                    
-                    // Add parent directory option if not in root
-                    if (path !== '' && path !== '/' && path !== '\\') {
-                        const parentItem = document.createElement('div');
-                        parentItem.className = 'file-item';
-                        parentItem.innerHTML = '<i class="fas fa-level-up-alt folder-icon"></i> ..';
-                        parentItem.onclick = () => {
-                            const parentPath = path.split(/[\/\\]/).slice(0, -1).join('/');
-                            document.getElementById('files-base-path').value = parentPath || '/';
-                            refreshFileList();
-                        };
-                        filesBrowser.appendChild(parentItem);
-                    }
-                    
-                    // Add all files and folders
-                    files.forEach(file => {
-                        const fileItem = document.createElement('div');
-                        fileItem.className = 'file-item';
-                        
-                        if (file.isDirectory) {
-                            fileItem.innerHTML = `<i class="fas fa-folder folder-icon"></i> ${file.name}`;
-                            fileItem.onclick = () => {
-                                const newPath = normalizePath(`${path}/${file.name}`);
-                                document.getElementById('files-base-path').value = newPath;
-                                refreshFileList();
-                            };
-                        } else {
-                            const iconClass = isImageFile(file.name) ? 'fa-image' : 'fa-file';
-                            fileItem.innerHTML = `<i class="fas ${iconClass} file-icon"></i> ${file.name}`;
-                            fileItem.onclick = () => openFile(`${path}/${file.name}`);
-                            fileItem.setAttribute('data-path', `${path}/${file.name}`);
-                        }
-                        
-                        filesBrowser.appendChild(fileItem);
-                    });
-                } else {
-                    filesBrowser.innerHTML = `
-                        <div class="file-explorer-empty">
-                            <i class="fas fa-folder-open fa-4x"></i>
-                            <p>This directory is empty</p>
-                        </div>
-                    `;
-                }
-                
-            } catch (error) {
-                document.getElementById('files-browser').innerHTML = `
-                    <div class="file-explorer-empty">
-                        <i class="fas fa-exclamation-triangle fa-4x"></i>
-                        <p>Error loading files: ${error.message}</p>
-                        <p>Make sure the API server is running and the path is accessible.</p>
-                    </div>
-                `;
-                showNotification('Error loading files: ' + error.message);
-            }
-        }
-        
-        // Function to open a file
-        async function openFile(filePath) {
-            try {
-                // Check for unsaved changes
-                if (fileHasChanges) {
-                    const confirmResult = confirm('You have unsaved changes. Do you want to continue without saving?');
-                    if (!confirmResult) {
-                        return; // User cancelled
-                    }
-                }
-                
-                // Remove selection from all file items
-                document.querySelectorAll('.file-item').forEach(item => {
-                    item.classList.remove('selected');
-                });
-                
-                // Add selection to current file
-                const selectedItem = document.querySelector(`.file-item[data-path="${filePath}"]`);
-                if (selectedItem) {
-                    selectedItem.classList.add('selected');
-                }
-                
-                const baseUrl = document.getElementById('api-base-url').value.trim();
-                const response = await fetch(`${baseUrl}/files/read?path=${encodeURIComponent(filePath)}`, {
-                    method: 'GET'
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
-                }
-                
-                // Update UI filename
-                const fileName = filePath.split(/[\/\\]/).pop();
-                document.getElementById('file-preview-name').textContent = fileName;
-                
-                // Enable share with AI button
-                document.getElementById('share-with-ai-button').disabled = false;
-                
-                // Check if it's an image file
-                if (isImageFile(fileName)) {
-                    const blob = await response.blob();
-                    const fileContent = document.getElementById('file-content-editor');
-                    const imagePreview = document.getElementById('image-content-preview');
-                    
-                    // Hide text editor, show image preview
-                    fileContent.style.display = 'none';
-                    imagePreview.style.display = 'flex';
-                    
-                    // Display the image
-                    const img = document.createElement('img');
-                    img.src = URL.createObjectURL(blob);
-                    imagePreview.innerHTML = '';
-                    imagePreview.appendChild(img);
-                    
-                    // Disable save button for images
-                    document.getElementById('save-file-button').disabled = true;
-                } else {
-                    // It's a text file
-                    const content = await response.text();
-                    const fileContent = document.getElementById('file-content-editor');
-                    const imagePreview = document.getElementById('image-content-preview');
-                    
-                    // Show text editor, hide image preview
-                    fileContent.style.display = 'block';
-                    imagePreview.style.display = 'none';
-                    
-                    // Set content and enable editing
-                    fileContent.value = content;
-                    fileContent.disabled = false;
-                    
-                    // Enable save button
-                    document.getElementById('save-file-button').disabled = false;
-                }
-                
-                // Store current open file
-                currentOpenFile = filePath;
-                fileHasChanges = false;
-                
-                // Add event listener for changes
-                const editor = document.getElementById('file-content-editor');
-                editor.onchange = editor.onkeyup = () => {
-                    fileHasChanges = true;
-                };
-                
-            } catch (error) {
-                showNotification('Error opening file: ' + error.message);
-            }
-        }
-        
-        // Function to save file content
-        async function saveFileContent() {
-            if (!currentOpenFile) {
-                showNotification('No file is currently open');
-                return;
-            }
-            
-            try {
-                const content = document.getElementById('file-content-editor').value;
-                const baseUrl = document.getElementById('api-base-url').value.trim();
-                
-                const response = await fetch(`${baseUrl}/files/write`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        path: currentOpenFile,
-                        content: content
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
-                }
-                
-                showNotification('File saved successfully');
-                fileHasChanges = false;
-            } catch (error) {
-                showNotification('Error saving file: ' + error.message);
-            }
-        }
-        
-        // Function to share file with AI
-        function shareFileWithAI() {
-            if (!currentOpenFile) {
-                showNotification('No file is selected');
-                return;
-            }
-            
-            try {
-                // Create a message to send to the AI
-                const fileName = currentOpenFile.split(/[\/\\]/).pop();
-                let fileContent;
-                
-                if (isImageFile(fileName)) {
-                    // For images, just mention it's an image
-                    userInput.value = `I'm sharing a file with you: ${fileName} (image file)`;
-                } else {
-                    // For text files, include the content
-                    fileContent = document.getElementById('file-content-editor').value;
-                    
-                    // Prepare message with file content
-                    userInput.value = `I'm sharing a file with you: ${fileName}\n\nFile content:\n\`\`\`\n${fileContent}\n\`\`\``;
-                }
-                
-                // Switch to chat tab
-                switchTab('chat-tab');
-                
-                // Focus the input field
-                userInput.focus();
-                
-                // Optionally, scroll to see the whole message
-                userInput.scrollTop = 0;
-            } catch (error) {
-                showNotification('Error sharing file: ' + error.message);
-            }
-        }
-        
-        // Function to create a new file
-        async function createNewFile() {
-            const path = document.getElementById('files-base-path').value.trim();
-            if (!path) {
-                showNotification('Please select a directory first');
-                return;
-            }
-            
-            const fileName = prompt('Enter the new file name:');
-            if (!fileName) return; // User cancelled
-            
-            try {
-                const filePath = normalizePath(`${path}/${fileName}`);
-                const baseUrl = document.getElementById('api-base-url').value.trim();
-                
-                const response = await fetch(`${baseUrl}/files/write`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        path: filePath,
-                        content: ''  // Empty content for new file
-                    })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
-                }
-                
-                showNotification(`File "${fileName}" created successfully`);
+                // Refresh file list
                 refreshFileList();
-                
-                // Open the newly created file
-                setTimeout(() => {
-                    openFile(filePath);
-                }, 500);
-                
+                showNotification('Folder created successfully');
             } catch (error) {
-                showNotification('Error creating file: ' + error.message);
+                console.error("Error creating folder:", error);
+                showNotification(`Error creating folder: ${error.message}`);
             }
         }
         
-        // Function to create a new folder
-        async function createNewFolder() {
-            const path = document.getElementById('files-base-path').value.trim();
-            if (!path) {
-                showNotification('Please select a directory first');
-                return;
+        // Helper to get file icon based on extension
+        function getFileIconClass(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            switch(ext) {
+                case 'txt': return 'fa-file-alt';
+                case 'md': return 'fa-file-alt';
+                case 'json': return 'fa-file-code';
+                case 'js': return 'fa-file-code';
+                case 'html': return 'fa-file-code';
+                case 'css': return 'fa-file-code';
+                case 'py': return 'fa-file-code';
+                case 'jpg': case 'jpeg': case 'png': case 'gif': return 'fa-file-image';
+                case 'pdf': return 'fa-file-pdf';
+                case 'doc': case 'docx': return 'fa-file-word';
+                case 'xls': case 'xlsx': return 'fa-file-excel';
+                default: return 'fa-file';
             }
+        }
+        
+        // Helper to check if file is an image
+        function isImageFile(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(ext);
+        }
+        
+        // Track changes in file editor
+        fileContentEditor.addEventListener('input', () => {
+            fileHasChanges = true;
+        });
+        
+        // Handle file commands typed in chat
+        function handleFileCommand(command) {
+            const parts = command.trim().split(' ');
+            const action = parts[0]?.toLowerCase();
             
-            const folderName = prompt('Enter the new folder name:');
-            if (!folderName) return; // User cancelled
-            
+            switch (action) {
+                case 'list':
+                    // List files in working directory
+                    listFilesInChat();
+                    break;
+                    
+                case 'read':
+                    // Read file content
+                    if (parts.length < 2) {
+                        addMessage("Please specify a filename to read", false);
+                        return;
+                    }
+                    readFileInChat(parts.slice(1).join(' '));
+                    break;
+                    
+                case 'write':
+                    // Write to file
+                    if (parts.length < 3) {
+                        addMessage("Usage: /file write filename content", false);
+                        return;
+                    }
+                    const filename = parts[1];
+                    const content = parts.slice(2).join(' ');
+                    writeFileInChat(filename, content);
+                    break;
+                    
+                case 'delete':
+                    // Delete file
+                    if (parts.length < 2) {
+                        addMessage("Please specify a filename to delete", false);
+                        return;
+                    }
+                    deleteFileInChat(parts.slice(1).join(' '));
+                    break;
+                    
+                case 'help':
+                    // Show help
+                    showFileCommandHelp();
+                    break;
+                    
+                default:
+                    addMessage(`Unknown file command: ${action}. Type "/file help" for available commands.`, false);
+            }
+        }
+        
+        // List files in chat
+        async function listFilesInChat() {
             try {
-                const folderPath = normalizePath(`${path}/${folderName}`);
-                const baseUrl = document.getElementById('api-base-url').value.trim();
+                const baseDir = basePathInput.value.trim() || currentDirectory;
+                const files = await readDirectory(baseDir);
                 
-                const response = await fetch(`${baseUrl}/files/createFolder`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        path: folderPath
-                    })
-                });
+                let messageText = `Files in directory ${baseDir}:\n\n`;
                 
-                if (!response.ok) {
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                // List folders
+                const folders = files.filter(file => file.isDirectory);
+                if (folders.length > 0) {
+                    messageText += "📁 Folders:\n";
+                    folders.forEach(folder => {
+                        messageText += `- ${folder.name}/\n`;
+                    });
+                    messageText += "\n";
                 }
                 
-                showNotification(`Folder "${folderName}" created successfully`);
-                refreshFileList();
+                // List files
+                const filesList = files.filter(file => !file.isDirectory);
+                if (filesList.length > 0) {
+                    messageText += "📄 Files:\n";
+                    filesList.forEach(file => {
+                        messageText += `- ${file.name}\n`;
+                    });
+                }
                 
+                addMessage(messageText, false);
             } catch (error) {
-                showNotification('Error creating folder: ' + error.message);
+                addMessage(`Error listing files: ${error.message}`, false);
             }
         }
         
-        // Load last used directory from local storage
-        const lastDirectory = localStorage.getItem('lastFilesDirectory');
-        if (lastDirectory) {
-            document.getElementById('files-base-path').value = lastDirectory;
+        // Read file in chat
+        async function readFileInChat(filename) {
+            try {
+                const baseDir = basePathInput.value.trim() || currentDirectory;
+                const filePath = `${baseDir}\\${filename}`;
+                const content = localStorage.getItem(`fileContent_${filePath}`);
+                
+                if (content === null) {
+                    addMessage(`File not found: ${filename}`, false);
+                    return;
+                }
+                
+                let messageText = `📄 Contents of file "${filename}":\n\n\`\`\`\n${content}\n\`\`\``;
+                addMessage(messageText, false);
+                
+                // Add to conversation history as a system message for context
+                addFileToContext(filename, content);
+                
+            } catch (error) {
+                addMessage(`Error reading file: ${error.message}`, false);
+            }
         }
         
-        // Focus the input field
-        userInput.focus();
+        // Write file in chat
+        async function writeFileInChat(filename, content) {
+            try {
+                const baseDir = basePathInput.value.trim() || currentDirectory;
+                const filePath = `${baseDir}\\${filename}`;
+                
+                // Check if file exists
+                const files = JSON.parse(localStorage.getItem(`fileDir_${baseDir}`) || '[]');
+                let fileExists = files.some(file => file.name === filename && !file.isDirectory);
+                
+                // Add or update file
+                if (!fileExists) {
+                    files.push({ name: filename, isDirectory: false });
+                    localStorage.setItem(`fileDir_${baseDir}`, JSON.stringify(files));
+                }
+                
+                // Write content
+                localStorage.setItem(`fileContent_${filePath}`, content);
+                
+                addMessage(`✓ File "${filename}" has been ${fileExists ? 'updated' : 'created'}.`, false);
+                
+            } catch (error) {
+                addMessage(`Error writing file: ${error.message}`, false);
+            }
+        }
+        
+        // Delete file in chat
+        async function deleteFileInChat(filename) {
+            try {
+                const baseDir = basePathInput.value.trim() || currentDirectory;
+                const filePath = `${baseDir}\\${filename}`;
+                
+                // Check if file exists
+                const files = JSON.parse(localStorage.getItem(`fileDir_${baseDir}`) || '[]');
+                const fileIndex = files.findIndex(file => file.name === filename && !file.isDirectory);
+                
+                if (fileIndex === -1) {
+                    addMessage(`File not found: ${filename}`, false);
+                    return;
+                }
+                
+                // Remove from directory listing
+                files.splice(fileIndex, 1);
+                localStorage.setItem(`fileDir_${baseDir}`, JSON.stringify(files));
+                
+                // Remove content
+                localStorage.removeItem(`fileContent_${filePath}`);
+                
+                addMessage(`✓ File "${filename}" has been deleted.`, false);
+                
+            } catch (error) {
+                addMessage(`Error deleting file: ${error.message}`, false);
+            }
+        }
+        
+        // Show file command help
+        function showFileCommandHelp() {
+            const helpText = `
+**File Command Help**
+
+Available commands:
+- \`/file list\` - List all files in the current directory
+- \`/file read filename\` - Read and display the contents of a file
+- \`/file write filename content\` - Create or update a file with the specified content
+- \`/file delete filename\` - Delete a file
+- \`/file help\` - Show this help message
+
+You can also use the Files tab to browse and manage files visually.
+`;
+            addMessage(helpText, false);
+        }
+        
+        // Update API to handle files
+        function addFileToContext(filePath, fileContent) {
+            // Store the file in conversation context
+            conversationHistory.push({
+                role: "system",
+                content: `File loaded: ${filePath}\n\n${fileContent}`
+            });
+        }
     </script>
 </body>
 </html>
