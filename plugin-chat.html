@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>LM Studio Chat with Plugins</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        h1 {
+            color: #333;
+            margin: 0;
+        }
+
+        .chat-container {
+            display: flex;
+            gap: 20px;
+            height: 500px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat {
+            flex-grow: 1;
+            border: 1px solid #ccc;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .user {
+            background: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 18px 18px 0 18px;
+            margin: 8px 0;
+            text-align: right;
+            max-width: 80%;
+            margin-left: auto;
+        }
+
+        .ai {
+            background: #f1f1f1;
+            padding: 10px 15px;
+            border-radius: 18px 18px 18px 0;
+            margin: 8px 0;
+            max-width: 80%;
+        }
+
+        .plugin {
+            background: #e6f7e6;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin: 8px 0;
+            border-left: 4px solid #4caf50;
+            font-family: monospace;
+            max-width: 90%;
+        }
+
+        .input-area {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        #input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .connected {
+            background-color: #4caf50;
+        }
+
+        .disconnected {
+            background-color: #f44336;
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .control-group select,
+        .control-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .typing-indicator {
+            display: none;
+            margin: 10px 0;
+            align-items: center;
+        }
+
+        .typing-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #888;
+            margin-right: 3px;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .plugin-item {
+            padding: 8px 10px;
+            background-color: #f5f5f5;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .plugin-item:hover {
+            background-color: #e9e9e9;
+            border-left-color: #4caf50;
+        }
+
+        .plugin-name {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .plugin-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        @keyframes typingBounce {
+
+            0%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <img src="https://raw.githubusercontent.com/microsoft/semantic-kernel/main/docs/images/sk-title.png"
+            alt="Semantic Kernel" class="logo">
+        <h1>LM Studio Chat with Plugins</h1>
+    </div>
+
+    <div class="status">
+        <div id="status-dot" class="status-dot"></div>
+        <span id="status-text">Checking connection...</span>
+    </div>
+
+    <div class="chat-container">
+        <div class="sidebar">
+            <div class="control-group">
+                <label for="modelSelect">Model:</label>
+                <select id="modelSelect">
+                    <option value="microsoft/phi-4-mini-reasoning">Phi-4-Mini</option>
+                    <option value="llama3-8b-instruct">Llama 3 8B</option>
+                    <option value="mistral-nemo-instruct-2407">Mistral Nemo</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="temperatureInput">Temperature:</label>
+                <input type="range" id="temperatureInput" min="0" max="1" step="0.1" value="0.7">
+                <span id="temperatureValue">0.7</span>
+            </div>
+
+            <div class="control-group">
+                <label for="systemPrompt">System Prompt:</label>
+                <textarea id="systemPrompt" rows="3" placeholder="Optional system prompt"></textarea>
+            </div>
+
+            <div class="control-group">
+                <label>Available Plugins:</label>
+                <div id="pluginsList">
+                    <div class="plugin-item" data-plugin="math" data-function="calculate">
+                        <div class="plugin-name">Math.Calculate</div>
+                        <div class="plugin-description">Performs calculations</div>
+                    </div>
+                    <div class="plugin-item" data-plugin="text" data-function="summarize">
+                        <div class="plugin-name">Text.Summarize</div>
+                        <div class="plugin-description">Summarizes text</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main">
+            <div id="chat"></div>
+
+            <div class="typing-indicator" id="typing">
+                <span>AI is typing</span>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+
+            <div class="input-area">
+                <input type="text" id="input" placeholder="Type your message...">
+                <button id="send">Send</button>
+                <button id="clear" onclick="clearChat()">Clear</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check backend status immediately
+        checkBackendStatus();
+
+        // Load plugins
+        loadPlugins();
+
+        // Update temperature display when slider changes
+        document.getElementById('temperatureInput').addEventListener('input', function () {
+            document.getElementById('temperatureValue').textContent = this.value;
+        });
+
+        // Event listeners
+        document.getElementById('send').onclick = sendMessage;
+        document.getElementById('input').addEventListener('keyup', function (e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Initial welcome message
+        document.getElementById('chat').innerHTML = '<div class="ai"><strong>AI:</strong> Hello! How can I help you today? I have several plugins available that I can use.</div>';
+
+        // Functions
+        async function loadPlugins() {
+            try {
+                const response = await fetch('http://localhost:8000/api/plugins');
+                if (response.ok) {
+                    const data = await response.json();
+
+                    // Clear existing plugins
+                    const pluginsList = document.getElementById('pluginsList');
+                    pluginsList.innerHTML = '';
+
+                    // Add each plugin and function
+                    if (data.plugins.length === 0) {
+                        pluginsList.innerHTML = '<p>No plugins available</p>';
+                        return;
+                    }
+
+                    data.functions.forEach(func => {
+                        const pluginItem = document.createElement('div');
+                        pluginItem.className = 'plugin-item';
+                        pluginItem.dataset.plugin = func.plugin;
+                        pluginItem.dataset.function = func.name;
+
+                        const pluginName = document.createElement('div');
+                        pluginName.className = 'plugin-name';
+                        pluginName.textContent = `${func.plugin}.${func.name}`;
+
+                        const pluginDesc = document.createElement('div');
+                        pluginDesc.className = 'plugin-description';
+                        pluginDesc.textContent = func.description || 'No description available';
+
+                        pluginItem.appendChild(pluginName);
+                        pluginItem.appendChild(pluginDesc);
+
+                        // Click to use plugin directly
+                        pluginItem.addEventListener('click', () => {
+                            usePlugin(func.plugin, func.name);
+                        });
+
+                        pluginsList.appendChild(pluginItem);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading plugins:', error);
+            }
+        }
+
+        async function checkBackendStatus() {
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+
+            statusDot.className = 'status-dot loading';
+            statusText.textContent = 'Checking connection...';
+
+            try {
+                const response = await fetch('http://localhost:8000/ping');
+
+                if (response.ok) {
+                    statusDot.className = 'status-dot connected';
+                    statusText.textContent = 'Connected to backend';
+                } else {
+                    statusDot.className = 'status-dot disconnected';
+                    statusText.textContent = 'Backend error';
+                }
+            } catch (err) {
+                statusDot.className = 'status-dot disconnected';
+                statusText.textContent = 'Backend not available';
+                console.error('Connection error:', err);
+            }
+        }
+
+        function clearChat() {
+            document.getElementById('chat').innerHTML = '<div class="ai"><strong>AI:</strong> Chat cleared. How can I help you today?</div>';
+        }
+
+        async function usePlugin(pluginId, functionId) {
+            const inputText = document.getElementById('input').value.trim() || 'Please help with this.';
+
+            // Show the plugin usage in chat
+            const chat = document.getElementById('chat');
+            chat.innerHTML += `<div class="plugin"><strong>Using Plugin:</strong> ${pluginId}.${functionId}(${inputText})</div>`;
+            chat.scrollTop = chat.scrollHeight;
+
+            // Show typing indicator
+            document.getElementById('typing').style.display = 'flex';
+
+            try {
+                const response = await fetch(`http://localhost:8000/api/run_plugin?plugin_id=${pluginId}&function_id=${pluginId}.${functionId}&input_text=${encodeURIComponent(inputText)}`);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.result) {
+                        chat.innerHTML += `<div class="ai"><strong>Plugin Result:</strong> ${data.result}</div>`;
+                    } else if (data.error) {
+                        chat.innerHTML += `<div class="ai" style="color:red;"><strong>Plugin Error:</strong> ${data.error}</div>`;
+                    }
+                } else {
+                    chat.innerHTML += `<div class="ai" style="color:red;"><strong>Error:</strong> Server returned ${response.status}</div>`;
+                }
+            } catch (error) {
+                console.error('Error running plugin:', error);
+                chat.innerHTML += `<div class="ai" style="color:red;"><strong>Error:</strong> Failed to run plugin</div>`;
+            } finally {
+                // Hide typing indicator
+                document.getElementById('typing').style.display = 'none';
+                chat.scrollTop = chat.scrollHeight;
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Display user message
+            const chat = document.getElementById('chat');
+            chat.innerHTML += `<div class="user"><strong>You:</strong> ${message}</div>`;
+            chat.scrollTop = chat.scrollHeight;
+
+            input.value = '';
+
+            // Show typing indicator
+            document.getElementById('typing').style.display = 'flex';
+            document.getElementById('send').disabled = true;
+
+            try {
+                // Get settings from UI
+                const model = document.getElementById('modelSelect').value;
+                const temperature = parseFloat(document.getElementById('temperatureInput').value);
+                const systemPrompt = document.getElementById('systemPrompt').value;
+
+                // Call backend API
+                const response = await fetch('http://localhost:8000/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        model: model,
+                        system: systemPrompt,
+                        temperature: temperature,
+                        max_tokens: 800
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    chat.innerHTML += `<div class="ai"><strong>AI:</strong> ${data.reply}</div>`;
+                } else {
+                    chat.innerHTML += `<div class="ai" style="color:red;"><strong>Error:</strong> Server returned ${response.status}</div>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                chat.innerHTML += `<div class="ai" style="color:red;"><strong>Error:</strong> Could not connect to backend</div>`;
+            } finally {
+                // Hide typing indicator and re-enable send button
+                document.getElementById('typing').style.display = 'none';
+                document.getElementById('send').disabled = false;
+
+                // Scroll to bottom
+                chat.scrollTop = chat.scrollHeight;
+            }
+        }
+    </script>
+</body>
+
+</html>

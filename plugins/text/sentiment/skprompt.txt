@@ -1,0 +1,7 @@
+I need to analyze sentiment for the following text:
+{{$input}}
+
+Analyze the sentiment and give me ONE of these responses only:
+POSITIVE
+NEGATIVE 
+NEUTRAL
