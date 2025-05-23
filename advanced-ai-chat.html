@@ -1093,7 +1093,27 @@
                 Thoughts</button>
             <button id="agentic-toggle" onclick="toggleAgenticMode()" class="control-button"><i
                     class="fas fa-robot"></i> Agentic Mode: <span id="agentic-status">OFF</span></button>
+            <button id="dual-agentic-toggle" onclick="toggleDualAgenticMode()" class="control-button"><i
+                    class="fas fa-comments"></i> Dual Agentic AI: <span id="dual-agentic-status">OFF</span></button>
+            <button id="agentic-options-toggle" onclick="toggleAgenticOptions()" class="control-button"><i
+                    class="fas fa-cogs"></i> Agentic Options</button>
             <span class="chat-tip"><i class="fas fa-lightbulb"></i> Tip: Press ? for keyboard shortcuts</span>
+        </div>
+        <div id="agentic-options-panel"
+            style="display:none;position:absolute;right:20px;top:60px;z-index:1000;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 2px 12px #0002;padding:16px;min-width:260px;">
+            <div style="font-weight:600;font-size:16px;margin-bottom:8px;"><i class="fas fa-cogs"></i> Agentic Options
+            </div>
+            <label style="display:block;margin-bottom:8px;"><input type="checkbox" id="agentic-file-autoshow"> Auto-show
+                file changes in chat</label>
+            <label style="display:block;margin-bottom:8px;"><input type="checkbox" id="agentic-thought-autoshow">
+                Auto-show new thoughts in chat</label>
+            <label style="display:block;margin-bottom:8px;"><input type="checkbox" id="agentic-verbose-reasoning">
+                Verbose agent reasoning</label>
+            <label style="display:block;margin-bottom:8px;"><input type="checkbox" id="agentic-turn-limit" checked>
+                Limit agent turns: <input type="number" id="agentic-turns" value="4" min="2" max="20"
+                    style="width:48px;margin-left:4px;"></label>
+            <button onclick="closeAgenticOptions()" style="margin-top:8px;float:right;" class="file-action-button"><i
+                    class="fas fa-times"></i> Close</button>
         </div>
     </div>
 
@@ -1111,6 +1131,13 @@
         let currentTab = 'chat-tab';
         let isDarkMode = false;
         let agenticMode = false;
+        let dualAgenticMode = false;
+        let dualAgentTurn = 0; // 0 = Agent A, 1 = Agent B
+        const agentNames = ["Agent A", "Agent B"];
+        const agentPrompts = [
+            "You are Agent A, an agentic AI assistant. You can use /file and /thought commands to read, write, list, or delete files and persistent thoughts as needed. Collaborate with Agent B to solve the user's problem. Always explain your reasoning.",
+            "You are Agent B, an agentic AI assistant. You can use /file and /thought commands to read, write, list, or delete files and persistent thoughts as needed. Collaborate with Agent A to solve the user's problem. Always explain your reasoning."
+        ];
 
         // Initialize plugin functions
         const pluginFunctions = {
@@ -1146,6 +1173,13 @@
             agenticMode = !agenticMode;
             document.getElementById('agentic-status').textContent = agenticMode ? 'ON' : 'OFF';
             showNotification('Agentic Mode ' + (agenticMode ? 'enabled' : 'disabled'));
+        }
+
+        // Function to toggle Dual Agentic AI Mode
+        function toggleDualAgenticMode() {
+            dualAgenticMode = !dualAgenticMode;
+            document.getElementById('dual-agentic-status').textContent = dualAgenticMode ? 'ON' : 'OFF';
+            showNotification('Dual Agentic AI Mode ' + (dualAgenticMode ? 'enabled' : 'disabled'));
         }
 
         // Function to toggle direct API settings
@@ -1529,207 +1563,143 @@
             }
         }
 
-        // Function to send a message
+        // --- Persistent File Browser Sidebar ---
+        async function renderFileSidebar() {
+            let sidebar = document.getElementById('file-sidebar');
+            if (!sidebar) {
+                sidebar = document.createElement('div');
+                sidebar.id = 'file-sidebar';
+                sidebar.style = 'position:fixed;left:0;top:0;bottom:0;width:260px;background:#fafaff;border-right:1px solid #eee;z-index:10;overflow-y:auto;padding:12px 0 0 0;box-shadow:2px 0 8px #0001;';
+                document.body.appendChild(sidebar);
+            }
+            sidebar.innerHTML = '<div style="font-weight:600;font-size:18px;padding:0 16px 8px 16px;"><i class="fas fa-folder-open"></i> Files</div>';
+            const files = await fetch(`${FILE_API_BASE}/files/list`).then(r => r.json()).catch(() => []);
+            if (Array.isArray(files) && files.length > 0) {
+                sidebar.innerHTML += '<ul style="margin:0 0 0 16px;padding:0;list-style:none;">' + files.map(f => {
+                    let icon = '<i class="fas fa-file-alt" style="color:#2196F3;margin-right:6px;"></i>';
+                    if (f.match(/\\|\//)) icon = '<i class="fas fa-folder" style="color:#ffc107;margin-right:6px;"></i>';
+                    else if (f.match(/\.(jpg|jpeg|png|gif|bmp)$/i)) icon = '<i class="fas fa-file-image" style="color:#8e44ad;margin-right:6px;"></i>';
+                    else if (f.match(/\.(md|txt|log)$/i)) icon = '<i class="fas fa-file-alt" style="color:#2196F3;margin-right:6px;"></i>';
+                    else if (f.match(/\.(js|ts|py|sh|bat)$/i)) icon = '<i class="fas fa-file-code" style="color:#27ae60;margin-right:6px;"></i>';
+                    else if (f.match(/\.(json|yml|yaml)$/i)) icon = '<i class="fas fa-file-code" style="color:#e67e22;margin-right:6px;"></i>';
+                    else if (f.match(/\.(zip|tar|gz)$/i)) icon = '<i class="fas fa-file-archive" style="color:#b9770e;margin-right:6px;"></i>';
+                    return `<li style='margin-bottom:4px;'><a href="#" onclick=\"handleFileCommand('read ${f.replace(/'/g, '')}')\" style=\'display:inline-flex;align-items:center;padding:4px 8px;border-radius:6px;transition:background 0.2s;text-decoration:none;color:#0084ff;font-weight:500;\' title=\'Click to view file\' onmouseover=\"this.style.background='#eaf4ff'\" onmouseout=\"this.style.background='none'\">${icon}${f}</a></li>`;
+                }).join('') + '</ul>';
+            } else {
+                sidebar.innerHTML += '<div style="color:#888;margin:12px 0 0 16px;">No files found.</div>';
+            }
+        }
+
+        async function agenticFileRefresh() {
+            await renderFileSidebar();
+        }
+
+        const _handleFileCommand = handleFileCommand;
+        handleFileCommand = async function (cmd) {
+            const r = await _handleFileCommand.apply(this, arguments);
+            if (document.getElementById('agentic-file-autoshow')?.checked) {
+                await agenticFileRefresh();
+            }
+            return r;
+        };
+
+        const _handleThoughtCommand = handleThoughtCommand;
+        handleThoughtCommand = async function (cmd) {
+            const r = await _handleThoughtCommand.apply(this, arguments);
+            if (document.getElementById('agentic-thought-autoshow')?.checked) {
+                await injectThoughtListToChat();
+            }
+            return r;
+        };
+
+        window.addEventListener('DOMContentLoaded', renderFileSidebar);
+
+        // --- Dual Agentic AI Conversation Logic ---
         async function sendMessage() {
             const message = userInput.value.trim();
             if (!message && !uploadedImage) return;
-
-            // Create message content, including image if present
             let displayMessage = message;
             let requestBody = { input: message };
-
             if (uploadedImage) {
                 displayMessage += ' [Image attached]';
                 requestBody.imageData = uploadedImage;
             }
-
-            // Check if the message is a file command
-            if (message.startsWith("/file ")) {
-                handleFileCommand(message.substring(6));
-                return;
-            }
-
-            // Check if the message is a thought command
-            if (message.startsWith("/thought ")) {
-                handleThoughtCommand(message.substring(8));
-                return;
-            }
-
-            // Display user message
+            if (message.startsWith("/file ")) { handleFileCommand(message.substring(6)); return; }
+            if (message.startsWith("/thought ")) { handleThoughtCommand(message.substring(8)); return; }
             addMessage(displayMessage, true);
             userInput.value = '';
-
-            // Clear image preview and data
             imagePreview.style.display = 'none';
             uploadedImage = null;
-
-            // Show loading indicator
             loadingIndicator.style.display = 'flex';
-
+            if (document.getElementById('agentic-file-autoshow')?.checked && message.startsWith('/file ')) {
+                injectFileListToChat();
+            }
+            if (document.getElementById('agentic-thought-autoshow')?.checked && message.startsWith('/thought ')) {
+                injectThoughtListToChat();
+            }
             try {
-                let response;
-                const baseUrl = apiBaseUrlInput.value.trim();
-                const model = modelSelector ? modelSelector.value : 'gpt-35-turbo';
-                const useDirectApi = document.getElementById('use-direct-api').checked;
-
-                // If agentic mode is enabled, prepend a system message to instruct the AI
+                let agenticTurns = 4;
+                if (dualAgenticMode && document.getElementById('agentic-turn-limit')?.checked) {
+                    agenticTurns = parseInt(document.getElementById('agentic-turns').value) || 4;
+                }
+                if (dualAgenticMode) {
+                    let turns = agenticTurns;
+                    let lastMsg = message;
+                    let context = conversationHistory.slice(-10);
+                    for (let t = 0; t < turns; t++) {
+                        const agentIdx = t % 2;
+                        const agentName = agentNames[agentIdx];
+                        let systemPrompt = agentPrompts[agentIdx];
+                        if (document.getElementById('agentic-verbose-reasoning')?.checked) {
+                            systemPrompt += ' Be very explicit about your reasoning and tool use.';
+                        }
+                        let formattedMessages = [
+                            { role: "system", content: systemPrompt },
+                            ...context.map(msg => ({ role: msg.role, content: msg.content })),
+                            { role: "user", content: lastMsg }
+                        ];
+                        let aiResponse = '';
+                        if (document.getElementById('use-direct-api').checked) {
+                            const directApiUrl = document.getElementById('direct-api-url').value.trim();
+                            const directModel = document.getElementById('direct-model-selector').value;
+                            const maxTokens = parseInt(document.getElementById('direct-max-tokens').value);
+                            const temperature = parseFloat(document.getElementById('direct-temperature').value);
+                            const response = await fetch(`${directApiUrl}/v1/chat/completions`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ model: directModel, messages: formattedMessages, max_tokens: maxTokens, temperature })
+                            });
+                            const data = await response.json();
+                            aiResponse = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : "No response from model";
+                        } else {
+                            const baseUrl = apiBaseUrlInput.value.trim();
+                            const response = await fetch(`${baseUrl}/chat`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ input: lastMsg })
+                            });
+                            aiResponse = await response.text();
+                        }
+                        addMessage(`${agentName}: ${aiResponse}`, false);
+                        lastMsg = aiResponse;
+                        context.push({ role: 'assistant', content: aiResponse });
+                        if (aiResponse.startsWith('/file ') && document.getElementById('agentic-file-autoshow')?.checked) {
+                            await injectFileListToChat();
+                        }
+                        if (aiResponse.startsWith('/thought ') && document.getElementById('agentic-thought-autoshow')?.checked) {
+                            await injectThoughtListToChat();
+                        }
+                    }
+                    loadingIndicator.style.display = 'none';
+                    return;
+                }
                 let systemPrompt = null;
                 if (agenticMode) {
                     systemPrompt = "You are an agentic AI assistant. You can use /file and /thought commands in your responses to read, write, list, or delete files and persistent thoughts as needed to accomplish the user's goals. Use these commands as tools, and explain your reasoning.";
                 }
-
-                if (useDirectApi) {
-                    // Use direct model API like Phi-4 at http://127.0.0.1:1234
-                    const directApiUrl = document.getElementById('direct-api-url').value.trim();
-                    const directModel = document.getElementById('direct-model-selector').value;
-                    const maxTokens = parseInt(document.getElementById('direct-max-tokens').value);
-                    const temperature = parseFloat(document.getElementById('direct-temperature').value);
-
-                    // Format the messages according to the model's expected format
-                    let formattedMessages = [];
-
-                    // Add system message with information about file commands
-                    if (systemPrompt) {
-                        formattedMessages.push({ role: "system", content: systemPrompt });
-                    } else {
-                        formattedMessages.push({
-                            role: "system",
-                            content: "You are an AI assistant that can help with files. You can access files through the file system interface. The user can use /file commands to interact with files directly."
-                        });
-                    }
-
-                    // Add the last 10 messages for context
-                    const contextMessages = conversationHistory.slice(-10, -1);
-                    for (const msg of contextMessages) {
-                        formattedMessages.push({
-                            role: msg.role,
-                            content: msg.content
-                        });
-                    }
-
-                    // Add the current user message
-                    formattedMessages.push({
-                        role: "user",
-                        content: message
-                    });
-
-                    // Make API call to the direct model API
-                    response = await fetch(`${directApiUrl}/v1/chat/completions`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            model: directModel,
-                            messages: formattedMessages,
-                            max_tokens: maxTokens,
-                            temperature: temperature
-                        })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Error from direct API: ${response.status} - ${response.statusText}`);
-                    }
-
-                    const data = await response.json();
-                    const aiResponse = data.choices && data.choices[0] && data.choices[0].message ?
-                        data.choices[0].message.content :
-                        "No response from model";
-
-                    addMessage(aiResponse, false);
-                    return;
-
-                } else if (currentTab === 'linkedin-tab') {
-                    const authToken = authTokenInput.value.trim();
-                    if (!authToken) {
-                        throw new Error('LinkedIn authentication token is required');
-                    }
-
-                    // Call the LinkedIn skill endpoint
-                    response = await fetch(`${baseUrl}/linkedin/post`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            authToken,
-                            text: message,
-                            ...(uploadedImage && { imageData: uploadedImage })
-                        })
-                    });
-                } else if (currentTab === 'plugins-tab') {
-                    // Specific plugin endpoint
-                    const plugin = pluginSelector.value;
-                    const func = pluginFunctionSelector.value;
-
-                    response = await fetch(`${baseUrl}/${plugin}/${func}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            input: message,
-                            modelId: model,
-                            history: conversationHistory.slice(-10), // Send last 10 messages as context
-                            ...(requestBody.imageData && { imageData: requestBody.imageData })
-                        })
-                    });
-                } else {
-                    // General chat endpoint
-                    const chatStyle = chatPluginSelector.value;
-                    let endpoint = 'chat';
-
-                    switch (chatStyle) {
-                        case 'creative':
-                            endpoint = 'writer/tellMeMore';
-                            break;
-                        case 'concise':
-                            endpoint = 'summarize/summarize';
-                            break;
-                        case 'expert':
-                            endpoint = 'qa/qna';
-                            break;
-                        default:
-                            endpoint = 'chat/chat';
-                    }
-
-                    response = await fetch(`${baseUrl}/${endpoint}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            input: message,
-                            modelId: model,
-                            history: conversationHistory.slice(-10), // Send last 10 messages as context
-                            ...(requestBody.imageData && { imageData: requestBody.imageData })
-                        })
-                    });
-                }
-
-                if (!response.ok) {
-                    if (response.status === 404) {
-                        throw new Error(`Endpoint not found. Make sure the AI Function app is running and the endpoint exists at ${baseUrl}.`);
-                    } else {
-                        throw new Error(`Error: ${response.status} - ${response.statusText}`);
-                    }
-                }
-
-                // Try to parse as JSON first
-                let data;
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    data = await response.json();
-                    const responseData = typeof data === 'object' ? JSON.stringify(data) : data;
-                    addMessage(responseData, false);
-                } else {
-                    data = await response.text();
-                    addMessage(data, false);
-                }
             } catch (error) {
                 addMessage(`Error: ${error.message}. Please make sure the AI functions app is running correctly.`, false);
             } finally {
-                // Hide loading indicator
                 loadingIndicator.style.display = 'none';
             }
         }
@@ -1743,14 +1713,9 @@
 
         // Function to clear the chat history
         function clearChat() {
-            // Clear the chat messages
             chatMessages.innerHTML = '';
-
-            // Clear conversation history
             conversationHistory.length = 0;
             localStorage.removeItem('conversationHistory');
-
-            // Add welcome message again
             addMessage('Hello! I\'m your AI assistant powered by Semantic Kernel. How can I help you today?', false);
         }
 
@@ -1759,16 +1724,10 @@
             const savedHistory = localStorage.getItem('conversationHistory');
             if (savedHistory) {
                 const history = JSON.parse(savedHistory);
-
-                // Clear existing messages
                 chatMessages.innerHTML = '';
-
-                // Add saved messages
                 history.forEach(msg => {
                     addMessage(msg.content, msg.role === 'user');
                 });
-
-                // Update conversation history
                 conversationHistory.push(...history);
             }
         }
@@ -1778,14 +1737,11 @@
 
         // Function to copy conversation to clipboard
         function copyConversation() {
-            // Build text representation of conversation
             let conversationText = '';
             conversationHistory.forEach(msg => {
                 const role = msg.role === 'user' ? 'You' : 'AI';
                 conversationText += `${role}: ${msg.content}\n\n`;
             });
-
-            // Copy to clipboard
             navigator.clipboard.writeText(conversationText).then(() => {
                 showNotification('Chat copied to clipboard!');
             }).catch(err => {
@@ -1798,8 +1754,6 @@
             const notification = document.getElementById('notification');
             notification.textContent = message + ' If this persists, check your backend/API connection.';
             notification.classList.add('show');
-
-            // Hide after 3 seconds
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 3000);
@@ -1857,25 +1811,18 @@
 
         // Add keyboard shortcuts
         document.addEventListener('keydown', function (e) {
-            // Ctrl+L or Cmd+L to clear chat
             if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
                 e.preventDefault();
                 clearChat();
             }
-
-            // Ctrl+D or Cmd+D to toggle dark mode
             if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
                 e.preventDefault();
                 toggleDarkMode();
             }
-
-            // ? to show keyboard shortcuts
             if (e.key === '?' && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
                 e.preventDefault();
                 showModal();
             }
-
-            // Escape to close modal
             if (e.key === 'Escape' && shortcutsModal.style.display === 'flex') {
                 closeModal();
             }
@@ -1891,45 +1838,51 @@
 
         // Load saved preferences
         function loadPreferences() {
-            // Load dark mode preference
             if (localStorage.getItem('darkMode') === 'true') {
                 toggleDarkMode();
             }
-
-            // Load direct API preference
-            const useDirectApi = localStorage.getItem('useDirectApi') === 'true';
-            document.getElementById('use-direct-api').checked = useDirectApi;
-            toggleDirectApiSettings();
-
-            // Load API URLs
-            const savedDirectApiUrl = localStorage.getItem('directApiUrl');
-            if (savedDirectApiUrl) {
-                document.getElementById('direct-api-url').value = savedDirectApiUrl;
-            }
-
-            const savedApiBaseUrl = localStorage.getItem('apiBaseUrl');
-            if (savedApiBaseUrl) {
-                apiBaseUrlInput.value = savedApiBaseUrl;
-            }
-
-            // Load model preferences
-            const savedDirectModel = localStorage.getItem('directModel');
-            if (savedDirectModel && document.getElementById('direct-model-selector')) {
-                document.getElementById('direct-model-selector').value = savedDirectModel;
-            }
-
-            const savedModel = localStorage.getItem('skModel');
-            if (savedModel && modelSelector) {
-                modelSelector.value = savedModel;
-            }
         }
 
-        // Save API settings when changed
-        document.getElementById('direct-api-url').addEventListener('change', function () {
-            localStorage.setItem('directApiUrl', this.value);
+        // Persist agentic options in localStorage
+        function saveAgenticOptions() {
+            localStorage.setItem('agenticFileAutoshow', document.getElementById('agentic-file-autoshow').checked);
+            localStorage.setItem('agenticThoughtAutoshow', document.getElementById('agentic-thought-autoshow').checked);
+            localStorage.setItem('agenticVerboseReasoning', document.getElementById('agentic-verbose-reasoning').checked);
+            localStorage.setItem('agenticTurnLimit', document.getElementById('agentic-turn-limit').checked);
+            localStorage.setItem('agenticTurns', document.getElementById('agentic-turns').value);
+        }
+
+        function loadAgenticOptions() {
+            document.getElementById('agentic-file-autoshow').checked = localStorage.getItem('agenticFileAutoshow') === 'true';
+            document.getElementById('agentic-thought-autoshow').checked = localStorage.getItem('agenticThoughtAutoshow') === 'true';
+            document.getElementById('agentic-verbose-reasoning').checked = localStorage.getItem('agenticVerboseReasoning') === 'true';
+            document.getElementById('agentic-turn-limit').checked = localStorage.getItem('agenticTurnLimit') !== 'false';
+            document.getElementById('agentic-turns').value = localStorage.getItem('agenticTurns') || '4';
+        }
+
+        ['agentic-file-autoshow', 'agentic-thought-autoshow', 'agentic-verbose-reasoning', 'agentic-turn-limit', 'agentic-turns'].forEach(id => {
+            document.getElementById(id).addEventListener('change', saveAgenticOptions);
         });
 
-        apiBaseUrlInput.addEventListener('change', function () {
+        window.addEventListener('DOMContentLoaded', loadAgenticOptions);
+
+        // Make agentic options panel close when clicking outside or pressing Escape
+        window.addEventListener('mousedown', function (e) {
+            const panel = document.getElementById('agentic-options-panel');
+            const toggle = document.getElementById('agentic-options-toggle');
+            if (panel && panel.style.display === 'block' && !panel.contains(e.target) && e.target !== toggle) {
+                panel.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                const panel = document.getElementById('agentic-options-panel');
+                if (panel && panel.style.display === 'block') panel.style.display = 'none';
+            }
+        });
+
+        document.getElementById('api-base-url').addEventListener('change', function () {
             localStorage.setItem('apiBaseUrl', this.value);
         });
 
@@ -1947,7 +1900,7 @@
         try {
             loadConversationHistory();
             loadPreferences();
-            updateModelBadge(); // Update the model badge based on settings
+            updateModelBadge();
         } catch (e) {
             console.error('Failed to load saved data:', e);
         }
@@ -1958,6 +1911,15 @@
         // Initial file list load
         if (document.getElementById('file-path-input')) {
             refreshFileList();
+        }
+
+        function toggleAgenticOptions() {
+            const panel = document.getElementById('agentic-options-panel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function closeAgenticOptions() {
+            document.getElementById('agentic-options-panel').style.display = 'none';
         }
     </script>
 </body>
