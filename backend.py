@@ -1,6 +1,6 @@
 # Save as backend.py and run with: uvicorn backend:app --reload
 
-from fastapi import FastAPI, Query, Body
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
@@ -22,10 +22,12 @@ class FileWriteRequest(BaseModel):
 class FileDeleteRequest(BaseModel):
     path: str
 
+from typing import List
+
 @app.get("/files/list")
-def list_files():
-    files = []
-    for root, dirs, filenames in os.walk(BASE_DIR):
+def list_files() -> List[str]:
+    files: List[str] = []
+    for root, _, filenames in os.walk(BASE_DIR):
         for f in filenames:
             rel_path = os.path.relpath(os.path.join(root, f), BASE_DIR)
             files.append(rel_path)

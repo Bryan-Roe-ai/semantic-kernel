@@ -1009,7 +1009,7 @@
         <div id="config-tab" class="tab-content" style="display: none;">
             <div class="settings-group">
                 <label for="api-base-url">Semantic Kernel API Base URL:</label>
-                <input type="text" id="api-base-url" value="http://localhost:7071/api">
+                <input type="text" id="api-base-url" value="http://127.0.0.1:8000">
             </div>
             <div class="settings-group">
                 <label for="model-selector">AI Model (for Semantic Kernel):</label>
@@ -1089,6 +1089,10 @@
             <button onclick="showModal()" class="control-button"><i class="fas fa-keyboard"></i> Shortcuts</button>
             <button onclick="injectFileListToChat()" class="control-button"><i class="fas fa-folder"></i> Show
                 Files</button>
+            <button onclick="injectThoughtListToChat()" class="control-button"><i class="fas fa-lightbulb"></i> Show
+                Thoughts</button>
+            <button id="agentic-toggle" onclick="toggleAgenticMode()" class="control-button"><i
+                    class="fas fa-robot"></i> Agentic Mode: <span id="agentic-status">OFF</span></button>
             <span class="chat-tip"><i class="fas fa-lightbulb"></i> Tip: Press ? for keyboard shortcuts</span>
         </div>
     </div>
@@ -1106,6 +1110,7 @@
 
         let currentTab = 'chat-tab';
         let isDarkMode = false;
+        let agenticMode = false;
 
         // Initialize plugin functions
         const pluginFunctions = {
@@ -1134,6 +1139,13 @@
 
             // Save preference
             localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        // Function to toggle Agentic Mode
+        function toggleAgenticMode() {
+            agenticMode = !agenticMode;
+            document.getElementById('agentic-status').textContent = agenticMode ? 'ON' : 'OFF';
+            showNotification('Agentic Mode ' + (agenticMode ? 'enabled' : 'disabled'));
         }
 
         // Function to toggle direct API settings
@@ -1277,6 +1289,85 @@
             addMessage(resultMsg, false);
         }
 
+        // --- AGENTIC THOUGHT COMMANDS & FILES OF THOUGHTS ---
+        // Handle /thought commands in chat
+        async function handleThoughtCommand(cmd) {
+            const [action, ...args] = cmd.trim().split(/\s+/);
+            let resultMsg = '';
+            const THOUGHTS_DIR = 'thoughts';
+            try {
+                let res, data;
+                switch (action) {
+                    case 'list':
+                        res = await fetch(`${FILE_API_BASE}/files/list`);
+                        data = await res.json();
+                        const thoughts = Array.isArray(data) ? data.filter(f => f.startsWith(`${THOUGHTS_DIR}/`)) : [];
+                        if (thoughts.length > 0) {
+                            resultMsg = 'Thought files:\n' + thoughts.map(f => f.replace(`${THOUGHTS_DIR}/`, '')).join('\n');
+                        } else {
+                            resultMsg = 'No thoughts saved yet.';
+                        }
+                        break;
+                    case 'save':
+                        if (!args[0] || !args[1]) throw new Error('Usage: /thought save <title> <content>');
+                        const title = args[0].replace(/[^a-zA-Z0-9_-]/g, '_');
+                        const content = args.slice(1).join(' ');
+                        res = await fetch(`${FILE_API_BASE}/files/write`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ path: `${THOUGHTS_DIR}/${title}.md`, content })
+                        });
+                        data = await res.json();
+                        resultMsg = `Saved thought '${title}': ${data.status || 'OK'}`;
+                        break;
+                    case 'read':
+                        if (!args[0]) throw new Error('Usage: /thought read <title>');
+                        res = await fetch(`${FILE_API_BASE}/files/read?path=${encodeURIComponent(`${THOUGHTS_DIR}/${args[0]}.md`)}`);
+                        data = await res.json();
+                        resultMsg = `Thought '${args[0]}':\n` + (data.content || '[Empty]');
+                        break;
+                    case 'delete':
+                        if (!args[0]) throw new Error('Usage: /thought delete <title>');
+                        res = await fetch(`${FILE_API_BASE}/files/delete`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ path: `${THOUGHTS_DIR}/${args[0]}.md` })
+                        });
+                        data = await res.json();
+                        resultMsg = `Deleted thought '${args[0]}': ${data.status || 'OK'}`;
+                        break;
+                    default:
+                        resultMsg = 'Unknown /thought command. Try: list, save <title> <content>, read <title>, delete <title>';
+                }
+            } catch (err) {
+                resultMsg = `Thought command error: ${err.message}`;
+            }
+            addMessage(resultMsg, false);
+        }
+
+        // Inject thought list into chat (Show Thoughts button)
+        async function injectThoughtListToChat() {
+            try {
+                const res = await fetch(`${FILE_API_BASE}/files/list`);
+                const files = await res.json();
+                const thoughts = Array.isArray(files) ? files.filter(f => f.startsWith('thoughts/')) : [];
+                let msg = '<div style="font-weight:600;margin-bottom:4px;">Saved Thoughts:</div>';
+                if (thoughts.length > 0) {
+                    msg += '<ul style="margin:8px 0 0 16px;padding:0;list-style:none;max-height:250px;overflow-y:auto;">';
+                    thoughts.forEach(f => {
+                        const title = f.replace('thoughts/', '').replace(/\.md$/, '');
+                        msg += `<li style='margin-bottom:4px;'><a href="#" onclick=\"handleThoughtCommand('read ${title}')\" style='display:inline-flex;align-items:center;padding:4px 8px;border-radius:6px;transition:background 0.2s;text-decoration:none;color:#8e44ad;font-weight:500;' title='Click to view thought' onmouseover=\"this.style.background='#f5eafc'\" onmouseout=\"this.style.background='none'\"><i class='fas fa-lightbulb' style='color:#f1c40f;margin-right:6px;'></i>${title}</a></li>`;
+                    });
+                    msg += '</ul>';
+                } else {
+                    msg += '<div style="color:#888;margin-top:6px;">No thoughts saved yet.</div>';
+                }
+                addMessage(msg, false);
+            } catch (e) {
+                addMessage('Error fetching thoughts: ' + e.message, false);
+            }
+        }
+
         // --- Enhance addMessage to render tool-use/JSON responses ---
         function addMessage(content, isUser) {
             const messageContainer = document.createElement('div');
@@ -1414,11 +1505,23 @@
             try {
                 const res = await fetch(`${FILE_API_BASE}/files/list`);
                 const files = await res.json();
-                let msg = 'Workspace Files:\n';
+                let msg = '<div style="font-weight:600;margin-bottom:4px;">Workspace Files:</div>';
                 if (Array.isArray(files) && files.length > 0) {
-                    msg += files.map(f => `- ${f}`).join('\n');
+                    msg += '<ul style="margin:8px 0 0 16px;padding:0;list-style:none;max-height:250px;overflow-y:auto;">';
+                    files.forEach(f => {
+                        // Choose icon based on file extension
+                        let icon = '<i class="fas fa-file-alt" style="color:#2196F3;margin-right:6px;"></i>';
+                        if (f.match(/\\|\//)) icon = '<i class="fas fa-folder" style="color:#ffc107;margin-right:6px;"></i>';
+                        else if (f.match(/\.(jpg|jpeg|png|gif|bmp)$/i)) icon = '<i class="fas fa-file-image" style="color:#8e44ad;margin-right:6px;"></i>';
+                        else if (f.match(/\.(md|txt|log)$/i)) icon = '<i class="fas fa-file-alt" style="color:#2196F3;margin-right:6px;"></i>';
+                        else if (f.match(/\.(js|ts|py|sh|bat)$/i)) icon = '<i class="fas fa-file-code" style="color:#27ae60;margin-right:6px;"></i>';
+                        else if (f.match(/\.(json|yml|yaml)$/i)) icon = '<i class="fas fa-file-code" style="color:#e67e22;margin-right:6px;"></i>';
+                        else if (f.match(/\.(zip|tar|gz)$/i)) icon = '<i class="fas fa-file-archive" style="color:#b9770e;margin-right:6px;"></i>';
+                        msg += `<li style='margin-bottom:4px;'><a href="#" onclick=\"handleFileCommand('read ${f.replace(/'/g, '')}')\" style='display:inline-flex;align-items:center;padding:4px 8px;border-radius:6px;transition:background 0.2s;text-decoration:none;color:#0084ff;font-weight:500;' title='Click to view file' onmouseover=\"this.style.background='#eaf4ff'\" onmouseout=\"this.style.background='none'\">${icon}${f}</a></li>`;
+                    });
+                    msg += '</ul>';
                 } else {
-                    msg += 'No files found.';
+                    msg += '<div style="color:#888;margin-top:6px;">No files found.</div>';
                 }
                 addMessage(msg, false);
             } catch (e) {
@@ -1446,6 +1549,12 @@
                 return;
             }
 
+            // Check if the message is a thought command
+            if (message.startsWith("/thought ")) {
+                handleThoughtCommand(message.substring(8));
+                return;
+            }
+
             // Display user message
             addMessage(displayMessage, true);
             userInput.value = '';
@@ -1463,6 +1572,12 @@
                 const model = modelSelector ? modelSelector.value : 'gpt-35-turbo';
                 const useDirectApi = document.getElementById('use-direct-api').checked;
 
+                // If agentic mode is enabled, prepend a system message to instruct the AI
+                let systemPrompt = null;
+                if (agenticMode) {
+                    systemPrompt = "You are an agentic AI assistant. You can use /file and /thought commands in your responses to read, write, list, or delete files and persistent thoughts as needed to accomplish the user's goals. Use these commands as tools, and explain your reasoning.";
+                }
+
                 if (useDirectApi) {
                     // Use direct model API like Phi-4 at http://127.0.0.1:1234
                     const directApiUrl = document.getElementById('direct-api-url').value.trim();
@@ -1474,10 +1589,14 @@
                     let formattedMessages = [];
 
                     // Add system message with information about file commands
-                    formattedMessages.push({
-                        role: "system",
-                        content: "You are an AI assistant that can help with files. You can access files through the file system interface. The user can use /file commands to interact with files directly."
-                    });
+                    if (systemPrompt) {
+                        formattedMessages.push({ role: "system", content: systemPrompt });
+                    } else {
+                        formattedMessages.push({
+                            role: "system",
+                            content: "You are an AI assistant that can help with files. You can access files through the file system interface. The user can use /file commands to interact with files directly."
+                        });
+                    }
 
                     // Add the last 10 messages for context
                     const contextMessages = conversationHistory.slice(-10, -1);
