@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple LM Studio Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+
+        #chat {
+            height: 400px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .user {
+            background: #e3f2fd;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 5px 0;
+            text-align: right;
+            max-width: 80%;
+            margin-left: auto;
+        }
+
+        .ai {
+            background: #f5f5f5;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin: 5px 0;
+            max-width: 80%;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        #input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .connected {
+            background-color: #4caf50;
+        }
+
+        .disconnected {
+            background-color: #f44336;
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        .typing-indicator {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .typing-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #888;
+            margin-right: 3px;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+
+            0%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Simple LM Studio Chat</h1>
+
+    <div class="status">
+        <div id="status-dot" class="status-dot"></div>
+        <span id="status-text">Checking connection...</span>
+    </div>
+
+    <div id="chat"></div>
+
+    <div class="typing-indicator" id="typing">
+        <span>AI is typing</span>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="input" placeholder="Type your message...">
+        <button id="send">Send</button>
+        <button id="clear" onclick="clearChat()">Clear</button>
+    </div>
+
+    <script>
+        // Check backend status immediately
+        checkBackendStatus();
+
+        // Event listeners
+        document.getElementById('send').onclick = sendMessage;
+        document.getElementById('input').addEventListener('keyup', function (e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Initial welcome message
+        document.getElementById('chat').innerHTML = '<div class="ai"><strong>AI:</strong> Hello! How can I help you today?</div>';
+
+        // Functions
+        async function checkBackendStatus() {
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+
+            statusDot.className = 'status-dot loading';
+            statusText.textContent = 'Checking connection...';
+
+            try {
+                const response = await fetch('http://localhost:8001/ping');
+
+                if (response.ok) {
+                    statusDot.className = 'status-dot connected';
+                    statusText.textContent = 'Connected to backend';
+                } else {
+                    statusDot.className = 'status-dot disconnected';
+                    statusText.textContent = 'Backend error';
+                }
+            } catch (err) {
+                statusDot.className = 'status-dot disconnected';
+                statusText.textContent = 'Backend not available';
+                console.error('Connection error:', err);
+            }
+        }
+
+        function clearChat() {
+            document.getElementById('chat').innerHTML = '<div class="ai"><strong>AI:</strong> Chat cleared. How can I help you today?</div>';
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('input');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // Display user message
+            const chat = document.getElementById('chat');
+            chat.innerHTML += `<div class="user"><strong>You:</strong> ${message}</div>`;
+            input.value = '';
+
+            // Show typing indicator
+            document.getElementById('typing').style.display = 'block';
+            document.getElementById('send').disabled = true;
+
+            try {
+                // Call backend API
+                const response = await fetch('http://localhost:8001/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: message,
+                        model: 'microsoft/phi-4-mini-reasoning',
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    chat.innerHTML += `<div class="ai"><strong>AI:</strong> ${data.reply}</div>`;
+                } else {
+                    chat.innerHTML += `<div class="ai" style="color:red;"><strong>Error:</strong> Server returned ${response.status}</div>`;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                chat.innerHTML += `<div class="ai" style="color:red;"><strong>Error:</strong> Could not connect to backend</div>`;
+            } finally {
+                // Hide typing indicator and re-enable send button
+                document.getElementById('typing').style.display = 'none';
+                document.getElementById('send').disabled = false;
+
+                // Scroll to bottom
+                chat.scrollTop = chat.scrollHeight;
+            }
+        }
+    </script>
+</body>
+
+</html>
