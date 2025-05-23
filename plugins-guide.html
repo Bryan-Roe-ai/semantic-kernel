@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LM Studio Chat Plugins Guide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2980b9;
+        }
+        pre, code {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow-x: auto;
+        }
+        .plugin-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .plugin-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .plugin-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        .plugin-type {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        .plugin-type.directory {
+            background-color: #e3f2fd;
+            color: #2196f3;
+        }
+        .plugin-type.python {
+            background-color: #e8f5e9;
+            color: #4caf50;
+        }
+        .function-item {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 8px 0;
+            border-left: 3px solid #3498db;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .note {
+            background-color: #fffde7;
+            border-left: 4px solid #ffd600;
+            padding: 12px;
+            margin: 16px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>LM Studio Chat Plugins Guide</h1>
+    
+    <p>This guide explains how to use and create plugins for the LM Studio Chat interface.</p>
+    
+    <div class="note">
+        <strong>Note:</strong> Plugins extend the capabilities of your AI assistant by adding domain-specific functions that can be triggered during conversations.
+    </div>
+
+    <h2>Using Plugins</h2>
+    
+    <p>The plugin-enabled chat interface allows you to:</p>
+    
+    <ul>
+        <li>View available plugins in the sidebar</li>
+        <li>Click on a plugin function to use it directly</li>
+        <li>Ask the AI to use plugins during the conversation</li>
+    </ul>
+
+    <h3>Available Plugin Types</h3>
+    
+    <div class="plugin-card">
+        <div class="plugin-header">
+            <span class="plugin-name">Directory-based Plugins</span>
+            <span class="plugin-type directory">📁 Directory</span>
+        </div>
+        <p>These plugins use prompt templates stored in directories and are processed by the LLM.</p>
+        <div class="function-item">
+            <strong>Structure:</strong> <code>plugins/plugin-name/function-name/</code>
+        </div>
+        <div class="function-item">
+            <strong>Files:</strong>
+            <ul>
+                <li><code>skprompt.txt</code> - The prompt template with <code>{{$input}}</code> placeholder</li>
+                <li><code>config.json</code> - Optional configuration with description</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="plugin-card">
+        <div class="plugin-header">
+            <span class="plugin-name">Python-based Plugins</span>
+            <span class="plugin-type python">🐍 Python</span>
+        </div>
+        <p>These plugins execute Python code directly, offering faster and more deterministic results.</p>
+        <div class="function-item">
+            <strong>Structure:</strong> Python files in <code>plugins/</code> directory</li>
+        </div>
+        <div class="function-item">
+            <strong>Format:</strong> Python classes with methods decorated using <code>@kernel_function</code>
+        </div>
+    </div>
+
+    <h2>Available Plugins</h2>
+    
+    <h3>Math Functions</h3>
+    <p>Mathematical operations and calculations.</p>
+    
+    <table>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>sqrt</td>
+            <td>Calculate square root of a number</td>
+            <td><code>math.sqrt("16")</code> → <code>"4"</code></td>
+        </tr>
+        <tr>
+            <td>calculate</td>
+            <td>Perform mathematical calculations</td>
+            <td><code>math.calculate("(3 + 4) * 2")</code></td>
+        </tr>
+    </table>
+    
+    <h3>Text Functions</h3>
+    <p>Text processing and analysis.</p>
+    
+    <table>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>count_word</td>
+            <td>Count word occurrences in text</td>
+            <td><code>text.count_word("hello world hello", "hello")</code> → <code>"2"</code></td>
+        </tr>
+        <tr>
+            <td>extract_emails</td>
+            <td>Extract email addresses from text</td>
+            <td><code>text.extract_emails("Contact us: info@example.com")</code></td>
+        </tr>
+        <tr>
+            <td>summarize</td>
+            <td>Summarize longer text</td>
+            <td><code>text.summarize("Long article text...")</code></td>
+        </tr>
+    </table>
+    
+    <h3>File Operations</h3>
+    <p>Work with files and directories.</p>
+    
+    <table>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>list</td>
+            <td>List files in a directory</td>
+            <td><code>fileoperations.list("plugins")</code></td>
+        </tr>
+        <tr>
+            <td>read</td>
+            <td>Read file contents</td>
+            <td><code>fileoperations.read("README.md")</code></td>
+        </tr>
+        <tr>
+            <td>info</td>
+            <td>Get file information</td>
+            <td><code>fileoperations.info("backend.py")</code></td>
+        </tr>
+    </table>
+    
+    <h3>Data Functions</h3>
+    <p>Data format conversions and encoding.</p>
+    
+    <table>
+        <tr>
+            <th>Function</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>format_json</td>
+            <td>Format JSON for readability</td>
+            <td><code>data.format_json('{"name":"John","age":30}')</code></td>
+        </tr>
+        <tr>
+            <td>encode_base64</td>
+            <td>Encode text to base64</td>
+            <td><code>data.encode_base64("Hello")</code> → <code>"SGVsbG8="</code></td>
+        </tr>
+        <tr>
+            <td>decode_base64</td>
+            <td>Decode base64 to text</td>
+            <td><code>data.decode_base64("SGVsbG8=")</code> → <code>"Hello"</code></td>
+        </tr>
+        <tr>
+            <td>csv_to_json</td>
+            <td>Convert CSV to JSON</td>
+            <td><code>data.csv_to_json("name,age\nJohn,30\nJane,25")</code></td>
+        </tr>
+    </table>
+
+    <h2>Creating Your Own Plugins</h2>
+    
+    <h3>Directory-based Plugin</h3>
+    <p>Create a new function in an existing plugin:</p>
+    <pre><code>1. Create a folder: plugins/my-plugin/my-function/
+2. Create skprompt.txt with the prompt template
+3. Create config.json with a description
+4. Restart the backend server</code></pre>
+    
+    <h3>Python-based Plugin</h3>
+    <p>Create a new Python plugin:</p>
+    <pre><code>import semantic_kernel.functions.kernel_function_decorator import kernel_function
+
+class MyFunctions:
+    """My custom functions."""
+    
+    @kernel_function(
+        description="A useful function",
+        name="my_function"
+    )
+    def my_function(self, input: str) -> str:
+        """Function documentation"""
+        return f"Processed: {input}"</code></pre>
+    
+    <div class="note">
+        <strong>Important:</strong> Python plugins must follow the naming convention of <code>[Name]Functions.py</code> with a class named <code>[Name]Functions</code> inside.
+    </div>
+    
+    <h2>Plugin Development Best Practices</h2>
+    <ul>
+        <li>Include detailed descriptions for your functions</li>
+        <li>Handle errors gracefully and return informative error messages</li>
+        <li>For directory-based plugins, make templates reusable with <code>{{$input}}</code></li>
+        <li>For Python plugins, add proper type hints and docstrings</li>
+        <li>Keep functions focused on a single task</li>
+    </ul>
+
+</body>
+</html>

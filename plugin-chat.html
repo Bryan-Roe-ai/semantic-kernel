@@ -212,6 +212,16 @@
             border-left-color: #4caf50;
         }
 
+        .plugin-item[data-type="python"] {
+            background-color: #e8f0fe;
+            border-left-color: #1a73e8;
+        }
+
+        .plugin-item[data-type="python"]:hover {
+            background-color: #d0e1fd;
+            border-left-color: #0d47a1;
+        }
+
         .plugin-name {
             font-weight: bold;
             font-size: 14px;
@@ -221,6 +231,12 @@
             font-size: 12px;
             color: #666;
             margin-top: 4px;
+        }
+
+        .plugin-type {
+            font-size: 10px;
+            margin-top: 4px;
+            opacity: 0.7;
         }
 
         @keyframes typingBounce {
@@ -248,6 +264,46 @@
             100% {
                 opacity: 0.5;
             }
+        }
+        
+        .file-upload-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 50%;
+            background: #f0f0f0;
+            transition: background-color 0.2s;
+        }
+        
+        .file-upload-label:hover {
+            background: #e0e0e0;
+        }
+        
+        .upload-icon {
+            font-size: 16px;
+        }
+        
+        #upload-preview {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+        
+        #file-info {
+            margin-bottom: 8px;
+        }
+        
+        #upload-button, #cancel-upload {
+            padding: 4px 8px;
+            margin-right: 5px;
+            font-size: 12px;
+        }
+        
+        #cancel-upload {
+            background-color: #f44336;
         }
     </style>
 </head>
@@ -315,6 +371,15 @@
                 <input type="text" id="input" placeholder="Type your message...">
                 <button id="send">Send</button>
                 <button id="clear" onclick="clearChat()">Clear</button>
+                <label for="file-upload" class="file-upload-label">
+                    <span class="upload-icon">📎</span>
+                </label>
+                <input type="file" id="file-upload" style="display:none">
+            </div>
+            <div id="upload-preview" style="margin-top: 10px; display: none;">
+                <div id="file-info" style="font-size: 12px;"></div>
+                <button id="upload-button">Upload File</button>
+                <button id="cancel-upload">Cancel</button>
             </div>
         </div>
     </div>
@@ -325,6 +390,9 @@
 
         // Load plugins
         loadPlugins();
+        
+        // Load file list
+        loadUploadedFiles();
 
         // Update temperature display when slider changes
         document.getElementById('temperatureInput').addEventListener('input', function () {
@@ -336,9 +404,42 @@
         document.getElementById('input').addEventListener('keyup', function (e) {
             if (e.key === 'Enter') sendMessage();
         });
-
-        // Initial welcome message
-        document.getElementById('chat').innerHTML = '<div class="ai"><strong>AI:</strong> Hello! How can I help you today? I have several plugins available that I can use.</div>';
+        
+        // Set up file upload handling
+        const fileUploadInput = document.getElementById('file-upload');
+        const uploadPreview = document.getElementById('upload-preview');
+        const fileInfo = document.getElementById('file-info');
+        const uploadButton = document.getElementById('upload-button');
+        const cancelUpload = document.getElementById('cancel-upload');
+        
+        // File selection handler
+        fileUploadInput.addEventListener('change', function() {
+            if (this.files.length === 0) {
+                uploadPreview.style.display = 'none';
+                return;
+            }
+            
+            const file = this.files[0];
+            fileInfo.textContent = `Selected: ${file.name} (${formatFileSize(file.size)})`;
+            uploadPreview.style.display = 'block';
+        });
+        
+        // Upload button handler
+        uploadButton.addEventListener('click', uploadFile);
+        
+        // Cancel upload handler
+        cancelUpload.addEventListener('click', function() {
+            fileUploadInput.value = '';
+            uploadPreview.style.display = 'none';
+        });
+        
+        // Load chat history if available
+        loadChatHistory();
+        
+        // If no history, show initial welcome message
+        if (document.getElementById('chat').children.length === 0) {
+            document.getElementById('chat').innerHTML = '<div class="ai"><strong>AI:</strong> Hello! How can I help you today? I have several plugins available that I can use.</div>';
+        }
 
         // Functions
         async function loadPlugins() {
@@ -362,6 +463,7 @@
                         pluginItem.className = 'plugin-item';
                         pluginItem.dataset.plugin = func.plugin;
                         pluginItem.dataset.function = func.name;
+                        pluginItem.dataset.type = func.type || 'directory';
 
                         const pluginName = document.createElement('div');
                         pluginName.className = 'plugin-name';
@@ -371,12 +473,17 @@
                         pluginDesc.className = 'plugin-description';
                         pluginDesc.textContent = func.description || 'No description available';
 
+                        const pluginType = document.createElement('div');
+                        pluginType.className = 'plugin-type';
+                        pluginType.textContent = func.type === 'python' ? '🐍 Python' : '📁 Directory';
+
                         pluginItem.appendChild(pluginName);
                         pluginItem.appendChild(pluginDesc);
+                        pluginItem.appendChild(pluginType);
 
                         // Click to use plugin directly
                         pluginItem.addEventListener('click', () => {
-                            usePlugin(func.plugin, func.name);
+                            usePlugin(func.plugin, func.name, func.type || 'directory');
                         });
 
                         pluginsList.appendChild(pluginItem);
@@ -415,7 +522,7 @@
             document.getElementById('chat').innerHTML = '<div class="ai"><strong>AI:</strong> Chat cleared. How can I help you today?</div>';
         }
 
-        async function usePlugin(pluginId, functionId) {
+        async function usePlugin(pluginId, functionId, pluginType) {
             const inputText = document.getElementById('input').value.trim() || 'Please help with this.';
 
             // Show the plugin usage in chat
@@ -427,7 +534,14 @@
             document.getElementById('typing').style.display = 'flex';
 
             try {
-                const response = await fetch(`http://localhost:8000/api/run_plugin?plugin_id=${pluginId}&function_id=${pluginId}.${functionId}&input_text=${encodeURIComponent(inputText)}`);
+                let response;
+                if (pluginType === 'python') {
+                    // Use Python plugin endpoint
+                    response = await fetch(`http://localhost:8000/api/run_python?plugin_id=${pluginId}&function_id=${pluginId}.${functionId}&input_text=${encodeURIComponent(inputText)}`);
+                } else {
+                    // Use directory-based plugin endpoint
+                    response = await fetch(`http://localhost:8000/api/run_plugin?plugin_id=${pluginId}&function_id=${pluginId}.${functionId}&input_text=${encodeURIComponent(inputText)}`);
+                }
 
                 if (response.ok) {
                     const data = await response.json();
