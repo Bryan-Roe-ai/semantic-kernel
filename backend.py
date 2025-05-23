@@ -1,9 +1,11 @@
 # Save as backend.py and run with: uvicorn backend:app --reload
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
+import requests
+from typing import List, Dict, Any, Optional
 
 app = FastAPI()
 app.add_middleware(
@@ -22,7 +24,17 @@ class FileWriteRequest(BaseModel):
 class FileDeleteRequest(BaseModel):
     path: str
 
-from typing import List
+class ChatRequest(BaseModel):
+    message: str
+    agentic: Dict[str, Any] = {}
+    system: Optional[str] = None  # Optional system prompt
+    model: Optional[str] = None  # Optional model override
+    temperature: Optional[float] = None  # Optional temperature override
+    max_tokens: Optional[int] = None  # Optional max_tokens override
+    stream: Optional[bool] = False  # Optional stream flag
+
+# LM Studio API endpoint (adjust as needed)
+LM_STUDIO_URL = os.environ.get("LM_STUDIO_URL", "http://localhost:1234/v1/chat/completions")
 
 @app.get("/files/list")
 def list_files() -> List[str]:
@@ -68,3 +80,29 @@ def delete_file(req: FileDeleteRequest):
         return {"status": "OK"}
     except Exception as e:
         return {"error": str(e)}
+
+@app.post("/api/chat")
+def chat_endpoint(req: ChatRequest):
+    # Build messages array for LM Studio
+    messages = []
+    # Use system prompt if provided, else default to empty
+    if req.system:
+        messages.append({"role": "system", "content": req.system})
+    # Always add user message
+    messages.append({"role": "user", "content": req.message})
+    # Compose payload for LM Studio
+    payload = {
+        "model": req.model or req.agentic.get("model", "microsoft/phi-4-mini-reasoning"),
+        "messages": messages,
+        "max_tokens": req.max_tokens if req.max_tokens is not None else req.agentic.get("turnLimit", -1),
+        "temperature": req.temperature if req.temperature is not None else req.agentic.get("temperature", 0.7),
+        "stream": req.stream if req.stream is not None else False,
+    }
+    try:
+        lm_response = requests.post(LM_STUDIO_URL, json=payload, timeout=60)
+        lm_response.raise_for_status()
+        data = lm_response.json()
+        reply = data.get("choices", [{}])[0].get("message", {}).get("content", "[No response]")
+        return {"reply": reply}
+    except Exception as e:
+        return {"reply": f"[LM Studio error: {str(e)}]"}

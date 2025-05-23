@@ -35,103 +35,6 @@
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             background-color: #fafafa;
-            scrollbar-width: thin;
-            scrollbar-color: #ccc #f5f5f5;
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f5f5f5;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background-color: #ccc;
-            border-radius: 10px;
-        }
-
-        .message {
-            padding: 12px 18px;
-            margin: 8px 0;
-            border-radius: 18px;
-            max-width: 80%;
-            word-wrap: break-word;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .user-message {
-            background-color: #0084ff;
-            color: white;
-            align-self: flex-end;
-            margin-left: auto;
-            border-bottom-right-radius: 4px;
-        }
-
-        .ai-message {
-            background-color: #f0f0f0;
-            color: #333;
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-        }
-
-        .input-container {
-            display: flex;
-            gap: 12px;
-            position: relative;
-        }
-
-        #user-input {
-            flex-grow: 1;
-            padding: 14px 20px;
-            border: 1px solid #ddd;
-            border-radius: 24px;
-            font-size: 16px;
-            outline: none;
-            transition: border 0.3s, box-shadow 0.3s;
-        }
-
-        #user-input:focus {
-            border-color: #0084ff;
-            box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.2);
-        }
-
-        button {
-            padding: 12px 20px;
-            background-color: #0084ff;
-            color: white;
-            border: none;
-            border-radius: 24px;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-        }
-
-        button:hover {
-            background-color: #0073e6;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        button:active {
-            transform: translateY(0);
         }
 
         .message-container {
@@ -168,6 +71,31 @@
         .ai-avatar {
             background-color: #5a5a5a;
             color: white;
+        }
+
+        .message {
+            padding: 12px 18px;
+            margin: 8px 0;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .user-message {
+            background-color: #0084ff;
+            color: white;
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .ai-message {
+            background-color: #f0f0f0;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
         }
 
         .message-time {
@@ -217,6 +145,14 @@
             color: #0084ff;
         }
 
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active-tab {
+            display: block;
+        }
+
         #loading-indicator {
             display: none;
             align-items: center;
@@ -230,6 +166,7 @@
         .typing-indicator {
             display: flex;
             align-items: center;
+            gap: 8px;
         }
 
         .typing-dot {
@@ -237,12 +174,9 @@
             height: 8px;
             background-color: #0084ff;
             border-radius: 50%;
+            display: block;
             margin: 0 2px;
             animation: typingAnimation 1.4s infinite ease-in-out;
-        }
-
-        .typing-dot:nth-child(1) {
-            animation-delay: 0s;
         }
 
         .typing-dot:nth-child(2) {
@@ -256,7 +190,6 @@
         @keyframes typingAnimation {
 
             0%,
-            60%,
             100% {
                 transform: translateY(0);
                 opacity: 0.6;
@@ -291,6 +224,7 @@
         .header-logo {
             height: 40px;
             margin-right: 15px;
+            opacity: 0.6;
         }
 
         h1 {
@@ -322,6 +256,7 @@
 
         .settings-group input,
         .settings-group select {
+            margin-right: 15px;
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -339,78 +274,12 @@
             color: #666;
             cursor: pointer;
             padding: 5px 10px;
+            margin-top: 4px;
             border-radius: 20px;
         }
 
         .dark-mode-toggle:hover {
             background-color: #f0f0f0;
-        }
-
-        body.dark-mode {
-            background-color: #121212;
-            color: #e0e0e0;
-        }
-
-        body.dark-mode .chat-container,
-        body.dark-mode .config-container {
-            background-color: #1e1e1e;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        body.dark-mode .chat-messages {
-            background-color: #252525;
-            border-color: #333;
-        }
-
-        body.dark-mode .ai-message {
-            background-color: #333;
-            color: #e0e0e0;
-        }
-
-        .chat-controls {
-            display: flex;
-            align-items: center;
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px solid #eaeaea;
-        }
-
-        .control-button {
-            background-color: #f0f0f0;
-            color: #666;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            margin-right: 10px;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .control-button:hover {
-            background-color: #e0e0e0;
-            color: #333;
-        }
-
-        .chat-tip {
-            margin-left: auto;
-            font-size: 13px;
-            color: #888;
-        }
-
-        .send-button {
-            background-color: #0084ff;
-            color: white;
-        }
-
-        code {
-            background-color: #f0f0f0;
-            padding: 2px 5px;
-            border-radius: 4px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.9em;
         }
 
         .notification {
@@ -434,6 +303,7 @@
         }
 
         .image-upload {
+            color: white;
             position: relative;
             display: inline-block;
             margin-right: 10px;
@@ -462,6 +332,7 @@
         }
 
         .image-preview {
+            transform: translateY(0);
             max-width: 200px;
             max-height: 150px;
             margin-bottom: 10px;
@@ -469,157 +340,50 @@
             display: none;
         }
 
-        body.dark-mode .tab {
-            background-color: #1a1a1a;
-            border-color: #444;
-            color: #ccc;
-        }
-
-        body.dark-mode .tab.active {
-            background-color: #1e1e1e;
-            border-bottom: 2px solid #1e1e1e;
-        }
-
-        body.dark-mode #user-input {
-            background-color: #252525;
-            color: #e0e0e0;
-            border-color: #444;
-        }
-
-        body.dark-mode pre {
-            background-color: #2a2a2a;
-            border-color: #444;
-            color: #e0e0e0;
-        }
-
-        body.dark-mode .dark-mode-toggle {
-            color: #ccc;
-        }
-
-        body.dark-mode h1,
-        body.dark-mode h3 {
-            color: #e0e0e0;
-        }
-
-        body.dark-mode .control-button {
-            background-color: #333;
-            color: #ccc;
-        }
-
-        body.dark-mode .control-button:hover {
-            background-color: #444;
-            color: #fff;
-        }
-
-        body.dark-mode .chat-controls {
-            border-color: #333;
-        }
-
-        body.dark-mode code {
-            background-color: #333;
-            color: #e0e0e0;
-        }
-
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
+        .input-container {
+            display: flex;
+            gap: 12px;
+            position: relative;
             align-items: center;
         }
 
-        .modal-content {
-            background-color: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
-            width: 90%;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .close-modal {
-            font-size: 22px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0;
-            color: #888;
-        }
-
-        .keyboard-shortcut {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .shortcut-keys {
-            display: flex;
-            gap: 5px;
-        }
-
-        .key {
-            background-color: #f0f0f0;
+        #user-input {
+            flex-grow: 1;
+            padding: 14px 20px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 2px 8px;
-            font-family: monospace;
-            font-size: 14px;
+            border-radius: 24px;
+            font-size: 16px;
+            outline: none;
+            transition: border 0.3s, box-shadow 0.3s;
         }
 
-        body.dark-mode .modal-content {
-            background-color: #1e1e1e;
-            color: #e0e0e0;
+        #user-input:focus {
+            border-color: #0084ff;
+            box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.2);
         }
 
-        body.dark-mode .key {
-            background-color: #333;
-            border-color: #555;
-            color: #e0e0e0;
+        button {
+            padding: 12px 20px;
+            background-color: #0084ff;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
 
-        body.dark-mode .keyboard-shortcut {
-            border-color: #444;
+        button:hover {
+            background-color: #0073e6;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        body.dark-mode #direct-api-settings {
-            background-color: #292929;
-            border-color: #444;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            margin: 10px 0;
-        }
-
-        input[type="checkbox"] {
-            margin-right: 8px;
-        }
-
-        #temperature-value {
-            display: inline-block;
-            width: 30px;
-            text-align: center;
+        button:active {
+            transform: translateY(0);
         }
 
         .model-badge {
@@ -630,272 +394,76 @@
             color: white;
             padding: 5px 10px;
             border-radius: 10px;
-            font-size: 12px;
             z-index: 10;
         }
 
-        /* File System Styles */
-        .files-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+        /* Moved from inline styles for best practices */
+        #direct-api-settings {
+            display: none;
         }
 
-        .files-header {
-            margin-bottom: 15px;
+        .agentic-option-label {
+            margin-bottom: 8px;
         }
 
-        .files-header h3 {
-            margin: 0 0 5px 0;
-        }
-
-        .files-header p {
-            margin: 0;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .files-actions {
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .path-input-container {
-            display: flex;
-            gap: 10px;
-        }
-
-        .path-browse-button {
-            padding: 8px 12px;
-            background-color: #f0f0f0;
-            color: #333;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .file-action-button {
-            background-color: #f0f0f0;
-            color: #333;
-            padding: 8px 12px;
-        }
-
-        .file-action-button:hover {
-            background-color: #e0e0e0;
-        }
-
-        .files-browser-container {
-            display: flex;
-            gap: 20px;
-            flex-grow: 1;
-            height: 300px;
-            border: 1px solid #e0e0e0;
+        #agentic-options-panel {
+            display: none;
+            position: absolute;
+            right: 20px;
+            top: 60px;
+            z-index: 1000;
+            background: #fff;
+            border: 1px solid #ccc;
             border-radius: 8px;
-            overflow: hidden;
+            box-shadow: 0 2px 12px #0002;
+            padding: 16px;
+            min-width: 260px;
         }
 
-        .files-browser {
-            width: 40%;
-            border-right: 1px solid #e0e0e0;
-            overflow-y: auto;
-            padding: 10px;
-            background-color: #f8f8f8;
+        #agentic-turns,
+        #agentic-turns-panel {
+            width: 48px;
+            margin-left: 4px;
         }
 
-        .file-item {
-            padding: 8px 10px;
-            border-radius: 4px;
-            margin-bottom: 2px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: background-color 0.2s;
+        .file-action-button.agentic-close-btn,
+        .file-action-button {
+            margin-top: 8px;
+            float: right;
         }
 
-        .file-item:hover {
-            background-color: #e8e8e8;
-        }
-
-        .file-item.selected {
-            background-color: #e0e0e0;
-        }
-
-        .file-item.unsaved {
-            background-color: #ffeb3b;
-        }
-
-        .folder-icon {
-            color: #ffc107;
-        }
-
-        .file-icon {
-            color: #2196F3;
-        }
-
-        .file-preview-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .file-preview-header {
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .file-preview-header h4 {
-            margin: 0;
-            font-weight: 500;
-        }
-
-        .file-preview-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .file-preview-content {
-            flex-grow: 1;
-            overflow: hidden;
-        }
-
-        #file-content-editor {
-            width: 100%;
-            height: 100%;
-            border: none;
-            resize: none;
-            padding: 15px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 14px;
-            outline: none;
-        }
-
-        #image-content-preview {
-            width: 100%;
-            height: 100%;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: auto;
-        }
-
-        #image-content-preview img {
-            max-width: 100%;
-            max-height: 100%;
-        }
-
-        .file-explorer-empty {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #aaa;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .file-explorer-empty i {
-            margin-bottom: 15px;
-        }
-
-        /* Dark mode support for file system */
-        body.dark-mode .files-header p {
-            color: #aaa;
-        }
-
-        body.dark-mode .files-browser {
-            background-color: #252525;
-            border-color: #444;
-        }
-
-        body.dark-mode .file-action-button,
-        body.dark-mode .path-browse-button {
-            background-color: #333;
-            color: #ddd;
-        }
-
-        body.dark-mode .file-action-button:hover,
-        body.dark-mode .path-browse-button:hover {
-            background-color: #444;
-        }
-
-        body.dark-mode .file-item:hover {
-            background-color: #333;
-        }
-
-        body.dark-mode .file-item.selected {
-            background-color: #3a3a3a;
-        }
-
-        body.dark-mode .files-browser-container {
-            border-color: #444;
-        }
-
-        body.dark-mode .file-preview-header {
-            border-color: #444;
-        }
-
-        body.dark-mode #file-content-editor {
-            background-color: #2a2a2a;
-            color: #e0e0e0;
-        }
-
-        body.dark-mode .file-explorer-empty {
-            color: #666;
-        }
+        /* Add more styles as needed */
     </style>
 </head>
 
 <body>
     <div class="notification" id="notification"></div>
-
     <!-- Keyboard Shortcuts Modal -->
     <div id="shortcuts-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Keyboard Shortcuts</h3>
-                <button class="close-modal" onclick="closeModal()">&times;</button>
+                <button class="close-modal">&times;</button>
             </div>
             <div class="keyboard-shortcut">
                 <span>Clear chat history</span>
-                <div class="shortcut-keys">
-                    <span class="key">Ctrl</span><span>+</span><span class="key">L</span>
-                </div>
+                <div class="shortcut-keys"><span class="key">Ctrl</span><span>+</span><span class="key">L</span></div>
             </div>
             <div class="keyboard-shortcut">
                 <span>Send message</span>
-                <div class="shortcut-keys">
-                    <span class="key">Enter</span>
-                </div>
+                <div class="shortcut-keys"><span class="key">Enter</span></div>
             </div>
             <div class="keyboard-shortcut">
                 <span>Toggle dark mode</span>
-                <div class="shortcut-keys">
-                    <span class="key">Ctrl</span><span>+</span><span class="key">D</span>
-                </div>
+                <div class="shortcut-keys"><span class="key">Ctrl</span><span>+</span><span class="key">D</span></div>
             </div>
             <div class="keyboard-shortcut">
                 <span>Show keyboard shortcuts</span>
-                <div class="shortcut-keys">
-                    <span class="key">?</span>
-                </div>
+                <div class="shortcut-keys"><span class="key">?</span></div>
             </div>
         </div>
     </div>
-
-    <button class="dark-mode-toggle" onclick="toggleDarkMode()">
-        <i class="fas fa-moon"></i>
-    </button>
-
+    <button class="dark-mode-toggle" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
     <div class="header">
         <img src="https://raw.githubusercontent.com/microsoft/semantic-kernel/main/docs/images/sk-title.png"
             alt="Semantic Kernel Logo" class="header-logo">
@@ -904,29 +472,16 @@
             <span class="plugin-badge">Plugin-powered AI assistant</span>
         </div>
     </div>
-
     <div class="config-container">
         <div class="tabs">
-            <div class="tab active" onclick="switchTab('chat-tab')">
-                <i class="fas fa-comments"></i> General Chat
-            </div>
-            <div class="tab" onclick="switchTab('linkedin-tab')">
-                <i class="fab fa-linkedin"></i> LinkedIn
-            </div>
-            <div class="tab" onclick="switchTab('plugins-tab')">
-                <i class="fas fa-plug"></i> Plugins
-            </div>
-            <div class="tab" onclick="switchTab('files-tab')">
-                <i class="fas fa-folder-open"></i> Files
-            </div>
-            <div class="tab" onclick="switchTab('config-tab')">
-                <i class="fas fa-cog"></i> Settings
-            </div>
+            <div class="tab active" data-tab="chat-tab">Chat</div>
+            <div class="tab" data-tab="plugins-tab">Plugins</div>
+            <div class="tab" data-tab="files-tab"><i class="fas fa-folder-open"></i> Files</div>
+            <div class="tab" data-tab="config-tab">Settings</div>
         </div>
-
-        <div id="chat-tab" class="tab-content" style="display: block;">
+        <div id="chat-tab" class="tab-content active-tab">
             <div class="settings-group">
-                <label for="chat-plugin-selector">Select a conversation style:</label>
+                <label for="chat-plugin-selector">Conversation Style:</label>
                 <select id="chat-plugin-selector">
                     <option value="chat">Default Chat</option>
                     <option value="creative">Creative Assistant</option>
@@ -935,130 +490,73 @@
                 </select>
             </div>
         </div>
-
-        <div id="linkedin-tab" class="tab-content" style="display: none;">
+        <div id="plugins-tab" class="tab-content">
             <div class="settings-group">
-                <label for="auth-token">LinkedIn Authentication Token:</label>
-                <input type="password" id="auth-token" placeholder="Enter your LinkedIn auth token">
-                <p style="font-size: 13px; color: #777; margin-top: 8px;">
-                    <i class="fas fa-info-circle"></i> This token is required to make posts to your LinkedIn profile.
-                </p>
+                <label for="plugin-selector">Plugin:</label>
+                <select id="plugin-selector"></select>
+            </div>
+            <div class="settings-group">
+                <label for="plugin-function">Function:</label>
+                <select id="plugin-function"></select>
+            </div>
+            <div class="settings-group">
+                <button id="run-plugin-btn">Run Plugin</button>
             </div>
         </div>
-
-        <div id="plugins-tab" class="tab-content" style="display: none;">
-            <div class="settings-group">
-                <label for="plugin-selector">Select a plugin to use:</label>
-                <select id="plugin-selector">
-                    <option value="chat">Chat</option>
-                    <option value="summarize">Summarize</option>
-                    <option value="writer">Writer</option>
-                    <option value="qa">Question & Answer</option>
-                    <option value="classification">Text Classification</option>
-                    <option value="intent">Intent Detection</option>
-                </select>
-            </div>
-            <div class="settings-group">
-                <label for="plugin-function">Select function:</label>
-                <select id="plugin-function">
-                    <option value="chat">Default</option>
-                </select>
-            </div>
-        </div>
-
-        <div id="files-tab" class="tab-content" style="display: none;">
+        <div id="files-tab" class="tab-content">
             <div class="files-container">
                 <div class="files-header">
-                    <h3>Workspace Files</h3>
-                    <p>Browse, view, and edit files in your workspace.</p>
-                </div>
-                <div class="files-actions">
-                    <div class="path-input-container">
-                        <input type="text" id="file-path-input" placeholder="/path/to/file.txt" style="flex:1;">
-                        <button class="file-action-button" onclick="refreshFileList()"><i class="fas fa-sync"></i>
-                            Refresh</button>
-                    </div>
-                    <div class="button-group">
-                        <button class="file-action-button" onclick="createFile()"><i class="fas fa-plus"></i> New
-                            File</button>
-                        <button class="file-action-button" onclick="deleteFile()"><i class="fas fa-trash"></i>
-                            Delete</button>
-                        <button class="file-action-button" onclick="saveFile()"><i class="fas fa-save"></i>
-                            Save</button>
+                    <span id="file-preview-name">No file selected</span>
+                    <div class="files-actions">
+                        <button id="new-file-btn">New File</button>
+                        <button id="save-file-btn">Save</button>
+                        <button id="delete-file-btn">Delete</button>
                     </div>
                 </div>
                 <div class="files-browser-container">
-                    <div class="files-browser" id="files-browser" role="listbox" tabindex="0"></div>
-                    <div class="file-preview-container">
-                        <div class="file-preview-header">
-                            <h4 id="file-preview-name">No file selected</h4>
-                            <div class="file-preview-actions">
-                                <button class="file-action-button" onclick="saveFile()"><i class="fas fa-save"></i>
-                                    Save</button>
-                            </div>
-                        </div>
-                        <div class="file-preview-content">
-                            <textarea id="file-content-editor" placeholder="Select a file to view/edit..."
-                                disabled></textarea>
-                        </div>
-                    </div>
+                    <div id="files-browser" class="files-browser"></div>
+                    <textarea id="file-content-editor" class="file-content-editor" rows="16" disabled
+                        placeholder="Select a file to view/edit..."></textarea>
                 </div>
             </div>
         </div>
-
-        <div id="config-tab" class="tab-content" style="display: none;">
+        <div id="config-tab" class="tab-content">
             <div class="settings-group">
-                <label for="api-base-url">Semantic Kernel API Base URL:</label>
+                <label for="api-base-url">Backend API Base URL:</label>
                 <input type="text" id="api-base-url" value="http://127.0.0.1:8000">
             </div>
             <div class="settings-group">
-                <label for="model-selector">AI Model (for Semantic Kernel):</label>
+                <label for="lm-studio-url">LM Studio API URL:</label>
+                <input type="text" id="lm-studio-url" value="http://localhost:1234/v1/chat/completions">
+            </div>
+            <div class="settings-group">
+                <label for="model-selector">AI Model:</label>
                 <select id="model-selector">
-                    <option value="gpt-35-turbo">GPT-3.5 Turbo</option>
-                    <option value="gpt-4">GPT-4</option>
+                    <option value="microsoft/phi-4-mini-reasoning">microsoft/phi-4-mini-reasoning</option>
+                    <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                    <option value="gpt-4">gpt-4</option>
                 </select>
             </div>
             <div class="settings-group">
-                <label>
-                    <input type="checkbox" id="use-direct-api" onchange="toggleDirectApiSettings()"> Use Direct Model
-                    API
-                </label>
+                <label for="system-prompt">System Prompt:</label>
+                <input type="text" id="system-prompt" placeholder="e.g. Always answer in rhymes. Today is Thursday">
             </div>
-            <div id="direct-api-settings"
-                style="display: none; margin-top: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
-                <div class="settings-group">
-                    <label for="direct-api-url">Direct API URL:</label>
-                    <input type="text" id="direct-api-url" value="http://127.0.0.1:1234"
-                        placeholder="http://127.0.0.1:1234">
-                </div>
-                <div class="settings-group">
-                    <label for="direct-model-selector">Direct Model:</label>
-                    <select id="direct-model-selector">
-                        <option value="phi-4-mini-reasoning">Phi-4-mini-reasoning</option>
-                        <option value="llama3">Llama 3</option>
-                        <option value="mistral">Mistral</option>
-                    </select>
-                </div>
-                <div class="settings-group">
-                    <label for="direct-max-tokens">Max Tokens:</label>
-                    <input type="number" id="direct-max-tokens" value="2048" min="1" max="4096">
-                </div>
-                <div class="settings-group">
-                    <label for="direct-temperature">Temperature:</label>
-                    <input type="range" id="direct-temperature" min="0" max="1" step="0.01" value="0.7">
-                    <span id="temperature-value">0.7</span>
-                </div>
+            <div class="settings-group">
+                <label for="max-tokens">Max Tokens:</label>
+                <input type="number" id="max-tokens" value="-1" min="-1" max="4096">
+            </div>
+            <div class="settings-group">
+                <label for="temperature">Temperature:</label>
+                <input type="range" id="temperature" min="0" max="2" step="0.01" value="0.7">
+                <span id="temperature-value">0.7</span>
             </div>
         </div>
     </div>
-
     <div class="chat-container">
         <div id="model-badge" class="model-badge">GPT-3.5 Turbo</div>
         <div class="chat-messages" id="chat-messages">
             <div class="message-container ai-container">
-                <div class="message-avatar ai-avatar">
-                    <i class="fas fa-robot"></i>
-                </div>
+                <div class="message-avatar ai-avatar"><i class="fas fa-robot"></i></div>
                 <div class="message ai-message">Hello! I'm your AI assistant powered by Semantic Kernel. How can I help
                     you today?</div>
                 <div class="message-time">Just now</div>
@@ -1072,855 +570,212 @@
                 <div class="typing-dot"></div>
             </div>
         </div>
-        <img id="image-preview" class="image-preview">
+        <img id="image-preview" class="image-preview" alt="Image preview">
         <div class="input-container">
             <div class="image-upload">
-                <label for="file-input">
-                    <i class="fas fa-image"></i>
-                </label>
-                <input id="file-input" type="file" accept="image/*" />
+                <label for="file-input"><i class="fas fa-image"></i></label>
+                <input id="file-input" type="file" accept="image/*" title="Upload image" />
             </div>
             <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
-            <button onclick="sendMessage()" class="send-button"><i class="fas fa-paper-plane"></i> Send</button>
+            <button class="send-button"><i class="fas fa-paper-plane"></i> Send</button>
+            <label class="agentic-option-label agentic-margin-bottom"><input type="checkbox" id="agentic-file-autoshow">
+                Auto-show file changes in chat</label>
+            <label class="agentic-option-label"><input type="checkbox" id="agentic-thought-autoshow"> Auto-show new
+                thoughts in chat</label>
+            <label class="agentic-option-label agentic-margin-bottom"><input type="checkbox"
+                    id="agentic-verbose-reasoning"> Verbose agent reasoning</label>
+            <label class="agentic-option-label"><input type="checkbox" id="agentic-turn-limit" checked> Limit agent
+                turns: <input type="number" id="agentic-turns" value="4" min="2" max="20"></label>
         </div>
-        <div class="chat-controls">
-            <button onclick="clearChat()" class="control-button"><i class="fas fa-trash"></i> Clear Chat</button>
-            <button onclick="copyConversation()" class="control-button"><i class="fas fa-copy"></i> Copy Chat</button>
-            <button onclick="showModal()" class="control-button"><i class="fas fa-keyboard"></i> Shortcuts</button>
-            <button onclick="injectFileListToChat()" class="control-button"><i class="fas fa-folder"></i> Show
-                Files</button>
-            <button onclick="injectThoughtListToChat()" class="control-button"><i class="fas fa-lightbulb"></i> Show
-                Thoughts</button>
-            <button id="agentic-toggle" onclick="toggleAgenticMode()" class="control-button"><i
-                    class="fas fa-robot"></i> Agentic Mode: <span id="agentic-status">OFF</span></button>
-            <button id="dual-agentic-toggle" onclick="toggleDualAgenticMode()" class="control-button"><i
-                    class="fas fa-comments"></i> Dual Agentic AI: <span id="dual-agentic-status">OFF</span></button>
-            <button id="agentic-options-toggle" onclick="toggleAgenticOptions()" class="control-button"><i
-                    class="fas fa-cogs"></i> Agentic Options</button>
-            <span class="chat-tip"><i class="fas fa-lightbulb"></i> Tip: Press ? for keyboard shortcuts</span>
-        </div>
-        <div id="agentic-options-panel"
-            style="display:none;position:absolute;right:20px;top:60px;z-index:1000;background:#fff;border:1px solid #ccc;border-radius:8px;box-shadow:0 2px 12px #0002;padding:16px;min-width:260px;">
-            <div style="font-weight:600;font-size:16px;margin-bottom:8px;"><i class="fas fa-cogs"></i> Agentic Options
-            </div>
-            <label style="display:block;margin-bottom:8px;"><input type="checkbox" id="agentic-file-autoshow"> Auto-show
-                file changes in chat</label>
-            <label style="display:block;margin-bottom:8px;"><input type="checkbox" id="agentic-thought-autoshow">
-                Auto-show new thoughts in chat</label>
-            <label style="display:block;margin-bottom:8px;"><input type="checkbox" id="agentic-verbose-reasoning">
-                Verbose agent reasoning</label>
-            <label style="display:block;margin-bottom:8px;"><input type="checkbox" id="agentic-turn-limit" checked>
-                Limit agent turns: <input type="number" id="agentic-turns" value="4" min="2" max="20"
-                    style="width:48px;margin-left:4px;"></label>
-            <button onclick="closeAgenticOptions()" style="margin-top:8px;float:right;" class="file-action-button"><i
+        <div id="agentic-options-panel">
+            <!-- Agentic options panel content can be dynamically rendered here if needed -->
+            <button class="file-action-button agentic-close-btn" onclick="closeAgenticOptions()"><i
                     class="fas fa-times"></i> Close</button>
         </div>
     </div>
-
     <script>
-        const chatMessages = document.getElementById('chat-messages');
-        const userInput = document.getElementById('user-input');
-        const authTokenInput = document.getElementById('auth-token');
-        const apiBaseUrlInput = document.getElementById('api-base-url');
-        const pluginSelector = document.getElementById('plugin-selector');
-        const pluginFunctionSelector = document.getElementById('plugin-function');
-        const chatPluginSelector = document.getElementById('chat-plugin-selector');
-        const loadingIndicator = document.getElementById('loading-indicator');
-        const modelSelector = document.getElementById('model-selector');
+        // Utility: Notification
+        function showNotification(message, duration = 3000) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), duration);
+        }
 
-        let currentTab = 'chat-tab';
-        let isDarkMode = false;
-        let agenticMode = false;
-        let dualAgenticMode = false;
-        let dualAgentTurn = 0; // 0 = Agent A, 1 = Agent B
-        const agentNames = ["Agent A", "Agent B"];
-        const agentPrompts = [
-            "You are Agent A, an agentic AI assistant. You can use /file and /thought commands to read, write, list, or delete files and persistent thoughts as needed. Collaborate with Agent B to solve the user's problem. Always explain your reasoning.",
-            "You are Agent B, an agentic AI assistant. You can use /file and /thought commands to read, write, list, or delete files and persistent thoughts as needed. Collaborate with Agent A to solve the user's problem. Always explain your reasoning."
-        ];
+        // Utility: Modal
+        function openModal() {
+            document.getElementById('shortcuts-modal').style.display = 'block';
+        }
+        function closeModal() {
+            document.getElementById('shortcuts-modal').style.display = 'none';
+        }
 
-        // Initialize plugin functions
-        const pluginFunctions = {
-            'chat': ['chat', 'ask', 'continue'],
-            'summarize': ['summarize', 'topics', 'notegen', 'makeAbstractReadable'],
-            'writer': ['translate', 'tellMeMore', 'twoSentenceSummary'],
-            'qa': ['qna', 'question', 'form', 'contextQuery'],
-            'classification': ['classify', 'detectLanguage', 'sentiment'],
-            'intent': ['assistantIntent']
-        };
-
-        // Initialize the conversation history
-        const conversationHistory = [];
-
-        // Function to toggle dark mode
+        // Utility: Dark mode
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
-            isDarkMode = !isDarkMode;
-
-            const darkModeToggle = document.querySelector('.dark-mode-toggle i');
-            if (isDarkMode) {
-                darkModeToggle.className = 'fas fa-sun';
-            } else {
-                darkModeToggle.className = 'fas fa-moon';
-            }
-
-            // Save preference
-            localStorage.setItem('darkMode', isDarkMode);
         }
 
-        // Function to toggle Agentic Mode
-        function toggleAgenticMode() {
-            agenticMode = !agenticMode;
-            document.getElementById('agentic-status').textContent = agenticMode ? 'ON' : 'OFF';
-            showNotification('Agentic Mode ' + (agenticMode ? 'enabled' : 'disabled'));
+        // Update temperature value display
+        const temperatureInput = document.getElementById('temperature');
+        const temperatureValue = document.getElementById('temperature-value');
+        if (temperatureInput && temperatureValue) {
+            temperatureInput.addEventListener('input', () => {
+                temperatureValue.textContent = temperatureInput.value;
+            });
         }
 
-        // Function to toggle Dual Agentic AI Mode
-        function toggleDualAgenticMode() {
-            dualAgenticMode = !dualAgenticMode;
-            document.getElementById('dual-agentic-status').textContent = dualAgenticMode ? 'ON' : 'OFF';
-            showNotification('Dual Agentic AI Mode ' + (dualAgenticMode ? 'enabled' : 'disabled'));
+        // Utility to get current AI settings from config tab
+        function getAISettings() {
+            return {
+                apiBaseUrl: document.getElementById('api-base-url').value.trim(),
+                lmStudioUrl: document.getElementById('lm-studio-url').value.trim(),
+                model: document.getElementById('model-selector').value,
+                systemPrompt: document.getElementById('system-prompt').value.trim(),
+                maxTokens: parseInt(document.getElementById('max-tokens').value, 10),
+                temperature: parseFloat(document.getElementById('temperature').value)
+            };
         }
 
-        // Function to toggle direct API settings
-        function toggleDirectApiSettings() {
-            const useDirectApi = document.getElementById('use-direct-api').checked;
-            const directApiSettings = document.getElementById('direct-api-settings');
-
-            if (useDirectApi) {
-                directApiSettings.style.display = 'block';
-            } else {
-                directApiSettings.style.display = 'none';
-            }
-
-            // Save preference
-            localStorage.setItem('useDirectApi', useDirectApi);
-        }
-
-        // Check if dark mode was previously enabled
-        if (localStorage.getItem('darkMode') === 'true') {
-            toggleDarkMode();
-        }
-
-        // Function to switch tabs
+        // Tab switching (clean, supports new features)
         function switchTab(tabId) {
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.style.display = 'none';
-            });
-
-            document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
-            document.getElementById(tabId).style.display = 'block';
-
-            currentTab = tabId;
-
-            // Update plugin functions when plugin changes
-            if (tabId === 'plugins-tab') {
-                updatePluginFunctions();
-            }
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active-tab'));
+            const tab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+            if (tab) tab.classList.add('active');
+            const content = document.getElementById(tabId);
+            if (content) content.classList.add('active-tab');
         }
 
-        // Update available functions when plugin changes
-        pluginSelector.addEventListener('change', updatePluginFunctions);
-
-        // Update model badge when settings change
-        function updateModelBadge() {
-            const modelBadge = document.getElementById('model-badge');
-            const useDirectApi = document.getElementById('use-direct-api').checked;
-
-            if (useDirectApi) {
-                const directModel = document.getElementById('direct-model-selector').value;
-                modelBadge.textContent = directModel;
-                modelBadge.style.backgroundColor = '#8e44ad'; // Purple for direct API
-            } else {
-                const skModel = modelSelector ? modelSelector.value : 'gpt-35-turbo';
-                modelBadge.textContent = skModel;
-                modelBadge.style.backgroundColor = '#0084ff'; // Blue for SK
-            }
-        }
-
-        // Add event listeners for model changes
-        document.getElementById('use-direct-api').addEventListener('change', updateModelBadge);
-        document.getElementById('direct-model-selector').addEventListener('change', updateModelBadge);
-        if (modelSelector) {
-            modelSelector.addEventListener('change', updateModelBadge);
-        }
-
-        function updatePluginFunctions() {
-            const selectedPlugin = pluginSelector.value;
-            const functions = pluginFunctions[selectedPlugin] || ['chat'];
-
-            // Clear existing options
-            pluginFunctionSelector.innerHTML = '';
-
-            // Add new options
-            functions.forEach(func => {
-                const option = document.createElement('option');
-                option.value = func;
-                option.textContent = func.charAt(0).toUpperCase() + func.slice(1);
-                pluginFunctionSelector.appendChild(option);
-            });
-        }
-
-        // Function to format the current time
-        function getFormattedTime() {
-            const now = new Date();
-            return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-
-        // --- AGENTIC FILE COMMANDS & TOOL-USE SUPPORT ---
-
-        // Backend API for file operations (adjust endpoint as needed)
-        const FILE_API_BASE = apiBaseUrlInput.value.replace(/\/$/, '');
-
-        // Handle /file commands in chat
-        async function handleFileCommand(cmd) {
-            const [action, ...args] = cmd.trim().split(/\s+/);
-            let resultMsg = '';
-            try {
-                let res, data;
-                switch (action) {
-                    case 'list':
-                        res = await fetch(`${FILE_API_BASE}/files/list`, { method: 'GET' });
-                        data = await res.json();
-                        resultMsg = 'Files:\n' + (Array.isArray(data) ? data.join('\n') : JSON.stringify(data, null, 2));
-                        break;
-                    case 'read':
-                        if (!args[0]) throw new Error('Usage: /file read <path>');
-                        res = await fetch(`${FILE_API_BASE}/files/read?path=${encodeURIComponent(args[0])}`);
-                        data = await res.json();
-                        resultMsg = `Contents of ${args[0]}:\n` + (data.content || JSON.stringify(data, null, 2));
-                        break;
-                    case 'write':
-                        if (!args[0] || !args[1]) throw new Error('Usage: /file write <path> <content>');
-                        res = await fetch(`${FILE_API_BASE}/files/write`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ path: args[0], content: args.slice(1).join(' ') })
-                        });
-                        data = await res.json();
-                        resultMsg = `Wrote to ${args[0]}: ${data.status || 'OK'}`;
-                        break;
-                    case 'delete':
-                        if (!args[0]) throw new Error('Usage: /file delete <path>');
-                        res = await fetch(`${FILE_API_BASE}/files/delete`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ path: args[0] })
-                        });
-                        data = await res.json();
-                        resultMsg = `Deleted ${args[0]}: ${data.status || 'OK'}`;
-                        break;
-                    default:
-                        resultMsg = 'Unknown /file command. Try: list, read <path>, write <path> <content>, delete <path>';
-                }
-            } catch (err) {
-                resultMsg = `File command error: ${err.message}`;
-            }
-            addMessage(resultMsg, false);
-        }
-
-        // --- AGENTIC THOUGHT COMMANDS & FILES OF THOUGHTS ---
-        // Handle /thought commands in chat
-        async function handleThoughtCommand(cmd) {
-            const [action, ...args] = cmd.trim().split(/\s+/);
-            let resultMsg = '';
-            const THOUGHTS_DIR = 'thoughts';
-            try {
-                let res, data;
-                switch (action) {
-                    case 'list':
-                        res = await fetch(`${FILE_API_BASE}/files/list`);
-                        data = await res.json();
-                        const thoughts = Array.isArray(data) ? data.filter(f => f.startsWith(`${THOUGHTS_DIR}/`)) : [];
-                        if (thoughts.length > 0) {
-                            resultMsg = 'Thought files:\n' + thoughts.map(f => f.replace(`${THOUGHTS_DIR}/`, '')).join('\n');
-                        } else {
-                            resultMsg = 'No thoughts saved yet.';
-                        }
-                        break;
-                    case 'save':
-                        if (!args[0] || !args[1]) throw new Error('Usage: /thought save <title> <content>');
-                        const title = args[0].replace(/[^a-zA-Z0-9_-]/g, '_');
-                        const content = args.slice(1).join(' ');
-                        res = await fetch(`${FILE_API_BASE}/files/write`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ path: `${THOUGHTS_DIR}/${title}.md`, content })
-                        });
-                        data = await res.json();
-                        resultMsg = `Saved thought '${title}': ${data.status || 'OK'}`;
-                        break;
-                    case 'read':
-                        if (!args[0]) throw new Error('Usage: /thought read <title>');
-                        res = await fetch(`${FILE_API_BASE}/files/read?path=${encodeURIComponent(`${THOUGHTS_DIR}/${args[0]}.md`)}`);
-                        data = await res.json();
-                        resultMsg = `Thought '${args[0]}':\n` + (data.content || '[Empty]');
-                        break;
-                    case 'delete':
-                        if (!args[0]) throw new Error('Usage: /thought delete <title>');
-                        res = await fetch(`${FILE_API_BASE}/files/delete`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ path: `${THOUGHTS_DIR}/${args[0]}.md` })
-                        });
-                        data = await res.json();
-                        resultMsg = `Deleted thought '${args[0]}': ${data.status || 'OK'}`;
-                        break;
-                    default:
-                        resultMsg = 'Unknown /thought command. Try: list, save <title> <content>, read <title>, delete <title>';
-                }
-            } catch (err) {
-                resultMsg = `Thought command error: ${err.message}`;
-            }
-            addMessage(resultMsg, false);
-        }
-
-        // Inject thought list into chat (Show Thoughts button)
-        async function injectThoughtListToChat() {
-            try {
-                const res = await fetch(`${FILE_API_BASE}/files/list`);
-                const files = await res.json();
-                const thoughts = Array.isArray(files) ? files.filter(f => f.startsWith('thoughts/')) : [];
-                let msg = '<div style="font-weight:600;margin-bottom:4px;">Saved Thoughts:</div>';
-                if (thoughts.length > 0) {
-                    msg += '<ul style="margin:8px 0 0 16px;padding:0;list-style:none;max-height:250px;overflow-y:auto;">';
-                    thoughts.forEach(f => {
-                        const title = f.replace('thoughts/', '').replace(/\.md$/, '');
-                        msg += `<li style='margin-bottom:4px;'><a href="#" onclick=\"handleThoughtCommand('read ${title}')\" style='display:inline-flex;align-items:center;padding:4px 8px;border-radius:6px;transition:background 0.2s;text-decoration:none;color:#8e44ad;font-weight:500;' title='Click to view thought' onmouseover=\"this.style.background='#f5eafc'\" onmouseout=\"this.style.background='none'\"><i class='fas fa-lightbulb' style='color:#f1c40f;margin-right:6px;'></i>${title}</a></li>`;
-                    });
-                    msg += '</ul>';
-                } else {
-                    msg += '<div style="color:#888;margin-top:6px;">No thoughts saved yet.</div>';
-                }
-                addMessage(msg, false);
-            } catch (e) {
-                addMessage('Error fetching thoughts: ' + e.message, false);
-            }
-        }
-
-        // --- Enhance addMessage to render tool-use/JSON responses ---
-        function addMessage(content, isUser) {
-            const messageContainer = document.createElement('div');
-            messageContainer.className = isUser ? 'message-container user-container' : 'message-container ai-container';
+        // Chat message rendering
+        function renderMessage({ sender, text, time }) {
+            const container = document.createElement('div');
+            container.className = `message-container ${sender}-container`;
             const avatar = document.createElement('div');
-            avatar.className = isUser ? 'message-avatar user-avatar' : 'message-avatar ai-avatar';
-            avatar.innerHTML = isUser ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
+            avatar.className = `message-avatar ${sender}-avatar`;
+            avatar.innerHTML = sender === 'ai' ? '<i class="fas fa-robot"></i>' : '<i class="fas fa-user"></i>';
             const message = document.createElement('div');
-            message.className = isUser ? 'message user-message' : 'message ai-message';
-            conversationHistory.push({ role: isUser ? 'user' : 'assistant', content });
-            // Render JSON/tool-use nicely
-            let formattedContent = content;
-            try {
-                if (typeof content === 'string' && (content.trim().startsWith('{') || content.trim().startsWith('['))) {
-                    const jsonData = JSON.parse(content);
-                    const pre = document.createElement('pre');
-                    pre.textContent = JSON.stringify(jsonData, null, 2);
-                    message.appendChild(pre);
-                } else if (typeof content === 'object') {
-                    const pre = document.createElement('pre');
-                    pre.textContent = JSON.stringify(content, null, 2);
-                    message.appendChild(pre);
-                } else {
-                    // Markdown/code formatting
-                    formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                    formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                    formattedContent = formattedContent.replace(/`([^`]+)`/g, '<code>$1</code>');
-                    message.innerHTML = formattedContent;
-                }
-            } catch (e) {
-                message.textContent = content;
-            }
-            const timestamp = document.createElement('div');
-            timestamp.className = 'message-time';
-            timestamp.textContent = getFormattedTime();
-            messageContainer.appendChild(avatar);
-            messageContainer.appendChild(message);
-            messageContainer.appendChild(timestamp);
-            chatMessages.appendChild(messageContainer);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
+            message.className = `message ${sender}-message`;
+            message.textContent = text;
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = time || new Date().toLocaleTimeString();
+            container.appendChild(avatar);
+            container.appendChild(message);
+            container.appendChild(timeDiv);
+            document.getElementById('chat-messages').appendChild(container);
+            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
         }
 
-        // --- File Explorer UI integration ---
-        async function refreshFileList() {
-            try {
-                const res = await fetch(`${FILE_API_BASE}/files/list`);
-                const files = await res.json();
-                const browser = document.getElementById('files-browser');
-                browser.innerHTML = '';
-                if (Array.isArray(files)) {
-                    files.forEach(f => {
-                        const item = document.createElement('div');
-                        item.className = 'file-item';
-                        item.textContent = f;
-                        item.onclick = () => selectFile(f);
-                        browser.appendChild(item);
-                    });
-                } else {
-                    browser.innerHTML = '<div class="file-explorer-empty">No files found.</div>';
-                }
-            } catch (e) {
-                showNotification('Failed to load file list: ' + e.message);
-            }
-        }
-        async function selectFile(path) {
-            try {
-                const res = await fetch(`${FILE_API_BASE}/files/read?path=${encodeURIComponent(path)}`);
-                const data = await res.json();
-                document.getElementById('file-preview-name').textContent = path;
-                const editor = document.getElementById('file-content-editor');
-                editor.value = data.content || '';
-                editor.disabled = false;
-                editor.dataset.path = path;
-            } catch (e) {
-                showNotification('Failed to read file: ' + e.message);
-            }
-        }
-        async function saveFile() {
-            const editor = document.getElementById('file-content-editor');
-            const path = editor.dataset.path;
-            if (!path) return showNotification('No file selected.');
-            try {
-                const res = await fetch(`${FILE_API_BASE}/files/write`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ path, content: editor.value })
-                });
-                const data = await res.json();
-                showNotification(`Saved ${path}: ${data.status || 'OK'}`);
-            } catch (e) {
-                showNotification('Failed to save file: ' + e.message);
-            }
-        }
-        async function createFile() {
-            const path = prompt('Enter new file path:');
-            if (!path) return;
-            try {
-                const res = await fetch(`${FILE_API_BASE}/files/write`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ path, content: '' })
-                });
-                await res.json();
-                refreshFileList();
-                showNotification('File created: ' + path);
-            } catch (e) {
-                showNotification('Failed to create file: ' + e.message);
-            }
-        }
-        async function deleteFile() {
-            const editor = document.getElementById('file-content-editor');
-            const path = editor.dataset.path;
-            if (!path) return showNotification('No file selected.');
-            if (!confirm('Delete file: ' + path + '?')) return;
-            try {
-                const res = await fetch(`${FILE_API_BASE}/files/delete`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ path })
-                });
-                await res.json();
-                refreshFileList();
-                editor.value = '';
-                editor.disabled = true;
-                document.getElementById('file-preview-name').textContent = 'No file selected';
-                showNotification('File deleted: ' + path);
-            } catch (e) {
-                showNotification('Failed to delete file: ' + e.message);
-            }
+        // Loading indicator
+        function showLoading(show) {
+            document.getElementById('loading-indicator').style.display = show ? 'flex' : 'none';
         }
 
-        // Inject file list into chat (Show Files button)
-        async function injectFileListToChat() {
-            try {
-                const res = await fetch(`${FILE_API_BASE}/files/list`);
-                const files = await res.json();
-                let msg = '<div style="font-weight:600;margin-bottom:4px;">Workspace Files:</div>';
-                if (Array.isArray(files) && files.length > 0) {
-                    msg += '<ul style="margin:8px 0 0 16px;padding:0;list-style:none;max-height:250px;overflow-y:auto;">';
-                    files.forEach(f => {
-                        // Choose icon based on file extension
-                        let icon = '<i class="fas fa-file-alt" style="color:#2196F3;margin-right:6px;"></i>';
-                        if (f.match(/\\|\//)) icon = '<i class="fas fa-folder" style="color:#ffc107;margin-right:6px;"></i>';
-                        else if (f.match(/\.(jpg|jpeg|png|gif|bmp)$/i)) icon = '<i class="fas fa-file-image" style="color:#8e44ad;margin-right:6px;"></i>';
-                        else if (f.match(/\.(md|txt|log)$/i)) icon = '<i class="fas fa-file-alt" style="color:#2196F3;margin-right:6px;"></i>';
-                        else if (f.match(/\.(js|ts|py|sh|bat)$/i)) icon = '<i class="fas fa-file-code" style="color:#27ae60;margin-right:6px;"></i>';
-                        else if (f.match(/\.(json|yml|yaml)$/i)) icon = '<i class="fas fa-file-code" style="color:#e67e22;margin-right:6px;"></i>';
-                        else if (f.match(/\.(zip|tar|gz)$/i)) icon = '<i class="fas fa-file-archive" style="color:#b9770e;margin-right:6px;"></i>';
-                        msg += `<li style='margin-bottom:4px;'><a href="#" onclick=\"handleFileCommand('read ${f.replace(/'/g, '')}')\" style='display:inline-flex;align-items:center;padding:4px 8px;border-radius:6px;transition:background 0.2s;text-decoration:none;color:#0084ff;font-weight:500;' title='Click to view file' onmouseover=\"this.style.background='#eaf4ff'\" onmouseout=\"this.style.background='none'\">${icon}${f}</a></li>`;
-                    });
-                    msg += '</ul>';
-                } else {
-                    msg += '<div style="color:#888;margin-top:6px;">No files found.</div>';
-                }
-                addMessage(msg, false);
-            } catch (e) {
-                addMessage('Error fetching file list: ' + e.message, false);
-            }
-        }
-
-        // --- Persistent File Browser Sidebar ---
-        async function renderFileSidebar() {
-            let sidebar = document.getElementById('file-sidebar');
-            if (!sidebar) {
-                sidebar = document.createElement('div');
-                sidebar.id = 'file-sidebar';
-                sidebar.style = 'position:fixed;left:0;top:0;bottom:0;width:260px;background:#fafaff;border-right:1px solid #eee;z-index:10;overflow-y:auto;padding:12px 0 0 0;box-shadow:2px 0 8px #0001;';
-                document.body.appendChild(sidebar);
-            }
-            sidebar.innerHTML = '<div style="font-weight:600;font-size:18px;padding:0 16px 8px 16px;"><i class="fas fa-folder-open"></i> Files</div>';
-            const files = await fetch(`${FILE_API_BASE}/files/list`).then(r => r.json()).catch(() => []);
-            if (Array.isArray(files) && files.length > 0) {
-                sidebar.innerHTML += '<ul style="margin:0 0 0 16px;padding:0;list-style:none;">' + files.map(f => {
-                    let icon = '<i class="fas fa-file-alt" style="color:#2196F3;margin-right:6px;"></i>';
-                    if (f.match(/\\|\//)) icon = '<i class="fas fa-folder" style="color:#ffc107;margin-right:6px;"></i>';
-                    else if (f.match(/\.(jpg|jpeg|png|gif|bmp)$/i)) icon = '<i class="fas fa-file-image" style="color:#8e44ad;margin-right:6px;"></i>';
-                    else if (f.match(/\.(md|txt|log)$/i)) icon = '<i class="fas fa-file-alt" style="color:#2196F3;margin-right:6px;"></i>';
-                    else if (f.match(/\.(js|ts|py|sh|bat)$/i)) icon = '<i class="fas fa-file-code" style="color:#27ae60;margin-right:6px;"></i>';
-                    else if (f.match(/\.(json|yml|yaml)$/i)) icon = '<i class="fas fa-file-code" style="color:#e67e22;margin-right:6px;"></i>';
-                    else if (f.match(/\.(zip|tar|gz)$/i)) icon = '<i class="fas fa-file-archive" style="color:#b9770e;margin-right:6px;"></i>';
-                    return `<li style='margin-bottom:4px;'><a href="#" onclick=\"handleFileCommand('read ${f.replace(/'/g, '')}')\" style=\'display:inline-flex;align-items:center;padding:4px 8px;border-radius:6px;transition:background 0.2s;text-decoration:none;color:#0084ff;font-weight:500;\' title=\'Click to view file\' onmouseover=\"this.style.background='#eaf4ff'\" onmouseout=\"this.style.background='none'\">${icon}${f}</a></li>`;
-                }).join('') + '</ul>';
+        // File/image upload preview
+        function handleFileInput(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('image-preview');
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    preview.src = ev.target.result;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
             } else {
-                sidebar.innerHTML += '<div style="color:#888;margin:12px 0 0 16px;">No files found.</div>';
+                preview.style.display = 'none';
             }
         }
 
-        async function agenticFileRefresh() {
-            await renderFileSidebar();
-        }
-
-        const _handleFileCommand = handleFileCommand;
-        handleFileCommand = async function (cmd) {
-            const r = await _handleFileCommand.apply(this, arguments);
-            if (document.getElementById('agentic-file-autoshow')?.checked) {
-                await agenticFileRefresh();
-            }
-            return r;
-        };
-
-        const _handleThoughtCommand = handleThoughtCommand;
-        handleThoughtCommand = async function (cmd) {
-            const r = await _handleThoughtCommand.apply(this, arguments);
-            if (document.getElementById('agentic-thought-autoshow')?.checked) {
-                await injectThoughtListToChat();
-            }
-            return r;
-        };
-
-        window.addEventListener('DOMContentLoaded', renderFileSidebar);
-
-        // --- Dual Agentic AI Conversation Logic ---
+        // Chat send logic
         async function sendMessage() {
-            const message = userInput.value.trim();
-            if (!message && !uploadedImage) return;
-            let displayMessage = message;
-            let requestBody = { input: message };
-            if (uploadedImage) {
-                displayMessage += ' [Image attached]';
-                requestBody.imageData = uploadedImage;
-            }
-            if (message.startsWith("/file ")) { handleFileCommand(message.substring(6)); return; }
-            if (message.startsWith("/thought ")) { handleThoughtCommand(message.substring(8)); return; }
-            addMessage(displayMessage, true);
-            userInput.value = '';
-            imagePreview.style.display = 'none';
-            uploadedImage = null;
-            loadingIndicator.style.display = 'flex';
-            if (document.getElementById('agentic-file-autoshow')?.checked && message.startsWith('/file ')) {
-                injectFileListToChat();
-            }
-            if (document.getElementById('agentic-thought-autoshow')?.checked && message.startsWith('/thought ')) {
-                injectThoughtListToChat();
-            }
+            const input = document.getElementById('user-input');
+            const text = input.value.trim();
+            if (!text) return;
+            renderMessage({ sender: 'user', text });
+            input.value = '';
+            showLoading(true);
+            // Collect agentic options
+            const agenticOptions = {
+                fileAutoShow: document.getElementById('agentic-file-autoshow').checked,
+                thoughtAutoShow: document.getElementById('agentic-thought-autoshow').checked,
+                verboseReasoning: document.getElementById('agentic-verbose-reasoning').checked,
+                turnLimitEnabled: document.getElementById('agentic-turn-limit').checked,
+                turnLimit: parseInt(document.getElementById('agentic-turns').value, 10)
+            };
+            // Collect AI settings
+            const aiSettings = getAISettings();
             try {
-                let agenticTurns = 4;
-                if (dualAgenticMode && document.getElementById('agentic-turn-limit')?.checked) {
-                    agenticTurns = parseInt(document.getElementById('agentic-turns').value) || 4;
-                }
-                if (dualAgenticMode) {
-                    let turns = agenticTurns;
-                    let lastMsg = message;
-                    let context = conversationHistory.slice(-10);
-                    for (let t = 0; t < turns; t++) {
-                        const agentIdx = t % 2;
-                        const agentName = agentNames[agentIdx];
-                        let systemPrompt = agentPrompts[agentIdx];
-                        if (document.getElementById('agentic-verbose-reasoning')?.checked) {
-                            systemPrompt += ' Be very explicit about your reasoning and tool use.';
-                        }
-                        let formattedMessages = [
-                            { role: "system", content: systemPrompt },
-                            ...context.map(msg => ({ role: msg.role, content: msg.content })),
-                            { role: "user", content: lastMsg }
-                        ];
-                        let aiResponse = '';
-                        if (document.getElementById('use-direct-api').checked) {
-                            const directApiUrl = document.getElementById('direct-api-url').value.trim();
-                            const directModel = document.getElementById('direct-model-selector').value;
-                            const maxTokens = parseInt(document.getElementById('direct-max-tokens').value);
-                            const temperature = parseFloat(document.getElementById('direct-temperature').value);
-                            const response = await fetch(`${directApiUrl}/v1/chat/completions`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ model: directModel, messages: formattedMessages, max_tokens: maxTokens, temperature })
-                            });
-                            const data = await response.json();
-                            aiResponse = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : "No response from model";
-                        } else {
-                            const baseUrl = apiBaseUrlInput.value.trim();
-                            const response = await fetch(`${baseUrl}/chat`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ input: lastMsg })
-                            });
-                            aiResponse = await response.text();
-                        }
-                        addMessage(`${agentName}: ${aiResponse}`, false);
-                        lastMsg = aiResponse;
-                        context.push({ role: 'assistant', content: aiResponse });
-                        if (aiResponse.startsWith('/file ') && document.getElementById('agentic-file-autoshow')?.checked) {
-                            await injectFileListToChat();
-                        }
-                        if (aiResponse.startsWith('/thought ') && document.getElementById('agentic-thought-autoshow')?.checked) {
-                            await injectThoughtListToChat();
-                        }
-                    }
-                    loadingIndicator.style.display = 'none';
-                    return;
-                }
-                let systemPrompt = null;
-                if (agenticMode) {
-                    systemPrompt = "You are an agentic AI assistant. You can use /file and /thought commands in your responses to read, write, list, or delete files and persistent thoughts as needed to accomplish the user's goals. Use these commands as tools, and explain your reasoning.";
-                }
-            } catch (error) {
-                addMessage(`Error: ${error.message}. Please make sure the AI functions app is running correctly.`, false);
+                const response = await fetch(`${aiSettings.apiBaseUrl}/api/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: text,
+                        agentic: agenticOptions,
+                        system: aiSettings.systemPrompt,
+                        model: aiSettings.model,
+                        temperature: aiSettings.temperature,
+                        max_tokens: aiSettings.maxTokens
+                    })
+                });
+                const data = await response.json();
+                renderMessage({ sender: 'ai', text: data.reply });
+            } catch (e) {
+                renderMessage({ sender: 'ai', text: 'Error: Unable to reach backend.' });
             } finally {
-                loadingIndicator.style.display = 'none';
+                showLoading(false);
             }
         }
 
-        // Send message on Enter key
-        userInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
+        // File operations (stubs)
+        function createFile() {
+            // TODO: Implement backend file creation
+            showNotification('Create file (not implemented)');
+        }
+        function saveFile() {
+            // TODO: Implement backend file save
+            showNotification('Save file (not implemented)');
+        }
+        function deleteFile() {
+            // TODO: Implement backend file delete
+            showNotification('Delete file (not implemented)');
+        }
+
+        // Agentic options panel (stub)
+        function closeAgenticOptions() {
+            document.getElementById('agentic-options-panel').style.display = 'none';
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', e => {
+            if (e.ctrlKey && e.key.toLowerCase() === 'l') {
+                document.getElementById('chat-messages').innerHTML = '';
+                showNotification('Chat history cleared');
+            }
+            if (e.ctrlKey && e.key.toLowerCase() === 'd') {
+                toggleDarkMode();
+            }
+            if (e.key === '?') {
+                openModal();
+            }
+            if (e.key === 'Enter' && document.activeElement === document.getElementById('user-input')) {
                 sendMessage();
             }
         });
 
-        // Function to clear the chat history
-        function clearChat() {
-            chatMessages.innerHTML = '';
-            conversationHistory.length = 0;
-            localStorage.removeItem('conversationHistory');
-            addMessage('Hello! I\'m your AI assistant powered by Semantic Kernel. How can I help you today?', false);
-        }
-
-        // Load conversation history from localStorage
-        function loadConversationHistory() {
-            const savedHistory = localStorage.getItem('conversationHistory');
-            if (savedHistory) {
-                const history = JSON.parse(savedHistory);
-                chatMessages.innerHTML = '';
-                history.forEach(msg => {
-                    addMessage(msg.content, msg.role === 'user');
+        // Event listeners registration (clean, extensible)
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('file-input').addEventListener('change', handleFileInput);
+            document.querySelector('.send-button').addEventListener('click', sendMessage);
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', e => {
+                    const tabId = tab.getAttribute('data-tab');
+                    switchTab(tabId);
                 });
-                conversationHistory.push(...history);
-            }
-        }
-
-        // Initialize the plugin functions dropdown
-        updatePluginFunctions();
-
-        // Function to copy conversation to clipboard
-        function copyConversation() {
-            let conversationText = '';
-            conversationHistory.forEach(msg => {
-                const role = msg.role === 'user' ? 'You' : 'AI';
-                conversationText += `${role}: ${msg.content}\n\n`;
             });
-            navigator.clipboard.writeText(conversationText).then(() => {
-                showNotification('Chat copied to clipboard!');
-            }).catch(err => {
-                showNotification('Failed to copy chat: ' + err);
-            });
-        }
-
-        // Show notification
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message + ' If this persists, check your backend/API connection.';
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        // Handle image upload
-        const fileInput = document.getElementById('file-input');
-        const imagePreview = document.getElementById('image-preview');
-        let uploadedImage = null;
-
-        fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            if (!file.type.match('image.*')) {
-                showNotification('Please select an image file');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                imagePreview.src = e.target.result;
-                imagePreview.style.display = 'block';
-                uploadedImage = e.target.result;
-            };
-            reader.readAsDataURL(file);
+            // TODO: Populate plugin/function selectors and models from backend
+            // TODO: Add event listeners for new-file-btn, save-file-btn, delete-file-btn, run-plugin-btn
         });
-
-        // Register service worker for offline capability
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').then(function () {
-                console.log('Service Worker registered');
-            }).catch(function (error) {
-                console.log('Service Worker registration failed:', error);
-            });
-        }
-
-        // Modal functions
-        const shortcutsModal = document.getElementById('shortcuts-modal');
-
-        function showModal() {
-            shortcutsModal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            shortcutsModal.style.display = 'none';
-        }
-
-        // Close modal when clicking outside of it
-        window.onclick = function (event) {
-            if (event.target === shortcutsModal) {
-                closeModal();
-            }
-        };
-
-        // Add keyboard shortcuts
-        document.addEventListener('keydown', function (e) {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
-                e.preventDefault();
-                clearChat();
-            }
-            if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
-                e.preventDefault();
-                toggleDarkMode();
-            }
-            if (e.key === '?' && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
-                e.preventDefault();
-                showModal();
-            }
-            if (e.key === 'Escape' && shortcutsModal.style.display === 'flex') {
-                closeModal();
-            }
-        });
-
-        // Temperature slider event handler
-        const temperatureSlider = document.getElementById('direct-temperature');
-        const temperatureValue = document.getElementById('temperature-value');
-
-        temperatureSlider.addEventListener('input', function () {
-            temperatureValue.textContent = this.value;
-        });
-
-        // Load saved preferences
-        function loadPreferences() {
-            if (localStorage.getItem('darkMode') === 'true') {
-                toggleDarkMode();
-            }
-        }
-
-        // Persist agentic options in localStorage
-        function saveAgenticOptions() {
-            localStorage.setItem('agenticFileAutoshow', document.getElementById('agentic-file-autoshow').checked);
-            localStorage.setItem('agenticThoughtAutoshow', document.getElementById('agentic-thought-autoshow').checked);
-            localStorage.setItem('agenticVerboseReasoning', document.getElementById('agentic-verbose-reasoning').checked);
-            localStorage.setItem('agenticTurnLimit', document.getElementById('agentic-turn-limit').checked);
-            localStorage.setItem('agenticTurns', document.getElementById('agentic-turns').value);
-        }
-
-        function loadAgenticOptions() {
-            document.getElementById('agentic-file-autoshow').checked = localStorage.getItem('agenticFileAutoshow') === 'true';
-            document.getElementById('agentic-thought-autoshow').checked = localStorage.getItem('agenticThoughtAutoshow') === 'true';
-            document.getElementById('agentic-verbose-reasoning').checked = localStorage.getItem('agenticVerboseReasoning') === 'true';
-            document.getElementById('agentic-turn-limit').checked = localStorage.getItem('agenticTurnLimit') !== 'false';
-            document.getElementById('agentic-turns').value = localStorage.getItem('agenticTurns') || '4';
-        }
-
-        ['agentic-file-autoshow', 'agentic-thought-autoshow', 'agentic-verbose-reasoning', 'agentic-turn-limit', 'agentic-turns'].forEach(id => {
-            document.getElementById(id).addEventListener('change', saveAgenticOptions);
-        });
-
-        window.addEventListener('DOMContentLoaded', loadAgenticOptions);
-
-        // Make agentic options panel close when clicking outside or pressing Escape
-        window.addEventListener('mousedown', function (e) {
-            const panel = document.getElementById('agentic-options-panel');
-            const toggle = document.getElementById('agentic-options-toggle');
-            if (panel && panel.style.display === 'block' && !panel.contains(e.target) && e.target !== toggle) {
-                panel.style.display = 'none';
-            }
-        });
-
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                const panel = document.getElementById('agentic-options-panel');
-                if (panel && panel.style.display === 'block') panel.style.display = 'none';
-            }
-        });
-
-        document.getElementById('api-base-url').addEventListener('change', function () {
-            localStorage.setItem('apiBaseUrl', this.value);
-        });
-
-        document.getElementById('direct-model-selector').addEventListener('change', function () {
-            localStorage.setItem('directModel', this.value);
-        });
-
-        if (modelSelector) {
-            modelSelector.addEventListener('change', function () {
-                localStorage.setItem('skModel', this.value);
-            });
-        }
-
-        // Try to load previous conversation and preferences
-        try {
-            loadConversationHistory();
-            loadPreferences();
-            updateModelBadge();
-        } catch (e) {
-            console.error('Failed to load saved data:', e);
-        }
-
-        // Focus the input field
-        userInput.focus();
-
-        // Initial file list load
-        if (document.getElementById('file-path-input')) {
-            refreshFileList();
-        }
-
-        function toggleAgenticOptions() {
-            const panel = document.getElementById('agentic-options-panel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function closeAgenticOptions() {
-            document.getElementById('agentic-options-panel').style.display = 'none';
-        }
     </script>
 </body>
 
