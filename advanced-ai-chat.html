@@ -268,6 +268,40 @@
             font-size: 15px;
         }
 
+        .input-with-button {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-with-button input {
+            flex-grow: 1;
+        }
+
+        .action-button {
+            padding: 10px 15px;
+            background-color: #4fc3f7;
+            color: #181a1b;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            justify-content: center;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .action-button:hover {
+            background-color: #0288d1;
+        }
+
+        .action-button i {
+            font-size: 0.9em;
+        }
+
         .notification {
             position: fixed;
             top: 20px;
@@ -378,13 +412,51 @@
 
         .model-badge {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: #0056b3;
+            top: 10px;
+            left: 10px;
+            background-color: #444;
             color: #fff;
             padding: 5px 10px;
             border-radius: 10px;
+            font-size: 0.8em;
             z-index: 10;
+        }
+
+        .backend-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #333;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-indicator.connected {
+            background-color: #3db34a;
+            /* Green for connected */
+        }
+
+        .status-indicator.connecting {
+            background-color: #f2a93c;
+            /* Yellow/Orange for connecting */
+        }
+
+        .status-indicator.disconnected {
+            background-color: #e74c3c;
+            /* Red for disconnected */
         }
 
         /* Moved from inline styles for best practices */
@@ -517,14 +589,18 @@
         <div id="config-tab" class="tab-content">
             <div class="settings-group">
                 <label for="api-base-url">Backend API Base URL:</label>
-                <input type="text" id="api-base-url" value="http://127.0.0.1:8000">
+                <div class="input-with-button">
+                    <input type="text" id="api-base-url" value="http://127.0.0.1:8000">
+                    <button id="start-backend-btn" class="action-button"><i class="fas fa-play"></i> Start
+                        Backend</button>
+                </div>
             </div>
             <div class="settings-group">
                 <label for="model-selector">AI Model:</label>
                 <select id="model-selector">
                     <option value="microsoft/phi-4-mini-reasoning">microsoft/phi-4-mini-reasoning</option>
                     <option value="mistral-nemo-instruct-2407">mistral-nemo-instruct-2407</option>
-                    <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                    <option value="llama3-8b-instruct">llama3-8b-instruct</option>
                     <option value="gpt-4">gpt-4</option>
                 </select>
             </div>
@@ -544,11 +620,15 @@
         </div>
     </div>
     <div class="chat-container">
-        <div id="model-badge" class="model-badge">GPT-3.5 Turbo</div>
+        <div id="model-badge" class="model-badge">AI Assistant</div>
+        <div id="backend-status" class="backend-status">
+            <span class="status-indicator disconnected"></span>
+            <span class="status-text">Backend: Disconnected</span>
+        </div>
         <div class="chat-messages" id="chat-messages">
             <div class="message-container ai-container">
                 <div class="message-avatar ai-avatar"><i class="fas fa-robot"></i></div>
-                <div class="message ai-message">Hello! I'm your AI assistant powered by Semantic Kernel. How can I help
+                <div class="message ai-message">Hello! I'm your AI assistant powered by LM Studio. How can I help
                     you today?</div>
                 <div class="message-time">Just now</div>
             </div>
@@ -732,6 +812,169 @@
             document.getElementById('agentic-options-panel').style.display = 'none';
         }
 
+        // Function to update the backend status indicator
+        function updateBackendStatus(status) {
+            const indicator = document.querySelector('.status-indicator');
+            const statusText = document.querySelector('.status-text');
+
+            if (!indicator || !statusText) return;
+
+            // Remove all status classes
+            indicator.classList.remove('connected', 'connecting', 'disconnected');
+
+            switch (status) {
+                case 'connected':
+                    indicator.classList.add('connected');
+                    statusText.textContent = 'Backend: Connected';
+                    break;
+                case 'connecting':
+                    indicator.classList.add('connecting');
+                    statusText.textContent = 'Backend: Connecting...';
+                    break;
+                case 'disconnected':
+                default:
+                    indicator.classList.add('disconnected');
+                    statusText.textContent = 'Backend: Disconnected';
+                    break;
+            }
+        }
+
+        // Function to check backend connection
+        async function checkBackendConnection() {
+            const apiBaseUrl = document.getElementById('api-base-url').value.trim();
+            updateBackendStatus('connecting');
+
+            try {
+                // Simple ping to see if the backend is reachable
+                const pingTimeout = 5000; // 5 seconds timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), pingTimeout);
+
+                const response = await fetch(`${apiBaseUrl}/files/list`, {
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (response.ok) {
+                    updateBackendStatus('connected');
+                    return true;
+                } else {
+                    updateBackendStatus('disconnected');
+                    return false;
+                }
+            } catch (error) {
+                updateBackendStatus('disconnected');
+                return false;
+            }
+        }
+
+        // Function to start the backend server
+        function startBackendServer() {
+            try {
+                // Check if the backend is already running
+                const apiBaseUrl = document.getElementById('api-base-url').value.trim();
+
+                // First check if we can connect to an existing backend
+                checkBackendConnection().then(isConnected => {
+                    if (isConnected) {
+                        showNotification('Backend server is already running!');
+                        return;
+                    }
+
+                    // If not connected, proceed with starting the backend
+                    showNotification('Starting backend server...');
+
+                    // First try to use the backend starter server
+                    fetch('http://127.0.0.1:9500/start', { mode: 'no-cors' })
+                        .then(() => {
+                            showNotification('Backend starting via starter service...');
+                        })
+                        .catch(() => {
+                            // If starter server is not running, try other methods
+                            const isWindows = navigator.platform.toLowerCase().includes('win');
+
+                            if (isWindows) {
+                                // On Windows, try to execute the batch file
+                                showNotification('Opening file download...');
+
+                                const downloadLink = document.createElement('a');
+                                downloadLink.href = 'start_backend.bat';
+                                downloadLink.download = 'start_backend.bat';
+
+                                const instructionsMessage = `
+                                    To start the backend server:
+                                    
+                                    1. Click "OK" to download start_backend.bat
+                                    2. Double-click the downloaded file to run it
+                                    
+                                    The backend server will start and this interface will connect automatically.
+                                    
+                                    For automatic backend starting, run backend_starter_server.py once.
+                                `;
+
+                                alert(instructionsMessage);
+                                downloadLink.click();
+                            } else {
+                                // On other platforms, download and provide instructions for the Python script
+                                const downloadLink = document.createElement('a');
+                                downloadLink.href = 'start_backend.py';
+                                downloadLink.download = 'start_backend.py';
+
+                                const instructionsMessage = `
+                                    To start the backend server:
+                                    
+                                    1. Click "OK" to download start_backend.py
+                                    2. Run it using: python start_backend.py
+                                    
+                                    The backend server will start and this interface will connect automatically.
+                                    
+                                    For automatic backend starting, run backend_starter_server.py once.
+                                `;
+
+                                alert(instructionsMessage);
+                                downloadLink.click();
+                            }
+                        });
+
+                    // Begin checking for connection after a delay
+                    setTimeout(() => {
+                        checkBackendConnection();
+
+                        // Set up periodic checks
+                        const checkInterval = setInterval(() => {
+                            checkBackendConnection().then(isConnected => {
+                                if (isConnected) {
+                                    showNotification('Successfully connected to backend!');
+                                    clearInterval(checkInterval);
+                                }
+                            });
+                        }, 3000);
+
+                        // Stop checking after 30 seconds
+                        setTimeout(() => clearInterval(checkInterval), 30000);
+                    }, 5000);
+                });
+            } catch (error) {
+                showNotification('Failed to start backend: ' + error.message);
+                updateBackendStatus('disconnected');
+            }
+        }
+
+        // Check connection when API URL changes
+        function setupBackendMonitoring() {
+            const apiBaseUrlInput = document.getElementById('api-base-url');
+            if (apiBaseUrlInput) {
+                apiBaseUrlInput.addEventListener('change', checkBackendConnection);
+            }
+
+            // Initial check
+            checkBackendConnection();
+
+            // Set up periodic checks every 30 seconds
+            setInterval(checkBackendConnection, 30000);
+        }
+
         // Keyboard shortcuts
         document.addEventListener('keydown', e => {
             if (e.ctrlKey && e.key.toLowerCase() === 'l') {
@@ -763,9 +1006,38 @@
             document.getElementById('shortcuts-modal').addEventListener('click', function (e) {
                 if (e.target === this) closeModal();
             });
+
+            // Update model badge when model selector changes
+            const modelSelector = document.getElementById('model-selector');
+            modelSelector.addEventListener('change', updateModelBadge);
+
+            // Set initial model badge text
+            updateModelBadge();
+
+            // Add start backend button functionality
+            const startBackendBtn = document.getElementById('start-backend-btn');
+            if (startBackendBtn) {
+                startBackendBtn.addEventListener('click', startBackendServer);
+            }
+
+            // Setup backend monitoring
+            setupBackendMonitoring();
+
             // TODO: Populate plugin/function selectors and models from backend
             // TODO: Add event listeners for new-file-btn, save-file-btn, delete-file-btn, run-plugin-btn
         });
+
+        // Function to update the model badge based on selected model
+        function updateModelBadge() {
+            const modelSelector = document.getElementById('model-selector');
+            const modelBadge = document.getElementById('model-badge');
+            if (modelSelector && modelBadge) {
+                const selectedModel = modelSelector.value;
+                // Display a simplified model name in the badge
+                const displayName = selectedModel.split('/').pop() || 'AI Assistant';
+                modelBadge.textContent = displayName;
+            }
+        }
     </script>
 </body>
 
