@@ -123,7 +123,7 @@ public sealed class MistralAI_FunctionCalling(ITestOutputHelper output) : BaseTe
         [Description("Get the current weather in a given location.")]
         public string GetWeather(
             [Description("The city and department, e.g. Marseille, 13")] string location
-        ) => "12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy";
+        ) => "12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy";
     }
 
     public sealed class WidgetPlugin

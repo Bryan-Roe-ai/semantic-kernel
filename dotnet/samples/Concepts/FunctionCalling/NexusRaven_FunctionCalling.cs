@@ -124,7 +124,7 @@ public class NexusRaven_FunctionCalling(ITestOutputHelper output) : BaseTest(out
         return kernel.ImportPluginFromFunctions("WeatherPlugin",
         [
             kernel.CreateFunctionFromMethod(
-                (string cityName) => "12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy",
+                (string cityName) => "12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy",
                 "GetWeatherForCity",
                 "Gets the current weather for the specified city",
                 new List<KernelParameterMetadata>
