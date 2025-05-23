@@ -500,3 +500,6 @@ swa-cli.config.json
 
 # dapr extension files
 **/dapr.yaml
+
+# LLM training data files
+llm_training_data.txt
