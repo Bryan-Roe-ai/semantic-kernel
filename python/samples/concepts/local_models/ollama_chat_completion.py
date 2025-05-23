@@ -39,7 +39,7 @@ openAIClient: AsyncOpenAI = AsyncOpenAI(
 kernel.add_service(OpenAIChatCompletion(service_id=service_id, ai_model_id="phi3", async_client=openAIClient))
 
 settings = kernel.get_prompt_execution_settings_from_service_id(service_id)
-settings.max_tokens = 2000
+settings.max_completion_tokens = 2000
 settings.temperature = 0.7
 settings.top_p = 0.8
 
