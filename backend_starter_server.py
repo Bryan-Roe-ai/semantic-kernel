@@ -137,12 +137,27 @@ class BackendStarterHandler(BaseHTTPRequestHandler):
                 os.makedirs(plugins_dir)
                 print(f"Created plugins directory: {plugins_dir}")
                 
+            # Check if port 8000 is available
+            backend_port = 8000
+            if not check_port_available(backend_port):
+                # Port 8000 is not available but the backend isn't running (we checked above)
+                # This means another process is using the port
+                print(f"Warning: Port {backend_port} is in use by another application.")
+                alt_port = find_available_port(backend_port + 1, max_attempts=10)
+                if alt_port:
+                    print(f"Using alternative port for backend: {alt_port}")
+                    backend_port = alt_port
+                else:
+                    print("Error: Could not find an available port for the backend server.")
+                    print("Please close some applications and try again.")
+                    return
+            
             # Construct the command to run the backend
-            cmd = [sys.executable, "-m", "uvicorn", "backend:app", "--reload", "--host", "127.0.0.1", "--port", "8000"]
+            cmd = [sys.executable, "-m", "uvicorn", "backend:app", "--reload", "--host", "127.0.0.1", "--port", str(backend_port)]
             
             # Start the process
             subprocess.Popen(cmd, cwd=current_dir)
-            print("Backend server started successfully")
+            print(f"Backend server started successfully on port {backend_port}")
         except Exception as e:
             print(f"Error starting backend: {e}")
     
@@ -152,7 +167,7 @@ class BackendStarterHandler(BaseHTTPRequestHandler):
             return
         return super().log_message(format, *args)
 
-def check_port_available(port):
+def check_port_available(port: int) -> bool:
     """Check if a port is available to use"""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         try:
@@ -161,7 +176,7 @@ def check_port_available(port):
         except OSError:
             return False
 
-def find_available_port(start_port, max_attempts=10):
+def find_available_port(start_port: int, max_attempts: int = 10) -> Optional[int]:
     """Find an available port starting from start_port"""
     for port in range(start_port, start_port + max_attempts):
         if check_port_available(port):
@@ -181,6 +196,9 @@ def run_server():
             return
     else:
         server_port = PORT
+    
+    # Initialize httpd variable before the try block
+    httpd = None
     
     try:
         server_address = ('127.0.0.1', server_port)
@@ -202,16 +220,12 @@ def run_server():
         httpd.serve_forever()
     except KeyboardInterrupt:
         print("\nShutting down server...")
-        httpd.server_close()
+        if httpd:
+            httpd.server_close()
         print("Server stopped.")
     except Exception as e:
         print(f"Error starting server: {e}")
         print("Please check if another application is using the port.")
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("\nShutting down server...")
-        httpd.server_close()
 
 if __name__ == "__main__":
     # Open the chat interface

@@ -1,14 +1,13 @@
 # Save as backend.py and run with: uvicorn backend:app --reload
 
 from fastapi import FastAPI, Query, File, UploadFile, Form
-from typing import Annotated
+from typing import Annotated, List, Dict, Any, Optional, Union, cast
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import os
 import requests
-from typing import List, Dict, Any, Optional
 import json
 import glob
 import importlib.util
@@ -29,7 +28,7 @@ except ImportError:
     PIL_AVAILABLE = False
 
 app: FastAPI = FastAPI()
-app.add_middleware(  # type: ignore
+app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Adjust for production
     allow_methods=["*"],
@@ -58,14 +57,14 @@ class ChatRequest(BaseModel):
 LM_STUDIO_URL = os.environ.get("LM_STUDIO_URL", "http://localhost:1234/v1/chat/completions")
 
 @app.get("/ping")
-def ping():
+def ping() -> Dict[str, str]:
     return {"status": "OK"}
 
 # Import Python plugins
 sys.path.insert(0, os.path.join(BASE_DIR, "plugins"))
-PYTHON_PLUGINS = {}
+PYTHON_PLUGINS: Dict[str, Dict[str, Any]] = {}
 
-def load_python_plugins():
+def load_python_plugins() -> None:
     """Dynamically load Python plugin modules"""
     global PYTHON_PLUGINS
     plugin_files = glob.glob(os.path.join(BASE_DIR, "plugins", "*.py"))
@@ -151,10 +150,10 @@ def load_python_plugins():
 load_python_plugins()
 
 @app.get("/api/plugins")
-def get_plugins():
+def get_plugins() -> Dict[str, Union[List[Dict[str, str]], List[Dict[str, Union[str, Dict[str, str]]]]]]:
     # Include both directory-based plugins and Python plugins
-    plugins = []
-    functions = []
+    plugins: List[Dict[str, str]] = []
+    functions: List[Dict[str, Union[str, Dict[str, str]]]] = []
     
     # Get directory-based plugins first
     if os.path.exists(PLUGINS_DIR):
@@ -211,7 +210,7 @@ def get_plugins():
     return {"plugins": plugins, "functions": functions}
 
 @app.post("/api/run_plugin")
-def run_plugin(plugin_id: str, function_id: str, input_text: str):
+def run_plugin(plugin_id: str, function_id: str, input_text: str) -> Dict[str, Union[str, Dict[str, str]]]:
     if not plugin_id or not function_id:
         return {"error": "Missing plugin_id or function_id"}
     
@@ -258,7 +257,7 @@ def run_plugin(plugin_id: str, function_id: str, input_text: str):
         return {"error": str(e)}
 
 @app.get("/api/run_python")
-def run_python_plugin(plugin_id: str, function_id: str, input_text: str, param2: Optional[str] = None):
+def run_python_plugin(plugin_id: str, function_id: str, input_text: str, param2: Optional[str] = None) -> Dict[str, Union[str, Dict[str, str]]]:
     """Run a Python plugin function"""
     # Parse function ID to get plugin and function names
     parts = function_id.split(".")
@@ -281,7 +280,7 @@ def run_python_plugin(plugin_id: str, function_id: str, input_text: str, param2:
         signature = PYTHON_PLUGINS[plugin_name]["methods"][function_name]["signature"]
         
         # Prepare arguments based on signature
-        kwargs = {}
+        kwargs: Dict[str, Any] = {}
         param_names = list(signature.parameters.keys())
         
         if len(param_names) == 1:
@@ -309,7 +308,7 @@ def list_files() -> List[str]:
     return files
 
 @app.get("/files/read")  # type: ignore
-def read_file(path: Annotated[str, Query(...)]) -> Dict[str, Any]:
+def read_file(path: Annotated[str, Query(...)]) -> Dict[str, Union[str, Dict[str, str]]]:
     abs_path = os.path.abspath(os.path.join(BASE_DIR, path))
     if not abs_path.startswith(BASE_DIR):
         return {"error": "Invalid path"}
@@ -352,14 +351,14 @@ except ImportError:
     ANALYZER_AVAILABLE = False
     class FileAnalyzer:
         @staticmethod
-        def analyze_file(file_path):
+        def analyze_file(file_path: str) -> Dict[str, Union[str, Dict[str, str]]]:
             return {"error": "File analyzer module not available"}
 
 # Create uploads directory if it doesn't exist
 UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
 os.makedirs(UPLOADS_DIR, exist_ok=True)
 
-def auto_analyze_file(filename: str) -> Dict[str, Any]:
+def auto_analyze_file(filename: str) -> Dict[str, Union[str, Dict[str, str]]]:
     """
     Automatically analyze a file based on its extension
     
@@ -385,7 +384,7 @@ def auto_analyze_file(filename: str) -> Dict[str, Any]:
         return {"error": f"Analysis failed: {str(e)}"}
 
 @app.post("/api/upload")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(file: UploadFile = File(...)) -> Dict[str, Union[str, Dict[str, str]]]:
     """Handle file uploads"""
     try:
         # Create a unique filename to prevent overwriting
@@ -421,13 +420,13 @@ async def upload_file(file: UploadFile = File(...)):
         )
         
 @app.get("/api/files")
-def list_uploaded_files():
+def list_uploaded_files() -> Dict[str, List[Dict[str, str]]]:
     """List all uploaded files"""
     try:
         if not os.path.exists(UPLOADS_DIR):
             return {"files": []}
             
-        files = []
+        files: List[Dict[str, str]] = []
         for filename in os.listdir(UPLOADS_DIR):
             file_path = os.path.join(UPLOADS_DIR, filename)
             if os.path.isfile(file_path):
@@ -452,7 +451,7 @@ def list_uploaded_files():
         )
 
 @app.get("/api/download/{filename}")
-def download_file(filename: str):
+def download_file(filename: str) -> Union[FileResponse, JSONResponse]:
     """Download a file from the uploads directory"""
     file_path = os.path.join(UPLOADS_DIR, filename)
     if not os.path.exists(file_path):
@@ -467,7 +466,7 @@ def download_file(filename: str):
     )
     
 @app.get("/api/analyze/{filename}")
-def analyze_file_endpoint(filename: str):
+def analyze_file_endpoint(filename: str) -> Dict[str, Union[str, Dict[str, str]]]:
     """Analyze a file from the uploads directory"""
     file_path = os.path.join(UPLOADS_DIR, filename)
     if not os.path.exists(file_path):
@@ -482,65 +481,3 @@ def analyze_file_endpoint(filename: str):
 @app.post("/api/chat")
 def chat_endpoint(req: ChatRequest) -> Dict[str, str]:
     # Validate input
-    if not req.message or not req.message.strip():
-        return {"reply": "Please provide a message to chat with the AI."}
-        
-    # Check if LM_STUDIO_URL is set and valid
-    lm_studio_url = os.environ.get("LM_STUDIO_URL", LM_STUDIO_URL)
-    
-    # Build messages array for LM Studio
-    messages: List[Dict[str, str]] = []
-    if req.system:
-        messages.append({"role": "system", "content": req.system})
-    messages.append({"role": "user", "content": req.message})
-    
-    # Default to a simple model if not specified
-    model = req.model or "microsoft/phi-4-mini-reasoning"
-    
-    # Compose payload for LM Studio
-    payload: Dict[str, Any] = {
-        "model": model,
-        "messages": messages,
-        "max_tokens": req.max_tokens if req.max_tokens is not None else 500,  # Use reasonable default
-        "temperature": req.temperature if req.temperature is not None else 0.7,
-        "stream": req.stream if req.stream is not None else False,
-    }
-    
-    # Try to connect to LM Studio
-    try:
-        print(f"Sending request to LM Studio at {lm_studio_url}")
-        print(f"Request payload: {payload}")
-        
-        lm_response = requests.post(lm_studio_url, json=payload, timeout=60)
-        
-        # Check for HTTP errors
-        if lm_response.status_code != 200:
-            error_msg = f"LM Studio returned error {lm_response.status_code}: {lm_response.text}"
-            print(f"Error: {error_msg}")
-            return {"reply": f"[Error: LM Studio returned status code {lm_response.status_code}. Make sure LM Studio is running and the server is started on the API tab.]"}
-        
-        # Parse the response
-        try:
-            data = lm_response.json()
-        except ValueError:
-            return {"reply": "[Error: Invalid JSON response from LM Studio]"}
-        
-        # Extract the AI's reply from the response
-        reply = data.get("choices", [{}])[0].get("message", {}).get("content", "[No response]")
-        
-        # Log the reply for debugging
-        print(f"Received reply from LM Studio: {reply[:100]}...")
-        
-        return {"reply": reply}
-    except requests.exceptions.ConnectionError:
-        error_msg = "[Error: Could not connect to LM Studio. Make sure it's running and the server is started on the API tab.]"
-        print(f"Error: Connection failed to {lm_studio_url}")
-        return {"reply": error_msg}
-    except requests.exceptions.Timeout:
-        error_msg = "[Error: LM Studio request timed out. The model might be too large or your computer is under heavy load.]"
-        print("Error: Request timed out")
-        return {"reply": error_msg}
-    except Exception as e:
-        error_msg = f"[LM Studio error: {str(e)}]"
-        print(f"Error: {error_msg}")
-        return {"reply": error_msg}
