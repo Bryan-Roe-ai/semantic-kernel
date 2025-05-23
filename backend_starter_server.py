@@ -14,7 +14,7 @@ import sys
 import threading
 import webbrowser
 import time
-from typing import Any, Optional, List
+from typing import Any, Optional, Tuple, List
 
 PORT = 9500
 
