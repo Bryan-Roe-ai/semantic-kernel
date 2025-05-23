@@ -1,6 +1,7 @@
 # Save as backend.py and run with: uvicorn backend:app --reload
 
-from fastapi import FastAPI, Query  # type: ignore
+from fastapi import FastAPI, Query
+from typing import Annotated
 from starlette.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
@@ -42,8 +43,8 @@ def list_files() -> List[str]:
         for f in filenames:
             rel_path = os.path.relpath(os.path.join(root, f), BASE_DIR)
             files.append(rel_path)
-    return files
 @app.get("/files/read")  # type: ignore
+def read_file(path: Annotated[str, Query(...)]) -> Dict[str, Any]:
 def read_file(path: str = Query(...)) -> Dict[str, Any]:
     abs_path = os.path.abspath(os.path.join(BASE_DIR, path))
     if not abs_path.startswith(BASE_DIR):

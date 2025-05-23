@@ -481,11 +481,12 @@
 
         /* Add more styles as needed */
     </style>
-    <div id="shortcuts-modal" class="modal">
+    <!-- Removed duplicate shortcuts-modal from head -->
 
 <body>
     <div class="notification" id="notification"></div>
     <!-- Keyboard Shortcuts Modal -->
+    <!-- Moved shortcuts-modal to body -->
     <div id="shortcuts-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -590,7 +591,7 @@
             </div>
             <div class="settings-group">
                 <label for="max-tokens">Max Tokens:</label>
-                <input type="number" id="max-tokens" value="-1" min="-1" max="4096">
+                <input type="number" id="max-tokens" value="100" min="1" max="4096" oninput="validateMaxTokens(this)">
             </div>
             <div class="settings-group">
                 <label for="temperature">Temperature:</label>
@@ -655,6 +656,15 @@
             temperatureInput.addEventListener('input', () => {
                 temperatureValue.textContent = temperatureInput.value;
             });
+        }
+
+        // Validate max-tokens input
+        function validateMaxTokens(input) {
+            const value = parseInt(input.value, 10);
+            if (isNaN(value) || value < 1) {
+                input.value = 1; // Default to minimum valid value
+                showNotification('Max Tokens must be a positive integer.');
+            }
         }
 
         // Utility to get current AI settings from config tab
@@ -734,7 +744,9 @@
                 // Send request to backend
                 const response = await fetch(`${aiSettings.apiBaseUrl}/api/chat`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         message: text,
                         system: aiSettings.systemPrompt,
@@ -744,7 +756,11 @@
                     })
                 });
                 const data = await response.json();
-                renderMessage({ sender: 'ai', text: data.reply });
+                if (data.reply) {
+                    renderMessage({ sender: 'ai', text: data.reply });
+                } else {
+                    renderMessage({ sender: 'ai', text: 'Error: No reply received from backend.' });
+                }
             } catch (e) {
                 renderMessage({ sender: 'ai', text: 'Error: Unable to reach backend.' });
             } finally {
@@ -799,19 +815,8 @@
         async function checkBackendConnection() {
             const apiBaseUrl = document.getElementById('api-base-url').value.trim();
             updateBackendStatus('connecting');
-
             try {
-                // Simple ping to see if the backend is reachable
-                const pingTimeout = 5000; // 5 seconds timeout
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), pingTimeout);
-
-                const response = await fetch(`${apiBaseUrl}/files/list`, {
-                    signal: controller.signal
-                });
-
-                clearTimeout(timeoutId);
-
+                const response = await fetch(`${apiBaseUrl}/files/list`);
                 if (response.ok) {
                     updateBackendStatus('connected');
                     return true;
@@ -834,50 +839,40 @@
                 // First check if we can connect to an existing backend
                 checkBackendConnection().then(isConnected => {
                     if (isConnected) {
-                        showNotification('Backend server is already running!');
-                        return;
-                    }
+                        fetch('http://127.0.0.1:9500/start', { mode: 'no-cors' })
+                            .then(() => {
+                                showNotification('Backend starting via starter service... Note: Response cannot be verified due to no-cors mode.');
+                            })
+                            .catch(() => {
+                                showNotification('Failed to send request to starter service. Trying alternative methods...');
+                                // If starter server is not running, try other methods
 
-                    // If not connected, proceed with starting the backend
-                    showNotification('Starting backend server...');
+                                // First try to use the backend starter server
+                                fetch('http://127.0.0.1:9500/start', { mode: 'no-cors' })
+                                    .then(() => {
+                                        showNotification('Backend starting via starter service...');
+                                    })
+                                    .catch(() => {
+                                        // If starter server is not running, try other methods
+                                        const isWindows = navigator.platform.toLowerCase().includes('win');
 
-                    // First try to use the backend starter server
-                    fetch('http://127.0.0.1:9500/start', { mode: 'no-cors' })
-                        .then(() => {
-                            showNotification('Backend starting via starter service...');
-                        })
-                        .catch(() => {
-                            // If starter server is not running, try other methods
-                            const isWindows = navigator.platform.toLowerCase().includes('win');
+                                        if (isWindows) {
+                                            // On Windows, try to execute the batch file
+                                            showNotification('Opening file download...');
 
-                            if (isWindows) {
-                                // On Windows, try to execute the batch file
-                                showNotification('Opening file download...');
+                                            const downloadLink = document.createElement('a');
+                                            downloadLink.href = 'start_backend.bat';
+                                            downloadLink.download = 'start_backend.bat';
+                                            alert("Click OK to download 'start_backend.bat'. Double-click the file to start the backend server.");
+                                            alert(instructionsMessage);
+                                            downloadLink.click();
+                                        } else {
+                                            // On other platforms, download and provide instructions for the Python script
+                                            const downloadLink = document.createElement('a');
+                                            downloadLink.href = 'start_backend.py';
+                                            downloadLink.download = 'start_backend.py';
 
-                                const downloadLink = document.createElement('a');
-                                downloadLink.href = 'start_backend.bat';
-                                downloadLink.download = 'start_backend.bat';
-
-                                const instructionsMessage = `
-                                    To start the backend server:
-                                    
-                                    1. Click "OK" to download start_backend.bat
-                                    2. Double-click the downloaded file to run it
-                                    
-                                    The backend server will start and this interface will connect automatically.
-                                    
-                                    For automatic backend starting, run backend_starter_server.py once.
-                                `;
-
-                                alert(instructionsMessage);
-                                downloadLink.click();
-                            } else {
-                                // On other platforms, download and provide instructions for the Python script
-                                const downloadLink = document.createElement('a');
-                                downloadLink.href = 'start_backend.py';
-                                downloadLink.download = 'start_backend.py';
-
-                                const instructionsMessage = `
+                                            const instructionsMessage = `
                                     To start the backend server:
                                     
                                     1. Click "OK" to download start_backend.py
@@ -888,112 +883,134 @@
                                     For automatic backend starting, run backend_starter_server.py once.
                                 `;
 
-                                alert(instructionsMessage);
-                                downloadLink.click();
-                            }
-                        });
+                                            alert(instructionsMessage);
+                                            downloadLink.click();
+                                        }
+                                    });
 
-                    // Begin checking for connection after a delay
-                    setTimeout(() => {
-                        checkBackendConnection();
+                                // Begin checking for connection after a delay
+                                setTimeout(() => {
+                                    checkBackendConnection();
 
-                        // Set up periodic checks
-                        const checkInterval = setInterval(() => {
-                            checkBackendConnection().then(isConnected => {
-                                if (isConnected) {
-                                    showNotification('Successfully connected to backend!');
-                                    clearInterval(checkInterval);
-                                }
+                                    // Set up periodic checks
+                                    const checkInterval = setInterval(() => {
+                                        checkBackendConnection().then(isConnected => {
+                                            if (isConnected) {
+                                                showNotification('Successfully connected to backend!');
+                                                clearInterval(checkInterval);
+                                            }
+                                        });
+                                    }, 3000);
+
+                                    // Stop checking after 30 seconds
+                                    setTimeout(() => clearInterval(checkInterval), 30000);
+                                }, 5000);
                             });
-                        }, 3000);
-
-                        // Stop checking after 30 seconds
-                        setTimeout(() => clearInterval(checkInterval), 30000);
-                    }, 5000);
-                });
-            } catch (error) {
-                showNotification('Failed to start backend: ' + error.message);
-                updateBackendStatus('disconnected');
-            }
-        }
+                    } catch (error) {
+                        showNotification('Failed to start backend: ' + error.message);
+                        updateBackendStatus('disconnected');
+                    }
+                }
 
         // Check connection when API URL changes
         function setupBackendMonitoring() {
-            const apiBaseUrlInput = document.getElementById('api-base-url');
-            if (apiBaseUrlInput) {
-                apiBaseUrlInput.addEventListener('change', checkBackendConnection);
-            }
+                        const apiBaseUrlInput = document.getElementById('api-base-url');
+                        if (apiBaseUrlInput) {
+                            apiBaseUrlInput.addEventListener('change', checkBackendConnection);
+                        }
 
-            // Initial check
-            checkBackendConnection();
+                        // Initial check
+                        checkBackendConnection();
 
-            // Set up periodic checks every 30 seconds
-            setInterval(checkBackendConnection, 30000);
-        }
+                        // Set up periodic checks every 30 seconds
+                        setInterval(checkBackendConnection, 30000);
+                    }
 
         // Keyboard shortcuts
         document.addEventListener('keydown', e => {
-            if (e.ctrlKey && e.key.toLowerCase() === 'l') {
-                document.getElementById('chat-messages').innerHTML = '';
-                showNotification('Chat history cleared');
-            }
-            if (e.ctrlKey && e.key.toLowerCase() === 'd') {
-                toggleDarkMode();
-            }
-            if (e.key === '?') {
-                openModal();
-            }
-            if (e.key === 'Enter' && document.activeElement === document.getElementById('user-input')) {
-                sendMessage();
-            }
-        });
+                        if (e.ctrlKey && e.key.toLowerCase() === 'l') {
+                            document.getElementById('chat-messages').innerHTML = '';
+                            showNotification('Chat history cleared');
+                        }
+                        if (e.ctrlKey && e.key.toLowerCase() === 'd') {
+                            toggleDarkMode();
+                        }
+                        if (e.key === '?') {
+                            openModal();
+                        }
+                        if (e.key === 'Enter' && document.activeElement === document.getElementById('user-input')) {
+                            sendMessage();
+                        }
+                    });
 
-        // Event listeners registration (clean, extensible)
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('file-input').addEventListener('change', handleFileInput);
-            document.querySelector('.send-button').addEventListener('click', sendMessage);
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', e => {
-                    const tabId = tab.getAttribute('data-tab');
-                    switchTab(tabId);
+                // Event listeners registration (clean, extensible)
+                window.addEventListener('DOMContentLoaded', () => {
+                    document.getElementById('file-input').addEventListener('change', handleFileInput);
+                    document.querySelector('.send-button').addEventListener('click', sendMessage);
+                    document.querySelectorAll('.tab').forEach(tab => {
+                        tab.addEventListener('click', e => {
+                            const tabId = tab.getAttribute('data-tab');
+                            switchTab(tabId);
+                        });
+                    });
+                    document.getElementById('close-shortcuts-modal').addEventListener('click', closeModal);
+                    document.getElementById('shortcuts-modal').addEventListener('click', function (e) {
+                        if (e.target === this) closeModal();
+                    });
+
+                    // Update model badge when model selector changes
+                    const modelSelector = document.getElementById('model-selector');
+                    modelSelector.addEventListener('change', updateModelBadge);
+
+                    // Set initial model badge text
+                    updateModelBadge();
+
+                    // Add start backend button functionality
+                    const startBackendBtn = document.getElementById('start-backend-btn');
+                    if (startBackendBtn) {
+                        startBackendBtn.addEventListener('click', startBackendServer);
+                    }
+
+                    if (modelSelector) {
+                        modelSelector.addEventListener('change', updateModelBadge);
+                    }
+                    // TODO: Populate plugin/function selectors and models from backend
+                    async function populateSelectorsFromBackend() {
+                        try {
+                            const response = await fetch(`${getAISettings().apiBaseUrl}/api/plugins`);
+                            if (response.ok) {
+                                const data = await response.json();
+                                const pluginSelector = document.getElementById('plugin-selector');
+                                const functionSelector = document.getElementById('plugin-function');
+                                pluginSelector.innerHTML = data.plugins.map(plugin => `<option value="${plugin.id}">${plugin.name}</option>`).join('');
+                                functionSelector.innerHTML = data.functions.map(func => `<option value="${func.id}">${func.name}</option>`).join('');
+                            } else {
+                                console.error('Failed to fetch plugins and functions from backend.');
+                            }
+                        } catch (error) {
+                            console.error('Error fetching plugins and functions:', error);
+                        }
+                    }
+                    populateSelectorsFromBackend();
+
+                    // Initialize backend connection monitoring
+                    setupBackendMonitoring();
+
+                    // TODO: Populate plugin/function selectors and models from backend
+                    // TODO: Add event listeners for new-file-btn, save-file-btn, delete-file-btn, run-plugin-btn
                 });
-            });
-            document.getElementById('close-shortcuts-modal').addEventListener('click', closeModal);
-            document.getElementById('shortcuts-modal').addEventListener('click', function (e) {
-                if (e.target === this) closeModal();
-            });
 
-            // Update model badge when model selector changes
-            const modelSelector = document.getElementById('model-selector');
-            modelSelector.addEventListener('change', updateModelBadge);
-
-            // Set initial model badge text
-            updateModelBadge();
-
-            // Add start backend button functionality
-            const startBackendBtn = document.getElementById('start-backend-btn');
-            if (startBackendBtn) {
-                startBackendBtn.addEventListener('click', startBackendServer);
-            }
-
-            // Setup backend monitoring
-            setupBackendMonitoring();
-
-            // TODO: Populate plugin/function selectors and models from backend
-            // TODO: Add event listeners for new-file-btn, save-file-btn, delete-file-btn, run-plugin-btn
-        });
-
-        // Function to update the model badge based on selected model
-        function updateModelBadge() {
-            const modelSelector = document.getElementById('model-selector');
-            const modelBadge = document.getElementById('model-badge');
-            if (modelSelector && modelBadge) {
-                const selectedModel = modelSelector.value;
-                // Display a simplified model name in the badge
-                const displayName = selectedModel.split('/').pop() || 'AI Assistant';
-                modelBadge.textContent = displayName;
-            }
-        }
+                // Function to update the model badge based on selected model
+                function updateModelBadge() {
+                    const modelSelector = document.getElementById('model-selector');
+                    const modelBadge = document.getElementById('model-badge');
+                    if (modelSelector && modelBadge) {
+                        const selectedModel = modelSelector.value;
+                        // Display a simplified model name in the badge
+                        const displayName = selectedModel.split('/').pop() || 'AI Assistant';
+                        modelBadge.textContent = displayName;
+                    }
+                }
     </script>
 </body>
 
