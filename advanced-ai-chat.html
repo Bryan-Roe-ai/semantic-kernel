@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,16 +15,18 @@
             background-color: #f0f2f5;
             color: #333;
         }
+
         .chat-container {
             background-color: white;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             padding: 20px;
             height: 600px;
             display: flex;
             flex-direction: column;
             transition: all 0.3s ease;
         }
+
         .chat-messages {
             flex-grow: 1;
             overflow-y: auto;
@@ -35,29 +38,42 @@
             scrollbar-width: thin;
             scrollbar-color: #ccc #f5f5f5;
         }
+
         .chat-messages::-webkit-scrollbar {
             width: 8px;
         }
+
         .chat-messages::-webkit-scrollbar-track {
             background: #f5f5f5;
         }
+
         .chat-messages::-webkit-scrollbar-thumb {
             background-color: #ccc;
             border-radius: 10px;
         }
+
         .message {
             padding: 12px 18px;
             margin: 8px 0;
             border-radius: 18px;
             max-width: 80%;
             word-wrap: break-word;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             animation: fadeIn 0.3s ease;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .user-message {
             background-color: #0084ff;
             color: white;
@@ -65,17 +81,20 @@
             margin-left: auto;
             border-bottom-right-radius: 4px;
         }
+
         .ai-message {
             background-color: #f0f0f0;
             color: #333;
             align-self: flex-start;
             border-bottom-left-radius: 4px;
         }
+
         .input-container {
             display: flex;
             gap: 12px;
             position: relative;
         }
+
         #user-input {
             flex-grow: 1;
             padding: 14px 20px;
@@ -85,10 +104,12 @@
             outline: none;
             transition: border 0.3s, box-shadow 0.3s;
         }
+
         #user-input:focus {
             border-color: #0084ff;
-            box-shadow: 0 0 0 2px rgba(0,132,255,0.2);
+            box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.2);
         }
+
         button {
             padding: 12px 20px;
             background-color: #0084ff;
@@ -102,26 +123,32 @@
             justify-content: center;
             transition: all 0.2s ease;
         }
+
         button:hover {
             background-color: #0073e6;
             transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         button:active {
             transform: translateY(0);
         }
+
         .message-container {
             display: flex;
             flex-direction: column;
             margin-bottom: 16px;
             position: relative;
         }
+
         .message-container.user-container {
             align-items: flex-end;
         }
+
         .message-container.ai-container {
             align-items: flex-start;
         }
+
         .message-avatar {
             width: 28px;
             height: 28px;
@@ -132,33 +159,39 @@
             font-size: 14px;
             margin-bottom: 4px;
         }
+
         .user-avatar {
             background-color: #0084ff;
             color: white;
         }
+
         .ai-avatar {
             background-color: #5a5a5a;
             color: white;
         }
+
         .message-time {
             font-size: 11px;
             color: #999;
             margin: 4px 8px;
         }
+
         .config-container {
             margin-bottom: 24px;
             padding: 20px;
             background-color: white;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
         }
+
         .tabs {
             display: flex;
             margin-bottom: 20px;
             border-bottom: 1px solid #ddd;
             gap: 2px;
         }
+
         .tab {
             padding: 12px 24px;
             cursor: pointer;
@@ -171,9 +204,11 @@
             font-weight: 500;
             transition: all 0.2s ease;
         }
+
         .tab:hover {
             background-color: #f0f0f0;
         }
+
         .tab.active {
             background-color: white;
             border-bottom: 2px solid white;
@@ -181,6 +216,7 @@
             border-top: 2px solid #0084ff;
             color: #0084ff;
         }
+
         #loading-indicator {
             display: none;
             align-items: center;
@@ -190,10 +226,12 @@
             font-size: 14px;
             gap: 8px;
         }
+
         .typing-indicator {
             display: flex;
             align-items: center;
         }
+
         .typing-dot {
             width: 8px;
             height: 8px;
@@ -202,25 +240,34 @@
             margin: 0 2px;
             animation: typingAnimation 1.4s infinite ease-in-out;
         }
+
         .typing-dot:nth-child(1) {
             animation-delay: 0s;
         }
+
         .typing-dot:nth-child(2) {
             animation-delay: 0.2s;
         }
+
         .typing-dot:nth-child(3) {
             animation-delay: 0.4s;
         }
+
         @keyframes typingAnimation {
-            0%, 60%, 100% {
+
+            0%,
+            60%,
+            100% {
                 transform: translateY(0);
                 opacity: 0.6;
             }
+
             30% {
                 transform: translateY(-6px);
                 opacity: 1;
             }
         }
+
         pre {
             background-color: #f8f8f8;
             padding: 15px;
@@ -232,23 +279,27 @@
             font-family: 'Consolas', 'Monaco', monospace;
             font-size: 14px;
             margin: 8px 0;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
         }
+
         .header {
             display: flex;
             align-items: center;
             margin-bottom: 24px;
         }
+
         .header-logo {
             height: 40px;
             margin-right: 15px;
         }
+
         h1 {
             color: #333;
             margin: 0;
             font-weight: 600;
             font-size: 28px;
         }
+
         .plugin-badge {
             display: inline-block;
             background-color: #f0f0f0;
@@ -258,21 +309,26 @@
             font-size: 12px;
             margin-top: 4px;
         }
+
         .settings-group {
             margin-bottom: 15px;
         }
+
         .settings-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
         }
-        .settings-group input, .settings-group select {
+
+        .settings-group input,
+        .settings-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 15px;
         }
+
         .dark-mode-toggle {
             position: absolute;
             top: 20px;
@@ -285,26 +341,32 @@
             padding: 5px 10px;
             border-radius: 20px;
         }
+
         .dark-mode-toggle:hover {
             background-color: #f0f0f0;
         }
+
         body.dark-mode {
             background-color: #121212;
             color: #e0e0e0;
         }
+
         body.dark-mode .chat-container,
         body.dark-mode .config-container {
             background-color: #1e1e1e;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
+
         body.dark-mode .chat-messages {
             background-color: #252525;
             border-color: #333;
         }
+
         body.dark-mode .ai-message {
             background-color: #333;
             color: #e0e0e0;
         }
+
         .chat-controls {
             display: flex;
             align-items: center;
@@ -312,6 +374,7 @@
             padding-top: 10px;
             border-top: 1px solid #eaeaea;
         }
+
         .control-button {
             background-color: #f0f0f0;
             color: #666;
@@ -325,19 +388,23 @@
             align-items: center;
             gap: 5px;
         }
+
         .control-button:hover {
             background-color: #e0e0e0;
             color: #333;
         }
+
         .chat-tip {
             margin-left: auto;
             font-size: 13px;
             color: #888;
         }
+
         .send-button {
             background-color: #0084ff;
             color: white;
         }
+
         code {
             background-color: #f0f0f0;
             padding: 2px 5px;
@@ -345,6 +412,7 @@
             font-family: 'Consolas', monospace;
             font-size: 0.9em;
         }
+
         .notification {
             position: fixed;
             top: 20px;
@@ -353,24 +421,28 @@
             color: white;
             padding: 10px 20px;
             border-radius: 4px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             transition: all 0.3s ease;
             opacity: 0;
             transform: translateY(-20px);
         }
+
         .notification.show {
             opacity: 1;
             transform: translateY(0);
         }
+
         .image-upload {
             position: relative;
             display: inline-block;
             margin-right: 10px;
         }
+
         .image-upload input {
             display: none;
         }
+
         .image-upload label {
             cursor: pointer;
             background-color: #f0f0f0;
@@ -384,9 +456,11 @@
             justify-content: center;
             transition: all 0.2s ease;
         }
+
         .image-upload label:hover {
             background-color: #e0e0e0;
         }
+
         .image-preview {
             max-width: 200px;
             max-height: 150px;
@@ -394,47 +468,58 @@
             border-radius: 8px;
             display: none;
         }
-        
+
         body.dark-mode .tab {
             background-color: #1a1a1a;
             border-color: #444;
             color: #ccc;
         }
+
         body.dark-mode .tab.active {
             background-color: #1e1e1e;
             border-bottom: 2px solid #1e1e1e;
         }
+
         body.dark-mode #user-input {
             background-color: #252525;
             color: #e0e0e0;
             border-color: #444;
         }
+
         body.dark-mode pre {
             background-color: #2a2a2a;
             border-color: #444;
             color: #e0e0e0;
         }
+
         body.dark-mode .dark-mode-toggle {
             color: #ccc;
         }
-        body.dark-mode h1, body.dark-mode h3 {
+
+        body.dark-mode h1,
+        body.dark-mode h3 {
             color: #e0e0e0;
         }
+
         body.dark-mode .control-button {
             background-color: #333;
             color: #ccc;
         }
+
         body.dark-mode .control-button:hover {
             background-color: #444;
             color: #fff;
         }
+
         body.dark-mode .chat-controls {
             border-color: #333;
         }
+
         body.dark-mode code {
             background-color: #333;
             color: #e0e0e0;
         }
+
         /* Modal styles */
         .modal {
             display: none;
@@ -448,6 +533,7 @@
             justify-content: center;
             align-items: center;
         }
+
         .modal-content {
             background-color: white;
             padding: 25px;
@@ -456,17 +542,20 @@
             max-width: 500px;
             width: 90%;
         }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 15px;
         }
+
         .modal-title {
             font-size: 20px;
             font-weight: 600;
             margin: 0;
         }
+
         .close-modal {
             font-size: 22px;
             cursor: pointer;
@@ -475,6 +564,7 @@
             padding: 0;
             color: #888;
         }
+
         .keyboard-shortcut {
             display: flex;
             justify-content: space-between;
@@ -482,10 +572,12 @@
             padding: 8px 0;
             border-bottom: 1px solid #eee;
         }
+
         .shortcut-keys {
             display: flex;
             gap: 5px;
         }
+
         .key {
             background-color: #f0f0f0;
             border: 1px solid #ddd;
@@ -494,34 +586,42 @@
             font-family: monospace;
             font-size: 14px;
         }
+
         body.dark-mode .modal-content {
             background-color: #1e1e1e;
             color: #e0e0e0;
         }
+
         body.dark-mode .key {
             background-color: #333;
             border-color: #555;
             color: #e0e0e0;
         }
+
         body.dark-mode .keyboard-shortcut {
             border-color: #444;
         }
+
         body.dark-mode #direct-api-settings {
             background-color: #292929;
             border-color: #444;
         }
+
         input[type="range"] {
             width: 100%;
             margin: 10px 0;
         }
+
         input[type="checkbox"] {
             margin-right: 8px;
         }
+
         #temperature-value {
             display: inline-block;
             width: 30px;
             text-align: center;
         }
+
         .model-badge {
             position: absolute;
             top: 20px;
@@ -533,51 +633,61 @@
             font-size: 12px;
             z-index: 10;
         }
-        
+
         /* File System Styles */
         .files-container {
             display: flex;
             flex-direction: column;
             height: 100%;
         }
+
         .files-header {
             margin-bottom: 15px;
         }
+
         .files-header h3 {
             margin: 0 0 5px 0;
         }
+
         .files-header p {
             margin: 0;
             font-size: 14px;
             color: #666;
         }
+
         .files-actions {
             margin-bottom: 15px;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
+
         .path-input-container {
             display: flex;
             gap: 10px;
         }
+
         .path-browse-button {
             padding: 8px 12px;
             background-color: #f0f0f0;
             color: #333;
         }
+
         .button-group {
             display: flex;
             gap: 10px;
         }
+
         .file-action-button {
             background-color: #f0f0f0;
             color: #333;
             padding: 8px 12px;
         }
+
         .file-action-button:hover {
             background-color: #e0e0e0;
         }
+
         .files-browser-container {
             display: flex;
             gap: 20px;
@@ -587,6 +697,7 @@
             border-radius: 8px;
             overflow: hidden;
         }
+
         .files-browser {
             width: 40%;
             border-right: 1px solid #e0e0e0;
@@ -594,6 +705,7 @@
             padding: 10px;
             background-color: #f8f8f8;
         }
+
         .file-item {
             padding: 8px 10px;
             border-radius: 4px;
@@ -604,23 +716,33 @@
             gap: 8px;
             transition: background-color 0.2s;
         }
+
         .file-item:hover {
             background-color: #e8e8e8;
         }
+
         .file-item.selected {
             background-color: #e0e0e0;
         }
+
+        .file-item.unsaved {
+            background-color: #ffeb3b;
+        }
+
         .folder-icon {
             color: #ffc107;
         }
+
         .file-icon {
             color: #2196F3;
         }
+
         .file-preview-container {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
+
         .file-preview-header {
             padding: 10px;
             display: flex;
@@ -628,18 +750,22 @@
             align-items: center;
             border-bottom: 1px solid #e0e0e0;
         }
+
         .file-preview-header h4 {
             margin: 0;
             font-weight: 500;
         }
+
         .file-preview-actions {
             display: flex;
             gap: 10px;
         }
+
         .file-preview-content {
             flex-grow: 1;
             overflow: hidden;
         }
+
         #file-content-editor {
             width: 100%;
             height: 100%;
@@ -650,6 +776,7 @@
             font-size: 14px;
             outline: none;
         }
+
         #image-content-preview {
             width: 100%;
             height: 100%;
@@ -659,10 +786,12 @@
             justify-content: center;
             overflow: auto;
         }
+
         #image-content-preview img {
             max-width: 100%;
             max-height: 100%;
         }
+
         .file-explorer-empty {
             height: 100%;
             display: flex;
@@ -673,51 +802,62 @@
             text-align: center;
             padding: 20px;
         }
+
         .file-explorer-empty i {
             margin-bottom: 15px;
         }
-        
+
         /* Dark mode support for file system */
         body.dark-mode .files-header p {
             color: #aaa;
         }
+
         body.dark-mode .files-browser {
             background-color: #252525;
             border-color: #444;
         }
+
         body.dark-mode .file-action-button,
         body.dark-mode .path-browse-button {
             background-color: #333;
             color: #ddd;
         }
+
         body.dark-mode .file-action-button:hover,
         body.dark-mode .path-browse-button:hover {
             background-color: #444;
         }
+
         body.dark-mode .file-item:hover {
             background-color: #333;
         }
+
         body.dark-mode .file-item.selected {
             background-color: #3a3a3a;
         }
+
         body.dark-mode .files-browser-container {
             border-color: #444;
         }
+
         body.dark-mode .file-preview-header {
             border-color: #444;
         }
+
         body.dark-mode #file-content-editor {
             background-color: #2a2a2a;
             color: #e0e0e0;
         }
+
         body.dark-mode .file-explorer-empty {
             color: #666;
         }
     </style>
 </head>
+
 <body>
     <div class="notification" id="notification"></div>
-    
+
     <!-- Keyboard Shortcuts Modal -->
     <div id="shortcuts-modal" class="modal">
         <div class="modal-content">
@@ -751,19 +891,20 @@
             </div>
         </div>
     </div>
-    
+
     <button class="dark-mode-toggle" onclick="toggleDarkMode()">
         <i class="fas fa-moon"></i>
     </button>
 
     <div class="header">
-        <img src="https://raw.githubusercontent.com/microsoft/semantic-kernel/main/docs/images/sk-title.png" alt="Semantic Kernel Logo" class="header-logo">
+        <img src="https://raw.githubusercontent.com/microsoft/semantic-kernel/main/docs/images/sk-title.png"
+            alt="Semantic Kernel Logo" class="header-logo">
         <div>
             <h1>Semantic Kernel Chat</h1>
             <span class="plugin-badge">Plugin-powered AI assistant</span>
         </div>
     </div>
-    
+
     <div class="config-container">
         <div class="tabs">
             <div class="tab active" onclick="switchTab('chat-tab')">
@@ -782,7 +923,7 @@
                 <i class="fas fa-cog"></i> Settings
             </div>
         </div>
-        
+
         <div id="chat-tab" class="tab-content" style="display: block;">
             <div class="settings-group">
                 <label for="chat-plugin-selector">Select a conversation style:</label>
@@ -794,7 +935,7 @@
                 </select>
             </div>
         </div>
-        
+
         <div id="linkedin-tab" class="tab-content" style="display: none;">
             <div class="settings-group">
                 <label for="auth-token">LinkedIn Authentication Token:</label>
@@ -804,7 +945,7 @@
                 </p>
             </div>
         </div>
-        
+
         <div id="plugins-tab" class="tab-content" style="display: none;">
             <div class="settings-group">
                 <label for="plugin-selector">Select a plugin to use:</label>
@@ -824,7 +965,7 @@
                 </select>
             </div>
         </div>
-        
+
         <div id="files-tab" class="tab-content" style="display: none;">
             <div class="files-container">
                 <div class="files-header">
@@ -834,25 +975,31 @@
                 <div class="files-actions">
                     <div class="path-input-container">
                         <input type="text" id="file-path-input" placeholder="/path/to/file.txt" style="flex:1;">
-                        <button class="file-action-button" onclick="refreshFileList()"><i class="fas fa-sync"></i> Refresh</button>
+                        <button class="file-action-button" onclick="refreshFileList()"><i class="fas fa-sync"></i>
+                            Refresh</button>
                     </div>
                     <div class="button-group">
-                        <button class="file-action-button" onclick="createFile()"><i class="fas fa-plus"></i> New File</button>
-                        <button class="file-action-button" onclick="deleteFile()"><i class="fas fa-trash"></i> Delete</button>
-                        <button class="file-action-button" onclick="saveFile()"><i class="fas fa-save"></i> Save</button>
+                        <button class="file-action-button" onclick="createFile()"><i class="fas fa-plus"></i> New
+                            File</button>
+                        <button class="file-action-button" onclick="deleteFile()"><i class="fas fa-trash"></i>
+                            Delete</button>
+                        <button class="file-action-button" onclick="saveFile()"><i class="fas fa-save"></i>
+                            Save</button>
                     </div>
                 </div>
                 <div class="files-browser-container">
-                    <div class="files-browser" id="files-browser"></div>
+                    <div class="files-browser" id="files-browser" role="listbox" tabindex="0"></div>
                     <div class="file-preview-container">
                         <div class="file-preview-header">
                             <h4 id="file-preview-name">No file selected</h4>
                             <div class="file-preview-actions">
-                                <button class="file-action-button" onclick="saveFile()"><i class="fas fa-save"></i> Save</button>
+                                <button class="file-action-button" onclick="saveFile()"><i class="fas fa-save"></i>
+                                    Save</button>
                             </div>
                         </div>
                         <div class="file-preview-content">
-                            <textarea id="file-content-editor" placeholder="Select a file to view/edit..." disabled></textarea>
+                            <textarea id="file-content-editor" placeholder="Select a file to view/edit..."
+                                disabled></textarea>
                         </div>
                     </div>
                 </div>
@@ -873,13 +1020,16 @@
             </div>
             <div class="settings-group">
                 <label>
-                    <input type="checkbox" id="use-direct-api" onchange="toggleDirectApiSettings()"> Use Direct Model API
+                    <input type="checkbox" id="use-direct-api" onchange="toggleDirectApiSettings()"> Use Direct Model
+                    API
                 </label>
             </div>
-            <div id="direct-api-settings" style="display: none; margin-top: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+            <div id="direct-api-settings"
+                style="display: none; margin-top: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
                 <div class="settings-group">
                     <label for="direct-api-url">Direct API URL:</label>
-                    <input type="text" id="direct-api-url" value="http://127.0.0.1:1234" placeholder="http://127.0.0.1:1234">
+                    <input type="text" id="direct-api-url" value="http://127.0.0.1:1234"
+                        placeholder="http://127.0.0.1:1234">
                 </div>
                 <div class="settings-group">
                     <label for="direct-model-selector">Direct Model:</label>
@@ -901,7 +1051,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="chat-container">
         <div id="model-badge" class="model-badge">GPT-3.5 Turbo</div>
         <div class="chat-messages" id="chat-messages">
@@ -909,7 +1059,8 @@
                 <div class="message-avatar ai-avatar">
                     <i class="fas fa-robot"></i>
                 </div>
-                <div class="message ai-message">Hello! I'm your AI assistant powered by Semantic Kernel. How can I help you today?</div>
+                <div class="message ai-message">Hello! I'm your AI assistant powered by Semantic Kernel. How can I help
+                    you today?</div>
                 <div class="message-time">Just now</div>
             </div>
         </div>
@@ -936,7 +1087,8 @@
             <button onclick="clearChat()" class="control-button"><i class="fas fa-trash"></i> Clear Chat</button>
             <button onclick="copyConversation()" class="control-button"><i class="fas fa-copy"></i> Copy Chat</button>
             <button onclick="showModal()" class="control-button"><i class="fas fa-keyboard"></i> Shortcuts</button>
-            <button onclick="injectFileListToChat()" class="control-button"><i class="fas fa-folder"></i> Show Files</button>
+            <button onclick="injectFileListToChat()" class="control-button"><i class="fas fa-folder"></i> Show
+                Files</button>
             <span class="chat-tip"><i class="fas fa-lightbulb"></i> Tip: Press ? for keyboard shortcuts</span>
         </div>
     </div>
@@ -951,10 +1103,10 @@
         const chatPluginSelector = document.getElementById('chat-plugin-selector');
         const loadingIndicator = document.getElementById('loading-indicator');
         const modelSelector = document.getElementById('model-selector');
-        
+
         let currentTab = 'chat-tab';
         let isDarkMode = false;
-        
+
         // Initialize plugin functions
         const pluginFunctions = {
             'chat': ['chat', 'ask', 'continue'],
@@ -967,38 +1119,38 @@
 
         // Initialize the conversation history
         const conversationHistory = [];
-        
+
         // Function to toggle dark mode
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             isDarkMode = !isDarkMode;
-            
+
             const darkModeToggle = document.querySelector('.dark-mode-toggle i');
             if (isDarkMode) {
                 darkModeToggle.className = 'fas fa-sun';
             } else {
                 darkModeToggle.className = 'fas fa-moon';
             }
-            
+
             // Save preference
             localStorage.setItem('darkMode', isDarkMode);
         }
-        
+
         // Function to toggle direct API settings
         function toggleDirectApiSettings() {
             const useDirectApi = document.getElementById('use-direct-api').checked;
             const directApiSettings = document.getElementById('direct-api-settings');
-            
+
             if (useDirectApi) {
                 directApiSettings.style.display = 'block';
             } else {
                 directApiSettings.style.display = 'none';
             }
-            
+
             // Save preference
             localStorage.setItem('useDirectApi', useDirectApi);
         }
-        
+
         // Check if dark mode was previously enabled
         if (localStorage.getItem('darkMode') === 'true') {
             toggleDarkMode();
@@ -1009,30 +1161,30 @@
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
             });
-            
+
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.style.display = 'none';
             });
-            
+
             document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
             document.getElementById(tabId).style.display = 'block';
-            
+
             currentTab = tabId;
-            
+
             // Update plugin functions when plugin changes
             if (tabId === 'plugins-tab') {
                 updatePluginFunctions();
             }
         }
-        
+
         // Update available functions when plugin changes
         pluginSelector.addEventListener('change', updatePluginFunctions);
-        
+
         // Update model badge when settings change
         function updateModelBadge() {
             const modelBadge = document.getElementById('model-badge');
             const useDirectApi = document.getElementById('use-direct-api').checked;
-            
+
             if (useDirectApi) {
                 const directModel = document.getElementById('direct-model-selector').value;
                 modelBadge.textContent = directModel;
@@ -1043,21 +1195,21 @@
                 modelBadge.style.backgroundColor = '#0084ff'; // Blue for SK
             }
         }
-        
+
         // Add event listeners for model changes
         document.getElementById('use-direct-api').addEventListener('change', updateModelBadge);
         document.getElementById('direct-model-selector').addEventListener('change', updateModelBadge);
         if (modelSelector) {
             modelSelector.addEventListener('change', updateModelBadge);
         }
-        
+
         function updatePluginFunctions() {
             const selectedPlugin = pluginSelector.value;
             const functions = pluginFunctions[selectedPlugin] || ['chat'];
-            
+
             // Clear existing options
             pluginFunctionSelector.innerHTML = '';
-            
+
             // Add new options
             functions.forEach(func => {
                 const option = document.createElement('option');
@@ -1072,130 +1224,261 @@
             const now = new Date();
             return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
-        
-        // Function to add a message to the chat
+
+        // --- AGENTIC FILE COMMANDS & TOOL-USE SUPPORT ---
+
+        // Backend API for file operations (adjust endpoint as needed)
+        const FILE_API_BASE = apiBaseUrlInput.value.replace(/\/$/, '');
+
+        // Handle /file commands in chat
+        async function handleFileCommand(cmd) {
+            const [action, ...args] = cmd.trim().split(/\s+/);
+            let resultMsg = '';
+            try {
+                let res, data;
+                switch (action) {
+                    case 'list':
+                        res = await fetch(`${FILE_API_BASE}/files/list`, { method: 'GET' });
+                        data = await res.json();
+                        resultMsg = 'Files:\n' + (Array.isArray(data) ? data.join('\n') : JSON.stringify(data, null, 2));
+                        break;
+                    case 'read':
+                        if (!args[0]) throw new Error('Usage: /file read <path>');
+                        res = await fetch(`${FILE_API_BASE}/files/read?path=${encodeURIComponent(args[0])}`);
+                        data = await res.json();
+                        resultMsg = `Contents of ${args[0]}:\n` + (data.content || JSON.stringify(data, null, 2));
+                        break;
+                    case 'write':
+                        if (!args[0] || !args[1]) throw new Error('Usage: /file write <path> <content>');
+                        res = await fetch(`${FILE_API_BASE}/files/write`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ path: args[0], content: args.slice(1).join(' ') })
+                        });
+                        data = await res.json();
+                        resultMsg = `Wrote to ${args[0]}: ${data.status || 'OK'}`;
+                        break;
+                    case 'delete':
+                        if (!args[0]) throw new Error('Usage: /file delete <path>');
+                        res = await fetch(`${FILE_API_BASE}/files/delete`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ path: args[0] })
+                        });
+                        data = await res.json();
+                        resultMsg = `Deleted ${args[0]}: ${data.status || 'OK'}`;
+                        break;
+                    default:
+                        resultMsg = 'Unknown /file command. Try: list, read <path>, write <path> <content>, delete <path>';
+                }
+            } catch (err) {
+                resultMsg = `File command error: ${err.message}`;
+            }
+            addMessage(resultMsg, false);
+        }
+
+        // --- Enhance addMessage to render tool-use/JSON responses ---
         function addMessage(content, isUser) {
             const messageContainer = document.createElement('div');
             messageContainer.className = isUser ? 'message-container user-container' : 'message-container ai-container';
-            
-            // Create avatar
             const avatar = document.createElement('div');
             avatar.className = isUser ? 'message-avatar user-avatar' : 'message-avatar ai-avatar';
-            
-            if (isUser) {
-                avatar.innerHTML = '<i class="fas fa-user"></i>';
-            } else {
-                avatar.innerHTML = '<i class="fas fa-robot"></i>';
-            }
-            
-            // Create message
+            avatar.innerHTML = isUser ? '<i class="fas fa-user"></i>' : '<i class="fas fa-robot"></i>';
             const message = document.createElement('div');
             message.className = isUser ? 'message user-message' : 'message ai-message';
-            
-            // Add message to history
-            conversationHistory.push({
-                role: isUser ? 'user' : 'assistant',
-                content: content
-            });
-            
-            // Check if the content appears to be JSON
+            conversationHistory.push({ role: isUser ? 'user' : 'assistant', content });
+            // Render JSON/tool-use nicely
+            let formattedContent = content;
             try {
                 if (typeof content === 'string' && (content.trim().startsWith('{') || content.trim().startsWith('['))) {
                     const jsonData = JSON.parse(content);
                     const pre = document.createElement('pre');
                     pre.textContent = JSON.stringify(jsonData, null, 2);
                     message.appendChild(pre);
+                } else if (typeof content === 'object') {
+                    const pre = document.createElement('pre');
+                    pre.textContent = JSON.stringify(content, null, 2);
+                    message.appendChild(pre);
                 } else {
-                    // Handle markdown formatting
-                    let formattedContent = content;
-                    
-                    // Bold
+                    // Markdown/code formatting
                     formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                    
-                    // Italic
                     formattedContent = formattedContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                    
-                    // Code
                     formattedContent = formattedContent.replace(/`([^`]+)`/g, '<code>$1</code>');
-                    
                     message.innerHTML = formattedContent;
                 }
             } catch (e) {
-                // Not valid JSON, just use text
                 message.textContent = content;
             }
-            
-            // Create timestamp
             const timestamp = document.createElement('div');
             timestamp.className = 'message-time';
             timestamp.textContent = getFormattedTime();
-            
-            // Append all elements
             messageContainer.appendChild(avatar);
             messageContainer.appendChild(message);
             messageContainer.appendChild(timestamp);
             chatMessages.appendChild(messageContainer);
-            
-            // Auto scroll to the bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            // Save conversation history
             localStorage.setItem('conversationHistory', JSON.stringify(conversationHistory));
+        }
+
+        // --- File Explorer UI integration ---
+        async function refreshFileList() {
+            try {
+                const res = await fetch(`${FILE_API_BASE}/files/list`);
+                const files = await res.json();
+                const browser = document.getElementById('files-browser');
+                browser.innerHTML = '';
+                if (Array.isArray(files)) {
+                    files.forEach(f => {
+                        const item = document.createElement('div');
+                        item.className = 'file-item';
+                        item.textContent = f;
+                        item.onclick = () => selectFile(f);
+                        browser.appendChild(item);
+                    });
+                } else {
+                    browser.innerHTML = '<div class="file-explorer-empty">No files found.</div>';
+                }
+            } catch (e) {
+                showNotification('Failed to load file list: ' + e.message);
+            }
+        }
+        async function selectFile(path) {
+            try {
+                const res = await fetch(`${FILE_API_BASE}/files/read?path=${encodeURIComponent(path)}`);
+                const data = await res.json();
+                document.getElementById('file-preview-name').textContent = path;
+                const editor = document.getElementById('file-content-editor');
+                editor.value = data.content || '';
+                editor.disabled = false;
+                editor.dataset.path = path;
+            } catch (e) {
+                showNotification('Failed to read file: ' + e.message);
+            }
+        }
+        async function saveFile() {
+            const editor = document.getElementById('file-content-editor');
+            const path = editor.dataset.path;
+            if (!path) return showNotification('No file selected.');
+            try {
+                const res = await fetch(`${FILE_API_BASE}/files/write`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path, content: editor.value })
+                });
+                const data = await res.json();
+                showNotification(`Saved ${path}: ${data.status || 'OK'}`);
+            } catch (e) {
+                showNotification('Failed to save file: ' + e.message);
+            }
+        }
+        async function createFile() {
+            const path = prompt('Enter new file path:');
+            if (!path) return;
+            try {
+                const res = await fetch(`${FILE_API_BASE}/files/write`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path, content: '' })
+                });
+                await res.json();
+                refreshFileList();
+                showNotification('File created: ' + path);
+            } catch (e) {
+                showNotification('Failed to create file: ' + e.message);
+            }
+        }
+        async function deleteFile() {
+            const editor = document.getElementById('file-content-editor');
+            const path = editor.dataset.path;
+            if (!path) return showNotification('No file selected.');
+            if (!confirm('Delete file: ' + path + '?')) return;
+            try {
+                const res = await fetch(`${FILE_API_BASE}/files/delete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path })
+                });
+                await res.json();
+                refreshFileList();
+                editor.value = '';
+                editor.disabled = true;
+                document.getElementById('file-preview-name').textContent = 'No file selected';
+                showNotification('File deleted: ' + path);
+            } catch (e) {
+                showNotification('Failed to delete file: ' + e.message);
+            }
+        }
+
+        // Inject file list into chat (Show Files button)
+        async function injectFileListToChat() {
+            try {
+                const res = await fetch(`${FILE_API_BASE}/files/list`);
+                const files = await res.json();
+                let msg = 'Workspace Files:\n';
+                if (Array.isArray(files) && files.length > 0) {
+                    msg += files.map(f => `- ${f}`).join('\n');
+                } else {
+                    msg += 'No files found.';
+                }
+                addMessage(msg, false);
+            } catch (e) {
+                addMessage('Error fetching file list: ' + e.message, false);
+            }
         }
 
         // Function to send a message
         async function sendMessage() {
             const message = userInput.value.trim();
             if (!message && !uploadedImage) return;
-            
+
             // Create message content, including image if present
             let displayMessage = message;
             let requestBody = { input: message };
-            
+
             if (uploadedImage) {
                 displayMessage += ' [Image attached]';
                 requestBody.imageData = uploadedImage;
             }
-            
+
             // Check if the message is a file command
             if (message.startsWith("/file ")) {
                 handleFileCommand(message.substring(6));
                 return;
             }
-            
+
             // Display user message
             addMessage(displayMessage, true);
             userInput.value = '';
-            
+
             // Clear image preview and data
             imagePreview.style.display = 'none';
             uploadedImage = null;
-            
+
             // Show loading indicator
             loadingIndicator.style.display = 'flex';
-            
+
             try {
                 let response;
                 const baseUrl = apiBaseUrlInput.value.trim();
                 const model = modelSelector ? modelSelector.value : 'gpt-35-turbo';
                 const useDirectApi = document.getElementById('use-direct-api').checked;
-                
+
                 if (useDirectApi) {
                     // Use direct model API like Phi-4 at http://127.0.0.1:1234
                     const directApiUrl = document.getElementById('direct-api-url').value.trim();
                     const directModel = document.getElementById('direct-model-selector').value;
                     const maxTokens = parseInt(document.getElementById('direct-max-tokens').value);
                     const temperature = parseFloat(document.getElementById('direct-temperature').value);
-                    
+
                     // Format the messages according to the model's expected format
                     let formattedMessages = [];
-                    
+
                     // Add system message with information about file commands
                     formattedMessages.push({
                         role: "system",
                         content: "You are an AI assistant that can help with files. You can access files through the file system interface. The user can use /file commands to interact with files directly."
                     });
-                    
+
                     // Add the last 10 messages for context
                     const contextMessages = conversationHistory.slice(-10, -1);
                     for (const msg of contextMessages) {
@@ -1204,13 +1487,13 @@
                             content: msg.content
                         });
                     }
-                    
+
                     // Add the current user message
                     formattedMessages.push({
                         role: "user",
                         content: message
                     });
-                    
+
                     // Make API call to the direct model API
                     response = await fetch(`${directApiUrl}/v1/chat/completions`, {
                         method: 'POST',
@@ -1224,25 +1507,25 @@
                             temperature: temperature
                         })
                     });
-                    
+
                     if (!response.ok) {
                         throw new Error(`Error from direct API: ${response.status} - ${response.statusText}`);
                     }
-                    
+
                     const data = await response.json();
-                    const aiResponse = data.choices && data.choices[0] && data.choices[0].message ? 
-                        data.choices[0].message.content : 
+                    const aiResponse = data.choices && data.choices[0] && data.choices[0].message ?
+                        data.choices[0].message.content :
                         "No response from model";
-                    
+
                     addMessage(aiResponse, false);
                     return;
-                    
+
                 } else if (currentTab === 'linkedin-tab') {
                     const authToken = authTokenInput.value.trim();
                     if (!authToken) {
                         throw new Error('LinkedIn authentication token is required');
                     }
-                    
+
                     // Call the LinkedIn skill endpoint
                     response = await fetch(`${baseUrl}/linkedin/post`, {
                         method: 'POST',
@@ -1259,7 +1542,7 @@
                     // Specific plugin endpoint
                     const plugin = pluginSelector.value;
                     const func = pluginFunctionSelector.value;
-                    
+
                     response = await fetch(`${baseUrl}/${plugin}/${func}`, {
                         method: 'POST',
                         headers: {
@@ -1276,7 +1559,7 @@
                     // General chat endpoint
                     const chatStyle = chatPluginSelector.value;
                     let endpoint = 'chat';
-                    
+
                     switch (chatStyle) {
                         case 'creative':
                             endpoint = 'writer/tellMeMore';
@@ -1290,7 +1573,7 @@
                         default:
                             endpoint = 'chat/chat';
                     }
-                    
+
                     response = await fetch(`${baseUrl}/${endpoint}`, {
                         method: 'POST',
                         headers: {
@@ -1304,7 +1587,7 @@
                         })
                     });
                 }
-                
+
                 if (!response.ok) {
                     if (response.status === 404) {
                         throw new Error(`Endpoint not found. Make sure the AI Function app is running and the endpoint exists at ${baseUrl}.`);
@@ -1312,7 +1595,7 @@
                         throw new Error(`Error: ${response.status} - ${response.statusText}`);
                     }
                 }
-                
+
                 // Try to parse as JSON first
                 let data;
                 const contentType = response.headers.get('content-type');
@@ -1333,47 +1616,47 @@
         }
 
         // Send message on Enter key
-        userInput.addEventListener('keypress', function(e) {
+        userInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 sendMessage();
             }
         });
-        
+
         // Function to clear the chat history
         function clearChat() {
             // Clear the chat messages
             chatMessages.innerHTML = '';
-            
+
             // Clear conversation history
             conversationHistory.length = 0;
             localStorage.removeItem('conversationHistory');
-            
+
             // Add welcome message again
             addMessage('Hello! I\'m your AI assistant powered by Semantic Kernel. How can I help you today?', false);
         }
-        
+
         // Load conversation history from localStorage
         function loadConversationHistory() {
             const savedHistory = localStorage.getItem('conversationHistory');
             if (savedHistory) {
                 const history = JSON.parse(savedHistory);
-                
+
                 // Clear existing messages
                 chatMessages.innerHTML = '';
-                
+
                 // Add saved messages
                 history.forEach(msg => {
                     addMessage(msg.content, msg.role === 'user');
                 });
-                
+
                 // Update conversation history
                 conversationHistory.push(...history);
             }
         }
-        
+
         // Initialize the plugin functions dropdown
         updatePluginFunctions();
-        
+
         // Function to copy conversation to clipboard
         function copyConversation() {
             // Build text representation of conversation
@@ -1382,7 +1665,7 @@
                 const role = msg.role === 'user' ? 'You' : 'AI';
                 conversationText += `${role}: ${msg.content}\n\n`;
             });
-            
+
             // Copy to clipboard
             navigator.clipboard.writeText(conversationText).then(() => {
                 showNotification('Chat copied to clipboard!');
@@ -1390,33 +1673,33 @@
                 showNotification('Failed to copy chat: ' + err);
             });
         }
-        
+
         // Show notification
         function showNotification(message) {
             const notification = document.getElementById('notification');
-            notification.textContent = message;
+            notification.textContent = message + ' If this persists, check your backend/API connection.';
             notification.classList.add('show');
-            
+
             // Hide after 3 seconds
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 3000);
         }
-        
+
         // Handle image upload
         const fileInput = document.getElementById('file-input');
         const imagePreview = document.getElementById('image-preview');
         let uploadedImage = null;
-        
+
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            
+
             if (!file.type.match('image.*')) {
                 showNotification('Please select an image file');
                 return;
             }
-            
+
             const reader = new FileReader();
             reader.onload = (e) => {
                 imagePreview.src = e.target.result;
@@ -1425,122 +1708,122 @@
             };
             reader.readAsDataURL(file);
         });
-        
+
         // Register service worker for offline capability
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').then(function() {
+            navigator.serviceWorker.register('/sw.js').then(function () {
                 console.log('Service Worker registered');
-            }).catch(function(error) {
+            }).catch(function (error) {
                 console.log('Service Worker registration failed:', error);
             });
         }
-        
+
         // Modal functions
         const shortcutsModal = document.getElementById('shortcuts-modal');
-        
+
         function showModal() {
             shortcutsModal.style.display = 'flex';
         }
-        
+
         function closeModal() {
             shortcutsModal.style.display = 'none';
         }
-        
+
         // Close modal when clicking outside of it
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             if (event.target === shortcutsModal) {
                 closeModal();
             }
         };
-        
+
         // Add keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             // Ctrl+L or Cmd+L to clear chat
             if ((e.ctrlKey || e.metaKey) && e.key === 'l') {
                 e.preventDefault();
                 clearChat();
             }
-            
+
             // Ctrl+D or Cmd+D to toggle dark mode
             if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
                 e.preventDefault();
                 toggleDarkMode();
             }
-            
+
             // ? to show keyboard shortcuts
             if (e.key === '?' && !e.ctrlKey && !e.shiftKey && !e.altKey && !e.metaKey) {
                 e.preventDefault();
                 showModal();
             }
-            
+
             // Escape to close modal
             if (e.key === 'Escape' && shortcutsModal.style.display === 'flex') {
                 closeModal();
             }
         });
-        
+
         // Temperature slider event handler
         const temperatureSlider = document.getElementById('direct-temperature');
         const temperatureValue = document.getElementById('temperature-value');
-        
-        temperatureSlider.addEventListener('input', function() {
+
+        temperatureSlider.addEventListener('input', function () {
             temperatureValue.textContent = this.value;
         });
-        
+
         // Load saved preferences
         function loadPreferences() {
             // Load dark mode preference
             if (localStorage.getItem('darkMode') === 'true') {
                 toggleDarkMode();
             }
-            
+
             // Load direct API preference
             const useDirectApi = localStorage.getItem('useDirectApi') === 'true';
             document.getElementById('use-direct-api').checked = useDirectApi;
             toggleDirectApiSettings();
-            
+
             // Load API URLs
             const savedDirectApiUrl = localStorage.getItem('directApiUrl');
             if (savedDirectApiUrl) {
                 document.getElementById('direct-api-url').value = savedDirectApiUrl;
             }
-            
+
             const savedApiBaseUrl = localStorage.getItem('apiBaseUrl');
             if (savedApiBaseUrl) {
                 apiBaseUrlInput.value = savedApiBaseUrl;
             }
-            
+
             // Load model preferences
             const savedDirectModel = localStorage.getItem('directModel');
             if (savedDirectModel && document.getElementById('direct-model-selector')) {
                 document.getElementById('direct-model-selector').value = savedDirectModel;
             }
-            
+
             const savedModel = localStorage.getItem('skModel');
             if (savedModel && modelSelector) {
                 modelSelector.value = savedModel;
             }
         }
-        
+
         // Save API settings when changed
-        document.getElementById('direct-api-url').addEventListener('change', function() {
+        document.getElementById('direct-api-url').addEventListener('change', function () {
             localStorage.setItem('directApiUrl', this.value);
         });
-        
-        apiBaseUrlInput.addEventListener('change', function() {
+
+        apiBaseUrlInput.addEventListener('change', function () {
             localStorage.setItem('apiBaseUrl', this.value);
         });
-        
-        document.getElementById('direct-model-selector').addEventListener('change', function() {
+
+        document.getElementById('direct-model-selector').addEventListener('change', function () {
             localStorage.setItem('directModel', this.value);
         });
-        
+
         if (modelSelector) {
-            modelSelector.addEventListener('change', function() {
+            modelSelector.addEventListener('change', function () {
                 localStorage.setItem('skModel', this.value);
             });
         }
-        
+
         // Try to load previous conversation and preferences
         try {
             loadConversationHistory();
@@ -1549,365 +1832,15 @@
         } catch (e) {
             console.error('Failed to load saved data:', e);
         }
-        
+
         // Focus the input field
         userInput.focus();
 
-        // File system functionality
-        let currentDirectory = "";
-        let selectedFile = null;
-        let fileHasChanges = false;
-        const basePathInput = document.getElementById('file-path-input');
-        const filesBrowser = document.getElementById('files-browser');
-        const filePreviewName = document.getElementById('file-preview-name');
-        const saveFileButton = document.getElementById('save-file-button');
-        const shareWithAIButton = document.getElementById('share-with-ai-button');
-        const imageContentPreview = document.getElementById('image-content-preview');
-        
-        // Set default path to current directory
-        window.addEventListener('load', function() {
-            // Use the current directory as default
-            const defaultPath = "c:\\Users\\Bryan\\OneDrive\\SK";
-            basePathInput.value = defaultPath;
-            currentDirectory = defaultPath;
-        });
-        
-        // Browse directory (not fully supported in browser, just a placeholder)
-        function browseDirectory() {
-            // In a real implementation, we would show a directory picker
-            // For now just notify the user this isn't available
-            showNotification('Directory browsing requires additional permissions. Please enter a path manually.');
-        }
-        
-        // Refresh file list
-        async function refreshFileList() {
-            currentDirectory = basePathInput.value.trim();
-            if (!currentDirectory) {
-                showNotification('Please enter a directory path');
-                return;
-            }
-            
-            try {
-                // Clear current selection
-                selectedFile = null;
-                fileContentEditor.value = '';
-                fileContentEditor.disabled = true;
-                filePreviewName.textContent = 'No file selected';
-                saveFileButton.disabled = true;
-                shareWithAIButton.disabled = true;
-                imageContentPreview.style.display = 'none';
-                fileContentEditor.style.display = 'block';
-                
-                // Get directory listing
-                const files = await readDirectory(currentDirectory);
-                
-                // Display files
-                filesBrowser.innerHTML = '';
-                
-                // Add parent directory option
-                const parentItem = document.createElement('div');
-                parentItem.className = 'file-item';
-                parentItem.innerHTML = '<i class="fas fa-arrow-up"></i> ..';
-                parentItem.addEventListener('click', () => {
-                    // Go up one directory
-                    const parts = currentDirectory.split('\\');
-                    if (parts.length > 1) {
-                        parts.pop();
-                        basePathInput.value = parts.join('\\');
-                        refreshFileList();
-                    }
-                });
-                filesBrowser.appendChild(parentItem);
-                
-                // Display folders first
-                files.filter(file => file.isDirectory).forEach(folder => {
-                    const folderItem = document.createElement('div');
-                    folderItem.className = 'file-item';
-                    folderItem.innerHTML = `<i class="fas fa-folder folder-icon"></i> ${folder.name}`;
-                    folderItem.addEventListener('click', () => {
-                        basePathInput.value = `${currentDirectory}\\${folder.name}`;
-                        refreshFileList();
-                    });
-                    filesBrowser.appendChild(folderItem);
-                });
-                
-                // Then display files
-                files.filter(file => !file.isDirectory).forEach(file => {
-                    const fileItem = document.createElement('div');
-                    fileItem.className = 'file-item';
-                    const iconClass = getFileIconClass(file.name);
-                    fileItem.innerHTML = `<i class="fas ${iconClass}"></i> ${file.name}`;
-                    fileItem.addEventListener('click', () => selectFile(file.name));
-                    filesBrowser.appendChild(fileItem);
-                });
-                
-            } catch (error) {
-                filesBrowser.innerHTML = `
-                    <div class="file-explorer-empty">
-                        <i class="fas fa-exclamation-circle fa-4x" style="color: #d9534f;"></i>
-                        <p>Error accessing directory: ${error.message}</p>
-                    </div>
-                `;
-            }
-        }
-        
-        // Read directory contents
-        async function readDirectory(path) {
-            try {
-                // This would be a real API call in a full implementation
-                // For now we'll simulate reading from localStorage
-                const storedFiles = localStorage.getItem(`fileDir_${path}`);
-                
-                if (storedFiles) {
-                    return JSON.parse(storedFiles);
-                }
-                
-                // If no stored files, create a default structure
-                let defaultFiles = [];
-                
-                // Default structure based on the user's workspace
-                defaultFiles.push({ name: "documents", isDirectory: true });
-                defaultFiles.push({ name: "images", isDirectory: true });
-                defaultFiles.push({ name: "notes.txt", isDirectory: false });
-                defaultFiles.push({ name: "todo.md", isDirectory: false });
-                defaultFiles.push({ name: "example.json", isDirectory: false });
-                
-                // Store the default structure
-                localStorage.setItem(`fileDir_${path}`, JSON.stringify(defaultFiles));
-                
-                // Create default content for files
-                localStorage.setItem(`fileContent_${path}\\notes.txt`, "These are my notes.\n\nImportant things to remember:\n1. Item one\n2. Item two\n3. Item three");
-                localStorage.setItem(`fileContent_${path}\\todo.md`, "# Todo List\n\n## High Priority\n- Finish the project\n- Submit report\n\n## Low Priority\n- Clean up code\n- Add documentation");
-                localStorage.setItem(`fileContent_${path}\\example.json`, '{\n  "name": "Example",\n  "version": "1.0.0",\n  "description": "An example JSON file",\n  "items": ["item1", "item2", "item3"]\n}');
-                
-                return defaultFiles;
-            } catch (error) {
-                console.error("Error reading directory:", error);
-                throw new Error("Failed to read directory contents");
-            }
-        }
-        
-        // Select a file to view/edit
-        async function selectFile(fileName) {
-            try {
-                const filePath = `${currentDirectory}\\${fileName}`;
-                selectedFile = filePath;
-                
-                // Update UI
-                filePreviewName.textContent = fileName;
-                saveFileButton.disabled = false;
-                shareWithAIButton.disabled = false;
-                
-                // Get file content
-                const content = localStorage.getItem(`fileContent_${filePath}`);
-                
-                // Check if it's an image
-                if (isImageFile(fileName)) {
-                    imageContentPreview.style.display = 'block';
-                    fileContentEditor.style.display = 'none';
-                    fileContentEditor.value = '';
-                    fileContentEditor.disabled = true;
-                    
-                    // For demo purposes we'll just show a placeholder
-                    imageContentPreview.innerHTML = `
-                        <div style="text-align: center; padding: 20px;">
-                            <i class="fas fa-image fa-5x" style="color: #ccc;"></i>
-                            <p>Image preview not available in this demo</p>
-                            <p>${fileName}</p>
-                        </div>
-                    `;
-                } else {
-                    // It's a text file
-                    imageContentPreview.style.display = 'none';
-                    fileContentEditor.style.display = 'block';
-                    fileContentEditor.value = content || '';
-                    fileContentEditor.disabled = false;
-                    
-                    // Set initial state
-                    fileHasChanges = false;
-                }
-                
-                // Highlight the selected file
-                document.querySelectorAll('.file-item').forEach(item => {
-                    item.classList.remove('selected');
-                    if (item.textContent.trim().endsWith(fileName)) {
-                        item.classList.add('selected');
-                    }
-                });
-            } catch (error) {
-                console.error("Error selecting file:", error);
-                showNotification(`Error opening file: ${error.message}`);
-            }
-        }
-        
-        // Save file content
-        async function saveFileContent() {
-            if (!selectedFile) return;
-            
-            try {
-                // In a real implementation, this would write to the file system
-                localStorage.setItem(`fileContent_${selectedFile}`, fileContentEditor.value);
-                fileHasChanges = false;
-                showNotification('File saved successfully');
-            } catch (error) {
-                console.error("Error saving file:", error);
-                showNotification(`Error saving file: ${error.message}`);
-            }
-        }
-        
-        // Share file with AI
-        function shareFileWithAI() {
-            if (!selectedFile) return;
-            
-            const fileName = selectedFile.split('\\').pop();
-            const fileContent = fileContentEditor.value;
-            
-            // Switch to chat tab
-            switchTab('chat-tab');
-            
-            // Insert file content into chat
-            addMessage(`I'm sharing the contents of file "${fileName}" with you:
-\`\`\`
-${fileContent}
-\`\`\`
-Please help me understand or modify this content.`, true);
-            
-            // Send to AI
-            sendMessage();
-        }
-        
-        // Create new file
-        function createNewFile() {
-            const fileName = prompt('Enter new file name:');
-            if (!fileName) return;
-            
-            try {
-                // Check if file already exists
-                const files = JSON.parse(localStorage.getItem(`fileDir_${currentDirectory}`) || '[]');
-                if (files.some(file => file.name === fileName)) {
-                    showNotification('A file with that name already exists');
-                    return;
-                }
-                
-                // Add to directory listing
-                files.push({ name: fileName, isDirectory: false });
-                localStorage.setItem(`fileDir_${currentDirectory}`, JSON.stringify(files));
-                
-                // Create empty file content
-                localStorage.setItem(`fileContent_${currentDirectory}\\${fileName}`, '');
-                
-                // Refresh file list
-                refreshFileList();
-                showNotification('File created successfully');
-                
-                // Select the new file
-                setTimeout(() => selectFile(fileName), 100);
-            } catch (error) {
-                console.error("Error creating file:", error);
-                showNotification(`Error creating file: ${error.message}`);
-            }
-        }
-        
-        // Create new folder
-        function createNewFolder() {
-            const folderName = prompt('Enter new folder name:');
-            if (!folderName) return;
-            
-            try {
-                // Check if folder already exists
-                const files = JSON.parse(localStorage.getItem(`fileDir_${currentDirectory}`) || '[]');
-                if (files.some(file => file.name === folderName)) {
-                    showNotification('A folder with that name already exists');
-                    return;
-                }
-                
-                // Add to directory listing
-                files.push({ name: folderName, isDirectory: true });
-                localStorage.setItem(`fileDir_${currentDirectory}`, JSON.stringify(files));
-                
-                // Create empty folder
-                localStorage.setItem(`fileDir_${currentDirectory}\\${folderName}`, JSON.stringify([]));
-                
-                // Refresh file list
-                refreshFileList();
-                showNotification('Folder created successfully');
-            } catch (error) {
-                console.error("Error creating folder:", error);
-                showNotification(`Error creating folder: ${error.message}`);
-            }
-        }
-        
-        // Helper to get file icon based on extension
-        function getFileIconClass(fileName) {
-            const ext = fileName.split('.').pop().toLowerCase();
-            switch(ext) {
-                case 'txt': return 'fa-file-alt';
-                case 'md': return 'fa-file-alt';
-                case 'json': return 'fa-file-code';
-                case 'js': return 'fa-file-code';
-                case 'html': return 'fa-file-code';
-                case 'css': return 'fa-file-code';
-                case 'py': return 'fa-file-code';
-                case 'jpg': case 'jpeg': case 'png': case 'gif': return 'fa-file-image';
-                case 'pdf': return 'fa-file-pdf';
-                case 'doc': case 'docx': return 'fa-file-word';
-                case 'xls': case 'xlsx': return 'fa-file-excel';
-                default: return 'fa-file';
-            }
-        }
-        
-        // Helper to check if file is an image
-        function isImageFile(fileName) {
-            const ext = fileName.split('.').pop().toLowerCase();
-            return ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].includes(ext);
-        }
-        
-        // Track changes in file editor
-        fileContentEditor.addEventListener('input', () => {
-            fileHasChanges = true;
-        });
-        
-        // Update API to handle files
-        function addFileToContext(filePath, fileContent) {
-            // Store the file in conversation context
-            conversationHistory.push({
-                role: "system",
-                content: `File loaded: ${filePath}\n\n${fileContent}`
-            });
-        }
-
-        // --- File Reference in Chat ---
-        let lastFileList = [];
-        let lastFileContents = {};
-
-        async function injectFileListToChat() {
-            // Fetch file list from backend (stub: replace with real API call)
-            // Example: const resp = await fetch('/api/files?path=/');
-            // lastFileList = await resp.json();
-            // For now, use a placeholder:
-            lastFileList = [
-                'README.md', 'LICENSE', 'advanced-ai-chat.html', 'ai-chat.html', 'semantic-kernel/app.py', 'semantic-kernel/BR-AI.txt'
-            ];
-            const fileListMsg = 'Workspace files available to the AI:\n' + lastFileList.map(f => '- ' + f).join('\n');
-            conversationHistory.push({ role: 'system', content: fileListMsg });
-            addMessage(fileListMsg, false);
-        }
-
-        async function handleFileCommand(filename) {
-            // Fetch file content from backend (stub: replace with real API call)
-            // Example: const resp = await fetch(`/api/files/read?path=${encodeURIComponent(filename)}`);
-            // const content = await resp.text();
-            // For now, use a placeholder:
-            let content = '';
-            if (filename === 'README.md') content = 'This is the README file.';
-            else if (filename === 'LICENSE') content = 'MIT License...';
-            else if (filename === 'advanced-ai-chat.html') content = '...HTML source...';
-            else content = '(File not found or not loaded)';
-            lastFileContents[filename] = content;
-            const fileMsg = `Content of ${filename}:\n\n` + content;
-            conversationHistory.push({ role: 'system', content: fileMsg });
-            addMessage(fileMsg, false);
+        // Initial file list load
+        if (document.getElementById('file-path-input')) {
+            refreshFileList();
         }
     </script>
 </body>
+
 </html>
