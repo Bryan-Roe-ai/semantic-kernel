@@ -509,12 +509,7 @@ jobs:
         shell: bash
         run: |
           uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/samples
-      - name: Run Integration Tests - Agents
-        id: run_tests_agents
-        timeout-minutes: 10
-        shell: bash
-        run: |
-          uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration/agents
+# Removed the duplicate step for running agent integration tests to avoid redundancy.
       - name: Run Integration Tests - Multi-Modality
         id: run_tests_multi_modality
         timeout-minutes: 5
