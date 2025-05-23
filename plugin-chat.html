@@ -563,6 +563,150 @@
             }
         }
 
+        // Format file size for display
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' bytes';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+        
+        // Function to load uploaded files
+        async function loadUploadedFiles() {
+            try {
+                const response = await fetch('http://localhost:8000/api/files');
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Get sidebar to add a files section
+                    const sidebar = document.querySelector('.sidebar');
+                    
+                    // Create files section if it doesn't exist yet
+                    let filesSection = document.getElementById('files-section');
+                    if (!filesSection) {
+                        filesSection = document.createElement('div');
+                        filesSection.id = 'files-section';
+                        filesSection.className = 'control-group';
+                        filesSection.innerHTML = '<label>Uploaded Files:</label>';
+                        
+                        const filesList = document.createElement('div');
+                        filesList.id = 'files-list';
+                        filesSection.appendChild(filesList);
+                        
+                        sidebar.appendChild(filesSection);
+                    }
+                    
+                    // Update files list
+                    const filesList = document.getElementById('files-list');
+                    filesList.innerHTML = '';
+                    
+                    if (data.files.length === 0) {
+                        filesList.innerHTML = '<p>No files uploaded</p>';
+                    } else {
+                        data.files.forEach(file => {
+                            const fileItem = document.createElement('div');
+                            fileItem.className = 'plugin-item';
+                            fileItem.dataset.type = 'file';
+                            fileItem.innerHTML = `
+                                <div class="plugin-name">${file.name}</div>
+                                <div class="plugin-description">${file.size}</div>
+                            `;
+                            
+                            // Add click handler to insert file reference
+                            fileItem.addEventListener('click', () => {
+                                const input = document.getElementById('input');
+                                input.value += ` [File: ${file.name}]`;
+                                input.focus();
+                            });
+                            
+                            filesList.appendChild(fileItem);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading files:', error);
+            }
+        }
+        
+        // Function to upload a file
+        async function uploadFile() {
+            const fileInput = document.getElementById('file-upload');
+            if (fileInput.files.length === 0) return;
+            
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            // Show upload in progress
+            const uploadButton = document.getElementById('upload-button');
+            uploadButton.disabled = true;
+            uploadButton.textContent = 'Uploading...';
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Add file upload message to chat
+                    const chat = document.getElementById('chat');
+                    chat.innerHTML += `<div class="plugin"><strong>File uploaded:</strong> ${data.originalName} (${data.size})</div>`;
+                    chat.scrollTop = chat.scrollHeight;
+                    
+                    // Reset file upload UI
+                    fileInput.value = '';
+                    document.getElementById('upload-preview').style.display = 'none';
+                    
+                    // Refresh file list
+                    loadUploadedFiles();
+                    
+                    // Save chat history
+                    saveChatHistory();
+                } else {
+                    console.error('Upload failed:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error uploading file:', error);
+            } finally {
+                uploadButton.disabled = false;
+                uploadButton.textContent = 'Upload File';
+            }
+        }
+        
+        // Save chat history to local storage
+        function saveChatHistory() {
+            const chat = document.getElementById('chat');
+            localStorage.setItem('chatHistory', chat.innerHTML);
+            localStorage.setItem('chatTimestamp', new Date().toISOString());
+        }
+        
+        // Load chat history from local storage
+        function loadChatHistory() {
+            const chat = document.getElementById('chat');
+            const history = localStorage.getItem('chatHistory');
+            const timestamp = localStorage.getItem('chatTimestamp');
+            
+            if (history) {
+                chat.innerHTML = history;
+                chat.scrollTop = chat.scrollHeight;
+                
+                // Add a separator if the history is old (more than 1 hour)
+                if (timestamp) {
+                    const lastTime = new Date(timestamp);
+                    const now = new Date();
+                    const hoursDiff = (now - lastTime) / (1000 * 60 * 60);
+                    
+                    if (hoursDiff > 1) {
+                        chat.innerHTML += `<div class="ai" style="text-align:center; font-style:italic; color:#888;">
+                            --- Conversation resumed (${Math.floor(hoursDiff)} hours ago) ---
+                        </div>`;
+                    }
+                }
+            }
+        }
+        
         async function sendMessage() {
             const input = document.getElementById('input');
             const message = input.value.trim();
@@ -614,6 +758,9 @@
 
                 // Scroll to bottom
                 chat.scrollTop = chat.scrollHeight;
+                
+                // Save chat history
+                saveChatHistory();
             }
         }
     </script>
