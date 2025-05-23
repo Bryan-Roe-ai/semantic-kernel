@@ -32,7 +32,7 @@ jobs:
 
       # Step to checkout the repository
       - name: Checkout Repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v4
 
       # Step to apply labels based on the configuration in .github/labeler.yml
       - name: Apply Labeler
