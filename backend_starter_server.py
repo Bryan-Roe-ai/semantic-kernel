@@ -69,10 +69,10 @@ class BackendStarterHandler(BaseHTTPRequestHandler):
             print("Backend server started successfully")
         except Exception as e:
             print(f"Error starting backend: {e}")
+    
     def log_message(self, format: str, *args: Any) -> None:
-    def log_message(self, format: str, *args) -> None:
-        # Quieter logging
-        if args and any('favicon' in str(arg) for arg in args):
+        """Override to suppress favicon and health check logs for quieter output."""
+        if args and any('favicon' in str(arg) or 'health' in str(arg) for arg in args):
             return
         return super().log_message(format, *args)
 
