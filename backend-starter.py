@@ -28,12 +28,45 @@ class BackendStarterHandler(BaseHTTPRequestHandler):
     
     def start_backend(self, backend_path: str) -> None:
         try:
+            # Check if Python is available
+            try:
+                subprocess.run([sys.executable, "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            except (subprocess.SubprocessError, FileNotFoundError):
+                print("Error: Python interpreter not found or not working correctly.")
+                return
+                
+            # Check if uvicorn is available
+            try:
+                subprocess.run([sys.executable, "-m", "uvicorn", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            except subprocess.SubprocessError:
+                print("Error: uvicorn not found. Please install it with: pip install uvicorn")
+                return
+                
+            # Check if backend.py exists
+            if not os.path.exists(backend_path):
+                print(f"Error: Backend file not found at {backend_path}")
+                return
+                
             # Use subprocess to run the uvicorn command
             cwd = os.path.dirname(backend_path)
             cmd = [sys.executable, "-m", "uvicorn", "backend:app", "--reload", "--port", "8000"]
             
+            # Check if Python is available
+            try:
+                subprocess.run([sys.executable, "--version"], check=True, capture_output=True)
+            except Exception:
+                print("Error: Python interpreter not found or not working properly.")
+                return
+                
+            # Check if uvicorn is installed
+            try:
+                subprocess.run([sys.executable, "-m", "uvicorn", "--version"], check=True, capture_output=True)
+            except Exception:
+                print("Error: uvicorn not installed. Please install it with: pip install uvicorn")
+                return
+                
             # Start the backend process
-            subprocess.Popen(cmd, cwd=cwd, shell=True)
+            subprocess.Popen(cmd, cwd=cwd, shell=False)  # shell=False is more secure
             print(f"Backend server started with command: {' '.join(cmd)}")
         except Exception as e:
             print(f"Error starting backend: {e}")

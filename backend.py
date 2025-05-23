@@ -70,39 +70,78 @@ def load_python_plugins():
     global PYTHON_PLUGINS
     plugin_files = glob.glob(os.path.join(BASE_DIR, "plugins", "*.py"))
     
+    print(f"Looking for plugins in {os.path.join(BASE_DIR, 'plugins')}")
+    if not os.path.exists(os.path.join(BASE_DIR, "plugins")):
+        print("Plugin directory doesn't exist, creating it...")
+        try:
+            os.makedirs(os.path.join(BASE_DIR, "plugins"), exist_ok=True)
+            print("Created plugins directory")
+        except Exception as e:
+            print(f"Failed to create plugins directory: {str(e)}")
+            return
+    
+    # Reset plugins for potential reload
+    PYTHON_PLUGINS = {}
+    
+    if not plugin_files:
+        print("No Python plugins found.")
+        return
+        
+    print(f"Found {len(plugin_files)} potential plugin files")
+    
     for plugin_file in plugin_files:
         module_name = os.path.basename(plugin_file).replace(".py", "")
         
         try:
             # Load the module
+            print(f"Loading plugin: {module_name}")
             spec = importlib.util.spec_from_file_location(module_name, plugin_file)
             if spec and spec.loader:
                 module = importlib.util.module_from_spec(spec)
-                spec.loader.exec_module(module)
+                sys.modules[module_name] = module  # Register in sys.modules to avoid reimport issues
+                
+                try:
+                    spec.loader.exec_module(module)
+                except Exception as exec_error:
+                    print(f"Error executing module {module_name}: {str(exec_error)}")
+                    traceback.print_exc()
+                    continue
                 
                 # Find plugin classes in the module
+                plugin_found = False
                 for name, obj in inspect.getmembers(module):
                     if inspect.isclass(obj) and name.endswith("Functions"):
-                        # Store the class as a plugin
-                        plugin_name = name.replace("Functions", "").lower() 
-                        instance = obj()
-                        PYTHON_PLUGINS[plugin_name] = {
-                            "instance": instance,
-                            "methods": {}
-                        }
-                        
-                        # Find methods with kernel_function decorator
-                        for method_name, method in inspect.getmembers(instance):
-                            if hasattr(method, "__sk_function_name__"):
-                                function_name = getattr(method, "__sk_function_name__")
-                                function_desc = getattr(method, "__sk_function_description__", "")
-                                
-                                PYTHON_PLUGINS[plugin_name]["methods"][function_name] = {
-                                    "method": method,
-                                    "description": function_desc,
-                                    "signature": inspect.signature(method)
-                                }
-                print(f"Loaded plugin: {plugin_name} with {len(PYTHON_PLUGINS[plugin_name]['methods'])} functions")
+                        try:
+                            # Store the class as a plugin
+                            plugin_name = name.replace("Functions", "").lower() 
+                            instance = obj()
+                            PYTHON_PLUGINS[plugin_name] = {
+                                "instance": instance,
+                                "methods": {}
+                            }
+                            
+                            # Find methods with kernel_function decorator
+                            method_count = 0
+                            for method_name, method in inspect.getmembers(instance):
+                                if hasattr(method, "__sk_function_name__"):
+                                    function_name = getattr(method, "__sk_function_name__")
+                                    function_desc = getattr(method, "__sk_function_description__", "")
+                                    
+                                    PYTHON_PLUGINS[plugin_name]["methods"][function_name] = {
+                                        "method": method,
+                                        "description": function_desc,
+                                        "signature": inspect.signature(method)
+                                    }
+                                    method_count += 1
+                                    
+                            print(f"Loaded plugin: {plugin_name} with {method_count} functions")
+                            plugin_found = True
+                        except Exception as inst_error:
+                            print(f"Error instantiating plugin class {name}: {str(inst_error)}")
+                            traceback.print_exc()
+                
+                if not plugin_found:
+                    print(f"No valid plugin classes found in {module_name}")
                 
         except Exception as e:
             print(f"Error loading plugin {module_name}: {str(e)}")
@@ -306,7 +345,15 @@ def delete_file(req: FileDeleteRequest) -> Dict[str, str]:
         return {"error": str(e)}
 
 # Import the file analyzer module
-from file_analyzer import FileAnalyzer
+try:
+    from file_analyzer import FileAnalyzer
+    ANALYZER_AVAILABLE = True
+except ImportError:
+    ANALYZER_AVAILABLE = False
+    class FileAnalyzer:
+        @staticmethod
+        def analyze_file(file_path):
+            return {"error": "File analyzer module not available"}
 
 # Create uploads directory if it doesn't exist
 UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
@@ -327,6 +374,10 @@ def auto_analyze_file(filename: str) -> Dict[str, Any]:
         if not os.path.exists(file_path):
             return {"error": f"File not found: {filename}"}
         
+        # Check if analyzer is available
+        if not ANALYZER_AVAILABLE:
+            return {"type": "unknown", "summary": f"File: {filename}", "details": {"info": "File analyzer not available"}}
+            
         # Use the FileAnalyzer class to analyze the file
         return FileAnalyzer.analyze_file(file_path)
         
@@ -430,6 +481,13 @@ def analyze_file_endpoint(filename: str):
 
 @app.post("/api/chat")
 def chat_endpoint(req: ChatRequest) -> Dict[str, str]:
+    # Validate input
+    if not req.message or not req.message.strip():
+        return {"reply": "Please provide a message to chat with the AI."}
+        
+    # Check if LM_STUDIO_URL is set and valid
+    lm_studio_url = os.environ.get("LM_STUDIO_URL", LM_STUDIO_URL)
+    
     # Build messages array for LM Studio
     messages: List[Dict[str, str]] = []
     if req.system:
@@ -448,12 +506,24 @@ def chat_endpoint(req: ChatRequest) -> Dict[str, str]:
         "stream": req.stream if req.stream is not None else False,
     }
     
-    # Only POST to LM_STUDIO_URL, do not append /api/chat
+    # Try to connect to LM Studio
     try:
-        print(f"Sending request to LM Studio: {payload}")
-        lm_response = requests.post(LM_STUDIO_URL, json=payload, timeout=60)
-        lm_response.raise_for_status()
-        data = lm_response.json()
+        print(f"Sending request to LM Studio at {lm_studio_url}")
+        print(f"Request payload: {payload}")
+        
+        lm_response = requests.post(lm_studio_url, json=payload, timeout=60)
+        
+        # Check for HTTP errors
+        if lm_response.status_code != 200:
+            error_msg = f"LM Studio returned error {lm_response.status_code}: {lm_response.text}"
+            print(f"Error: {error_msg}")
+            return {"reply": f"[Error: LM Studio returned status code {lm_response.status_code}. Make sure LM Studio is running and the server is started on the API tab.]"}
+        
+        # Parse the response
+        try:
+            data = lm_response.json()
+        except ValueError:
+            return {"reply": "[Error: Invalid JSON response from LM Studio]"}
         
         # Extract the AI's reply from the response
         reply = data.get("choices", [{}])[0].get("message", {}).get("content", "[No response]")
@@ -462,6 +532,14 @@ def chat_endpoint(req: ChatRequest) -> Dict[str, str]:
         print(f"Received reply from LM Studio: {reply[:100]}...")
         
         return {"reply": reply}
+    except requests.exceptions.ConnectionError:
+        error_msg = "[Error: Could not connect to LM Studio. Make sure it's running and the server is started on the API tab.]"
+        print(f"Error: Connection failed to {lm_studio_url}")
+        return {"reply": error_msg}
+    except requests.exceptions.Timeout:
+        error_msg = "[Error: LM Studio request timed out. The model might be too large or your computer is under heavy load.]"
+        print("Error: Request timed out")
+        return {"reply": error_msg}
     except Exception as e:
         error_msg = f"[LM Studio error: {str(e)}]"
         print(f"Error: {error_msg}")

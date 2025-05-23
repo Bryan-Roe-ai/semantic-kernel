@@ -28,11 +28,31 @@ def start_backend():
         for dep in dependencies:
             if not check_dependency(dep):
                 install_dependency(dep)
+                # Verify installation was successful
+                if not check_dependency(dep):
+                    print(f"Error: Failed to install {dep}. Please install it manually with:")
+                    print(f"pip install {dep}")
+                    input("Press Enter to exit...")
+                    return
+        
+        # Check if .env file exists and create one if needed
+        env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
+        if not os.path.exists(env_path):
+            print("Creating default .env file...")
+            with open(env_path, 'w') as env_file:
+                env_file.write('LM_STUDIO_URL="http://localhost:1234/v1/chat/completions"\n')
+            print("Created .env file with default settings")
         
         # Get the backend path
         backend_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backend.py')
         cwd = os.path.dirname(backend_path)
         
+        # Check if backend.py exists
+        if not os.path.exists(backend_path):
+            print(f"Error: {backend_path} not found!")
+            input("Press Enter to exit...")
+            return
+            
         # Use subprocess to run the uvicorn command
         cmd = [sys.executable, "-m", "uvicorn", "backend:app", "--reload", "--host", "127.0.0.1", "--port", "8000"]
         
@@ -51,13 +71,19 @@ def start_backend():
             # Open the chat UI
             html_path = os.path.join(cwd, 'advanced-ai-chat.html')
             print(f"Opening chat interface: {html_path}")
-            webbrowser.open(f'file:///{html_path}')
+            if os.path.exists(html_path):
+                webbrowser.open(f'file:///{html_path}')
+            else:
+                print(f"Warning: Chat UI file not found at {html_path}")
+                print("You can manually open any of the HTML files in your browser.")
             
             print("\nServer is running. Press Ctrl+C to stop.")
             # Keep the script running until the user presses Ctrl+C
             process.wait()
         else:
             print("Failed to start backend server")
+            print("Check the output above for any error messages")
+            input("Press Enter to exit...")
     except Exception as e:
         print(f"Error starting backend: {e}")
         input("Press Enter to exit...")
