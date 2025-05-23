@@ -1,7 +1,7 @@
 # Save as backend.py and run with: uvicorn backend:app --reload
 
 from fastapi import FastAPI, Query, File, UploadFile
-from typing import Annotated, List, Dict, Any, Optional, Union
+from typing import Annotated, List, Dict, Any, Optional
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import FileResponse
 from fastapi.responses import JSONResponse
@@ -15,17 +15,14 @@ import traceback
 import sys
 import inspect
 import shutil
-import base64
 from datetime import datetime
-import csv
-import mimetypes
 
 # Try to import PIL for image analysis, but don't fail if not available
 try:
     from PIL import Image
-    PIL_AVAILABLE = True
+    pil_available = True
 except ImportError:
-    PIL_AVAILABLE = False
+    pil_available = False
 
 app: FastAPI = FastAPI()
 app.add_middleware(
@@ -35,8 +32,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-BASE_DIR = os.getcwd()  # Or set to your workspace root
+BASE_DIR = os.getcwd()
 PLUGINS_DIR = os.path.join(BASE_DIR, "plugins")
+UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
+os.makedirs(UPLOADS_DIR, exist_ok=True)
 
 class FileWriteRequest(BaseModel):
     path: str
@@ -47,24 +46,32 @@ class FileDeleteRequest(BaseModel):
 
 class ChatRequest(BaseModel):
     message: str
-    system: Optional[str] = None  # Optional system prompt
-    model: Optional[str] = None  # Optional model override
-    temperature: Optional[float] = None  # Optional temperature override
-    max_tokens: Optional[int] = None  # Optional max_tokens override
-    stream: Optional[bool] = False  # Optional stream flag
+    system: Optional[str] = None
+    model: Optional[str] = None
+    temperature: Optional[float] = None
+    max_tokens: Optional[int] = None
+    stream: Optional[bool] = False
 
-# LM Studio API endpoint (do NOT append /api/chat)
 LM_STUDIO_URL = os.environ.get("LM_STUDIO_URL", "http://localhost:1234/v1/chat/completions")
 
 @app.get("/ping")
 def ping() -> Dict[str, str]:
     return {"status": "OK"}
 
-# Import Python plugins
+# --- Plugin Loading ---
+sys.path.insert(0, PLUGINS_DIR)
+python_plugins: Dict[str, Dict[str, Any]] = {}
+
 def load_python_plugins() -> None:
-    global PYTHON_PLUGINS
-    plugin_files = glob.glob(os.path.join(BASE_DIR, "plugins", "*.py"))
-    PYTHON_PLUGINS.clear()
+    global python_plugins
+    plugin_files = glob.glob(os.path.join(PLUGINS_DIR, "*.py"))
+    if not os.path.exists(PLUGINS_DIR):
+        try:
+            os.makedirs(PLUGINS_DIR, exist_ok=True)
+        except Exception as e:
+            print(f"Failed to create plugins directory: {str(e)}")
+            return
+    python_plugins = {}
     for plugin_file in plugin_files:
         module_name = os.path.basename(plugin_file).replace(".py", "")
         try:
@@ -73,38 +80,42 @@ def load_python_plugins() -> None:
                 module = importlib.util.module_from_spec(spec)
                 sys.modules[module_name] = module
                 spec.loader.exec_module(module)
+                plugin_found = False
                 for name, obj in inspect.getmembers(module):
                     if inspect.isclass(obj) and name.endswith("Functions"):
                         try:
                             plugin_name = name.replace("Functions", "").lower()
                             instance = obj()
-                            PYTHON_PLUGINS[plugin_name] = {
+                            python_plugins[plugin_name] = {
                                 "instance": instance,
                                 "methods": {}
                             }
-                            for method_name, method in inspect.getmembers(instance):
+                            for _, method in inspect.getmembers(instance):
                                 if hasattr(method, "__sk_function_name__"):
                                     function_name = getattr(method, "__sk_function_name__")
                                     function_desc = getattr(method, "__sk_function_description__", "")
-                                    PYTHON_PLUGINS[plugin_name]["methods"][function_name] = {
+                                    python_plugins[plugin_name]["methods"][function_name] = {
                                         "method": method,
                                         "description": function_desc,
                                         "signature": inspect.signature(method)
                                     }
+                            plugin_found = True
                         except Exception as inst_error:
                             print(f"Error instantiating plugin class {name}: {str(inst_error)}")
                             traceback.print_exc()
+                if not plugin_found:
+                    print(f"No valid plugin classes found in {module_name}")
         except Exception as e:
             print(f"Error loading plugin {module_name}: {str(e)}")
             traceback.print_exc()
 
-PYTHON_PLUGINS: Dict[str, Dict[str, Any]] = {}
 load_python_plugins()
 
 @app.get("/api/plugins")
-def get_plugins() -> Dict[str, Union[List[Dict[str, str]], List[Dict[str, Union[str, Dict[str, str]]]]]]:
+def get_plugins() -> Any:
     plugins: List[Dict[str, str]] = []
-    functions: List[Dict[str, Union[str, Dict[str, str]]]] = []
+    functions: List[Dict[str, Any]] = []
+    # Directory-based plugins
     if os.path.exists(PLUGINS_DIR):
         for plugin_dir in glob.glob(os.path.join(PLUGINS_DIR, "*")):
             if not os.path.isdir(plugin_dir):
@@ -134,7 +145,8 @@ def get_plugins() -> Dict[str, Union[List[Dict[str, str]], List[Dict[str, Union[
                         "description": description,
                         "type": "directory"
                     })
-    for plugin_name, plugin_data in PYTHON_PLUGINS.items():
+    # Python plugins
+    for plugin_name, plugin_data in python_plugins.items():
         plugins.append({"id": plugin_name, "name": plugin_name.capitalize(), "type": "python"})
         for function_name, function_info in plugin_data["methods"].items():
             function_id = f"{plugin_name}.{function_name.lower()}"
@@ -148,14 +160,13 @@ def get_plugins() -> Dict[str, Union[List[Dict[str, str]], List[Dict[str, Union[
     return {"plugins": plugins, "functions": functions}
 
 @app.post("/api/run_plugin")
-def run_plugin(plugin_id: str, function_id: str, input_text: str) -> Dict[str, Union[str, Dict[str, str]]]:
+def run_plugin(plugin_id: str, function_id: str, input_text: str) -> Any:
     if not plugin_id or not function_id:
         return {"error": "Missing plugin_id or function_id"}
     parts = function_id.split(".")
     if len(parts) != 2:
         return {"error": "Invalid function_id format"}
-    plugin_name = parts[0]
-    function_name = parts[1]
+    plugin_name, function_name = parts
     function_dir = os.path.join(PLUGINS_DIR, plugin_name, function_name)
     prompt_file = os.path.join(function_dir, "skprompt.txt")
     if not os.path.exists(prompt_file):
@@ -181,19 +192,18 @@ def run_plugin(plugin_id: str, function_id: str, input_text: str) -> Dict[str, U
         return {"error": str(e)}
 
 @app.get("/api/run_python")
-def run_python_plugin(plugin_id: str, function_id: str, input_text: str, param2: Optional[str] = None) -> Dict[str, Union[str, Dict[str, str]]]:
+def run_python_plugin(plugin_id: str, function_id: str, input_text: str, param2: Optional[str] = None) -> Any:
     parts = function_id.split(".")
     if len(parts) != 2:
         return {"error": "Invalid function_id format"}
-    plugin_name = parts[0]
-    function_name = parts[1]
-    if plugin_name not in PYTHON_PLUGINS:
+    plugin_name, function_name = parts
+    if plugin_name not in python_plugins:
         return {"error": f"Plugin {plugin_name} not found"}
-    if function_name not in PYTHON_PLUGINS[plugin_name]["methods"]:
+    if function_name not in python_plugins[plugin_name]["methods"]:
         return {"error": f"Function {function_name} not found in plugin {plugin_name}"}
     try:
-        method = PYTHON_PLUGINS[plugin_name]["methods"][function_name]["method"]
-        signature = PYTHON_PLUGINS[plugin_name]["methods"][function_name]["signature"]
+        method = python_plugins[plugin_name]["methods"][function_name]["method"]
+        signature = python_plugins[plugin_name]["methods"][function_name]["signature"]
         kwargs: Dict[str, Any] = {}
         param_names = list(signature.parameters.keys())
         if len(param_names) == 1:
@@ -206,6 +216,7 @@ def run_python_plugin(plugin_id: str, function_id: str, input_text: str, param2:
     except Exception as e:
         return {"error": f"Error executing function: {str(e)}"}
 
+# --- File Operations ---
 @app.get("/files/list")
 def list_files() -> List[str]:
     files: List[str] = []
@@ -216,7 +227,7 @@ def list_files() -> List[str]:
     return files
 
 @app.get("/files/read")
-def read_file(path: Annotated[str, Query(...)]) -> Dict[str, Union[str, Dict[str, str]]]:
+def read_file(path: Annotated[str, Query(...)]) -> Any:
     abs_path = os.path.abspath(os.path.join(BASE_DIR, path))
     if not abs_path.startswith(BASE_DIR):
         return {"error": "Invalid path"}
@@ -228,7 +239,7 @@ def read_file(path: Annotated[str, Query(...)]) -> Dict[str, Union[str, Dict[str
         return {"error": str(e)}
 
 @app.post("/files/write")
-def write_file(req: FileWriteRequest) -> Dict[str, str]:
+def write_file(req: FileWriteRequest) -> Any:
     abs_path = os.path.abspath(os.path.join(BASE_DIR, req.path))
     if not abs_path.startswith(BASE_DIR):
         return {"error": "Invalid path"}
@@ -241,7 +252,7 @@ def write_file(req: FileWriteRequest) -> Dict[str, str]:
         return {"error": str(e)}
 
 @app.post("/files/delete")
-def delete_file(req: FileDeleteRequest) -> Dict[str, str]:
+def delete_file(req: FileDeleteRequest) -> Any:
     abs_path = os.path.abspath(os.path.join(BASE_DIR, req.path))
     if not abs_path.startswith(BASE_DIR):
         return {"error": "Invalid path"}
@@ -251,33 +262,31 @@ def delete_file(req: FileDeleteRequest) -> Dict[str, str]:
     except Exception as e:
         return {"error": str(e)}
 
-# Import the file analyzer module
+# --- File Analyzer ---
 try:
     from file_analyzer import FileAnalyzer
-    ANALYZER_AVAILABLE = True
+    analyzer_available = True
 except ImportError:
-    ANALYZER_AVAILABLE = False
+    analyzer_available = False
     class FileAnalyzer:
         @staticmethod
-        def analyze_file(file_path: str) -> Dict[str, Union[str, Dict[str, str]]]:
+        def analyze_file(file_path: str) -> Dict[str, Any]:
             return {"error": "File analyzer module not available"}
 
-UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
-os.makedirs(UPLOADS_DIR, exist_ok=True)
-
-def auto_analyze_file(filename: str) -> Dict[str, Union[str, Dict[str, str]]]:
+def auto_analyze_file(filename: str) -> Dict[str, Any]:
     try:
         file_path = os.path.join(UPLOADS_DIR, filename)
         if not os.path.exists(file_path):
             return {"error": f"File not found: {filename}"}
-        if not ANALYZER_AVAILABLE:
+        if not analyzer_available:
             return {"type": "unknown", "summary": f"File: {filename}", "details": {"info": "File analyzer not available"}}
         return FileAnalyzer.analyze_file(file_path)
     except Exception as e:
         return {"error": f"Analysis failed: {str(e)}"}
 
+# --- Upload/Download/Analyze Endpoints ---
 @app.post("/api/upload")
-async def upload_file(file: UploadFile = File(...)) -> Dict[str, Union[str, Dict[str, str]]]:
+async def upload_file(file: UploadFile = File(...)) -> Any:
     try:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{timestamp}_{file.filename}"
@@ -285,11 +294,12 @@ async def upload_file(file: UploadFile = File(...)) -> Dict[str, Union[str, Dict
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         file_size = os.path.getsize(file_path)
-        size_str = f"{file_size} bytes"
-        if file_size > 1024:
-            size_str = f"{file_size / 1024:.1f} KB"
         if file_size > 1024 * 1024:
             size_str = f"{file_size / (1024 * 1024):.1f} MB"
+        elif file_size > 1024:
+            size_str = f"{file_size / 1024:.1f} KB"
+        else:
+            size_str = f"{file_size} bytes"
         analysis = auto_analyze_file(filename)
         return {
             "filename": filename,
@@ -298,13 +308,10 @@ async def upload_file(file: UploadFile = File(...)) -> Dict[str, Union[str, Dict
             "analysis": analysis
         }
     except Exception as e:
-        return JSONResponse(
-            status_code=500,
-            content={"error": f"Failed to upload file: {str(e)}"}
-        )
+        return {"error": f"Failed to upload file: {str(e)}"}
 
 @app.get("/api/files")
-def list_uploaded_files() -> Dict[str, List[Dict[str, str]]]:
+def list_uploaded_files() -> Any:
     try:
         if not os.path.exists(UPLOADS_DIR):
             return {"files": []}
@@ -313,11 +320,12 @@ def list_uploaded_files() -> Dict[str, List[Dict[str, str]]]:
             file_path = os.path.join(UPLOADS_DIR, filename)
             if os.path.isfile(file_path):
                 file_size = os.path.getsize(file_path)
-                size_str = f"{file_size} bytes"
-                if file_size > 1024:
-                    size_str = f"{file_size / 1024:.1f} KB"
                 if file_size > 1024 * 1024:
                     size_str = f"{file_size / (1024 * 1024):.1f} MB"
+                elif file_size > 1024:
+                    size_str = f"{file_size / 1024:.1f} KB"
+                else:
+                    size_str = f"{file_size} bytes"
                 files.append({
                     "name": filename,
                     "size": size_str,
@@ -325,38 +333,26 @@ def list_uploaded_files() -> Dict[str, List[Dict[str, str]]]:
                 })
         return {"files": files}
     except Exception as e:
-        return JSONResponse(
-            status_code=500,
-            content={"error": f"Failed to list files: {str(e)}"}
-        )
+        return {"error": f"Failed to list files: {str(e)}"}
 
 @app.get("/api/download/{filename}")
-def download_file(filename: str) -> Union[FileResponse, JSONResponse]:
+def download_file(filename: str) -> Any:
     file_path = os.path.join(UPLOADS_DIR, filename)
     if not os.path.exists(file_path):
-        return JSONResponse(
-            status_code=404,
-            content={"error": "File not found"}
-        )
-    return FileResponse(
-        path=file_path,
-        filename=filename,
-        media_type="application/octet-stream"
-    )
+        return {"error": "File not found"}
+    return FileResponse(path=file_path, filename=filename, media_type="application/octet-stream")
 
 @app.get("/api/analyze/{filename}")
-def analyze_file_endpoint(filename: str) -> Dict[str, Union[str, Dict[str, str]]]:
+def analyze_file_endpoint(filename: str) -> Any:
     file_path = os.path.join(UPLOADS_DIR, filename)
     if not os.path.exists(file_path):
-        return JSONResponse(
-            status_code=404,
-            content={"error": "File not found"}
-        )
+        return {"error": "File not found"}
     analysis = auto_analyze_file(filename)
     return analysis
 
+# --- Chat Endpoint ---
 @app.post("/api/chat")
-def chat_endpoint(req: ChatRequest) -> Dict[str, str]:
+def chat_endpoint(req: ChatRequest) -> Any:
     if not req.message or not req.message.strip():
         return {"reply": "Please enter a message."}
     payload = {
@@ -373,5 +369,5 @@ def chat_endpoint(req: ChatRequest) -> Dict[str, str]:
         data = response.json()
         reply = data.get("choices", [{}])[0].get("message", {}).get("content", "[No response]")
         return {"reply": reply}
-    except Exception as e:
+    except Exception:
         return {"reply": f"[AI unavailable] You said: {req.message}"}
