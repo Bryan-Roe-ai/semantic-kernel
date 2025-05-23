@@ -2,7 +2,8 @@
 
 import logging
 from abc import ABC
-from typing import TYPE_CHECKING
+from collections.abc import Mapping, MutableMapping
+from typing import TYPE_CHECKING, TypeVar
 
 from pydantic import Field, field_validator
 
@@ -15,7 +16,6 @@ from semantic_kernel.exceptions import (
     KernelServiceNotFoundError,
 )
 from semantic_kernel.kernel_pydantic import KernelBaseModel
-from semantic_kernel.kernel_types import AI_SERVICE_CLIENT_TYPE
 from semantic_kernel.services.ai_service_client_base import AIServiceClientBase
 from semantic_kernel.services.ai_service_selector import AIServiceSelector
 
@@ -23,6 +23,7 @@ if TYPE_CHECKING:
     from semantic_kernel.functions.kernel_arguments import KernelArguments
     from semantic_kernel.functions.kernel_function import KernelFunction
 
+AI_SERVICE_CLIENT_TYPE = TypeVar("AI_SERVICE_CLIENT_TYPE", bound=AIServiceClientBase)
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -33,7 +34,7 @@ class KernelServicesExtension(KernelBaseModel, ABC):
     Adds all services related entities to the Kernel.
     """
 
-    services: dict[str, AIServiceClientBase] = Field(default_factory=dict)
+    services: MutableMapping[str, AIServiceClientBase] = Field(default_factory=dict)
     ai_service_selector: AIServiceSelector = Field(default_factory=AIServiceSelector)
 
     @field_validator("services", mode="before")
@@ -60,20 +61,35 @@ class KernelServicesExtension(KernelBaseModel, ABC):
         return services
 
     def select_ai_service(
-        self, function: "KernelFunction", arguments: "KernelArguments"
+        self,
+        function: "KernelFunction | None" = None,
+        arguments: "KernelArguments | None" = None,
+        type: type[AI_SERVICE_CLIENT_TYPE] | tuple[type[AI_SERVICE_CLIENT_TYPE], ...] | None = None,
     ) -> tuple[AIServiceClientBase, PromptExecutionSettings]:
-        """Uses the AI service selector to select a service for the function."""
-        return self.ai_service_selector.select_ai_service(self, function, arguments)
+        """Uses the AI service selector to select a service for the function.
+
+        Args:
+            function (KernelFunction | None): The function used.
+            arguments (KernelArguments | None): The arguments used.
+            type (Type[AI_SERVICE_CLIENT_TYPE] | tuple[type[AI_SERVICE_CLIENT_TYPE], ...] | None): The type of
+                service to select. Defaults to None.
+        """
+        return self.ai_service_selector.select_ai_service(self, function=function, arguments=arguments, type_=type)
 
     def get_service(
         self,
         service_id: str | None = None,
+<<<<<<< HEAD
         type: (
             type[AI_SERVICE_CLIENT_TYPE]
             | tuple[type[AI_SERVICE_CLIENT_TYPE], ...]
             | None
         ) = None,
     ) -> AIServiceClientBase:
+=======
+        type: type[AI_SERVICE_CLIENT_TYPE] | tuple[type[AI_SERVICE_CLIENT_TYPE], ...] | None = None,
+    ) -> AI_SERVICE_CLIENT_TYPE:
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """Get a service by service_id and type.
 
         Type is optional and when not supplied, no checks are done.
@@ -113,6 +129,7 @@ class KernelServicesExtension(KernelBaseModel, ABC):
         return services[service_id]
 
     def get_services_by_type(
+<<<<<<< HEAD
         self,
         type: (
             type[AI_SERVICE_CLIENT_TYPE]
@@ -128,6 +145,14 @@ class KernelServicesExtension(KernelBaseModel, ABC):
             for service in self.services.values()
             if isinstance(service, type)
         }
+=======
+        self, type: type[AI_SERVICE_CLIENT_TYPE] | tuple[type[AI_SERVICE_CLIENT_TYPE], ...] | None
+    ) -> Mapping[str, AI_SERVICE_CLIENT_TYPE]:
+        """Get all services of a specific type."""
+        if type is None:
+            return self.services  # type: ignore
+        return {service.service_id: service for service in self.services.values() if isinstance(service, type)}  # type: ignore
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     def get_prompt_execution_settings_from_service_id(
         self, service_id: str, type: type[AI_SERVICE_CLIENT_TYPE] | None = None

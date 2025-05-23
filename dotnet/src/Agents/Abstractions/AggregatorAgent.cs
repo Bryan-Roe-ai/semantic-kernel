@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -46,6 +47,9 @@ using System.Threading.Tasks;
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+using System.Diagnostics.CodeAnalysis;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -97,6 +101,7 @@ namespace Microsoft.SemanticKernel.Agents;
 /// Defines the relationship between the internal aggregated chat and the chat
 /// with which <see cref="AggregatorAgent"/> is participating.
 /// </summary>
+[Experimental("SKEXP0110")]
 public enum AggregatorMode
 {
     /// <summary>
@@ -114,18 +119,44 @@ public enum AggregatorMode
 /// Allows an <see cref="AgentChat"/> to participate in another <see cref="AgentChat"/> as an <see cref="Agent"/>.
 /// </summary>
 /// <param name="chatProvider">A factory method that produces a new <see cref="AgentChat"/> instance.</param>
+[Experimental("SKEXP0110")]
 public sealed class AggregatorAgent(Func<AgentChat> chatProvider) : Agent
 {
     /// <summary>
-    /// Defines the relationship between the internal aggregated chat and the chat
+    /// Gets the relationship between the internal aggregated chat and the chat
     /// with which <see cref="AggregatorAgent"/> is participating.
-    /// Default: <see cref="AggregatorMode.Flat"/>.
     /// </summary>
+    /// <value>
+    /// The relationship between the internal aggregated chat and the chat
+    /// with which <see cref="AggregatorAgent"/> is participating. The default value is <see cref="AggregatorMode.Flat"/>.
+    /// </value>
     public AggregatorMode Mode { get; init; } = AggregatorMode.Flat;
 
     /// <inheritdoc/>
+    public override IAsyncEnumerable<AgentResponseItem<ChatMessageContent>> InvokeAsync(
+        ICollection<ChatMessageContent> messages,
+        AgentThread? thread = null,
+        AgentInvokeOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        // TODO: Need to determine the correct approach here.
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public override IAsyncEnumerable<AgentResponseItem<StreamingChatMessageContent>> InvokeStreamingAsync(
+        ICollection<ChatMessageContent> messages,
+        AgentThread? thread = null,
+        AgentInvokeOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        // TODO: Need to determine the correct approach here.
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
     /// <remarks>
-    /// Different <see cref="AggregatorAgent"/> will never share the same channel.
+    /// Different <see cref="AggregatorAgent"/> instances will never share the same channel.
     /// </remarks>
     protected internal override IEnumerable<string> GetChannelKeys()
     {

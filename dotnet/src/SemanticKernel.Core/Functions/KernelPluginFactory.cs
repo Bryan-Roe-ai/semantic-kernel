@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -74,7 +74,6 @@ public static partial class KernelPluginFactory
     /// Methods decorated with <see cref="KernelFunctionAttribute"/> will be included in the plugin.
     /// Attributed methods must all have different names; overloads are not supported.
     /// </remarks>
-    [Experimental("SKEXP0120")]
     public static KernelPlugin CreateFromType<[DynamicallyAccessedMembers(
         DynamicallyAccessedMemberTypes.PublicConstructors |
         DynamicallyAccessedMemberTypes.PublicMethods |
@@ -105,6 +104,7 @@ public static partial class KernelPluginFactory
     /// Methods decorated with <see cref="KernelFunctionAttribute"/> will be included in the plugin.
     /// Attributed methods must all have different names; overloads are not supported.
     /// </remarks>
+<<<<<<< HEAD
 <<<<<<< main
     public static KernelPlugin CreateFromType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(JsonSerializerOptions jsonSerializerOptions, string? pluginName = null, IServiceProvider? serviceProvider = null)
     {
@@ -112,11 +112,46 @@ public static partial class KernelPluginFactory
         return CreateFromObject(ActivatorUtilities.CreateInstance<T>(serviceProvider)!, jsonSerializerOptions, pluginName, serviceProvider?.GetService<ILoggerFactory>());
 =======
     [Experimental("SKEXP0001")]
+=======
+    [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
+    [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelPlugin CreateFromType(Type instanceType, string? pluginName = null, IServiceProvider? serviceProvider = null)
     {
         serviceProvider ??= EmptyServiceProvider.Instance;
         return CreateFromObject(ActivatorUtilities.CreateInstance(serviceProvider, instanceType)!, pluginName, serviceProvider?.GetService<ILoggerFactory>());
+<<<<<<< HEAD
 >>>>>>> upstream/main
+=======
+    }
+
+    /// <summary>Creates a plugin that wraps a new instance of the specified type <paramref name="instanceType"/>.</summary>
+    /// <param name="instanceType">
+    /// Specifies the type of the object to wrap.
+    /// </param>
+    /// <param name="jsonSerializerOptions">
+    /// The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.
+    /// </param>
+    /// <param name="pluginName">
+    /// Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the <paramref name="instanceType"/>.
+    /// </param>
+    /// <param name="serviceProvider">
+    /// The <see cref="IServiceProvider"/> to use for resolving any required services, such as an <see cref="ILoggerFactory"/>
+    /// and any services required to satisfy a constructor on <paramref name="instanceType"/>.
+    /// </param>
+    /// <returns>A <see cref="KernelPlugin"/> containing <see cref="KernelFunction"/>s for all relevant members of <paramref name="instanceType"/>.</returns>
+    /// <remarks>
+    /// Methods decorated with <see cref="KernelFunctionAttribute"/> will be included in the plugin.
+    /// Attributed methods must all have different names; overloads are not supported.
+    /// </remarks>
+    public static KernelPlugin CreateFromType([DynamicallyAccessedMembers(
+        DynamicallyAccessedMemberTypes.PublicConstructors |
+        DynamicallyAccessedMemberTypes.PublicMethods |
+        DynamicallyAccessedMemberTypes.NonPublicMethods)] Type instanceType, JsonSerializerOptions jsonSerializerOptions, string? pluginName = null, IServiceProvider? serviceProvider = null)
+    {
+        serviceProvider ??= EmptyServiceProvider.Instance;
+        return CreateFromObject(ActivatorUtilities.CreateInstance(serviceProvider, instanceType)!, jsonSerializerOptions, pluginName, serviceProvider?.GetService<ILoggerFactory>());
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     /// <summary>Creates a plugin that wraps the specified target object.</summary>
@@ -151,11 +186,14 @@ public static partial class KernelPluginFactory
     /// </remarks>
     [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "This method is AOT save.")]
     [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "This method is AOT safe.")]
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
     public static KernelPlugin CreateFromObject(object target, JsonSerializerOptions jsonSerializerOptions, string? pluginName = null, ILoggerFactory? loggerFactory = null)
 =======
     [Experimental("SKEXP0120")]
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelPlugin CreateFromObject<[DynamicallyAccessedMembersAttribute(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] T>(T target, JsonSerializerOptions jsonSerializerOptions, string? pluginName = null, ILoggerFactory? loggerFactory = null)
 >>>>>>> upstream/main
 =======
@@ -255,7 +293,7 @@ public static partial class KernelPluginFactory
         Verify.NotNull(target);
 
         pluginName ??= CreatePluginName(target.GetType());
-        Verify.ValidPluginName(pluginName);
+        KernelVerify.ValidPluginName(pluginName);
 
         MethodInfo[] methods = target.GetType().GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
 

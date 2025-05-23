@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ namespace Microsoft.SemanticKernel.Connectors.Postgres;
 /// <summary>
 /// Interface for client managing postgres database operations for <see cref="PostgresMemoryStore"/>.
 /// </summary>
+[Obsolete("The IMemoryStore abstraction is being obsoleted, use Microsoft.Extensions.VectorData and PostgresVectorStore")]
 public interface IPostgresDbClient
 {
     /// <summary>

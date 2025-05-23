@@ -231,6 +231,7 @@ class AIServiceSelector:
 >>>>>>> head
         self,
         kernel: "KernelServicesExtension",
+<<<<<<< HEAD
         function: "KernelFunction",
         arguments: "KernelArguments",
         type_: (
@@ -238,24 +239,42 @@ class AIServiceSelector:
             | tuple[type[AI_SERVICE_CLIENT_TYPE], ...]
             | None
         ) = None,
+=======
+        function: "KernelFunction | None" = None,
+        arguments: "KernelArguments | None" = None,
+        type_: type[AI_SERVICE_CLIENT_TYPE] | tuple[type[AI_SERVICE_CLIENT_TYPE], ...] | None = None,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     ) -> tuple["AIServiceClientBase", "PromptExecutionSettings"]:
         """Select an AI Service on a first come, first served basis.
 
         Starts with execution settings in the arguments,
         followed by the execution settings from the function.
         If the same service_id is in both, the one in the arguments will be used.
+
+        Args:
+            kernel: The kernel used.
+            function: The function used. (optional)
+            arguments: The arguments used. (optional)
+            type_: The type of service to select. (optional)
         """
         if type_ is None:
+<<<<<<< HEAD
             from semantic_kernel.connectors.ai.chat_completion_client_base import (
                 ChatCompletionClientBase,
             )
             from semantic_kernel.connectors.ai.text_completion_client_base import (
                 TextCompletionClientBase,
             )
+=======
+            from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+            from semantic_kernel.connectors.ai.text_completion_client_base import TextCompletionClientBase
+            from semantic_kernel.connectors.ai.text_to_audio_client_base import TextToAudioClientBase
+            from semantic_kernel.connectors.ai.text_to_image_client_base import TextToImageClientBase
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-            type_ = (TextCompletionClientBase, ChatCompletionClientBase)  # type: ignore
+            type_ = (TextCompletionClientBase, ChatCompletionClientBase, TextToAudioClientBase, TextToImageClientBase)  # type: ignore
 
-        execution_settings_dict = arguments.execution_settings or {}
+        execution_settings_dict = arguments.execution_settings if arguments and arguments.execution_settings else {}
         if func_exec_settings := getattr(function, "prompt_execution_settings", None):
             for id, settings in func_exec_settings.items():
                 if id not in execution_settings_dict:

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -45,7 +45,7 @@ public record PostgresHotel<T>()
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
     /// <summary>A vector field.</summary>
-    [VectorStoreRecordVector(4, IndexKind.Hnsw, DistanceFunction.ManhattanDistance)]
+    [VectorStoreRecordVector(4, DistanceFunction = IndexKind.Hnsw, IndexKind = DistanceFunction.ManhattanDistance)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

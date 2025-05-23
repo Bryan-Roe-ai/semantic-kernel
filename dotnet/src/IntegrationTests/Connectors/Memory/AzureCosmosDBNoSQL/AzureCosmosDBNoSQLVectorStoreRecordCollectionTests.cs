@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -61,6 +62,9 @@
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 using System.Collections.Generic;
@@ -69,25 +73,28 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.AzureCosmosDBNoSQL;
+using SemanticKernel.IntegrationTests.Connectors.Memory.Xunit;
 using Xunit;
 using DistanceFunction = Microsoft.Extensions.VectorData.DistanceFunction;
 using IndexKind = Microsoft.Extensions.VectorData.IndexKind;
 
 namespace SemanticKernel.IntegrationTests.Connectors.Memory.AzureCosmosDBNoSQL;
 
+#pragma warning disable CA1859 // Use concrete types when possible for improved performance
+#pragma warning disable CS0618 // VectorSearchFilter is obsolete
+
 /// <summary>
-/// Integration tests for <see cref="AzureCosmosDBNoSQLVectorStoreRecordCollection{TRecord}"/> class.
+/// Integration tests for <see cref="AzureCosmosDBNoSQLVectorStoreRecordCollection{TKey, TRecord}"/> class.
 /// </summary>
 [Collection("AzureCosmosDBNoSQLVectorStoreCollection")]
+[AzureCosmosDBNoSQLConnectionStringSetCondition]
 public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosmosDBNoSQLVectorStoreFixture fixture)
 {
-    private const string? SkipReason = "Azure CosmosDB NoSQL cluster is required";
-
-    [Fact(Skip = SkipReason)]
+    [VectorStoreFact]
     public async Task ItCanCreateCollectionAsync()
     {
         // Arrange
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(fixture.Database!, "test-create-collection");
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, AzureCosmosDBNoSQLHotel>(fixture.Database!, "test-create-collection");
 
         // Act
         await sut.CreateCollectionAsync();
@@ -96,13 +103,13 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         Assert.True(await sut.CollectionExistsAsync());
     }
 
-    [Theory(Skip = SkipReason)]
+    [VectorStoreTheory]
     [InlineData("sk-test-hotels", true)]
     [InlineData("nonexistentcollection", false)]
     public async Task CollectionExistsReturnsCollectionStateAsync(string collectionName, bool expectedExists)
     {
         // Arrange
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(fixture.Database!, collectionName);
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, AzureCosmosDBNoSQLHotel>(fixture.Database!, collectionName);
 
         if (expectedExists)
         {
@@ -116,7 +123,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         Assert.Equal(expectedExists, actual);
     }
 
-    [Theory(Skip = SkipReason)]
+    [VectorStoreTheory]
     [InlineData(true, true)]
     [InlineData(true, false)]
     [InlineData(false, true)]
@@ -135,7 +142,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
             VectorStoreRecordDefinition = useRecordDefinition ? this.GetTestHotelRecordDefinition() : null
         };
 
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(fixture.Database!, collectionName);
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, AzureCosmosDBNoSQLHotel>(fixture.Database!, collectionName);
 
         var record = this.CreateTestHotel(HotelId);
 
@@ -229,14 +236,14 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         }
     }
 
-    [Fact(Skip = SkipReason)]
+    [VectorStoreFact]
     public async Task ItCanDeleteCollectionAsync()
     {
         // Arrange
         const string TempCollectionName = "test-delete-collection";
         await fixture.Database!.CreateContainerAsync(new ContainerProperties(TempCollectionName, "/id"));
 
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(fixture.Database!, TempCollectionName);
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, AzureCosmosDBNoSQLHotel>(fixture.Database!, TempCollectionName);
 
         Assert.True(await sut.CollectionExistsAsync());
 
@@ -247,7 +254,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         Assert.False(await sut.CollectionExistsAsync());
     }
 
-    [Theory(Skip = SkipReason)]
+    [VectorStoreTheory]
     [InlineData("consistent-mode-collection", IndexingMode.Consistent)]
     [InlineData("lazy-mode-collection", IndexingMode.Lazy)]
     [InlineData("none-mode-collection", IndexingMode.None)]
@@ -255,7 +262,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
     {
         // Arrange
         const string HotelId = "55555555-5555-5555-5555-555555555555";
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, AzureCosmosDBNoSQLHotel>(
             fixture.Database!,
             collectionName,
             new() { IndexingMode = indexingMode, Automatic = indexingMode != IndexingMode.None });
@@ -279,7 +286,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         Assert.Null(getResult);
     }
 
-    [Fact(Skip = SkipReason)]
+    [VectorStoreFact]
     public async Task ItCanGetAndDeleteRecordWithPartitionKeyAsync()
     {
         // Arrange
@@ -287,7 +294,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         const string HotelName = "Test Hotel Name";
 
         IVectorStoreRecordCollection<AzureCosmosDBNoSQLCompositeKey, AzureCosmosDBNoSQLHotel> sut =
-            new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(
+            new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLCompositeKey, AzureCosmosDBNoSQLHotel>(
                 fixture.Database!,
                 "delete-with-partition-key",
                 new() { PartitionKeyPropertyName = "HotelName" });
@@ -314,7 +321,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         Assert.Null(getResult);
     }
 
-    [Fact(Skip = SkipReason)]
+    [VectorStoreFact]
     public async Task ItCanGetAndDeleteBatchAsync()
     {
         // Arrange
@@ -322,7 +329,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         const string HotelId2 = "22222222-2222-2222-2222-222222222222";
         const string HotelId3 = "33333333-3333-3333-3333-333333333333";
 
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(fixture.Database!, "get-and-delete-batch");
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, AzureCosmosDBNoSQLHotel>(fixture.Database!, "get-and-delete-batch");
 
         await sut.CreateCollectionAsync();
 
@@ -330,8 +337,8 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         var record2 = this.CreateTestHotel(HotelId2);
         var record3 = this.CreateTestHotel(HotelId3);
 
-        var upsertResults = await sut.UpsertBatchAsync([record1, record2, record3]).ToListAsync();
-        var getResults = await sut.GetBatchAsync([HotelId1, HotelId2, HotelId3]).ToListAsync();
+        var upsertResults = await sut.UpsertAsync([record1, record2, record3]);
+        var getResults = await sut.GetAsync([HotelId1, HotelId2, HotelId3]).ToListAsync();
 
         Assert.Equal([HotelId1, HotelId2, HotelId3], upsertResults);
 
@@ -340,20 +347,20 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         Assert.NotNull(getResults.First(l => l.HotelId == HotelId3));
 
         // Act
-        await sut.DeleteBatchAsync([HotelId1, HotelId2, HotelId3]);
+        await sut.DeleteAsync([HotelId1, HotelId2, HotelId3]);
 
-        getResults = await sut.GetBatchAsync([HotelId1, HotelId2, HotelId3]).ToListAsync();
+        getResults = await sut.GetAsync([HotelId1, HotelId2, HotelId3]).ToListAsync();
 
         // Assert
         Assert.Empty(getResults);
     }
 
-    [Fact(Skip = SkipReason)]
+    [VectorStoreFact]
     public async Task ItCanUpsertRecordAsync()
     {
         // Arrange
         const string HotelId = "55555555-5555-5555-5555-555555555555";
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(fixture.Database!, "upsert-record");
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, AzureCosmosDBNoSQLHotel>(fixture.Database!, "upsert-record");
 
         await sut.CreateCollectionAsync();
 
@@ -378,6 +385,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         Assert.Equal(10, getResult.HotelRating);
     }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -538,6 +546,9 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         string? hotelName = null,
         ReadOnlyMemory<float>? embedding = null)
     [Fact(Skip = SkipReason)]
+=======
+    [VectorStoreFact]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public async Task VectorizedSearchReturnsValidResultsByDefaultAsync()
     {
         // Arrange
@@ -546,17 +557,16 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         var hotel3 = this.CreateTestHotel(hotelId: "key3", embedding: new[] { 20f, 20f, 20f, 20f });
         var hotel4 = this.CreateTestHotel(hotelId: "key4", embedding: new[] { -1000f, -1000f, -1000f, -1000f });
 
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(fixture.Database!, "vector-search-default");
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, AzureCosmosDBNoSQLHotel>(fixture.Database!, "vector-search-default");
 
         await sut.CreateCollectionIfNotExistsAsync();
 
-        await sut.UpsertBatchAsync([hotel4, hotel2, hotel3, hotel1]).ToListAsync();
+        await sut.UpsertAsync([hotel4, hotel2, hotel3, hotel1]);
 
         // Act
-        var actual = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]));
+        var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), top: 3).ToListAsync();
 
         // Assert
-        var searchResults = await actual.Results.ToListAsync();
         var ids = searchResults.Select(l => l.Record.HotelId).ToList();
 
         Assert.Equal("key1", ids[0]);
@@ -568,7 +578,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         Assert.Equal(1, searchResults.First(l => l.Record.HotelId == "key1").Score);
     }
 
-    [Fact(Skip = SkipReason)]
+    [VectorStoreFact]
     public async Task VectorizedSearchReturnsValidResultsWithOffsetAsync()
     {
         // Arrange
@@ -577,21 +587,19 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         var hotel3 = this.CreateTestHotel(hotelId: "key3", embedding: new[] { 20f, 20f, 20f, 20f });
         var hotel4 = this.CreateTestHotel(hotelId: "key4", embedding: new[] { -1000f, -1000f, -1000f, -1000f });
 
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(fixture.Database!, "vector-search-with-offset");
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, AzureCosmosDBNoSQLHotel>(fixture.Database!, "vector-search-with-offset");
 
         await sut.CreateCollectionIfNotExistsAsync();
 
-        await sut.UpsertBatchAsync([hotel4, hotel2, hotel3, hotel1]).ToListAsync();
+        await sut.UpsertAsync([hotel4, hotel2, hotel3, hotel1]);
 
         // Act
-        var actual = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), new()
+        var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), top: 2, new()
         {
-            Top = 2,
             Skip = 2
-        });
+        }).ToListAsync();
 
         // Assert
-        var searchResults = await actual.Results.ToListAsync();
         var ids = searchResults.Select(l => l.Record.HotelId).ToList();
 
         Assert.Equal("key3", ids[0]);
@@ -601,7 +609,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         Assert.DoesNotContain("key2", ids);
     }
 
-    [Theory(Skip = SkipReason)]
+    [VectorStoreTheory]
     [MemberData(nameof(VectorizedSearchWithFilterData))]
     public async Task VectorizedSearchReturnsValidResultsWithFilterAsync(VectorSearchFilter filter, List<string> expectedIds)
     {
@@ -611,72 +619,69 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
         var hotel3 = this.CreateTestHotel(hotelId: "key3", embedding: new[] { 20f, 20f, 20f, 20f });
         var hotel4 = this.CreateTestHotel(hotelId: "key4", embedding: new[] { -1000f, -1000f, -1000f, -1000f });
 
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<AzureCosmosDBNoSQLHotel>(fixture.Database!, "vector-search-with-filter");
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<string, AzureCosmosDBNoSQLHotel>(fixture.Database!, "vector-search-with-filter");
 
         await sut.CreateCollectionIfNotExistsAsync();
 
-        await sut.UpsertBatchAsync([hotel4, hotel2, hotel3, hotel1]).ToListAsync();
+        await sut.UpsertAsync([hotel4, hotel2, hotel3, hotel1]);
 
         // Act
-        var actual = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), new()
+        var searchResults = await sut.VectorizedSearchAsync(new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]), top: 4, new()
         {
-            Filter = filter,
-            Top = 4,
-        });
+            OldFilter = filter,
+        }).ToListAsync();
 
         // Assert
-        var searchResults = await actual.Results.ToListAsync();
         var actualIds = searchResults.Select(l => l.Record.HotelId).ToList();
 
         Assert.Equal(expectedIds, actualIds);
     }
 
-    [Fact(Skip = SkipReason)]
-    public async Task ItCanUpsertAndRetrieveUsingTheGenericMapperAsync()
+    [VectorStoreFact]
+    public async Task ItCanUpsertAndRetrieveUsingTheDynamicMapperAsync()
     {
         // Arrange
         const string HotelId = "55555555-5555-5555-5555-555555555555";
-        var options = new AzureCosmosDBNoSQLVectorStoreRecordCollectionOptions<VectorStoreGenericDataModel<string>>
+        var options = new AzureCosmosDBNoSQLVectorStoreRecordCollectionOptions<Dictionary<string, object?>>
         {
             VectorStoreRecordDefinition = this.GetTestHotelRecordDefinition()
         };
 
-        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<VectorStoreGenericDataModel<string>>(fixture.Database!, "generic-mapper", options);
+        var sut = new AzureCosmosDBNoSQLVectorStoreRecordCollection<object, Dictionary<string, object?>>(fixture.Database!, "dynamic-mapper", options);
 
         await sut.CreateCollectionAsync();
 
         // Act
-        var upsertResult = await sut.UpsertAsync(new VectorStoreGenericDataModel<string>(HotelId)
+        var upsertResult = await sut.UpsertAsync(new Dictionary<string, object?>
         {
-            Data =
-            {
-                { "HotelName", "Generic Mapper Hotel" },
-                { "Description", "This is a generic mapper hotel" },
-                { "Tags", new List<string> { "generic" } },
-                { "parking_is_included", false },
-                { "Timestamp", new DateTimeOffset(1970, 1, 18, 0, 0, 0, TimeSpan.Zero) },
-                { "HotelRating", 3.6f }
-            },
-            Vectors =
-            {
-                { "DescriptionEmbedding", new ReadOnlyMemory<float>([30f, 31f, 32f, 33f]) }
-            }
+            ["HotelId"] = HotelId,
+
+            ["HotelName"] = "Dynamic Mapper Hotel",
+            ["Description"] = "This is a dynamic mapper hotel",
+            ["Tags"] = new List<string> { "dynamic" },
+            ["parking_is_included"] = false,
+            ["Timestamp"] = new DateTimeOffset(1970, 1, 18, 0, 0, 0, TimeSpan.Zero),
+            ["HotelRating"] = 3.6f,
+
+            ["DescriptionEmbedding"] = new ReadOnlyMemory<float>([30f, 31f, 32f, 33f])
         });
 
         var localGetResult = await sut.GetAsync(HotelId, new GetRecordOptions { IncludeVectors = true });
 
         // Assert
         Assert.NotNull(upsertResult);
-        Assert.Equal(HotelId, upsertResult);
+        var upsertCompositeKey = (AzureCosmosDBNoSQLCompositeKey)upsertResult;
+        Assert.Equal(HotelId, upsertCompositeKey.PartitionKey);
+        Assert.Equal(HotelId, upsertCompositeKey.RecordKey);
 
         Assert.NotNull(localGetResult);
-        Assert.Equal("Generic Mapper Hotel", localGetResult.Data["HotelName"]);
-        Assert.Equal("This is a generic mapper hotel", localGetResult.Data["Description"]);
-        Assert.Equal(new List<string> { "generic" }, localGetResult.Data["Tags"]);
-        Assert.False((bool?)localGetResult.Data["parking_is_included"]);
-        Assert.Equal(new DateTimeOffset(1970, 1, 18, 0, 0, 0, TimeSpan.Zero), localGetResult.Data["Timestamp"]);
-        Assert.Equal(3.6f, localGetResult.Data["HotelRating"]);
-        Assert.Equal(new[] { 30f, 31f, 32f, 33f }, ((ReadOnlyMemory<float>)localGetResult.Vectors["DescriptionEmbedding"]!).ToArray());
+        Assert.Equal("Dynamic Mapper Hotel", localGetResult["HotelName"]);
+        Assert.Equal("This is a dynamic mapper hotel", localGetResult["Description"]);
+        Assert.Equal(new List<string> { "dynamic" }, localGetResult["Tags"]);
+        Assert.False((bool?)localGetResult["parking_is_included"]);
+        Assert.Equal(new DateTimeOffset(1970, 1, 18, 0, 0, 0, TimeSpan.Zero), localGetResult["Timestamp"]);
+        Assert.Equal(3.6f, localGetResult["HotelRating"]);
+        Assert.Equal(new[] { 30f, 31f, 32f, 33f }, ((ReadOnlyMemory<float>)localGetResult["DescriptionEmbedding"]!).ToArray());
     }
 
     public static TheoryData<VectorSearchFilter, List<string>> VectorizedSearchWithFilterData => new()
@@ -883,6 +888,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
                 new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(ReadOnlyMemory<float>?)) { Dimensions = 4, IndexKind = IndexKind.Flat, DistanceFunction = DistanceFunction.CosineDistance }
 =======
                 new VectorStoreRecordDataProperty("Timestamp", typeof(DateTimeOffset)),
+<<<<<<< HEAD
                 new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(ReadOnlyMemory<float>?)) { Dimensions = 4, IndexKind = IndexKind.Flat, DistanceFunction = DistanceFunction.CosineSimilarity }
 >>>>>>> main
 <<<<<<< Updated upstream
@@ -918,6 +924,9 @@ public sealed class AzureCosmosDBNoSQLVectorStoreRecordCollectionTests(AzureCosm
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+                new VectorStoreRecordVectorProperty("DescriptionEmbedding", typeof(ReadOnlyMemory<float>?), 4) { IndexKind = IndexKind.Flat, DistanceFunction = DistanceFunction.CosineSimilarity }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             ]
         };
     }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Net.Http;
@@ -69,6 +69,7 @@ internal sealed class GeminiTokenCounterClient : ClientBase
     {
         Verify.NotNullOrWhiteSpace(modelId);
         Verify.NotNullOrWhiteSpace(location);
+        Verify.ValidHostnameSegment(location);
         Verify.NotNullOrWhiteSpace(projectId);
 
         string versionSubLink = GetApiVersionSubLink(apiVersion);

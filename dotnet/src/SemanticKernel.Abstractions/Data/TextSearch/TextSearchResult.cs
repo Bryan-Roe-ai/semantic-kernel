@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System.Diagnostics.CodeAnalysis;
+// Copyright (c) Microsoft. All rights reserved.
 
 namespace Microsoft.SemanticKernel.Data;
 
@@ -21,7 +19,6 @@ namespace Microsoft.SemanticKernel.Data;
 public sealed class TextSearchResult(string? name = null, string? value = null, string? link = null)
 =======
 /// <param name="value">The text search result value.</param>
-[Experimental("SKEXP0001")]
 public sealed class TextSearchResult(string value)
 >>>>>>> main
 {

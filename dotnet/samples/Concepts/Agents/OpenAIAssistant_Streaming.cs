@@ -1,15 +1,17 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System.ComponentModel;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
+using OpenAI.Assistants;
 
 namespace Agents;
 
 /// <summary>
 /// Demonstrate consuming "streaming" message for <see cref="OpenAIAssistantAgent"/>.
 /// </summary>
-public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAgentsTest(output)
+public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAssistantTest(output)
 {
 <<<<<<< HEAD
 <<<<<<< div
@@ -101,9 +103,15 @@ public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAgentsTes
     [Fact]
     public async Task UseStreamingAssistantAgentAsync()
     {
-        const string AgentName = "Parrot";
-        const string AgentInstructions = "Repeat the user message in the voice of a pirate and then end with a parrot sound.";
+        // Define the assistant
+        Assistant assistant =
+            await this.AssistantClient.CreateAssistantAsync(
+                this.Model,
+                name: "Parrot",
+                instructions: "Repeat the user message in the voice of a pirate and then end with a parrot sound.",
+                metadata: SampleMetadata);
 
+<<<<<<< HEAD
         // Define the agent
         OpenAIAssistantAgent agent =
                 await OpenAIAssistantAgent.CreateAsync(
@@ -150,17 +158,21 @@ public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAgentsTes
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+        // Create the agent
+        OpenAIAssistantAgent agent = new(assistant, this.AssistantClient);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Create a thread for the agent conversation.
-        string threadId = await agent.CreateThreadAsync(new OpenAIThreadCreationOptions { Metadata = AssistantSampleMetadata });
+        OpenAIAssistantAgentThread agentThread = new(this.AssistantClient, metadata: SampleMetadata);
 
         // Respond to user input
-        await InvokeAgentAsync(agent, threadId, "Fortune favors the bold.");
-        await InvokeAgentAsync(agent, threadId, "I came, I saw, I conquered.");
-        await InvokeAgentAsync(agent, threadId, "Practice makes perfect.");
+        await InvokeAgentAsync(agent, agentThread, "Fortune favors the bold.");
+        await InvokeAgentAsync(agent, agentThread, "I came, I saw, I conquered.");
+        await InvokeAgentAsync(agent, agentThread, "Practice makes perfect.");
 
         // Output the entire chat history
-        await DisplayChatHistoryAsync(agent, threadId);
+        await DisplayChatHistoryAsync(agentThread);
     }
 
     [Fact]
@@ -214,6 +226,7 @@ public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAgentsTes
 >>>>>>> head
     public async Task UseStreamingAssistantAgentWithPluginAsync()
     {
+<<<<<<< HEAD
         const string AgentName = "Host";
         const string AgentInstructions = "Answer questions about the menu.";
 <<<<<<< div
@@ -369,18 +382,29 @@ public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAgentsTes
                 });
 
         // Initialize plugin and add to the agent's Kernel (same as direct Kernel usage).
+=======
+        // Define the assistant
+        Assistant assistant =
+            await this.AssistantClient.CreateAssistantAsync(
+                this.Model,
+                name: "Host",
+                instructions: "Answer questions about the menu.",
+                metadata: SampleMetadata);
+
+        // Create the agent
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         KernelPlugin plugin = KernelPluginFactory.CreateFromType<MenuPlugin>();
-        agent.Kernel.Plugins.Add(plugin);
+        OpenAIAssistantAgent agent = new(assistant, this.AssistantClient, [plugin]);
 
         // Create a thread for the agent conversation.
-        string threadId = await agent.CreateThreadAsync(new OpenAIThreadCreationOptions { Metadata = AssistantSampleMetadata });
+        OpenAIAssistantAgentThread agentThread = new(this.AssistantClient, metadata: SampleMetadata);
 
         // Respond to user input
-        await InvokeAgentAsync(agent, threadId, "What is the special soup and its price?");
-        await InvokeAgentAsync(agent, threadId, "What is the special drink and its price?");
+        await InvokeAgentAsync(agent, agentThread, "What is the special soup and its price?");
+        await InvokeAgentAsync(agent, agentThread, "What is the special drink and its price?");
 
         // Output the entire chat history
-        await DisplayChatHistoryAsync(agent, threadId);
+        await DisplayChatHistoryAsync(agentThread);
     }
 
 <<<<<<< HEAD
@@ -422,31 +446,27 @@ public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAgentsTes
     [Fact]
     public async Task UseStreamingAssistantWithCodeInterpreterAsync()
     {
-        const string AgentName = "MathGuy";
-        const string AgentInstructions = "Solve math problems with code.";
+        // Define the assistant
+        Assistant assistant =
+            await this.AssistantClient.CreateAssistantAsync(
+                this.Model,
+                name: "MathGuy",
+                instructions: "Solve math problems with code.",
+                enableCodeInterpreter: true,
+                metadata: SampleMetadata);
 
-        // Define the agent
-        OpenAIAssistantAgent agent =
-            await OpenAIAssistantAgent.CreateAsync(
-                kernel: new(),
-                clientProvider: this.GetClientProvider(),
-                definition: new OpenAIAssistantDefinition(this.Model)
-                {
-                    Instructions = AgentInstructions,
-                    Name = AgentName,
-                    EnableCodeInterpreter = true,
-                    Metadata = AssistantSampleMetadata,
-                });
+        // Create the agent
+        OpenAIAssistantAgent agent = new(assistant, this.AssistantClient);
 
         // Create a thread for the agent conversation.
-        string threadId = await agent.CreateThreadAsync(new OpenAIThreadCreationOptions { Metadata = AssistantSampleMetadata });
+        OpenAIAssistantAgentThread agentThread = new(this.AssistantClient, metadata: SampleMetadata);
 
         // Respond to user input
-        await InvokeAgentAsync(agent, threadId, "Is 191 a prime number?");
-        await InvokeAgentAsync(agent, threadId, "Determine the values in the Fibonacci sequence that that are less then the value of 101");
+        await InvokeAgentAsync(agent, agentThread, "Is 191 a prime number?");
+        await InvokeAgentAsync(agent, agentThread, "Determine the values in the Fibonacci sequence that that are less then the value of 101");
 
         // Output the entire chat history
-        await DisplayChatHistoryAsync(agent, threadId);
+        await DisplayChatHistoryAsync(agentThread);
     }
 
 <<<<<<< div
@@ -484,13 +504,18 @@ public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAgentsTes
 >>>>>>> Stashed changes
 >>>>>>> head
     // Local function to invoke agent and display the conversation messages.
-    private async Task InvokeAgentAsync(OpenAIAssistantAgent agent, string threadId, string input)
+    private async Task InvokeAgentAsync(OpenAIAssistantAgent agent, AgentThread agentThread, string input)
     {
         ChatMessageContent message = new(AuthorRole.User, input);
-        await agent.AddChatMessageAsync(threadId, message);
         this.WriteAgentChatMessage(message);
 
+        // For this sample, also capture fully formed messages so we can display them later.
         ChatHistory history = [];
+        Task OnNewMessage(ChatMessageContent message)
+        {
+            history.Add(message);
+            return Task.CompletedTask;
+        }
 
         bool isFirst = false;
 <<<<<<< HEAD
@@ -525,6 +550,7 @@ public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAgentsTes
         await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(threadId, history))
 =======
         bool isCode = false;
+<<<<<<< HEAD
         await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(threadId, messages: history))
 >>>>>>> main
 <<<<<<< Updated upstream
@@ -558,6 +584,9 @@ public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAgentsTes
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+        await foreach (StreamingChatMessageContent response in agent.InvokeStreamingAsync(message, agentThread, new() { OnIntermediateMessage = OnNewMessage }))
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         {
             if (string.IsNullOrEmpty(response.Content))
             {
@@ -662,13 +691,13 @@ public class OpenAIAssistant_Streaming(ITestOutputHelper output) : BaseAgentsTes
         }
     }
 
-    private async Task DisplayChatHistoryAsync(OpenAIAssistantAgent agent, string threadId)
+    private async Task DisplayChatHistoryAsync(OpenAIAssistantAgentThread agentThread)
     {
         Console.WriteLine("================================");
         Console.WriteLine("CHAT HISTORY");
         Console.WriteLine("================================");
 
-        ChatMessageContent[] messages = await agent.GetThreadMessagesAsync(threadId).ToArrayAsync();
+        ChatMessageContent[] messages = await agentThread.GetMessagesAsync().ToArrayAsync();
         for (int index = messages.Length - 1; index >= 0; --index)
         {
             this.WriteAgentChatMessage(messages[index]);

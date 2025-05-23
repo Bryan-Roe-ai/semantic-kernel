@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
@@ -9,6 +9,7 @@ using Xunit;
 
 namespace SemanticKernel.IntegrationTests.Connectors.AzureCosmosDBNoSQL;
 
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class AzureCosmosDBNoSQLMemoryStoreTestsFixture : IAsyncLifetime
 {
     public AzureCosmosDBNoSQLMemoryStore MemoryStore { get; }

@@ -1,4 +1,4 @@
-﻿# Vector Store RAG Demo
+# Vector Store RAG Demo
 
 This sample demonstrates how to ingest text from pdf files into a vector store and ask questions about the content
 using an LLM while using RAG to supplement the LLM with additional information from the vector store.
@@ -57,7 +57,7 @@ dotnet user-secrets set "AIServices:AzureOpenAI:Endpoint" "https://<yourservice>
 dotnet user-secrets set "AIServices:AzureOpenAI:ChatDeploymentName" "<your deployment name>"
 ```
 
-Note that the code doesn't use an API Key to communicate with Azure Open AI, but rather an `AzureCliCredential` so no api key secret is required.
+Note that the code doesn't use an API Key to communicate with Azure OpenAI, but rather an `AzureCliCredential` so no api key secret is required.
 
 ### OpenAI Chat Completion
 
@@ -83,7 +83,7 @@ dotnet user-secrets set "AIServices:AzureOpenAIEmbeddings:Endpoint" "https://<yo
 dotnet user-secrets set "AIServices:AzureOpenAIEmbeddings:DeploymentName" "<your deployment name>"
 ```
 
-Note that the code doesn't use an API Key to communicate with Azure Open AI, but rather an `AzureCliCredential` so no api key secret is required.
+Note that the code doesn't use an API Key to communicate with Azure OpenAI, but rather an `AzureCliCredential` so no api key secret is required.
 
 ### OpenAI Embeddings
 

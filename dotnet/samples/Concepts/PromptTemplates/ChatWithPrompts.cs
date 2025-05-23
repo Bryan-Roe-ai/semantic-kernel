@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Globalization;
 using Microsoft.SemanticKernel;
@@ -108,14 +108,14 @@ public class ChatWithPrompts(ITestOutputHelper output) : BaseTest(output)
         The chat started at: 09:52:12 PM -07
         The current time is: Thursday, April 27, 2023 9:52 PM
         Text selected:
-        The central Sahara is hyperarid, with sparse vegetation. The northern and southern reaches of the desert, along with the highlands, have areas of sparse grassland and desert shrub, with trees and taller shrubs in wadis, where moisture collects. In the central, hyperarid region, there are many subdivisions of the great desert: Tanezrouft, the TÃ©nÃ©rÃ©, the Libyan Desert, the Eastern Desert, the Nubian Desert and others. These extremely arid areas often receive no rain for years.
+        The central Sahara is hyperarid, with sparse vegetation. The northern and southern reaches of the desert, along with the highlands, have areas of sparse grassland and desert shrub, with trees and taller shrubs in wadis, where moisture collects. In the central, hyperarid region, there are many subdivisions of the great desert: Tanezrouft, the Ténéré, the Libyan Desert, the Eastern Desert, the Nubian Desert and others. These extremely arid areas often receive no rain for years.
         ------------------------------------
         Thursday, April 27, 2023 2:34 PM: extract locations as a bullet point list
         ------------------------------------
         Sure, here are the locations mentioned in the text:
 
         - Tanezrouft
-        - TÃ©nÃ©rÃ©
+        - Ténéré
         - Libyan Desert
         - Eastern Desert
         - Nubian Desert

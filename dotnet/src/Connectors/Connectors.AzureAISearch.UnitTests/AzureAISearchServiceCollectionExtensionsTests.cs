@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -64,6 +65,9 @@
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 using Azure;
@@ -297,10 +301,11 @@ public class AzureAISearchServiceCollectionExtensionsTests
 
         var collection = serviceProvider.GetRequiredService<IVectorStoreRecordCollection<string, TestRecord>>();
         Assert.NotNull(collection);
-        Assert.IsType<AzureAISearchVectorStoreRecordCollection<TestRecord>>(collection);
+        Assert.IsType<AzureAISearchVectorStoreRecordCollection<string, TestRecord>>(collection);
 
-        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorizedSearch<TestRecord>>();
+        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorSearch<TestRecord>>();
         Assert.NotNull(vectorizedSearch);
+<<<<<<< HEAD
         Assert.IsType<AzureAISearchVectorStoreRecordCollection<TestRecord>>(vectorizedSearch);
 <<<<<<< main
 
@@ -309,6 +314,9 @@ public class AzureAISearchServiceCollectionExtensionsTests
         Assert.IsType<AzureAISearchVectorStoreRecordCollection<TestRecord>>(vectorizableSearch);
 =======
 >>>>>>> upstream/main
+=======
+        Assert.IsType<AzureAISearchVectorStoreRecordCollection<string, TestRecord>>(vectorizedSearch);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
 #pragma warning disable CA1812 // Avoid uninstantiated internal classes

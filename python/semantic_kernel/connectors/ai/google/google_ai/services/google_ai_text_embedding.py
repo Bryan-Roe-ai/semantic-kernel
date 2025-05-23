@@ -8,9 +8,13 @@ from google.generativeai.types.text_types import BatchEmbeddingDict
 from numpy import array, ndarray
 from pydantic import ValidationError
 
+<<<<<<< HEAD
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
     EmbeddingGeneratorBase,
 )
+=======
+from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.connectors.ai.google.google_ai.google_ai_prompt_execution_settings import (
     GoogleAIEmbeddingPromptExecutionSettings,
 )
@@ -60,7 +64,7 @@ class GoogleAITextEmbedding(GoogleAIBase, EmbeddingGeneratorBase):
             ServiceInitializationError: If an error occurs during initialization.
         """
         try:
-            google_ai_settings = GoogleAISettings.create(
+            google_ai_settings = GoogleAISettings(
                 embedding_model_id=embedding_model_id,
                 api_key=api_key,
                 env_file_path=env_file_path,
@@ -105,7 +109,9 @@ class GoogleAITextEmbedding(GoogleAIBase, EmbeddingGeneratorBase):
         assert isinstance(settings, GoogleAIEmbeddingPromptExecutionSettings)  # nosec
 
         genai.configure(api_key=self.service_settings.api_key.get_secret_value())
-        response: BatchEmbeddingDict = await genai.embed_content_async(
+        if not self.service_settings.embedding_model_id:
+            raise ServiceInitializationError("The Google AI embedding model ID is required.")
+        response: BatchEmbeddingDict = await genai.embed_content_async(  # type: ignore
             model=self.service_settings.embedding_model_id,
             content=texts,
             **settings.prepare_settings_dict(),

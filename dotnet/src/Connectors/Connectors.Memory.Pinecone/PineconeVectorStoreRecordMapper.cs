@@ -1,6 +1,7 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -82,6 +83,11 @@ using Microsoft.SemanticKernel.Data;
 >>>>>>> origin/main
 using Microsoft.Extensions.VectorData;
 >>>>>>> upstream/main
+=======
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.VectorData;
+using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Pinecone;
 
 namespace Microsoft.SemanticKernel.Connectors.Pinecone;
@@ -90,8 +96,9 @@ namespace Microsoft.SemanticKernel.Connectors.Pinecone;
 /// Mapper between a Pinecone record and the consumer data model that uses json as an intermediary to allow supporting a wide range of models.
 /// </summary>
 /// <typeparam name="TRecord">The consumer data model to map to or from.</typeparam>
-internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRecordMapper<TRecord, Vector>
+internal sealed class PineconeVectorStoreRecordMapper<TRecord>(VectorStoreRecordModel model)
 {
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -370,9 +377,12 @@ internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRec
 >>>>>>> head
     }
 
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <inheritdoc />
-    public Vector MapFromDataToStorageModel(TRecord dataModel)
+    public Vector MapFromDataToStorageModel(TRecord dataModel, Embedding<float>? generatedEmbedding)
     {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -454,14 +464,18 @@ internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRec
 =======
 >>>>>>> Stashed changes
         var keyObject = this._propertyReader.KeyPropertyInfo.GetValue(dataModel);
+=======
+        var keyObject = model.KeyProperty.GetValueAsObject(dataModel!);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         if (keyObject is null)
         {
-            throw new VectorStoreRecordMappingException($"Key property {this._propertyReader.KeyPropertyName} on provided record of type {typeof(TRecord).FullName} may not be null.");
+            throw new VectorStoreRecordMappingException($"Key property '{model.KeyProperty.ModelName}' on provided record of type '{typeof(TRecord).Name}' may not be null.");
         }
 
-        var metadata = new MetadataMap();
-        foreach (var dataPropertyInfo in this._propertyReader.DataPropertiesInfo)
+        var metadata = new Metadata();
+        foreach (var property in model.DataProperties)
         {
+<<<<<<< HEAD
             var propertyName = this._propertyReader.GetStoragePropertyName(dataPropertyInfo.Name);
 <<<<<<< div
 =======
@@ -614,12 +628,26 @@ internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRec
 >>>>>>> Stashed changes
 >>>>>>> head
         }
+=======
+            if (property.GetValueAsObject(dataModel!) is { } value)
+            {
+                metadata[property.StorageName] = PineconeVectorStoreRecordFieldMapping.ConvertToMetadataValue(value);
+            }
+        }
+
+        var values = (generatedEmbedding?.Vector ?? model.VectorProperty!.GetValueAsObject(dataModel!)) switch
+        {
+            ReadOnlyMemory<float> floats => floats,
+            null => throw new VectorStoreRecordMappingException($"Vector property '{model.VectorProperty.ModelName}' on provided record of type '{typeof(TRecord).Name}' may not be null."),
+            _ => throw new VectorStoreRecordMappingException($"Unsupported vector type '{model.VectorProperty.Type.Name}' for vector property '{model.VectorProperty.ModelName}' on provided record of type '{typeof(TRecord).Name}'.")
+        };
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // TODO: what about sparse values?
         var result = new Vector
         {
             Id = (string)keyObject,
-            Values = values.ToArray(),
+            Values = values,
             Metadata = metadata,
             SparseValues = null
         };
@@ -630,6 +658,7 @@ internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRec
     /// <inheritdoc />
     public TRecord MapFromStorageToDataModel(Vector storageModel, StorageToDataModelMapperOptions options)
     {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -748,27 +777,38 @@ internal sealed class PineconeVectorStoreRecordMapper<TRecord> : IVectorStoreRec
 >>>>>>> Stashed changes
         // Construct the output record.
         var outputRecord = (TRecord)this._propertyReader.ParameterLessConstructorInfo.Invoke(null);
+=======
+        var outputRecord = model.CreateRecord<TRecord>()!;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-        // Set Key.
-        this._propertyReader.KeyPropertyInfo.SetValue(outputRecord, storageModel.Id);
+        model.KeyProperty.SetValueAsObject(outputRecord, storageModel.Id);
 
-        // Set Vector.
         if (options?.IncludeVectors is true)
         {
-            this._propertyReader.FirstVectorPropertyInfo!.SetValue(
+            model.VectorProperty.SetValueAsObject(
                 outputRecord,
-                new ReadOnlyMemory<float>(storageModel.Values));
+                storageModel.Values);
         }
 
-        // Set Data.
         if (storageModel.Metadata != null)
         {
+<<<<<<< HEAD
             VectorStoreRecordMapping.SetValuesOnProperties(
                 outputRecord,
                 this._propertyReader.DataPropertiesInfo,
                 this._propertyReader.StoragePropertyNamesMap,
                 storageModel.Metadata,
                 ConvertFromMetadataValueToNativeType);
+=======
+            foreach (var property in model.DataProperties)
+            {
+                property.SetValueAsObject(
+                    outputRecord,
+                    storageModel.Metadata.TryGetValue(property.StorageName, out var metadataValue) && metadataValue is not null
+                        ? PineconeVectorStoreRecordFieldMapping.ConvertFromMetadataValueToNativeType(metadataValue, property.Type)
+                        : null);
+            }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         }
 
         return outputRecord;

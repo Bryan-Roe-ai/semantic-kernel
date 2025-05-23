@@ -1,13 +1,16 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 <<<<<<< HEAD
 using Microsoft.SemanticKernel.Data;
 =======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
 >>>>>>> main
+=======
+using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 namespace Microsoft.SemanticKernel.Connectors.AzureAISearch;
 
@@ -16,22 +19,23 @@ namespace Microsoft.SemanticKernel.Connectors.AzureAISearch;
 /// </summary>
 internal static class AzureAISearchVectorStoreCollectionSearchMapping
 {
+#pragma warning disable CS0618 // VectorSearchFilter is obsolete
     /// <summary>
     /// Build an OData filter string from the provided <see cref="VectorSearchFilter"/>.
     /// </summary>
     /// <param name="basicVectorSearchFilter">The <see cref="VectorSearchFilter"/> to build an OData filter string from.</param>
-    /// <param name="storagePropertyNames">A mapping of data model property names to the names under which they are stored.</param>
+    /// <param name="model">The model.</param>
     /// <returns>The OData filter string.</returns>
     /// <exception cref="InvalidOperationException">Thrown when a provided filter value is not supported.</exception>
-    public static string BuildFilterString(VectorSearchFilter? basicVectorSearchFilter, IReadOnlyDictionary<string, string> storagePropertyNames)
+    public static string BuildLegacyFilterString(VectorSearchFilter basicVectorSearchFilter, VectorStoreRecordModel model)
     {
         var filterString = string.Empty;
-        if (basicVectorSearchFilter?.FilterClauses is not null)
+        if (basicVectorSearchFilter.FilterClauses is not null)
         {
             // Map Equality clauses.
             var filterStrings = basicVectorSearchFilter?.FilterClauses.OfType<EqualToFilterClause>().Select(x =>
             {
-                string storageFieldName = GetStoragePropertyName(storagePropertyNames, x.FieldName);
+                string storageFieldName = GetStoragePropertyName(model, x.FieldName);
 
                 return x.Value switch
                 {
@@ -52,11 +56,7 @@ internal static class AzureAISearchVectorStoreCollectionSearchMapping
             // Map tag contains clauses.
             var tagListContainsStrings = basicVectorSearchFilter?.FilterClauses
                 .OfType<AnyTagEqualToFilterClause>()
-                .Select(x =>
-                {
-                    string storageFieldName = GetStoragePropertyName(storagePropertyNames, x.FieldName);
-                    return $"{storageFieldName}/any(t: t eq '{x.Value}')";
-                });
+                .Select(x => $"{GetStoragePropertyName(model, x.FieldName)}/any(t: t eq '{x.Value}')");
 
             // Combine clauses.
             filterString = string.Join(" and ", filterStrings!.Concat(tagListContainsStrings!));
@@ -64,21 +64,22 @@ internal static class AzureAISearchVectorStoreCollectionSearchMapping
 
         return filterString;
     }
+#pragma warning restore CS0618 // VectorSearchFilter is obsolete
 
     /// <summary>
     /// Gets the name of the name under which the property with the given name is stored.
     /// </summary>
-    /// <param name="storagePropertyNames">A mapping of data model property names to the names under which they are stored.</param>
+    /// <param name="model">The model.</param>
     /// <param name="fieldName">The name of the property in the data model.</param>
     /// <returns>The name that the property os stored under.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the property name is not found.</exception>
-    private static string GetStoragePropertyName(IReadOnlyDictionary<string, string> storagePropertyNames, string fieldName)
+    private static string GetStoragePropertyName(VectorStoreRecordModel model, string fieldName)
     {
-        if (!storagePropertyNames.TryGetValue(fieldName, out var storageFieldName))
+        if (!model.PropertyMap.TryGetValue(fieldName, out var property))
         {
             throw new InvalidOperationException($"Property name '{fieldName}' provided as part of the filter clause is not a valid property name.");
         }
 
-        return storageFieldName;
+        return property.StorageName;
     }
 }

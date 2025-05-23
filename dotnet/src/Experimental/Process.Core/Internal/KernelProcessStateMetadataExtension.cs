@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +17,12 @@ internal static class KernelProcessStateMetadataExtension
         KernelProcessStateMetadata? sanitizedMetadata = null;
         if (stateMetadata != null)
         {
+<<<<<<< HEAD
             sanitizedMetadata = SanitizeProcessStateMetadata(stateMetadata, processBuilder.Steps);
             sanitizedMetadata = SanitizeProcessStateMetadata(stateMetadata, processBuilder.Steps);
+=======
+            sanitizedMetadata = SanitizeProcessStateMetadata(processBuilder, stateMetadata, processBuilder.Steps);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         }
 
         // 2- Build steps info with validated stateMetadata
@@ -27,20 +31,24 @@ internal static class KernelProcessStateMetadataExtension
         {
             if (sanitizedMetadata != null && sanitizedMetadata.StepsState != null && sanitizedMetadata.StepsState.TryGetValue(step.Name, out var stepStateObject) && stepStateObject != null)
             {
-                builtSteps.Add(step.BuildStep(stepStateObject));
+                builtSteps.Add(step.BuildStep(processBuilder, stepStateObject));
                 continue;
                 continue;
             }
 
-            builtSteps.Add(step.BuildStep());
+            builtSteps.Add(step.BuildStep(processBuilder));
         }
         }
 
         return builtSteps;
     }
 
+<<<<<<< HEAD
     private static KernelProcessStateMetadata SanitizeProcessStateMetadata(KernelProcessStateMetadata stateMetadata, IReadOnlyList<ProcessStepBuilder> stepBuilders)
     private static KernelProcessStateMetadata SanitizeProcessStateMetadata(KernelProcessStateMetadata stateMetadata, IReadOnlyList<ProcessStepBuilder> stepBuilders)
+=======
+    private static KernelProcessStateMetadata SanitizeProcessStateMetadata(ProcessBuilder processBuilder, KernelProcessStateMetadata stateMetadata, IReadOnlyList<ProcessStepBuilder> stepBuilders)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         KernelProcessStateMetadata sanitizedStateMetadata = stateMetadata;
         foreach (ProcessStepBuilder step in stepBuilders)
@@ -63,7 +71,7 @@ internal static class KernelProcessStateMetadataExtension
             // 2- stepKey match found
             if (stepKey != null)
             {
-                var currentVersionStateMetadata = step.BuildStep().ToProcessStateMetadata();
+                var currentVersionStateMetadata = step.BuildStep(processBuilder).ToProcessStateMetadata();
                 if (sanitizedStateMetadata.StepsState!.TryGetValue(stepKey, out var savedStateMetadata))
                 {
                     if (stepKey != step.Name)
@@ -79,11 +87,12 @@ internal static class KernelProcessStateMetadataExtension
                             // version mismatch - check if migration logic in place
                             if (step is ProcessBuilder subprocessBuilder)
                             {
-                                KernelProcessStateMetadata sanitizedStepState = SanitizeProcessStateMetadata((KernelProcessStateMetadata)savedStateMetadata, subprocessBuilder.Steps);
+                                KernelProcessStateMetadata sanitizedStepState = SanitizeProcessStateMetadata(processBuilder, (KernelProcessStateMetadata)savedStateMetadata, subprocessBuilder.Steps);
                                 sanitizedStateMetadata.StepsState[step.Name] = sanitizedStepState;
                             }
                             else if (step is ProcessMapBuilder mapBuilder)
                             {
+<<<<<<< HEAD
                                 KernelProcessStateMetadata sanitizedStepState = SanitizeProcessStateMetadata((KernelProcessStateMetadata)savedStateMetadata, [mapBuilder.MapOperation]);
                                 KernelProcessStateMetadata sanitizedStepState = SanitizeProcessStateMetadata((KernelProcessStateMetadata)savedStateMetadata, mapBuilder.MapOperation.Steps);
                                 KernelProcessStateMetadata sanitizedStepState = SanitizeProcessStateMetadata((KernelProcessStateMetadata)savedStateMetadata, subprocessBuilder.Steps);
@@ -92,6 +101,9 @@ internal static class KernelProcessStateMetadataExtension
                             else if (step is ProcessMapBuilder mapBuilder)
                             {
                                 KernelProcessStateMetadata sanitizedStepState = SanitizeProcessStateMetadata((KernelProcessStateMetadata)savedStateMetadata, [mapBuilder.MapOperation]);
+=======
+                                KernelProcessStateMetadata sanitizedStepState = SanitizeProcessStateMetadata(processBuilder, (KernelProcessStateMetadata)savedStateMetadata, [mapBuilder.MapOperation]);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                                 sanitizedStateMetadata.StepsState[step.Name] = sanitizedStepState;
                             }
                             else if (false)

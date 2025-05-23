@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -136,7 +136,7 @@ public class AzureAIInferencePromptExecutionSettings : PromptExecutionSettings
     /// Note that to enable JSON mode, some AI models may also require you to instruct the model to produce JSON
     /// via a system or user message.
     /// Please note <see cref="ChatCompletionsResponseFormat"/> is the base class. According to the scenario, a derived class of the base class might need to be assigned here, or this property needs to be casted to one of the possible derived classes.
-    /// The available derived classes include <see cref="ChatCompletionsResponseFormatJSON"/> and <see cref="ChatCompletionsResponseFormatText"/>.
+    /// The available derived classes include <see cref="ChatCompletionsResponseFormatJsonObject"/> and <see cref="ChatCompletionsResponseFormatText"/>.
     /// </summary>
     [JsonPropertyName("response_format")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

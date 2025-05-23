@@ -45,7 +45,7 @@ class ApiKeyAuthentication(AzureChatRequestBase):
     """API key authentication."""
 
     type: Annotated[Literal["APIKey", "api_key"], AfterValidator(to_snake)] = "api_key"
-    key: str | None = None
+    key: str
 
 
 class SystemAssignedManagedIdentityAuthentication(AzureChatRequestBase):
@@ -187,4 +187,4 @@ class ExtraBody(KernelBaseModel):
 class AzureChatPromptExecutionSettings(OpenAIChatPromptExecutionSettings):
     """Specific settings for the Azure OpenAI Chat Completion endpoint."""
 
-    extra_body: dict[str, Any] | ExtraBody | None = None
+    extra_body: dict[str, Any] | ExtraBody | None = None  # type: ignore[assignment]

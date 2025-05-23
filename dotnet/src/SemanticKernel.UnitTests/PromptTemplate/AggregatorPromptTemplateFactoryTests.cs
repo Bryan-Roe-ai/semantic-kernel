@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Threading;
@@ -33,7 +33,7 @@ public sealed class AggregatorPromptTemplateFactoryTests
     }
 
     [Fact]
-    public void ItThrowsExceptionForUnknowPromptTemplateFormat()
+    public void ItThrowsExceptionForUnknownPromptTemplateFormat()
     {
         // Arrange
         var templateString = "{{$input}}";

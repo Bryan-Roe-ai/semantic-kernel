@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -320,5 +320,43 @@ public class PromptRenderFilterTests : FilterBaseTest
 
         // Assert
         Assert.Equal(isStreaming, actualStreamingFlag);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task PromptExecutionSettingsArePropagatedToFilterContextAsync(bool isStreaming)
+    {
+        // Arrange
+        PromptExecutionSettings? actualExecutionSettings = null;
+
+        var mockTextGeneration = this.GetMockTextGeneration();
+
+        var function = KernelFunctionFactory.CreateFromPrompt("Prompt");
+
+        var kernel = this.GetKernelWithFilters(textGenerationService: mockTextGeneration.Object,
+            onPromptRender: (context, next) =>
+            {
+                actualExecutionSettings = context.ExecutionSettings;
+                return next(context);
+            });
+
+        var expectedExecutionSettings = new PromptExecutionSettings();
+
+        var arguments = new KernelArguments(expectedExecutionSettings);
+
+        // Act
+        if (isStreaming)
+        {
+            await foreach (var item in kernel.InvokeStreamingAsync(function, arguments))
+            { }
+        }
+        else
+        {
+            await kernel.InvokeAsync(function, arguments);
+        }
+
+        // Assert
+        Assert.Same(expectedExecutionSettings, actualExecutionSettings);
     }
 }

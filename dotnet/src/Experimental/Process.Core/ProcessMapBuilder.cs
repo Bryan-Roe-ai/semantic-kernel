@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +26,7 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
     /// </summary>
     /// <param name="mapOperation">The target of the map operation.  May target a step or process</param>
     internal ProcessMapBuilder(ProcessStepBuilder mapOperation)
-        : base($"Map{mapOperation.Name}")
+        : base($"Map{mapOperation.Name}", mapOperation.ProcessBuilder)
     {
         this.MapOperation = mapOperation;
     }
@@ -187,7 +187,7 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
     }
 
     /// <inheritdoc/>
-    internal override KernelProcessStepInfo BuildStep(KernelProcessStepStateMetadata? stateMetadata = null)
+    internal override KernelProcessStepInfo BuildStep(ProcessBuilder processBuilder, KernelProcessStepStateMetadata? stateMetadata = null)
     {
         KernelProcessMapStateMetadata? mapMetadata = stateMetadata as KernelProcessMapStateMetadata;
 
@@ -197,7 +197,11 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
         // Define the map state
         KernelProcessMapState state = new(this.Name, this.Version, this.Id);
 
+<<<<<<< HEAD
         return new KernelProcessMap(state, this.MapOperation.BuildStep(mapMetadata?.OperationState), builtEdges);
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+=======
+        return new KernelProcessMap(state, this.MapOperation.BuildStep(processBuilder, mapMetadata?.OperationState), builtEdges);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 }

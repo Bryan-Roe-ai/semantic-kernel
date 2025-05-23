@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Step03.Models;
@@ -45,7 +45,7 @@ public class Step03b_FoodOrdering(ITestOutputHelper output) : BaseTest(output, r
         Kernel kernel = CreateKernelWithChatCompletion();
         KernelProcess kernelProcess = SingleFoodItemProcess.CreateProcess().Build();
 
-        using var runningProcess = await kernelProcess.StartAsync(kernel, new KernelProcessEvent()
+        await using var runningProcess = await kernelProcess.StartAsync(kernel, new KernelProcessEvent()
         {
             Id = SingleFoodItemProcess.ProcessEvents.SingleOrderReceived,
             Data = foodItem

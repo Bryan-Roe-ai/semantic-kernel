@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 <<<<<<< main
 <<<<<<< HEAD
@@ -150,18 +150,18 @@ public sealed class WeaviateKernelBuilderExtensionsTests
         this._kernelBuilder.Services.AddSingleton<HttpClient>(httpClient);
 
         // Act
-        this._kernelBuilder.AddWeaviateVectorStoreRecordCollection<TestRecord>("testcollection");
+        this._kernelBuilder.AddWeaviateVectorStoreRecordCollection<TestRecord>("Testcollection");
 
         var kernel = this._kernelBuilder.Build();
 
         // Assert
         var collection = kernel.Services.GetRequiredService<IVectorStoreRecordCollection<Guid, TestRecord>>();
         Assert.NotNull(collection);
-        Assert.IsType<WeaviateVectorStoreRecordCollection<TestRecord>>(collection);
+        Assert.IsType<WeaviateVectorStoreRecordCollection<Guid, TestRecord>>(collection);
 
-        var vectorizedSearch = kernel.Services.GetRequiredService<IVectorizedSearch<TestRecord>>();
+        var vectorizedSearch = kernel.Services.GetRequiredService<IVectorSearch<TestRecord>>();
         Assert.NotNull(vectorizedSearch);
-        Assert.IsType<WeaviateVectorStoreRecordCollection<TestRecord>>(vectorizedSearch);
+        Assert.IsType<WeaviateVectorStoreRecordCollection<Guid, TestRecord>>(vectorizedSearch);
     }
 
 #pragma warning disable CA1812 // Avoid uninstantiated internal classes

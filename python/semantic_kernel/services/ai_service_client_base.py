@@ -60,9 +60,9 @@
 >>>>>>> Stashed changes
 >>>>>>> head
 from abc import ABC
-from typing import TYPE_CHECKING, Annotated
+from typing import TYPE_CHECKING, Annotated, Any
 
-from pydantic import Field, StringConstraints
+from pydantic.types import StringConstraints
 
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 
@@ -248,8 +248,9 @@ class AIServiceClientBase(KernelBaseModel, ABC):
     """
 
     ai_model_id: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
-    service_id: str = Field("")
+    service_id: str = ""
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -329,6 +330,9 @@ class AIServiceClientBase(KernelBaseModel, ABC):
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+    def model_post_init(self, __context: Any):
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """Update the service_id if it is not set."""
         if not self.service_id:
             self.service_id = self.ai_model_id

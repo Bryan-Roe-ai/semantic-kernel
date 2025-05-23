@@ -115,6 +115,7 @@ class PromptExecutionSettings(KernelBaseModel):
 
     @model_validator(mode="before")
     @classmethod
+<<<<<<< HEAD
     def parse_function_choice_behavior(
         cls: type[_T], data: dict[str, Any]
     ) -> dict[str, Any]:
@@ -129,6 +130,17 @@ class PromptExecutionSettings(KernelBaseModel):
                 data["function_choice_behavior"] = FunctionChoiceBehavior.from_dict(
                     function_choice_behavior_data
                 )
+=======
+    def parse_function_choice_behavior(cls: type[_T], data: Any) -> dict[str, Any]:
+        """Parse the function choice behavior data."""
+        if isinstance(data, dict):
+            function_choice_behavior_data = data.get("function_choice_behavior")
+            if function_choice_behavior_data:
+                if isinstance(function_choice_behavior_data, str):
+                    data["function_choice_behavior"] = FunctionChoiceBehavior.from_string(function_choice_behavior_data)
+                elif isinstance(function_choice_behavior_data, dict):
+                    data["function_choice_behavior"] = FunctionChoiceBehavior.from_dict(function_choice_behavior_data)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         return data
     def parse_function_choice_behavior(cls, data: dict[str, Any]) -> dict[str, Any] | None:
         """Parse the function choice behavior data."""
@@ -163,7 +175,7 @@ class PromptExecutionSettings(KernelBaseModel):
     @property
     def keys(self):
         """Get the keys of the prompt execution settings."""
-        return self.model_fields.keys()
+        return self.__class__.model_fields.keys()
 
     def prepare_settings_dict(self, **kwargs) -> dict[str, Any]:
         """Prepare the settings as a dictionary for sending to the AI service.
@@ -239,7 +251,7 @@ class PromptExecutionSettings(KernelBaseModel):
             by_alias=True,
         )
 
-    def update_from_prompt_execution_settings(self, config: _T) -> None:
+    def update_from_prompt_execution_settings(self, config: "PromptExecutionSettings") -> None:
         """Update the prompt execution settings from a completion config."""
         if config.service_id is not None:
             self.service_id = config.service_id
@@ -248,7 +260,7 @@ class PromptExecutionSettings(KernelBaseModel):
         self.unpack_extension_data()
 
     @classmethod
-    def from_prompt_execution_settings(cls: type[_T], config: _T) -> _T:
+    def from_prompt_execution_settings(cls: type[_T], config: "PromptExecutionSettings") -> _T:
         """Create a prompt execution settings from a completion config."""
         config.pack_extension_data()
         return cls(

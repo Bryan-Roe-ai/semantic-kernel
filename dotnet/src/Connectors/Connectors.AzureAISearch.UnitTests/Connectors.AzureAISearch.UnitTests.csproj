@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AssemblyName>SemanticKernel.Connectors.AzureAISearch.UnitTests</AssemblyName>
@@ -8,7 +8,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);SKEXP0001,SKEXP0020</NoWarn>
+    <NoWarn>$(NoWarn);SKEXP0001</NoWarn>
+    <NoWarn>$(NoWarn);MEVD9001</NoWarn> <!-- Experimental MEVD connector-facing APIs -->
   </PropertyGroup>
 
   <ItemGroup>

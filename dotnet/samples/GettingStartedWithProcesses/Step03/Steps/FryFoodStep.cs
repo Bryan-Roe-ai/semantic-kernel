@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Process;
@@ -12,7 +12,7 @@ namespace Step03.Steps;
 [KernelProcessStepMetadata("FryFoodStep.V1")]
 public class FryFoodStep : KernelProcessStep
 {
-    public static class Functions
+    public static class ProcessStepFunctions
     {
         public const string FryFood = nameof(FryFood);
     }
@@ -25,7 +25,7 @@ public class FryFoodStep : KernelProcessStep
 
     private readonly Random _randomSeed = new();
 
-    [KernelFunction(Functions.FryFood)]
+    [KernelFunction(ProcessStepFunctions.FryFood)]
     public async Task FryFoodAsync(KernelProcessStepContext context, List<string> foodActions)
     {
         var foodToFry = foodActions.First();

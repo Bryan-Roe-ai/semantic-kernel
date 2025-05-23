@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Linq;
@@ -38,9 +38,10 @@ public class QdrantVectorStoreTests
 
         // Assert.
         Assert.NotNull(actual);
-        Assert.IsType<QdrantVectorStoreRecordCollection<SinglePropsModel<ulong>>>(actual);
+        Assert.IsType<QdrantVectorStoreRecordCollection<ulong, SinglePropsModel<ulong>>>(actual);
     }
 
+#pragma warning disable CS0618 // IQdrantVectorStoreRecordCollectionFactory is obsolete
     [Fact]
     public void GetCollectionCallsFactoryIfProvided()
     {
@@ -59,6 +60,7 @@ public class QdrantVectorStoreTests
         Assert.Equal(collectionMock.Object, actual);
         factoryMock.Verify(x => x.CreateVectorStoreRecordCollection<ulong, SinglePropsModel<ulong>>(It.IsAny<QdrantClient>(), TestCollectionName, null), Times.Once);
     }
+#pragma warning restore CS0618
 
     [Fact]
     public void GetCollectionThrowsForInvalidKeyType()

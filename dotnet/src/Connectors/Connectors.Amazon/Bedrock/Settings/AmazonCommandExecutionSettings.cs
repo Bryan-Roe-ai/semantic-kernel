@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Text.Json;
@@ -112,6 +112,7 @@ public class AmazonCommandExecutionSettings : PromptExecutionSettings
     /// (Required to support streaming) Specify true to return the response piece-by-piece in real-time and false to return the complete response after the process finishes.
     /// </summary>
     [JsonPropertyName("stream")]
+    [JsonConverter(typeof(OptionalBoolJsonConverter))]
     public bool? Stream
     {
         get => this._stream;

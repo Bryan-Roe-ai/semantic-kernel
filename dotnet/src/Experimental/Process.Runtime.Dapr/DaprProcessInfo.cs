@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -44,6 +44,10 @@ public sealed record DaprProcessInfo : DaprStepInfo
             {
                 steps.Add(mapStep.ToKernelProcessMap());
             }
+            else if (step is DaprProxyInfo proxyStep)
+            {
+                steps.Add(proxyStep.ToKernelProcessProxy());
+            }
             else
             {
                 steps.Add(step.ToKernelProcessStepInfo());
@@ -74,6 +78,10 @@ public sealed record DaprProcessInfo : DaprStepInfo
             else if (step is KernelProcessMap mapStep)
             {
                 daprSteps.Add(DaprMapInfo.FromKernelProcessMap(mapStep));
+            }
+            else if (step is KernelProcessProxy proxyStep)
+            {
+                daprSteps.Add(DaprProxyInfo.FromKernelProxyInfo(proxyStep));
             }
             else
             {

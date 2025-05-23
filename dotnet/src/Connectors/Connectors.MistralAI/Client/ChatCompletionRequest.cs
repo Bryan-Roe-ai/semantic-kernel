@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -59,6 +59,14 @@ internal sealed class ChatCompletionRequest
     [JsonPropertyName("stop")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IList<string>? Stop { get; set; }
+
+    [JsonPropertyName("document_image_limit")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public int? DocumentImageLimit { get; set; }
+
+    [JsonPropertyName("document_page_limit")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public int? DocumentPageLimit { get; set; }
 
     /// <summary>
     /// Construct an instance of <see cref="ChatCompletionRequest"/>.

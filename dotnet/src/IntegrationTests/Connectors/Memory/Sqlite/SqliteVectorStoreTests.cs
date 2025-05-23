@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Connectors.Sqlite;
+using SemanticKernel.IntegrationTests.Connectors.Memory.Xunit;
 using Xunit;
 
 namespace SemanticKernel.IntegrationTests.Connectors.Memory.Sqlite;
@@ -11,14 +12,42 @@ namespace SemanticKernel.IntegrationTests.Connectors.Memory.Sqlite;
 /// Integration tests for <see cref="SqliteVectorStore"/> class.
 /// </summary>
 [Collection("SqliteVectorStoreCollection")]
+[DisableVectorStoreTests(Skip = "SQLite vector search extension is required")]
 public sealed class SqliteVectorStoreTests(SqliteVectorStoreFixture fixture)
-    : BaseVectorStoreTests<string, SqliteHotel<string>>(new SqliteVectorStore(fixture.Connection!))
+    : BaseVectorStoreTests<string, SqliteHotel<string>>(new SqliteVectorStore(fixture.ConnectionString))
 {
+<<<<<<< HEAD
     private const string? SkipReason = "SQLite vector search extension is required";
 
     [Fact(Skip = SkipReason)]
     public override async Task ItCanGetAListOfExistingCollectionNamesAsync()
     {
         await base.ItCanGetAListOfExistingCollectionNamesAsync();
+=======
+    [VectorStoreFact]
+    public async Task ItCanGetAListOfExistingCollectionNamesWhenRegisteredWithDIAsync()
+    {
+        // Arrange
+        var serviceCollection = new ServiceCollection();
+
+        serviceCollection.AddSqliteVectorStore(fixture.ConnectionString);
+
+        var provider = serviceCollection.BuildServiceProvider();
+
+        var sut = provider.GetRequiredService<IVectorStore>();
+
+        var collection1 = sut.GetCollection<string, SqliteHotel<string>>("ListCollectionNames1");
+        var collection2 = sut.GetCollection<string, SqliteHotel<string>>("ListCollectionNames2");
+
+        await collection1.CreateCollectionIfNotExistsAsync();
+        await collection2.CreateCollectionIfNotExistsAsync();
+
+        // Act
+        var collectionNames = await sut.ListCollectionNamesAsync().ToListAsync();
+
+        // Assert
+        Assert.Contains("ListCollectionNames1", collectionNames);
+        Assert.Contains("ListCollectionNames1", collectionNames);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 }

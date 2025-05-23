@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -89,6 +89,7 @@ internal sealed class KernelFunctionFromPrompt : KernelFunction
     /// <param name="promptTemplateFactory">Optional: Prompt template factory</param>
     /// <param name="loggerFactory">Logger factory</param>
     /// <returns>A function ready to use</returns>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -813,6 +814,8 @@ internal sealed class KernelFunctionFromPrompt : KernelFunction
     /// <param name="loggerFactory">Logger factory</param>
     /// <returns>A function ready to use</returns>
     [Experimental("SKEXP0120")]
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelFunction Create(
         string promptTemplate,
         JsonSerializerOptions jsonSerializerOptions,
@@ -885,7 +888,6 @@ internal sealed class KernelFunctionFromPrompt : KernelFunction
     /// <param name="promptTemplateFactory">Optional: Prompt template factory</param>
     /// <param name="loggerFactory">Logger factory</param>
     /// <returns>A function ready to use</returns>
-    [Experimental("SKEXP0120")]
     public static KernelFunction Create(
         PromptTemplateConfig promptConfig,
         JsonSerializerOptions jsonSerializerOptions,
@@ -932,7 +934,6 @@ internal sealed class KernelFunctionFromPrompt : KernelFunction
     /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
     /// <param name="loggerFactory">Logger factory</param>
     /// <returns>A function ready to use</returns>
-    [Experimental("SKEXP0120")]
     public static KernelFunction Create(
         IPromptTemplate promptTemplate,
         PromptTemplateConfig promptConfig,
@@ -1223,7 +1224,7 @@ internal sealed class KernelFunctionFromPrompt : KernelFunction
 
         Verify.NotNull(aiService);
 
-        var renderingContext = await kernel.OnPromptRenderAsync(this, arguments, isStreaming, async (context) =>
+        var renderingContext = await kernel.OnPromptRenderAsync(this, arguments, isStreaming, executionSettings, async (context) =>
         {
             renderedPrompt = await this._promptTemplate.RenderAsync(kernel, context.Arguments, cancellationToken).ConfigureAwait(false);
 
@@ -1259,6 +1260,7 @@ internal sealed class KernelFunctionFromPrompt : KernelFunction
     /// <summary>
     /// Captures usage details, including token information.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     private void CaptureUsageDetails(string? modelId, IReadOnlyDictionary<string, object?>? metadata, ILogger logger)
     {
         if (!logger.IsEnabled(LogLevel.Information) &&

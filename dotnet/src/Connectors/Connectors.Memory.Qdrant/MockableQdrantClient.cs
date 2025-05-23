@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -62,6 +63,9 @@
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 using System.Collections.Generic;
@@ -417,6 +421,7 @@ internal class MockableQdrantClient
             lookupFrom,
             timeout,
             cancellationToken);
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -460,4 +465,25 @@ internal class MockableQdrantClient
 =======
 >>>>>>> head
 >>>>>>> div
+=======
+
+    public virtual Task<ScrollResponse> ScrollAsync(
+        string collectionName,
+        Filter filter,
+        WithVectorsSelector vectorsSelector,
+        uint limit = 10,
+        OrderBy? orderBy = null,
+        CancellationToken cancellationToken = default)
+        => this._qdrantClient.ScrollAsync(
+            collectionName,
+            filter,
+            limit,
+            offset: null,
+            payloadSelector: null,
+            vectorsSelector,
+            readConsistency: null,
+            shardKeySelector: null,
+            orderBy,
+            cancellationToken);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 }

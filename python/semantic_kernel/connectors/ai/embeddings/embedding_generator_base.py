@@ -1,8 +1,8 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any
+from typing_extensions import deprecated
 
+<<<<<<< HEAD
 from semantic_kernel.services.ai_service_client_base import AIServiceClientBase
 from semantic_kernel.utils.experimental_decorator import experimental_class
 
@@ -49,12 +49,20 @@ if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
         PromptExecutionSettings,
     )
+=======
+from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase as NewEmbeddingGeneratorBase
+from semantic_kernel.utils.feature_stage_decorator import experimental
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 
-@experimental_class
-class EmbeddingGeneratorBase(AIServiceClientBase, ABC):
+@deprecated(
+    "This class has been moved to semantic_kernel.connectors.ai.embedding_generator_base. Please update your imports."
+)
+@experimental
+class EmbeddingGeneratorBase(NewEmbeddingGeneratorBase):
     """Base class for embedding generators."""
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -178,3 +186,6 @@ class EmbeddingGeneratorBase(AIServiceClientBase, ABC):
             kwargs (Any): Additional arguments to pass to the request.
         """
         return await self.generate_embeddings(texts, settings, **kwargs)
+=======
+    pass
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

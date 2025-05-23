@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -183,8 +183,8 @@ public class BingAndGooglePlugins(ITestOutputHelper output) : BaseTest(output)
             Khaby Lame is the most-followed user on TikTok. This list contains the top 50 accounts by number
             of followers on the Chinese social media platform TikTok, which was merged with musical.ly in 2018.
             [1] The most-followed individual on the platform is Khaby Lame, with over 153 million followers..
-            EUR â€“ Euro To USD â€“ US Dollar 1.00 Euro = 1.10 37097 US Dollars 1 USD = 0.906035 EUR We use the
-            mid-market rate for our Converter. This is for informational purposes only. You wonâ€™t receive this
+            EUR – Euro To USD – US Dollar 1.00 Euro = 1.10 37097 US Dollars 1 USD = 0.906035 EUR We use the
+            mid-market rate for our Converter. This is for informational purposes only. You won’t receive this
             rate when sending money. Check send rates Convert Euro to US Dollar Convert US Dollar to Euro..
             ---- ANSWER:
 

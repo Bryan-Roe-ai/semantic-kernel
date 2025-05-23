@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Chat;
@@ -28,7 +28,7 @@ public class Step05_JsonResult(ITestOutputHelper output) : BaseAgentsTest(output
         """;
 
     [Fact]
-    public async Task UseKernelFunctionStrategiesWithJsonResultAsync()
+    public async Task UseKernelFunctionStrategiesWithJsonResult()
     {
         // Define the agents
         ChatCompletionAgent agent =

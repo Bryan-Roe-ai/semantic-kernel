@@ -1,10 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.VectorData;
+using Microsoft.Extensions.VectorData.ConnectorSupport;
 
 namespace Microsoft.SemanticKernel.Connectors.Weaviate;
 
@@ -18,10 +19,10 @@ internal static class WeaviateVectorStoreCollectionCreateMapping
     /// Maps record type properties to Weaviate collection schema for collection creation.
     /// </summary>
     /// <param name="collectionName">The name of the vector store collection.</param>
-    /// <param name="dataProperties">Collection of record data properties.</param>
-    /// <param name="vectorProperties">Collection of record vector properties.</param>
-    /// <param name="storagePropertyNames">A dictionary that maps from a property name to the storage name that should be used when serializing it to JSON for data and vector properties.</param>
+    /// <param name="hasNamedVectors">Gets a value indicating whether the vectors in the store are named and multiple vectors are supported, or whether there is just a single unnamed vector in Weaviate collection.</param>
+    /// <param name="model">The model.</param>
     /// <returns>Weaviate collection schema.</returns>
+<<<<<<< HEAD
     public static WeaviateCollectionSchema MapToSchema(
         string collectionName,
         IEnumerable<VectorStoreRecordDataProperty> dataProperties,
@@ -92,33 +93,47 @@ internal static class WeaviateVectorStoreCollectionCreateMapping
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+    public static WeaviateCollectionSchema MapToSchema(string collectionName, bool hasNamedVectors, VectorStoreRecordModel model)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         var schema = new WeaviateCollectionSchema(collectionName);
 
         // Handle data properties.
-        foreach (var property in dataProperties)
+        foreach (var property in model.DataProperties)
         {
             schema.Properties.Add(new WeaviateCollectionSchemaProperty
             {
-                Name = storagePropertyNames[property.DataModelPropertyName],
-                DataType = [MapType(property.PropertyType)],
-                IndexFilterable = property.IsFilterable,
-                IndexSearchable = property.IsFullTextSearchable
+                Name = property.StorageName,
+                DataType = [MapType(property.Type)],
+                IndexFilterable = property.IsIndexed,
+                IndexSearchable = property.IsFullTextIndexed
             });
         }
 
         // Handle vector properties.
-        foreach (var property in vectorProperties)
+        if (hasNamedVectors)
         {
-            var vectorPropertyName = storagePropertyNames[property.DataModelPropertyName];
-            schema.VectorConfigurations.Add(vectorPropertyName, new WeaviateCollectionSchemaVectorConfig
+            foreach (var property in model.VectorProperties)
             {
-                VectorIndexType = MapIndexKind(property.IndexKind, vectorPropertyName),
-                VectorIndexConfig = new WeaviateCollectionSchemaVectorIndexConfig
+                schema.VectorConfigurations.Add(property.StorageName, new WeaviateCollectionSchemaVectorConfig
                 {
-                    Distance = MapDistanceFunction(property.DistanceFunction, vectorPropertyName)
-                }
-            });
+                    VectorIndexType = MapIndexKind(property.IndexKind, property.StorageName),
+                    VectorIndexConfig = new WeaviateCollectionSchemaVectorIndexConfig
+                    {
+                        Distance = MapDistanceFunction(property.DistanceFunction, property.StorageName)
+                    }
+                });
+            }
+        }
+        else
+        {
+            var vectorProperty = model.VectorProperty;
+            schema.VectorIndexType = MapIndexKind(vectorProperty.IndexKind, vectorProperty.StorageName);
+            schema.VectorIndexConfig = new WeaviateCollectionSchemaVectorIndexConfig
+            {
+                Distance = MapDistanceFunction(vectorProperty.DistanceFunction, vectorProperty.StorageName)
+            };
         }
 
         return schema;
@@ -177,15 +192,15 @@ internal static class WeaviateVectorStoreCollectionCreateMapping
         return distanceFunction switch
         {
             DistanceFunction.CosineDistance => Cosine,
-            DistanceFunction.DotProductSimilarity => Dot,
+            DistanceFunction.NegativeDotProductSimilarity => Dot,
             DistanceFunction.EuclideanSquaredDistance => EuclideanSquared,
             DistanceFunction.Hamming => Hamming,
             DistanceFunction.ManhattanDistance => Manhattan,
-            _ => throw new InvalidOperationException(
+            _ => throw new NotSupportedException(
                 $"Distance function '{distanceFunction}' on {nameof(VectorStoreRecordVectorProperty)} '{vectorPropertyName}' is not supported by the Weaviate VectorStore. " +
                 $"Supported distance functions: {string.Join(", ",
                     DistanceFunction.CosineDistance,
-                    DistanceFunction.DotProductSimilarity,
+                    DistanceFunction.NegativeDotProductSimilarity,
                     DistanceFunction.EuclideanSquaredDistance,
                     DistanceFunction.Hamming,
                     DistanceFunction.ManhattanDistance)}")

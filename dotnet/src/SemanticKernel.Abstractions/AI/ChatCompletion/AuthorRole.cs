@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -44,6 +45,9 @@
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -123,6 +127,11 @@ namespace Microsoft.SemanticKernel.AI.ChatCompletion;
 /// </summary>
 public readonly struct AuthorRole : IEquatable<AuthorRole>
 {
+    /// <summary>
+    /// The role that instructs or sets the behavior of the assistant.
+    /// </summary>
+    public static AuthorRole Developer { get; } = new("developer");
+
     /// <summary>
     /// The role that instructs or sets the behavior of the assistant.
     /// </summary>

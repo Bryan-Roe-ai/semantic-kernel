@@ -1,0 +1,5 @@
+You are a calculator that can solve math problems.
+
+Given the math expression: {{$input}}
+
+Solve the expression step by step, showing your work, and provide the final answer.

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -163,6 +163,7 @@ public sealed class GoogleTextSearch : ITextSearch, IDisposable
         return await search.ExecuteAsync(cancellationToken).ConfigureAwait(false);
     }
 
+#pragma warning disable CS0618 // FilterClause is obsolete
     /// <summary>
     /// Add basic filters to the Google search metadata.
     /// </summary>
@@ -195,6 +196,7 @@ public sealed class GoogleTextSearch : ITextSearch, IDisposable
             }
         }
     }
+#pragma warning restore CS0618 // FilterClause is obsolete
 
     /// <summary>
     /// Return the search results as instances of <see cref="TextSearchResult"/>.

@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
 
 using System;
 using System.Collections;
@@ -1617,6 +1618,8 @@ public abstract class KernelFunction
 }
 
 // Copyright (c) Microsoft. All rights reserved.
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 using System.Collections;
@@ -1626,6 +1629,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Metrics;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
@@ -1634,6 +1638,7 @@ using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel.Diagnostics;
+using Microsoft.SemanticKernel.Functions;
 
 namespace Microsoft.SemanticKernel;
 
@@ -1716,6 +1721,15 @@ public abstract class KernelFunction
     public IReadOnlyDictionary<string, PromptExecutionSettings>? ExecutionSettings { get; }
 
     /// <summary>
+    /// Gets the underlying <see cref="MethodInfo"/> that this function might be wrapping.
+    /// </summary>
+    /// <remarks>
+    /// Provides additional metadata on the function and its signature. Implementations not wrapping .NET methods may return null.
+    /// </remarks>
+    [Experimental("SKEXP0001")]
+    public MethodInfo? UnderlyingMethod { get; internal init; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="KernelFunction"/> class.
     /// </summary>
     /// <param name="name">A name of the function to use as its <see cref="KernelFunction.Name"/>.</param>
@@ -1768,7 +1782,7 @@ public abstract class KernelFunction
     internal KernelFunction(string name, string? pluginName, string description, IReadOnlyList<KernelParameterMetadata> parameters, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null, ReadOnlyDictionary<string, object?>? additionalMetadata = null)
     {
         Verify.NotNull(name);
-        Verify.ParametersUniqueness(parameters);
+        KernelVerify.ParametersUniqueness(parameters);
 
         this.Metadata = new KernelFunctionMetadata(name)
         {
@@ -1804,7 +1818,7 @@ public abstract class KernelFunction
     internal KernelFunction(string name, string? pluginName, string description, IReadOnlyList<KernelParameterMetadata> parameters, JsonSerializerOptions jsonSerializerOptions, KernelReturnParameterMetadata? returnParameter = null, Dictionary<string, PromptExecutionSettings>? executionSettings = null, ReadOnlyDictionary<string, object?>? additionalMetadata = null)
     {
         Verify.NotNull(name);
-        Verify.ParametersUniqueness(parameters);
+        KernelVerify.ParametersUniqueness(parameters);
         Verify.NotNull(jsonSerializerOptions);
 
         this.Metadata = new KernelFunctionMetadata(name)
@@ -2135,6 +2149,7 @@ public abstract class KernelFunction
     /// <summary>An <see cref="AIFunction"/> wrapper around a <see cref="KernelFunction"/>.</summary>
     private sealed class KernelAIFunction : AIFunction
     {
+        private static readonly JsonElement s_defaultSchema = JsonDocument.Parse("{}").RootElement;
         private readonly KernelFunction _kernelFunction;
         private readonly Kernel? _kernel;
 
@@ -2142,40 +2157,19 @@ public abstract class KernelFunction
         {
             this._kernelFunction = kernelFunction;
             this._kernel = kernel;
-
-            string name = string.IsNullOrWhiteSpace(kernelFunction.PluginName) ?
+            this.Name = string.IsNullOrWhiteSpace(kernelFunction.PluginName) ?
                 kernelFunction.Name :
-                $"{kernelFunction.PluginName}-{kernelFunction.Name}";
+                $"{kernelFunction.PluginName}_{kernelFunction.Name}";
 
-            this.Metadata = new AIFunctionMetadata(name)
-            {
-                Description = kernelFunction.Description,
-
-                JsonSerializerOptions = kernelFunction.JsonSerializerOptions,
-
-                Parameters = kernelFunction.Metadata.Parameters.Select(p => new AIFunctionParameterMetadata(p.Name)
-                {
-                    Description = p.Description,
-                    ParameterType = p.ParameterType,
-                    IsRequired = p.IsRequired,
-                    HasDefaultValue = p.DefaultValue is not null,
-                    DefaultValue = p.DefaultValue,
-                    Schema = p.Schema?.RootElement,
-                }).ToList(),
-
-                ReturnParameter = new AIFunctionReturnParameterMetadata()
-                {
-                    Description = kernelFunction.Metadata.ReturnParameter.Description,
-                    ParameterType = kernelFunction.Metadata.ReturnParameter.ParameterType,
-                    Schema = kernelFunction.Metadata.ReturnParameter.Schema?.RootElement,
-                },
-            };
+            this.JsonSchema = BuildFunctionSchema(kernelFunction);
         }
 
-        public override AIFunctionMetadata Metadata { get; }
+        public override string Name { get; }
+        public override JsonElement JsonSchema { get; }
+        public override string Description => this._kernelFunction.Description;
+        public override JsonSerializerOptions JsonSerializerOptions => this._kernelFunction.JsonSerializerOptions ?? base.JsonSerializerOptions;
 
-        protected override async Task<object?> InvokeCoreAsync(
-            IEnumerable<KeyValuePair<string, object?>> arguments, CancellationToken cancellationToken)
+        protected override async ValueTask<object?> InvokeCoreAsync(AIFunctionArguments? arguments = null, CancellationToken cancellationToken = default)
         {
             Verify.NotNull(arguments);
 
@@ -2193,6 +2187,26 @@ public abstract class KernelFunction
             return functionResult.Value is object value ?
                 JsonSerializer.SerializeToElement(value, AbstractionsJsonContext.GetTypeInfo(value.GetType(), this._kernelFunction.JsonSerializerOptions)) :
                 null;
+        }
+
+        private static JsonElement BuildFunctionSchema(KernelFunction function)
+        {
+            KernelFunctionSchemaModel schemaModel = new()
+            {
+                Type = "object",
+                Description = function.Description,
+            };
+
+            foreach (var parameter in function.Metadata.Parameters)
+            {
+                schemaModel.Properties[parameter.Name] = parameter.Schema?.RootElement ?? s_defaultSchema;
+                if (parameter.IsRequired)
+                {
+                    (schemaModel.Required ??= []).Add(parameter.Name);
+                }
+            }
+
+            return JsonSerializer.SerializeToElement(schemaModel, AbstractionsJsonContext.Default.KernelFunctionSchemaModel);
         }
     }
 }

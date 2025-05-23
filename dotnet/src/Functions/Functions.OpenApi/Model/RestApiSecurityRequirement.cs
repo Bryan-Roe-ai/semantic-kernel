@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections;
 using System.Collections.Generic;
@@ -10,7 +10,6 @@ namespace Microsoft.SemanticKernel.Plugins.OpenApi;
 /// <summary>
 /// The REST API security requirement object.
 /// </summary>
-[Experimental("SKEXP0040")]
 #pragma warning disable CA1710 // Identifiers should have correct suffix
 public sealed class RestApiSecurityRequirement : IDictionary<RestApiSecurityScheme, IList<string>>, IReadOnlyDictionary<RestApiSecurityScheme, IList<string>>
 #pragma warning restore CA1710 // Identifiers should have correct suffix

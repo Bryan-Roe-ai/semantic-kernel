@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -11,6 +12,9 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 ﻿// Copyright (c) Microsoft. All rights reserved.
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Reflection;
 =======
 =======
@@ -696,6 +700,33 @@ public void WriteLine(string? message = null)
 =======
 >>>>>>> head
 >>>>>>> div
+
+    /// <summary>
+    /// Outputs out the stream of generated message tokens.
+    /// </summary>
+    protected async Task StreamMessageOutputAsync(IChatCompletionService chatCompletionService, ChatHistory chatHistory, AuthorRole authorRole)
+    {
+        bool roleWritten = false;
+        string fullMessage = string.Empty;
+
+        await foreach (var chatUpdate in chatCompletionService.GetStreamingChatMessageContentsAsync(chatHistory))
+        {
+            if (!roleWritten && chatUpdate.Role.HasValue)
+            {
+                Console.Write($"{chatUpdate.Role.Value}: {chatUpdate.Content}");
+                roleWritten = true;
+            }
+
+            if (chatUpdate.Content is { Length: > 0 })
+            {
+                fullMessage += chatUpdate.Content;
+                Console.Write(chatUpdate.Content);
+            }
+        }
+
+        Console.WriteLine("\n------------------------");
+        chatHistory.AddMessage(authorRole, fullMessage);
+    }
 
     /// <summary>
     /// Utility method to write a horizontal rule to the console.

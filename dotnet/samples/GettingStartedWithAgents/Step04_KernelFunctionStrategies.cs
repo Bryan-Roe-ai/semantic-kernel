@@ -1,8 +1,11 @@
 // Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Chat;
-using Microsoft.SemanticKernel.Agents.History;
 using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace GettingStarted;
@@ -35,7 +38,7 @@ public class Step04_KernelFunctionStrategies(ITestOutputHelper output) : BaseAge
         """;
 
     [Fact]
-    public async Task UseKernelFunctionStrategiesWithAgentGroupChatAsync()
+    public async Task UseKernelFunctionStrategiesWithAgentGroupChat()
     {
         // Define the agents
         ChatCompletionAgent agentReviewer =
@@ -75,11 +78,11 @@ public class Step04_KernelFunctionStrategies(ITestOutputHelper output) : BaseAge
                 Determine which participant takes the next turn in a conversation based on the the most recent participant.
                 State only the name of the participant to take the next turn.
                 No participant should take more than one turn in a row.
-                
+
                 Choose only from these participants:
                 - {{{ReviewerName}}}
                 - {{{CopyWriterName}}}
-                
+
                 Always follow these rules when selecting the next participant:
                 - After {{{CopyWriterName}}}, it is {{{ReviewerName}}}'s turn.
                 - After {{{ReviewerName}}}, it is {{{CopyWriterName}}}'s turn.
@@ -143,9 +146,9 @@ public class Step04_KernelFunctionStrategies(ITestOutputHelper output) : BaseAge
         chat.AddChatMessage(message);
         this.WriteAgentChatMessage(message);
 
-        await foreach (ChatMessageContent responese in chat.InvokeAsync())
+        await foreach (ChatMessageContent response in chat.InvokeAsync())
         {
-            this.WriteAgentChatMessage(responese);
+            this.WriteAgentChatMessage(response);
         }
 
         Console.WriteLine($"\n[IS COMPLETED: {chat.IsComplete}]");

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ using Xunit;
 
 namespace SemanticKernel.Connectors.UnitTests.Weaviate;
 
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public sealed class WeaviateMemoryBuilderExtensionsTests : IDisposable
 {
     private static readonly JsonSerializerOptions s_jsonSerializerOptions = new()

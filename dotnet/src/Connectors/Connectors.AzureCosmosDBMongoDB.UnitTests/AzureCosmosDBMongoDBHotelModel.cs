@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -97,6 +97,7 @@ public class AzureCosmosDBMongoDBHotelModel(string hotelId)
     public string HotelId { get; init; } = hotelId;
 
     /// <summary>A string metadata field.</summary>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
@@ -183,6 +184,9 @@ public class AzureCosmosDBMongoDBHotelModel(string hotelId)
 =======
 >>>>>>> head
 >>>>>>> div
+=======
+    [VectorStoreRecordData(IsIndexed = true)]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public string? HotelName { get; set; }
 
     /// <summary>An int metadata field.</summary>
@@ -289,6 +293,6 @@ public class AzureCosmosDBMongoDBHotelModel(string hotelId)
     public string? Description { get; set; }
 
     /// <summary>A vector field.</summary>
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction: DistanceFunction.CosineDistance, IndexKind: IndexKind.IvfFlat)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.IvfFlat)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }

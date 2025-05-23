@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections;
@@ -11,6 +11,7 @@ using Xunit;
 
 namespace SemanticKernel.Connectors.UnitTests.Pinecone;
 
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class PineconeUtilsTests
 {
     [Fact]

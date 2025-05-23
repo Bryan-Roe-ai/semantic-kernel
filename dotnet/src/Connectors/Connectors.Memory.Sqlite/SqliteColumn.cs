@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 
@@ -17,6 +17,8 @@ internal sealed class SqliteColumn(
     public string Type { get; set; } = type;
 
     public bool IsPrimary { get; set; } = isPrimary;
+
+    public bool HasIndex { get; set; }
 
     public Dictionary<string, object>? Configuration { get; set; }
 }

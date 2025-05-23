@@ -1,9 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using Json.Schema;
 
 namespace Microsoft.SemanticKernel.Plugins.OpenApi;
 
@@ -13,19 +14,27 @@ namespace Microsoft.SemanticKernel.Plugins.OpenApi;
 internal static class OpenApiTypeConverter
 {
     /// <summary>
-    /// Converts the given parameter argument to a JsonNode based on the specified type.
+    /// Converts the given parameter argument to a JsonNode based on the specified type or schema.
     /// </summary>
     /// <param name="name">The parameter name.</param>
     /// <param name="type">The parameter type.</param>
     /// <param name="argument">The argument to be converted.</param>
+    /// <param name="schema">The parameter schema.</param>
     /// <returns>A JsonNode representing the converted value.</returns>
+<<<<<<< HEAD
     public static JsonNode Convert(string name, RestApiParameterType? type, object argument)
+=======
+    public static JsonNode Convert(string name, string type, object argument, KernelJsonSchema? schema = null)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         Verify.NotNull(argument);
 
         try
         {
+<<<<<<< HEAD
 #pragma warning disable IDE0072 // Add missing cases
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             JsonNode? node = type switch
             {
                 RestApiParameterType.String => JsonValue.Create(argument),
@@ -53,9 +62,15 @@ internal static class OpenApiTypeConverter
                     byte or sbyte or short or ushort or int or uint or long or ulong or float or double or decimal => JsonValue.Create(argument),
                     _ => null
                 },
+<<<<<<< HEAD
                 // Type may not be specified in the schema which means it can be any type.
                 null => JsonSerializer.SerializeToNode(argument),
                 _ => throw new NotSupportedException($"Unexpected type '{type}' of parameter '{name}' with argument '{argument}'."),
+=======
+                _ => schema is null
+                    ? JsonSerializer.SerializeToNode(argument)
+                    : ValidateSchemaAndConvert(name, schema, argument)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             };
 #pragma warning restore IDE0072 // Add missing cases
 
@@ -69,5 +84,26 @@ internal static class OpenApiTypeConverter
         {
             throw new ArgumentOutOfRangeException(name, argument, ex.Message);
         }
+    }
+
+    /// <summary>
+    /// Validates the argument against the parameter schema and converts it to a JsonNode if valid.
+    /// </summary>
+    /// <param name="parameterName">The parameter name.</param>
+    /// <param name="parameterSchema">The parameter schema.</param>
+    /// <param name="argument">The argument to be validated and converted.</param>
+    /// <returns>A JsonNode representing the converted value.</returns>
+    private static JsonNode? ValidateSchemaAndConvert(string parameterName, KernelJsonSchema parameterSchema, object argument)
+    {
+        var jsonSchema = JsonSchema.FromText(JsonSerializer.Serialize(parameterSchema));
+
+        var node = JsonSerializer.SerializeToNode(argument);
+
+        if (jsonSchema.Evaluate(node).IsValid)
+        {
+            return node;
+        }
+
+        throw new ArgumentOutOfRangeException(parameterName, argument, $"Argument type '{argument.GetType()}' does not match the schema.");
     }
 }

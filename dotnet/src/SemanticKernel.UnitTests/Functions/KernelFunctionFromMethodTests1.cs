@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -2470,7 +2470,7 @@ public sealed class KernelFunctionFromMethodTests1
         functionName: "Test");
 
         await function.InvokeAsync(this._kernel, arguments);
-        await function.AsAIFunction().InvokeAsync(arguments);
+        await function.AsAIFunction().InvokeAsync(new(arguments));
     }
 
     [Fact]
@@ -2500,7 +2500,7 @@ public sealed class KernelFunctionFromMethodTests1
         functionName: "Test");
 
         await function.InvokeAsync(this._kernel, arguments);
-        await function.AsAIFunction().InvokeAsync(arguments);
+        await function.AsAIFunction().InvokeAsync(new(arguments));
     }
 
     [Fact]

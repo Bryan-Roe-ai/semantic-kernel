@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -26,6 +26,7 @@ public class PostgresVectorStoreTests
     public PostgresVectorStoreTests()
     {
         this._postgresClientMock = new Mock<IPostgresVectorStoreDbClient>(MockBehavior.Strict);
+        this._postgresClientMock.Setup(l => l.DatabaseName).Returns("TestDatabase");
     }
 
     [Fact]
@@ -52,6 +53,7 @@ public class PostgresVectorStoreTests
         Assert.Throws<NotSupportedException>(() => sut.GetCollection<ulong, SinglePropsModel<ulong>>(TestCollectionName));
     }
 
+#pragma warning disable CS0618 // IPostgresVectorStoreRecordCollectionFactory is obsolete
     [Fact]
     public void GetCollectionCallsFactoryIfProvided()
     {
@@ -59,7 +61,10 @@ public class PostgresVectorStoreTests
         var factoryMock = new Mock<IPostgresVectorStoreRecordCollectionFactory>(MockBehavior.Strict);
         var collectionMock = new Mock<IVectorStoreRecordCollection<int, SinglePropsModel<int>>>(MockBehavior.Strict);
         var clientMock = new Mock<IPostgresVectorStoreDbClient>(MockBehavior.Strict);
+
         clientMock.Setup(x => x.DataSource).Returns<NpgsqlDataSource>(null);
+        clientMock.Setup(x => x.DatabaseName).Returns("TestDatabase");
+
         factoryMock
             .Setup(x => x.CreateVectorStoreRecordCollection<int, SinglePropsModel<int>>(It.IsAny<NpgsqlDataSource>(), TestCollectionName, null))
             .Returns(collectionMock.Object);
@@ -68,9 +73,10 @@ public class PostgresVectorStoreTests
         // Act.
         var actual = sut.GetCollection<int, SinglePropsModel<int>>(TestCollectionName);
 
-        // Assert.        
+        // Assert.
         Assert.Equal(collectionMock.Object, actual);
     }
+#pragma warning restore CS0618
 
     [Fact]
     public async Task ListCollectionNamesCallsSDKAsync()

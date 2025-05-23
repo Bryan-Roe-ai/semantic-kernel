@@ -22,6 +22,7 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
+<<<<<<< HEAD
 **Desktop (please complete the following information):**
  - OS: [e.g. iOS]
  - Browser [e.g. chrome, safari]
@@ -68,3 +69,14 @@ Any other information that may be helpful in diagnosing and resolving the issue.
 
 **Check Discussions**
 Before submitting a bug report, please check the [Discussions](https://github.com/Bryan-Roe/semantic-kernel/discussions) page for existing solutions or ongoing discussions related to your issue.
+=======
+**Platform**
+ - Language: [e.g. C#, Python]
+ - Source: [e.g. NuGet package version 0.1.0, pip package version 0.1.0, main branch of repository]
+ - AI model: [e.g. OpenAI:GPT-4o-mini(2024-07-18)]
+ - IDE: [e.g. Visual Studio, VS Code]
+ - OS: [e.g. Windows, Mac]
+
+**Additional context**
+Add any other context about the problem here.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

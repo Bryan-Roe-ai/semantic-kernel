@@ -107,6 +107,7 @@ from semantic_kernel.connectors.ai.open_ai.settings.azure_open_ai_settings impor
     AzureOpenAISettings,
 )
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError
+<<<<<<< HEAD
 from semantic_kernel.utils.experimental_decorator import experimental_class
 <<<<<<< div
 <<<<<<< div
@@ -121,11 +122,15 @@ from semantic_kernel.utils.experimental_decorator import experimental_class
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+from semantic_kernel.utils.feature_stage_decorator import experimental
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 logger: logging.Logger = logging.getLogger(__name__)
 
 =======
 
+<<<<<<< HEAD
 logger: logging.Logger = logging.getLogger(__name__)
 <<<<<<< div
 >>>>>>> main
@@ -201,6 +206,9 @@ logger: logging.Logger = logging.getLogger(__name__)
 =======
 >>>>>>> head
 @experimental_class
+=======
+@experimental
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
     """Azure Text Embedding class."""
 
@@ -336,7 +344,7 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
             environment variables. (Optional)
         """
         try:
-            azure_openai_settings = AzureOpenAISettings.create(
+            azure_openai_settings = AzureOpenAISettings(
                 env_file_path=env_file_path,
                 api_key=api_key,
                 embedding_deployment_name=deployment_name,

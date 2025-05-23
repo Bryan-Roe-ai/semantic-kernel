@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 
+using System;
 using System.Collections.Generic;
 using Microsoft.SemanticKernel.Process.Internal;
 using Microsoft.SemanticKernel.Process.Models;
@@ -18,6 +19,16 @@ public sealed record KernelProcess : KernelProcessStepInfo
     public IList<KernelProcessStepInfo> Steps { get; }
 
     /// <summary>
+    /// The collection of Threads in the Process.
+    /// </summary>
+    public IReadOnlyDictionary<string, KernelProcessAgentThread> Threads { get; init; } = new Dictionary<string, KernelProcessAgentThread>();
+
+    /// <summary>
+    /// The type of the user state. This is used to identify the underlying state type.
+    /// </summary>
+    public Type? UserStateType { get; init; } = null;
+
+    /// <summary>
     /// Captures Kernel Process State into <see cref="KernelProcessStateMetadata"/> after process has run
     /// </summary>
     /// <returns><see cref="KernelProcessStateMetadata"/></returns>
@@ -34,7 +45,8 @@ public sealed record KernelProcess : KernelProcessStepInfo
     public KernelProcess(string name, IList<KernelProcessStepInfo> steps)
         : base(typeof(KernelProcess), new KernelProcessState() { Name = name }, [])
     /// <param name="edges">The edges of the process.</param>
-    public KernelProcess(KernelProcessState state, IList<KernelProcessStepInfo> steps, Dictionary<string, List<KernelProcessEdge>>? edges = null)
+    /// <param name="threads">The threads associated with the process.</param>
+    public KernelProcess(KernelProcessState state, IList<KernelProcessStepInfo> steps, Dictionary<string, List<KernelProcessEdge>>? edges = null, IReadOnlyDictionary<string, KernelProcessAgentThread>? threads = null)
         : base(typeof(KernelProcess), state, edges ?? [])
     {
         Verify.NotNull(state);

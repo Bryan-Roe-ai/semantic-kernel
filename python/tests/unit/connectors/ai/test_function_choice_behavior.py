@@ -8,12 +8,11 @@ import pytest
 if TYPE_CHECKING:
     from semantic_kernel.kernel import Kernel
 
-from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
+from semantic_kernel.connectors.ai.function_calling_utils import _combine_filter_dicts
 from semantic_kernel.connectors.ai.function_choice_behavior import (
     DEFAULT_MAX_AUTO_INVOKE_ATTEMPTS,
     FunctionChoiceBehavior,
     FunctionChoiceType,
-    _combine_filter_dicts,
 )
 from semantic_kernel.exceptions import ServiceInitializationError
 )
@@ -51,6 +50,7 @@ def test_function_choice_behavior_required():
     assert behavior.type_ == FunctionChoiceType.REQUIRED
     assert behavior.maximum_auto_invoke_attempts == 1
     assert behavior.filters == expected_filters
+
 
 
 def test_from_function_call_behavior_kernel_functions():

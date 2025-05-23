@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -62,6 +63,12 @@
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+
+using System;
+using Microsoft.Extensions.AI;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 namespace Microsoft.SemanticKernel.Connectors.Qdrant;
 
@@ -77,6 +84,7 @@ public sealed class QdrantVectorStoreOptions
     public bool HasNamedVectors { get; set; } = false;
 
     /// <summary>
+<<<<<<< HEAD
     /// An optional factory to use for constructing <see cref="QdrantVectorStoreRecordCollection{TRecord}"/> instances, if a custom record collection is required.
 <<<<<<< HEAD
 <<<<<<< div
@@ -152,6 +160,15 @@ public sealed class QdrantVectorStoreOptions
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+    /// Gets or sets the default embedding generator to use when generating vectors embeddings with this vector store.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
+    public IEmbeddingGenerator? EmbeddingGenerator { get; init; }
+
+    /// <summary>
+    /// An optional factory to use for constructing <see cref="QdrantVectorStoreRecordCollection{TKey, TRecord}"/> instances, if a custom record collection is required.
+    /// </summary>
+    [Obsolete("To control how collections are instantiated, extend your provider's IVectorStore implementation and override GetCollection()")]
     public IQdrantVectorStoreRecordCollectionFactory? VectorStoreCollectionFactory { get; init; }
 }

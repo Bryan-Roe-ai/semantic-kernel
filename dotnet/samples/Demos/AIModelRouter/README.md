@@ -7,7 +7,7 @@ This sample demonstrates how to implement an AI Model Router using Semantic Kern
 
 ## Semantic Kernel Features Used
 
-- [Chat Completion Service](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/ChatCompletion/IChatCompletionService.cs) - Using the Chat Completion Service [OpenAI Connector implementation](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Connectors/Connectors.OpenAI/ChatCompletion/OpenAIChatCompletionService.cs) to generate responses from the LLM.
+- [Chat Completion Service](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/ChatCompletion/IChatCompletionService.cs) - Using the Chat Completion Service [OpenAI Connector implementation](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Connectors/Connectors.OpenAI/Services/OpenAIChatCompletionService.cs) to generate responses from the LLM.
 - [Filters](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/ChatCompletion/IChatCompletionService.cs), using to capture selected service and log in the console.
 
 ## Prerequisites
@@ -78,6 +78,7 @@ dotnet run
 > **User** > LMStudio, what is Jupiter? Keep it simple.
 
 > **Assistant** > Jupiter is the fifth planet from the Sun in our Solar System and one of its gas giants alongside Saturn, Uranus, and Neptune. It's famous for having a massive storm called the Great Red Spot that has been raging for hundreds of years.
+<<<<<<< HEAD
 
 > **User** > AzureAI, what is Jupiter? Keep it simple.
 
@@ -90,3 +91,5 @@ dotnet run
 > **User** > ONNX, what is Jupiter? Keep it simple.
 
 > **Assistant** > Jupiter is the fifth planet from the Sun in our Solar System and one of its gas giants alongside Saturn, Uranus, and Neptune. It's famous for having a massive storm called the Great Red Spot that has been raging for hundreds of years.
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

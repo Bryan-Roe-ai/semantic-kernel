@@ -1,11 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel.ChatCompletion;
 
 namespace Microsoft.SemanticKernel;
 
 /// <summary>
-/// The context is to be provided by the choice behavior consumer – AI connector in order to obtain the choice behavior configuration.
+/// The context is to be provided by the choice behavior consumer � AI connector in order to obtain the choice behavior configuration.
 /// </summary>
 public sealed class FunctionChoiceBehaviorConfigurationContext
 {

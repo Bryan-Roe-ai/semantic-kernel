@@ -4,7 +4,7 @@ import logging
 from abc import ABC
 from collections.abc import Mapping, Sequence
 from functools import singledispatchmethod
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, Protocol, runtime_checkable
 
 from pydantic import Field, field_validator
 
@@ -31,9 +31,23 @@ if TYPE_CHECKING:
     )
     from semantic_kernel.functions.kernel_function import KernelFunction
     from semantic_kernel.functions.types import KERNEL_FUNCTION_TYPE
+    from semantic_kernel.kernel import Kernel
 
 
 logger: logging.Logger = logging.getLogger(__name__)
+
+
+@runtime_checkable
+class AddToKernelCallbackProtocol(Protocol):
+    """Protocol for the callback to be called when the plugin is added to the kernel."""
+
+    def added_to_kernel(self, kernel: "Kernel") -> None:
+        """Called when the plugin is added to the kernel.
+
+        Args:
+            kernel (Kernel): The kernel instance
+        """
+        pass
 
 
 class KernelFunctionExtension(KernelBaseModel, ABC):
@@ -77,6 +91,7 @@ class KernelFunctionExtension(KernelBaseModel, ABC):
                 a custom class that contains methods with the kernel_function decorator
                 or a dictionary of functions with the kernel_function decorator for one or
                 several methods.
+                if the custom class has a `added_to_kernel` method, it will be called with the kernel instance.
             plugin_name: The name of the plugin, used if the plugin is not a KernelPlugin,
                 if the plugin is None and the parent_directory is set,
                 KernelPlugin.from_directory is called with those parameters,
@@ -96,13 +111,21 @@ class KernelFunctionExtension(KernelBaseModel, ABC):
             self.plugins[plugin.name] = plugin
             return self.plugins[plugin.name]
         if not plugin_name:
+<<<<<<< HEAD
             raise ValueError(
                 "plugin_name must be provided if a plugin is not supplied."
             )
+=======
+            plugin_name = getattr(plugin, "name", plugin.__class__.__name__)
+        if not isinstance(plugin_name, str):
+            raise TypeError("plugin_name must be a string.")
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         if plugin:
             self.plugins[plugin_name] = KernelPlugin.from_object(
                 plugin_name=plugin_name, plugin_instance=plugin, description=description
             )
+            if isinstance(plugin, AddToKernelCallbackProtocol):
+                plugin.added_to_kernel(self)  # type: ignore
             return self.plugins[plugin_name]
         if plugin is None and parent_directory is not None:
             self.plugins[plugin_name] = KernelPlugin.from_directory(
@@ -114,9 +137,13 @@ class KernelFunctionExtension(KernelBaseModel, ABC):
             return self.plugins[plugin_name]
         raise ValueError("plugin or parent_directory must be provided.")
 
+<<<<<<< HEAD
     def add_plugins(
         self, plugins: list[KernelPlugin] | dict[str, KernelPlugin | object]
     ) -> None:
+=======
+    def add_plugins(self, plugins: list[KernelPlugin | object] | dict[str, KernelPlugin | object]) -> None:
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """Adds a list of plugins to the kernel's collection of plugins.
 
         Args:
@@ -189,7 +216,7 @@ class KernelFunctionExtension(KernelBaseModel, ABC):
             function = KernelFunction.from_prompt(
                 function_name=function_name,
                 plugin_name=plugin_name,
-                description=description,
+                description=description or (prompt_template_config.description if prompt_template_config else None),
                 prompt=prompt,
                 template_format=template_format,
                 prompt_template=prompt_template,

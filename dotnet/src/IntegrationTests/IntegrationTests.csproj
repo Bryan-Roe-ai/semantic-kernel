@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>IntegrationTests</AssemblyName>
     <RootNamespace>SemanticKernel.IntegrationTests</RootNamespace>
@@ -12,8 +12,12 @@
     <NoWarn>$(NoWarn);CA2007,CA1861,VSTHRD111,SKEXP0001,SKEXP0010,SKEXP0020,SKEXP0040,SKEXP0050,SKEXP0060,SKEXP0070,SKEXP0080,SKEXP0110</NoWarn>
 =======
     <IsPackable>false</IsPackable>
+<<<<<<< HEAD
     <NoWarn>$(NoWarn);CA2007,CA1861,VSTHRD111,SKEXP0001,SKEXP0010,SKEXP0020,SKEXP0040,SKEXP0050,SKEXP0060,SKEXP0070,SKEXP0080,SKEXP0110,OPENAI001</NoWarn>
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+=======
+    <NoWarn>$(NoWarn);CA2007,CA1861,VSTHRD111,SKEXP0001,SKEXP0010,SKEXP0040,SKEXP0050,SKEXP0060,SKEXP0070,SKEXP0080,SKEXP0110,OPENAI001,MEVD9000</NoWarn>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     <UserSecretsId>b7762d10-e29b-4bb1-8b74-b6d69a667dd4</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
@@ -56,17 +60,20 @@
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AWSSDK.SecurityToken" />
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" />
+    <PackageReference Include="Azure.Identity" />
     <PackageReference Include="Microsoft.Extensions.Configuration" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
+    <PackageReference Include="Microsoft.Extensions.AI.OpenAI" />
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" />
     <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Npgsql" />
-    <PackageReference Include="Pinecone.NET" />
     <PackageReference Include="System.Linq.Async" />
     <PackageReference Include="xRetry" />
     <PackageReference Include="xunit" />
@@ -79,11 +86,13 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Testcontainers.Milvus" />
+    <PackageReference Include="Testcontainers.MongoDB" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Agents\AzureAI\Agents.AzureAI.csproj" />
+    <ProjectReference Include="..\Agents\Yaml\Agents.Yaml.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.Amazon\Connectors.Amazon.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.AzureAIInference\Connectors.AzureAIInference.csproj" />
-    <ProjectReference Include="..\Connectors\Connectors.Memory.Pinecone\Connectors.Memory.Pinecone.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.AzureOpenAI\Connectors.AzureOpenAI.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.AssemblyAI\Connectors.AssemblyAI.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.AzureAIInference\Connectors.AzureAIInference.csproj" />
@@ -99,6 +108,7 @@
     <ProjectReference Include="..\Connectors\Connectors.MistralAI\Connectors.MistralAI.csproj" />
     <ProjectReference Include="..\Agents\Core\Agents.Core.csproj" />
     <ProjectReference Include="..\Agents\OpenAI\Agents.OpenAI.csproj" />
+    <ProjectReference Include="..\Agents\Bedrock\Agents.Bedrock.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.Google\Connectors.Google.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.Memory.Redis\Connectors.Memory.Redis.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.Memory.Qdrant\Connectors.Memory.Qdrant.csproj" />
@@ -113,7 +123,6 @@
     <ProjectReference Include="..\Connectors\Connectors.Memory.Milvus\Connectors.Memory.Milvus.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.Memory.MongoDB\Connectors.Memory.MongoDB.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.Memory.Postgres\Connectors.Memory.Postgres.csproj" />
-    <ProjectReference Include="..\Connectors\Connectors.Memory.SqlServer\Connectors.Memory.SqlServer.csproj" />
     <ProjectReference Include="..\Connectors\Connectors.Memory.Weaviate\Connectors.Memory.Weaviate.csproj" />
     <ProjectReference Include="..\Experimental\Process.Abstractions\Process.Abstractions.csproj" />
     <ProjectReference Include="..\Experimental\Process.Core\Process.Core.csproj" />
@@ -146,6 +155,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestData\SessionsPythonPlugin\file_to_upload_2.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\SessionsPythonPlugin\file_to_upload_1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="testsettings.development.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -251,5 +266,11 @@
     <None Update="TestData\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+    <ItemGroup>
+    <EmbeddedResource Include="Resources/gemini_cached_content.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

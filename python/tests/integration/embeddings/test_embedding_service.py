@@ -12,6 +12,7 @@ import os
 
 import pytest
 
+<<<<<<< HEAD
 << << << < main
 << << << < main
 == == == =
@@ -38,6 +39,9 @@ pytestmark = pytest.mark.parametrize(
 << << << < main
 == == == =
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import EmbeddingGeneratorBase
+=======
+from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from tests.integration.embeddings.test_embedding_service_base import (
     EmbeddingServiceTestBase,

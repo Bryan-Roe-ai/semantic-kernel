@@ -331,6 +331,7 @@ class HttpPlugin(KernelBaseModel):
         self,
         url: Annotated[str, "The URI to send the request to."],
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -390,6 +391,9 @@ class HttpPlugin(KernelBaseModel):
 >>>>>>> Stashed changes
 >>>>>>> head
         body: Annotated[dict[str, Any] | None, "The body of the request"] = {},
+=======
+        body: Annotated[dict[str, Any] | None, "The body of the request"] = None,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     ) -> str:
         """Sends an HTTP POST request to the specified URI and returns the response body as a string.
 
@@ -563,7 +567,7 @@ class HttpPlugin(KernelBaseModel):
 >>>>>>> head
 
         headers = {"Content-Type": "application/json"}
-        data = json.dumps(body)
+        data = json.dumps(body) if body is not None else None
         async with (
             aiohttp.ClientSession() as session,
             session.post(
@@ -576,6 +580,7 @@ class HttpPlugin(KernelBaseModel):
     async def put(
         self,
         url: Annotated[str, "The URI to send the request to."],
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -636,6 +641,9 @@ class HttpPlugin(KernelBaseModel):
 >>>>>>> Stashed changes
 >>>>>>> head
         body: Annotated[dict[str, Any] | None, "The body of the request"] = {},
+=======
+        body: Annotated[dict[str, Any] | None, "The body of the request"] = None,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     ) -> str:
         """Sends an HTTP PUT request to the specified URI and returns the response body as a string.
 
@@ -810,7 +818,7 @@ class HttpPlugin(KernelBaseModel):
 >>>>>>> head
 
         headers = {"Content-Type": "application/json"}
-        data = json.dumps(body)
+        data = json.dumps(body) if body is not None else None
         async with (
             aiohttp.ClientSession() as session,
             session.put(

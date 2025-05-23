@@ -2,14 +2,18 @@
 
 import json
 import logging
+from typing import TYPE_CHECKING
 
 from google.cloud.aiplatform_v1beta1.types.content import Blob, Candidate, Part
 from google.cloud.aiplatform_v1beta1.types.tool import FunctionCall, FunctionResponse
 from vertexai.generative_models import FunctionDeclaration, Tool, ToolConfig
 
+<<<<<<< HEAD
 from semantic_kernel.connectors.ai.function_call_choice_configuration import (
     FunctionCallChoiceConfiguration,
 )
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
 from semantic_kernel.connectors.ai.google.shared_utils import (
     FUNCTION_CHOICE_TYPE_TO_GOOGLE_FUNCTION_CALLING_MODE,
@@ -18,7 +22,6 @@ from semantic_kernel.connectors.ai.google.shared_utils import (
 from semantic_kernel.connectors.ai.google.vertex_ai.vertex_ai_prompt_execution_settings import (
     VertexAIChatPromptExecutionSettings,
 )
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.contents.function_result_content import FunctionResultContent
@@ -29,6 +32,10 @@ from semantic_kernel.contents.utils.finish_reason import (
 )
 from semantic_kernel.exceptions.service_exceptions import ServiceInvalidRequestError
 from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
+
+if TYPE_CHECKING:
+    from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
+    from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -177,8 +184,8 @@ def kernel_function_metadata_to_vertex_ai_function_call_format(metadata: KernelF
 
 
 def update_settings_from_function_choice_configuration(
-    function_choice_configuration: FunctionCallChoiceConfiguration,
-    settings: PromptExecutionSettings,
+    function_choice_configuration: "FunctionCallChoiceConfiguration",
+    settings: "PromptExecutionSettings",
     type: FunctionChoiceType,
 ) -> None:
     """Update the settings from a FunctionChoiceConfiguration."""

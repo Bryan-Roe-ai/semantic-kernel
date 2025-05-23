@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -62,6 +63,9 @@
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -124,8 +128,8 @@ public class StreamingChatMessageContent : StreamingKernelContent
     /// <summary>
     /// Name of the author of the message
     /// </summary>
-    [Experimental("SKEXP0001")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [Experimental("SKEXP0001")]
     public string? AuthorName
     {
         get => this._authorName;

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -62,6 +62,18 @@ public sealed class OllamaTextGenerationService : ServiceBase, ITextGenerationSe
         OllamaApiClient ollamaClient,
         ILoggerFactory? loggerFactory = null)
         : base(modelId, ollamaClient, loggerFactory)
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OllamaTextGenerationService"/> class.
+    /// </summary>
+    /// <param name="ollamaClient">The Ollama API client.</param>
+    /// <param name="loggerFactory">Optional logger factory to be used for logging.</param>
+    public OllamaTextGenerationService(
+        OllamaApiClient ollamaClient,
+        ILoggerFactory? loggerFactory = null)
+        : base(ollamaClient.SelectedModel, ollamaClient, loggerFactory)
     {
     }
 
@@ -131,7 +143,8 @@ public sealed class OllamaTextGenerationService : ServiceBase, ITextGenerationSe
                 Temperature = settings.Temperature,
                 TopP = settings.TopP,
                 TopK = settings.TopK,
-                Stop = settings.Stop?.ToArray()
+                Stop = settings.Stop?.ToArray(),
+                NumPredict = settings.NumPredict
             },
             Model = selectedModel,
             Stream = true

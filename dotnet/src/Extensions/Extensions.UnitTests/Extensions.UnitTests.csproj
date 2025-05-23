@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -81,6 +82,9 @@
 >>>>>>> Stashed changes
 >>>>>>> origin/main
 >>>>>>> head
+=======
+<Project Sdk="Microsoft.NET.Sdk">
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   <PropertyGroup>
     <AssemblyName>SemanticKernel.Extensions.UnitTests</AssemblyName>
     <RootNamespace>SemanticKernel.Extensions.UnitTests</RootNamespace>

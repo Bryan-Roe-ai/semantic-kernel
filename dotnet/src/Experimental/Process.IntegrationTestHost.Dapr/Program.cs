@@ -1,7 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using SemanticKernel.Process.IntegrationTests;
+using SemanticKernel.Process.TestsShared.CloudEvents;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,10 @@ builder.Services.AddLogging((logging) =>
 
 // Configure the Kernel with DI. This is required for dependency injection to work with processes.
 builder.Services.AddKernel();
+
+// Configure IExternalKernelProcessMessageChannel used for testing purposes
+builder.Services.AddSingleton<IExternalKernelProcessMessageChannel>(MockCloudEventClient.Instance);
+builder.Services.AddSingleton(MockCloudEventClient.Instance);
 
 // Configure Dapr
 builder.Services.AddActors(static options =>

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -213,4 +214,13 @@ internal static class AzureCosmosDBMongoDBConstants
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+
+namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
+
+internal static class AzureCosmosDBMongoDBConstants
+{
+    public const string VectorStoreSystemName = "azure.cosmosdbmongodb";
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 }

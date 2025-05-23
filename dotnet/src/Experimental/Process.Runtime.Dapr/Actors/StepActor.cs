@@ -268,6 +268,39 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
     }
     public ValueTask EmitEventAsync(KernelProcessEvent processEvent) => this.EmitEventAsync(processEvent, isError: false);
 
+    // TODO: this can be moved to shared runtime code, looks almost/same to localRuntime implementation
+    internal virtual void AssignStepFunctionParameterValues(ProcessMessage message)
+    {
+        if (this._functions is null || this._inputs is null || this._initialInputs is null)
+        {
+            throw new KernelException("The step has not been initialized.").Log(this._logger);
+        }
+
+        // Add the message values to the inputs for the function
+        foreach (var kvp in message.Values)
+        {
+            if (this._inputs.TryGetValue(message.FunctionName, out Dictionary<string, object?>? functionName) && functionName != null && functionName.TryGetValue(kvp.Key, out object? parameterName) && parameterName != null)
+            {
+                this._logger?.LogWarning("Step {StepName} already has input for {FunctionName}.{Key}, it is being overwritten with a message from Step named '{SourceId}'.", this.Name, message.FunctionName, kvp.Key, message.SourceId);
+            }
+
+            if (!this._inputs.TryGetValue(message.FunctionName, out Dictionary<string, object?>? functionParameters))
+            {
+                this._inputs[message.FunctionName] = [];
+                functionParameters = this._inputs[message.FunctionName];
+            }
+
+            if (kvp.Value is KernelProcessEventData proxyData)
+            {
+                functionParameters![kvp.Key] = proxyData.ToObject();
+            }
+            else
+            {
+                functionParameters![kvp.Key] = kvp.Value;
+            }
+        }
+    }
+
     /// <summary>
     /// Emits an event from the step.
     /// </summary>
@@ -302,21 +335,7 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
         this._logger?.LogDebug("Received message from '{SourceId}' targeting function '{FunctionName}' and parameters '{Parameters}'.", message.SourceId, message.FunctionName, messageLogParameters);
 
         // Add the message values to the inputs for the function
-        foreach (var kvp in message.Values)
-        {
-            if (this._inputs.TryGetValue(message.FunctionName, out Dictionary<string, object?>? functionName) && functionName != null && functionName.TryGetValue(kvp.Key, out object? parameterName) && parameterName != null)
-            {
-                this._logger?.LogWarning("Step {StepName} already has input for {FunctionName}.{Key}, it is being overwritten with a message from Step named '{SourceId}'.", this.Name, message.FunctionName, kvp.Key, message.SourceId);
-            }
-
-            if (!this._inputs.TryGetValue(message.FunctionName, out Dictionary<string, object?>? functionParameters))
-            {
-                this._inputs[message.FunctionName] = [];
-                functionParameters = this._inputs[message.FunctionName];
-            }
-
-            functionParameters![kvp.Key] = kvp.Value;
-        }
+        this.AssignStepFunctionParameterValues(message);
 
         // If we're still waiting for inputs on all of our functions then don't do anything.
         List<string> invocableFunctions = this._inputs.Where(i => i.Value != null && i.Value.All(v => v.Value != null)).Select(i => i.Key).ToList();
@@ -357,24 +376,22 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
             await this.StateManager.SaveStateAsync().ConfigureAwait(false);
 
             await this.EmitEventAsync(
-                new ProcessEvent
-                {
-                    Namespace = this._eventNamespace!,
-                    SourceId = $"{targetFunction}.OnResult",
-                    Data = invokeResult.GetValue<object>()
-                }).ConfigureAwait(false);
+                ProcessEvent.Create(
+                    invokeResult.GetValue<object>(),
+                    this._eventNamespace!,
+                    sourceId: $"{targetFunction}.OnResult",
+                    eventVisibility: KernelProcessEventVisibility.Public)).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             this._logger?.LogError(ex, "Error in Step {StepName}: {ErrorMessage}", this.Name, ex.Message);
             await this.EmitEventAsync(
-                new ProcessEvent
-                {
-                    Namespace = this._eventNamespace!,
-                    SourceId = $"{targetFunction}.OnError",
-                    Data = KernelProcessError.FromException(ex),
-                    IsError = true
-                }).ConfigureAwait(false);
+                ProcessEvent.Create(
+                    KernelProcessError.FromException(ex),
+                    this._eventNamespace!,
+                    sourceId: $"{targetFunction}.OnError",
+                    eventVisibility: KernelProcessEventVisibility.Public,
+                    isError: true)).ConfigureAwait(false);
         }
         finally
         {
@@ -382,6 +399,11 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
             this._inputs[targetFunction] = new(this._initialInputs[targetFunction] ?? []);
         }
 #pragma warning restore CA1031 // Do not catch general exception types
+    }
+
+    internal virtual Dictionary<string, Dictionary<string, object?>?> GenerateInitialInputs()
+    {
+        return this.FindInputChannels(this._functions, this._logger);
     }
 
     /// <summary>
@@ -407,7 +429,11 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
         }
 
         // Initialize the input channels
+<<<<<<< HEAD
         this._initialInputs = this.FindInputChannels();
+=======
+        this._initialInputs = this.GenerateInitialInputs();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         this._inputs = this._initialInputs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 
         // Activate the step with user-defined state if needed
@@ -598,12 +624,21 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
         foreach (KernelProcessEdge edge in this.GetEdgeForEvent(daprEvent.QualifiedId))
         {
 <<<<<<< HEAD
+<<<<<<< HEAD
             DaprMessage message = DaprMessageFactory.CreateFromEdge(edge, daprEvent.Data);
             var targetStep = this.ProxyFactory.CreateActorProxy<IMessageBuffer>(new ActorId(edge.OutputTarget.StepId), nameof(MessageBufferActor));
             await targetStep.EnqueueAsync(message).ConfigureAwait(false);
 =======
             ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, daprEvent.Data);
             ActorId scopedStepId = this.ScopedActorId(new ActorId(edge.OutputTarget.StepId));
+=======
+            if (edge.OutputTarget is not KernelProcessFunctionTarget functionTarget)
+            {
+                throw new KernelException("The target for the edge is not a function target.").Log(this._logger);
+            }
+            ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, daprEvent.SourceId, daprEvent.Data);
+            ActorId scopedStepId = this.ScopedActorId(new ActorId(functionTarget.StepId));
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             IMessageBuffer targetStep = this.ProxyFactory.CreateActorProxy<IMessageBuffer>(scopedStepId, nameof(MessageBufferActor));
             await targetStep.EnqueueAsync(message.ToJson()).ConfigureAwait(false);
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
@@ -622,11 +657,17 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
 <<<<<<< HEAD
     /// Generates a scoped event for the step.
     /// </summary>
+<<<<<<< HEAD
     /// <param name="daprEvent">The event.</param>
     /// <returns>A <see cref="DaprEvent"/> with the correctly scoped namespace.</returns>
     internal DaprEvent ScopedEvent(DaprEvent daprEvent)
     /// <returns>A <see cref="ProcessEvent"/> with the correctly scoped namespace.</returns>
     private ProcessEvent ScopedEvent(ProcessEvent daprEvent)
+=======
+    /// <param name="actorId">The actor Id to scope.</param>
+    /// <returns>A new <see cref="ActorId"/> which is scoped to the process.</returns>
+    internal ActorId ScopedActorId(ActorId actorId)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         Verify.NotNull(daprEvent, nameof(daprEvent));
         return daprEvent with { Namespace = $"{this.Name}_{this.Id}" };

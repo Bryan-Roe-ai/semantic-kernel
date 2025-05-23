@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using HandlebarsDotNet;
@@ -47,6 +47,11 @@ public sealed class HandlebarsPromptTemplateOptions : HandlebarsHelpersOptions
     /// 3. A <see cref="KernelArguments"/> instance containing variables maintained by the Handlebars context.
     /// </value>
     public Action<RegisterHelperCallback, HandlebarsPromptTemplateOptions, KernelArguments>? RegisterCustomHelpers { get; set; }
+
+    /// <summary>
+    /// Flag indicating whether to enable HTML decoding of the rendered template.
+    /// </summary>
+    public bool EnableHtmlDecoder { get; set; } = true;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HandlebarsPromptTemplateOptions"/> class.

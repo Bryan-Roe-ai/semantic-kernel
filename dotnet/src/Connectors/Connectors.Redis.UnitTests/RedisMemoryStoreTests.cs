@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -20,6 +20,7 @@ namespace SemanticKernel.Connectors.Redis.UnitTests;
 /// <summary>
 /// Unit tests of <see cref="RedisMemoryStore"/>.
 /// </summary>
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class RedisMemoryStoreTests
 {
     private readonly Mock<IDatabase> _mockDatabase;

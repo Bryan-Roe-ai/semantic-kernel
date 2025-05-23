@@ -1,4 +1,4 @@
-﻿# Onnx Simple RAG (Retrieval Augmented Generation) Sample
+# Onnx Simple RAG (Retrieval Augmented Generation) Sample
 
 This sample demonstrates how you can do RAG using Semantic Kernel with the ONNX Connector that enables running Local Models straight from files. 
 
@@ -36,7 +36,7 @@ git clone https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx
 > Both `BGE-Micro-V2` and `Phi-3` models are too large to be downloaded by the `git clone` command alone if you don't have [git-lfs extension](https://git-lfs.com/) installed, for this you may need to download the models manually and overwrite the files in the cloned directories.
 
 - Manual download [BGE-Micro-V2](https://huggingface.co/TaylorAI/bge-micro-v2/resolve/main/onnx/model.onnx?download=true) (69 MB)
-- Manual download [Phi-3-Mini-4k CPU](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx/resolve/main/cpu_and_mobile/cpu-int4-rtn-block-32/phi3-mini-4k-instruct-cpu-int4-rtn-block-32.onnx.data?download=true) (≈2.7 GB)
+- Manual download [Phi-3-Mini-4k CPU](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx/resolve/main/cpu_and_mobile/cpu-int4-rtn-block-32/phi3-mini-4k-instruct-cpu-int4-rtn-block-32.onnx.data?download=true) (�2.7 GB)
 
 Update the `Program.cs` file lines below with the paths to the models you downloaded in the previous step.
 

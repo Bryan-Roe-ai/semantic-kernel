@@ -1,10 +1,15 @@
 // Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
 // Copyright (c) Microsoft. All rights reserved.
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI.Assistants;
 
 namespace Microsoft.SemanticKernel.Agents.OpenAI.Internal;
+
+#pragma warning disable CS0618 // Type or member is obsolete
 
 /// <summary>
 /// Produce the <see cref="AssistantCreationOptions"/> for an assistant according to the requested configuration.

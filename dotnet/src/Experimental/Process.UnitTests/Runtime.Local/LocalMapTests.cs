@@ -1,10 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System;
 <<<<<<< HEAD
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+<<<<<<< HEAD
 using System.Threading;
 =======
 using System.Collections.Generic;
@@ -12,7 +13,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Threading.Tasks;
+using SemanticKernel.Process.TestsShared.Services;
+using SemanticKernel.Process.TestsShared.Setup;
+using SemanticKernel.Process.TestsShared.Steps;
 using Xunit;
 
 namespace Microsoft.SemanticKernel.Process.Runtime.Local.UnitTests;
@@ -61,6 +67,7 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+<<<<<<< HEAD
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
@@ -76,6 +83,9 @@ public class LocalMapTests
     /// and with a step as the map operation.
 =======
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+=======
+        await using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Assert
         UnionState unionState = await GetUnionStateAsync(processContext);
@@ -121,9 +131,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+<<<<<<< HEAD
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+=======
+        await using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Assert
         UnionState unionState = await GetUnionStateAsync(processContext);
@@ -177,9 +191,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+<<<<<<< HEAD
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+=======
+        await using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Assert
         UnionState unionState = await GetUnionStateAsync(processContext);
@@ -234,9 +252,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+<<<<<<< HEAD
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+=======
+        await using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Assert
         UnionState unionState = await GetUnionStateAsync(processContext);
@@ -295,9 +317,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+<<<<<<< HEAD
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+=======
+        await using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Assert
         UnionState unionState = await GetUnionStateAsync(processContext);
@@ -357,9 +383,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+<<<<<<< HEAD
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+=======
+        await using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Assert
         UnionState unionState = await GetUnionStateAsync(processContext);
@@ -425,9 +455,13 @@ public class LocalMapTests
         Kernel kernel = new();
 
         // Act
+<<<<<<< HEAD
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+=======
+        await using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Assert
         UnionState unionState = await GetUnionStateAsync(processContext);
@@ -480,8 +514,7 @@ public class LocalMapTests
             .SendEventTo(new ProcessFunctionTargetBuilder(mapStep));
 
         // CountStep is not part of the map operation, rather it has been defined on the "outer" process.
-        CountStep.Index = 0; // Reset static state (test hack)
-        ProcessStepBuilder countStep = process.AddStepFromType<CountStep>();
+        ProcessStepBuilder countStep = process.AddStepFromType<CommonSteps.CountStep>(id: nameof(ProcessMapResultWithTargetInvalidAsync));
         mapStep.MapOperation
             .OnEvent(ComputeStep.SquareEventId)
             .SendEventTo(new ProcessFunctionTargetBuilder(countStep));
@@ -525,7 +558,8 @@ public class LocalMapTests
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             .SendEventTo(new ProcessFunctionTargetBuilder(computeStep));
 
-        ProcessStepBuilder countStep = mapProcess.AddStepFromType<CountStep>();
+        const string CounterName = nameof(ProcessMapResultWithTargetExtraAsync);
+        ProcessStepBuilder countStep = mapProcess.AddStepFromType<CommonSteps.CountStep>(id: CounterName);
         computeStep
             .OnEvent(ComputeStep.SquareEventId)
             .SendEventTo(new ProcessFunctionTargetBuilder(countStep));
@@ -556,16 +590,22 @@ public class LocalMapTests
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         KernelProcess processInstance = process.Build();
-        Kernel kernel = new();
+        CounterService counterService = new();
+        Kernel kernel = KernelSetup.SetupKernelWithCounterService(counterService);
 
         // Act
+<<<<<<< HEAD
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+=======
+        await using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, new int[] { 1, 2, 3, 4, 5 }, "Start");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Assert
         UnionState unionState = await GetUnionStateAsync(processContext);
         Assert.Equal(55L, unionState.SquareResult);
+<<<<<<< HEAD
         Assert.Equal(5, CountStep.Index);
         VerifyMapResult(kernel, UnionStep.ResultKey, 55L);
         VerifyMapResult(kernel, CountStep.CountKey, 5);
@@ -577,6 +617,9 @@ public class LocalMapTests
         Assert.Equal(55L, unionState.SquareResult);
         Assert.Equal(5, CountStep.Index);
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+=======
+        Assert.Equal(5, counterService.GetCount());
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     /// <summary>
@@ -644,9 +687,13 @@ public class LocalMapTests
             [1, 2, 3, 4, 5],
             [1, 2, 3, 4, 5],
         ];
+<<<<<<< HEAD
         using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, input, "Start");
 <<<<<<< HEAD
         await this.RunProcessAsync(kernel, processInstance, input, "Start");
+=======
+        await using LocalKernelProcessContext processContext = await this.RunProcessAsync(kernel, processInstance, input, "Start");
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Assert
         UnionState unionState = await GetUnionStateAsync(processContext);
@@ -939,6 +986,7 @@ public class LocalMapTests
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         }
     }
+<<<<<<< HEAD
 
     /// <summary>
     /// The step that counts how many times it has been invoked.
@@ -972,4 +1020,6 @@ public class LocalMapTests
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         }
     }
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 }

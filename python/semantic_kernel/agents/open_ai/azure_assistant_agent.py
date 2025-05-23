@@ -1,30 +1,37 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-import logging
-from collections.abc import AsyncIterable, Awaitable, Callable
+from collections.abc import Awaitable, Callable
 from copy import copy
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 from openai import AsyncAzureOpenAI
 from pydantic import ValidationError
 
+<<<<<<< HEAD
 from semantic_kernel.agents.open_ai.open_ai_assistant_base import OpenAIAssistantBase
 from semantic_kernel.connectors.ai.open_ai.settings.azure_open_ai_settings import (
     AzureOpenAISettings,
 )
 from semantic_kernel.const import DEFAULT_SERVICE_NAME
+=======
+from semantic_kernel.agents import OpenAIAssistantAgent
+from semantic_kernel.connectors.ai.open_ai.settings.azure_open_ai_settings import AzureOpenAISettings
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.exceptions.agent_exceptions import AgentInitializationException
-from semantic_kernel.kernel_pydantic import HttpsUrl
 from semantic_kernel.utils.authentication.entra_id_authentication import get_entra_auth_token
+<<<<<<< HEAD
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.telemetry.user_agent import (
     APP_INFO,
     prepend_semantic_kernel_to_user_agent,
 )
+=======
+from semantic_kernel.utils.feature_stage_decorator import release_candidate
+from semantic_kernel.utils.telemetry.user_agent import APP_INFO, prepend_semantic_kernel_to_user_agent
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-if TYPE_CHECKING:
-    from semantic_kernel.kernel import Kernel
 
+<<<<<<< HEAD
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -428,29 +435,65 @@ class AzureAssistantAgent(OpenAIAssistantBase):
             token_endpoint=token_endpoint,
             **assistant_definition,
         )
+=======
+@release_candidate
+class AzureAssistantAgent(OpenAIAssistantAgent):
+    """An Azure Assistant Agent class that extends the OpenAI Assistant Agent class."""
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     @staticmethod
-    def _setup_client_and_token(
-        azure_openai_settings: AzureOpenAISettings,
-        ad_token: str | None,
-        ad_token_provider: Callable[[], str | Awaitable[str]] | None,
-        client: AsyncAzureOpenAI | None,
-        default_headers: dict[str, str] | None,
-    ) -> tuple[AsyncAzureOpenAI, str | None]:
-        """Helper method that ensures either an AD token or an API key is present.
+    def setup_resources(
+        *,
+        ad_token: str | None = None,
+        ad_token_provider: Callable[[], str | Awaitable[str]] | None = None,
+        api_key: str | None = None,
+        api_version: str | None = None,
+        base_url: str | None = None,
+        default_headers: dict[str, str] | None = None,
+        deployment_name: str | None = None,
+        endpoint: str | None = None,
+        env_file_path: str | None = None,
+        env_file_encoding: str | None = None,
+        token_scope: str | None = None,
+        **kwargs: Any,
+    ) -> tuple[AsyncAzureOpenAI, str]:
+        """A method to create the Azure OpenAI client and the deployment name/model from the provided arguments.
 
-        Retrieves a new AD token if needed, and configures the AsyncAzureOpenAI client.
+        Any arguments provided will override the values in the environment variables/environment file.
+
+        Args:
+            ad_token: The Microsoft Entra (previously Azure AD) token represented as a string
+            ad_token_provider: The Microsoft Entra (previously Azure AD) token provider provided as a callback
+            api_key: The API key
+            api_version: The API version
+            base_url: The base URL in the form https://<resource>.azure.openai.com/openai/deployments/<deployment_name>
+            default_headers: The default headers to add to the client
+            deployment_name: The deployment name
+            endpoint: The endpoint in the form https://<resource>.azure.openai.com
+            env_file_path: The environment file path
+            env_file_encoding: The environment file encoding, defaults to utf-8
+            token_scope: The token scope
+            kwargs: Additional keyword arguments
 
         Returns:
-            A tuple of (client, ad_token), where client is guaranteed not to be None.
+            An Azure OpenAI client instance and the configured deployment name (model)
         """
-        if not azure_openai_settings.chat_deployment_name:
-            raise AgentInitializationException("The Azure OpenAI chat_deployment_name is required.")
+        try:
+            azure_openai_settings = AzureOpenAISettings(
+                api_key=api_key,
+                base_url=base_url,
+                endpoint=endpoint,
+                chat_deployment_name=deployment_name,
+                api_version=api_version,
+                env_file_path=env_file_path,
+                env_file_encoding=env_file_encoding,
+                token_endpoint=token_scope,
+            )
+        except ValidationError as exc:
+            raise AgentInitializationException(f"Failed to create Azure OpenAI settings: {exc}") from exc
 
-        # If everything is missing, but there is a token_endpoint, try to get the token.
         if (
-            client is None
-            and azure_openai_settings.api_key is None
+            azure_openai_settings.api_key is None
             and ad_token_provider is None
             and ad_token is None
             and azure_openai_settings.token_endpoint
@@ -458,67 +501,35 @@ class AzureAssistantAgent(OpenAIAssistantBase):
             ad_token = get_entra_auth_token(azure_openai_settings.token_endpoint)
 
         # If we still have no credentials, we can't proceed
-        if not client and not azure_openai_settings.api_key and not ad_token and not ad_token_provider:
+        if not azure_openai_settings.api_key and not ad_token and not ad_token_provider:
             raise AgentInitializationException(
-                "Please provide either a client, an api_key, ad_token or ad_token_provider."
+                "Please provide either an api_key, ad_token or ad_token_provider for authentication."
             )
 
-        # Build the client if it's not supplied
-        if not client:
-            client = AzureAssistantAgent._create_client(
-                api_key=azure_openai_settings.api_key.get_secret_value() if azure_openai_settings.api_key else None,
-                endpoint=azure_openai_settings.endpoint,
-                api_version=azure_openai_settings.api_version,
-                ad_token=ad_token,
-                ad_token_provider=ad_token_provider,
-                default_headers=default_headers,
-            )
-
-        return client, ad_token
-
-    @staticmethod
-    def _create_client(
-        api_key: str | None = None,
-        endpoint: HttpsUrl | None = None,
-        api_version: str | None = None,
-        ad_token: str | None = None,
-        ad_token_provider: Callable[[], str | Awaitable[str]] | None = None,
-        default_headers: dict[str, str] | None = None,
-    ) -> AsyncAzureOpenAI:
-        """Create the OpenAI client from configuration.
-
-        Args:
-            api_key: The OpenAI API key.
-            endpoint: The OpenAI endpoint.
-            api_version: The OpenAI API version.
-            ad_token: The Azure AD token.
-            ad_token_provider: The Azure AD token provider.
-            default_headers: The default headers.
-
-        Returns:
-            An AsyncAzureOpenAI client instance.
-        """
         merged_headers = dict(copy(default_headers)) if default_headers else {}
+        if default_headers:
+            merged_headers.update(default_headers)
         if APP_INFO:
             merged_headers.update(APP_INFO)
             merged_headers = prepend_semantic_kernel_to_user_agent(merged_headers)
 
-        if not api_key and not ad_token and not ad_token_provider:
-            raise AgentInitializationException(
-                "Please provide either AzureOpenAI api_key, an ad_token, ad_token_provider, or a client."
-            )
-        if not endpoint:
-            raise AgentInitializationException("Please provide an AzureOpenAI endpoint.")
+        if not azure_openai_settings.endpoint:
+            raise AgentInitializationException("Please provide an Azure OpenAI endpoint")
 
-        return AsyncAzureOpenAI(
-            azure_endpoint=str(endpoint),
-            api_version=api_version,
-            api_key=api_key,
+        if not azure_openai_settings.chat_deployment_name:
+            raise AgentInitializationException("Please provide an Azure OpenAI deployment name")
+
+        client = AsyncAzureOpenAI(
+            azure_endpoint=str(azure_openai_settings.endpoint),
+            api_version=azure_openai_settings.api_version,
+            api_key=azure_openai_settings.api_key.get_secret_value() if azure_openai_settings.api_key else None,
             azure_ad_token=ad_token,
             azure_ad_token_provider=ad_token_provider,
             default_headers=merged_headers,
+            **kwargs,
         )
 
+<<<<<<< HEAD
     @staticmethod
     def _create_azure_openai_settings(
         api_key: str | None = None,
@@ -655,3 +666,6 @@ class AzureAssistantAgent(OpenAIAssistantBase):
         return AzureAssistantAgent(kernel=kernel, assistant=assistant, **assistant_definition)
 
     # endregion
+=======
+        return client, azure_openai_settings.chat_deployment_name
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

@@ -74,7 +74,7 @@ class GoogleAITextCompletion(GoogleAIBase, TextCompletionClientBase):
             ServiceInitializationError: If an error occurs during initialization.
         """
         try:
-            google_ai_settings = GoogleAISettings.create(
+            google_ai_settings = GoogleAISettings(
                 gemini_model_id=gemini_model_id,
                 api_key=api_key,
                 env_file_path=env_file_path,
@@ -256,8 +256,10 @@ class GoogleAITextCompletion(GoogleAIBase, TextCompletionClientBase):
 =======
 >>>>>>> upstream/main
         genai.configure(api_key=self.service_settings.api_key.get_secret_value())
+        if not self.service_settings.gemini_model_id:
+            raise ServiceInitializationError("The Google AI Gemini model ID is required.")
         model = GenerativeModel(
-            self.service_settings.gemini_model_id,
+            model_name=self.service_settings.gemini_model_id,
         )
 
         response: AsyncGenerateContentResponse = await model.generate_content_async(
@@ -309,8 +311,10 @@ class GoogleAITextCompletion(GoogleAIBase, TextCompletionClientBase):
         assert isinstance(settings, GoogleAITextPromptExecutionSettings)  # nosec
 
         genai.configure(api_key=self.service_settings.api_key.get_secret_value())
+        if not self.service_settings.gemini_model_id:
+            raise ServiceInitializationError("The Google AI Gemini model ID is required.")
         model = GenerativeModel(
-            self.service_settings.gemini_model_id,
+            model_name=self.service_settings.gemini_model_id,
         )
 
         response: AsyncGenerateContentResponse = await model.generate_content_async(

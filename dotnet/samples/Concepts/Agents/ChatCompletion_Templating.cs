@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 <<<<<<<+HEAD
 // Copyright (c) Microsoft. All rights reserved.
 =======
 // Copyright (c) Microsoft. All rights reserved.
 >>>>>>>+main
 ing Microsoft.SemanticKernel;
+=======
+// Copyright (c) Microsoft. All rights reserved.
+using Microsoft.SemanticKernel;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
@@ -54,7 +59,9 @@ public class ChatCompletion_Templating(ITestOutputHelper output) : BaseAgentsTes
             """
             Write a one verse poem on the requested topic in the style of {{$style}}.
             Always state the requested style of the poem.
-            """);
+            """,
+            PromptTemplateConfig.SemanticKernelTemplateFormat,
+            new KernelPromptTemplateFactory());
     }
 
     [Fact]
@@ -83,8 +90,8 @@ public class ChatCompletion_Templating(ITestOutputHelper output) : BaseAgentsTes
 
     private async Task InvokeChatCompletionAgentWithTemplateAsync(
         string instructionTemplate,
-        string? templateFormat = null,
-        IPromptTemplateFactory? templateFactory = null)
+        string templateFormat,
+        IPromptTemplateFactory templateFactory)
     {
         // Define the agent
         PromptTemplateConfig templateConfig =
@@ -114,7 +121,6 @@ public class ChatCompletion_Templating(ITestOutputHelper output) : BaseAgentsTes
         {
             // Add input to chat
             ChatMessageContent request = new(AuthorRole.User, input);
-            chat.Add(request);
             this.WriteAgentChatMessage(request);
 
             KernelArguments? arguments = null;
@@ -126,7 +132,7 @@ public class ChatCompletion_Templating(ITestOutputHelper output) : BaseAgentsTes
             }
 
             // Process agent response
-            await foreach (ChatMessageContent message in agent.InvokeAsync(chat, arguments))
+            await foreach (ChatMessageContent message in agent.InvokeAsync(request, options: new() { KernelArguments = arguments }))
             {
                 chat.Add(message);
                 this.WriteAgentChatMessage(message);

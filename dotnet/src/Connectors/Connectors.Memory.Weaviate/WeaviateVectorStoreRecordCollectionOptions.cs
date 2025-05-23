@@ -1,19 +1,21 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Text.Json.Nodes;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 
 namespace Microsoft.SemanticKernel.Connectors.Weaviate;
 
 /// <summary>
-/// Options when creating a <see cref="WeaviateVectorStoreRecordCollection{TRecord}"/>.
+/// Options when creating a <see cref="WeaviateVectorStoreRecordCollection{TKey, TRecord}"/>.
 /// </summary>
 public sealed class WeaviateVectorStoreRecordCollectionOptions<TRecord>
 {
     /// <summary>
     /// Gets or sets an optional custom mapper to use when converting between the data model and Weaviate record.
     /// </summary>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -45,6 +47,9 @@ public sealed class WeaviateVectorStoreRecordCollectionOptions<TRecord>
 >>>>>>> Stashed changes
     public IVectorStoreRecordMapper<TRecord, JsonNode>? JsonNodeCustomMapper { get; init; } = null;
 =======
+=======
+    [Obsolete("Custom mappers are no longer supported.", error: true)]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public IVectorStoreRecordMapper<TRecord, JsonObject>? JsonObjectCustomMapper { get; init; } = null;
 >>>>>>> main
 <<<<<<< Updated upstream
@@ -103,4 +108,16 @@ public sealed class WeaviateVectorStoreRecordCollectionOptions<TRecord>
     /// This parameter is optional because authentication may be disabled in local clusters for testing purposes.
     /// </remarks>
     public string? ApiKey { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the vectors in the store are named and multiple vectors are supported, or whether there is just a single unnamed vector in Weaviate collection.
+    /// Defaults to multiple named vectors.
+    /// <see href="https://weaviate.io/developers/weaviate/config-refs/schema/multi-vector"/>.
+    /// </summary>
+    public bool HasNamedVectors { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the default embedding generator to use when generating vectors embeddings with this vector store.
+    /// </summary>
+    public IEmbeddingGenerator? EmbeddingGenerator { get; init; }
 }

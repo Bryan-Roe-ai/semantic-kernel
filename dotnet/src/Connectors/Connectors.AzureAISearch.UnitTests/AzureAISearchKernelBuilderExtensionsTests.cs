@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using Azure;
@@ -232,10 +232,11 @@ public class AzureAISearchKernelBuilderExtensionsTests
 
         var collection = kernel.Services.GetRequiredService<IVectorStoreRecordCollection<string, TestRecord>>();
         Assert.NotNull(collection);
-        Assert.IsType<AzureAISearchVectorStoreRecordCollection<TestRecord>>(collection);
+        Assert.IsType<AzureAISearchVectorStoreRecordCollection<string, TestRecord>>(collection);
 
-        var vectorizedSearch = kernel.Services.GetRequiredService<IVectorizedSearch<TestRecord>>();
+        var vectorizedSearch = kernel.Services.GetRequiredService<IVectorSearch<TestRecord>>();
         Assert.NotNull(vectorizedSearch);
+<<<<<<< HEAD
         Assert.IsType<AzureAISearchVectorStoreRecordCollection<TestRecord>>(vectorizedSearch);
 <<<<<<< main
 
@@ -244,6 +245,9 @@ public class AzureAISearchKernelBuilderExtensionsTests
         Assert.IsType<AzureAISearchVectorStoreRecordCollection<TestRecord>>(vectorizableSearch);
 =======
 >>>>>>> upstream/main
+=======
+        Assert.IsType<AzureAISearchVectorStoreRecordCollection<string, TestRecord>>(vectorizedSearch);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
 #pragma warning disable CA1812 // Avoid uninstantiated internal classes

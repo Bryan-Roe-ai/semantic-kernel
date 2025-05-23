@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -11,6 +12,9 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 ﻿// Copyright (c) Microsoft. All rights reserved.
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 <<<<<<< main
 =======
@@ -309,11 +313,11 @@ public class QdrantServiceCollectionExtensionsTests
 
         var collection = serviceProvider.GetRequiredService<IVectorStoreRecordCollection<ulong, TestRecord>>();
         Assert.NotNull(collection);
-        Assert.IsType<QdrantVectorStoreRecordCollection<TestRecord>>(collection);
+        Assert.IsType<QdrantVectorStoreRecordCollection<ulong, TestRecord>>(collection);
 
-        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorizedSearch<TestRecord>>();
+        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorSearch<TestRecord>>();
         Assert.NotNull(vectorizedSearch);
-        Assert.IsType<QdrantVectorStoreRecordCollection<TestRecord>>(vectorizedSearch);
+        Assert.IsType<QdrantVectorStoreRecordCollection<ulong, TestRecord>>(vectorizedSearch);
     }
 
 #pragma warning disable CA1812 // Avoid uninstantiated internal classes

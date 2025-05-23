@@ -1,8 +1,7 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Text.Json.Serialization;
 
@@ -12,7 +11,7 @@ namespace Microsoft.SemanticKernel.Connectors.Pinecone;
 /// QueryRequest
 /// See https://docs.pinecone.io/reference/query
 /// </summary>
-[Experimental("SKEXP0020")]
+[Obsolete("The IMemoryStore abstraction is being obsoleted, use Microsoft.Extensions.VectorData and PineconeVectorStore")]
 internal sealed class QueryRequest
 {
     /// <summary>

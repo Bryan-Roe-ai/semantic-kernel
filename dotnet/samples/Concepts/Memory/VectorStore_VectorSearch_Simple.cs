@@ -1,15 +1,22 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using Microsoft.SemanticKernel.Data;
 =======
+=======
+using Azure.AI.OpenAI;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Azure.Identity;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
-using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using Microsoft.SemanticKernel.Connectors.InMemory;
+<<<<<<< HEAD
 >>>>>>> main
 using Microsoft.SemanticKernel.Embeddings;
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 namespace Memory;
 
@@ -32,6 +39,7 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
     public async Task ExampleAsync()
     {
         // Create an embedding generation service.
+<<<<<<< HEAD
         var textEmbeddingGenerationService = new AzureOpenAITextEmbeddingGenerationService(
                 TestConfiguration.AzureOpenAIEmbeddings.DeploymentName,
                 TestConfiguration.AzureOpenAIEmbeddings.Endpoint,
@@ -42,6 +50,11 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
         var vectorStore = new VolatileVectorStore();
 =======
                 new AzureCliCredential());
+=======
+        var embeddingGenerator = new AzureOpenAIClient(new Uri(TestConfiguration.AzureOpenAIEmbeddings.Endpoint), new AzureCliCredential())
+            .GetEmbeddingClient(TestConfiguration.AzureOpenAIEmbeddings.DeploymentName)
+            .AsIEmbeddingGenerator();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Construct an InMemory vector store.
         var vectorStore = new InMemoryVectorStore();
@@ -55,7 +68,7 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
         var glossaryEntries = CreateGlossaryEntries().ToList();
         var tasks = glossaryEntries.Select(entry => Task.Run(async () =>
         {
-            entry.DefinitionEmbedding = await textEmbeddingGenerationService.GenerateEmbeddingAsync(entry.Definition);
+            entry.DefinitionEmbedding = (await embeddingGenerator.GenerateAsync(entry.Definition)).Vector;
         }));
         await Task.WhenAll(tasks);
 
@@ -65,6 +78,7 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
 
         // Search the collection using a vector search.
         var searchString = "What is an Application Programming Interface";
+<<<<<<< HEAD
         var searchVector = await textEmbeddingGenerationService.GenerateEmbeddingAsync(searchString);
 <<<<<<< HEAD
         var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 }).ToListAsync();
@@ -74,6 +88,10 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
 =======
         var searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 });
         var resultRecords = await searchResult.Results.ToListAsync();
+=======
+        var searchVector = (await embeddingGenerator.GenerateAsync(searchString)).Vector;
+        var resultRecords = await collection.SearchEmbeddingAsync(searchVector, top: 1).ToListAsync();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         Console.WriteLine("Search string: " + searchString);
         Console.WriteLine("Result: " + resultRecords.First().Record.Definition);
@@ -82,6 +100,7 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
 
         // Search the collection using a vector search.
         searchString = "What is Retrieval Augmented Generation";
+<<<<<<< HEAD
         searchVector = await textEmbeddingGenerationService.GenerateEmbeddingAsync(searchString);
 <<<<<<< HEAD
         searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 }).ToListAsync();
@@ -91,6 +110,10 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
 =======
         searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 1 });
         resultRecords = await searchResult.Results.ToListAsync();
+=======
+        searchVector = (await embeddingGenerator.GenerateAsync(searchString)).Vector;
+        resultRecords = await collection.SearchEmbeddingAsync(searchVector, top: 1).ToListAsync();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         Console.WriteLine("Search string: " + searchString);
         Console.WriteLine("Result: " + resultRecords.First().Record.Definition);
@@ -99,6 +122,7 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
 
         // Search the collection using a vector search with pre-filtering.
         searchString = "What is Retrieval Augmented Generation";
+<<<<<<< HEAD
         searchVector = await textEmbeddingGenerationService.GenerateEmbeddingAsync(searchString);
         var filter = new VectorSearchFilter().EqualTo(nameof(Glossary.Category), "External Definitions");
 <<<<<<< HEAD
@@ -113,6 +137,10 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
 =======
         searchResult = await collection.VectorizedSearchAsync(searchVector, new() { Top = 3, Filter = filter });
         resultRecords = await searchResult.Results.ToListAsync();
+=======
+        searchVector = (await embeddingGenerator.GenerateAsync(searchString)).Vector;
+        resultRecords = await collection.SearchEmbeddingAsync(searchVector, top: 3, new() { Filter = g => g.Category == "External Definitions" }).ToListAsync();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         Console.WriteLine("Search string: " + searchString);
         Console.WriteLine("Number of results: " + resultRecords.Count);
@@ -135,7 +163,7 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
         [VectorStoreRecordKey]
         public ulong Key { get; set; }
 
-        [VectorStoreRecordData(IsFilterable = true)]
+        [VectorStoreRecordData(IsIndexed = true)]
         public string Category { get; set; }
 
         [VectorStoreRecordData]
@@ -175,7 +203,7 @@ public class VectorStore_VectorSearch_Simple(ITestOutputHelper output) : BaseTes
             Key = 3,
             Category = "External Definitions",
             Term = "RAG",
-            Definition = "Retrieval Augmented Generation - a term that refers to the process of retrieving additional data to provide as context to an LLM to use when generating a response (completion) to a user’s question (prompt)."
+            Definition = "Retrieval Augmented Generation - a term that refers to the process of retrieving additional data to provide as context to an LLM to use when generating a response (completion) to a user�s question (prompt)."
         };
     }
 }

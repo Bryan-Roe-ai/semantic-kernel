@@ -13,6 +13,7 @@ import sentence_transformers
 import torch
 from numpy import ndarray
 
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -95,8 +96,11 @@ from semantic_kernel.connectors.ai.ai_exception import AIException
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
     EmbeddingGeneratorBase,
 )
+=======
+from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.exceptions import ServiceResponseException
-from semantic_kernel.utils.experimental_decorator import experimental_class
+from semantic_kernel.utils.feature_stage_decorator import experimental
 
 if TYPE_CHECKING:
     from torch import Tensor
@@ -105,9 +109,11 @@ if TYPE_CHECKING:
         PromptExecutionSettings,
     )
 
+
 logger: logging.Logger = logging.getLogger(__name__)
 
 
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -173,6 +179,9 @@ logger: logging.Logger = logging.getLogger(__name__)
 =======
 >>>>>>> head
 @experimental_class
+=======
+@experimental
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 class HuggingFaceTextEmbedding(EmbeddingGeneratorBase):
     """Hugging Face text embedding service."""
 
@@ -430,8 +439,14 @@ class HuggingFaceTextEmbedding(EmbeddingGeneratorBase):
             ai_model_id=ai_model_id,
             service_id=service_id,
             device=resolved_device,
+<<<<<<< HEAD
             generator=sentence_transformers.SentenceTransformer(
                 model_name_or_path=ai_model_id, device=resolved_device
+=======
+            generator=sentence_transformers.SentenceTransformer(  # type: ignore
+                model_name_or_path=ai_model_id,
+                device=resolved_device,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             ),
         )
 

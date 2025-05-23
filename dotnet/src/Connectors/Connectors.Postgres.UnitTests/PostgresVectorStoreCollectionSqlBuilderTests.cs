@@ -1,9 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.VectorData;
+using Microsoft.Extensions.VectorData.ConnectorSupport;
 using Microsoft.SemanticKernel.Connectors.Postgres;
 using Pgvector;
 using Xunit;
@@ -26,8 +27,6 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
     [InlineData(false)]
     public void TestBuildCreateTableCommand(bool ifNotExists)
     {
-        var builder = new PostgresVectorStoreCollectionSqlBuilder();
-
         var recordDefinition = new VectorStoreRecordDefinition()
         {
             Properties = [
@@ -38,12 +37,12 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
                 new VectorStoreRecordDataProperty("description", typeof(string)),
                 new VectorStoreRecordDataProperty("parking_is_included", typeof(bool)) { StoragePropertyName = "free_parking" },
                 new VectorStoreRecordDataProperty("tags", typeof(List<string>)),
-                new VectorStoreRecordVectorProperty("embedding1", typeof(ReadOnlyMemory<float>))
+                new VectorStoreRecordVectorProperty("embedding1", typeof(ReadOnlyMemory<float>), 10)
                 {
                     Dimensions = 10,
                     IndexKind = "hnsw",
                 },
-                new VectorStoreRecordVectorProperty("embedding2", typeof(ReadOnlyMemory<float>?))
+                new VectorStoreRecordVectorProperty("embedding2", typeof(ReadOnlyMemory<float>?), 10)
                 {
                     Dimensions = 10,
                     IndexKind = "hnsw",
@@ -51,7 +50,9 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
             ]
         };
 
-        var cmdInfo = builder.BuildCreateTableCommand("public", "testcollection", recordDefinition.Properties, ifNotExists: ifNotExists);
+        var model = new VectorStoreRecordModelBuilder(PostgresConstants.ModelBuildingOptions).Build(typeof(Dictionary<string, object?>), recordDefinition, defaultEmbeddingGenerator: null);
+
+        var cmdInfo = PostgresSqlBuilder.BuildCreateTableCommand("public", "testcollection", model, ifNotExists: ifNotExists);
 
         // Check for expected properties; integration tests will validate the actual SQL.
         Assert.Contains("public.\"testcollection\" (", cmdInfo.CommandText);
@@ -76,26 +77,40 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
     }
 
     [Theory]
-    [InlineData(IndexKind.Hnsw, DistanceFunction.EuclideanDistance)]
-    [InlineData(IndexKind.IvfFlat, DistanceFunction.DotProductSimilarity)]
-    [InlineData(IndexKind.Hnsw, DistanceFunction.CosineDistance)]
-    public void TestBuildCreateIndexCommand(string indexKind, string distanceFunction)
+    [InlineData(IndexKind.Hnsw, DistanceFunction.EuclideanDistance, true)]
+    [InlineData(IndexKind.Hnsw, DistanceFunction.EuclideanDistance, false)]
+    [InlineData(IndexKind.IvfFlat, DistanceFunction.DotProductSimilarity, true)]
+    [InlineData(IndexKind.IvfFlat, DistanceFunction.DotProductSimilarity, false)]
+    [InlineData(IndexKind.Hnsw, DistanceFunction.CosineDistance, true)]
+    [InlineData(IndexKind.Hnsw, DistanceFunction.CosineDistance, false)]
+    public void TestBuildCreateIndexCommand(string indexKind, string distanceFunction, bool ifNotExists)
     {
-        var builder = new PostgresVectorStoreCollectionSqlBuilder();
-
         var vectorColumn = "embedding1";
 
         if (indexKind != IndexKind.Hnsw)
         {
-            Assert.Throws<NotSupportedException>(() => builder.BuildCreateVectorIndexCommand("public", "testcollection", vectorColumn, indexKind, distanceFunction));
+            Assert.Throws<NotSupportedException>(() => PostgresSqlBuilder.BuildCreateIndexCommand("public", "testcollection", vectorColumn, indexKind, distanceFunction, true, ifNotExists));
+            Assert.Throws<NotSupportedException>(() => PostgresSqlBuilder.BuildCreateIndexCommand("public", "testcollection", vectorColumn, indexKind, distanceFunction, true, ifNotExists));
             return;
         }
 
-        var cmdInfo = builder.BuildCreateVectorIndexCommand("public", "testcollection", vectorColumn, indexKind, distanceFunction);
+        var cmdInfo = PostgresSqlBuilder.BuildCreateIndexCommand("public", "1testcollection", vectorColumn, indexKind, distanceFunction, true, ifNotExists);
 
         // Check for expected properties; integration tests will validate the actual SQL.
         Assert.Contains("CREATE INDEX ", cmdInfo.CommandText);
-        Assert.Contains("ON public.\"testcollection\" USING hnsw (\"embedding1\" ", cmdInfo.CommandText);
+        // Make sure ifNotExists is respected
+        if (ifNotExists)
+        {
+            Assert.Contains("CREATE INDEX IF NOT EXISTS", cmdInfo.CommandText);
+        }
+        else
+        {
+            Assert.DoesNotContain("CREATE INDEX IF NOT EXISTS", cmdInfo.CommandText);
+        }
+        // Make sure the name is escaped, so names starting with a digit are OK.
+        Assert.Contains($"\"1testcollection_{vectorColumn}_index\"", cmdInfo.CommandText);
+
+        Assert.Contains("ON public.\"1testcollection\" USING hnsw (\"embedding1\" ", cmdInfo.CommandText);
         if (distanceFunction == null)
         {
             // Check for distance function defaults to cosine distance
@@ -117,12 +132,24 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
         this._output.WriteLine(cmdInfo.CommandText);
     }
 
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public void TestBuildCreateNonVectorIndexCommand(bool ifNotExists)
+    {
+        var cmdInfo = PostgresSqlBuilder.BuildCreateIndexCommand("schema", "tableName", "columnName", indexKind: "", distanceFunction: "", isVector: false, ifNotExists);
+
+        var expectedCommandText = ifNotExists
+            ? "CREATE INDEX IF NOT EXISTS \"tableName_columnName_index\" ON schema.\"tableName\" (\"columnName\");"
+            : "CREATE INDEX \"tableName_columnName_index\" ON schema.\"tableName\" (\"columnName\");";
+
+        Assert.Equal(expectedCommandText, cmdInfo.CommandText);
+    }
+
     [Fact]
     public void TestBuildDropTableCommand()
     {
-        var builder = new PostgresVectorStoreCollectionSqlBuilder();
-
-        var cmdInfo = builder.BuildDropTableCommand("public", "testcollection");
+        var cmdInfo = PostgresSqlBuilder.BuildDropTableCommand("public", "testcollection");
 
         // Check for expected properties; integration tests will validate the actual SQL.
         Assert.Contains("DROP TABLE IF EXISTS public.\"testcollection\"", cmdInfo.CommandText);
@@ -134,8 +161,6 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
     [Fact]
     public void TestBuildUpsertCommand()
     {
-        var builder = new PostgresVectorStoreCollectionSqlBuilder();
-
         var row = new Dictionary<string, object?>()
         {
             ["id"] = 123,
@@ -150,7 +175,7 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
 
         var keyColumn = "id";
 
-        var cmdInfo = builder.BuildUpsertCommand("public", "testcollection", keyColumn, row);
+        var cmdInfo = PostgresSqlBuilder.BuildUpsertCommand("public", "testcollection", keyColumn, row);
 
         // Check for expected properties; integration tests will validate the actual SQL.
         Assert.Contains("INSERT INTO public.\"testcollection\" (", cmdInfo.CommandText);
@@ -175,8 +200,6 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
     [Fact]
     public void TestBuildUpsertBatchCommand()
     {
-        var builder = new PostgresVectorStoreCollectionSqlBuilder();
-
         var rows = new List<Dictionary<string, object?>>()
         {
             new()
@@ -206,7 +229,7 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
         var keyColumn = "id";
         var columnCount = rows.First().Count;
 
-        var cmdInfo = builder.BuildUpsertBatchCommand("public", "testcollection", keyColumn, rows);
+        var cmdInfo = PostgresSqlBuilder.BuildUpsertBatchCommand("public", "testcollection", keyColumn, rows);
 
         // Check for expected properties; integration tests will validate the actual SQL.
         Assert.Contains("INSERT INTO public.\"testcollection\" (", cmdInfo.CommandText);
@@ -235,8 +258,6 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
     public void TestBuildGetCommand()
     {
         // Arrange
-        var builder = new PostgresVectorStoreCollectionSqlBuilder();
-
         var recordDefinition = new VectorStoreRecordDefinition()
         {
             Properties = [
@@ -247,23 +268,23 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
                 new VectorStoreRecordDataProperty("description", typeof(string)),
                 new VectorStoreRecordDataProperty("parking_is_included", typeof(bool)) { StoragePropertyName = "free_parking" },
                 new VectorStoreRecordDataProperty("tags", typeof(List<string>)),
-                new VectorStoreRecordVectorProperty("embedding1", typeof(ReadOnlyMemory<float>))
+                new VectorStoreRecordVectorProperty("embedding1", typeof(ReadOnlyMemory<float>), 10)
                 {
-                    Dimensions = 10,
                     IndexKind = "hnsw",
                 },
-                new VectorStoreRecordVectorProperty("embedding2", typeof(ReadOnlyMemory<float>?))
+                new VectorStoreRecordVectorProperty("embedding2", typeof(ReadOnlyMemory<float>?), 10)
                 {
-                    Dimensions = 10,
                     IndexKind = "hnsw",
                 }
             ]
         };
 
+        var model = new VectorStoreRecordModelBuilder(PostgresConstants.ModelBuildingOptions).Build(typeof(Dictionary<string, object?>), recordDefinition, defaultEmbeddingGenerator: null);
+
         var key = 123;
 
         // Act
-        var cmdInfo = builder.BuildGetCommand("public", "testcollection", recordDefinition.Properties, key, includeVectors: true);
+        var cmdInfo = PostgresSqlBuilder.BuildGetCommand("public", "testcollection", model, key, includeVectors: true);
 
         // Assert
         Assert.Contains("SELECT", cmdInfo.CommandText);
@@ -280,8 +301,6 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
     public void TestBuildGetBatchCommand()
     {
         // Arrange
-        var builder = new PostgresVectorStoreCollectionSqlBuilder();
-
         var recordDefinition = new VectorStoreRecordDefinition()
         {
             Properties = [
@@ -292,14 +311,12 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
                 new VectorStoreRecordDataProperty("description", typeof(string)),
                 new VectorStoreRecordDataProperty("parking_is_included", typeof(bool)) { StoragePropertyName = "free_parking" },
                 new VectorStoreRecordDataProperty("tags", typeof(List<string>)),
-                new VectorStoreRecordVectorProperty("embedding1", typeof(ReadOnlyMemory<float>))
+                new VectorStoreRecordVectorProperty("embedding1", typeof(ReadOnlyMemory<float>), 10)
                 {
-                    Dimensions = 10,
                     IndexKind = "hnsw",
                 },
-                new VectorStoreRecordVectorProperty("embedding2", typeof(ReadOnlyMemory<float>?))
+                new VectorStoreRecordVectorProperty("embedding2", typeof(ReadOnlyMemory<float>?), 10)
                 {
-                    Dimensions = 10,
                     IndexKind = "hnsw",
                 }
             ]
@@ -307,8 +324,10 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
 
         var keys = new List<long> { 123, 124 };
 
+        var model = new VectorStoreRecordModelBuilder(PostgresConstants.ModelBuildingOptions).Build(typeof(Dictionary<string, object?>), recordDefinition, defaultEmbeddingGenerator: null);
+
         // Act
-        var cmdInfo = builder.BuildGetBatchCommand("public", "testcollection", recordDefinition.Properties, keys, includeVectors: true);
+        var cmdInfo = PostgresSqlBuilder.BuildGetBatchCommand("public", "testcollection", model, keys, includeVectors: true);
 
         // Assert
         Assert.Contains("SELECT", cmdInfo.CommandText);
@@ -328,12 +347,10 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
     public void TestBuildDeleteCommand()
     {
         // Arrange
-        var builder = new PostgresVectorStoreCollectionSqlBuilder();
-
         var key = 123;
 
         // Act
-        var cmdInfo = builder.BuildDeleteCommand("public", "testcollection", "id", key);
+        var cmdInfo = PostgresSqlBuilder.BuildDeleteCommand("public", "testcollection", "id", key);
 
         // Assert
         Assert.Contains("DELETE", cmdInfo.CommandText);
@@ -348,12 +365,10 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
     public void TestBuildDeleteBatchCommand()
     {
         // Arrange
-        var builder = new PostgresVectorStoreCollectionSqlBuilder();
-
         var keys = new List<long> { 123, 124 };
 
         // Act
-        var cmdInfo = builder.BuildDeleteBatchCommand("public", "testcollection", "id", keys);
+        var cmdInfo = PostgresSqlBuilder.BuildDeleteBatchCommand("public", "testcollection", "id", keys);
 
         // Assert
         Assert.Contains("DELETE", cmdInfo.CommandText);
@@ -362,59 +377,6 @@ public class PostgresVectorStoreCollectionSqlBuilderTests
         Assert.NotNull(cmdInfo.Parameters);
         Assert.Single(cmdInfo.Parameters);
         Assert.Equal(keys, cmdInfo.Parameters[0].Value);
-
-        // Output
-        this._output.WriteLine(cmdInfo.CommandText);
-    }
-
-    [Fact]
-    public void TestBuildGetNearestMatchCommand()
-    {
-        // Arrange
-        var builder = new PostgresVectorStoreCollectionSqlBuilder();
-
-        var vectorProperty = new VectorStoreRecordVectorProperty("embedding1", typeof(ReadOnlyMemory<float>))
-        {
-            Dimensions = 10,
-            IndexKind = "hnsw",
-        };
-
-        var recordDefinition = new VectorStoreRecordDefinition()
-        {
-            Properties = [
-                new VectorStoreRecordKeyProperty("id", typeof(long)),
-                new VectorStoreRecordDataProperty("name", typeof(string)),
-                new VectorStoreRecordDataProperty("code", typeof(int)),
-                new VectorStoreRecordDataProperty("rating", typeof(float?)),
-                new VectorStoreRecordDataProperty("description", typeof(string)),
-                new VectorStoreRecordDataProperty("parking_is_included", typeof(bool)),
-                new VectorStoreRecordDataProperty("tags", typeof(List<string>)),
-                vectorProperty,
-                new VectorStoreRecordVectorProperty("embedding2", typeof(ReadOnlyMemory<float>?))
-                {
-                    Dimensions = 10,
-                    IndexKind = "hnsw",
-                }
-            ]
-        };
-
-        var vector = new Vector(s_vector);
-
-        // Act
-        var cmdInfo = builder.BuildGetNearestMatchCommand("public", "testcollection",
-            properties: recordDefinition.Properties,
-            vectorProperty: vectorProperty,
-            vectorValue: vector,
-            filter: null,
-            skip: null,
-            includeVectors: true,
-            limit: 10);
-
-        // Assert
-        Assert.Contains("SELECT", cmdInfo.CommandText);
-        Assert.Contains("FROM public.\"testcollection\"", cmdInfo.CommandText);
-        Assert.Contains("ORDER BY", cmdInfo.CommandText);
-        Assert.Contains("LIMIT 10", cmdInfo.CommandText);
 
         // Output
         this._output.WriteLine(cmdInfo.CommandText);

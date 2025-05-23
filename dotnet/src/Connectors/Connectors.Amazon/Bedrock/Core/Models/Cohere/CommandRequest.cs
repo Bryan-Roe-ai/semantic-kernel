@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -75,7 +75,7 @@ internal static class CommandRequest
         public int? NumGenerations { get; set; }
 
         /// <summary>
-        /// Prevents the model from generating unwanted tokens or incentivizes the model to include desired tokens. The format is {token_id: bias} where bias is a float between -10 and 10. Tokens can be obtained from text using any tokenization service, such as Cohere’s Tokenize endpoint.
+        /// Prevents the model from generating unwanted tokens or incentivizes the model to include desired tokens. The format is {token_id: bias} where bias is a float between -10 and 10. Tokens can be obtained from text using any tokenization service, such as Cohere�s Tokenize endpoint.
         /// </summary>
         [JsonPropertyName("logit_bias")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.Memory;
@@ -19,6 +19,7 @@ namespace Memory;
 /// <see cref="VectorStore_ConsumeFromMemoryStore_Qdrant"/>
 /// <see cref="VectorStore_ConsumeFromMemoryStore_Redis"/>
 /// </remarks>
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public static class VectorStore_ConsumeFromMemoryStore_Common
 {
     public static async Task CreateCollectionAndAddSampleDataAsync(IMemoryStore memoryStore, string collectionName, ITextEmbeddingGenerationService textEmbeddingService)

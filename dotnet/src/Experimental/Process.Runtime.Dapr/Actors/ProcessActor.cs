@@ -371,6 +371,14 @@ internal sealed class ProcessActor : StepActor, IProcess, IDisposable
                 await mapActor.InitializeMapAsync(mapStep, this.Id.GetId()).ConfigureAwait(false);
                 stepActor = this.ProxyFactory.CreateActorProxy<IStep>(scopedMapId, nameof(MapActor));
             }
+            else if (step is DaprProxyInfo proxyStep)
+            {
+                // Initialize the step as a proxy
+                ActorId scopedProxyId = this.ScopedActorId(new ActorId(proxyStep.State.Id!));
+                IProxy proxyActor = this.ProxyFactory.CreateActorProxy<IProxy>(scopedProxyId, nameof(ProxyActor));
+                await proxyActor.InitializeProxyAsync(proxyStep, this.Id.GetId()).ConfigureAwait(false);
+                stepActor = this.ProxyFactory.CreateActorProxy<IStep>(scopedProxyId, nameof(ProxyActor));
+            }
             else
             {
                 // The current step should already have an Id.
@@ -468,12 +476,22 @@ internal sealed class ProcessActor : StepActor, IProcess, IDisposable
                 foreach (KernelProcessEdge edge in edges)
                 {
 <<<<<<< HEAD
+<<<<<<< HEAD
                     DaprMessage message = DaprMessageFactory.CreateFromEdge(edge, externalEvent.Data);
                     var messageQueue = this.ProxyFactory.CreateActorProxy<IMessageBuffer>(new ActorId(edge.OutputTarget.StepId), nameof(MessageBufferActor));
                     await messageQueue.EnqueueAsync(message).ConfigureAwait(false);
 =======
                     ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, externalEvent.Data);
                     var scopedMessageBufferId = this.ScopedActorId(new ActorId(edge.OutputTarget.StepId));
+=======
+                    if (edge.OutputTarget is not KernelProcessFunctionTarget functionTarget)
+                    {
+                        throw new KernelException("The target for the edge is not a function target.").Log(this._logger);
+                    }
+
+                    ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, externalEvent.Id, externalEvent.Data);
+                    var scopedMessageBufferId = this.ScopedActorId(new ActorId(functionTarget.StepId));
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     var messageQueue = this.ProxyFactory.CreateActorProxy<IMessageBuffer>(scopedMessageBufferId, nameof(MessageBufferActor));
                     await messageQueue.EnqueueAsync(message.ToJson()).ConfigureAwait(false);
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
@@ -509,8 +527,12 @@ internal sealed class ProcessActor : StepActor, IProcess, IDisposable
         {
             foreach (ProcessEvent errorEvent in processErrorEvents)
             {
-                var errorMessage = ProcessMessageFactory.CreateFromEdge(errorEdge, errorEvent.Data);
-                var scopedErrorMessageBufferId = this.ScopedActorId(new ActorId(errorEdge.OutputTarget.StepId));
+                if (errorEdge.OutputTarget is not KernelProcessFunctionTarget functionTarget)
+                {
+                    throw new KernelException("The target for the edge is not a function target.").Log(this._logger);
+                }
+                var errorMessage = ProcessMessageFactory.CreateFromEdge(errorEdge, errorEvent.SourceId, errorEvent.Data);
+                var scopedErrorMessageBufferId = this.ScopedActorId(new ActorId(functionTarget.StepId));
                 var errorStepQueue = this.ProxyFactory.CreateActorProxy<IMessageBuffer>(scopedErrorMessageBufferId, nameof(MessageBufferActor));
                 await errorStepQueue.EnqueueAsync(errorMessage.ToJson()).ConfigureAwait(false);
             }
@@ -538,8 +560,13 @@ internal sealed class ProcessActor : StepActor, IProcess, IDisposable
                 {
                     foreach (var edge in edges)
                     {
-                        ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, scopedEvent.Data);
-                        var scopedMessageBufferId = this.ScopedActorId(new ActorId(edge.OutputTarget.StepId), scopeToParent: true);
+                        if (edge.OutputTarget is not KernelProcessFunctionTarget functionTarget)
+                        {
+                            throw new KernelException("The target for the edge is not a function target.").Log(this._logger);
+                        }
+
+                        ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, scopedEvent.SourceId, scopedEvent.Data);
+                        var scopedMessageBufferId = this.ScopedActorId(new ActorId(functionTarget.StepId), scopeToParent: true);
                         var messageQueue = this.ProxyFactory.CreateActorProxy<IMessageBuffer>(scopedMessageBufferId, nameof(MessageBufferActor));
                         await messageQueue.EnqueueAsync(message.ToJson()).ConfigureAwait(false);
                     }

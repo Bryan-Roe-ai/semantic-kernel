@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Process.Models;
@@ -252,7 +252,7 @@ public class Step03a_FoodPreparation(ITestOutputHelper output) : BaseTest(output
 
         // Assert
         Console.WriteLine($"=== Start SK Process '{processBuilder.Name}' ===");
-        using var runningProcess = await kernelProcess.StartAsync(kernel, new KernelProcessEvent()
+        await using var runningProcess = await kernelProcess.StartAsync(kernel, new KernelProcessEvent()
         {
             Id = externalTriggerEvent, Data = new List<string>()
         });

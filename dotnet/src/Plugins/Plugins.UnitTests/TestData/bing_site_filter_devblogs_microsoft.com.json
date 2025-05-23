@@ -1,4 +1,4 @@
-Ôªø{
+{
   "_type": "SearchResponse",
   "queryContext": {
     "originalQuery": "What is the Semantic Kernel? site:devblogs.microsoft.com"
@@ -16,7 +16,7 @@
         "datePublishedDisplayText": "Mar 17, 2023",
         "isFamilyFriendly": true,
         "displayUrl": "https://devblogs.microsoft.com/semantic-kernel/hello-world",
-        "snippet": "Semantic Kernel (SK) is a lightweight SDK that lets you mix conventional programming languages, like C# and Python, with the latest in Large Language Model (LLM) AI ‚Äúprompts‚Äù with prompt templating, chaining, and planning capabilities.",
+        "snippet": "Semantic Kernel (SK) is a lightweight SDK that lets you mix conventional programming languages, like C# and Python, with the latest in Large Language Model (LLM) AI ìpromptsî with prompt templating, chaining, and planning capabilities.",
         "dateLastCrawled": "2024-08-21T20:02:00.0000000Z",
         "primaryImageOfPage": {
           "thumbnailUrl": "https://www.bing.com/th?id=OIP.4Dwh1vVBFk1G8b1OVf3EpAHaEK&w=80&h=80&c=1&pid=5.1",
@@ -44,7 +44,7 @@
         "datePublishedDisplayText": "Mar 6, 2024",
         "isFamilyFriendly": true,
         "displayUrl": "https://devblogs.microsoft.com/semantic-kernel/architecting-ai-apps-with-semantic-kernel",
-        "snippet": "With Semantic Kernel, you can easily build agents that can call your existing code. This power lets you automate your business processes with models from OpenAI, Azure OpenAI, Hugging Face, and more! We often get asked though, ‚ÄúHow do I architect my solution?‚Äù and ‚ÄúHow does it actually work?‚Äù",
+        "snippet": "With Semantic Kernel, you can easily build agents that can call your existing code. This power lets you automate your business processes with models from OpenAI, Azure OpenAI, Hugging Face, and more! We often get asked though, ìHow do I architect my solution?î and ìHow does it actually work?î",
         "dateLastCrawled": "2024-08-20T17:04:00.0000000Z",
         "cachedPageUrl": "http://cc.bingj.com/cache.aspx?q=What+is+the+Semantic+Kernel%3f+site%3adevblogs.microsoft.com&d=5018850118025290&mkt=en-IE&setlang=en-US&w=3y8E3u-wEwTqT2CGXMi8SRmSm7P3b2ph",
         "language": "en",
@@ -140,7 +140,7 @@
       {
         "webSearchUrl": "https://www.bing.com/videos/search?q=What%20is%20the%20Semantic%20Kernel?%20site:devblogs.microsoft.com&view=detail&mid=6328301320A0A7BE84176328301320A0A7BE8417",
         "name": "Spring 2024 roadmap for Semantic Kernel",
-        "description": "Now that it‚Äôs February, we wanted to share what we had planned for Semantic Kernel from now until Microsoft Build. Most of our next immediate investments fall into one of three buckets: V1.0 parity across all our languages, additional connectors, and last but not least,",
+        "description": "Now that itís February, we wanted to share what we had planned for Semantic Kernel from now until Microsoft Build. Most of our next immediate investments fall into one of three buckets: V1.0 parity across all our languages, additional connectors, and last but not least,",
         "thumbnailUrl": "https://tse4.mm.bing.net/th?id=OVP.8UWiuXMNdFVQpD8h7lOBTwHgEO&pid=Api",
         "datePublished": "2024-02-12T16:00:21.0000000",
         "publisher": [
@@ -168,8 +168,8 @@
       },
       {
         "webSearchUrl": "https://www.bing.com/videos/search?q=What%20is%20the%20Semantic%20Kernel?%20site:devblogs.microsoft.com&view=detail&mid=D1CE54DA55D4D3749A30D1CE54DA55D4D3749A30",
-        "name": "What‚Äôs coming next? Summer / Fall roadmap for Semantic Kernel",
-        "description": "It feels like yesterday when we went live with v1.0+ of all our SDKs (Python, Java, and C#) at Microsoft Build. Since then, the Semantic Kernel team has been hard at work making Semantic Kernel even better. Now that we‚Äôve made some progress,",
+        "name": "Whatís coming next? Summer / Fall roadmap for Semantic Kernel",
+        "description": "It feels like yesterday when we went live with v1.0+ of all our SDKs (Python, Java, and C#) at Microsoft Build. Since then, the Semantic Kernel team has been hard at work making Semantic Kernel even better. Now that weíve made some progress,",
         "thumbnailUrl": "https://tse3.mm.bing.net/th?id=OVP.lRb_0KhOLK_vTr4TmQloPAHgEO&pid=Api",
         "datePublished": "2024-07-30T19:31:08.0000000",
         "publisher": [
@@ -225,8 +225,8 @@
       },
       {
         "webSearchUrl": "https://www.bing.com/videos/search?q=What%20is%20the%20Semantic%20Kernel?%20site:devblogs.microsoft.com&view=detail&mid=B896DED8BF4B0BA1CB50B896DED8BF4B0BA1CB50",
-        "name": "Customer Case Study: preezie‚Äôs AI Journey with Microsoft Semantic Kernel",
-        "description": "Today we‚Äôre thrilled to feature the Prezzie team on the Semantic Kernel blog. The Prezzie team will discuss their AI journey, how they‚Äôve integrated the Semantic Kernel SDK to build out their AI solutions and advice they‚Äôd give to other customers getting started on their AI journeys.",
+        "name": "Customer Case Study: preezieís AI Journey with Microsoft Semantic Kernel",
+        "description": "Today weíre thrilled to feature the Prezzie team on the Semantic Kernel blog. The Prezzie team will discuss their AI journey, how theyíve integrated the Semantic Kernel SDK to build out their AI solutions and advice theyíd give to other customers getting started on their AI journeys.",
         "thumbnailUrl": "https://tse4.mm.bing.net/th?id=OVP.UO5gfmc6NKq98Z7doqAfCwFHC1&pid=Api",
         "datePublished": "2024-07-04T00:00:58.0000000",
         "publisher": [
@@ -279,8 +279,8 @@
       },
       {
         "webSearchUrl": "https://www.bing.com/videos/search?q=What%20is%20the%20Semantic%20Kernel?%20site:devblogs.microsoft.com&view=detail&mid=53B095170D82FF0DC86353B095170D82FF0DC863",
-        "name": "Build your own app‚Äôs copilot on Microsoft Teams with the new Teams AI Library",
-        "description": "Beyond plugins, you can build conversational app experiences for your Teams users‚Äîyour very own copilots.- with Teams AI library.",
+        "name": "Build your own appís copilot on Microsoft Teams with the new Teams AI Library",
+        "description": "Beyond plugins, you can build conversational app experiences for your Teams usersóyour very own copilots.- with Teams AI library.",
         "thumbnailUrl": "https://tse2.mm.bing.net/th?id=OVP.ipSCJjdfFRX_UyZs0wVTqwEsCo&pid=Api",
         "datePublished": "2023-06-01T15:00:44.0000000",
         "publisher": [
@@ -366,7 +366,7 @@
       },
       {
         "webSearchUrl": "https://www.bing.com/videos/search?q=What%20is%20the%20Semantic%20Kernel?%20site:devblogs.microsoft.com&view=detail&mid=6B15EFB42CBC610559036B15EFB42CBC61055903",
-        "name": "Announcing NuGet 6.4 ‚Äì Signed, Central, Delivered",
+        "name": "Announcing NuGet 6.4 ñ Signed, Central, Delivered",
         "description": "NuGet 6.4 is included in Visual Studio 2022 and .NET 7.0 out of the box. You can also download NuGet 6.4 for Windows, macOS, and Linux as a standalone executable. NuGet 6.4 is one of many releases in our .NET unification journey.",
         "thumbnailUrl": "https://tse2.mm.bing.net/th?id=OVP.se1BiCMOIUJxlBXtNx6yNgEsDg&pid=Api",
         "datePublished": "2022-11-08T20:59:34.0000000",

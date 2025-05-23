@@ -1,9 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 namespace Microsoft.Extensions.VectorData;
 
 /// <summary>
-/// Base class for filter clauses.
+/// Defines a base class for filter clauses.
 /// </summary>
 /// <remarks>
 /// A <see cref="FilterClause"/> is used to request that the underlying search service should

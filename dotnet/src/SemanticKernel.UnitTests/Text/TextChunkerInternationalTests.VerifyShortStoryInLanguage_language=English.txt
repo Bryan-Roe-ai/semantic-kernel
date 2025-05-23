@@ -1,4 +1,4 @@
-ï»¿[
+[
   "The little mouse lived in a peaceful small village.",
   "He always saw the same scenery and interacted with the same friends.",
   "One day, he decided to venture to the big city.",
@@ -8,9 +8,9 @@
   "His eyes sparkled as he wandered around.",
   "However, he needed some time to get used to this big world.",
   "One day, the mouse met a big rat in the park.",
-  "The big rat said to him, â€œDid you come from a small village?",
+  "The big rat said to him, “Did you come from a small village?",
   "The city can be tough at times, but there are new friends and exciting adventures waiting for you.",
-  "â€",
+  "”",
   "The mouse nodded with a smile.",
   "He decided to find new friends in the city and expand his little world."
 ]

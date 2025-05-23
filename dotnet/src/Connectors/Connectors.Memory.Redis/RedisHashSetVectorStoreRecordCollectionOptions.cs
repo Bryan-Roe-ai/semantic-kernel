@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -64,7 +65,12 @@
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
+using System;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using StackExchange.Redis;
 
@@ -206,6 +212,7 @@ public sealed class RedisHashSetVectorStoreRecordCollectionOptions<TRecord>
     /// <summary>
     /// Gets or sets an optional custom mapper to use when converting between the data model and the Redis record.
     /// </summary>
+    [Obsolete("Custom mappers are no longer supported.", error: true)]
     public IVectorStoreRecordMapper<TRecord, (string Key, HashEntry[] HashEntries)>? HashEntriesCustomMapper { get; init; } = null;
 
     /// <summary>
@@ -217,4 +224,9 @@ public sealed class RedisHashSetVectorStoreRecordCollectionOptions<TRecord>
     /// See <see cref="VectorStoreRecordKeyAttribute"/>, <see cref="VectorStoreRecordDataAttribute"/> and <see cref="VectorStoreRecordVectorAttribute"/>.
     /// </remarks>
     public VectorStoreRecordDefinition? VectorStoreRecordDefinition { get; init; } = null;
+
+    /// <summary>
+    /// Gets or sets the default embedding generator to use when generating vectors embeddings with this vector store.
+    /// </summary>
+    public IEmbeddingGenerator? EmbeddingGenerator { get; init; }
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using Pgvector;
@@ -8,6 +8,7 @@ namespace Microsoft.SemanticKernel.Connectors.Postgres;
 /// <summary>
 /// A postgres memory entry.
 /// </summary>
+[Obsolete("The IMemoryStore abstraction is being obsoleted, use Microsoft.Extensions.VectorData and PostgresVectorStore")]
 public record struct PostgresMemoryEntry
 {
     /// <summary>

@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 from semantic_kernel.data.const import DistanceFunction, IndexKind
 <<<<<<< HEAD
 <<<<<<< div
@@ -82,31 +83,34 @@ from semantic_kernel.data.vector_store_record_collection import (
 )
 from semantic_kernel.data.vector_store_record_fields import (
 =======
+=======
+
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.data.const import (
     DEFAULT_DESCRIPTION,
     DEFAULT_FUNCTION_NAME,
+    DISTANCE_FUNCTION_DIRECTION_HELPER,
     DistanceFunction,
     IndexKind,
 )
-from semantic_kernel.data.filter_clauses import AnyTagsEqualTo, EqualTo
-from semantic_kernel.data.kernel_search_results import KernelSearchResults
 from semantic_kernel.data.record_definition import (
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     VectorStoreRecordDataField,
     VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
-    VectorStoreRecordUtils,
     VectorStoreRecordVectorField,
     vectorstoremodel,
 )
-from semantic_kernel.data.search_options import SearchOptions
 from semantic_kernel.data.text_search import (
+    AnyTagsEqualTo,
+    EqualTo,
+    KernelSearchResults,
     OptionsUpdateFunctionType,
+    SearchFilter,
+    SearchOptions,
     TextSearch,
-    TextSearchFilter,
     TextSearchOptions,
     TextSearchResult,
-    VectorStoreTextSearch,
     create_options,
     default_options_update_function,
 )
@@ -118,12 +122,15 @@ from semantic_kernel.data.vector_search import (
     VectorSearchOptions,
     VectorSearchResult,
     VectorTextSearchMixin,
+    add_vector_to_records,
 )
 from semantic_kernel.data.vector_storage import VectorStore, VectorStoreRecordCollection
+from semantic_kernel.data.vector_store_text_search import VectorStoreTextSearch
 
 __all__ = [
     "DEFAULT_DESCRIPTION",
     "DEFAULT_FUNCTION_NAME",
+    "DISTANCE_FUNCTION_DIRECTION_HELPER",
     "AnyTagsEqualTo",
     "DistanceFunction",
     "EqualTo",
@@ -202,20 +209,14 @@ __all__ = [
 =======
     "KernelSearchResults",
     "OptionsUpdateFunctionType",
+    "SearchFilter",
     "SearchOptions",
     "TextSearch",
-    "TextSearchFilter",
-    "TextSearchFilter",
     "TextSearchOptions",
-    "TextSearchOptions",
-    "TextSearchResult",
     "TextSearchResult",
     "VectorSearchBase",
     "VectorSearchFilter",
-    "VectorSearchFilter",
     "VectorSearchOptions",
-    "VectorSearchOptions",
-    "VectorSearchResult",
     "VectorSearchResult",
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     "VectorStore",
@@ -223,12 +224,12 @@ __all__ = [
     "VectorStoreRecordDataField",
     "VectorStoreRecordDefinition",
     "VectorStoreRecordKeyField",
-    "VectorStoreRecordUtils",
     "VectorStoreRecordVectorField",
     "VectorStoreTextSearch",
     "VectorTextSearchMixin",
     "VectorizableTextSearchMixin",
     "VectorizedSearchMixin",
+    "add_vector_to_records",
     "create_options",
     "default_options_update_function",
     "vectorstoremodel",

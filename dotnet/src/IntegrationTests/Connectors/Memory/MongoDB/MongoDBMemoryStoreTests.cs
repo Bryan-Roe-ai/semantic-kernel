@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Linq;
@@ -13,6 +13,7 @@ namespace SemanticKernel.IntegrationTests.Connectors.MongoDB;
 /// <summary>
 /// Integration tests of <see cref="MongoDBMemoryStore"/>.
 /// </summary>
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class MongoDBMemoryStoreTests(MongoDBMemoryStoreTestsFixture fixture) : IClassFixture<MongoDBMemoryStoreTestsFixture>
 {
     // If null, all tests will be enabled

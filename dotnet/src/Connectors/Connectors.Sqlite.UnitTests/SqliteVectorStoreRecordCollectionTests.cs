@@ -1,4 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
+
+// TODO: Reimplement these as integration tests, #10464
+
+#if DISABLED
 
 using System;
 using System.Collections.Generic;
@@ -116,8 +120,7 @@ public sealed class SqliteVectorStoreRecordCollectionTests
         var sut = new SqliteVectorStoreRecordCollection<TestRecord<ulong>>(fakeConnection, "VectorizedSearch");
 
         // Act
-        var results = await sut.VectorizedSearchAsync(expectedRecord.Vector, new() { IncludeVectors = includeVectors });
-        var result = await results.Results.FirstOrDefaultAsync();
+        var result = await sut.VectorizedSearchAsync(expectedRecord.Vector, new() { IncludeVectors = includeVectors }).FirstOrDefaultAsync();
 
         // Assert
         Assert.NotNull(result);
@@ -400,3 +403,5 @@ public sealed class SqliteVectorStoreRecordCollectionTests
 
     #endregion
 }
+
+#endif

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -32,6 +32,7 @@ public class AzureAISearchVectorStoreTests
         this._searchClientMock = new Mock<SearchClient>(MockBehavior.Strict);
         this._searchIndexClientMock = new Mock<SearchIndexClient>(MockBehavior.Strict);
         this._searchIndexClientMock.Setup(x => x.GetSearchClient(TestCollectionName)).Returns(this._searchClientMock.Object);
+        this._searchIndexClientMock.Setup(x => x.ServiceName).Returns("TestService");
     }
 
     [Fact]
@@ -45,9 +46,10 @@ public class AzureAISearchVectorStoreTests
 
         // Assert.
         Assert.NotNull(actual);
-        Assert.IsType<AzureAISearchVectorStoreRecordCollection<SinglePropsModel>>(actual);
+        Assert.IsType<AzureAISearchVectorStoreRecordCollection<string, SinglePropsModel>>(actual);
     }
 
+#pragma warning disable CS0618 // IAzureAISearchVectorStoreRecordCollectionFactory is obsolete
     [Fact]
     public void GetCollectionCallsFactoryIfProvided()
     {
@@ -65,6 +67,7 @@ public class AzureAISearchVectorStoreTests
         // Assert.
         Assert.Equal(collectionMock.Object, actual);
     }
+#pragma warning restore CS0618 // Type or member is obsolete
 
     [Fact]
     public void GetCollectionThrowsForInvalidKeyType()

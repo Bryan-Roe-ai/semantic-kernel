@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 namespace Microsoft.SemanticKernel.Connectors.Google;
 
@@ -12,5 +12,10 @@ public enum VertexAIVersion
     /// <summary>
     /// Represents the V1 version of the Vertex AI API.
     /// </summary>
-    V1
+    V1,
+
+    /// <summary>
+    /// Represents the V1-beta version of the Vertex AI API.
+    /// </summary>
+    V1_Beta
 }

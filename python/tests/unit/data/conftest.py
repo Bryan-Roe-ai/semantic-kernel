@@ -21,28 +21,35 @@ from semantic_kernel.data.vector_store_record_collection import (
 from semantic_kernel.data.vector_store_record_fields import (
 =======
 from semantic_kernel.data import (
-    KernelSearchResults,
-    VectorizableTextSearchMixin,
-    VectorizedSearchMixin,
     VectorSearchBase,
+<<<<<<< HEAD
     VectorSearchResult,
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     VectorStoreRecordDataField,
     VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
     VectorStoreRecordVectorField,
-    VectorTextSearchMixin,
-    vectorstoremodel,
 )
+from semantic_kernel.data.record_definition import vectorstoremodel
+from semantic_kernel.data.text_search import KernelSearchResults
+from semantic_kernel.data.vector_search import (
+    VectorizableTextSearchMixin,
+    VectorizedSearchMixin,
+    VectorSearchResult,
+    VectorTextSearchMixin,
+)
+from semantic_kernel.data.vector_storage import VectorStoreRecordCollection
 
 
 @fixture
 def DictVectorStoreRecordCollection() -> type[VectorSearchBase]:
     class DictVectorStoreRecordCollection(
-        VectorSearchBase[str, Any],
-        VectorizedSearchMixin[Any],
-        VectorizableTextSearchMixin[Any],
-        VectorTextSearchMixin[Any],
+        VectorStoreRecordCollection[str, Any],
+        VectorizedSearchMixin[str, Any],
+        VectorizableTextSearchMixin[str, Any],
+        VectorTextSearchMixin[str, Any],
     ):
         inner_storage: dict[str, Any] = Field(default_factory=dict)
 

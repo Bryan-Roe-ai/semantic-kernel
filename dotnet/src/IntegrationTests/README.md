@@ -303,7 +303,7 @@
 1. **Postgres**: start a postgres with the [pgvector](https://github.com/pgvector/pgvector) extension installed. You can easily do it using the docker image [ankane/pgvector](https://hub.docker.com/r/ankane/pgvector).
 1. **Weaviate**: go to `IntegrationTests/Connectors/Weaviate` where `docker-compose.yml` is located and run `docker-compose up --build`. 
     1. Deploy the following models:
-        1. `dall-e-3` DALL-E 3 generates images  and is used in Text to Image tests.
+        1. `dall-e-3` DALL-E 3 generates images and is used in Text to Image tests.
         1. `tts` TTS is a model that converts text to natural sounding speech and is used in Text to Audio tests.
         1. `whisper` The Whisper models are trained for speech recognition and translation tasks and is used in Audio to Text tests.
         1. `text-embedding-ada-002` Text Embedding Ada 002 is used in Text Embedding tests.

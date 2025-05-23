@@ -62,5 +62,9 @@ Cons:
 - Prompts can be run by Kernel.RunAsync method only.
 
 ## Decision Outcome
+<<<<<<< HEAD
 
 It was agreed to go with the option 1 - `1. Completion connector classes` since it a more flexible solution and allows adding new connectors without modifying the `SemanticFunction` class.
+=======
+It was agreed to go with the option 1 - `1. Completion connector classes` since it a more flexible solution and allows adding new connectors without modifying the `SemanticFunction` class.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

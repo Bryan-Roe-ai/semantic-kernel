@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 <<<<<<< HEAD
 <<<<<<< div
@@ -67,7 +67,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 namespace ChatCompletion;
 
 /// <summary>
-/// These examples demonstrate the ways different content types are streamed by OpenAI LLM via the chat completion service.
+/// These examples demonstrate different ways of using streaming chat completion with OpenAI API.
 /// </summary>
 public class OpenAI_ChatCompletionStreaming(ITestOutputHelper output) : BaseTest(output)
 {
@@ -721,6 +721,7 @@ public class OpenAI_ChatCompletionStreaming(ITestOutputHelper output) : BaseTest
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -976,6 +977,8 @@ public class OpenAI_ChatCompletionStreaming(ITestOutputHelper output) : BaseTest
 >>>>>>> Stashed changes
 >>>>>>> head
 
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     private async Task<string> StreamMessageOutputFromKernelAsync(Kernel kernel, string prompt)
     {
         bool roleWritten = false;

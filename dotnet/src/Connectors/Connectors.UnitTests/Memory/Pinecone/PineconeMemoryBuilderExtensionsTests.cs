@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Linq;
@@ -14,6 +14,7 @@ using Xunit;
 
 namespace SemanticKernel.Connectors.UnitTests.Pinecone;
 
+[Obsolete("Temporary test for obsolete ITextEmbeddingGenerationService MemoryBuilder extensions.")]
 public sealed class PineconeMemoryBuilderExtensionsTests : IDisposable
 {
     private readonly HttpMessageHandlerStub _messageHandlerStub;

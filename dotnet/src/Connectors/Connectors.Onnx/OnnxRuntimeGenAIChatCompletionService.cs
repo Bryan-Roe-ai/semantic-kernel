@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -89,13 +89,13 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
         OnnxRuntimeGenAIPromptExecutionSettings onnxPromptExecutionSettings = this.GetOnnxPromptExecutionSettingsSettings(executionSettings);
 
         var prompt = this.GetPrompt(chatHistory, onnxPromptExecutionSettings);
-        var tokens = this.GetTokenizer().Encode(prompt);
+        using var tokens = this.GetTokenizer().Encode(prompt);
 
         using var generatorParams = new GeneratorParams(this.GetModel());
         this.UpdateGeneratorParamsFromPromptExecutionSettings(generatorParams, onnxPromptExecutionSettings);
-        generatorParams.SetInputSequences(tokens);
 
         using var generator = new Generator(this.GetModel(), generatorParams);
+        generator.AppendTokenSequences(tokens);
 
 <<<<<<< HEAD
 <<<<<<< div
@@ -162,10 +162,10 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
 
             yield return await Task.Run(() =>
             {
-                generator.ComputeLogits();
                 generator.GenerateNextToken();
 
                 var outputTokens = generator.GetSequence(0);
+<<<<<<< HEAD
                 var newToken = outputTokens.Slice(outputTokens.Length - 1, 1);
 <<<<<<< HEAD
 <<<<<<< div
@@ -208,6 +208,12 @@ public sealed class OnnxRuntimeGenAIChatCompletionService : IChatCompletionServi
 >>>>>>> Stashed changes
 >>>>>>> head
                 string output = this.GetTokenizer().Decode(newToken);
+=======
+                var newToken = outputTokens[outputTokens.Length - 1];
+
+                using var tokenizerStream = this.GetTokenizer().CreateStream();
+                string output = tokenizerStream.Decode(newToken);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
                 if (removeNextTokenStartingWithSpace && output[0] == ' ')
                 {

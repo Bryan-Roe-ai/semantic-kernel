@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.IO;
@@ -35,7 +35,7 @@ public static class DeclarativeAgentExtensions
         CopilotAgentPluginParameters? pluginParameters = null,
         PromptExecutionSettings? promptExecutionSettings = default,
         CancellationToken cancellationToken = default)
-        where T : KernelAgent, new()
+        where T : Agent, new()
     {
         Verify.NotNull(kernel);
         Verify.NotNullOrWhiteSpace(filePath);

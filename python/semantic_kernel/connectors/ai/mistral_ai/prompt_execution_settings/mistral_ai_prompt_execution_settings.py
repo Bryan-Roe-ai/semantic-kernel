@@ -1,6 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import logging
+<<<<<<< HEAD
 import sys
 <<<<<<< Updated upstream
 from typing import Annotated, Any, Literal
@@ -20,6 +21,12 @@ from pydantic import Field, field_validator
 =======
 from pydantic import Field
 >>>>>>> Stashed changes
+=======
+from typing import Annotated, Any, Literal
+
+from mistralai import utils
+from pydantic import Field
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
@@ -43,8 +50,19 @@ class MistralAIChatPromptExecutionSettings(MistralAIPromptExecutionSettings):
 
     response_format: dict[Literal["type"], Literal["text", "json_object"]] | None = None
     messages: list[dict[str, Any]] | None = None
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     safe_mode: Annotated[bool, Field(exclude=True)] = False
+=======
+    safe_mode: Annotated[
+        bool,
+        Field(
+            exclude=True,
+            deprecated="The 'safe_mode' setting is no longer supported and is being ignored, "
+            "it will be removed in the Future.",
+        ),
+    ] = False
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     safe_prompt: bool = False
     max_tokens: Annotated[int | None, Field(gt=0)] = None
     seed: int | None = None
@@ -124,6 +142,7 @@ class MistralAIChatPromptExecutionSettings(MistralAIPromptExecutionSettings):
             "on the function choice configuration.",
         ),
     ] = None
+<<<<<<< HEAD
 
     @field_validator("safe_mode")
     @classmethod
@@ -141,3 +160,5 @@ class MistralAIChatPromptExecutionSettings(MistralAIPromptExecutionSettings):
 =======
 >>>>>>> microsoft/main
 >>>>>>> Stashed changes
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

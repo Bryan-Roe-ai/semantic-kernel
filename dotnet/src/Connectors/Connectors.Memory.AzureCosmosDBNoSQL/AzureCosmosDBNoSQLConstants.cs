@@ -1,9 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBNoSQL;
 
 internal static class AzureCosmosDBNoSQLConstants
 {
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
@@ -50,6 +51,10 @@ internal static class AzureCosmosDBNoSQLConstants
 >>>>>>> Stashed changes
 >>>>>>> head
 <<<<<<< HEAD
+=======
+    internal const string VectorStoreSystemName = "azure.cosmosdbnosql";
+
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <summary>
     /// Reserved key property name in Azure CosmosDB NoSQL.
     /// </summary>
@@ -65,6 +70,7 @@ internal static class AzureCosmosDBNoSQLConstants
     /// Variable name for table in Azure CosmosDB NoSQL queries.
     /// Can be any string. Example: "SELECT x.Name FROM x".
     /// </summary>
+<<<<<<< HEAD
     internal const string TableQueryVariableName = "x";
 <<<<<<< main
 =======
@@ -110,4 +116,7 @@ internal static class AzureCosmosDBNoSQLConstants
 =======
 >>>>>>> head
 >>>>>>> div
+=======
+    internal const char ContainerAlias = 'x';
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 }

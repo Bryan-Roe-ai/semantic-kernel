@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
 using System.Text.Json.Serialization;
@@ -17,7 +17,7 @@ public sealed class Step2_Add_Plugins(ITestOutputHelper output) : BaseTest(outpu
     /// Shows different ways to load a <see cref="KernelPlugin"/> instances.
     /// </summary>
     [Fact]
-    public async Task AddPluginsAsync()
+    public async Task AddPlugins()
     {
         // Create a kernel with OpenAI chat completion
         IKernelBuilder kernelBuilder = Kernel.CreateBuilder();

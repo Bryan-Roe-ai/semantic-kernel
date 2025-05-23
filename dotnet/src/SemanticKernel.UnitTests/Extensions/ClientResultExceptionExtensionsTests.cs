@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -64,7 +64,7 @@ public class ClientResultExceptionExtensionsTests
         // Assert
         Assert.NotNull(httpOperationException);
         Assert.NotNull(httpOperationException.StatusCode);
-        Assert.Empty(httpOperationException.ResponseContent!);
+        Assert.Null(httpOperationException.ResponseContent);
         Assert.Equal(exception, httpOperationException.InnerException);
         Assert.Equal(exception.Message, httpOperationException.Message);
         Assert.Equal(pipelineResponse.Status, (int)httpOperationException.StatusCode!);

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 #pragma warning disable IDE0005 // Using directive is unnecessary.
 using Xunit;
@@ -10,6 +10,4 @@ namespace SemanticKernel.Process.IntegrationTests;
 /// A collection definition for shared process tests.
 /// </summary>
 [CollectionDefinition(nameof(ProcessTestGroup))]
-public class ProcessTestGroup : ICollectionFixture<ProcessTestFixture>
-{
-}
+public class ProcessTestGroup : ICollectionFixture<ProcessTestFixture>;

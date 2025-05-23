@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,7 @@ namespace SemanticKernel.Connectors.Qdrant.UnitTests;
 /// <summary>
 /// Tests for <see cref="QdrantMemoryStore"/> collection and upsert operations.
 /// </summary>
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class QdrantMemoryStoreTests
 {
     private readonly string _id = "Id";

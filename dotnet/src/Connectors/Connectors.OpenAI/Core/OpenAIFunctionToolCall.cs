@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -170,6 +170,7 @@ public sealed class OpenAIFunctionToolCall
             // If we have an ID, ensure the index is being tracked. Even if it's not a function update,
             // we want to keep track of it so we can send back an error.
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -233,14 +234,17 @@ public sealed class OpenAIFunctionToolCall
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+            if (!string.IsNullOrWhiteSpace(update.ToolCallId))
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             {
-                (toolCallIdsByIndex ??= [])[update.Index] = id;
+                (toolCallIdsByIndex ??= [])[update.Index] = update.ToolCallId;
             }
 
             // Ensure we're tracking the function's name.
-            if (update.FunctionName is string name)
+            if (!string.IsNullOrWhiteSpace(update.FunctionName))
             {
-                (functionNamesByIndex ??= [])[update.Index] = name;
+                (functionNamesByIndex ??= [])[update.Index] = update.FunctionName;
             }
 
             // Ensure we're tracking the function's arguments.

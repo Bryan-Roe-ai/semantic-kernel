@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -44,11 +45,13 @@
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -130,7 +133,7 @@ namespace Microsoft.SemanticKernel.Connectors.Pinecone;
 /// <summary>
 /// A client for the Pinecone API
 /// </summary>
-[Experimental("SKEXP0020")]
+[Obsolete("The IMemoryStore abstraction is being obsoleted, use Microsoft.Extensions.VectorData and PineconeVectorStore")]
 public sealed class PineconeClient : IPineconeClient
 {
     /// <summary>
@@ -142,6 +145,8 @@ public sealed class PineconeClient : IPineconeClient
     /// <param name="httpClient">An optional HttpClient instance for making HTTP requests.</param>
     public PineconeClient(string pineconeEnvironment, string apiKey, ILoggerFactory? loggerFactory = null, HttpClient? httpClient = null)
     {
+        Verify.NotNullOrWhiteSpace(pineconeEnvironment);
+        Verify.ValidHostnameSegment(pineconeEnvironment);
         this._pineconeEnvironment = pineconeEnvironment;
         this._authHeader = new KeyValuePair<string, string>("Api-Key", apiKey);
         this._jsonSerializerOptions = PineconeUtils.DefaultSerializerOptions;

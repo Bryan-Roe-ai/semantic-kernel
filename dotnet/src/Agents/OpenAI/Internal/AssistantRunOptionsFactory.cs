@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -64,8 +65,11 @@
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Collections.Generic;
-using Microsoft.SemanticKernel.ChatCompletion;
 using OpenAI.Assistants;
 
 namespace Microsoft.SemanticKernel.Agents.OpenAI.Internal;
@@ -73,11 +77,9 @@ namespace Microsoft.SemanticKernel.Agents.OpenAI.Internal;
 /// <summary>
 /// Factory for creating <see cref="RunCreationOptions"/> definition.
 /// </summary>
-/// <remarks>
-/// Improves testability.
-/// </remarks>
 internal static class AssistantRunOptionsFactory
 {
+<<<<<<< HEAD
     /// <summary>
     /// Produce <see cref="RunCreationOptions"/> by reconciling <see cref="OpenAIAssistantDefinition"/> and <see cref="OpenAIAssistantInvocationOptions"/>.
     /// </summary>
@@ -168,12 +170,14 @@ internal static class AssistantRunOptionsFactory
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+    public static RunCreationOptions GenerateOptions(RunCreationOptions? defaultOptions, string? agentInstructions, RunCreationOptions? invocationOptions)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
-        int? truncationMessageCount = ResolveExecutionSetting(invocationOptions?.TruncationMessageCount, definition.ExecutionOptions?.TruncationMessageCount);
-
-        RunCreationOptions options =
+        RunCreationOptions runOptions =
             new()
             {
+<<<<<<< HEAD
                 AdditionalInstructions = invocationOptions?.AdditionalInstructions ?? definition.ExecutionOptions?.AdditionalInstructions,
 <<<<<<< HEAD
 <<<<<<< div
@@ -293,34 +297,41 @@ internal static class AssistantRunOptionsFactory
                 ResponseFormat = ResolveExecutionSetting(invocationOptions?.EnableJsonResponse, definition.EnableJsonResponse) ?? false ? AssistantResponseFormat.JsonObject : null,
                 Temperature = ResolveExecutionSetting(invocationOptions?.Temperature, definition.Temperature),
                 TruncationStrategy = truncationMessageCount.HasValue ? RunTruncationStrategy.CreateLastMessagesStrategy(truncationMessageCount.Value) : null,
+=======
+                AdditionalInstructions = invocationOptions?.AdditionalInstructions ?? defaultOptions?.AdditionalInstructions,
+                InstructionsOverride = invocationOptions?.InstructionsOverride ?? agentInstructions,
+                MaxOutputTokenCount = invocationOptions?.MaxOutputTokenCount ?? defaultOptions?.MaxOutputTokenCount,
+                MaxInputTokenCount = invocationOptions?.MaxInputTokenCount ?? defaultOptions?.MaxInputTokenCount,
+                ModelOverride = invocationOptions?.ModelOverride ?? defaultOptions?.ModelOverride,
+                NucleusSamplingFactor = invocationOptions?.NucleusSamplingFactor ?? defaultOptions?.NucleusSamplingFactor,
+                AllowParallelToolCalls = invocationOptions?.AllowParallelToolCalls ?? defaultOptions?.AllowParallelToolCalls,
+                ResponseFormat = invocationOptions?.ResponseFormat ?? defaultOptions?.ResponseFormat,
+                Temperature = invocationOptions?.Temperature ?? defaultOptions?.Temperature,
+                ToolConstraint = invocationOptions?.ToolConstraint ?? defaultOptions?.ToolConstraint,
+                TruncationStrategy = invocationOptions?.TruncationStrategy ?? defaultOptions?.TruncationStrategy,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             };
 
-        if (invocationOptions?.Metadata != null)
+        IList<ThreadInitializationMessage>? additionalMessages = invocationOptions?.AdditionalMessages ?? defaultOptions?.AdditionalMessages;
+        if (additionalMessages != null)
         {
-            foreach (var metadata in invocationOptions.Metadata)
-            {
-                options.Metadata.Add(metadata.Key, metadata.Value ?? string.Empty);
-            }
+            runOptions.AdditionalMessages.AddRange(additionalMessages);
         }
 
-        if (invocationOptions?.AdditionalMessages != null)
-        {
-            foreach (ChatMessageContent message in invocationOptions.AdditionalMessages)
-            {
-                ThreadInitializationMessage threadMessage = new(
-                    role: message.Role == AuthorRole.User ? MessageRole.User : MessageRole.Assistant,
-                    content: AssistantMessageFactory.GetMessageContents(message));
+        PopulateMetadata(defaultOptions, runOptions);
+        PopulateMetadata(invocationOptions, runOptions);
 
-                options.AdditionalMessages.Add(threadMessage);
-            }
-        }
-
-        return options;
+        return runOptions;
     }
 
-    private static TValue? ResolveExecutionSetting<TValue>(TValue? setting, TValue? agentSetting) where TValue : struct
-        =>
-            setting.HasValue && (!agentSetting.HasValue || !EqualityComparer<TValue>.Default.Equals(setting.Value, agentSetting.Value)) ?
-                setting.Value :
-                agentSetting;
+    private static void PopulateMetadata(RunCreationOptions? sourceOptions, RunCreationOptions targetOptions)
+    {
+        if (sourceOptions?.Metadata != null)
+        {
+            foreach (KeyValuePair<string, string> item in sourceOptions.Metadata)
+            {
+                targetOptions.Metadata[item.Key] = item.Value ?? string.Empty;
+            }
+        }
+    }
 }

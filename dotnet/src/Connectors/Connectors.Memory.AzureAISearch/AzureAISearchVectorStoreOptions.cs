@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -76,9 +77,14 @@ using Azure.Search.Documents.Indexes;
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
+using System;
 using System.Text.Json;
 using Azure.Search.Documents.Indexes;
+using Microsoft.Extensions.AI;
 
 namespace Microsoft.SemanticKernel.Connectors.AzureAISearch;
 
@@ -88,6 +94,7 @@ namespace Microsoft.SemanticKernel.Connectors.AzureAISearch;
 public sealed class AzureAISearchVectorStoreOptions
 {
     /// <summary>
+<<<<<<< HEAD
     /// An optional factory to use for constructing <see cref="AzureAISearchVectorStoreRecordCollection{TRecord}"/> instances, if a custom record collection is required.
 <<<<<<< HEAD
 <<<<<<< div
@@ -172,7 +179,11 @@ public sealed class AzureAISearchVectorStoreOptions
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+    /// An optional factory to use for constructing <see cref="AzureAISearchVectorStoreRecordCollection{TKey, TRecord}"/> instances, if a custom record collection is required.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
+    [Obsolete("To control how collections are instantiated, extend your provider's IVectorStore implementation and override GetCollection()")]
     public IAzureAISearchVectorStoreRecordCollectionFactory? VectorStoreCollectionFactory { get; init; }
 
     /// <summary>
@@ -181,4 +192,9 @@ public sealed class AzureAISearchVectorStoreOptions
     /// to provide the same set of <see cref="System.Text.Json.JsonSerializerOptions"/> both here and when constructing the <see cref="SearchIndexClient"/>.
     /// </summary>
     public JsonSerializerOptions? JsonSerializerOptions { get; init; } = null;
+
+    /// <summary>
+    /// Gets or sets the default embedding generator to use when generating vectors embeddings with this vector store.
+    /// </summary>
+    public IEmbeddingGenerator? EmbeddingGenerator { get; init; }
 }

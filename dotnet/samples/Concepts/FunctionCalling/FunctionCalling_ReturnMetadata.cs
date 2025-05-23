@@ -1,4 +1,4 @@
-癤�// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
 using Microsoft.SemanticKernel;
@@ -45,9 +45,9 @@ public class FunctionCalling_ReturnMetadata(ITestOutputHelper output) : BaseTest
 
         Console.WriteLine(result);
         // Output: The current weather is as follows:
-        // - Temperature: 35째C
+        // - Temperature: 35캜
         // - Humidity: 20%
-        // - Dew Point: 10째C
+        // - Dew Point: 10캜
         // - Wind Speed: 15 km/h
     }
 
@@ -74,9 +74,9 @@ public class FunctionCalling_ReturnMetadata(ITestOutputHelper output) : BaseTest
 
         Console.WriteLine(result);
         // Output: The current weather details is as follows:
-        // - Temperature: 35째C
+        // - Temperature: 35캜
         // - Humidity: 20%
-        // - Dew Point: 10째C
+        // - Dew Point: 10캜
         // - Wind Speed: 15 km/h
     }
 
@@ -110,9 +110,9 @@ public class FunctionCalling_ReturnMetadata(ITestOutputHelper output) : BaseTest
 
         Console.WriteLine(result);
         // Output: The current weather conditions are as follows:
-        // - Temperature: 35째C
+        // - Temperature: 35캜
         // - Humidity: 20 %
-        // - Dew Point: 10째C
+        // - Dew Point: 10캜
         // - Wind Speed: 15 km/h
     }
 
@@ -122,7 +122,7 @@ public class FunctionCalling_ReturnMetadata(ITestOutputHelper output) : BaseTest
     private sealed class WeatherPlugin1
     {
         [KernelFunction]
-        [Description("Returns current weather: Data1 - Temperature (째C), Data2 - Humidity (%), Data3 - Dew Point (째C), Data4 - Wind Speed (km/h)")]
+        [Description("Returns current weather: Data1 - Temperature (캜), Data2 - Humidity (%), Data3 - Dew Point (캜), Data4 - Wind Speed (km/h)")]
         public WeatherData GetWeatherData()
         {
             return new WeatherData()
@@ -148,7 +148,7 @@ public class FunctionCalling_ReturnMetadata(ITestOutputHelper output) : BaseTest
     private sealed class WeatherPlugin2
     {
         [KernelFunction]
-        [Description("""Returns current weather: {"type":"object","properties":{"Data1":{"description":"Temperature (째C)","type":"number"},"Data2":{"description":"Humidity(%)","type":"number"}, Data3":{"description":"Dew point (째C)","type":"number"},"Data4":{"description":"Wind speed (km/h)","type":"number"}}}""")]
+        [Description("""Returns current weather: {"type":"object","properties":{"Data1":{"description":"Temperature (캜)","type":"number"},"Data2":{"description":"Humidity(%)","type":"number"}, Data3":{"description":"Dew point (캜)","type":"number"},"Data4":{"description":"Wind speed (km/h)","type":"number"}}}""")]
         public WeatherData GetWeatherData()
         {
             return new WeatherData()
@@ -188,13 +188,13 @@ public class FunctionCalling_ReturnMetadata(ITestOutputHelper output) : BaseTest
 
         public sealed class WeatherData
         {
-            [Description("Temp (째C)")]
+            [Description("Temp (캜)")]
             public double Data1 { get; set; }
 
             [Description("Humidity (%)")]
             public double Data2 { get; set; }
 
-            [Description("Dew point (째C)")]
+            [Description("Dew point (캜)")]
             public double Data3 { get; set; }
 
             [Description("Wind speed (km/h)")]

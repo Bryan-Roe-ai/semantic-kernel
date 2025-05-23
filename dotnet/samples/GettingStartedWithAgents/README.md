@@ -2,13 +2,21 @@
 
 This project contains a step by step guide to get started with  _Semantic Kernel Agents_.
 
+<<<<<<< HEAD
 #### NuGet:
+=======
+## NuGet
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 - [Microsoft.SemanticKernel.Agents.Abstractions](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.Abstractions)
 - [Microsoft.SemanticKernel.Agents.Core](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.Core)
 - [Microsoft.SemanticKernel.Agents.OpenAI](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.OpenAI)
 
+<<<<<<< HEAD
 #### Source
+=======
+## Source
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 - [Semantic Kernel Agent Framework](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Agents)
 
@@ -18,6 +26,8 @@ The examples can be run as integration tests but their code can also be copied t
 
 The getting started with agents examples include:
 
+### ChatCompletion
+
 Example|Description
 ---|---
 [Step01_Agent](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/Step01_Agent.cs)|How to create and use an agent.
@@ -26,11 +36,53 @@ Example|Description
 [Step04_KernelFunctionStrategies](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/Step04_KernelFunctionStrategies.cs)|How to utilize a `KernelFunction` as a _chat strategy_.
 [Step05_JsonResult](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/Step05_JsonResult.cs)|How to have an agent produce JSON.
 [Step06_DependencyInjection](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/Step06_DependencyInjection.cs)|How to define dependency injection patterns for agents.
-[Step07_Logging](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/Step07_Logging.cs)|How to enable logging for agents.
-[Step08_Assistant](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/Step08_Assistant.cs)|How to create an Open AI Assistant agent.
-[Step09_Assistant](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/Step09_Assistant_Vision.cs)|How to provide an image as input to an Open AI Assistant agent.
-[Step10_Assistant](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/Step10_AssistantTool_CodeInterpreter_.cs)|How to use the code-interpreter tool for an Open AI Assistant agent.
-[Step11_Assistant](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/Step11_AssistantTool_FileSearch.cs)|How to use the file-search tool for an Open AI Assistant agent.
+[Step07_Telemetry](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/Step07_Telemetry.cs)|How to enable logging for agents.
+
+### Open AI Assistant
+
+Example|Description
+---|---
+[Step01_Assistant](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/OpenAIAssistant/Step01_Assistant.cs)|How to create an Open AI Assistant agent.
+[Step02_Assistant_Plugins](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/OpenAIAssistant/Step02_Assistant_Plugins.cs)|How to create an Open AI Assistant agent.
+[Step03_Assistant_Vision](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/OpenAIAssistant/Step03_Assistant_Vision.cs)|How to provide an image as input to an Open AI Assistant agent.
+[Step04_AssistantTool_CodeInterpreter_](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/OpenAIAssistant/Step04_AssistantTool_CodeInterpreter.cs)|How to use the code-interpreter tool for an Open AI Assistant agent.
+[Step05_AssistantTool_FileSearch](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/OpenAIAssistant/Step05_AssistantTool_FileSearch.cs)|How to use the file-search tool for an Open AI Assistant agent.
+
+### Azure AI Agent
+
+Example|Description
+---|---
+[Step01_AzureAIAgent](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/AzureAIAgent/Step01_AzureAIAgent.cs)|How to create an Azure AI agent.
+[Step02_AzureAIAgent_Plugins](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/AzureAIAgent/Step02_AzureAIAgent_Plugins.cs)|How to create an Azure AI agent.
+[Step03_AzureAIAgent_Chat](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/AzureAIAgent/Step03_AzureAIAgent_Chat.cs)|How create a conversation with Azure AI agents.
+[Step04_AzureAIAgent_CodeInterpreter](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/AzureAIAgent/Step04_AzureAIAgent_CodeInterpreter.cs)|How to use the code-interpreter tool for an Azure AI agent.
+[Step05_AzureAIAgent_FileSearch](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/AzureAIAgent/Step05_AzureAIAgent_FileSearch.cs)|How to use the file-search tool for an Azure AI agent.
+[Step06_AzureAIAgent_OpenAPI](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/samples/GettingStartedWithAgents/AzureAIAgent/Step06_AzureAIAgent_OpenAPI.cs)|How to use the Open API tool for an Azure AI agent.
+
+### Bedrock Agent
+
+Example|Description
+---|---
+[Step01_BedrockAgent](./BedrockAgent/Step01_BedrockAgent.cs)|How to create a Bedrock agent and interact with it in the most basic way.
+[Step02_BedrockAgent_CodeInterpreter](./BedrockAgent/Step02_BedrockAgent_CodeInterpreter.cs)|How to use the code-interpreter tool with a Bedrock agent.
+[Step03_BedrockAgent_Functions](./BedrockAgent/Step03_BedrockAgent_Functions.cs)|How to use kernel functions with a Bedrock agent.
+[Step04_BedrockAgent_Trace](./BedrockAgent/Step04_BedrockAgent_Trace.cs)|How to enable tracing for a Bedrock agent to inspect the chain of thoughts.
+[Step05_BedrockAgent_FileSearch](./BedrockAgent/Step05_BedrockAgent_FileSearch.cs)|How to use file search with a Bedrock agent (i.e. Bedrock knowledge base).
+[Step06_BedrockAgent_AgentChat](./BedrockAgent/Step06_BedrockAgent_AgentChat.cs)|How to create a conversation between two agents and one of them in a Bedrock agent.
+
+### Orchestration
+
+Example|Description
+---|---
+[Step01_Concurrent](./Orchestration/Step01_Concurrent.cs)|How to use a concurrent orchestration..
+[Step01a_ConcurrentWithStructuredOutput](./Orchestration/Step01a_ConcurrentWithStructuredOutput.cs)|How to use structured output (with concurrent orchestration).
+[Step02_Sequential](./Orchestration/Step02_Sequential.cs)|How to use sequential orchestration.
+[Step02a_Sequential](./Orchestration/Step02a_Sequential.cs)|How to cancel an orchestration (with sequential orchestration).
+[Step03_GroupChat](./Orchestration/Step03_GroupChat.cs)|How to use group-chat orchestration.
+[Step03a_GroupChatWithHumanInTheLoop](./Orchestration/Step03a_GroupChatWithHumanInTheLoop.cs)|How to use group-chat orchestration with human in the loop.
+[Step03b_GroupChatWithAIManager](./Orchestration/Step03b_GroupChatWithAIManager.cs)|How to use group-chat orchestration with a AI powered group-manager.
+[Step04_Handoff](./Orchestration/Step04_Handoff.cs)|How to use handoff orchestration.
+[Step04b_HandoffWithStructuredInput](./Orchestration/Step04b_HandoffWithStructuredInput.cs)|How to use structured input (with handoff orchestration).
 
 ## Legacy Agents
 
@@ -84,16 +136,38 @@ dotnet user-secrets set "OpenAI:ChatModelId" "..."
 dotnet user-secrets set "OpenAI:ApiKey" "..."
 ```
 
-5. Or Azure Open AI:
+5. Or Azure OpenAI:
 
+<<<<<<< HEAD
 ```sh {"id":"01J6KPX0GQCZXPP6FDQ290W7XP"}
 dotnet user-secrets set "AzureOpenAI:DeploymentName" "..."
 dotnet user-secrets set "AzureOpenAI:ChatDeploymentName" "..."
 dotnet user-secrets set "AzureOpenAI:Endpoint" "https://... .openai.azure.com/"
 dotnet user-secrets set "AzureOpenAI:ApiKey" "..."
 ```
+=======
+    ```
+    dotnet user-secrets set "AzureOpenAI:ChatDeploymentName" "gpt-4o"
+    dotnet user-secrets set "AzureOpenAI:Endpoint" "https://... .openai.azure.com/"
+    dotnet user-secrets set "AzureOpenAI:ApiKey" "..."
+    ```
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-> NOTE: Azure secrets will take precedence, if both Open AI and Azure Open AI secrets are defined, unless `ForceOpenAI` is set:
+6. Or Azure AI:
+
+    ```
+    dotnet user-secrets set "AzureAI:ConnectionString" "..."
+    dotnet user-secrets set "AzureAI:ChatModelId" "gpt-4o"
+    ```
+
+7. Or Bedrock:
+
+    ```
+    dotnet user-secrets set "BedrockAgent:AgentResourceRoleArn" "arn:aws:iam::...:role/..."
+    dotnet user-secrets set "BedrockAgent:FoundationModel" "..."
+    ```
+
+> NOTE: Azure secrets will take precedence, if both Open AI and Azure OpenAI secrets are defined, unless `ForceOpenAI` is set:
 
 ```sh {"id":"01J6KPX0GQCZXPP6FDQ68Q18B3"}
 protected override bool ForceOpenAI => true;

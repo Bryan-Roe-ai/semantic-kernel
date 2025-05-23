@@ -1,9 +1,9 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import logging
-import sys
 from typing import Annotated, Any, Literal
 
+<<<<<<< HEAD
 if sys.version_info >= (3, 11):
     from typing import Self  # pragma: no cover
 else:
@@ -18,6 +18,11 @@ from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBeh
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
 )
+=======
+from pydantic import BaseModel, Field, field_validator, model_validator
+
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.exceptions import ServiceInvalidExecutionSettingsError
 
 logger = logging.getLogger(__name__)
@@ -107,8 +112,7 @@ class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
     messages: Annotated[
         list[dict[str, Any]] | None, Field(description="Do not set this manually. It is set by the service.")
     ] = None
-    function_call_behavior: Annotated[FunctionCallBehavior | None, Field(exclude=True)] = None
-    parallel_tool_calls: bool = True
+    parallel_tool_calls: bool | None = None
     tools: Annotated[
         list[dict[str, Any]] | None,
         Field(
@@ -130,6 +134,20 @@ class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
         dict[str, Any] | None,
         Field(description="Additional options to pass when streaming is used. Do not set this manually."),
     ] = None
+    max_completion_tokens: Annotated[
+        int | None,
+        Field(
+            gt=0,
+            description="A maximum limit on total tokens for completion, including both output and reasoning tokens.",
+        ),
+    ] = None
+    reasoning_effort: Annotated[
+        Literal["low", "medium", "high"] | None,
+        Field(
+            description="Adjusts reasoning effort (low/medium/high). Lower values reduce response time and token usage."
+        ),
+    ] = None
+    extra_body: dict[str, Any] | None = None
 
     @field_validator("functions", "function_call", mode="after")
     @classmethod
@@ -142,8 +160,10 @@ class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
         return v
 
     @model_validator(mode="before")
-    def validate_response_format_and_set_flag(cls, values) -> Any:
+    def validate_response_format_and_set_flag(cls, values: Any) -> Any:
         """Validate the response_format and set structured_json_response accordingly."""
+        if not isinstance(values, dict):
+            return values
         response_format = values.get("response_format", None)
 
         if response_format is None:
@@ -172,6 +192,7 @@ class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
 
         return values
 
+<<<<<<< HEAD
     @model_validator(mode="before")
     @classmethod
     def validate_function_calling_behaviors(cls, data) -> Any:
@@ -210,6 +231,8 @@ class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
             )
         return v
 
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 class OpenAIEmbeddingPromptExecutionSettings(PromptExecutionSettings):
     """Specific settings for the text embedding endpoint."""

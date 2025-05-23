@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>SemanticKernel.Functions.Prompty.UnitTests</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
@@ -33,6 +33,11 @@
 
   <ItemGroup>
     <None Update="TestData\**\*.prompty">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="TestData\**\*.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

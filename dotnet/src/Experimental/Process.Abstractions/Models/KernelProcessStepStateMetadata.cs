@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
@@ -12,6 +12,7 @@ namespace Microsoft.SemanticKernel.Process.Models;
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "$type", UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FallBackToNearestAncestor)]
 [JsonDerivedType(typeof(KernelProcessStepStateMetadata), typeDiscriminator: nameof(ProcessConstants.SupportedComponents.Step))]
 [JsonDerivedType(typeof(KernelProcessMapStateMetadata), typeDiscriminator: nameof(ProcessConstants.SupportedComponents.Map))]
+[JsonDerivedType(typeof(KernelProcessProxyStateMetadata), typeDiscriminator: nameof(ProcessConstants.SupportedComponents.Proxy))]
 [JsonDerivedType(typeof(KernelProcessStateMetadata), typeDiscriminator: nameof(ProcessConstants.SupportedComponents.Process))]
 public record class KernelProcessStepStateMetadata
 {

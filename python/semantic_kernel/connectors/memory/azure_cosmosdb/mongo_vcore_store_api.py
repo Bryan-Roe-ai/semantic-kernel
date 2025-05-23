@@ -19,10 +19,10 @@ from semantic_kernel.connectors.memory.azure_cosmosdb.utils import (
     CosmosDBVectorSearchType,
 )
 from semantic_kernel.memory.memory_record import MemoryRecord
-from semantic_kernel.utils.experimental_decorator import experimental_class
+from semantic_kernel.utils.feature_stage_decorator import experimental
 
 
-@experimental_class
+@experimental
 class MongoStoreApi(AzureCosmosDBStoreApi):
     """MongoStoreApi class for the Azure Cosmos DB Mongo store."""
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 
@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.VectorData;
 /// Defines a data property on a vector store record.
 /// </summary>
 /// <remarks>
-/// The characteristics defined here will influence how the property is treated by the vector store.
+/// The characteristics defined here influence how the property is treated by the vector store.
 /// </remarks>
 public sealed class VectorStoreRecordDataProperty : VectorStoreRecordProperty
 {
@@ -25,27 +25,45 @@ public sealed class VectorStoreRecordDataProperty : VectorStoreRecordProperty
     /// <summary>
     /// Initializes a new instance of the <see cref="VectorStoreRecordDataProperty"/> class by cloning the given source.
     /// </summary>
-    /// <param name="source">The source to clone</param>
+    /// <param name="source">The source to clone.</param>
     public VectorStoreRecordDataProperty(VectorStoreRecordDataProperty source)
         : base(source)
     {
-        this.IsFilterable = source.IsFilterable;
-        this.IsFullTextSearchable = source.IsFullTextSearchable;
+        this.IsIndexed = source.IsIndexed;
+        this.IsFullTextIndexed = source.IsFullTextIndexed;
     }
 
     /// <summary>
     /// Gets or sets a value indicating whether this data property is filterable.
     /// </summary>
-    /// <remarks>
-    /// Default is <see langword="false" />.
-    /// </remarks>
+    /// <value>
+    /// The default is <see langword="false" />.
+    /// </value>
+    [Obsolete("This property is now obsolete and will have no affect if used. Please use IsIndexed instead", error: true)]
     public bool IsFilterable { get; init; }
 
     /// <summary>
     /// Gets or sets a value indicating whether this data property is full text searchable.
     /// </summary>
-    /// <remarks>
-    /// Default is <see langword="false" />.
-    /// </remarks>
+    /// <value>
+    /// The default is <see langword="false" />.
+    /// </value>
+    [Obsolete("This property is now obsolete and will have no affect if used. Please use IsFullTextIndexed instead", error: true)]
     public bool IsFullTextSearchable { get; init; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this data property is indexed.
+    /// </summary>
+    /// <value>
+    /// The default is <see langword="false" />.
+    /// </value>
+    public bool IsIndexed { get; init; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this data property is indexed for full-text search.
+    /// </summary>
+    /// <value>
+    /// The default is <see langword="false" />.
+    /// </value>
+    public bool IsFullTextIndexed { get; init; }
 }

@@ -1,17 +1,31 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-using System.ClientModel;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Azure.Identity;
+using Azure.AI.Projects;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
+<<<<<<< HEAD
 using Microsoft.SemanticKernel.Agents.AzureAI;
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
 using OpenAI.Assistants;
 using OpenAI.Files;
 using ChatTokenUsage = OpenAI.Chat.ChatTokenUsage;
+
+/// <summary>
+/// Base class for samples that demonstrate the usage of host agents
+/// based on API's such as Open AI Assistants or Azure AI Agents.
+/// </summary>
+public abstract class BaseAgentsTest<TClient>(ITestOutputHelper output) : BaseAgentsTest(output)
+{
+    /// <summary>
+    /// Gets the root client for the service.
+    /// </summary>
+    protected abstract TClient Client { get; }
+}
 
 /// <summary>
 /// Base class for samples that demonstrate the usage of agents.
@@ -21,25 +35,26 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
     /// <summary>
     /// Metadata key to indicate the assistant as created for a sample.
     /// </summary>
-    protected const string AssistantSampleMetadataKey = "sksample";
+    protected const string SampleMetadataKey = "sksample";
 
     protected override bool ForceOpenAI => true;
 
     /// <summary>
-    /// Metadata to indicate the assistant as created for a sample.
+    /// Metadata to indicate the object was created for a sample.
     /// </summary>
     /// <remarks>
-    /// While the samples do attempt delete the assistants it creates, it is possible
-    /// that some assistants may remain.  This metadata can be used to identify and sample
-    /// agents for clean-up.
+    /// While the samples do attempt delete the objects it creates, it is possible
+    /// that some may remain.  This metadata can be used to identify and sample
+    /// objects for manual clean-up.
     /// </remarks>
-    protected static readonly ReadOnlyDictionary<string, string> AssistantSampleMetadata =
+    protected static readonly ReadOnlyDictionary<string, string> SampleMetadata =
         new(new Dictionary<string, string>
         {
-            { AssistantSampleMetadataKey, bool.TrueString }
+            { SampleMetadataKey, bool.TrueString }
         });
 
     /// <summary>
+<<<<<<< HEAD
     /// Provide a <see cref="OpenAIClientProvider"/> according to the configuration settings.
     /// </summary>
     protected AzureAIClientProvider GetAzureProvider()
@@ -81,6 +96,8 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
 >>>>>>> upstream/agents-azureai
 
     /// <summary>
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// Common method to write formatted agent chat content to the console.
     /// </summary>
     protected void WriteAgentChatMessage(ChatMessageContent message)
@@ -98,7 +115,14 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
         {
             if (item is AnnotationContent annotation)
             {
-                Console.WriteLine($"  [{item.GetType().Name}] {annotation.Quote}: File #{annotation.FileId}");
+                if (annotation.Kind == AnnotationKind.UrlCitation)
+                {
+                    Console.WriteLine($"  [{item.GetType().Name}] {annotation.Label}: {annotation.ReferenceId} - {annotation.Title}");
+                }
+                else
+                {
+                    Console.WriteLine($"  [{item.GetType().Name}] {annotation.Label}: File #{annotation.ReferenceId}");
+                }
             }
             else if (item is FileReferenceContent fileReference)
             {
@@ -124,13 +148,17 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
             {
                 WriteUsage(assistantUsage.TotalTokenCount, assistantUsage.InputTokenCount, assistantUsage.OutputTokenCount);
             }
+            else if (usage is RunStepCompletionUsage agentUsage)
+            {
+                WriteUsage(agentUsage.TotalTokens, agentUsage.PromptTokens, agentUsage.CompletionTokens);
+            }
             else if (usage is ChatTokenUsage chatUsage)
             {
                 WriteUsage(chatUsage.TotalTokenCount, chatUsage.InputTokenCount, chatUsage.OutputTokenCount);
             }
         }
 
-        void WriteUsage(int totalTokens, int inputTokens, int outputTokens)
+        void WriteUsage(long totalTokens, long inputTokens, long outputTokens)
         {
             Console.WriteLine($"  [Usage] Tokens: {totalTokens}, Input: {inputTokens}, Output: {outputTokens}");
         }
@@ -146,7 +174,7 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
         {
             if (item is AnnotationContent annotation)
             {
-                await this.DownloadFileContentAsync(client, annotation.FileId!);
+                await this.DownloadFileContentAsync(client, annotation.ReferenceId!);
             }
         }
     }

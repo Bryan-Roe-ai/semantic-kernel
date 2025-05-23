@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Step02.Models;
@@ -10,12 +10,12 @@ namespace Step02.Steps;
 /// </summary>
 public class MailServiceStep : KernelProcessStep
 {
-    public static class Functions
+    public static class ProcessStepFunctions
     {
         public const string SendMailToUserWithDetails = nameof(SendMailToUserWithDetails);
     }
 
-    [KernelFunction(Functions.SendMailToUserWithDetails)]
+    [KernelFunction(ProcessStepFunctions.SendMailToUserWithDetails)]
     public async Task SendMailServiceAsync(KernelProcessStepContext context, string message)
     {
         Console.WriteLine("======== MAIL SERVICE ======== ");

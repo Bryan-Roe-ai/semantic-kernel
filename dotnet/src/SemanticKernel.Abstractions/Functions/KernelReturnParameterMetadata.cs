@@ -285,6 +285,7 @@ public sealed class KernelReturnParameterMetadata
     /// <summary>Initializes a <see cref="KernelReturnParameterMetadata"/> as a copy of another <see cref="KernelReturnParameterMetadata"/>.</summary>
     /// <param name="metadata">The metadata to copy.</param>
     /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to generate JSON schema.</param>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -292,6 +293,8 @@ public sealed class KernelReturnParameterMetadata
 >>>>>>> upstream/main
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public KernelReturnParameterMetadata(KernelReturnParameterMetadata metadata, JsonSerializerOptions jsonSerializerOptions)
     {
         this._description = metadata._description;

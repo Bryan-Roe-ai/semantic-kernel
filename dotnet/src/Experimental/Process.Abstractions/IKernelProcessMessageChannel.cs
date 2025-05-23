@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Threading.Tasks;
 
@@ -14,5 +14,5 @@ public interface IKernelProcessMessageChannel
     /// </summary>
     /// <param name="processEvent">The event to emit.</param>
     /// <returns>A <see cref="ValueTask"/></returns>
-    public abstract ValueTask EmitEventAsync(KernelProcessEvent processEvent);
+    abstract ValueTask EmitEventAsync(KernelProcessEvent processEvent);
 }

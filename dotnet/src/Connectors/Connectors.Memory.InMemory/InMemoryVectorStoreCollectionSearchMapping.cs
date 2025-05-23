@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections;
@@ -88,22 +88,23 @@ internal static class InMemoryVectorStoreCollectionSearchMapping
         }
     }
 
+#pragma warning disable CS0618 // VectorSearchFilter is obsolete
     /// <summary>
     /// Filter the provided records using the provided filter definition.
     /// </summary>
-    /// <param name="filter">The filter definition to filter the <paramref name="records"/> with.</param>
-    /// <param name="records">The records to filter.</param>
+    /// <param name="filter">The filter definition to filter the <paramref name="recordWrappers"/> with.</param>
+    /// <param name="recordWrappers">The records to filter.</param>
     /// <returns>The filtered records.</returns>
     /// <exception cref="InvalidOperationException">Thrown when an unsupported filter clause is encountered.</exception>
-    public static IEnumerable<object> FilterRecords(VectorSearchFilter? filter, IEnumerable<object> records)
+    public static IEnumerable<InMemoryVectorRecordWrapper<TRecord>> FilterRecords<TRecord>(VectorSearchFilter filter, IEnumerable<InMemoryVectorRecordWrapper<TRecord>> recordWrappers)
     {
-        if (filter == null)
+        return recordWrappers.Where(wrapper =>
         {
-            return records;
-        }
+            if (wrapper.Record is null)
+            {
+                return false;
+            }
 
-        return records.Where(record =>
-        {
             var result = true;
 
             // Run each filter clause against the record, and AND the results together.
@@ -113,7 +114,7 @@ internal static class InMemoryVectorStoreCollectionSearchMapping
             {
                 if (clause is EqualToFilterClause equalToFilter)
                 {
-                    result = result && CheckEqualTo(record, equalToFilter);
+                    result = result && CheckEqualTo(wrapper.Record, equalToFilter);
 
                     if (result == false)
                     {
@@ -122,7 +123,7 @@ internal static class InMemoryVectorStoreCollectionSearchMapping
                 }
                 else if (clause is AnyTagEqualToFilterClause anyTagEqualToFilter)
                 {
-                    result = result && CheckAnyTagEqualTo(record, anyTagEqualToFilter);
+                    result = result && CheckAnyTagEqualTo(wrapper.Record, anyTagEqualToFilter);
 
                     if (result == false)
                     {
@@ -197,6 +198,7 @@ internal static class InMemoryVectorStoreCollectionSearchMapping
 
         return false;
     }
+#pragma warning restore CS0618 // VectorSearchFilter is obsolete
 
     /// <summary>
     /// Get the property info for the provided property name on the record.

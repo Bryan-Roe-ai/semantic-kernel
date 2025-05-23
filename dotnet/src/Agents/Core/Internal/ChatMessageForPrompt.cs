@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,9 @@ internal sealed class ChatMessageForPrompt(ChatMessageContent message)
     /// The referenced <see cref="ChatMessageContent.AuthorName"/> property.
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+#pragma warning disable SKEXP0001
     public string? Name => message.AuthorName;
+#pragma warning restore SKEXP0001
 
     /// <summary>
     /// The referenced <see cref="ChatMessageContent.Content"/> property.

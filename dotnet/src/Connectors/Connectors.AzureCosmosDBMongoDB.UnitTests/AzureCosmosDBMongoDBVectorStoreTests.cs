@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -30,6 +30,7 @@ public sealed class AzureCosmosDBMongoDBVectorStoreTests
         Assert.Throws<NotSupportedException>(() => sut.GetCollection<Guid, AzureCosmosDBMongoDBHotelModel>("collection"));
     }
 
+#pragma warning disable CS0618 // IAzureCosmosDBMongoDBVectorStoreRecordCollectionFactory is obsolete
     [Fact]
     public void GetCollectionWithFactoryReturnsCustomCollection()
     {
@@ -58,6 +59,7 @@ public sealed class AzureCosmosDBMongoDBVectorStoreTests
             "collection",
             It.IsAny<VectorStoreRecordDefinition>()), Times.Once());
     }
+#pragma warning restore CS0618
 
     [Fact]
     public void GetCollectionWithoutFactoryReturnsDefaultCollection()

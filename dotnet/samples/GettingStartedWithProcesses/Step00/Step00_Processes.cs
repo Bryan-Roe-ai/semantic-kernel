@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Step00.Steps;
@@ -59,7 +59,7 @@ public class Step00_Processes(ITestOutputHelper output) : BaseTest(output, redir
         KernelProcess kernelProcess = process.Build();
 
         // Start the process with an initial external event
-        using var runningProcess = await kernelProcess.StartAsync(
+        await using var runningProcess = await kernelProcess.StartAsync(
             kernel,
                 new KernelProcessEvent()
                 {

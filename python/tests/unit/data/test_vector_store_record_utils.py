@@ -16,9 +16,9 @@ from semantic_kernel.data import (
     VectorStoreRecordDataField,
     VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
-    VectorStoreRecordUtils,
     VectorStoreRecordVectorField,
 )
+<<<<<<< HEAD
 <<<<<<< HEAD
 from semantic_kernel.data.vector_store_record_utils import VectorStoreRecordUtils
 from semantic_kernel.exceptions.memory_connector_exceptions import (
@@ -26,6 +26,9 @@ from semantic_kernel.exceptions.memory_connector_exceptions import (
 )
 from semantic_kernel.kernel import Kernel
 =======
+=======
+from semantic_kernel.data.vector_search import add_vector_to_records
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.exceptions import VectorStoreModelException
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
@@ -33,10 +36,8 @@ from semantic_kernel.exceptions import VectorStoreModelException
 async def test_add_vector_to_records(data_model_definition):
     kernel = MagicMock(spec=Kernel)
     kernel.add_embedding_to_object = AsyncMock()
-    utils = VectorStoreRecordUtils(kernel)
-    assert utils is not None
     record = {"id": "test_id", "content": "content"}
-    await utils.add_vector_to_records(record, None, data_model_definition)
+    await add_vector_to_records(kernel, record, None, data_model_definition)
     kernel.add_embedding_to_object.assert_called_once()
 
 
@@ -52,19 +53,15 @@ async def test_add_vector_wrong_fields():
     )
     kernel = MagicMock(spec=Kernel)
     kernel.add_embedding_to_object = AsyncMock()
-    utils = VectorStoreRecordUtils(kernel)
-    assert utils is not None
     record = {"id": "test_id", "content": "content"}
     with raises(VectorStoreModelException, match="Embedding field"):
-        await utils.add_vector_to_records(record, None, data_model)
+        await add_vector_to_records(kernel, record, None, data_model)
 
 
 async def test_fail():
     kernel = MagicMock(spec=Kernel)
     kernel.add_embedding_to_object = AsyncMock()
-    utils = VectorStoreRecordUtils(kernel)
-    assert utils is not None
     record = {"id": "test_id", "content": "content"}
     with raises(VectorStoreModelException, match="Data model definition is required"):
-        await utils.add_vector_to_records(record, dict, None)
+        await add_vector_to_records(kernel, record, None, None)
     kernel.add_embedding_to_object.assert_not_called()

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -64,6 +65,10 @@
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+using Azure.Identity;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
@@ -91,7 +96,7 @@ public class Step06_DependencyInjection(ITestOutputHelper output) : BaseAgentsTe
         """;
 
     [Fact]
-    public async Task UseDependencyInjectionToCreateAgentAsync()
+    public async Task UseDependencyInjectionToCreateAgent()
     {
         ServiceCollection serviceContainer = new();
 
@@ -108,7 +113,7 @@ public class Step06_DependencyInjection(ITestOutputHelper output) : BaseAgentsTe
             serviceContainer.AddAzureOpenAIChatCompletion(
                 TestConfiguration.AzureOpenAI.ChatDeploymentName,
                 TestConfiguration.AzureOpenAI.Endpoint,
-                TestConfiguration.AzureOpenAI.ApiKey);
+                new AzureCliCredential());
         }
 
         // Transient Kernel as each agent may customize its Kernel instance with plug-ins.

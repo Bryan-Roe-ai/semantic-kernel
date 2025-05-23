@@ -1,16 +1,19 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 <<<<<<< HEAD
 using Microsoft.SemanticKernel.Data;
 =======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 >>>>>>> main
 =======
+=======
+using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel.Connectors.MongoDB;
 >>>>>>> upstream/main
 =======
@@ -44,17 +47,19 @@ internal static class AzureCosmosDBMongoDBVectorStoreCollectionSearchMapping
     /// <summary>Returns distance function specified on vector property or default <see cref="AzureCosmosDBMongoDBConstants.DefaultDistanceFunction"/>.</summary>
     public static string GetVectorPropertyDistanceFunction(string? distanceFunction) => !string.IsNullOrWhiteSpace(distanceFunction) ? distanceFunction! : AzureCosmosDBMongoDBConstants.DefaultDistanceFunction;
 
+<<<<<<< HEAD
 >>>>>>> main
+=======
+#pragma warning disable CS0618 // VectorSearchFilter is obsolete
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <summary>
     /// Build Azure CosmosDB MongoDB filter from the provided <see cref="VectorSearchFilter"/>.
     /// </summary>
     /// <param name="vectorSearchFilter">The <see cref="VectorSearchFilter"/> to build Azure CosmosDB MongoDB filter from.</param>
-    /// <param name="storagePropertyNames">A dictionary that maps from a property name to the storage name.</param>
+    /// <param name="model">The model.</param>
     /// <exception cref="NotSupportedException">Thrown when the provided filter type is unsupported.</exception>
     /// <exception cref="InvalidOperationException">Thrown when property name specified in filter doesn't exist.</exception>
-    public static BsonDocument? BuildFilter(
-        VectorSearchFilter? vectorSearchFilter,
-        Dictionary<string, string> storagePropertyNames)
+    public static BsonDocument? BuildFilter(VectorSearchFilter? vectorSearchFilter, VectorStoreRecordModel model)
     {
         const string EqualOperator = "$eq";
 
@@ -87,30 +92,33 @@ internal static class AzureCosmosDBMongoDBVectorStoreCollectionSearchMapping
                         nameof(EqualToFilterClause)])}");
             }
 
-            if (!storagePropertyNames.TryGetValue(propertyName, out var storagePropertyName))
+            if (!model.PropertyMap.TryGetValue(propertyName, out var property))
             {
                 throw new InvalidOperationException($"Property name '{propertyName}' provided as part of the filter clause is not a valid property name.");
             }
 
-            if (filter.Contains(storagePropertyName))
+            var storageName = property.StorageName;
+
+            if (filter.Contains(storageName))
             {
-                if (filter[storagePropertyName] is BsonDocument document && document.Contains(filterOperator))
+                if (filter[storageName] is BsonDocument document && document.Contains(filterOperator))
                 {
                     throw new NotSupportedException(
                         $"Filter with operator '{filterOperator}' is already added to '{propertyName}' property. " +
                         "Multiple filters of the same type in the same property are not supported.");
                 }
 
-                filter[storagePropertyName][filterOperator] = propertyValue;
+                filter[storageName][filterOperator] = propertyValue;
             }
             else
             {
-                filter[storagePropertyName] = new BsonDocument() { [filterOperator] = propertyValue };
+                filter[storageName] = new BsonDocument() { [filterOperator] = propertyValue };
             }
         }
 
         return filter;
     }
+#pragma warning restore CS0618 // VectorSearchFilter is obsolete
 
     /// <summary>Returns search part of the search query for <see cref="IndexKind.Hnsw"/> index kind.</summary>
     public static BsonDocument GetSearchQueryForHnswIndex<TVector>(

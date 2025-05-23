@@ -25,6 +25,7 @@ internal static class KernelJsonSchemaBuilder
 {
     private static readonly JsonSerializerOptions s_options = CreateDefaultOptions();
     private static JsonSerializerOptions? s_options;
+<<<<<<< HEAD
     private static readonly JsonSchemaMapperConfiguration s_config = new()
     private static readonly AIJsonSchemaCreateOptions s_schemaOptions = new()
     internal static readonly AIJsonSchemaCreateOptions s_schemaOptions = new()
@@ -34,6 +35,9 @@ internal static class KernelJsonSchemaBuilder
         RequireAllProperties = false,
         DisallowAdditionalProperties = false,
     };
+=======
+    internal static readonly AIJsonSchemaCreateOptions s_schemaOptions = new();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     [RequiresUnreferencedCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
@@ -83,7 +87,9 @@ internal static class KernelJsonSchemaBuilder
 
         if (!string.IsNullOrWhiteSpace(description))
         configuration ??= s_schemaOptions;
-        JsonElement schemaDocument = AIJsonUtilities.CreateJsonSchema(type, description, serializerOptions: options, inferenceOptions: configuration);
+        // To be compatible with the previous behavior of MEAI 9.3.0 (when description is empty, should not be included in the schema)
+        string? schemaDescription = string.IsNullOrEmpty(description) ? null : description;
+        JsonElement schemaDocument = AIJsonUtilities.CreateJsonSchema(type, schemaDescription, serializerOptions: options, inferenceOptions: configuration);
         switch (schemaDocument.ValueKind)
         {
             case JsonValueKind.False:

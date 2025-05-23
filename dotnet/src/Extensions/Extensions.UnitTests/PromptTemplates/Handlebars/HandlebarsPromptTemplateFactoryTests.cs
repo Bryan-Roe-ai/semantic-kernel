@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
@@ -27,7 +27,7 @@ public sealed class HandlebarsPromptTemplateFactoryTests
     }
 
     [Fact]
-    public void ItThrowsExceptionForUnknowPromptTemplateFormat()
+    public void ItThrowsExceptionForUnknownPromptTemplateFormat()
     {
         // Arrange
         var templateString = "{{input}}";

@@ -1,5 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
+using System;
 using Microsoft.Extensions.VectorData;
 using MongoDB.Driver;
 
@@ -8,6 +9,7 @@ namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
 /// <summary>
 /// Interface for constructing <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/> Azure CosmosDB MongoDB instances when using <see cref="IVectorStore"/> to retrieve these.
 /// </summary>
+[Obsolete("To control how collections are instantiated, extend your provider's IVectorStore implementation and override GetCollection()")]
 public interface IAzureCosmosDBMongoDBVectorStoreRecordCollectionFactory
 {
     /// <summary>
@@ -20,5 +22,6 @@ public interface IAzureCosmosDBMongoDBVectorStoreRecordCollectionFactory
     /// <param name="vectorStoreRecordDefinition">An optional record definition that defines the schema of the record type. If not present, attributes on <typeparamref name="TRecord"/> will be used.</param>
     /// <returns>The new instance of <see cref="IVectorStoreRecordCollection{TKey, TRecord}"/>.</returns>
     IVectorStoreRecordCollection<TKey, TRecord> CreateVectorStoreRecordCollection<TKey, TRecord>(IMongoDatabase mongoDatabase, string name, VectorStoreRecordDefinition? vectorStoreRecordDefinition)
-        where TKey : notnull;
+        where TKey : notnull
+        where TRecord : notnull;
 }

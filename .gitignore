@@ -530,6 +530,7 @@ swa-cli.config.json
 # Python devcontainer
 /python/.devcontainer/*
 
+<<<<<<< HEAD
 # Exclude unnecessary files and directories
 *.log
 *.tmp
@@ -941,3 +942,13 @@ swa-cli.config.json
 *.swq
 *.swp
 *.swo
+=======
+# kiota workspace files
+**/.kiota
+
+# dapr extension files
+**/dapr.yaml
+
+# LLM training data files
+llm_training_data.txt
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

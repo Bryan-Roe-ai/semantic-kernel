@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 #pragma warning disable IDE0005 // Using directive is unnecessary
 using Microsoft.SemanticKernel.Connectors.FunctionCalling;
+
 #pragma warning restore IDE0005 // Using directive is unnecessary
 using Moq;
 using Xunit;
@@ -18,12 +19,18 @@ using Xunit;
 namespace SemanticKernel.UnitTests.Utilities.AIConnectors;
 public class FunctionCallsProcessorTests
 {
+<<<<<<< HEAD
     private readonly FunctionCallsProcessor _sut;
 
     public FunctionCallsProcessorTests()
     {
         this._sut = new FunctionCallsProcessor();
     }
+=======
+    private readonly FunctionCallsProcessor _sut = new();
+    private readonly FunctionChoiceBehaviorOptions _functionChoiceBehaviorOptions = new();
+    private readonly PromptExecutionSettings _promptExecutionSettings = new();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     [Fact]
     public void ItShouldReturnNoConfigurationIfNoBehaviorProvided()
@@ -93,6 +100,7 @@ public class FunctionCallsProcessorTests
 
             await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: [],
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -121,6 +129,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -148,6 +157,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -160,7 +170,7 @@ public class FunctionCallsProcessorTests
 
         Assert.Equal("MyPlugin", functionResult.PluginName);
         Assert.Equal("Function1", functionResult.FunctionName);
-        Assert.Equal("Error: Function call processing failed. Deserialization failed.", functionResult.Result);
+        Assert.Equal("Error: Function call processing failed. Correct yourself. Deserialization failed.", functionResult.Result);
     }
 
     [Fact]
@@ -180,6 +190,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -207,6 +218,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => false, // Return false to simulate that the function is not advertised
@@ -219,7 +231,7 @@ public class FunctionCallsProcessorTests
 
         Assert.Equal("MyPlugin", functionResult.PluginName);
         Assert.Equal("Function1", functionResult.FunctionName);
-        Assert.Equal("Error: Function call request for a function that wasn't defined.", functionResult.Result);
+        Assert.Equal("Error: Function call request for a function that wasn't defined. Correct yourself.", functionResult.Result);
     }
 
     [Fact]
@@ -234,6 +246,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -246,7 +259,7 @@ public class FunctionCallsProcessorTests
 
         Assert.Equal("MyPlugin", functionResult.PluginName);
         Assert.Equal("Function1", functionResult.FunctionName);
-        Assert.Equal("Error: Requested function could not be found.", functionResult.Result);
+        Assert.Equal("Error: Requested function could not be found. Correct yourself.", functionResult.Result);
     }
 
     [Fact]
@@ -270,6 +283,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -330,6 +344,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -405,6 +420,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -447,6 +463,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -494,6 +511,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -541,6 +559,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -582,6 +601,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -625,6 +645,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -677,6 +698,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -695,7 +717,7 @@ public class FunctionCallsProcessorTests
     }
 
     [Fact]
-    public async Task ItShouldSerializeFunctionResultOfUnknowTypeAsync()
+    public async Task ItShouldSerializeFunctionResultOfUnknownTypeAsync()
     {
         // Arrange
         var function1 = KernelFunctionFactory.CreateFromMethod(() => { return new { a = 2, b = "test" }; }, "Function1");
@@ -711,6 +733,7 @@ public class FunctionCallsProcessorTests
         // Act
         await this._sut.ProcessFunctionCallsAsync(
                 chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
                 chatHistory: chatHistory,
                 requestIndex: 0,
                 checkIfFunctionAdvertised: (_) => true,
@@ -765,6 +788,53 @@ public class FunctionCallsProcessorTests
 
         // Assert
         Assert.Equal("{\"a\":2,\"b\":\"test\"}", result);
+    }
+
+    [Fact]
+    public void ItShouldSerializeFunctionResultsWithStringProperties()
+    {
+        // Arrange
+        var functionResult = new { Text = "???" };
+
+        // Act
+        var result = FunctionCallsProcessor.ProcessFunctionResult(functionResult);
+
+        // Assert
+        Assert.Equal("{\"Text\":\"???\"}", result);
+    }
+
+    [Fact]
+    public async Task ItShouldPassPromptExecutionSettingsToAutoFunctionInvocationFilterAsync()
+    {
+        // Arrange
+        var plugin = KernelPluginFactory.CreateFromFunctions("MyPlugin", [KernelFunctionFactory.CreateFromMethod(() => { }, "Function1")]);
+
+        AutoFunctionInvocationContext? actualContext = null;
+
+        Kernel kernel = CreateKernel(plugin, (context, next) =>
+        {
+            actualContext = context;
+            return Task.CompletedTask;
+        });
+
+        var chatMessageContent = new ChatMessageContent();
+        chatMessageContent.Items.Add(new FunctionCallContent("Function1", "MyPlugin", arguments: new KernelArguments() { ["parameter"] = "function1-result" }));
+
+        // Act
+        await this._sut.ProcessFunctionCallsAsync(
+                chatMessageContent: chatMessageContent,
+                executionSettings: this._promptExecutionSettings,
+                chatHistory: new ChatHistory(),
+                requestIndex: 0,
+                checkIfFunctionAdvertised: (_) => true,
+                options: this._functionChoiceBehaviorOptions,
+                kernel: kernel!,
+                isStreaming: false,
+                cancellationToken: CancellationToken.None);
+
+        // Assert
+        Assert.NotNull(actualContext);
+        Assert.Same(this._promptExecutionSettings, actualContext!.ExecutionSettings);
     }
 
     private sealed class AutoFunctionInvocationFilter(

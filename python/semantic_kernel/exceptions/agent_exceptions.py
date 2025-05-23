@@ -32,4 +32,25 @@ class AgentChatException(AgentException):
     """An error occurred while invoking the agent chat."""
 
     pass
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+
+
+class AgentChatHistoryReducerException(AgentException):
+    """An error occurred while reducing the chat history."""
+
+    pass
+
+
+class AgentThreadInitializationException(AgentException):
+    """An error occurred while initializing the agent thread."""
+
+    pass
+
+
+class AgentThreadOperationException(AgentException):
+    """An error occurred while performing an operation on the agent thread."""
+
+    pass
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

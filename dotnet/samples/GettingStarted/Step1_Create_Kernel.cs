@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -14,7 +14,7 @@ public sealed class Step1_Create_Kernel(ITestOutputHelper output) : BaseTest(out
     /// Show how to create a <see cref="Kernel"/> and use it to execute prompts.
     /// </summary>
     [Fact]
-    public async Task CreateKernelAsync()
+    public async Task CreateKernel()
     {
         // Create a kernel with OpenAI chat completion
         Kernel kernel = Kernel.CreateBuilder()

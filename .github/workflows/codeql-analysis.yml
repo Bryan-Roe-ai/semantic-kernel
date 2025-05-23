@@ -1,10 +1,16 @@
 name: "CodeQL"
 
 on:
+  workflow_dispatch:
   push:
+<<<<<<< HEAD
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+=======
+    # TODO: Add "feature*" back in again, once we determine the cause of the ongoing CodeQL failures.
+    branches: ["main", "experimental*", "*-development"]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   schedule:
     - cron: "17 11 * * 2"
   workflow_dispatch:
@@ -29,6 +35,7 @@ jobs:
 
     steps:
       - name: Checkout repository
+<<<<<<< HEAD
         uses: actions/checkout@v3
 
       - name: Cache dependencies
@@ -49,6 +56,11 @@ jobs:
           else
               echo "queries=" >> $GITHUB_OUTPUT
           fi
+=======
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4

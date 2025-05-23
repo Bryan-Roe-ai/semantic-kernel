@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -203,6 +203,7 @@ public class ChatMessageContentTests
             new FunctionResultContent(new FunctionCallContent("function-name", "plugin-name", "function-id"), "function-result"),
             new FileReferenceContent(fileId: "file-id-1") { ModelId = "model-7", Metadata = new Dictionary<string, object?>() { ["metadata-key-7"] = "metadata-value-7" } },
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -266,6 +267,10 @@ public class ChatMessageContentTests
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+            new FileReferenceContent(fileId: "file-id-2") { Tools = ["a", "b", "c"] },
+            new AnnotationContent(AnnotationKind.TextCitation, "quote-8", "file-id-3") { ModelId = "model-8", StartIndex = 2, EndIndex = 24, Metadata = new Dictionary<string, object?>() { ["metadata-key-8"] = "metadata-value-8" } },
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         ];
 
         // Act
@@ -364,18 +369,26 @@ public class ChatMessageContentTests
         Assert.Equal("function-id", functionResultContent.CallId);
         Assert.Equal("plugin-name", functionResultContent.PluginName);
 
-        var fileReferenceContent = deserializedMessage.Items[8] as FileReferenceContent;
-        Assert.NotNull(fileReferenceContent);
-        Assert.Equal("file-id-1", fileReferenceContent.FileId);
-        Assert.Equal("model-7", fileReferenceContent.ModelId);
-        Assert.NotNull(fileReferenceContent.Metadata);
-        Assert.Single(fileReferenceContent.Metadata);
-        Assert.Equal("metadata-value-7", fileReferenceContent.Metadata["metadata-key-7"]?.ToString());
+        var fileReferenceContent1 = deserializedMessage.Items[8] as FileReferenceContent;
+        Assert.NotNull(fileReferenceContent1);
+        Assert.Equal("file-id-1", fileReferenceContent1.FileId);
+        Assert.Equal("model-7", fileReferenceContent1.ModelId);
+        Assert.NotNull(fileReferenceContent1.Metadata);
+        Assert.Single(fileReferenceContent1.Metadata);
+        Assert.Equal("metadata-value-7", fileReferenceContent1.Metadata["metadata-key-7"]?.ToString());
 
-        var annotationContent = deserializedMessage.Items[9] as AnnotationContent;
+        var fileReferenceContent2 = deserializedMessage.Items[9] as FileReferenceContent;
+        Assert.NotNull(fileReferenceContent2);
+        Assert.Equal("file-id-2", fileReferenceContent2.FileId);
+        Assert.NotNull(fileReferenceContent2.Tools);
+        Assert.Equal(3, fileReferenceContent2.Tools.Count);
+
+        var annotationContent = deserializedMessage.Items[10] as AnnotationContent;
         Assert.NotNull(annotationContent);
-        Assert.Equal("file-id-2", annotationContent.FileId);
-        Assert.Equal("quote-8", annotationContent.Quote);
+        Assert.Equal("file-id-3", annotationContent.ReferenceId);
+        Assert.Equal("quote-8", annotationContent.Label);
+        Assert.Equal(AnnotationKind.TextCitation, annotationContent.Kind);
+        Assert.Equal("quote-8", annotationContent.Label);
         Assert.Equal("model-8", annotationContent.ModelId);
         Assert.Equal(2, annotationContent.StartIndex);
         Assert.Equal(24, annotationContent.EndIndex);

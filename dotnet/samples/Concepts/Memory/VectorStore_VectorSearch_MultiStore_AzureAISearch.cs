@@ -1,12 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Azure;
+using Azure.AI.OpenAI;
 using Azure.Identity;
 using Azure.Search.Documents.Indexes;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
-using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 
 namespace Memory;
 
@@ -23,7 +24,11 @@ namespace Memory;
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_Volatile"/></para>
 =======
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_InMemory"/></para>
+<<<<<<< HEAD
 >>>>>>> main
+=======
+/// <para><see cref="VectorStore_VectorSearch_MultiStore_Postgres"/></para>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 ///
 /// To run this sample, you need an already existing Azure AI Search instance.
 /// To set your secrets use:
@@ -44,7 +49,7 @@ public class VectorStore_VectorSearch_MultiStore_AzureAISearch(ITestOutputHelper
             .CreateBuilder();
 
         // Register an embedding generation service with the DI container.
-        kernelBuilder.AddAzureOpenAITextEmbeddingGeneration(
+        kernelBuilder.AddAzureOpenAIEmbeddingGenerator(
             deploymentName: TestConfiguration.AzureOpenAIEmbeddings.DeploymentName,
             endpoint: TestConfiguration.AzureOpenAIEmbeddings.Endpoint,
             credential: new AzureCliCredential());
@@ -74,10 +79,9 @@ public class VectorStore_VectorSearch_MultiStore_AzureAISearch(ITestOutputHelper
     public async Task ExampleWithoutDIAsync()
     {
         // Create an embedding generation service.
-        var textEmbeddingGenerationService = new AzureOpenAITextEmbeddingGenerationService(
-                TestConfiguration.AzureOpenAIEmbeddings.DeploymentName,
-                TestConfiguration.AzureOpenAIEmbeddings.Endpoint,
-                new AzureCliCredential());
+        var embeddingGenerator = new AzureOpenAIClient(new Uri(TestConfiguration.AzureOpenAIEmbeddings.Endpoint), new AzureCliCredential())
+            .GetEmbeddingClient(TestConfiguration.AzureOpenAIEmbeddings.DeploymentName)
+            .AsIEmbeddingGenerator();
 
         // Construct the Azure AI Search VectorStore.
         var searchIndexClient = new SearchIndexClient(
@@ -86,7 +90,7 @@ public class VectorStore_VectorSearch_MultiStore_AzureAISearch(ITestOutputHelper
         var vectorStore = new AzureAISearchVectorStore(searchIndexClient);
 
         // Create the common processor that works for any vector store.
-        var processor = new VectorStore_VectorSearch_MultiStore_Common(vectorStore, textEmbeddingGenerationService, this.Output);
+        var processor = new VectorStore_VectorSearch_MultiStore_Common(vectorStore, embeddingGenerator, this.Output);
 
         // Run the process and pass a key generator function to it, to generate unique record keys.
         // The key generator function is required, since different vector stores may require different key types.

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -13,10 +13,13 @@ namespace Microsoft.SemanticKernel;
 /// </summary>
 [KnownType(typeof(KernelProcessEdge))]
 [KnownType(typeof(KernelProcessStepState))]
+[KnownType(typeof(KernelProcessProxyMessage))]
 [KnownType(typeof(DaprProcessInfo))]
 [KnownType(typeof(DaprMapInfo))]
+[KnownType(typeof(DaprProxyInfo))]
 [JsonDerivedType(typeof(DaprProcessInfo))]
 [JsonDerivedType(typeof(DaprMapInfo))]
+[JsonDerivedType(typeof(DaprProxyInfo))]
 public record DaprStepInfo
 {
     /// <summary>

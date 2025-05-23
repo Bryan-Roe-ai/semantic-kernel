@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -18,7 +18,11 @@ namespace SemanticKernel.IntegrationTests.Data;
 /// </summary>
 public abstract class BaseTextSearchTests : BaseIntegrationTest
 {
+<<<<<<< HEAD
     [Fact]
+=======
+    [Fact(Skip = "For manual verification only.")]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public virtual async Task CanSearchAsync()
     {
         // Arrange
@@ -42,7 +46,11 @@ public abstract class BaseTextSearchTests : BaseIntegrationTest
         }
     }
 
+<<<<<<< HEAD
     [Fact]
+=======
+    [Fact(Skip = "For manual verification only.")]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public virtual async Task CanGetTextSearchResultsAsync()
     {
         // Arrange
@@ -72,7 +80,11 @@ public abstract class BaseTextSearchTests : BaseIntegrationTest
         }
     }
 
+<<<<<<< HEAD
     [Fact]
+=======
+    [Fact(Skip = "For manual verification only.")]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public virtual async Task CanGetSearchResultsAsync()
     {
         // Arrange
@@ -92,7 +104,11 @@ public abstract class BaseTextSearchTests : BaseIntegrationTest
         Assert.True(this.VerifySearchResults(results, query));
     }
 
+<<<<<<< HEAD
     [Fact]
+=======
+    [Fact(Skip = "For manual verification only.")]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public virtual async Task UsingTextSearchWithAFilterAsync()
     {
         // Arrange
@@ -113,7 +129,11 @@ public abstract class BaseTextSearchTests : BaseIntegrationTest
         Assert.True(this.VerifySearchResults(results, query, filter));
     }
 
+<<<<<<< HEAD
     [Fact]
+=======
+    [Fact(Skip = "For manual verification only.")]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public virtual async Task FunctionCallingUsingCreateWithSearchAsync()
     {
         // Arrange
@@ -142,7 +162,11 @@ public abstract class BaseTextSearchTests : BaseIntegrationTest
         Assert.NotEmpty(results);
     }
 
+<<<<<<< HEAD
     [Fact]
+=======
+    [Fact(Skip = "For manual verification only.")]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public virtual async Task FunctionCallingUsingCreateWithGetSearchResultsAsync()
     {
         // Arrange
@@ -171,7 +195,11 @@ public abstract class BaseTextSearchTests : BaseIntegrationTest
         Assert.NotEmpty(results);
     }
 
+<<<<<<< HEAD
     [Fact]
+=======
+    [Fact(Skip = "For manual verification only.")]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public virtual async Task FunctionCallingUsingGetTextSearchResultsAsync()
     {
         // Arrange

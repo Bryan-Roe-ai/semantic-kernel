@@ -1,4 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
+
+// TODO: Reimplement these as integration tests, #10464
+
+#if DISABLED
 
 using System;
 using System.Data.Common;
@@ -43,6 +47,7 @@ public sealed class SqliteVectorStoreTests
         Assert.NotNull(collectionWithStringKey);
     }
 
+#pragma warning disable CS0618 // ISqliteVectorStoreRecordCollectionFactory is obsolete
     [Fact]
     public void GetCollectionWithFactoryReturnsCustomCollection()
     {
@@ -72,6 +77,7 @@ public sealed class SqliteVectorStoreTests
             "collection",
             It.IsAny<VectorStoreRecordDefinition>()), Times.Once());
     }
+#pragma warning restore CS0618
 
     [Fact]
     public async Task ListCollectionNamesReturnsCollectionNamesAsync()
@@ -102,3 +108,5 @@ public sealed class SqliteVectorStoreTests
         Assert.Contains("collection2", collections);
     }
 }
+
+#endif

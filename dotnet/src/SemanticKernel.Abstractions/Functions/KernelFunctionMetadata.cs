@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -58,7 +58,7 @@ public sealed class KernelFunctionMetadata
         init
         {
             Verify.NotNull(value);
-            Verify.ValidFunctionName(value);
+            KernelVerify.ValidFunctionName(value);
             this._name = value;
         }
     }

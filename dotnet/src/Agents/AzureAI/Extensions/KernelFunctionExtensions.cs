@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿// Copyright (c) Microsoft. All rights reserved.
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,18 @@ using AzureAIP = Azure.AI.Projects;
 namespace Microsoft.SemanticKernel.Agents.AzureAI;
 
 internal static class KernelFunctionExtensions
+=======
+// Copyright (c) Microsoft. All rights reserved.
+using System;
+using Azure.AI.Projects;
+
+namespace Microsoft.SemanticKernel.Agents.AzureAI;
+
+/// <summary>
+/// Extensions for <see cref="KernelFunction"/> to support Azure AI specific operations.
+/// </summary>
+public static class KernelFunctionExtensions
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 {
     /// <summary>
     /// Convert <see cref="KernelFunction"/> to an OpenAI tool model.
@@ -14,6 +27,7 @@ internal static class KernelFunctionExtensions
     /// <param name="function">The source function</param>
     /// <param name="pluginName">The plugin name</param>
     /// <returns>An OpenAI tool definition</returns>
+<<<<<<< HEAD
     public static AzureAIP.FunctionToolDefinition ToToolDefinition(this KernelFunction function, string pluginName)
     {
         var metadata = function.Metadata;
@@ -89,5 +103,17 @@ internal static class KernelFunctionExtensions
 
             _ => "object",
         };
+=======
+    public static FunctionToolDefinition ToToolDefinition(this KernelFunction function, string pluginName)
+    {
+        if (function.Metadata.Parameters.Count > 0)
+        {
+            BinaryData parameterData = function.Metadata.CreateParameterSpec();
+
+            return new FunctionToolDefinition(FunctionName.ToFullyQualifiedName(function.Name, pluginName), function.Description, parameterData);
+        }
+
+        return new FunctionToolDefinition(FunctionName.ToFullyQualifiedName(function.Name, pluginName), function.Description);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 }

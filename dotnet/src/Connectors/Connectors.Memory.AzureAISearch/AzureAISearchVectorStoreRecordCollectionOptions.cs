@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -62,16 +63,21 @@
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
+using System;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using Azure.Search.Documents.Indexes;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 
 namespace Microsoft.SemanticKernel.Connectors.AzureAISearch;
 
 /// <summary>
-/// Options when creating a <see cref="AzureAISearchVectorStoreRecordCollection{TRecord}"/>.
+/// Options when creating a <see cref="AzureAISearchVectorStoreRecordCollection{TKey, TRecord}"/>.
 /// </summary>
 public sealed class AzureAISearchVectorStoreRecordCollectionOptions<TRecord>
 {
@@ -81,6 +87,7 @@ public sealed class AzureAISearchVectorStoreRecordCollectionOptions<TRecord>
     /// <remarks>
     /// If not set, the default mapper that is provided by the Azure AI Search client SDK will be used.
     /// </remarks>
+    [Obsolete("Custom mappers are no longer supported.", error: true)]
     public IVectorStoreRecordMapper<TRecord, JsonObject>? JsonObjectCustomMapper { get; init; } = null;
 
     /// <summary>
@@ -173,4 +180,9 @@ public sealed class AzureAISearchVectorStoreRecordCollectionOptions<TRecord>
 >>>>>>> head
     /// </summary>
     public JsonSerializerOptions? JsonSerializerOptions { get; init; } = null;
+
+    /// <summary>
+    /// Gets or sets the default embedding generator to use when generating vectors embeddings with this vector store.
+    /// </summary>
+    public IEmbeddingGenerator? EmbeddingGenerator { get; init; }
 }

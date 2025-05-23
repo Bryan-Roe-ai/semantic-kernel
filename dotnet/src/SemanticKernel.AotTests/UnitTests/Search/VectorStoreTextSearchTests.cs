@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.VectorData;
@@ -46,7 +46,7 @@ internal sealed class VectorStoreTextSearchTests
         };
         var vectorizableTextSearch = new MockVectorizableTextSearch<DataModel>(testData);
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddSingleton<IVectorizableTextSearch<DataModel>>(vectorizableTextSearch);
+        serviceCollection.AddSingleton<IVectorSearch<DataModel>>(vectorizableTextSearch);
 
         // Act
         serviceCollection.AddVectorStoreTextSearch<DataModel>();

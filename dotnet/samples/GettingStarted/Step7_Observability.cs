@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,7 +13,7 @@ public sealed class Step7_Observability(ITestOutputHelper output) : BaseTest(out
     /// Shows how to observe the execution of a <see cref="KernelPlugin"/> instance with filters.
     /// </summary>
     [Fact]
-    public async Task ObservabilityWithFiltersAsync()
+    public async Task ObservabilityWithFilters()
     {
         // Create a kernel with OpenAI chat completion
         IKernelBuilder kernelBuilder = Kernel.CreateBuilder();

@@ -1,14 +1,18 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 <<<<<<< HEAD
 using Microsoft.SemanticKernel.Data;
 =======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
 >>>>>>> main
+=======
+using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using NRedisStack.Search;
 
 namespace Microsoft.SemanticKernel.Connectors.Redis;
@@ -27,42 +31,39 @@ internal static class RedisVectorStoreCollectionSearchMapping
     /// <returns>The vector converted to a byte array.</returns>
     /// <exception cref="NotSupportedException">Thrown if the vector type is not supported.</exception>
     public static byte[] ValidateVectorAndConvertToBytes<TVector>(TVector vector, string connectorTypeName)
-    {
-        byte[] vectorBytes;
-        if (vector is ReadOnlyMemory<float> floatVector)
+        => vector switch
         {
-            vectorBytes = MemoryMarshal.AsBytes(floatVector.Span).ToArray();
-        }
-        else if (vector is ReadOnlyMemory<double> doubleVector)
-        {
-            vectorBytes = MemoryMarshal.AsBytes(doubleVector.Span).ToArray();
-        }
-        else
-        {
-            throw new NotSupportedException($"The provided vector type {vector?.GetType().FullName} is not supported by the Redis {connectorTypeName} connector.");
-        }
-
-        return vectorBytes;
-    }
+            ReadOnlyMemory<float> floatVector => MemoryMarshal.AsBytes(floatVector.Span).ToArray(),
+            ReadOnlyMemory<double> doubleVector => MemoryMarshal.AsBytes(doubleVector.Span).ToArray(),
+            _ => throw new NotSupportedException($"The provided vector type {vector?.GetType().FullName} is not supported by the Redis {connectorTypeName} connector.")
+        };
 
     /// <summary>
     /// Build a Redis <see cref="Query"/> object from the given vector and options.
     /// </summary>
     /// <param name="vectorBytes">The vector to search the database with as a byte array.</param>
+    /// <param name="top">The maximum number of elements to return.</param>
     /// <param name="options">The options to configure the behavior of the search.</param>
-    /// <param name="storagePropertyNames">A mapping of data model property names to the names under which they are stored.</param>
-    /// <param name="firstVectorPropertyName">The name of the first vector property in the data model.</param>
+    /// <param name="model">The model.</param>
+    /// <param name="vectorProperty">The vector property.</param>
     /// <param name="selectFields">The set of fields to limit the results to. Null for all.</param>
     /// <returns>The <see cref="Query"/>.</returns>
-    public static Query BuildQuery(byte[] vectorBytes, VectorSearchOptions options, IReadOnlyDictionary<string, string> storagePropertyNames, string firstVectorPropertyName, string[]? selectFields)
+    public static Query BuildQuery<TRecord>(byte[] vectorBytes, int top, VectorSearchOptions<TRecord> options, VectorStoreRecordModel model, VectorStoreRecordVectorPropertyModel vectorProperty, string[]? selectFields)
     {
-        // Resolve options.
-        var vectorPropertyName = ResolveVectorFieldName(options.VectorPropertyName, storagePropertyNames, firstVectorPropertyName);
-
         // Build search query.
-        var redisLimit = options.Top + options.Skip;
-        var filter = RedisVectorStoreCollectionSearchMapping.BuildFilter(options.Filter, storagePropertyNames);
-        var query = new Query($"{filter}=>[KNN {redisLimit} @{vectorPropertyName} $embedding AS vector_score]")
+        var redisLimit = top + options.Skip;
+
+#pragma warning disable CS0618 // Type or member is obsolete
+        var filter = options switch
+        {
+            { OldFilter: not null, Filter: not null } => throw new ArgumentException("Either Filter or OldFilter can be specified, but not both"),
+            { OldFilter: VectorSearchFilter legacyFilter } => BuildLegacyFilter(legacyFilter, model),
+            { Filter: Expression<Func<TRecord, bool>> newFilter } => new RedisFilterTranslator().Translate(newFilter, model),
+            _ => "*"
+        };
+#pragma warning restore CS0618 // Type or member is obsolete
+
+        var query = new Query($"{filter}=>[KNN {redisLimit} @{vectorProperty.StorageName} $embedding AS vector_score]")
             .AddParam("embedding", vectorBytes)
             .SetSortBy("vector_score")
             .Limit(options.Skip, redisLimit)
@@ -77,25 +78,44 @@ internal static class RedisVectorStoreCollectionSearchMapping
         return query;
     }
 
+    internal static Query BuildQuery<TRecord>(Expression<Func<TRecord, bool>> filter, int top, GetFilteredRecordOptions<TRecord> options, VectorStoreRecordModel model)
+    {
+        var translatedFilter = new RedisFilterTranslator().Translate(filter, model);
+        Query query = new Query(translatedFilter)
+            .Limit(options.Skip, top)
+            .Dialect(2);
+
+        var sortInfo = options.OrderBy.Values.Count switch
+        {
+            0 => null,
+            1 => options.OrderBy.Values[0],
+            _ => throw new NotSupportedException("Redis does not support ordering by more than one property.")
+        };
+
+        if (sortInfo is not null)
+        {
+            string storageName = model.GetDataOrKeyProperty(sortInfo.PropertySelector).StorageName;
+            query = query.SetSortBy(field: storageName, ascending: sortInfo.Ascending);
+        }
+
+        return query;
+    }
+
     /// <summary>
     /// Build a redis filter string from the provided <see cref="VectorSearchFilter"/>.
     /// </summary>
     /// <param name="basicVectorSearchFilter">The <see cref="VectorSearchFilter"/> to build the Redis filter string from.</param>
-    /// <param name="storagePropertyNames">A mapping of data model property names to the names under which they are stored.</param>
+    /// <param name="model">The model.</param>
     /// <returns>The Redis filter string.</returns>
     /// <exception cref="InvalidOperationException">Thrown when a provided filter value is not supported.</exception>
-    public static string BuildFilter(VectorSearchFilter? basicVectorSearchFilter, IReadOnlyDictionary<string, string> storagePropertyNames)
+#pragma warning disable CS0618 // Type or member is obsolete
+    public static string BuildLegacyFilter(VectorSearchFilter basicVectorSearchFilter, VectorStoreRecordModel model)
     {
-        if (basicVectorSearchFilter == null)
-        {
-            return "*";
-        }
-
         var filterClauses = basicVectorSearchFilter.FilterClauses.Select(clause =>
         {
             if (clause is EqualToFilterClause equalityFilterClause)
             {
-                var storagePropertyName = GetStoragePropertyName(storagePropertyNames, equalityFilterClause.FieldName);
+                var storagePropertyName = GetStoragePropertyName(model, equalityFilterClause.FieldName);
 
                 return equalityFilterClause.Value switch
                 {
@@ -109,7 +129,7 @@ internal static class RedisVectorStoreCollectionSearchMapping
             }
             else if (clause is AnyTagEqualToFilterClause tagListContainsClause)
             {
-                var storagePropertyName = GetStoragePropertyName(storagePropertyNames, tagListContainsClause.FieldName);
+                var storagePropertyName = GetStoragePropertyName(model, tagListContainsClause.FieldName);
                 return $"@{storagePropertyName}:{{{tagListContainsClause.Value}}}";
             }
             else
@@ -120,28 +140,16 @@ internal static class RedisVectorStoreCollectionSearchMapping
 
         return $"({string.Join(" ", filterClauses)})";
     }
+#pragma warning restore CS0618 // Type or member is obsolete
 
     /// <summary>
     /// Resolve the distance function to use for a search by checking the distance function of the vector property specified in options
     /// or by falling back to the distance function of the first vector property, or by falling back to the default distance function.
     /// </summary>
-    /// <param name="options">The search options potentially containing a vector field to search.</param>
-    /// <param name="vectorProperties">The list of all vector properties.</param>
-    /// <param name="firstVectorProperty">The first vector property in the record.</param>
+    /// <param name="vectorProperty">The vector property to be used.</param>
     /// <returns>The distance function for the vector we want to search.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when a user asked for a vector property that doesn't exist on the record.</exception>
-    public static string ResolveDistanceFunction(VectorSearchOptions options, IReadOnlyList<VectorStoreRecordVectorProperty> vectorProperties, VectorStoreRecordVectorProperty firstVectorProperty)
-    {
-        if (options.VectorPropertyName == null || vectorProperties.Count == 1)
-        {
-            return firstVectorProperty.DistanceFunction ?? DistanceFunction.CosineSimilarity;
-        }
-
-        var vectorProperty = vectorProperties.FirstOrDefault(p => p.DataModelPropertyName == options.VectorPropertyName)
-            ?? throw new InvalidOperationException($"The collection does not have a vector field named '{options.VectorPropertyName}'.");
-
-        return vectorProperty.DistanceFunction ?? DistanceFunction.CosineSimilarity;
-    }
+    public static string ResolveDistanceFunction(VectorStoreRecordVectorPropertyModel vectorProperty)
+        => vectorProperty.DistanceFunction ?? DistanceFunction.CosineSimilarity;
 
     /// <summary>
     /// Convert the score from redis into the appropriate output score based on the distance function.
@@ -163,52 +171,25 @@ internal static class RedisVectorStoreCollectionSearchMapping
             DistanceFunction.CosineSimilarity => 1 - redisScore,
             DistanceFunction.CosineDistance => redisScore,
             DistanceFunction.DotProductSimilarity => redisScore,
-            DistanceFunction.EuclideanDistance => redisScore,
+            DistanceFunction.EuclideanSquaredDistance => redisScore,
             _ => throw new InvalidOperationException($"The distance function '{distanceFunction}' is not supported."),
         };
     }
 
     /// <summary>
-    /// Resolve the vector field name to use for a search by using the storage name for the field name from options
-    /// if available, and falling back to the first vector field name if not.
-    /// </summary>
-    /// <param name="optionsVectorFieldName">The vector field name provided via options.</param>
-    /// <param name="storagePropertyNames">A mapping of data model property names to the names under which they are stored.</param>
-    /// <param name="firstVectorPropertyName">The name of the first vector property in the data model.</param>
-    /// <returns>The resolved vector field name.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if the provided field name is not a valid field name.</exception>
-    private static string ResolveVectorFieldName(string? optionsVectorFieldName, IReadOnlyDictionary<string, string> storagePropertyNames, string firstVectorPropertyName)
-    {
-        string? vectorFieldName;
-        if (!string.IsNullOrWhiteSpace(optionsVectorFieldName))
-        {
-            if (!storagePropertyNames.TryGetValue(optionsVectorFieldName!, out vectorFieldName))
-            {
-                throw new InvalidOperationException($"The collection does not have a vector field named '{optionsVectorFieldName}'.");
-            }
-        }
-        else
-        {
-            vectorFieldName = firstVectorPropertyName;
-        }
-
-        return vectorFieldName!;
-    }
-
-    /// <summary>
     /// Gets the name of the name under which the property with the given name is stored.
     /// </summary>
-    /// <param name="storagePropertyNames">A mapping of data model property names to the names under which they are stored.</param>
+    /// <param name="model">The model.</param>
     /// <param name="fieldName">The name of the property in the data model.</param>
     /// <returns>The name that the property os stored under.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the property name is not found.</exception>
-    private static string GetStoragePropertyName(IReadOnlyDictionary<string, string> storagePropertyNames, string fieldName)
+    private static string GetStoragePropertyName(VectorStoreRecordModel model, string fieldName)
     {
-        if (!storagePropertyNames.TryGetValue(fieldName, out var storageFieldName))
+        if (!model.PropertyMap.TryGetValue(fieldName, out var property))
         {
             throw new InvalidOperationException($"Property name '{fieldName}' provided as part of the filter clause is not a valid property name.");
         }
 
-        return storageFieldName;
+        return property.StorageName;
     }
 }

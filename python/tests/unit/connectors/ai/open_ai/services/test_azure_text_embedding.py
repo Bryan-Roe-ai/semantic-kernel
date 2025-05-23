@@ -7,6 +7,7 @@ from openai import AsyncAzureOpenAI
 from openai.resources.embeddings import AsyncEmbeddings
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -73,6 +74,9 @@ from semantic_kernel.connectors.ai.open_ai.services.azure_text_embedding import 
 >>>>>>> Stashed changes
 =======
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import EmbeddingGeneratorBase
+=======
+from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.connectors.ai.open_ai.services.azure_text_embedding import AzureTextEmbedding
 <<<<<<< HEAD
 from semantic_kernel.connectors.ai.open_ai.settings.azure_open_ai_settings import AzureOpenAISettings

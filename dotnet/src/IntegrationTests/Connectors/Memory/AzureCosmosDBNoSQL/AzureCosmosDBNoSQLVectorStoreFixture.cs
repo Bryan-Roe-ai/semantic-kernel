@@ -1,6 +1,7 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
@@ -11,6 +12,7 @@ namespace SemanticKernel.IntegrationTests.Connectors.Memory.AzureCosmosDBNoSQL;
 
 public class AzureCosmosDBNoSQLVectorStoreFixture : IAsyncLifetime, IDisposable
 {
+    public const string ConnectionStringKey = "AzureCosmosDBNoSQL:ConnectionString";
     private const string DatabaseName = "testdb";
 
     private readonly CosmosClient _cosmosClient;
@@ -20,20 +22,45 @@ public class AzureCosmosDBNoSQLVectorStoreFixture : IAsyncLifetime, IDisposable
 
     public AzureCosmosDBNoSQLVectorStoreFixture()
     {
+        var connectionString = GetConnectionString();
+        if (string.IsNullOrWhiteSpace(connectionString))
+        {
+            throw new ArgumentNullException($"{connectionString} string is not configured");
+        }
+
+        var options = new CosmosClientOptions
+        {
+            UseSystemTextJsonSerializerWithOptions = JsonSerializerOptions.Default,
+            ConnectionMode = ConnectionMode.Gateway,
+#pragma warning disable CA5400 // HttpClient may be created without enabling CheckCertificateRevocationList
+            HttpClientFactory = () => new HttpClient(new HttpClientHandler { ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator })
+#pragma warning restore CA5400 // HttpClient may be created without enabling CheckCertificateRevocationList
+        };
+
+        this._cosmosClient = new CosmosClient(connectionString, options);
+    }
+
+    public static string? GetConnectionString()
+    {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile(path: "testsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile(
                 path: "testsettings.development.json",
-                optional: false,
+                optional: true,
                 reloadOnChange: true
             )
             .AddEnvironmentVariables()
+            .AddUserSecrets<AzureCosmosDBNoSQLVectorStoreFixture>()
             .Build();
 
+<<<<<<< HEAD
         var connectionString = GetConnectionString(configuration);
         var options = new CosmosClientOptions { Serializer = new CosmosSystemTextJsonSerializer(JsonSerializerOptions.Default) };
 
         this._cosmosClient = new CosmosClient(connectionString, options);
+=======
+        return configuration[ConnectionStringKey];
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     public async Task InitializeAsync()
@@ -61,19 +88,4 @@ public class AzureCosmosDBNoSQLVectorStoreFixture : IAsyncLifetime, IDisposable
             this._cosmosClient.Dispose();
         }
     }
-
-    #region private
-
-    private static string GetConnectionString(IConfigurationRoot configuration)
-    {
-        var settingValue = configuration["AzureCosmosDBNoSQL:ConnectionString"];
-        if (string.IsNullOrWhiteSpace(settingValue))
-        {
-            throw new ArgumentNullException($"{settingValue} string is not configured");
-        }
-
-        return settingValue;
-    }
-
-    #endregion
 }

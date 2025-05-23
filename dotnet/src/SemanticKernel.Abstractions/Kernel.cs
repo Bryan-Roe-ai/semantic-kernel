@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -349,13 +349,15 @@ public sealed class Kernel
         KernelFunction function,
         KernelArguments arguments,
         bool isStreaming,
+        PromptExecutionSettings? executionSettings,
         Func<PromptRenderContext, Task> renderCallback,
         CancellationToken cancellationToken)
     {
         PromptRenderContext context = new(this, function, arguments)
         {
             CancellationToken = cancellationToken,
-            IsStreaming = isStreaming
+            IsStreaming = isStreaming,
+            ExecutionSettings = executionSettings
         };
 
         await InvokeFilterOrPromptRenderAsync(this._promptRenderFilters, renderCallback, context).ConfigureAwait(false);

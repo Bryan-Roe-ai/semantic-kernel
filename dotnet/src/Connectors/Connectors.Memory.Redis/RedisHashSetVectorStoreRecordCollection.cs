@@ -2,11 +2,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
+using Microsoft.Extensions.VectorData.ConnectorSupport;
+using Microsoft.Extensions.VectorData.Properties;
 using NRedisStack.RedisStackCommands;
 using NRedisStack.Search;
 using NRedisStack.Search.Literals.Enums;
@@ -17,39 +22,16 @@ namespace Microsoft.SemanticKernel.Connectors.Redis;
 /// <summary>
 /// Service for storing and retrieving vector records, that uses Redis HashSets as the underlying storage.
 /// </summary>
+/// <typeparam name="TKey">The data type of the record key. Can be either <see cref="string"/>, or <see cref="object"/> for dynamic mapping.</typeparam>
 /// <typeparam name="TRecord">The data model to use for adding, updating and retrieving data from storage.</typeparam>
 #pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorStoreRecordCollection<string, TRecord>
+public sealed class RedisHashSetVectorStoreRecordCollection<TKey, TRecord> : IVectorStoreRecordCollection<TKey, TRecord>
+    where TKey : notnull
+    where TRecord : notnull
 #pragma warning restore CA1711 // Identifiers should not have incorrect suffix
 {
-    /// <summary>The name of this database for telemetry purposes.</summary>
-    private const string DatabaseName = "Redis";
-
-    /// <summary>A set of types that a key on the provided model may have.</summary>
-    private static readonly HashSet<Type> s_supportedKeyTypes =
-    [
-        typeof(string)
-    ];
-
-    /// <summary>A set of types that data properties on the provided model may have.</summary>
-    private static readonly HashSet<Type> s_supportedDataTypes =
-    [
-        typeof(string),
-        typeof(int),
-        typeof(uint),
-        typeof(long),
-        typeof(ulong),
-        typeof(double),
-        typeof(float),
-        typeof(bool),
-        typeof(int?),
-        typeof(uint?),
-        typeof(long?),
-        typeof(ulong?),
-        typeof(double?),
-        typeof(float?),
-        typeof(bool?)
-    ];
+    /// <summary>Metadata about vector store record collection.</summary>
+    private readonly VectorStoreRecordCollectionMetadata _collectionMetadata;
 
     /// <summary>A set of types that vectors on the provided model may have.</summary>
     private static readonly HashSet<Type> s_supportedVectorTypes =
@@ -60,22 +42,57 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
         typeof(ReadOnlyMemory<double>?)
     ];
 
+    internal static readonly VectorStoreRecordModelBuildingOptions ModelBuildingOptions = new()
+    {
+        RequiresAtLeastOneVector = false,
+        SupportsMultipleKeys = false,
+        SupportsMultipleVectors = true,
+
+        SupportedKeyPropertyTypes = [typeof(string)],
+
+        SupportedDataPropertyTypes =
+        [
+            typeof(string),
+            typeof(int),
+            typeof(uint),
+            typeof(long),
+            typeof(ulong),
+            typeof(double),
+            typeof(float),
+            typeof(bool)
+        ],
+
+        SupportedEnumerableDataPropertyElementTypes = [],
+
+        SupportedVectorPropertyTypes = s_supportedVectorTypes
+    };
+
     /// <summary>The default options for vector search.</summary>
+<<<<<<< HEAD
     private static readonly VectorSearchOptions s_defaultVectorSearchOptions = new();
+=======
+    private static readonly VectorSearchOptions<TRecord> s_defaultVectorSearchOptions = new();
+
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <summary>The Redis database to read/write records from.</summary>
     private readonly IDatabase _database;
 
-    /// <summary>The name of the collection that this <see cref="RedisHashSetVectorStoreRecordCollection{TRecord}"/> will access.</summary>
+    /// <summary>The name of the collection that this <see cref="RedisHashSetVectorStoreRecordCollection{TKey, TRecord}"/> will access.</summary>
     private readonly string _collectionName;
 
     /// <summary>Optional configuration options for this class.</summary>
     private readonly RedisHashSetVectorStoreRecordCollectionOptions<TRecord> _options;
 
+<<<<<<< HEAD
     /// <summary>A definition of the current storage model.</summary>
     private readonly VectorStoreRecordDefinition _vectorStoreRecordDefinition;
 
     /// <summary>A helper to access property information for the current data model and record definition.</summary>
     private readonly VectorStoreRecordPropertyReader _propertyReader;
+=======
+    /// <summary>The model.</summary>
+    private readonly VectorStoreRecordModel _model;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     /// <summary>An array of the names of all the data properties that are part of the Redis payload as RedisValue objects, i.e. all properties except the key and vector properties.</summary>
     private readonly RedisValue[] _dataStoragePropertyNameRedisValues;
@@ -97,27 +114,31 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
     private readonly string? _firstVectorPropertyName = null;
 
     /// <summary>The mapper to use when mapping between the consumer data model and the Redis record.</summary>
-    private readonly IVectorStoreRecordMapper<TRecord, (string Key, HashEntry[] HashEntries)> _mapper;
+    private readonly RedisHashSetVectorStoreRecordMapper<TRecord> _mapper;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="RedisHashSetVectorStoreRecordCollection{TRecord}"/> class.
+    /// Initializes a new instance of the <see cref="RedisHashSetVectorStoreRecordCollection{TKey, TRecord}"/> class.
     /// </summary>
     /// <param name="database">The Redis database to read/write records from.</param>
-    /// <param name="collectionName">The name of the collection that this <see cref="RedisHashSetVectorStoreRecordCollectionOptions{TRecord}"/> will access.</param>
+    /// <param name="name">The name of the collection that this <see cref="RedisHashSetVectorStoreRecordCollectionOptions{TRecord}"/> will access.</param>
     /// <param name="options">Optional configuration options for this class.</param>
     /// <exception cref="ArgumentNullException">Throw when parameters are invalid.</exception>
-    public RedisHashSetVectorStoreRecordCollection(IDatabase database, string collectionName, RedisHashSetVectorStoreRecordCollectionOptions<TRecord>? options = null)
+    public RedisHashSetVectorStoreRecordCollection(IDatabase database, string name, RedisHashSetVectorStoreRecordCollectionOptions<TRecord>? options = null)
     {
         // Verify.
         Verify.NotNull(database);
-        Verify.NotNullOrWhiteSpace(collectionName);
-        VectorStoreRecordPropertyVerification.VerifyGenericDataModelKeyType(typeof(TRecord), options?.HashEntriesCustomMapper is not null, s_supportedKeyTypes);
-        VectorStoreRecordPropertyVerification.VerifyGenericDataModelDefinitionSupplied(typeof(TRecord), options?.VectorStoreRecordDefinition is not null);
+        Verify.NotNullOrWhiteSpace(name);
+
+        if (typeof(TKey) != typeof(string) && typeof(TKey) != typeof(object))
+        {
+            throw new NotSupportedException("Only string keys are supported (and object for dynamic mapping).");
+        }
 
         // Assign.
         this._database = database;
-        this._collectionName = collectionName;
+        this._collectionName = name;
         this._options = options ?? new RedisHashSetVectorStoreRecordCollectionOptions<TRecord>();
+<<<<<<< HEAD
         this._vectorStoreRecordDefinition = this._options.VectorStoreRecordDefinition ?? VectorStoreRecordPropertyReader.CreateVectorStoreRecordDefinitionFromType(typeof(TRecord), true);
 
         // Validate property types.
@@ -173,10 +194,21 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
             .ToArray();
 
         this._dataStoragePropertyNamesWithScore = [.. this._propertyReader.DataPropertyStoragePropertyNames, "vector_score"];
+=======
+        this._model = new VectorStoreRecordModelBuilder(ModelBuildingOptions)
+            .Build(typeof(TRecord), this._options.VectorStoreRecordDefinition, this._options.EmbeddingGenerator);
+
+        // Lookup storage property names.
+        this._dataStoragePropertyNameRedisValues = this._model.DataProperties.Select(p => RedisValue.Unbox(p.StorageName)).ToArray();
+        this._dataStoragePropertyNamesWithScore = [.. this._model.DataProperties.Select(p => p.StorageName), "vector_score"];
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Assign Mapper.
-        if (this._options.HashEntriesCustomMapper is not null)
+        this._mapper = new RedisHashSetVectorStoreRecordMapper<TRecord>(this._model);
+
+        this._collectionMetadata = new()
         {
+<<<<<<< HEAD
             // Custom Mapper.
             this._mapper = this._options.HashEntriesCustomMapper;
         }
@@ -197,10 +229,16 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
             this._mapper = new RedisHashSetVectorStoreRecordMapper<TRecord>(this._vectorStoreRecordDefinition, this._storagePropertyNames);
             this._mapper = new RedisHashSetVectorStoreRecordMapper<TRecord>(this._propertyReader);
         }
+=======
+            VectorStoreSystemName = RedisConstants.VectorStoreSystemName,
+            VectorStoreName = database.Database.ToString(),
+            CollectionName = name
+        };
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     /// <inheritdoc />
-    public string CollectionName => this._collectionName;
+    public string Name => this._collectionName;
 
     /// <inheritdoc />
     public async Task<bool> CollectionExistsAsync(CancellationToken cancellationToken = default)
@@ -218,7 +256,8 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
         {
             throw new VectorStoreOperationException("Call to vector store failed.", ex)
             {
-                VectorStoreType = DatabaseName,
+                VectorStoreSystemName = RedisConstants.VectorStoreSystemName,
+                VectorStoreName = this._collectionMetadata.VectorStoreName,
                 CollectionName = this._collectionName,
                 OperationName = "FT.INFO"
             };
@@ -229,9 +268,13 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
     public Task CreateCollectionAsync(CancellationToken cancellationToken = default)
     {
         // Map the record definition to a schema.
+<<<<<<< HEAD
         var schema = RedisVectorStoreCollectionCreateMapping.MapToSchema(this._vectorStoreRecordDefinition.Properties, this._storagePropertyNames, useDollarPrefix: false);
         var schema = RedisVectorStoreCollectionCreateMapping.MapToSchema(this._vectorStoreRecordDefinition.Properties, this._storagePropertyNames);
         var schema = RedisVectorStoreCollectionCreateMapping.MapToSchema(this._propertyReader.Properties, this._propertyReader.StoragePropertyNamesMap, useDollarPrefix: false);
+=======
+        var schema = RedisVectorStoreCollectionCreateMapping.MapToSchema(this._model.Properties, useDollarPrefix: false);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Create the index creation params.
         // Add the collection name and colon as the index prefix, which means that any record where the key is prefixed with this text will be indexed by this index
@@ -253,19 +296,41 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
     }
 
     /// <inheritdoc />
-    public Task DeleteCollectionAsync(CancellationToken cancellationToken = default)
+    public async Task DeleteCollectionAsync(CancellationToken cancellationToken = default)
     {
-        return this.RunOperationAsync("FT.DROPINDEX", () => this._database.FT().DropIndexAsync(this._collectionName));
+        try
+        {
+            await this.RunOperationAsync("FT.DROPINDEX",
+                () => this._database.FT().DropIndexAsync(this._collectionName)).ConfigureAwait(false);
+        }
+        catch (VectorStoreOperationException ex) when (ex.InnerException is RedisServerException)
+        {
+            // The RedisServerException does not expose any reliable way of checking if the index does not exist.
+            // It just sets the message to "Unknown index name".
+            // We catch the exception and ignore it, but only after checking that the index does not exist.
+            if (!await this.CollectionExistsAsync(cancellationToken).ConfigureAwait(false))
+            {
+                return;
+            }
+
+            throw;
+        }
     }
 
     /// <inheritdoc />
-    public async Task<TRecord?> GetAsync(string key, GetRecordOptions? options = null, CancellationToken cancellationToken = default)
+    public async Task<TRecord?> GetAsync(TKey key, GetRecordOptions? options = null, CancellationToken cancellationToken = default)
     {
-        Verify.NotNullOrWhiteSpace(key);
+        var stringKey = this.GetStringKey(key);
 
         // Create Options
-        var maybePrefixedKey = this.PrefixKeyIfNeeded(key);
+        var maybePrefixedKey = this.PrefixKeyIfNeeded(stringKey);
+
         var includeVectors = options?.IncludeVectors ?? false;
+        if (includeVectors && this._model.VectorProperties.Any(p => p.EmbeddingGenerator is not null))
+        {
+            throw new NotSupportedException(VectorDataStrings.IncludeVectorsNotSupportedWithEmbeddingGeneration);
+        }
+
         var operationName = includeVectors ? "HGETALL" : "HMGET";
 
         // Get the Redis value.
@@ -294,17 +359,18 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
 
         // Convert to the caller's data model.
         return VectorStoreErrorHandler.RunModelConversion(
-            DatabaseName,
+            RedisConstants.VectorStoreSystemName,
+            this._collectionMetadata.VectorStoreName,
             this._collectionName,
             operationName,
             () =>
             {
-                return this._mapper.MapFromStorageToDataModel((key, retrievedHashEntries), new() { IncludeVectors = includeVectors });
+                return this._mapper.MapFromStorageToDataModel((stringKey, retrievedHashEntries), new() { IncludeVectors = includeVectors });
             });
     }
 
     /// <inheritdoc />
-    public async IAsyncEnumerable<TRecord> GetBatchAsync(IEnumerable<string> keys, GetRecordOptions? options = default, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<TRecord> GetAsync(IEnumerable<TKey> keys, GetRecordOptions? options = default, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         Verify.NotNull(keys);
 
@@ -321,12 +387,12 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
     }
 
     /// <inheritdoc />
-    public Task DeleteAsync(string key, DeleteRecordOptions? options = default, CancellationToken cancellationToken = default)
+    public Task DeleteAsync(TKey key, CancellationToken cancellationToken = default)
     {
-        Verify.NotNullOrWhiteSpace(key);
+        var stringKey = this.GetStringKey(key);
 
         // Create Options
-        var maybePrefixedKey = this.PrefixKeyIfNeeded(key);
+        var maybePrefixedKey = this.PrefixKeyIfNeeded(stringKey);
 
         // Remove.
         return this.RunOperationAsync(
@@ -336,29 +402,51 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
     }
 
     /// <inheritdoc />
-    public Task DeleteBatchAsync(IEnumerable<string> keys, DeleteRecordOptions? options = default, CancellationToken cancellationToken = default)
+    public Task DeleteAsync(IEnumerable<TKey> keys, CancellationToken cancellationToken = default)
     {
         Verify.NotNull(keys);
 
         // Remove records in parallel.
-        var tasks = keys.Select(key => this.DeleteAsync(key, options, cancellationToken));
+        var tasks = keys.Select(key => this.DeleteAsync(key, cancellationToken));
         return Task.WhenAll(tasks);
     }
 
     /// <inheritdoc />
-    public async Task<string> UpsertAsync(TRecord record, UpsertRecordOptions? options = default, CancellationToken cancellationToken = default)
+    public async Task<TKey> UpsertAsync(TRecord record, CancellationToken cancellationToken = default)
+    {
+        (_, var generatedEmbeddings) = await RedisVectorStoreRecordFieldMapping.ProcessEmbeddingsAsync<TRecord>(this._model, [record], cancellationToken).ConfigureAwait(false);
+
+        return await this.UpsertCoreAsync(record, 0, generatedEmbeddings, cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <inheritdoc />
+    public async Task<IReadOnlyList<TKey>> UpsertAsync(IEnumerable<TRecord> records, CancellationToken cancellationToken = default)
+    {
+        Verify.NotNull(records);
+
+        (records, var generatedEmbeddings) = await RedisVectorStoreRecordFieldMapping.ProcessEmbeddingsAsync<TRecord>(this._model, records, cancellationToken).ConfigureAwait(false);
+
+        // Upsert records in parallel.
+        var tasks = records.Select((r, i) => this.UpsertCoreAsync(r, i, generatedEmbeddings, cancellationToken));
+        var results = await Task.WhenAll(tasks).ConfigureAwait(false);
+        return results.Where(r => r is not null).ToList();
+    }
+
+    private async Task<TKey> UpsertCoreAsync(TRecord record, int recordIndex, IReadOnlyList<Embedding>?[]? generatedEmbeddings, CancellationToken cancellationToken = default)
     {
         Verify.NotNull(record);
 
         // Map.
         var redisHashSetRecord = VectorStoreErrorHandler.RunModelConversion(
-            DatabaseName,
+            RedisConstants.VectorStoreSystemName,
+            this._collectionMetadata.VectorStoreName,
             this._collectionName,
             "HSET",
-            () => this._mapper.MapFromDataToStorageModel(record));
+            () => this._mapper.MapFromDataToStorageModel(record, recordIndex, generatedEmbeddings));
 
         // Upsert.
         var maybePrefixedKey = this.PrefixKeyIfNeeded(redisHashSetRecord.Key);
+
         await this.RunOperationAsync(
             "HSET",
             () => this._database
@@ -366,44 +454,106 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
                     maybePrefixedKey,
                     redisHashSetRecord.HashEntries)).ConfigureAwait(false);
 
-        return redisHashSetRecord.Key;
+        return (TKey)(object)redisHashSetRecord.Key;
     }
 
-    /// <inheritdoc />
-    public async IAsyncEnumerable<string> UpsertBatchAsync(IEnumerable<TRecord> records, UpsertRecordOptions? options = default, [EnumeratorCancellation] CancellationToken cancellationToken = default)
-    {
-        Verify.NotNull(records);
+    #region Search
 
-        // Upsert records in parallel.
-        var tasks = records.Select(x => this.UpsertAsync(x, options, cancellationToken));
-        var results = await Task.WhenAll(tasks).ConfigureAwait(false);
-        foreach (var result in results)
+    /// <inheritdoc />
+    public async IAsyncEnumerable<VectorSearchResult<TRecord>> SearchAsync<TInput>(
+        TInput value,
+        int top,
+        VectorSearchOptions<TRecord>? options = default,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        where TInput : notnull
+    {
+        options ??= s_defaultVectorSearchOptions;
+        var vectorProperty = this._model.GetVectorPropertyOrSingle(options);
+
+        switch (vectorProperty.EmbeddingGenerator)
         {
-            if (result is not null)
+            case IEmbeddingGenerator<TInput, Embedding<float>> generator:
             {
-                yield return result;
+                var embedding = await generator.GenerateAsync(value, new() { Dimensions = vectorProperty.Dimensions }, cancellationToken).ConfigureAwait(false);
+
+                await foreach (var record in this.SearchCoreAsync(embedding.Vector, top, vectorProperty, operationName: "Search", options, cancellationToken).ConfigureAwait(false))
+                {
+                    yield return record;
+                }
+
+                yield break;
             }
+
+            case IEmbeddingGenerator<TInput, Embedding<double>> generator:
+            {
+                var embedding = await generator.GenerateAsync(value, new() { Dimensions = vectorProperty.Dimensions }, cancellationToken).ConfigureAwait(false);
+
+                await foreach (var record in this.SearchCoreAsync(embedding.Vector, top, vectorProperty, operationName: "Search", options, cancellationToken).ConfigureAwait(false))
+                {
+                    yield return record;
+                }
+
+                yield break;
+            }
+
+            case null:
+                throw new InvalidOperationException(VectorDataStrings.NoEmbeddingGeneratorWasConfiguredForSearch);
+
+            default:
+                throw new InvalidOperationException(
+                    s_supportedVectorTypes.Contains(typeof(TInput))
+                        ? string.Format(VectorDataStrings.EmbeddingTypePassedToSearchAsync)
+                        : string.Format(VectorDataStrings.IncompatibleEmbeddingGeneratorWasConfiguredForInputType, typeof(TInput).Name, vectorProperty.EmbeddingGenerator.GetType().Name));
         }
     }
 
     /// <inheritdoc />
+<<<<<<< HEAD
     public async IAsyncEnumerable<VectorSearchResult<TRecord>> VectorizedSearchAsync<TVector>(TVector vector, VectorSearchOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     /// <inheritdoc />
     public async Task<VectorSearchResults<TRecord>> VectorizedSearchAsync<TVector>(TVector vector, VectorSearchOptions? options = null, CancellationToken cancellationToken = default)
+=======
+    public IAsyncEnumerable<VectorSearchResult<TRecord>> SearchEmbeddingAsync<TVector>(
+        TVector vector,
+        int top,
+        VectorSearchOptions<TRecord>? options = null,
+        CancellationToken cancellationToken = default)
+        where TVector : notnull
+    {
+        options ??= s_defaultVectorSearchOptions;
+        var vectorProperty = this._model.GetVectorPropertyOrSingle(options);
+
+        return this.SearchCoreAsync(vector, top, vectorProperty, operationName: "SearchEmbedding", options, cancellationToken);
+    }
+
+    private async IAsyncEnumerable<VectorSearchResult<TRecord>> SearchCoreAsync<TVector>(
+        TVector vector,
+        int top,
+        VectorStoreRecordVectorPropertyModel vectorProperty,
+        string operationName,
+        VectorSearchOptions<TRecord> options,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        where TVector : notnull
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         Verify.NotNull(vector);
+        Verify.NotLessThan(top, 1);
 
-        if (this._propertyReader.FirstVectorPropertyName is null)
+        if (options.IncludeVectors && this._model.VectorProperties.Any(p => p.EmbeddingGenerator is not null))
         {
-            throw new InvalidOperationException("The collection does not have any vector fields, so vector search is not possible.");
+            throw new NotSupportedException(VectorDataStrings.IncludeVectorsNotSupportedWithEmbeddingGeneration);
         }
 
-        var internalOptions = options ?? s_defaultVectorSearchOptions;
-
         // Build query & search.
-        var selectFields = internalOptions.IncludeVectors ? null : this._dataStoragePropertyNamesWithScore;
+        var selectFields = options.IncludeVectors ? null : this._dataStoragePropertyNamesWithScore;
         byte[] vectorBytes = RedisVectorStoreCollectionSearchMapping.ValidateVectorAndConvertToBytes(vector, "HashSet");
-        var query = RedisVectorStoreCollectionSearchMapping.BuildQuery(vectorBytes, internalOptions, this._propertyReader.StoragePropertyNamesMap, this._propertyReader.FirstVectorPropertyStoragePropertyName!, selectFields);
+        var query = RedisVectorStoreCollectionSearchMapping.BuildQuery(
+            vectorBytes,
+            top,
+            options,
+            this._model,
+            vectorProperty,
+            selectFields);
         var results = await this.RunOperationAsync(
             "FT.SEARCH",
             () => this._database
@@ -414,19 +564,20 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
         foreach (var result in results.Documents)
         var mappedResults = results.Documents.Select(result =>
         {
-            var retrievedHashEntries = this._propertyReader.DataPropertyStoragePropertyNames
-                .Concat(this._propertyReader.VectorPropertyStoragePropertyNames)
+            var retrievedHashEntries = this._model.DataProperties.Select(p => p.StorageName)
+                .Concat(this._model.VectorProperties.Select(p => p.StorageName))
                 .Select(propertyName => new HashEntry(propertyName, result[propertyName]))
                 .ToArray();
 
             // Convert to the caller's data model.
             var dataModel = VectorStoreErrorHandler.RunModelConversion(
-                DatabaseName,
+                RedisConstants.VectorStoreSystemName,
+                this._collectionMetadata.VectorStoreName,
                 this._collectionName,
                 "FT.SEARCH",
                 () =>
                 {
-                    return this._mapper.MapFromStorageToDataModel((this.RemoveKeyPrefixIfNeeded(result.Id), retrievedHashEntries), new() { IncludeVectors = internalOptions.IncludeVectors });
+                    return this._mapper.MapFromStorageToDataModel((this.RemoveKeyPrefixIfNeeded(result.Id), retrievedHashEntries), new() { IncludeVectors = options.IncludeVectors });
                 });
 
             yield return new VectorSearchResult<TRecord>(dataModel, result.Score);
@@ -435,13 +586,80 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
 
             return new VectorSearchResult<TRecord>(dataModel, result.Score);
             // Process the score of the result item.
-            var distanceFunction = RedisVectorStoreCollectionSearchMapping.ResolveDistanceFunction(internalOptions, this._propertyReader.VectorProperties, this._propertyReader.VectorProperty!);
+            var vectorProperty = this._model.GetVectorPropertyOrSingle(options);
+            var distanceFunction = RedisVectorStoreCollectionSearchMapping.ResolveDistanceFunction(vectorProperty);
             var score = RedisVectorStoreCollectionSearchMapping.GetOutputScoreFromRedisScore(result["vector_score"].HasValue ? (float)result["vector_score"] : null, distanceFunction);
 
             return new VectorSearchResult<TRecord>(dataModel, score);
         });
 
-        return new VectorSearchResults<TRecord>(mappedResults.ToAsyncEnumerable());
+        foreach (var result in mappedResults)
+        {
+            yield return result;
+        }
+    }
+
+    /// <inheritdoc />
+    [Obsolete("Use either SearchEmbeddingAsync to search directly on embeddings, or SearchAsync to handle embedding generation internally as part of the call.")]
+    public IAsyncEnumerable<VectorSearchResult<TRecord>> VectorizedSearchAsync<TVector>(TVector vector, int top, VectorSearchOptions<TRecord>? options = null, CancellationToken cancellationToken = default)
+        where TVector : notnull
+        => this.SearchEmbeddingAsync(vector, top, options, cancellationToken);
+
+    #endregion Search
+
+    /// <inheritdoc />
+    public async IAsyncEnumerable<TRecord> GetAsync(Expression<Func<TRecord, bool>> filter, int top,
+        GetFilteredRecordOptions<TRecord>? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        Verify.NotNull(filter);
+        Verify.NotLessThan(top, 1);
+
+        options ??= new();
+
+        if (options.IncludeVectors && this._model.VectorProperties.Any(p => p.EmbeddingGenerator is not null))
+        {
+            throw new NotSupportedException(VectorDataStrings.IncludeVectorsNotSupportedWithEmbeddingGeneration);
+        }
+
+        Query query = RedisVectorStoreCollectionSearchMapping.BuildQuery(filter, top, options, this._model);
+
+        var results = await this.RunOperationAsync(
+            "FT.SEARCH",
+            () => this._database
+                .FT()
+                .SearchAsync(this._collectionName, query)).ConfigureAwait(false);
+
+        foreach (var document in results.Documents)
+        {
+            var retrievedHashEntries = this._model.DataProperties.Select(p => p.StorageName)
+                .Concat(this._model.VectorProperties.Select(p => p.StorageName))
+                .Select(propertyName => new HashEntry(propertyName, document[propertyName]))
+                .ToArray();
+
+            // Convert to the caller's data model.
+            yield return VectorStoreErrorHandler.RunModelConversion(
+                RedisConstants.VectorStoreSystemName,
+                this._collectionMetadata.VectorStoreName,
+                this._collectionName,
+                "FT.SEARCH",
+                () =>
+                {
+                    return this._mapper.MapFromStorageToDataModel((this.RemoveKeyPrefixIfNeeded(document.Id), retrievedHashEntries), new() { IncludeVectors = options.IncludeVectors });
+                });
+        }
+    }
+
+    /// <inheritdoc />
+    public object? GetService(Type serviceType, object? serviceKey = null)
+    {
+        Verify.NotNull(serviceType);
+
+        return
+            serviceKey is not null ? null :
+            serviceType == typeof(VectorStoreRecordCollectionMetadata) ? this._collectionMetadata :
+            serviceType == typeof(IDatabase) ? this._database :
+            serviceType.IsInstanceOfType(this) ? this :
+            null;
     }
 
     /// <summary>
@@ -489,11 +707,12 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
         {
             return await operation.Invoke().ConfigureAwait(false);
         }
-        catch (RedisConnectionException ex)
+        catch (RedisException ex)
         {
             throw new VectorStoreOperationException("Call to vector store failed.", ex)
             {
-                VectorStoreType = DatabaseName,
+                VectorStoreSystemName = RedisConstants.VectorStoreSystemName,
+                VectorStoreName = this._collectionMetadata.VectorStoreName,
                 CollectionName = this._collectionName,
                 OperationName = operationName
             };
@@ -516,10 +735,22 @@ public sealed class RedisHashSetVectorStoreRecordCollection<TRecord> : IVectorSt
         {
             throw new VectorStoreOperationException("Call to vector store failed.", ex)
             {
-                VectorStoreType = DatabaseName,
+                VectorStoreSystemName = RedisConstants.VectorStoreSystemName,
+                VectorStoreName = this._collectionMetadata.VectorStoreName,
                 CollectionName = this._collectionName,
                 OperationName = operationName
             };
         }
+    }
+
+    private string GetStringKey(TKey key)
+    {
+        Verify.NotNull(key);
+
+        var stringKey = key as string ?? throw new UnreachableException("string key should have been validated during model building");
+
+        Verify.NotNullOrWhiteSpace(stringKey, nameof(key));
+
+        return stringKey;
     }
 }

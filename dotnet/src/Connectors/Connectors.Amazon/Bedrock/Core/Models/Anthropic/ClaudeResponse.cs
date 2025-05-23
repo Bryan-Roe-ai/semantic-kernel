@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Text.Json.Serialization;
 
@@ -17,8 +17,8 @@ internal class ClaudeResponse
 
     /// <summary>
     /// The reason why the model stopped generating the response.
-    /// "stop_sequence" â€“ The model reached a stop sequence â€” either provided by you with the stop_sequences inference parameter, or a stop sequence built into the model.
-    /// "max_tokens" â€“ The model exceeded max_tokens_to_sample or the model's maximum number of tokens.
+    /// "stop_sequence" – The model reached a stop sequence — either provided by you with the stop_sequences inference parameter, or a stop sequence built into the model.
+    /// "max_tokens" – The model exceeded max_tokens_to_sample or the model's maximum number of tokens.
     /// </summary>
     [JsonPropertyName("stop_reason")]
     public string? StopReason { get; set; }

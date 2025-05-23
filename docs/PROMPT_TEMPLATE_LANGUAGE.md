@@ -1,7 +1,8 @@
 # SK Prompt Template Syntax
 
-This document has been moved to the Semantic Kernel Documentation site. You can find it by navigating to the [Prompt template syntax](https://learn.microsoft.com/en-us/semantic-kernel/prompt-engineering/prompt-template-syntax) page.
+This document has been moved to the Semantic Kernel Documentation site. You can find it by navigating to the [What are prompts?](https://learn.microsoft.com/en-us/semantic-kernel/concepts/prompts) page.
 
+<<<<<<< HEAD
 To make an update on the page, file a PR on the [docs repo.](https://github.com/MicrosoftDocs/semantic-kernel-docs/blob/main/semantic-kernel/prompt-engineering/prompt-template-syntax.md)
 Prompts are the inputs or queries that a user or a program gives to an LLM AI,
 in order to elicit a specific response from the model.
@@ -408,3 +409,6 @@ Generate a response to the email, to say: I am doing well, thank you!
 Include the original email quoted after the response.
 Additional information: Looking forward to our meeting next week.
 ```
+=======
+To make an update on the page, file a PR on the [docs repo.](https://github.com/MicrosoftDocs/semantic-kernel-docs/blob/main/semantic-kernel/concepts/prompts/index.md)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

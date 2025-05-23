@@ -1,5 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -9,12 +10,15 @@ namespace Microsoft.SemanticKernel.Agents;
 
 /// <summary>
 /// Defines the communication protocol for a particular <see cref="Agent"/> type.
-/// An agent provides it own <see cref="AgentChannel"/> via <see cref="Agent.CreateChannelAsync"/>.
 /// </summary>
+/// <remarks>
+/// An agent provides it own <see cref="AgentChannel"/> via <see cref="Agent.CreateChannelAsync"/>.
+/// </remarks>
+[Experimental("SKEXP0110")]
 public abstract class AgentChannel
 {
     /// <summary>
-    /// The <see cref="ILogger"/> associated with the <see cref="AgentChannel"/>.
+    /// Gets or sets the <see cref="ILogger"/> associated with the <see cref="AgentChannel"/>.
     /// </summary>
     public ILogger Logger { get; set; } = NullLogger.Instance;
 
@@ -64,6 +68,7 @@ public abstract class AgentChannel
 
     /// <summary>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -101,6 +106,9 @@ public abstract class AgentChannel
 =======
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// Receive the conversation messages.  Used when joining a conversation and also during each agent interaction..
+=======
+    /// Receive the conversation messages.  Used when joining a conversation and also during each agent interaction.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
     /// <param name="history">The chat history at the point the channel is created.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
@@ -111,7 +119,7 @@ public abstract class AgentChannel
     /// </summary>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
     /// <remarks>
-    /// The channel wont' be reused; rather, it will be discarded and a new one created.
+    /// The channel won't be reused; rather, it will be discarded and a new one created.
     /// </remarks>
     protected internal abstract Task ResetAsync(CancellationToken cancellationToken = default);
 
@@ -151,16 +159,17 @@ public abstract class AgentChannel
 
 /// <summary>
 /// Defines the communication protocol for a particular <see cref="Agent"/> type.
-/// An agent provides it own <see cref="AgentChannel"/> via <see cref="Agent.CreateChannelAsync"/>.
 /// </summary>
-/// <typeparam name="TAgent">The agent type for this channel</typeparam>
+/// <typeparam name="TAgent">The agent type for this channel.</typeparam>
 /// <remarks>
-/// Convenience upcast to agent for <see cref="AgentChannel{TAgent}.InvokeAsync(TAgent, CancellationToken)"/>.
+/// An agent provides it own <see cref="AgentChannel"/> via <see cref="Agent.CreateChannelAsync"/>.
+/// This class is a convenience upcast to an agent for <see cref="AgentChannel{TAgent}.InvokeAsync(TAgent, CancellationToken)"/>.
 /// </remarks>
+[Experimental("SKEXP0110")]
 public abstract class AgentChannel<TAgent> : AgentChannel where TAgent : Agent
 {
     /// <summary>
-    /// Process a discrete incremental interaction between a single <see cref="Agent"/> an a <see cref="AgentChat"/>.
+    /// Process a discrete incremental interaction between a single <see cref="Agent"/> and a <see cref="AgentChat"/>.
     /// </summary>
     /// <param name="agent">The agent actively interacting with the chat.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
@@ -186,7 +195,7 @@ public abstract class AgentChannel<TAgent> : AgentChannel where TAgent : Agent
         return this.InvokeAsync((TAgent)agent, cancellationToken);
     }
     /// <summary>
-    /// Process a discrete incremental interaction between a single <see cref="Agent"/> an a <see cref="AgentChat"/>.
+    /// Process a discrete incremental interaction between a single <see cref="Agent"/> and a <see cref="AgentChat"/>.
     /// </summary>
     /// <param name="agent">The agent actively interacting with the chat.</param>
     /// <param name="messages">The receiver for the completed messages generated</param>

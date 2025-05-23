@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -34,7 +34,7 @@ public sealed class WeaviateVectorStoreTests : IDisposable
         var sut = new WeaviateVectorStore(this._mockHttpClient);
 
         // Act & Assert
-        Assert.Throws<NotSupportedException>(() => sut.GetCollection<string, WeaviateHotel>("collection"));
+        Assert.Throws<NotSupportedException>(() => sut.GetCollection<string, WeaviateHotel>("Collection"));
     }
 
     [Fact]
@@ -44,12 +44,13 @@ public sealed class WeaviateVectorStoreTests : IDisposable
         var sut = new WeaviateVectorStore(this._mockHttpClient);
 
         // Act
-        var collection = sut.GetCollection<Guid, WeaviateHotel>("collection1");
+        var collection = sut.GetCollection<Guid, WeaviateHotel>("Collection1");
 
         // Assert
         Assert.NotNull(collection);
     }
 
+#pragma warning disable CS0618 // IWeaviateVectorStoreRecordCollectionFactory is obsolete
     [Fact]
     public void GetCollectionWithFactoryReturnsCustomCollection()
     {
@@ -78,6 +79,7 @@ public sealed class WeaviateVectorStoreTests : IDisposable
             "collection",
             It.IsAny<VectorStoreRecordDefinition>()), Times.Once());
     }
+#pragma warning restore CS0618
 
     [Fact]
     public async Task ListCollectionNamesReturnsCollectionNamesAsync()

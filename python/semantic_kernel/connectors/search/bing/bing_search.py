@@ -25,6 +25,7 @@ from semantic_kernel.connectors.search.bing.const import (
     QUERY_PARAMETERS,
 )
 <<<<<<< HEAD
+<<<<<<< HEAD
 from semantic_kernel.connectors.search_engine.bing_connector_settings import BingSettings
 from semantic_kernel.data.filters.any_tags_equal_to_filter_clause import AnyTagsEqualTo
 from semantic_kernel.data.filters.equal_to_filter_clause import EqualTo
@@ -49,19 +50,34 @@ from semantic_kernel.data.text_search import TextSearch
 from semantic_kernel.data.text_search.text_search_filter import TextSearchFilter
 from semantic_kernel.data.text_search.text_search_options import TextSearchOptions
 from semantic_kernel.data.text_search.text_search_result import TextSearchResult
+=======
+from semantic_kernel.data.text_search import (
+    AnyTagsEqualTo,
+    EqualTo,
+    KernelSearchResults,
+    SearchFilter,
+    TextSearch,
+    TextSearchOptions,
+    TextSearchResult,
+)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.exceptions import ServiceInitializationError, ServiceInvalidRequestError
 from semantic_kernel.kernel_pydantic import KernelBaseModel
-from semantic_kernel.utils.experimental_decorator import experimental_class
+from semantic_kernel.utils.feature_stage_decorator import experimental
 from semantic_kernel.utils.telemetry.user_agent import SEMANTIC_KERNEL_USER_AGENT
 
 if TYPE_CHECKING:
-    from semantic_kernel.data.search_options import SearchOptions
+    from semantic_kernel.data.text_search import SearchOptions
 
 logger: logging.Logger = logging.getLogger(__name__)
 
 
+<<<<<<< HEAD
 @experimental_class
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+=======
+@experimental
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 class BingSearch(KernelBaseModel, TextSearch):
     """A search engine connector that uses the Bing Search API to perform a web search."""
 
@@ -94,7 +110,7 @@ class BingSearch(KernelBaseModel, TextSearch):
             env_file_encoding: The optional encoding of the .env file.
         """
         try:
-            settings = BingSettings.create(
+            settings = BingSettings(
                 api_key=api_key,
                 custom_config=custom_config,
                 env_file_path=env_file_path,
@@ -103,7 +119,7 @@ class BingSearch(KernelBaseModel, TextSearch):
         except ValidationError as ex:
             raise ServiceInitializationError("Failed to create Bing settings.") from ex
 
-        super().__init__(settings=settings)
+        super().__init__(settings=settings)  # type: ignore[call-arg]
 
 <<<<<<< HEAD
     async def search(self, options: TextSearchOptions | None = None, **kwargs: Any) -> "KernelSearchResult[str]":
@@ -322,8 +338,12 @@ class BingSearch(KernelBaseModel, TextSearch):
             return params
         extra_query_params = []
         for filter in options.filter.filters:
+<<<<<<< HEAD
             if isinstance(filter, TextSearchFilter):
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+=======
+            if isinstance(filter, SearchFilter):
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                 logger.warning("Groups are not supported by Bing search, ignored.")
                 continue
             if isinstance(filter, EqualTo):

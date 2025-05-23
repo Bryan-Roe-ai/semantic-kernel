@@ -1,15 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.SemanticKernel.Plugins.OpenApi;
 
 /// <summary>
 /// REST API server variable.
 /// </summary>
-[Experimental("SKEXP0040")]
 public sealed class RestApiServerVariable
 {
     /// <summary>

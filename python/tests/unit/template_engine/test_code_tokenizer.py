@@ -2,6 +2,7 @@
 
 from pytest import mark, raises
 
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -85,6 +86,9 @@ from semantic_kernel.template_engine.blocks.block_errors import CodeBlockSyntaxE
 >>>>>>> Stashed changes
 >>>>>>> origin/main
 >>>>>>> head
+=======
+from semantic_kernel.template_engine.blocks.block_errors import CodeBlockSyntaxError
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.template_engine.blocks.block_types import BlockTypes
 from semantic_kernel.template_engine.code_tokenizer import CodeTokenizer
 

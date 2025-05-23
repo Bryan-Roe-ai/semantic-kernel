@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -18,6 +18,7 @@ namespace SemanticKernel.IntegrationTests.Connectors.AzureCosmosDBNoSQL;
 /// <summary>
 /// Integration tests of <see cref="AzureCosmosDBNoSQLMemoryStore"/>.
 /// </summary>
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class AzureCosmosDBNoSQLMemoryStoreTests : IClassFixture<AzureCosmosDBNoSQLMemoryStoreTestsFixture>
 {
     private const string? SkipReason = "Azure Cosmos DB Account with Vector indexing enabled required";

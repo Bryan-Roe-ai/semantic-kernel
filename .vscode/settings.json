@@ -1,6 +1,8 @@
 {
   "prettier.enable": true,
-  "css.lint.validProperties": ["composes"],
+  "css.lint.validProperties": [
+    "composes"
+  ],
   "editor.formatOnType": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
@@ -14,9 +16,13 @@
     }
   },
   "python.formatting.provider": "autopep8",
-  "python.formatting.autopep8Args": ["--max-line-length=120"],
+  "python.formatting.autopep8Args": [
+    "--max-line-length=120"
+  ],
   "notebook.output.textLineLimit": 500,
-  "python.analysis.extraPaths": ["./python/src"],
+  "python.analysis.extraPaths": [
+    "./python/src"
+  ],
   "javascript.updateImportsOnFileMove.enabled": "always",
   "search.exclude": {
     "**/node_modules": true,
@@ -95,10 +101,17 @@
   "java.debug.settings.onBuildFailureProceed": true,
   "java.compile.nullAnalysis.mode": "disabled",
   "dotnet.defaultSolution": "dotnet\\SK-dotnet.sln",
-  "python.testing.pytestArgs": ["python/tests"],
+  "python.testing.pytestArgs": [
+    "python/tests"
+  ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
+<<<<<<< HEAD
   "azureFunctions.deploySubpath": "dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function/bin/Release/net8.0/publish",
+=======
+  "azureFunctions.projectSubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions",
+  "azureFunctions.deploySubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Release/net6.0/publish",
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   "azureFunctions.projectLanguage": "C#",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
@@ -159,6 +172,7 @@
   "C_Cpp_Runner.useLeakSanitizer": false,
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
+<<<<<<< HEAD
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build",
   "intelliphp.inlineSuggestionsEnabled": true,
@@ -219,3 +233,7 @@
     "editor.defaultFormatter": "Google.cros-ide"
   }
 }
+=======
+  "C_Cpp_Runner.msvcSecureNoWarnings": false
+}
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

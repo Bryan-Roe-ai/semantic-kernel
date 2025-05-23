@@ -80,8 +80,13 @@ class OllamaTextCompletion(TextCompletionClientBase):
     ) -> List[TextContent]:
         """
         try:
+<<<<<<< HEAD
             ollama_settings = OllamaSettings.create(
                 model=ai_model_id,
+=======
+            ollama_settings = OllamaSettings(
+                text_model_id=ai_model_id,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                 host=host,
                 env_file_path=env_file_path,
                 env_file_encoding=env_file_encoding,

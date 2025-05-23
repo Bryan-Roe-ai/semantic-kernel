@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -21,4 +21,13 @@ internal sealed class WeaviateCollectionSchema
 
     [JsonPropertyName("properties")]
     public List<WeaviateCollectionSchemaProperty> Properties { get; set; } = [];
+
+    [JsonPropertyName("vectorizer")]
+    public string Vectorizer { get; set; } = WeaviateConstants.DefaultVectorizer;
+
+    [JsonPropertyName("vectorIndexType")]
+    public string? VectorIndexType { get; set; }
+
+    [JsonPropertyName("vectorIndexConfig")]
+    public WeaviateCollectionSchemaVectorIndexConfig? VectorIndexConfig { get; set; }
 }

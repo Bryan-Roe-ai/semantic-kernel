@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
@@ -22,7 +22,7 @@ public class QdrantTextSearchTests(QdrantVectorStoreFixture fixture) : BaseVecto
         if (this.VectorStore is null)
         {
             this.EmbeddingGenerator = fixture.EmbeddingGenerator;
-            this.VectorStore = new QdrantVectorStore(fixture.QdrantClient);
+            this.VectorStore = new QdrantVectorStore(fixture.QdrantClient, new QdrantVectorStoreOptions { EmbeddingGenerator = fixture.EmbeddingGenerator });
         }
 
         var options = new QdrantVectorStoreRecordCollectionOptions<HotelInfo>
@@ -30,11 +30,12 @@ public class QdrantTextSearchTests(QdrantVectorStoreFixture fixture) : BaseVecto
             HasNamedVectors = true,
             VectorStoreRecordDefinition = fixture.HotelVectorStoreRecordDefinition,
         };
-        var vectorSearch = new QdrantVectorStoreRecordCollection<HotelInfo>(fixture.QdrantClient, "namedVectorsHotels", options);
+        var vectorSearch = new QdrantVectorStoreRecordCollection<ulong, HotelInfo>(fixture.QdrantClient, "namedVectorsHotels", options);
         var stringMapper = new HotelInfoTextSearchStringMapper();
         var resultMapper = new HotelInfoTextSearchResultMapper();
 
         var result = new VectorStoreTextSearch<HotelInfo>(vectorSearch, this.EmbeddingGenerator!, stringMapper, resultMapper);
+
         return Task.FromResult<ITextSearch>(result);
     }
 

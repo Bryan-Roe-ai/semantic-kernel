@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Threading;
 
@@ -53,6 +53,11 @@ public sealed class PromptRenderContext
     /// Gets the arguments associated with the operation.
     /// </summary>
     public KernelArguments Arguments { get; }
+
+    /// <summary>
+    /// The execution settings associated with the operation.
+    /// </summary>
+    public PromptExecutionSettings? ExecutionSettings { get; init; }
 
     /// <summary>
     /// Gets or sets the rendered prompt.

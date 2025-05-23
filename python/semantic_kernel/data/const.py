@@ -1,5 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+import operator
+from collections.abc import Callable
 from enum import Enum
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -64,12 +66,15 @@ from typing import Final
 =======
 from typing import Final
 
+<<<<<<< HEAD
 DEFAULT_FUNCTION_NAME: Final[str] = "search"
 DEFAULT_DESCRIPTION: Final[str] = (
     "Perform a search for content related to the specified query and return string results"
 )
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 class IndexKind(str, Enum):
     """Index kinds for similarity search.
@@ -250,4 +255,36 @@ DEFAULT_COUNT: Final[int] = 5
 >>>>>>> head
 =======
     HAMMING = "hamming"
+<<<<<<< HEAD
 >>>>>>> upstream/main
+=======
+
+
+DISTANCE_FUNCTION_DIRECTION_HELPER: Final[dict[DistanceFunction, Callable[[int | float, int | float], bool]]] = {
+    DistanceFunction.COSINE_SIMILARITY: operator.gt,
+    DistanceFunction.COSINE_DISTANCE: operator.le,
+    DistanceFunction.DOT_PROD: operator.gt,
+    DistanceFunction.EUCLIDEAN_DISTANCE: operator.le,
+    DistanceFunction.EUCLIDEAN_SQUARED_DISTANCE: operator.le,
+    DistanceFunction.MANHATTAN: operator.le,
+    DistanceFunction.HAMMING: operator.le,
+}
+DEFAULT_FUNCTION_NAME: Final[str] = "search"
+DEFAULT_DESCRIPTION: Final[str] = (
+    "Perform a search for content related to the specified query and return string results"
+)
+
+
+class TextSearchFunctions(str, Enum):
+    """Text search functions.
+
+    Attributes:
+        SEARCH: Search using a query.
+        GET_TEXT_SEARCH_RESULT: Get text search results.
+        GET_SEARCH_RESULT: Get search results.
+    """
+
+    SEARCH = "search"
+    GET_TEXT_SEARCH_RESULT = "get_text_search_result"
+    GET_SEARCH_RESULT = "get_search_result"
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

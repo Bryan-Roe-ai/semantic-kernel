@@ -21,6 +21,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Agents\Core\Agents.Core.csproj" />
+    <ProjectReference Include="..\..\Agents\OpenAI\Agents.OpenAI.csproj" />
     <ProjectReference Include="..\..\SemanticKernel.Core\SemanticKernel.Core.csproj" />
   </ItemGroup>
 
@@ -39,8 +41,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="JmesPath.Net" />
     <PackageReference Include="Microsoft.VisualStudio.Threading" />
+    <PackageReference Include="System.Net.Http" />
+    <PackageReference Include="System.Text.RegularExpressions" />
     <PackageReference Include="System.Threading.Channels" />
   </ItemGroup>
 
+<<<<<<< HEAD
+=======
+  <ItemGroup>
+    <PackageReference Include="Azure.AI.Projects" />
+    <PackageReference Include="Azure.Identity" />
+  </ItemGroup>
+
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 </Project>

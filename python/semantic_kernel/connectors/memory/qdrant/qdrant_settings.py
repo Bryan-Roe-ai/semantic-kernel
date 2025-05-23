@@ -5,12 +5,12 @@ from typing import ClassVar
 from pydantic import HttpUrl, SecretStr, model_validator
 
 from semantic_kernel.kernel_pydantic import KernelBaseSettings
-from semantic_kernel.utils.experimental_decorator import experimental_class
+from semantic_kernel.utils.feature_stage_decorator import experimental
 
 IN_MEMORY_STRING = ":memory:"
 
 
-@experimental_class
+@experimental
 class QdrantSettings(KernelBaseSettings):
     """Qdrant settings currently used by the Qdrant Vector Record Store."""
 
@@ -26,10 +26,15 @@ class QdrantSettings(KernelBaseSettings):
     prefer_grpc: bool = False
 
     @model_validator(mode="before")
-    def validate_settings(cls, values):
+    def validate_settings(cls, values: dict):
         """Validate the settings."""
         if (
+<<<<<<< HEAD
             "url" not in values
+=======
+            isinstance(values, dict)
+            and "url" not in values
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             and "host" not in values
             and "path" not in values
             and "location" not in values

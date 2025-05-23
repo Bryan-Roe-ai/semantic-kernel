@@ -4,7 +4,6 @@ import asyncio
 import logging
 import os
 from collections.abc import Callable, Coroutine
-from functools import reduce
 from typing import Any
 
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion import (
@@ -52,6 +51,7 @@ async def streaming_exception_handling(
 ):
     await next(context)
 
+<<<<<<< HEAD
     async def override_stream(stream):
         try:
             async for partial in stream:
@@ -68,6 +68,23 @@ async def streaming_exception_handling(
     context.result = FunctionResult(
         function=context.result.function, value=override_stream(stream)
     )
+=======
+    if context.is_streaming:
+
+        async def override_stream(stream):
+            try:
+                async for partial in stream:
+                    yield partial
+            except Exception as e:
+                yield [
+                    StreamingChatMessageContent(
+                        role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}", choice_index=0
+                    )
+                ]
+
+        stream = context.result.value
+        context.result = FunctionResult(function=context.result.function, value=override_stream(stream))
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 
 async def chat(chat_history: ChatHistory) -> bool:
@@ -99,9 +116,13 @@ async def chat(chat_history: ChatHistory) -> bool:
     print("")
     chat_history.add_user_message(user_input)
     if streamed_chunks:
+<<<<<<< HEAD
         streaming_chat_message = reduce(
             lambda first, second: first + second, streamed_chunks
         )
+=======
+        streaming_chat_message = sum(streamed_chunks[1:], streamed_chunks[0])
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         chat_history.add_message(streaming_chat_message)
     return True
 

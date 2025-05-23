@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Xunit;
 
@@ -23,7 +23,7 @@ public class ProcessEdgeBuilderTests
 
         // Assert
         Assert.StrictEqual(processBuilder, edgeBuilder.Source);
-        Assert.Equal("TestEvent", edgeBuilder.EventId);
+        Assert.Equal("TestEvent", edgeBuilder.EventData.EventId);
     }
 
     /// <summary>

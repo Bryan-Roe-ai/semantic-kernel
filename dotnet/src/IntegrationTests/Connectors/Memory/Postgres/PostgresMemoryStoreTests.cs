@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace SemanticKernel.IntegrationTests.Connectors.Memory.Postgres;
 /// <summary>
 /// Integration tests of <see cref="PostgresMemoryStore"/>.
 /// </summary>
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class PostgresMemoryStoreTests : IAsyncLifetime
 {
     // If null, all tests will be enabled

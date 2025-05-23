@@ -32,7 +32,7 @@ from semantic_kernel.functions.kernel_function_from_method import (
 )
 from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
 from semantic_kernel.schema.kernel_json_schema_builder import TYPE_MAPPING
-from semantic_kernel.utils.experimental_decorator import experimental_function
+from semantic_kernel.utils.feature_stage_decorator import experimental
 
 if TYPE_CHECKING:
     from semantic_kernel.connectors.openapi_plugin.openapi_function_execution_parameters import (
@@ -42,7 +42,7 @@ if TYPE_CHECKING:
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-@experimental_function
+@experimental
 def create_functions_from_openapi(
     plugin_name: str,
     openapi_document_path: str | None = None,
@@ -140,7 +140,7 @@ def create_functions_from_openapi(
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
-@experimental_function
+@experimental
 def _create_function_from_operation(
     runner: OpenApiRunner,
     operation: RestApiOperation,

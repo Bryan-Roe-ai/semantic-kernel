@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -162,7 +162,7 @@ public sealed class GeminiFunction
             Name = this.FullyQualifiedName,
             Description = this.Description ?? throw new InvalidOperationException(
                 $"Function description is required. Please provide a description for the function {this.FullyQualifiedName}."),
-            Parameters = JsonSerializer.SerializeToNode(resultParameters),
+            Parameters = GeminiRequest.TransformToOpenApi3Schema(JsonSerializer.SerializeToElement(resultParameters)),
         };
     }
 

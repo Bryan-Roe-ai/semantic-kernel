@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -11,6 +11,8 @@ internal readonly struct ContentChunkType : IEquatable<ContentChunkType>
     public static ContentChunkType Text { get; } = new("text");
 
     public static ContentChunkType ImageUrl { get; } = new("image_url");
+
+    public static ContentChunkType DocumentUrl { get; } = new("document_url");
 
     public string Type { get; }
 

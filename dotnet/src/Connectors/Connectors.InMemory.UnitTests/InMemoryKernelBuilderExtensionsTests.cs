@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,7 +52,7 @@ public class InMemoryKernelBuilderExtensionsTests
         Assert.NotNull(collection);
         Assert.IsType<InMemoryVectorStoreRecordCollection<string, TestRecord>>(collection);
 
-        var vectorizedSearch = kernel.Services.GetRequiredService<IVectorizedSearch<TestRecord>>();
+        var vectorizedSearch = kernel.Services.GetRequiredService<IVectorSearch<TestRecord>>();
         Assert.NotNull(vectorizedSearch);
         Assert.IsType<InMemoryVectorStoreRecordCollection<string, TestRecord>>(vectorizedSearch);
     }

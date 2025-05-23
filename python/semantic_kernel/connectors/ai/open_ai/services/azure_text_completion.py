@@ -280,7 +280,7 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
 >>>>>>> head
         """
         try:
-            azure_openai_settings = AzureOpenAISettings.create(
+            azure_openai_settings = AzureOpenAISettings(
                 env_file_path=env_file_path,
                 text_deployment_name=deployment_name,
                 endpoint=endpoint,

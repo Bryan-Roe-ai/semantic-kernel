@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -39,6 +39,6 @@ public class AzureCosmosDBNoSQLHotel(string hotelId)
 
     /// <summary>A vector field.</summary>
     [JsonPropertyName("description_embedding")]
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction: DistanceFunction.CosineSimilarity, IndexKind: IndexKind.Flat)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Flat)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }

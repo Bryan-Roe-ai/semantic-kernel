@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -82,6 +82,7 @@ public class ProcessStateTypeResolver<T> : DefaultJsonTypeInfoResolver where T :
                 {
                     new JsonDerivedType(typeof(DaprProcessInfo), nameof(DaprProcessInfo)),
                     new JsonDerivedType(typeof(DaprMapInfo), nameof(DaprMapInfo)),
+                    new JsonDerivedType(typeof(DaprProxyInfo), nameof(DaprProxyInfo)),
                 }
             };
         }

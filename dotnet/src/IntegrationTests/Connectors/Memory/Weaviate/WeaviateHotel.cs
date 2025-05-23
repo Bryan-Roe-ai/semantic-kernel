@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -16,10 +16,11 @@ public sealed record WeaviateHotel
     public Guid HotelId { get; init; }
 
     /// <summary>A string metadata field.</summary>
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string? HotelName { get; set; }
 
     /// <summary>An int metadata field.</summary>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
@@ -146,10 +147,18 @@ public sealed record WeaviateHotel
 =======
 >>>>>>> head
 >>>>>>> div
+=======
+    [VectorStoreRecordData(IsIndexed = true)]
+    public int HotelCode { get; set; }
+
+    /// <summary>A float metadata field.</summary>
+    [VectorStoreRecordData(IsIndexed = true)]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public float? HotelRating { get; set; }
 
     /// <summary>A bool metadata field.</summary>
     [JsonPropertyName("parking_is_included")]
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
@@ -239,16 +248,20 @@ public sealed record WeaviateHotel
 =======
 >>>>>>> Stashed changes
     [VectorStoreRecordData(IsFilterable = true)]
+=======
+    [VectorStoreRecordData(IsIndexed = true)]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public bool ParkingIncluded { get; set; }
 
     /// <summary>An array metadata field.</summary>
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public List<string> Tags { get; set; } = [];
 
     /// <summary>A data field.</summary>
-    [VectorStoreRecordData(IsFullTextSearchable = true, IsFilterable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true, IsIndexed = true)]
     public string Description { get; set; }
 
+<<<<<<< HEAD
     [VectorStoreRecordData(IsFilterable = true)]
 <<<<<<< div
 =======
@@ -290,9 +303,12 @@ public sealed record WeaviateHotel
 =======
 >>>>>>> head
 >>>>>>> div
+=======
+    [VectorStoreRecordData(IsIndexed = true)]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public DateTimeOffset Timestamp { get; set; }
 
     /// <summary>A vector field.</summary>
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction: DistanceFunction.CosineDistance, IndexKind: IndexKind.Hnsw)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineDistance, IndexKind = IndexKind.Hnsw)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }

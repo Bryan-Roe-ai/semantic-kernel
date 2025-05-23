@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -145,6 +145,28 @@ public sealed class MistralAIChatCompletionTests : IDisposable
         Assert.Contains("Paris", response[0].Content, System.StringComparison.InvariantCultureIgnoreCase);
         Assert.Contains("Eiffel Tower", response[0].Content, System.StringComparison.InvariantCultureIgnoreCase);
         Assert.Contains("Snow", response[0].Content, System.StringComparison.InvariantCultureIgnoreCase);
+    }
+
+    [Fact(Skip = "This test is for manual verification.")]
+    public async Task ValidateGetChatMessageContentsWithImageDataUriAsync()
+    {
+        // Arrange
+        var model = this._configuration["MistralAI:ImageModelId"];
+        var apiKey = this._configuration["MistralAI:ApiKey"];
+        var service = new MistralAIChatCompletionService(model!, apiKey!, httpClient: this._httpClient);
+
+        // Act
+        var chatHistory = new ChatHistory
+        {
+            new ChatMessageContent(AuthorRole.User, "What's in this image?"),
+            new ChatMessageContent(AuthorRole.User, [new ImageContent("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEA2ADYAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAAQABADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD5rooor8DP9oD/2Q==")])
+        };
+        var response = await service.GetChatMessageContentsAsync(chatHistory, this._executionSettings);
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Single(response);
+        Assert.Contains("square", response[0].Content, System.StringComparison.InvariantCultureIgnoreCase);
     }
 
     [Fact(Skip = "This test is for manual verification.")]
@@ -307,7 +329,7 @@ public sealed class MistralAIChatCompletionTests : IDisposable
         Assert.NotNull(response);
         Assert.Single(response);
         Assert.Contains("Paris", response[0].Content, System.StringComparison.Ordinal);
-        Assert.Contains("12Â°C", response[0].Content, System.StringComparison.Ordinal);
+        Assert.Contains("12°C", response[0].Content, System.StringComparison.Ordinal);
     }
 
     [Fact(Skip = "This test is for manual verification.")]
@@ -463,7 +485,7 @@ public sealed class MistralAIChatCompletionTests : IDisposable
         Assert.NotNull(response);
         Assert.Single(response);
         Assert.Contains("Paris", response[0].Content, System.StringComparison.Ordinal);
-        Assert.Contains("12Â°C", response[0].Content, System.StringComparison.Ordinal);
+        Assert.Contains("12°C", response[0].Content, System.StringComparison.Ordinal);
         Assert.Contains("GetWeather", invokedFunctions);
     }
 
@@ -492,7 +514,7 @@ public sealed class MistralAIChatCompletionTests : IDisposable
         Assert.NotNull(result2);
         Assert.Single(result2);
         Assert.Contains("Marseille", result2[0].Content, System.StringComparison.Ordinal);
-        Assert.Contains("12Â°C", result2[0].Content, System.StringComparison.Ordinal);
+        Assert.Contains("12°C", result2[0].Content, System.StringComparison.Ordinal);
     }
 
     public sealed class WeatherPlugin
@@ -501,7 +523,7 @@ public sealed class MistralAIChatCompletionTests : IDisposable
         [Description("Get the current weather in a given location.")]
         public string GetWeather(
             [Description("The city and department, e.g. Marseille, 13")] string location
-            ) => $"12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy\nLocation: {location}";
+            ) => $"12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy\nLocation: {location}";
     }
 
     public sealed class AnonymousPlugin

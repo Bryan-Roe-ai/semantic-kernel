@@ -36,6 +36,7 @@ from semantic_kernel.prompt_template.handlebars_prompt_template import (
 )
 from semantic_kernel.prompt_template.jinja2_prompt_template import Jinja2PromptTemplate
 from semantic_kernel.prompt_template.kernel_prompt_template import KernelPromptTemplate
+from semantic_kernel.prompt_template.prompt_template_base import PromptTemplateBase
 
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
@@ -49,10 +50,14 @@ if TYPE_CHECKING:
         KernelFunctionFromPrompt,
     )
     from semantic_kernel.kernel import Kernel
+<<<<<<< HEAD
     from semantic_kernel.prompt_template.prompt_template_base import PromptTemplateBase
     from semantic_kernel.prompt_template.prompt_template_config import (
         PromptTemplateConfig,
     )
+=======
+    from semantic_kernel.prompt_template.prompt_template_config import PromptTemplateConfig
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 # Logger, tracer and meter for observability
 logger: logging.Logger = logging.getLogger(__name__)
@@ -60,7 +65,7 @@ tracer: trace.Tracer = trace.get_tracer(__name__)
 meter: metrics.Meter = metrics.get_meter_provider().get_meter(__name__)
 MEASUREMENT_FUNCTION_TAG_NAME: str = "semantic_kernel.function.name"
 
-TEMPLATE_FORMAT_MAP = {
+TEMPLATE_FORMAT_MAP: dict[TEMPLATE_FORMAT_TYPES, type[PromptTemplateBase]] = {
     KERNEL_TEMPLATE_FORMAT_NAME: KernelPromptTemplate,
     HANDLEBARS_TEMPLATE_FORMAT_NAME: HandlebarsPromptTemplate,
     JINJA2_TEMPLATE_FORMAT_NAME: Jinja2PromptTemplate,
@@ -154,9 +159,11 @@ class KernelFunction(KernelBaseModel):
 
     metadata: KernelFunctionMetadata
 
-    invocation_duration_histogram: metrics.Histogram = Field(default_factory=_create_function_duration_histogram)
+    invocation_duration_histogram: metrics.Histogram = Field(
+        default_factory=_create_function_duration_histogram, exclude=True
+    )
     streaming_duration_histogram: metrics.Histogram = Field(
-        default_factory=_create_function_streaming_duration_histogram
+        default_factory=_create_function_streaming_duration_histogram, exclude=True
     )
 
     @classmethod
@@ -337,7 +344,7 @@ class KernelFunction(KernelBaseModel):
         self,
         kernel: "Kernel",
         arguments: "KernelArguments | None" = None,
-        metadata: dict[str, Any] = {},
+        metadata: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> FunctionResult | None:
         return self.metadata.is_prompt
@@ -659,7 +666,7 @@ class KernelFunction(KernelBaseModel):
         self,
         kernel: "Kernel",
         arguments: "KernelArguments | None" = None,
-        metadata: dict[str, Any] = {},
+        metadata: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> "FunctionResult | None":
         arguments: Optional[KernelArguments] = None,
@@ -762,7 +769,7 @@ class KernelFunction(KernelBaseModel):
         self,
         kernel: "Kernel",
         arguments: "KernelArguments | None" = None,
-        metadata: dict[str, Any] = {},
+        metadata: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> "AsyncGenerator[FunctionResult | list[StreamingContentMixin | Any], Any]":
         """Invoke a stream async function with the given arguments.
@@ -788,6 +795,7 @@ class KernelFunction(KernelBaseModel):
             arguments = KernelArguments(**kwargs)
         _rebuild_function_invocation_context()
         function_context = FunctionInvocationContext(
+<<<<<<< HEAD
             function=self, kernel=kernel, arguments=arguments
         )
         function_context = FunctionInvocationContext(
@@ -797,6 +805,10 @@ class KernelFunction(KernelBaseModel):
             function=self, kernel=kernel, arguments=arguments
         )
         function_context = FunctionInvocationContext(function=self, kernel=kernel, arguments=arguments)
+=======
+            function=self, kernel=kernel, arguments=arguments, is_streaming=True
+        )
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         with tracer.start_as_current_span(self.fully_qualified_name) as current_span:
             KernelFunctionLogMessages.log_function_streaming_invoking(logger, self.fully_qualified_name)

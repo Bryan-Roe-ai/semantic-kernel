@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.Redis;
@@ -24,7 +24,7 @@ public static class RedisFactory
             new VectorStoreRecordKeyProperty("Key", typeof(string)),
             new VectorStoreRecordDataProperty("Content", typeof(string)) { StoragePropertyName = "text" },
             new VectorStoreRecordDataProperty("Source", typeof(string)) { StoragePropertyName = "source" },
-            new VectorStoreRecordVectorProperty("Embedding", typeof(ReadOnlyMemory<float>)) { StoragePropertyName = "embedding", Dimensions = 1536 }
+            new VectorStoreRecordVectorProperty("Embedding", typeof(ReadOnlyMemory<float>), 1536) { StoragePropertyName = "embedding" }
         }
     };
 
@@ -34,23 +34,18 @@ public static class RedisFactory
     /// <param name="database">The redis database to read/write from.</param>
     /// <returns>The <see cref="IVectorStore"/>.</returns>
     public static IVectorStore CreateRedisLangchainInteropVectorStore(IDatabase database)
-    {
-        // Create a vector store that uses our custom factory for creating collections
-        // so that the collection can be configured to be compatible with Langchain.
-        return new RedisVectorStore(
-            database,
-            new()
-            {
-                VectorStoreCollectionFactory = new RedisVectorStoreRecordCollectionFactory()
-            });
-    }
+        => new RedisLangchainInteropVectorStore(new RedisVectorStore(database), database);
 
-    /// <summary>
-    /// Factory that is used to inject the appropriate <see cref="VectorStoreRecordDefinition"/> for Langchain interoperability.
-    /// </summary>
-    private sealed class RedisVectorStoreRecordCollectionFactory : IRedisVectorStoreRecordCollectionFactory
+    private sealed class RedisLangchainInteropVectorStore(
+        IVectorStore innerStore,
+        IDatabase database)
+        : IVectorStore
     {
-        public IVectorStoreRecordCollection<TKey, TRecord> CreateVectorStoreRecordCollection<TKey, TRecord>(IDatabase database, string name, VectorStoreRecordDefinition? vectorStoreRecordDefinition) where TKey : notnull
+        private readonly IDatabase _database = database;
+
+        public IVectorStoreRecordCollection<TKey, TRecord> GetCollection<TKey, TRecord>(string name, VectorStoreRecordDefinition? vectorStoreRecordDefinition = null)
+            where TKey : notnull
+            where TRecord : notnull
         {
             if (typeof(TKey) != typeof(string) || typeof(TRecord) != typeof(LangchainDocument<string>))
             {
@@ -61,13 +56,21 @@ public static class RedisFactory
             // Also pass in our custom record definition that matches the schema used by Langchain
             // so that the default mapper can use the storage names in it, to map to the storage
             // scheme.
-            return (new RedisHashSetVectorStoreRecordCollection<TRecord>(
-                database,
+            return (new RedisHashSetVectorStoreRecordCollection<TKey, TRecord>(
+                _database,
                 name,
                 new()
                 {
                     VectorStoreRecordDefinition = s_recordDefinition
                 }) as IVectorStoreRecordCollection<TKey, TRecord>)!;
         }
+
+        public object? GetService(Type serviceType, object? serviceKey = null) => innerStore.GetService(serviceType, serviceKey);
+
+        public IAsyncEnumerable<string> ListCollectionNamesAsync(CancellationToken cancellationToken = default) => innerStore.ListCollectionNamesAsync(cancellationToken);
+
+        public Task<bool> CollectionExistsAsync(string name, CancellationToken cancellationToken = default) => innerStore.CollectionExistsAsync(name, cancellationToken);
+
+        public Task DeleteCollectionAsync(string name, CancellationToken cancellationToken = default) => innerStore.DeleteCollectionAsync(name, cancellationToken);
     }
 }

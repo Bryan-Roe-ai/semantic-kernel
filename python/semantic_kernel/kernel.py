@@ -38,12 +38,17 @@ import logging
 <<<<<<< main
 >>>>>>> Stashed changes
 from collections.abc import AsyncGenerator, AsyncIterable, Callable
-from copy import copy
+from contextlib import AbstractAsyncContextManager
+from copy import copy, deepcopy
 from typing import TYPE_CHECKING, Any, Literal, TypeVar
 
+<<<<<<< HEAD
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
     EmbeddingGeneratorBase,
 )
+=======
+from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.const import METADATA_EXCEPTION_KEY
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.function_call_content import FunctionCallContent
@@ -74,22 +79,35 @@ from semantic_kernel.functions.kernel_function_from_prompt import (
     KernelFunctionFromPrompt,
 )
 from semantic_kernel.functions.kernel_plugin import KernelPlugin
-from semantic_kernel.kernel_types import AI_SERVICE_CLIENT_TYPE, OneOrMany
+from semantic_kernel.kernel_types import AI_SERVICE_CLIENT_TYPE, OneOrMany, OptionalOneOrMany
 from semantic_kernel.prompt_template.const import KERNEL_TEMPLATE_FORMAT_NAME
+<<<<<<< HEAD
 from semantic_kernel.reliability.kernel_reliability_extension import (
     KernelReliabilityExtension,
 )
+=======
+from semantic_kernel.prompt_template.prompt_template_base import PromptTemplateBase
+from semantic_kernel.reliability.kernel_reliability_extension import KernelReliabilityExtension
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.services.ai_service_selector import AIServiceSelector
 from semantic_kernel.services.kernel_services_extension import KernelServicesExtension
+from semantic_kernel.utils.feature_stage_decorator import experimental
 from semantic_kernel.utils.naming import generate_random_ascii_name
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     from semantic_kernel.connectors.ai.function_choice_behavior import (
         FunctionChoiceBehavior,
     )
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
         PromptExecutionSettings,
     )
+=======
+    from mcp.server.lowlevel.server import LifespanResultT, Server
+
+    from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+    from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     from semantic_kernel.functions.kernel_function import KernelFunction
 
 T = TypeVar("T")
@@ -157,7 +175,7 @@ class Kernel(
         arguments: KernelArguments | None = None,
         function_name: str | None = None,
         plugin_name: str | None = None,
-        metadata: dict[str, Any] = {},
+        metadata: dict[str, Any] | None = None,
         return_function_results: bool = False,
         **kwargs: Any,
     ) -> AsyncGenerator[
@@ -226,7 +244,7 @@ class Kernel(
         arguments: KernelArguments | None = None,
         function_name: str | None = None,
         plugin_name: str | None = None,
-        metadata: dict[str, Any] = {},
+        metadata: dict[str, Any] | None = None,
         **kwargs: Any,
     ) -> FunctionResult | None:
         """Execute a function and return the FunctionResult.
@@ -391,10 +409,13 @@ class Kernel(
         self,
         function_call: FunctionCallContent,
         chat_history: ChatHistory,
+        *,
         arguments: "KernelArguments | None" = None,
+        execution_settings: "PromptExecutionSettings | None" = None,
         function_call_count: int | None = None,
         request_index: int | None = None,
-        function_behavior: "FunctionChoiceBehavior" = None,  # type: ignore
+        is_streaming: bool = False,
+        function_behavior: "FunctionChoiceBehavior | None" = None,
     ) -> "AutoFunctionInvocationContext | None":
         """Processes the provided FunctionCallContent and updates the chat history."""
         args_cloned = copy(arguments) if arguments else KernelArguments()
@@ -471,10 +492,16 @@ class Kernel(
             function=function_to_call,
             kernel=self,
             arguments=args_cloned,
+            is_streaming=is_streaming,
             chat_history=chat_history,
+<<<<<<< HEAD
             function_result=FunctionResult(
                 function=function_to_call.metadata, value=None
             ),
+=======
+            execution_settings=execution_settings,
+            function_result=FunctionResult(function=function_to_call.metadata, value=None),
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             function_count=function_call_count or 0,
             request_sequence_index=request_index or 0,
         )
@@ -487,13 +514,15 @@ class Kernel(
         )
         await stack(invocation_context)
 
+        # Snapshot the tool's return value so later mutations don't leak back
+        if invocation_context.function_result and invocation_context.function_result.value is not None:
+            invocation_context.function_result.value = deepcopy(invocation_context.function_result.value)
+
         frc = FunctionResultContent.from_function_call_content_and_result(
             function_call_content=function_call,
             result=invocation_context.function_result,
         )
-
         is_streaming = any(isinstance(message, StreamingChatMessageContent) for message in chat_history.messages)
-
         message = frc.to_streaming_chat_message_content() if is_streaming else frc.to_chat_message_content()
 
         chat_history.add_message(message=message)
@@ -578,6 +607,7 @@ class Kernel(
             inputs[field_to_store] = vectors[0]  # type: ignore
             return
         setattr(inputs, field_to_store, vectors[0])
+<<<<<<< HEAD
 from logging import Logger
 from typing import Any, Dict, Optional
 
@@ -3676,3 +3706,76 @@ class Kernel(KernelBase):
 >>>>>>> Stashed changes
 >>>>>>> origin/main
 >>>>>>> head
+=======
+
+    def clone(self) -> "Kernel":
+        """Clone the kernel instance to create a new one that may be mutated without affecting the current instance.
+
+        The current instance is not mutated by this operation.
+
+        Note: The same service clients are used in the new instance, so if you mutate the service clients
+        in the new instance, the original instance will be affected as well.
+
+        New lists of plugins and filters are created. It will not affect the original lists when the new instance
+        is mutated. A new `ai_service_selector` is created. It will not affect the original instance when the new
+        instance is mutated.
+        """
+        return Kernel(
+            plugins=deepcopy(self.plugins),
+            # Shallow copy of the services, as they are not serializable
+            services={k: v for k, v in self.services.items()},
+            ai_service_selector=deepcopy(self.ai_service_selector),
+            function_invocation_filters=deepcopy(self.function_invocation_filters),
+            prompt_rendering_filters=deepcopy(self.prompt_rendering_filters),
+            auto_function_invocation_filters=deepcopy(self.auto_function_invocation_filters),
+        )
+
+    @experimental
+    def as_mcp_server(
+        self,
+        prompts: list[PromptTemplateBase] | None = None,
+        server_name: str = "Semantic Kernel MCP Server",
+        version: str | None = None,
+        instructions: str | None = None,
+        lifespan: Callable[["Server[LifespanResultT]"], AbstractAsyncContextManager["LifespanResultT"]] | None = None,
+        excluded_functions: OptionalOneOrMany[str] = None,
+        **kwargs: Any,
+    ) -> "Server":
+        """Create a MCP server from this kernel.
+
+        This function automatically creates a MCP server from a kernel instance, it uses the provided arguments to
+        configure the server and expose functions as tools and prompts, see the mcp documentation for more details.
+
+        By default, all functions are exposed as Tools, you can control this by
+        using use the `excluded_functions` argument.
+        These need to be set to the function name, without the plugin_name.
+
+        Args:
+            kernel: The kernel instance to use.
+            prompts: A list of prompt templates to expose as prompts.
+            server_name: The name of the server.
+            version: The version of the server.
+            instructions: The instructions to use for the server.
+            lifespan: The lifespan of the server.
+            excluded_functions: The list of function names to exclude from the server.
+                if None, no functions will be excluded.
+            kwargs: Any extra arguments to pass to the server creation.
+
+        Returns:
+            The MCP server instance, it is a instance of
+            mcp.server.lowlevel.Server
+
+        """
+        from semantic_kernel.connectors.mcp import create_mcp_server_from_kernel
+
+        return create_mcp_server_from_kernel(
+            kernel=self,
+            prompts=prompts,
+            server_name=server_name,
+            version=version,
+            instructions=instructions,
+            lifespan=lifespan,
+            excluded_functions=excluded_functions,
+            **kwargs,
+        )
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

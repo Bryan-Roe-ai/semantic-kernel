@@ -12,7 +12,7 @@ from semantic_kernel.exceptions.memory_connector_exceptions import (
 )
 from semantic_kernel.memory.memory_record import MemoryRecord
 from semantic_kernel.memory.memory_store_base import MemoryStoreBase
-from semantic_kernel.utils.experimental_decorator import experimental_class
+from semantic_kernel.utils.feature_stage_decorator import experimental
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -112,7 +112,7 @@ class FieldMapper:
         return {key.lstrip("_"): value for key, value in sk_dict.items()}
 
 
-@experimental_class
+@experimental
 class WeaviateMemoryStore(MemoryStoreBase):
     """A memory store that uses Weaviate as the backend."""
 
@@ -137,7 +137,7 @@ class WeaviateMemoryStore(MemoryStoreBase):
             WeaviateSettings,
         )
 
-        self.settings = WeaviateSettings.create(
+        self.settings = WeaviateSettings(
             url=url,
             api_key=api_key,
             use_embed=use_embed,

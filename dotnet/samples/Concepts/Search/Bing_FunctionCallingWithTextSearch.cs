@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -36,7 +36,7 @@ public class Bing_FunctionCallingWithTextSearch(ITestOutputHelper output) : Base
         // Invoke prompt and use text search plugin to provide grounding information
         OpenAIPromptExecutionSettings settings = new() { ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions };
         KernelArguments arguments = new(settings);
-        Console.WriteLine(await kernel.InvokePromptAsync("What is the Semantic Kernel?", arguments));
+        Console.WriteLine(await kernel.InvokePromptAsync("What is the Semantic Kernel? Search for 5 references.", arguments));
     }
 
     /// <summary>

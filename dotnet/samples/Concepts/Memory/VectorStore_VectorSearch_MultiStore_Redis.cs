@@ -1,10 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
+using Azure.AI.OpenAI;
 using Azure.Identity;
 using Memory.VectorStoreFixtures;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using Microsoft.SemanticKernel.Connectors.Redis;
 using StackExchange.Redis;
 
@@ -23,7 +24,11 @@ namespace Memory;
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_Volatile"/></para>
 =======
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_InMemory"/></para>
+<<<<<<< HEAD
 >>>>>>> main
+=======
+/// <para><see cref="VectorStore_VectorSearch_MultiStore_Postgres"/></para>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 ///
 /// Redis supports two record storage types: Json and HashSet.
 /// Note the use of the <see cref="RedisStorageType"/> enum to specify the preferred storage type.
@@ -46,7 +51,7 @@ public class VectorStore_VectorSearch_MultiStore_Redis(ITestOutputHelper output,
             .CreateBuilder();
 
         // Register an embedding generation service with the DI container.
-        kernelBuilder.AddAzureOpenAITextEmbeddingGeneration(
+        kernelBuilder.AddAzureOpenAIEmbeddingGenerator(
             deploymentName: TestConfiguration.AzureOpenAIEmbeddings.DeploymentName,
             endpoint: TestConfiguration.AzureOpenAIEmbeddings.Endpoint,
             credential: new AzureCliCredential());
@@ -79,10 +84,9 @@ public class VectorStore_VectorSearch_MultiStore_Redis(ITestOutputHelper output,
     public async Task ExampleWithoutDIAsync(RedisStorageType redisStorageType)
     {
         // Create an embedding generation service.
-        var textEmbeddingGenerationService = new AzureOpenAITextEmbeddingGenerationService(
-                TestConfiguration.AzureOpenAIEmbeddings.DeploymentName,
-                TestConfiguration.AzureOpenAIEmbeddings.Endpoint,
-                new AzureCliCredential());
+        var embeddingGenerator = new AzureOpenAIClient(new Uri(TestConfiguration.AzureOpenAIEmbeddings.Endpoint), new AzureCliCredential())
+            .GetEmbeddingClient(TestConfiguration.AzureOpenAIEmbeddings.DeploymentName)
+            .AsIEmbeddingGenerator();
 
         // Initialize the Redis docker container via the fixtures and construct the Redis VectorStore with the preferred storage type.
         await redisFixture.ManualInitializeAsync();
@@ -90,7 +94,7 @@ public class VectorStore_VectorSearch_MultiStore_Redis(ITestOutputHelper output,
         var vectorStore = new RedisVectorStore(database, new() { StorageType = redisStorageType });
 
         // Create the common processor that works for any vector store.
-        var processor = new VectorStore_VectorSearch_MultiStore_Common(vectorStore, textEmbeddingGenerationService, this.Output);
+        var processor = new VectorStore_VectorSearch_MultiStore_Common(vectorStore, embeddingGenerator, this.Output);
 
         // Run the process and pass a key generator function to it, to generate unique record keys.
         // The key generator function is required, since different vector stores may require different key types.

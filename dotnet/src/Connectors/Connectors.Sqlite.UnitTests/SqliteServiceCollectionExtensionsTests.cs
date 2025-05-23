@@ -1,11 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
+<<<<<<< HEAD
 using Microsoft.Data.Sqlite;
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Sqlite;
-using Moq;
 using Xunit;
 
 namespace SemanticKernel.Connectors.Sqlite.UnitTests;
@@ -20,11 +22,14 @@ public sealed class SqliteServiceCollectionExtensionsTests
     [Fact]
     public void AddVectorStoreRegistersClass()
     {
+<<<<<<< HEAD
         // Arrange
         this._serviceCollection.AddSingleton<SqliteConnection>(Mock.Of<SqliteConnection>());
 
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         // Act
-        this._serviceCollection.AddSqliteVectorStore();
+        this._serviceCollection.AddSqliteVectorStore("Data Source=:memory:");
 
         var serviceProvider = this._serviceCollection.BuildServiceProvider();
         var vectorStore = serviceProvider.GetRequiredService<IVectorStore>();
@@ -35,6 +40,7 @@ public sealed class SqliteServiceCollectionExtensionsTests
     }
 
     [Fact]
+<<<<<<< HEAD
     public void AddVectorStoreWithSqliteConnectionRegistersClass()
     {
         // Act
@@ -54,39 +60,51 @@ public sealed class SqliteServiceCollectionExtensionsTests
         // Arrange
         this._serviceCollection.AddSingleton<SqliteConnection>(Mock.Of<SqliteConnection>());
 
+=======
+    public void AddVectorStoreRecordCollectionWithStringKeyRegistersClass()
+    {
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         // Act
-        this._serviceCollection.AddSqliteVectorStoreRecordCollection<string, TestRecord>("testcollection");
+        this._serviceCollection.AddSqliteVectorStoreRecordCollection<string, TestRecord>("testcollection", "Data Source=:memory:");
 
         var serviceProvider = this._serviceCollection.BuildServiceProvider();
 
         // Assert
         var collection = serviceProvider.GetRequiredService<IVectorStoreRecordCollection<string, TestRecord>>();
         Assert.NotNull(collection);
-        Assert.IsType<SqliteVectorStoreRecordCollection<TestRecord>>(collection);
+        Assert.IsType<SqliteVectorStoreRecordCollection<string, TestRecord>>(collection);
 
-        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorizedSearch<TestRecord>>();
+        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorSearch<TestRecord>>();
         Assert.NotNull(vectorizedSearch);
+<<<<<<< HEAD
         Assert.IsType<SqliteVectorStoreRecordCollection<TestRecord>>(vectorizedSearch);
+=======
+        Assert.IsType<SqliteVectorStoreRecordCollection<string, TestRecord>>(vectorizedSearch);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     [Fact]
     public void AddVectorStoreRecordCollectionWithNumericKeyRegistersClass()
     {
+<<<<<<< HEAD
         // Arrange
         this._serviceCollection.AddSingleton<SqliteConnection>(Mock.Of<SqliteConnection>());
 
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         // Act
-        this._serviceCollection.AddSqliteVectorStoreRecordCollection<ulong, TestRecord>("testcollection");
+        this._serviceCollection.AddSqliteVectorStoreRecordCollection<ulong, TestRecord>("testcollection", "Data Source=:memory:");
 
         var serviceProvider = this._serviceCollection.BuildServiceProvider();
 
         // Assert
         var collection = serviceProvider.GetRequiredService<IVectorStoreRecordCollection<ulong, TestRecord>>();
         Assert.NotNull(collection);
-        Assert.IsType<SqliteVectorStoreRecordCollection<TestRecord>>(collection);
+        Assert.IsType<SqliteVectorStoreRecordCollection<ulong, TestRecord>>(collection);
 
-        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorizedSearch<TestRecord>>();
+        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorSearch<TestRecord>>();
         Assert.NotNull(vectorizedSearch);
+<<<<<<< HEAD
         Assert.IsType<SqliteVectorStoreRecordCollection<TestRecord>>(vectorizedSearch);
     }
 
@@ -124,6 +142,9 @@ public sealed class SqliteServiceCollectionExtensionsTests
         var vectorizedSearch = serviceProvider.GetRequiredService<IVectorizedSearch<TestRecord>>();
         Assert.NotNull(vectorizedSearch);
         Assert.IsType<SqliteVectorStoreRecordCollection<TestRecord>>(vectorizedSearch);
+=======
+        Assert.IsType<SqliteVectorStoreRecordCollection<ulong, TestRecord>>(vectorizedSearch);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     #region private

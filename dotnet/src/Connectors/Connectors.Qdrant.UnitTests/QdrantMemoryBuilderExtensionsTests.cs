@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Net.Http;
@@ -13,6 +13,7 @@ using Xunit;
 
 namespace SemanticKernel.Connectors.Qdrant.UnitTests;
 
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public sealed class QdrantMemoryBuilderExtensionsTests : IDisposable
 {
     private readonly HttpMessageHandlerStub _messageHandlerStub;

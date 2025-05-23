@@ -26,6 +26,7 @@ from semantic_kernel.configuration.kernel_config import KernelConfig
 import semantic_kernel.memory as memory
 from semantic_kernel.kernel import Kernel
 
+<<<<<<< HEAD
 __version__ = "1.18.1"
 __all__ = ["Kernel", "__version__"]
 
@@ -58,3 +59,10 @@ __all__ = [
 ]
 __version__= "1.17.0"
 __all__= ["Kernel", "__version__"]
+=======
+__version__ = "1.30.0"
+
+DEFAULT_RC_VERSION = f"{__version__}-rc8"
+
+__all__ = ["DEFAULT_RC_VERSION", "Kernel", "__version__"]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

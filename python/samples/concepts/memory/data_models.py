@@ -91,6 +91,7 @@ class DataModelPydantic(BaseModel):
     other: str | None = None
 
 
+<<<<<<< HEAD
 # Data model using Pydantic BaseModels with mixed annotations (from pydantic and SK)
 @vectorstoremodel
 class DataModelPydanticComplex(BaseModel):
@@ -107,6 +108,8 @@ class DataModelPydanticComplex(BaseModel):
     other: str | None = None
 
 
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 # Data model using Python classes
 # This one includes a custom serialize and deserialize method
 @vectorstoremodel
@@ -167,6 +170,7 @@ data_model_definition_pandas = VectorStoreRecordDefinition(
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     data_item1 = DataModelDataclass(
         content="Hello, world!", vector=[1.0, 2.0, 3.0], other=None
     )
@@ -179,13 +183,18 @@ if __name__ == "__main__":
     data_item4 = DataModelPython(
         content="Hello, world!", vector=[1.0, 2.0, 3.0], other=None
     )
+=======
+    data_item1 = DataModelDataclass(content="Hello, world!", vector=[1.0, 2.0, 3.0], other=None)
+    data_item2 = DataModelPydantic(content="Hello, world!", vector=[1.0, 2.0, 3.0], other=None)
+    data_item3 = DataModelPython(content="Hello, world!", vector=[1.0, 2.0, 3.0], other=None)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     print("Example records:")
     print(f"DataClass:\n  {data_item1}", end="\n\n")
     print(f"Pydantic:\n  {data_item2}", end="\n\n")
-    print(f"Pydantic with annotations:\n  {data_item3}", end="\n\n")
-    print(f"Python:\n  {data_item4}", end="\n\n")
+    print(f"Python:\n  {data_item3}", end="\n\n")
 
     print("Item definitions:")
+<<<<<<< HEAD
     print(
         f"DataClass:\n  {data_item1.__kernel_vectorstoremodel_definition__}", end="\n\n"
     )
@@ -200,11 +209,16 @@ if __name__ == "__main__":
     print(
         f"Definition for use with Pandas:\n  {data_model_definition_pandas}", end="\n\n"
     )
+=======
+    print(f"DataClass:\n  {data_item1.__kernel_vectorstoremodel_definition__}", end="\n\n")
+    print(f"Pydantic:\n  {data_item2.__kernel_vectorstoremodel_definition__}", end="\n\n")
+    print(f"Python:\n  {data_item3.__kernel_vectorstoremodel_definition__}", end="\n\n")
+    print(f"Definition for use with Pandas:\n  {data_model_definition_pandas}", end="\n\n")
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     if (
         data_item1.__kernel_vectorstoremodel_definition__.fields
         == data_item2.__kernel_vectorstoremodel_definition__.fields
         == data_item3.__kernel_vectorstoremodel_definition__.fields
-        == data_item4.__kernel_vectorstoremodel_definition__.fields
         == data_model_definition_pandas.fields
     ):
         print("All data models are the same")

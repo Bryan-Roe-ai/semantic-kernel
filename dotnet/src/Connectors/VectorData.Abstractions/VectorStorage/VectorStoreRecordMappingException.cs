@@ -1,11 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 
 namespace Microsoft.Extensions.VectorData;
 
 /// <summary>
-/// Exception thrown when a failure occurs while trying to convert models for storage or retrieval.
+/// Defines an exception that's thrown when a failure occurs while trying to convert models for storage or retrieval.
 /// </summary>
 public class VectorStoreRecordMappingException : VectorStoreException
 {

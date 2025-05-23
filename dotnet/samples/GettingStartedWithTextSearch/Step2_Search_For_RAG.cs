@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using Microsoft.SemanticKernel;

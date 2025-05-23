@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Plugins.Web.Bing;
@@ -84,7 +84,7 @@ public class Step1_Web_Search(ITestOutputHelper output) : BaseTest(output)
         }
         else
         {
-            Console.WriteLine("\nâ€”â€”â€” Google Web Page Results â€”â€”â€”\n");
+            Console.WriteLine("\n——— Google Web Page Results ———\n");
             await foreach (Google.Apis.CustomSearchAPI.v1.Data.Result result in objectResults.Results)
             {
                 Console.WriteLine($"Title:       {result.Title}");

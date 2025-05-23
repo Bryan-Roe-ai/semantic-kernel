@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using Microsoft.SemanticKernel.Process.Internal;
@@ -20,7 +20,7 @@ internal sealed class EndStep : ProcessStepBuilder
     /// Represents the end of a process.
     /// </summary>
     internal EndStep()
-        : base(ProcessConstants.EndStepName)
+        : base(id: ProcessConstants.EndStepName, null)
     {
     }
 
@@ -30,7 +30,7 @@ internal sealed class EndStep : ProcessStepBuilder
         return [];
     }
 
-    internal override KernelProcessStepInfo BuildStep(KernelProcessStepStateMetadata? stateMetadata = null)
+    internal override KernelProcessStepInfo BuildStep(ProcessBuilder processBuilder, KernelProcessStepStateMetadata? stateMetadata = null)
     {
         // The end step has no state.
         return new KernelProcessStepInfo(typeof(KernelProcessStepState), new KernelProcessStepState(ProcessConstants.EndStepName, version: ProcessConstants.InternalStepsVersion), []);

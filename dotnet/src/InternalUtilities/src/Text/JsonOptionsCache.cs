@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -37,5 +37,13 @@ internal static class JsonOptionsCache
         AllowTrailingCommas = true,
         PropertyNameCaseInsensitive = true,
         ReadCommentHandling = JsonCommentHandling.Skip,
+    };
+
+    /// <summary>
+    /// Gets the <see cref="JsonSerializerOptions"/> configured for serializing chat history data.
+    /// </summary>
+    public static JsonSerializerOptions ChatHistory { get; } = new()
+    {
+        Converters = { new ExceptionJsonConverter() }
     };
 }

@@ -10,7 +10,8 @@
             "console": "integratedTerminal"
 =======
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": false,
+            "purpose": ["debug-in-terminal"]
         },
         {
             "name": "Python FastAPI app with Dapr",

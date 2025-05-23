@@ -49,7 +49,7 @@ kernel.add_service(
 )
 
 settings = kernel.get_prompt_execution_settings_from_service_id(service_id)
-settings.max_tokens = 2000
+settings.max_completion_tokens = 2000
 settings.temperature = 0.7
 settings.top_p = 0.8
 

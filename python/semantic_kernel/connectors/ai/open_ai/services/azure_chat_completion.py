@@ -96,6 +96,7 @@ class AzureChatCompletion(
         async_client: AsyncAzureOpenAI | None = None,
         env_file_path: str | None = None,
         env_file_encoding: str | None = None,
+        instruction_role: str | None = None,
     ) -> None:
         """Initialize an AzureChatCompletion service.
 
@@ -119,6 +120,7 @@ class AzureChatCompletion(
             async_client (AsyncAzureOpenAI | None): An existing client to use. (Optional)
             env_file_path (str | None): Use the environment settings file as a fallback to using env vars.
             env_file_encoding (str | None): The encoding of the environment settings file, defaults to 'utf-8'.
+<<<<<<< HEAD
         deployment_name: str,
         base_url: Union[HttpsUrl, str],
         service_id: Optional[str] = None,
@@ -150,9 +152,13 @@ class AzureChatCompletion(
             async_client (AsyncAzureOpenAI | None): An existing client to use. (Optional)
             env_file_path (str | None): Use the environment settings file as a fallback to using env vars.
             env_file_encoding (str | None): The encoding of the environment settings file, defaults to 'utf-8'.
+=======
+            instruction_role (str | None): The role to use for 'instruction' messages, for example, summarization
+                prompts could use `developer` or `system`. (Optional)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """
         try:
-            azure_openai_settings = AzureOpenAISettings.create(
+            azure_openai_settings = AzureOpenAISettings(
                 api_key=api_key,
                 base_url=base_url,
                 endpoint=endpoint,
@@ -543,6 +549,7 @@ class AzureChatCompletion(
             default_headers=default_headers,
             ai_model_type=OpenAIModelTypes.CHAT,
             client=async_client,
+            instruction_role=instruction_role,
         )
 
     @classmethod

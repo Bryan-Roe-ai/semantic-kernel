@@ -1011,6 +1011,7 @@ def test_create_options_azure_data_from_azure_ai_settings(
 >>>>>>> Stashed changes
 =======
 def test_create_options_azure_data_from_azure_ai_settings(azure_ai_search_unit_test_env):
+<<<<<<< HEAD
     az_source = AzureAISearchDataSource.from_azure_ai_search_settings(AzureAISearchSettings.create())
 >>>>>>> main
 <<<<<<< Updated upstream
@@ -1046,6 +1047,9 @@ def test_create_options_azure_data_from_azure_ai_settings(azure_ai_search_unit_t
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+    az_source = AzureAISearchDataSource.from_azure_ai_search_settings(AzureAISearchSettings())
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     extra = ExtraBody(data_sources=[az_source])
     assert extra["data_sources"] is not None
     settings = AzureChatPromptExecutionSettings(extra_body=extra)
@@ -1262,6 +1266,20 @@ def test_azure_open_ai_chat_prompt_execution_settings_with_aisearch_data_sources
         {"type": "access_token", "access_token": "test_token"},
         pytest.param({"type": "access_token"}, marks=pytest.mark.xfail),
         pytest.param({"type": "invalid"}, marks=pytest.mark.xfail),
+    ],
+    ids=[
+        "APIKey",
+        "api_key",
+        "api_key_no_key",
+        "SystemAssignedManagedIdentity",
+        "system_assigned_managed_identity",
+        "UserAssignedManagedIdentity",
+        "user_assigned_managed_identity",
+        "user_assigned_managed_identity_no_id",
+        "AccessToken",
+        "access_token",
+        "access_token_no_token",
+        "invalid",
     ],
 )
 def test_aisearch_data_source_parameters(authentication) -> None:

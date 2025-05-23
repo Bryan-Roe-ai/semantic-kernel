@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System;
@@ -44,9 +44,15 @@ internal static class ProcessStateMetadataFactory
         {
             return KernelProcessMapToProcessStateMetadata(stepMap);
         }
+<<<<<<< HEAD
         else if (stepInfo is KernelProcessMap stepMap)
         {
             return KernelProcessMapToProcessStateMetadata(stepMap);
+=======
+        else if (stepInfo is KernelProcessProxy stepProxy)
+        {
+            return KernelProcessProxyToProcessStateMetadata(stepProxy);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         }
 
         return StepInfoToProcessStateMetadata(stepInfo);
@@ -62,6 +68,18 @@ internal static class ProcessStateMetadataFactory
                 VersionInfo = stepMap.State.Version,
                 OperationState = ToProcessStateMetadata(stepMap.Operation),
             };
+    }
+
+    private static KernelProcessProxyStateMetadata KernelProcessProxyToProcessStateMetadata(KernelProcessProxy stepProxy)
+    {
+        return new()
+        {
+            Name = stepProxy.State.Name,
+            Id = stepProxy.State.Id,
+            VersionInfo = stepProxy.State.Version,
+            PublishTopics = stepProxy.ProxyMetadata?.PublishTopics ?? [],
+            EventMetadata = stepProxy.ProxyMetadata?.EventMetadata ?? [],
+        };
     }
 
     /// <summary>

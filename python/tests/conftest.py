@@ -12,23 +12,29 @@ import pandas as pd
 from pydantic import BaseModel
 from pytest import fixture
 
-from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_prompt_execution_settings import (
-    OpenAIEmbeddingPromptExecutionSettings,
-)
-from semantic_kernel.data.record_definition.vector_store_model_decorator import vectorstoremodel
-from semantic_kernel.data.record_definition.vector_store_model_definition import VectorStoreRecordDefinition
-from semantic_kernel.data.record_definition.vector_store_record_fields import (
+from semantic_kernel.agents import Agent, DeclarativeSpecMixin, register_agent_type
+from semantic_kernel.connectors.ai.open_ai import OpenAIEmbeddingPromptExecutionSettings
+from semantic_kernel.data.record_definition import (
     VectorStoreRecordDataField,
+    VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
     VectorStoreRecordVectorField,
+    vectorstoremodel,
 )
 
 if TYPE_CHECKING:
+<<<<<<< HEAD
     from semantic_kernel.contents.chat_history import ChatHistory
     from semantic_kernel.filters.functions.function_invocation_context import (
         FunctionInvocationContext,
     )
     from semantic_kernel.kernel import Kernel
+=======
+    from semantic_kernel import Kernel
+    from semantic_kernel.contents import ChatHistory
+    from semantic_kernel.filters import FunctionInvocationContext
+    from semantic_kernel.functions import KernelFunction
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     from semantic_kernel.services.ai_service_client_base import AIServiceClientBase
 
 def pytest_configure(config):
@@ -39,9 +45,16 @@ def pytest_configure(config):
     logging.getLogger("httpcore").setLevel(logging.WARNING)
     logging.getLogger("semantic_kernel").setLevel(logging.INFO)
 
+<<<<<<< HEAD
+=======
+
+# region: Kernel fixtures
+
+
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 @fixture(scope="function")
 def kernel() -> "Kernel":
-    from semantic_kernel.kernel import Kernel
+    from semantic_kernel import Kernel
 
     return Kernel()
 
@@ -193,15 +206,27 @@ def custom_plugin_class():
 @fixture(scope="session")
 def experimental_plugin_class():
     from semantic_kernel.functions.kernel_function_decorator import kernel_function
-    from semantic_kernel.utils.experimental_decorator import experimental_class
+    from semantic_kernel.utils.feature_stage_decorator import experimental
 
-    @experimental_class
+    @experimental
     class ExperimentalPlugin:
         @kernel_function(name="getLightStatus")
         def decorated_native_function(self) -> str:
             return "test"
 
     return ExperimentalPlugin
+
+@fixture(scope="session")
+def auto_function_invocation_filter() -> Callable:
+    """A filter that will be called for each function call in the response."""
+    from semantic_kernel.filters import AutoFunctionInvocationContext
+
+    async def auto_function_invocation_filter(context: AutoFunctionInvocationContext, next):
+        await next(context)
+        context.terminate = True
+
+    return auto_function_invocation_filter
+
 
 @fixture(scope="session")
 def create_mock_function() -> Callable:
@@ -280,6 +305,7 @@ def prompt() -> str:
     return "test prompt"
 
 
+<<<<<<< HEAD
 # @fixture(autouse=True)
 # def enable_debug_mode():
 #     """Set `autouse=True` to enable easy debugging for tests.
@@ -317,6 +343,9 @@ def prompt() -> str:
 #     builtins.ss = snoop.snoop(depth=4).__enter__
 #     builtins.pr = snoop.pp
 
+=======
+# region: Connector Settings fixtures
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 @fixture
 def exclude_list(request):
     """Fixture that returns a list of environment variables to exclude."""
@@ -327,6 +356,11 @@ def override_env_param_dict(request):
     """Fixture that returns a dict of environment variables to override."""
     return request.param if hasattr(request, "param") else {}
 
+<<<<<<< HEAD
+=======
+
+# These two fixtures are used for multiple things, also non-connector tests
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 @fixture()
 def azure_openai_unit_test_env(monkeypatch, exclude_list, override_env_param_dict):
     """Fixture to set environment variables for AzureOpenAISettings."""
@@ -343,6 +377,7 @@ def azure_openai_unit_test_env(monkeypatch, exclude_list, override_env_param_dic
         "AZURE_OPENAI_TEXT_TO_IMAGE_DEPLOYMENT_NAME": "test_text_to_image_deployment",
         "AZURE_OPENAI_AUDIO_TO_TEXT_DEPLOYMENT_NAME": "test_audio_to_text_deployment",
         "AZURE_OPENAI_TEXT_TO_AUDIO_DEPLOYMENT_NAME": "test_text_to_audio_deployment",
+        "AZURE_OPENAI_REALTIME_DEPLOYMENT_NAME": "test_realtime_deployment",
         "AZURE_OPENAI_API_KEY": "test_api_key",
         "AZURE_OPENAI_ENDPOINT": "https://test-endpoint.com",
         "AZURE_OPENAI_API_VERSION": "2023-03-15-preview",
@@ -372,12 +407,14 @@ def openai_unit_test_env(monkeypatch, exclude_list, override_env_param_dict):
     env_vars = {
         "OPENAI_API_KEY": "test_api_key",
         "OPENAI_ORG_ID": "test_org_id",
+        "OPENAI_RESPONSES_MODEL_ID": "test_responses_model_id",
         "OPENAI_CHAT_MODEL_ID": "test_chat_model_id",
         "OPENAI_TEXT_MODEL_ID": "test_text_model_id",
         "OPENAI_EMBEDDING_MODEL_ID": "test_embedding_model_id",
         "OPENAI_TEXT_TO_IMAGE_MODEL_ID": "test_text_to_image_model_id",
         "OPENAI_AUDIO_TO_TEXT_MODEL_ID": "test_audio_to_text_model_id",
         "OPENAI_TEXT_TO_AUDIO_MODEL_ID": "test_text_to_audio_model_id",
+        "OPENAI_REALTIME_MODEL_ID": "test_realtime_model_id",
     }
 
     env_vars.update(override_env_param_dict)
@@ -390,6 +427,7 @@ def openai_unit_test_env(monkeypatch, exclude_list, override_env_param_dict):
 
     return env_vars
 
+<<<<<<< HEAD
 @fixture()
 def mistralai_unit_test_env(monkeypatch, exclude_list, override_env_param_dict):
     """Fixture to set environment variables for MistralAISettings."""
@@ -615,6 +653,11 @@ def get_gp_config():
     return env_vars
 
 
+=======
+
+# region: Data Model Fixtures
+# some of these fixtures are used in both unit and integration tests
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 @fixture
 def index_kind(request) -> str:
     if hasattr(request, "param"):
@@ -660,7 +703,7 @@ def dataclass_vector_data_model(
                 property_type=vector_property_type,
             ),
         ] = None
-        id: Annotated[str, VectorStoreRecordKeyField()] = field(default_factory=lambda: str(uuid4()))
+        id: Annotated[str, VectorStoreRecordKeyField(property_type="str")] = field(default_factory=lambda: str(uuid4()))
         content: Annotated[
             str, VectorStoreRecordDataField(has_embedding=True, embedding_property_name="vector", property_type="str")
         ] = "content1"
@@ -698,13 +741,14 @@ def dataclass_vector_data_model_array(
 @fixture
 def data_model_definition(
     index_kind: str, distance_function: str, vector_property_type: str, dimensions: int
-) -> object:
+) -> VectorStoreRecordDefinition:
     return VectorStoreRecordDefinition(
         fields={
-            "id": VectorStoreRecordKeyField(),
+            "id": VectorStoreRecordKeyField(property_type="str"),
             "content": VectorStoreRecordDataField(
                 has_embedding=True,
                 embedding_property_name="vector",
+                property_type="str",
             ),
             "vector": VectorStoreRecordVectorField(
                 dimensions=dimensions,
@@ -780,3 +824,39 @@ def data_model_type_with_key_as_key_field(
         key: Annotated[str, VectorStoreRecordKeyField()]
 
     return DataModelClass
+
+
+# region Declarative Spec
+
+
+@register_agent_type("test_agent")
+class TestAgent(DeclarativeSpecMixin, Agent):
+    @classmethod
+    def resolve_placeholders(cls, yaml_str, settings=None, extras=None):
+        return yaml_str
+
+    @classmethod
+    async def _from_dict(cls, data, **kwargs):
+        return cls(
+            name=data.get("name"),
+            description=data.get("description"),
+            instructions=data.get("instructions"),
+            kernel=data.get("kernel"),
+        )
+
+    async def get_response(self, messages, instructions_override=None):
+        return "test response"
+
+    async def invoke(self, messages, **kwargs):
+        return "invoke result"
+
+    async def invoke_stream(self, messages, **kwargs):
+        yield "stream result"
+
+
+@fixture(scope="session")
+def test_agent_cls():
+    return TestAgent
+
+
+# endregion

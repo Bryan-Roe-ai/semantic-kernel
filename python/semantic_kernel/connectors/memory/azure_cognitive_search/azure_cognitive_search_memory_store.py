@@ -36,12 +36,12 @@ from semantic_kernel.exceptions import (
 )
 from semantic_kernel.memory.memory_record import MemoryRecord
 from semantic_kernel.memory.memory_store_base import MemoryStoreBase
-from semantic_kernel.utils.experimental_decorator import experimental_class
+from semantic_kernel.utils.feature_stage_decorator import experimental
 
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-@experimental_class
+@experimental
 class AzureCognitiveSearchMemoryStore(MemoryStoreBase):
     """Azure Cognitive Search Memory Store."""
 
@@ -82,7 +82,7 @@ class AzureCognitiveSearchMemoryStore(MemoryStoreBase):
         )
 
         try:
-            acs_memory_settings = AzureAISearchSettings.create(
+            acs_memory_settings = AzureAISearchSettings(
                 env_file_path=env_file_path,
                 endpoint=search_endpoint,
                 api_key=admin_key,

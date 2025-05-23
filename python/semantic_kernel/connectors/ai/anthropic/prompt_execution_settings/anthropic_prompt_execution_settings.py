@@ -5,12 +5,16 @@ from typing import Annotated, Any
 
 from pydantic import Field, model_validator
 
+<<<<<<< HEAD
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.exceptions import ServiceInvalidExecutionSettingsError
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
+=======
+from semantic_kernel.connectors.ai.function_choice_type import FunctionChoiceType
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.exceptions import ServiceInvalidExecutionSettingsError
 

@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 <<<<<<< main
 <<<<<<< HEAD
@@ -67,7 +68,11 @@ using System.Text.Json.Nodes;
 using Microsoft.SemanticKernel.Data;
 =======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
 >>>>>>> upstream/main
+=======
+using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Qdrant.Client.Grpc;
 
 namespace Microsoft.SemanticKernel.Connectors.Qdrant;
@@ -77,6 +82,19 @@ namespace Microsoft.SemanticKernel.Connectors.Qdrant;
 /// </summary>
 internal static class QdrantVectorStoreRecordFieldMapping
 {
+    public static VectorStoreRecordModelBuildingOptions GetModelBuildOptions(bool hasNamedVectors)
+        => new()
+        {
+            RequiresAtLeastOneVector = !hasNamedVectors,
+            SupportsMultipleKeys = false,
+            SupportsMultipleVectors = hasNamedVectors,
+
+            SupportedKeyPropertyTypes = [typeof(ulong), typeof(Guid)],
+            SupportedDataPropertyTypes = QdrantVectorStoreRecordFieldMapping.s_supportedDataTypes,
+            SupportedEnumerableDataPropertyElementTypes = QdrantVectorStoreRecordFieldMapping.s_supportedDataTypes,
+            SupportedVectorPropertyTypes = QdrantVectorStoreRecordFieldMapping.s_supportedVectorTypes
+        };
+
     /// <summary>A set of types that data properties on the provided model may have.</summary>
     public static readonly HashSet<Type> s_supportedDataTypes =
     [
@@ -86,11 +104,7 @@ internal static class QdrantVectorStoreRecordFieldMapping
         typeof(double),
         typeof(float),
         typeof(bool),
-        typeof(int?),
-        typeof(long?),
-        typeof(double?),
-        typeof(float?),
-        typeof(bool?)
+        typeof(DateTimeOffset)
     ];
 
     /// <summary>A set of types that vectors on the provided model may have.</summary>
@@ -312,7 +326,8 @@ internal static class QdrantVectorStoreRecordFieldMapping
                 targetType == typeof(int) || targetType == typeof(int?) ?
                 (object)(int)payloadValue.IntegerValue :
                 (object)payloadValue.IntegerValue,
-            Value.KindOneofCase.StringValue => payloadValue.StringValue,
+            Value.KindOneofCase.StringValue =>
+                ConvertStringValue(payloadValue.StringValue),
             Value.KindOneofCase.DoubleValue =>
                 targetType == typeof(float) || targetType == typeof(float?) ?
                 (object)(float)payloadValue.DoubleValue :
@@ -358,6 +373,15 @@ internal static class QdrantVectorStoreRecordFieldMapping
 >>>>>>> head
             _ => throw new VectorStoreRecordMappingException($"Unsupported grpc value kind {payloadValue.KindCase}."),
         };
+
+        object ConvertStringValue(string stringValue)
+        {
+            return targetType switch
+            {
+                Type t when t == typeof(DateTimeOffset) || t == typeof(DateTimeOffset?) => DateTimeOffset.Parse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind),
+                _ => stringValue,
+            };
+        }
     }
 
     /// <summary>
@@ -397,12 +421,18 @@ internal static class QdrantVectorStoreRecordFieldMapping
         {
             value.BoolValue = boolValue;
         }
+        else if (sourceValue is DateTimeOffset dateTimeOffsetValue)
+        {
+            value.StringValue = dateTimeOffsetValue.ToString("O");
+        }
         else if (sourceValue is IEnumerable<int> ||
             sourceValue is IEnumerable<long> ||
             sourceValue is IEnumerable<string> ||
             sourceValue is IEnumerable<float> ||
             sourceValue is IEnumerable<double> ||
-            sourceValue is IEnumerable<bool>)
+            sourceValue is IEnumerable<bool> ||
+            sourceValue is IEnumerable<DateTime> ||
+            sourceValue is IEnumerable<DateTimeOffset>)
         {
             var listValue = sourceValue as IEnumerable;
             value.ListValue = new ListValue();

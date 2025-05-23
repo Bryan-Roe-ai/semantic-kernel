@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.SemanticKernel.Data;
@@ -8,7 +8,6 @@ namespace Microsoft.SemanticKernel;
 /// <summary>
 /// Extension methods to register <see cref="ITextSearch"/> for use with <see cref="KernelBuilder"/>.
 /// </summary>
-[Experimental("SKEXP0001")]
 public static class TextSearchKernelBuilderExtensions
 {
     /// <summary>

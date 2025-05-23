@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using Microsoft.SemanticKernel.Functions;
 
 namespace Microsoft.SemanticKernel;
 
@@ -15,7 +16,9 @@ namespace Microsoft.SemanticKernel;
     WriteIndented = true)]
 [JsonSerializable(typeof(IDictionary<string, object?>))]
 [JsonSerializable(typeof(JsonElement))]
+[JsonSerializable(typeof(KernelFunctionSchemaModel))]
 [JsonSerializable(typeof(PromptExecutionSettings))]
+[JsonSerializable(typeof(KernelArguments))]
 // types commonly used as values in settings dictionaries
 [JsonSerializable(typeof(string))]
 [JsonSerializable(typeof(int))]

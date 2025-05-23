@@ -1,17 +1,25 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
+<<<<<<< HEAD
 <<<<<<< HEAD
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 =======
+=======
+using Azure.AI.OpenAI;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Azure.Identity;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
+<<<<<<< HEAD
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 >>>>>>> main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel.Data;
 using SemanticKernel.IntegrationTests.Data;
 using SemanticKernel.IntegrationTests.TestSettings;
@@ -86,20 +94,29 @@ public class AzureAISearchTextSearchTests(AzureAISearchVectorStoreFixture fixtur
             Assert.NotNull(azureOpenAIConfiguration);
             Assert.NotEmpty(azureOpenAIConfiguration.DeploymentName);
             Assert.NotEmpty(azureOpenAIConfiguration.Endpoint);
+<<<<<<< HEAD
             this.EmbeddingGenerator = new AzureOpenAITextEmbeddingGenerationService(
                 azureOpenAIConfiguration.DeploymentName,
                 azureOpenAIConfiguration.Endpoint,
                 new AzureCliCredential());
 >>>>>>> main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-            this.VectorStore = new AzureAISearchVectorStore(fixture.SearchIndexClient);
+            this.EmbeddingGenerator = new AzureOpenAIClient(new Uri(azureOpenAIConfiguration.Endpoint), new AzureCliCredential())
+                .GetEmbeddingClient(azureOpenAIConfiguration.DeploymentName)
+                .AsIEmbeddingGenerator();
+
+            this.VectorStore = new AzureAISearchVectorStore(fixture.SearchIndexClient, new() { EmbeddingGenerator = this.EmbeddingGenerator });
         }
 
         var vectorSearch = this.VectorStore.GetCollection<string, AzureAISearchHotel>(fixture.TestIndexName);
         var stringMapper = new HotelTextSearchStringMapper();
         var resultMapper = new HotelTextSearchResultMapper();
 
+        // TODO: Once OpenAITextEmbeddingGenerationService implements MEAI's IEmbeddingGenerator (#10811), configure it with the AzureAISearchVectorStore above instead of passing it here.
         var result = new VectorStoreTextSearch<AzureAISearchHotel>(vectorSearch, this.EmbeddingGenerator!, stringMapper, resultMapper);
+
         return Task.FromResult<ITextSearch>(result);
     }
 

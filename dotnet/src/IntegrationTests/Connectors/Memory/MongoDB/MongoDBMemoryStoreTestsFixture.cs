@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Linq;
@@ -12,6 +12,7 @@ using Xunit;
 
 namespace SemanticKernel.IntegrationTests.Connectors.MongoDB;
 
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class MongoDBMemoryStoreTestsFixture : IAsyncLifetime
 {
 #pragma warning disable CA1859 // Use concrete types when possible for improved performance

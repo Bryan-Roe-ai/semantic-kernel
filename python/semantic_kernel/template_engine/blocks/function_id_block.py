@@ -447,7 +447,7 @@ class FunctionIdBlock(Block):
 >>>>>>> head
     @model_validator(mode="before")
     @classmethod
-    def parse_content(cls, fields: dict[str, Any]) -> dict[str, Any]:
+    def parse_content(cls, fields: Any) -> dict[str, Any]:
         """Parse the content of the function id block and extract the plugin and function name.
 
         If both are present in the fields, return the fields as is.
@@ -542,15 +542,16 @@ class FunctionIdBlock(Block):
 >>>>>>> origin/main
 >>>>>>> head
         """
-        if "plugin_name" in fields and "function_name" in fields:
-            return fields
-        content = fields.get("content", "").strip()
-        matches = FUNCTION_ID_BLOCK_MATCHER.match(content)
-        if not matches:
-            raise FunctionIdBlockSyntaxError(content=content)
-        if plugin := matches.groupdict().get("plugin"):
-            fields["plugin_name"] = plugin
-        fields["function_name"] = matches.group("function")
+        if isinstance(fields, dict):
+            if "plugin_name" in fields and "function_name" in fields:
+                return fields
+            content = fields.get("content", "").strip()
+            matches = FUNCTION_ID_BLOCK_MATCHER.match(content)
+            if not matches:
+                raise FunctionIdBlockSyntaxError(content=content)
+            if plugin := matches.groupdict().get("plugin"):
+                fields["plugin_name"] = plugin
+            fields["function_name"] = matches.group("function")
         return fields
 
 <<<<<<< div

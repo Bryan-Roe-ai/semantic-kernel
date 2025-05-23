@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -44,6 +45,9 @@
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 using System.Collections;
@@ -190,11 +194,27 @@ public class ChatHistory : List<ChatMessageBase>
     }
 
     /// <summary>
-    /// Creates a new instance of the <see cref="ChatHistory"/> class with a system message
+    /// Creates a new instance of the <see cref="ChatHistory"/> with a first message in the provided <see cref="AuthorRole"/>.
+    /// If not role is provided then the first message will default to <see cref="AuthorRole.System"/> role.
+    /// </summary>
+    /// <param name="message">The text message to add to the first message in chat history.</param>
+    /// <param name="role">The role to add as the first message.</param>
+    public ChatHistory(string message, AuthorRole role)
+    {
+        Verify.NotNullOrWhiteSpace(message);
+
+        this._messages = [];
+        this.Add(new ChatMessageContent(role, message));
+    }
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="ChatHistory"/> class with a system message.
     /// </summary>
     /// <param name="systemMessage">The system message to add to the history.</param>
     public ChatHistory(string systemMessage)
+        : this(systemMessage, AuthorRole.System)
     {
+<<<<<<< HEAD
         Verify.NotNullOrWhiteSpace(systemMessage);
 
         this._messages = [];
@@ -286,6 +306,8 @@ public class ChatHistory : List<ChatMessageBase>
 >>>>>>> main
 =======
 >>>>>>> head
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     /// <summary>Initializes the history will all of the specified messages.</summary>
@@ -345,6 +367,13 @@ public class ChatHistory : List<ChatMessageBase>
     /// <param name="content">Message content</param>
     public void AddSystemMessage(string content) =>
         this.AddMessage(AuthorRole.System, content);
+
+    /// <summary>
+    /// Add a developer message to the chat history
+    /// </summary>
+    /// <param name="content">Message content</param>
+    public void AddDeveloperMessage(string content) =>
+        this.AddMessage(AuthorRole.Developer, content);
 
     /// <summary>Adds a message to the history.</summary>
     /// <param name="item">The message to add.</param>

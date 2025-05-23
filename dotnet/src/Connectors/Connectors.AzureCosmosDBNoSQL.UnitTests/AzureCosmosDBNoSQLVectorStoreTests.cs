@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
@@ -19,6 +20,17 @@ namespace SemanticKernel.Connectors.AzureCosmosDBNoSQL.UnitTests;
 public sealed class AzureCosmosDBNoSQLVectorStoreTests
 {
     private readonly Mock<Database> _mockDatabase = new();
+
+    public AzureCosmosDBNoSQLVectorStoreTests()
+    {
+        var mockClient = new Mock<CosmosClient>();
+
+        mockClient.Setup(l => l.ClientOptions).Returns(new CosmosClientOptions() { UseSystemTextJsonSerializerWithOptions = JsonSerializerOptions.Default });
+
+        this._mockDatabase
+            .Setup(l => l.Client)
+            .Returns(mockClient.Object);
+    }
 
     [Fact]
     public void GetCollectionWithNotSupportedKeyThrowsException()
@@ -45,6 +57,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreTests
         Assert.NotNull(collectionWithCompositeKey);
     }
 
+#pragma warning disable CS0618 // IAzureCosmosDBNoSQLVectorStoreRecordCollectionFactory is obsolete
     [Fact]
     public void GetCollectionWithFactoryReturnsCustomCollection()
     {
@@ -73,6 +86,7 @@ public sealed class AzureCosmosDBNoSQLVectorStoreTests
             "collection",
             It.IsAny<VectorStoreRecordDefinition>()), Times.Once());
     }
+#pragma warning restore CS0618
 
     [Fact]
     public void GetCollectionWithoutFactoryReturnsDefaultCollection()

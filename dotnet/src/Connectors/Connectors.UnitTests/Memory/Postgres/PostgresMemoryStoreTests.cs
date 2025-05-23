@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,7 @@ namespace SemanticKernel.Connectors.UnitTests.Postgres;
 /// <summary>
 /// Unit tests for <see cref="PostgresMemoryStore"/> class.
 /// </summary>
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class PostgresMemoryStoreTests
 {
     private const string CollectionName = "fake-collection-name";

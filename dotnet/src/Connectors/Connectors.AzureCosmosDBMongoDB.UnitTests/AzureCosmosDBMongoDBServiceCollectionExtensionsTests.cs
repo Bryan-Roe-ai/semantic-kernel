@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -64,6 +65,9 @@
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
@@ -188,11 +192,11 @@ public sealed class AzureCosmosDBMongoDBServiceCollectionExtensionsTests
 
         var collection = serviceProvider.GetRequiredService<IVectorStoreRecordCollection<string, TestRecord>>();
         Assert.NotNull(collection);
-        Assert.IsType<AzureCosmosDBMongoDBVectorStoreRecordCollection<TestRecord>>(collection);
+        Assert.IsType<AzureCosmosDBMongoDBVectorStoreRecordCollection<string, TestRecord>>(collection);
 
-        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorizedSearch<TestRecord>>();
+        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorSearch<TestRecord>>();
         Assert.NotNull(vectorizedSearch);
-        Assert.IsType<AzureCosmosDBMongoDBVectorStoreRecordCollection<TestRecord>>(vectorizedSearch);
+        Assert.IsType<AzureCosmosDBMongoDBVectorStoreRecordCollection<string, TestRecord>>(vectorizedSearch);
     }
 
 #pragma warning disable CA1812 // Avoid uninstantiated internal classes

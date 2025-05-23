@@ -31,16 +31,22 @@ from semantic_kernel.connectors.memory.redis.const import (
     TYPE_MAPPER_VECTOR,
     RedisCollectionTypes,
 )
+<<<<<<< HEAD
 from semantic_kernel.data.filter_clauses.any_tags_equal_to_filter_clause import AnyTagsEqualTo
 from semantic_kernel.data.filter_clauses.equal_to_filter_clause import EqualTo
 from semantic_kernel.data.record_definition.vector_store_model_definition import VectorStoreRecordDefinition
 from semantic_kernel.data.record_definition.vector_store_record_fields import (
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+=======
+from semantic_kernel.data.record_definition import (
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     VectorStoreRecordDataField,
+    VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
     VectorStoreRecordVectorField,
 )
-from semantic_kernel.data.vector_search.vector_search_filter import VectorSearchFilter
+from semantic_kernel.data.text_search import AnyTagsEqualTo, EqualTo
+from semantic_kernel.data.vector_search import VectorSearchFilter
 from semantic_kernel.exceptions import VectorSearchOptionsException
 from semantic_kernel.memory.memory_record import MemoryRecord
 

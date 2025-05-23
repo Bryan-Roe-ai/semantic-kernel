@@ -38,6 +38,29 @@ public static class TextSearchExtensions
     /// Creates a plugin from an ITextSearch implementation.
     /// </summary>
     /// <remarks>
+<<<<<<< HEAD
+=======
+    /// The plugin will have a single function called `Search` which
+    /// will return a <see cref="IEnumerable{String}"/>
+    /// </remarks>
+    /// <param name="textSearch">The instance of ITextSearch to be used by the plugin.</param>
+    /// <param name="pluginName">The name for the plugin.</param>
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
+    /// <param name="description">A description of the plugin.</param>
+    /// <returns>A <see cref="KernelPlugin"/> instance with a Search operation that calls the provided <see cref="ITextSearch.SearchAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
+    public static KernelPlugin CreateWithSearch(this ITextSearch textSearch, string pluginName, JsonSerializerOptions jsonSerializerOptions, string? description = null)
+    {
+        Verify.NotNull(textSearch);
+        Verify.NotNull(pluginName);
+
+        return KernelPluginFactory.CreateFromFunctions(pluginName, description, [textSearch.CreateSearch(jsonSerializerOptions)]);
+    }
+
+    /// <summary>
+    /// Creates a plugin from an ITextSearch implementation.
+    /// </summary>
+    /// <remarks>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// The plugin will have a single function called `GetSearchResults` which
     /// will return a <see cref="IEnumerable{TextSearchResult}"/>
     /// </remarks>
@@ -62,6 +85,29 @@ public static class TextSearchExtensions
     /// </remarks>
     /// <param name="textSearch">The instance of ITextSearch to be used by the plugin.</param>
     /// <param name="pluginName">The name for the plugin.</param>
+<<<<<<< HEAD
+=======
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
+    /// <param name="description">A description of the plugin.</param>
+    /// <returns>A <see cref="KernelPlugin"/> instance with a GetTextSearchResults operation that calls the provided <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
+    public static KernelPlugin CreateWithGetTextSearchResults(this ITextSearch textSearch, string pluginName, JsonSerializerOptions jsonSerializerOptions, string? description = null)
+    {
+        Verify.NotNull(textSearch);
+        Verify.NotNull(pluginName);
+
+        return KernelPluginFactory.CreateFromFunctions(pluginName, description, [textSearch.CreateGetTextSearchResults(jsonSerializerOptions)]);
+    }
+
+    /// <summary>
+    /// Creates a plugin from an ITextSearch implementation.
+    /// </summary>
+    /// <remarks>
+    /// The plugin will have a single function called `GetSearchResults` which
+    /// will return a <see cref="IEnumerable{TextSearchResult}"/>
+    /// </remarks>
+    /// <param name="textSearch">The instance of ITextSearch to be used by the plugin.</param>
+    /// <param name="pluginName">The name for the plugin.</param>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <param name="description">A description of the plugin.</param>
     /// <returns>A <see cref="KernelPlugin"/> instance with a GetSearchResults operation that calls the provided <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
     public static KernelPlugin CreateWithGetSearchResults(this ITextSearch textSearch, string pluginName, string? description = null)
@@ -71,6 +117,29 @@ public static class TextSearchExtensions
 
         return KernelPluginFactory.CreateFromFunctions(pluginName, description, [textSearch.CreateGetSearchResults()]);
     }
+<<<<<<< HEAD
+=======
+
+    /// <summary>
+    /// Creates a plugin from an ITextSearch implementation.
+    /// </summary>
+    /// <remarks>
+    /// The plugin will have a single function called `GetSearchResults` which
+    /// will return a <see cref="IEnumerable{TextSearchResult}"/>
+    /// </remarks>
+    /// <param name="textSearch">The instance of ITextSearch to be used by the plugin.</param>
+    /// <param name="pluginName">The name for the plugin.</param>
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
+    /// <param name="description">A description of the plugin.</param>
+    /// <returns>A <see cref="KernelPlugin"/> instance with a GetSearchResults operation that calls the provided <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
+    public static KernelPlugin CreateWithGetSearchResults(this ITextSearch textSearch, string pluginName, JsonSerializerOptions jsonSerializerOptions, string? description = null)
+    {
+        Verify.NotNull(textSearch);
+        Verify.NotNull(pluginName);
+
+        return KernelPluginFactory.CreateFromFunctions(pluginName, description, [textSearch.CreateGetSearchResults(jsonSerializerOptions)]);
+    }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     #endregion
 
     #region KernelFunction factory methods
@@ -83,7 +152,7 @@ public static class TextSearchExtensions
     /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.SearchAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
     public static KernelFunction CreateSearch(this ITextSearch textSearch, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
     {
-        async Task<IEnumerable<string>> SearchAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken)
+        async Task<IEnumerable<string>> SearchAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken, int count = 2, int skip = 0)
         {
             arguments.TryGetValue("query", out var query);
             if (string.IsNullOrEmpty(query?.ToString()))
@@ -95,8 +164,8 @@ public static class TextSearchExtensions
 
             searchOptions ??= new()
             {
-                Top = GetArgumentValue(arguments, parameters, "count", 2),
-                Skip = GetArgumentValue(arguments, parameters, "skip", 0),
+                Top = count,
+                Skip = skip,
                 Filter = CreateBasicFilter(options, arguments)
             };
 
@@ -112,15 +181,18 @@ public static class TextSearchExtensions
     }
 
     /// <summary>
-    /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
+<<<<<<< HEAD
+=======
+    /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.SearchAsync(string, TextSearchOptions?, CancellationToken)"/>.
     /// </summary>
     /// <param name="textSearch">The ITextSearch instance to use.</param>
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
     /// <param name="options">Optional KernelFunctionFromMethodOptions which allow the KernelFunction metadata to be specified.</param>
     /// <param name="searchOptions">Optional TextSearchOptions which override the options provided when the function is invoked.</param>
-    /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
-    public static KernelFunction CreateGetTextSearchResults(this ITextSearch textSearch, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
+    /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.SearchAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
+    public static KernelFunction CreateSearch(this ITextSearch textSearch, JsonSerializerOptions jsonSerializerOptions, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
     {
-        async Task<IEnumerable<TextSearchResult>> GetTextSearchResultAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken)
+        async Task<IEnumerable<string>> SearchAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken, int count = 2, int skip = 0)
         {
             arguments.TryGetValue("query", out var query);
             if (string.IsNullOrEmpty(query?.ToString()))
@@ -132,8 +204,47 @@ public static class TextSearchExtensions
 
             searchOptions ??= new()
             {
-                Top = GetArgumentValue(arguments, parameters, "count", 2),
-                Skip = GetArgumentValue(arguments, parameters, "skip", 0),
+                Top = count,
+                Skip = skip,
+                Filter = CreateBasicFilter(options, arguments)
+            };
+
+            var result = await textSearch.SearchAsync(query?.ToString()!, searchOptions, cancellationToken).ConfigureAwait(false);
+            var resultList = await result.Results.ToListAsync(cancellationToken).ConfigureAwait(false);
+            return resultList;
+        }
+
+        options ??= DefaultSearchMethodOptions(jsonSerializerOptions);
+        return KernelFunctionFactory.CreateFromMethod(
+                SearchAsync,
+                jsonSerializerOptions,
+                options);
+    }
+
+    /// <summary>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+    /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
+    /// </summary>
+    /// <param name="textSearch">The ITextSearch instance to use.</param>
+    /// <param name="options">Optional KernelFunctionFromMethodOptions which allow the KernelFunction metadata to be specified.</param>
+    /// <param name="searchOptions">Optional TextSearchOptions which override the options provided when the function is invoked.</param>
+    /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
+    public static KernelFunction CreateGetTextSearchResults(this ITextSearch textSearch, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
+    {
+        async Task<IEnumerable<TextSearchResult>> GetTextSearchResultAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken, int count = 2, int skip = 0)
+        {
+            arguments.TryGetValue("query", out var query);
+            if (string.IsNullOrEmpty(query?.ToString()))
+            {
+                return [];
+            }
+
+            var parameters = function.Metadata.Parameters;
+
+            searchOptions ??= new()
+            {
+                Top = count,
+                Skip = skip,
                 Filter = CreateBasicFilter(options, arguments)
             };
 
@@ -148,15 +259,18 @@ public static class TextSearchExtensions
     }
 
     /// <summary>
-    /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
+<<<<<<< HEAD
+=======
+    /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
     /// </summary>
     /// <param name="textSearch">The ITextSearch instance to use.</param>
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
     /// <param name="options">Optional KernelFunctionFromMethodOptions which allow the KernelFunction metadata to be specified.</param>
     /// <param name="searchOptions">Optional TextSearchOptions which override the options provided when the function is invoked.</param>
-    /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
-    public static KernelFunction CreateGetSearchResults(this ITextSearch textSearch, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
+    /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.GetTextSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
+    public static KernelFunction CreateGetTextSearchResults(this ITextSearch textSearch, JsonSerializerOptions jsonSerializerOptions, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
     {
-        async Task<IEnumerable<object>> GetSearchResultAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken)
+        async Task<IEnumerable<TextSearchResult>> GetTextSearchResultAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken, int count = 2, int skip = 0)
         {
             arguments.TryGetValue("query", out var query);
             if (string.IsNullOrEmpty(query?.ToString()))
@@ -168,8 +282,46 @@ public static class TextSearchExtensions
 
             searchOptions ??= new()
             {
-                Top = GetArgumentValue(arguments, parameters, "count", 2),
-                Skip = GetArgumentValue(arguments, parameters, "skip", 0),
+                Top = count,
+                Skip = skip,
+                Filter = CreateBasicFilter(options, arguments)
+            };
+
+            var result = await textSearch.GetTextSearchResultsAsync(query?.ToString()!, searchOptions, cancellationToken).ConfigureAwait(false);
+            return await result.Results.ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        options ??= DefaultGetTextSearchResultsMethodOptions(jsonSerializerOptions);
+        return KernelFunctionFactory.CreateFromMethod(
+                GetTextSearchResultAsync,
+                jsonSerializerOptions,
+                options);
+    }
+
+    /// <summary>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+    /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
+    /// </summary>
+    /// <param name="textSearch">The ITextSearch instance to use.</param>
+    /// <param name="options">Optional KernelFunctionFromMethodOptions which allow the KernelFunction metadata to be specified.</param>
+    /// <param name="searchOptions">Optional TextSearchOptions which override the options provided when the function is invoked.</param>
+    /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
+    public static KernelFunction CreateGetSearchResults(this ITextSearch textSearch, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
+    {
+        async Task<IEnumerable<object>> GetSearchResultAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken, int count = 2, int skip = 0)
+        {
+            arguments.TryGetValue("query", out var query);
+            if (string.IsNullOrEmpty(query?.ToString()))
+            {
+                return [];
+            }
+
+            var parameters = function.Metadata.Parameters;
+
+            searchOptions ??= new()
+            {
+                Top = count,
+                Skip = skip,
                 Filter = CreateBasicFilter(options, arguments)
             };
 
@@ -182,33 +334,51 @@ public static class TextSearchExtensions
                 GetSearchResultAsync,
                 options);
     }
+<<<<<<< HEAD
+=======
+
+    /// <summary>
+    /// Create a <see cref="KernelFunction"/> which invokes <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.
+    /// </summary>
+    /// <param name="textSearch">The ITextSearch instance to use.</param>
+    /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> to use for serialization and deserialization of various aspects of the function.</param>
+    /// <param name="options">Optional KernelFunctionFromMethodOptions which allow the KernelFunction metadata to be specified.</param>
+    /// <param name="searchOptions">Optional TextSearchOptions which override the options provided when the function is invoked.</param>
+    /// <returns>A <see cref="KernelFunction"/> instance with a Search operation that calls the provided <see cref="ITextSearch.GetSearchResultsAsync(string, TextSearchOptions?, CancellationToken)"/>.</returns>
+    public static KernelFunction CreateGetSearchResults(this ITextSearch textSearch, JsonSerializerOptions jsonSerializerOptions, KernelFunctionFromMethodOptions? options = null, TextSearchOptions? searchOptions = null)
+    {
+        async Task<IEnumerable<object>> GetSearchResultAsync(Kernel kernel, KernelFunction function, KernelArguments arguments, CancellationToken cancellationToken, int count = 2, int skip = 0)
+        {
+            arguments.TryGetValue("query", out var query);
+            if (string.IsNullOrEmpty(query?.ToString()))
+            {
+                return [];
+            }
+
+            var parameters = function.Metadata.Parameters;
+
+            searchOptions ??= new()
+            {
+                Top = count,
+                Skip = skip,
+                Filter = CreateBasicFilter(options, arguments)
+            };
+
+            var result = await textSearch.GetSearchResultsAsync(query?.ToString()!, searchOptions, cancellationToken).ConfigureAwait(false);
+            return await result.Results.ToListAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        options ??= DefaultGetSearchResultsMethodOptions(jsonSerializerOptions);
+        return KernelFunctionFactory.CreateFromMethod(
+                GetSearchResultAsync,
+                jsonSerializerOptions,
+                options);
+    }
+
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     #endregion
 
     #region private
-    /// <summary>
-    /// Get the argument value from <see cref="KernelArguments"/> or users default value from
-    /// <see cref="KernelReturnParameterMetadata"/> or default to the provided value.
-    /// </summary>
-    /// <param name="arguments">KernelArguments instance.</param>
-    /// <param name="parameters">List of KernelReturnParameterMetadata.</param>
-    /// <param name="name">Name of the argument.</param>
-    /// <param name="defaultValue">Default value of the argument.</param>
-    private static int GetArgumentValue(KernelArguments arguments, IReadOnlyList<KernelParameterMetadata> parameters, string name, int defaultValue)
-    {
-        if (arguments.TryGetValue(name, out var value) && value is int argument)
-        {
-            return argument;
-        }
-
-        value = parameters.FirstOrDefault(parameter => parameter.Name == name)?.DefaultValue;
-        if (value is int metadataDefault)
-        {
-            return metadataDefault;
-        }
-
-        return defaultValue;
-    }
-
     /// <summary>
     /// Create the default <see cref="KernelFunctionFromMethodOptions"/> for <see cref="ITextSearch.SearchAsync(string, TextSearchOptions?, CancellationToken)"/>.
     /// </summary>

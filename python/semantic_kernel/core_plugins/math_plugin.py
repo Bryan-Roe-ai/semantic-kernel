@@ -185,15 +185,16 @@ class MathPlugin:
     @kernel_function(name="Add")
     def add(
         self,
-        input: Annotated[int, "the first number to add"],
-        amount: Annotated[int, "the second number to add"],
-    ) -> Annotated[int, "the output is a number"]:
+        input: Annotated[int | str, "The first number to add"],
+        amount: Annotated[int | str, "The second number to add"],
+    ) -> Annotated[int, "The result"]:
         """Returns the Addition result of the values provided."""
         if isinstance(input, str):
             input = int(input)
         if isinstance(amount, str):
             amount = int(amount)
-        return MathPlugin.add_or_subtract(input, amount, add=True)
+
+        return input + amount
 
 <<<<<<< HEAD
 <<<<<<< div
@@ -279,6 +280,7 @@ class MathPlugin:
 >>>>>>> head
     def subtract(
         self,
+<<<<<<< HEAD
         input: Annotated[int, "the first number"],
         amount: Annotated[int, "the number to subtract"],
     ) -> int:
@@ -294,6 +296,11 @@ class MathPlugin:
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+        input: Annotated[int | str, "The number to subtract from"],
+        amount: Annotated[int | str, "The number to subtract"],
+    ) -> Annotated[int, "The result"]:
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """Returns the difference of numbers provided."""
 =======
 =======
@@ -371,8 +378,8 @@ class MathPlugin:
             input = int(input)
         if isinstance(amount, str):
             amount = int(amount)
-        return MathPlugin.add_or_subtract(input, amount, add=False)
 
+<<<<<<< HEAD
     @staticmethod
     def add_or_subtract(input: int, amount: int, add: bool) -> int:
 <<<<<<< HEAD
@@ -462,3 +469,6 @@ class MathPlugin:
 >>>>>>> Stashed changes
 >>>>>>> head
         return input + amount if add else input - amount
+=======
+        return input - amount
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

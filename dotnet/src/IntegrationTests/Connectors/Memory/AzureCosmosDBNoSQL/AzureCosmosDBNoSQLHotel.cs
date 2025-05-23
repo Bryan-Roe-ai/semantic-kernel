@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -16,11 +16,11 @@ public record AzureCosmosDBNoSQLHotel()
     public string HotelId { get; init; }
 
     /// <summary>A string metadata field.</summary>
-    [VectorStoreRecordData(IsFilterable = true)]
+    [VectorStoreRecordData(IsIndexed = true)]
     public string? HotelName { get; set; }
 
     /// <summary>An int metadata field.</summary>
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
+    [VectorStoreRecordData(IsFullTextIndexed = true)]
     public int HotelCode { get; set; }
 
     /// <summary>A float metadata field.</summary>
@@ -115,6 +115,6 @@ public record AzureCosmosDBNoSQLHotel()
 >>>>>>> Stashed changes
 >>>>>>> head
     /// <summary>A vector field.</summary>
-    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction: DistanceFunction.CosineSimilarity, IndexKind: IndexKind.Flat)]
+    [VectorStoreRecordVector(Dimensions: 4, DistanceFunction = DistanceFunction.CosineSimilarity, IndexKind = IndexKind.Flat)]
     public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
 }

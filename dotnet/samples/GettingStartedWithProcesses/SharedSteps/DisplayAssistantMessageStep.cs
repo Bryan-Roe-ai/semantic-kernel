@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Events;
 using Microsoft.SemanticKernel;
@@ -11,12 +11,12 @@ namespace SharedSteps;
 /// </summary>
 public class DisplayAssistantMessageStep : KernelProcessStep
 {
-    public static class Functions
+    public static class ProcessStepFunctions
     {
         public const string DisplayAssistantMessage = nameof(DisplayAssistantMessage);
     }
 
-    [KernelFunction(Functions.DisplayAssistantMessage)]
+    [KernelFunction(ProcessStepFunctions.DisplayAssistantMessage)]
     public async ValueTask DisplayAssistantMessageAsync(KernelProcessStepContext context, string assistantMessage)
     {
         Console.ForegroundColor = ConsoleColor.Blue;

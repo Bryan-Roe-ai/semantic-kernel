@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any
 import yaml
 from pydantic import Field, ValidationError, model_validator
 
+<<<<<<< HEAD
 from semantic_kernel.connectors.ai.chat_completion_client_base import (
     ChatCompletionClientBase,
 )
@@ -18,9 +19,18 @@ from semantic_kernel.connectors.ai.prompt_execution_settings import (
 from semantic_kernel.connectors.ai.text_completion_client_base import (
     TextCompletionClientBase,
 )
+=======
+from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.connectors.ai.text_completion_client_base import TextCompletionClientBase
+from semantic_kernel.connectors.ai.text_to_audio_client_base import TextToAudioClientBase
+from semantic_kernel.connectors.ai.text_to_image_client_base import TextToImageClientBase
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.const import DEFAULT_SERVICE_NAME
+from semantic_kernel.contents.audio_content import AudioContent
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.contents.image_content import ImageContent
 from semantic_kernel.contents.text_content import TextContent
 from semantic_kernel.exceptions import (
     FunctionExecutionException,
@@ -176,13 +186,14 @@ through prompt_template_config or in the prompt_template."
     @classmethod
     def rewrite_execution_settings(
         cls,
-        data: dict[str, Any],
+        data: Any,
     ) -> dict[str, PromptExecutionSettings]:
         """Rewrite execution settings to a dictionary.
 
         If the prompt_execution_settings is not a dictionary, it is converted to a dictionary.
         If it is not supplied, but prompt_template is, the prompt_template's execution settings are used.
         """
+<<<<<<< HEAD
         prompt_execution_settings = data.get("prompt_execution_settings")
         prompt_template = data.get("prompt_template")
         if not prompt_execution_settings:
@@ -203,6 +214,25 @@ through prompt_template_config or in the prompt_template."
                 s.service_id or DEFAULT_SERVICE_NAME: s
                 for s in prompt_execution_settings
             }
+=======
+        if isinstance(data, dict):
+            prompt_execution_settings = data.get("prompt_execution_settings")
+            prompt_template = data.get("prompt_template")
+            if not prompt_execution_settings:
+                if prompt_template:
+                    prompt_execution_settings = prompt_template.prompt_template_config.execution_settings
+                    data["prompt_execution_settings"] = prompt_execution_settings
+                if not prompt_execution_settings:
+                    return data
+            if isinstance(prompt_execution_settings, PromptExecutionSettings):
+                data["prompt_execution_settings"] = {
+                    prompt_execution_settings.service_id or DEFAULT_SERVICE_NAME: prompt_execution_settings
+                }
+            if isinstance(prompt_execution_settings, Sequence):
+                data["prompt_execution_settings"] = {
+                    s.service_id or DEFAULT_SERVICE_NAME: s for s in prompt_execution_settings
+                }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         return data
 
     async def _invoke_internal(self, context: FunctionInvocationContext) -> None:
@@ -238,6 +268,10 @@ through prompt_template_config or in the prompt_template."
                 completions=chat_message_contents,
                 chat_history=chat_history,
                 arguments=context.arguments,
+<<<<<<< HEAD
+=======
+                prompt=prompt_render_result.rendered_prompt,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             )
             return
 
@@ -259,13 +293,48 @@ through prompt_template_config or in the prompt_template."
             )
             return
 
+<<<<<<< HEAD
         raise ValueError(
             f"Service `{type(prompt_render_result.ai_service).__name__}` is not a valid AI service"
         )
+=======
+        if isinstance(prompt_render_result.ai_service, TextToImageClientBase):
+            try:
+                images = await prompt_render_result.ai_service.get_image_content(
+                    description=unescape(prompt_render_result.rendered_prompt),
+                    settings=prompt_render_result.execution_settings,
+                )
+            except Exception as exc:
+                raise FunctionExecutionException(f"Error occurred while invoking function {self.name}: {exc}") from exc
+
+            context.result = self._create_function_result(
+                completions=[images], arguments=context.arguments, prompt=prompt_render_result.rendered_prompt
+            )
+            return
+
+        if isinstance(prompt_render_result.ai_service, TextToAudioClientBase):
+            try:
+                audio = await prompt_render_result.ai_service.get_audio_content(
+                    text=unescape(prompt_render_result.rendered_prompt),
+                    settings=prompt_render_result.execution_settings,
+                )
+            except Exception as exc:
+                raise FunctionExecutionException(f"Error occurred while invoking function {self.name}: {exc}") from exc
+
+            context.result = self._create_function_result(
+                completions=[audio], arguments=context.arguments, prompt=prompt_render_result.rendered_prompt
+            )
+            return
+
+        raise ValueError(f"Service `{type(prompt_render_result.ai_service).__name__}` is not a valid AI service")
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     async def _invoke_internal_stream(self, context: FunctionInvocationContext) -> None:
         """Invokes the function stream with the given arguments."""
-        prompt_render_result = await self._render_prompt(context)
+        prompt_render_result = await self._render_prompt(context, is_streaming=True)
+        if prompt_render_result.function_result is not None:
+            context.result = prompt_render_result.function_result
+            return
 
         if isinstance(prompt_render_result.ai_service, ChatCompletionClientBase):
             chat_history = ChatHistory.from_rendered_prompt(
@@ -288,17 +357,27 @@ through prompt_template_config or in the prompt_template."
                 f"Service `{type(prompt_render_result.ai_service)}` is not a valid AI service"
             )
 
-        context.result = FunctionResult(function=self.metadata, value=value)
+        context.result = FunctionResult(
+            function=self.metadata, value=value, rendered_prompt=prompt_render_result.rendered_prompt
+        )
 
     async def _render_prompt(
+<<<<<<< HEAD
         self, context: FunctionInvocationContext
+=======
+        self, context: FunctionInvocationContext, is_streaming: bool = False
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     ) -> PromptRenderingResult:
         """Render the prompt and apply the prompt rendering filters."""
         self.update_arguments_with_defaults(context.arguments)
 
         _rebuild_prompt_render_context()
         prompt_render_context = PromptRenderContext(
+<<<<<<< HEAD
             function=self, kernel=context.kernel, arguments=context.arguments
+=======
+            function=self, kernel=context.kernel, arguments=context.arguments, is_streaming=is_streaming
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         )
 
         stack = context.kernel.construct_call_stack(
@@ -308,16 +387,25 @@ through prompt_template_config or in the prompt_template."
         await stack(prompt_render_context)
 
         if prompt_render_context.rendered_prompt is None:
+<<<<<<< HEAD
             raise PromptRenderingException(
                 "Prompt rendering failed, no rendered prompt was returned."
             )
         selected_service: tuple["AIServiceClientBase", PromptExecutionSettings] = (
             context.kernel.select_ai_service(function=self, arguments=context.arguments)
+=======
+            raise PromptRenderingException("Prompt rendering failed, no rendered prompt was returned.")
+        selected_service: tuple["AIServiceClientBase", PromptExecutionSettings] = context.kernel.select_ai_service(
+            function=self,
+            arguments=context.arguments,
+            type=(TextCompletionClientBase, ChatCompletionClientBase) if prompt_render_context.is_streaming else None,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         )
         return PromptRenderingResult(
             rendered_prompt=prompt_render_context.rendered_prompt,
             ai_service=selected_service[0],
             execution_settings=selected_service[1],
+            function_result=prompt_render_context.function_result,
         )
 
     async def _inner_render_prompt(self, context: PromptRenderContext) -> None:
@@ -328,7 +416,7 @@ through prompt_template_config or in the prompt_template."
 
     def _create_function_result(
         self,
-        completions: list[ChatMessageContent] | list[TextContent],
+        completions: list[ChatMessageContent] | list[TextContent] | list[ImageContent] | list[AudioContent],
         arguments: KernelArguments,
         chat_history: ChatHistory | None = None,
         prompt: str | None = None,
@@ -346,6 +434,7 @@ through prompt_template_config or in the prompt_template."
             function=self.metadata,
             value=completions,
             metadata=metadata,
+            rendered_prompt=prompt,
         )
 
     def update_arguments_with_defaults(self, arguments: KernelArguments) -> None:

@@ -16,6 +16,7 @@ import logging
 <<<<<<< Updated upstream
 from collections.abc import Mapping
 from copy import copy
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Stashed changes
@@ -89,6 +90,9 @@ from typing import Dict, Mapping, Optional
 >>>>>>> Stashed changes
 >>>>>>> origin/main
 >>>>>>> head
+=======
+from typing import Any
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 from openai import AsyncOpenAI
 from pydantic import ConfigDict, Field, validate_call
@@ -191,6 +195,7 @@ class OpenAIConfigBase(OpenAIHandler):
         service_id: str | None = None,
         default_headers: Mapping[str, str] | None = None,
         client: AsyncOpenAI | None = None,
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -276,6 +281,10 @@ class OpenAIConfigBase(OpenAIHandler):
 >>>>>>> Stashed changes
 >>>>>>> origin/main
 >>>>>>> head
+=======
+        instruction_role: str | None = None,
+        **kwargs: Any,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     ) -> None:
         """Initialize a client for OpenAI services.
 
@@ -295,6 +304,7 @@ class OpenAIConfigBase(OpenAIHandler):
             default_headers (Mapping[str, str]): Default headers
                 for HTTP requests. (Optional)
             client (AsyncOpenAI): An existing OpenAI client, optional.
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -302,6 +312,11 @@ class OpenAIConfigBase(OpenAIHandler):
 <<<<<<< Updated upstream
 <<<<<<< head
 >>>>>>> head
+=======
+            instruction_role (str): The role to use for 'instruction'
+                messages, for example, summarization prompts could use `developer` or `system`. (Optional)
+            kwargs: Additional keyword arguments.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
@@ -349,7 +364,9 @@ class OpenAIConfigBase(OpenAIHandler):
         }
         if service_id:
             args["service_id"] = service_id
-        super().__init__(**args)
+        if instruction_role:
+            args["instruction_role"] = instruction_role
+        super().__init__(**args, **kwargs)
 
     def to_dict(self) -> dict[str, str]:
         """Create a dict of the service settings."""

@@ -76,6 +76,7 @@ from openai import AsyncOpenAI
 
 from semantic_kernel.agents.channels.agent_channel import AgentChannel
 from semantic_kernel.agents.open_ai.assistant_content_generation import create_chat_message, generate_message_content
+from semantic_kernel.agents.open_ai.assistant_thread_actions import AssistantThreadActions
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 <<<<<<< HEAD
 <<<<<<< div
@@ -110,6 +111,7 @@ from semantic_kernel.exceptions.agent_exceptions import AgentChatException
 =======
 from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.exceptions.agent_exceptions import AgentChatException
+<<<<<<< HEAD
 from semantic_kernel.utils.experimental_decorator import experimental_class
 >>>>>>> main
 <<<<<<< Updated upstream
@@ -144,11 +146,15 @@ from semantic_kernel.utils.experimental_decorator import experimental_class
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+from semantic_kernel.utils.feature_stage_decorator import experimental
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 if TYPE_CHECKING:
     from semantic_kernel.agents.agent import Agent
 
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -208,6 +214,9 @@ if TYPE_CHECKING:
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+@experimental
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 class OpenAIAssistantChannel(AgentChannel):
     """OpenAI Assistant Channel."""
 
@@ -229,24 +238,22 @@ class OpenAIAssistantChannel(AgentChannel):
             await create_chat_message(self.client, self.thread_id, message)
 
     @override
-    async def invoke(self, agent: "Agent") -> AsyncIterable[tuple[bool, "ChatMessageContent"]]:
+    async def invoke(self, agent: "Agent", **kwargs: Any) -> AsyncIterable[tuple[bool, "ChatMessageContent"]]:
         """Invoke the agent.
 
         Args:
             agent: The agent to invoke.
+            kwargs: The keyword arguments.
 
         Yields:
             tuple[bool, ChatMessageContent]: The conversation messages.
         """
-        from semantic_kernel.agents.open_ai.open_ai_assistant_base import OpenAIAssistantBase
+        from semantic_kernel.agents.open_ai.open_ai_assistant_agent import OpenAIAssistantAgent
 
-        if not isinstance(agent, OpenAIAssistantBase):
-            raise AgentChatException(f"Agent is not of the expected type {type(OpenAIAssistantBase)}.")
+        if not isinstance(agent, OpenAIAssistantAgent):
+            raise AgentChatException(f"Agent is not of the expected type {type(OpenAIAssistantAgent)}.")
 
-        if agent._is_deleted:
-            raise AgentChatException("Agent is deleted.")
-
-        async for is_visible, message in agent._invoke_internal(thread_id=self.thread_id):
+        async for is_visible, message in AssistantThreadActions.invoke(agent=agent, thread_id=self.thread_id, **kwargs):
             yield is_visible, message
 
     @override
@@ -287,26 +294,26 @@ class OpenAIAssistantChannel(AgentChannel):
 >>>>>>> Stashed changes
 >>>>>>> head
     async def invoke_stream(
-        self, agent: "Agent", messages: list[ChatMessageContent]
+        self, agent: "Agent", messages: list[ChatMessageContent], **kwargs: Any
     ) -> AsyncIterable["ChatMessageContent"]:
         """Invoke the agent stream.
 
         Args:
             agent: The agent to invoke.
             messages: The conversation messages.
+            kwargs: The keyword arguments.
 
         Yields:
             tuple[bool, StreamingChatMessageContent]: The conversation messages.
         """
-        from semantic_kernel.agents.open_ai.open_ai_assistant_base import OpenAIAssistantBase
+        from semantic_kernel.agents.open_ai.open_ai_assistant_agent import OpenAIAssistantAgent
 
-        if not isinstance(agent, OpenAIAssistantBase):
-            raise AgentChatException(f"Agent is not of the expected type {type(OpenAIAssistantBase)}.")
+        if not isinstance(agent, OpenAIAssistantAgent):
+            raise AgentChatException(f"Agent is not of the expected type {type(OpenAIAssistantAgent)}.")
 
-        if agent._is_deleted:
-            raise AgentChatException("Agent is deleted.")
-
-        async for message in agent._invoke_internal_stream(thread_id=self.thread_id, messages=messages):
+        async for message in AssistantThreadActions.invoke_stream(
+            agent=agent, thread_id=self.thread_id, output_messages=messages, **kwargs
+        ):
             yield message
 
     @override

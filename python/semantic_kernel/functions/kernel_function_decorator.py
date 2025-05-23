@@ -387,9 +387,19 @@ def kernel_function(
 >>>>>>> Stashed changes
 >>>>>>> head
 
-    To parse the type, first it checks if the parameter is annotated, and get's the description from there.
-    After that it checks recursively until it reaches the lowest level, and it combines
+    To parse the type, first it checks if the parameter is annotated.
+
+    If there are annotations, the first annotation that is a string is used as the description.
+    Any other annotations are checked if they are a dict, if so, they will be added to the parameter info.
+    If the keys align with the KernelParameterMetadata, they will be added to the parameter info.
+    This is useful for things like parameters like `kernel`, `service` and `arguments`, for instance
+    if you set `{"include_in_function_choices": False}` in the annotation, that parameter will not be included in
+    the representation of the function towards LLM's or MCP Servers. If you do set this and the parameter is required
+    but you do not set it in a invoke level arguments, the function will raise an error.
+
+    After the annotations, it checks recursively until it reaches the lowest level, and it combines
     the types into a single comma-separated string, a forwardRef is also supported.
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -402,6 +412,9 @@ def kernel_function(
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     All of this is are stored in __kernel_function_parameters__.
 =======
 =======
@@ -755,7 +768,16 @@ def _parse_parameter(name: str, param: Any, default: Any) -> dict[str, Any]:
         return ret
     if not isinstance(param, str):
         if hasattr(param, "__metadata__"):
-            ret["description"] = param.__metadata__[0]
+            for meta in param.__metadata__:
+                if isinstance(meta, str):
+                    ret["description"] = meta
+                elif isinstance(meta, dict):
+                    # only override from the metadata if it is not already set
+                    if "description" not in ret and (description := meta.pop("description", None)):
+                        ret["description"] = description
+                    ret.update(meta)
+                else:
+                    logger.debug(f"Unknown metadata type: {meta}")
         if hasattr(param, "__origin__"):
             ret.update(_parse_parameter(name, param.__origin__, default))
         if hasattr(param, "__args__"):
@@ -788,6 +810,9 @@ def _parse_parameter(name: str, param: Any, default: Any) -> dict[str, Any]:
             param = param.replace(" |", ",")
         ret["type_"] = param
         ret["is_required"] = True
+    # if the include_in_function_choices is set to false, we set the is_required to false
+    if not ret.get("include_in_function_choices", True):
+        ret["is_required"] = False
     return ret
 <<<<<<< HEAD
 <<<<<<< div

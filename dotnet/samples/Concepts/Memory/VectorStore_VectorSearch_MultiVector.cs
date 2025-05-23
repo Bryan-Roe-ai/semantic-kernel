@@ -1,15 +1,22 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
+using Azure.AI.OpenAI;
 using Azure.Identity;
+<<<<<<< HEAD
 <<<<<<< HEAD
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using Microsoft.SemanticKernel.Data;
 =======
+=======
+using Microsoft.Extensions.AI;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Extensions.VectorData;
-using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using Microsoft.SemanticKernel.Connectors.InMemory;
+<<<<<<< HEAD
 >>>>>>> main
 using Microsoft.SemanticKernel.Embeddings;
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 namespace Memory;
 
@@ -32,10 +39,9 @@ public class VectorStore_VectorSearch_MultiVector(ITestOutputHelper output) : Ba
     public async Task VectorSearchWithMultiVectorRecordAsync()
     {
         // Create an embedding generation service.
-        var textEmbeddingGenerationService = new AzureOpenAITextEmbeddingGenerationService(
-                TestConfiguration.AzureOpenAIEmbeddings.DeploymentName,
-                TestConfiguration.AzureOpenAIEmbeddings.Endpoint,
-                new AzureCliCredential());
+        var embeddingGenerator = new AzureOpenAIClient(new Uri(TestConfiguration.AzureOpenAIEmbeddings.Endpoint), new AzureCliCredential())
+            .GetEmbeddingClient(TestConfiguration.AzureOpenAIEmbeddings.DeploymentName)
+            .AsIEmbeddingGenerator();
 
 <<<<<<< HEAD
         // Construct a volatile vector store.
@@ -53,11 +59,11 @@ public class VectorStore_VectorSearch_MultiVector(ITestOutputHelper output) : Ba
         var productRecords = CreateProductRecords().ToList();
         var tasks = productRecords.Select(entry => Task.Run(async () =>
         {
-            var descriptionEmbeddingTask = textEmbeddingGenerationService.GenerateEmbeddingAsync(entry.Description);
-            var featureListEmbeddingTask = textEmbeddingGenerationService.GenerateEmbeddingAsync(string.Join("\n", entry.FeatureList));
+            var descriptionEmbeddingTask = embeddingGenerator.GenerateAsync(entry.Description);
+            var featureListEmbeddingTask = embeddingGenerator.GenerateAsync(string.Join("\n", entry.FeatureList));
 
-            entry.DescriptionEmbedding = await descriptionEmbeddingTask;
-            entry.FeatureListEmbedding = await featureListEmbeddingTask;
+            entry.DescriptionEmbedding = (await descriptionEmbeddingTask).Vector;
+            entry.FeatureListEmbedding = (await featureListEmbeddingTask).Vector;
         }));
         await Task.WhenAll(tasks);
 
@@ -67,10 +73,11 @@ public class VectorStore_VectorSearch_MultiVector(ITestOutputHelper output) : Ba
 
         // Search the store using the description embedding.
         var searchString = "I am looking for a reasonably priced coffee maker";
-        var searchVector = await textEmbeddingGenerationService.GenerateEmbeddingAsync(searchString);
-        var searchResult = await collection.VectorizedSearchAsync(
-            searchVector, new()
+        var searchVector = (await embeddingGenerator.GenerateAsync(searchString)).Vector;
+        var resultRecords = await collection.SearchEmbeddingAsync(
+            searchVector, top: 1, new()
             {
+<<<<<<< HEAD
                 Top = 1,
                 VectorPropertyName = nameof(Product.DescriptionEmbedding)
 <<<<<<< HEAD
@@ -82,6 +89,10 @@ public class VectorStore_VectorSearch_MultiVector(ITestOutputHelper output) : Ba
 =======
             });
         var resultRecords = await searchResult.Results.ToListAsync();
+=======
+                VectorProperty = r => r.DescriptionEmbedding
+            }).ToListAsync();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         WriteLine("Search string: " + searchString);
         WriteLine("Result: " + resultRecords.First().Record.Description);
@@ -91,11 +102,13 @@ public class VectorStore_VectorSearch_MultiVector(ITestOutputHelper output) : Ba
 
         // Search the store using the feature list embedding.
         searchString = "I am looking for a handheld vacuum cleaner that will remove pet hair";
-        searchVector = await textEmbeddingGenerationService.GenerateEmbeddingAsync(searchString);
-        searchResult = await collection.VectorizedSearchAsync(
+        searchVector = (await embeddingGenerator.GenerateAsync(searchString)).Vector;
+        resultRecords = await collection.SearchEmbeddingAsync(
             searchVector,
+            top: 1,
             new()
             {
+<<<<<<< HEAD
                 Top = 1,
                 VectorPropertyName = nameof(Product.FeatureListEmbedding)
 <<<<<<< HEAD
@@ -107,6 +120,10 @@ public class VectorStore_VectorSearch_MultiVector(ITestOutputHelper output) : Ba
 =======
             });
         resultRecords = await searchResult.Results.ToListAsync();
+=======
+                VectorProperty = r => r.FeatureListEmbedding
+            }).ToListAsync();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         WriteLine("Search string: " + searchString);
         WriteLine("Result: " + resultRecords.First().Record.Description);

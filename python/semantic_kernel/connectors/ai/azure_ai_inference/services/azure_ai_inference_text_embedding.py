@@ -33,9 +33,14 @@ from semantic_kernel.connectors.ai.azure_ai_inference.services.azure_ai_inferenc
     AzureAIInferenceBase,
     AzureAIInferenceClientType,
 )
+<<<<<<< HEAD
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import EmbeddingGeneratorBase
 from semantic_kernel.utils.experimental_decorator import experimental_class
+=======
+from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
+from semantic_kernel.utils.feature_stage_decorator import experimental
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
@@ -43,7 +48,7 @@ if TYPE_CHECKING:
     )
 
 
-@experimental_class
+@experimental
 class AzureAIInferenceTextEmbedding(EmbeddingGeneratorBase, AzureAIInferenceBase):
     """Azure AI Inference Text Embedding Service."""
 
@@ -150,6 +155,8 @@ class AzureAIInferenceTextEmbedding(EmbeddingGeneratorBase, AzureAIInferenceBase
         settings: AzureAIInferenceEmbeddingPromptExecutionSettings = kwargs.get("settings", None)
         response: EmbeddingsResult = await self.client.embed(
             input=texts,
+            # The model id will be ignored by the service if the endpoint serves only one model (i.e. MaaS)
+            model=self.ai_model_id,
             model_extras=settings.extra_parameters if settings else None,
             dimensions=settings.dimensions if settings else None,
             encoding_format=settings.encoding_format if settings else None,

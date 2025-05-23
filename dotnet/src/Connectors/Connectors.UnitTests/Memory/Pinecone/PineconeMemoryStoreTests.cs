@@ -1,3 +1,4 @@
+<<<<<<< HEAD:dotnet/src/Connectors/Connectors.UnitTests/Memory/Pinecone/PineconeMemoryStoreTests.cs
 <<<<<<< div
 <<<<<<< div
 =======
@@ -44,6 +45,9 @@
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/Connectors/Connectors.Pinecone.UnitTests/PineconeMemoryStoreTests.cs
 
 using System;
 using System.Collections.Generic;
@@ -138,6 +142,7 @@ using Xunit;
 
 namespace SemanticKernel.Connectors.UnitTests.Pinecone;
 
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class PineconeMemoryStoreTests
 {
     private readonly string _id = "Id";

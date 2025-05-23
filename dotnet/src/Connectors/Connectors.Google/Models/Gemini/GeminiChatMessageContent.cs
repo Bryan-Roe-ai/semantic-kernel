@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.Google.Core;
 
@@ -13,6 +14,14 @@ namespace Microsoft.SemanticKernel.Connectors.Google;
 /// </summary>
 public sealed class GeminiChatMessageContent : ChatMessageContent
 {
+    /// <summary>
+    /// Creates a new instance of the <see cref="GeminiChatMessageContent"/> class
+    /// </summary>
+    [JsonConstructor]
+    public GeminiChatMessageContent()
+    {
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="GeminiChatMessageContent"/> class.
     /// </summary>

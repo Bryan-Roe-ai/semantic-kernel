@@ -1,15 +1,20 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Microsoft.Azure.Cosmos;
 <<<<<<< HEAD
 using Microsoft.SemanticKernel.Data;
 =======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
 >>>>>>> main
+=======
+using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBNoSQL;
 
@@ -25,77 +30,159 @@ internal static class AzureCosmosDBNoSQLVectorStoreCollectionQueryBuilder
     /// <summary>
     /// Builds <see cref="QueryDefinition"/> to get items from Azure CosmosDB NoSQL using vector search.
     /// </summary>
-    public static QueryDefinition BuildSearchQuery<TVector>(
+    public static QueryDefinition BuildSearchQuery<TVector, TRecord>(
         TVector vector,
-        List<string> fields,
-        Dictionary<string, string> storagePropertyNames,
+        ICollection<string>? keywords,
+        VectorStoreRecordModel model,
         string vectorPropertyName,
+        string? textPropertyName,
         string scorePropertyName,
-        VectorSearchOptions searchOptions)
+#pragma warning disable CS0618 // Type or member is obsolete
+        VectorSearchFilter? oldFilter,
+#pragma warning restore CS0618 // Type or member is obsolete
+        Expression<Func<TRecord, bool>>? filter,
+        int top,
+        int skip,
+        bool includeVectors)
     {
         Verify.NotNull(vector);
 
         const string VectorVariableName = "@vector";
-        const string OffsetVariableName = "@offset";
-        const string LimitVariableName = "@limit";
-        const string TopVariableName = "@top";
+        // TODO: Use parameterized query for keywords when FullTextScore with parameters is supported.
+        //const string KeywordsVariableName = "@keywords";
 
-        var tableVariableName = AzureCosmosDBNoSQLConstants.TableQueryVariableName;
+        var tableVariableName = AzureCosmosDBNoSQLConstants.ContainerAlias;
 
-        var fieldsArgument = fields.Select(field => $"{tableVariableName}.{field}");
+        IEnumerable<VectorStoreRecordPropertyModel> projectionProperties = model.Properties;
+        if (!includeVectors)
+        {
+            projectionProperties = projectionProperties.Where(p => p is not VectorStoreRecordVectorPropertyModel);
+        }
+        var fieldsArgument = projectionProperties.Select(p => $"{tableVariableName}.{p.StorageName}");
         var vectorDistanceArgument = $"VectorDistance({tableVariableName}.{vectorPropertyName}, {VectorVariableName})";
         var vectorDistanceArgumentWithAlias = $"{vectorDistanceArgument} AS {scorePropertyName}";
 
+        // Passing keywords using a parameter is not yet supported for FullTextScore so doing some crude string sanitization in the mean time to frustrate script injection.
+        var sanitizedKeywords = keywords is not null ? keywords.Select(x => x.Replace("\"", "")) : null;
+        var formattedKeywords = sanitizedKeywords is not null ? $"[\"{string.Join("\", \"", sanitizedKeywords)}\"]" : null;
+        var fullTextScoreArgument = textPropertyName is not null && keywords is not null ? $"FullTextScore({tableVariableName}.{textPropertyName}, {formattedKeywords})" : null;
+
+        var rankingArgument = fullTextScoreArgument is null ? vectorDistanceArgument : $"RANK RRF({vectorDistanceArgument}, {fullTextScoreArgument})";
+
         var selectClauseArguments = string.Join(SelectClauseDelimiter, [.. fieldsArgument, vectorDistanceArgumentWithAlias]);
 
-        var filter = BuildSearchFilter(searchOptions.Filter, storagePropertyNames);
+#pragma warning disable CS0618 // VectorSearchFilter is obsolete
+        // Build filter object.
+        var (whereClause, filterParameters) = (OldFilter: oldFilter, Filter: filter) switch
+        {
+            { OldFilter: not null, Filter: not null } => throw new ArgumentException("Either Filter or OldFilter can be specified, but not both"),
+            { OldFilter: VectorSearchFilter legacyFilter } => BuildSearchFilter(legacyFilter, model),
+            { Filter: Expression<Func<TRecord, bool>> newFilter } => new AzureCosmosDBNoSqlFilterTranslator().Translate(newFilter, model),
+            _ => (null, [])
+        };
+#pragma warning restore CS0618 // VectorSearchFilter is obsolete
 
-        var filterQueryParameters = filter?.QueryParameters;
-        var filterWhereClauseArguments = filter?.WhereClauseArguments;
-        var queryParameters = new Dictionary<string, object>
+        var queryParameters = new Dictionary<string, object?>
         {
             [VectorVariableName] = vector
         };
 
-        var whereClause = filterWhereClauseArguments is { Count: > 0 } ?
-            $"WHERE {string.Join(AndConditionDelimiter, filterWhereClauseArguments)}" :
-            string.Empty;
-
         // If Offset is not configured, use Top parameter instead of Limit/Offset
-        // since it's more optimized.
-        var topArgument = searchOptions.Skip == 0 ? $"TOP {TopVariableName} " : string.Empty;
+        // since it's more optimized. Hybrid search doesn't allow top to be passed as a parameter
+        // so directly add it to the query here.
+        var topArgument = skip == 0 ? $"TOP {top} " : string.Empty;
 
         var builder = new StringBuilder();
 
         builder.AppendLine($"SELECT {topArgument}{selectClauseArguments}");
         builder.AppendLine($"FROM {tableVariableName}");
 
-        if (filterWhereClauseArguments is { Count: > 0 })
+        if (whereClause is not null)
         {
-            builder.AppendLine($"WHERE {string.Join(AndConditionDelimiter, filterWhereClauseArguments)}");
+            builder.Append("WHERE ").AppendLine(whereClause);
         }
 
-        builder.AppendLine($"ORDER BY {vectorDistanceArgument}");
+        builder.AppendLine($"ORDER BY {rankingArgument}");
 
-        if (!string.IsNullOrEmpty(topArgument))
+        if (string.IsNullOrEmpty(topArgument))
         {
-            queryParameters.Add(TopVariableName, searchOptions.Top);
+            // Hybrid search doesn't allow offset and limit to be passed as parameters
+            // so directly add it to the query here.
+            builder.AppendLine($"OFFSET {skip} LIMIT {top}");
         }
-        else
+
+        // TODO: Use parameterized query for keywords when FullTextScore with parameters is supported.
+        //if (fullTextScoreArgument is not null)
+        //{
+        //    queryParameters.Add(KeywordsVariableName, keywords!.ToArray());
+        //}
+
+        var queryDefinition = new QueryDefinition(builder.ToString());
+
+        if (filterParameters is { Count: > 0 })
         {
-            builder.AppendLine($"OFFSET {OffsetVariableName} LIMIT {LimitVariableName}");
-            queryParameters.Add(OffsetVariableName, searchOptions.Skip);
-            queryParameters.Add(LimitVariableName, searchOptions.Top);
+            queryParameters = queryParameters.Union(filterParameters).ToDictionary(k => k.Key, v => v.Value);
+        }
+
+        foreach (var queryParameter in queryParameters)
+        {
+            queryDefinition.WithParameter(queryParameter.Key, queryParameter.Value);
+        }
+
+        return queryDefinition;
+    }
+
+    internal static QueryDefinition BuildSearchQuery<TRecord>(
+        VectorStoreRecordModel model,
+        string whereClause, Dictionary<string, object?> filterParameters,
+        GetFilteredRecordOptions<TRecord> filterOptions,
+        int top)
+    {
+        var tableVariableName = AzureCosmosDBNoSQLConstants.ContainerAlias;
+
+        IEnumerable<VectorStoreRecordPropertyModel> projectionProperties = model.Properties;
+        if (!filterOptions.IncludeVectors)
+        {
+            projectionProperties = projectionProperties.Where(p => p is not VectorStoreRecordVectorPropertyModel);
+        }
+
+        var fieldsArgument = projectionProperties.Select(field => $"{tableVariableName}.{field.StorageName}");
+
+        var selectClauseArguments = string.Join(SelectClauseDelimiter, [.. fieldsArgument]);
+
+        // If Offset is not configured, use Top parameter instead of Limit/Offset
+        // since it's more optimized.
+        var topArgument = filterOptions.Skip == 0 ? $"TOP {top} " : string.Empty;
+
+        var builder = new StringBuilder();
+
+        builder.AppendLine($"SELECT {topArgument}{selectClauseArguments}");
+        builder.AppendLine($"FROM {tableVariableName}");
+        builder.Append("WHERE ").AppendLine(whereClause);
+
+        if (filterOptions.OrderBy.Values.Count > 0)
+        {
+            builder.Append("ORDER BY ");
+
+            foreach (var sortInfo in filterOptions.OrderBy.Values)
+            {
+                builder.AppendFormat("{0}.{1} {2},", tableVariableName,
+                    model.GetDataOrKeyProperty(sortInfo.PropertySelector).StorageName,
+                    sortInfo.Ascending ? "ASC" : "DESC");
+            }
+
+            builder.Length--; // remove the last comma
+            builder.AppendLine();
+        }
+
+        if (string.IsNullOrEmpty(topArgument))
+        {
+            builder.AppendLine($"OFFSET {filterOptions.Skip} LIMIT {top}");
         }
 
         var queryDefinition = new QueryDefinition(builder.ToString());
 
-        if (filterQueryParameters is { Count: > 0 })
-        {
-            queryParameters = queryParameters.Union(filterQueryParameters).ToDictionary(k => k.Key, v => v.Value);
-        }
-
-        foreach (var queryParameter in queryParameters)
+        foreach (var queryParameter in filterParameters)
         {
             queryDefinition.WithParameter(queryParameter.Key, queryParameter.Value);
         }
@@ -107,30 +194,38 @@ internal static class AzureCosmosDBNoSQLVectorStoreCollectionQueryBuilder
     /// Builds <see cref="QueryDefinition"/> to get items from Azure CosmosDB NoSQL.
     /// </summary>
     public static QueryDefinition BuildSelectQuery(
+        VectorStoreRecordModel model,
         string keyStoragePropertyName,
         string partitionKeyStoragePropertyName,
         List<AzureCosmosDBNoSQLCompositeKey> keys,
-        List<string> fields)
+        bool includeVectors)
     {
         Verify.True(keys.Count > 0, "At least one key should be provided.", nameof(keys));
 
         const string RecordKeyVariableName = "@rk";
         const string PartitionKeyVariableName = "@pk";
 
-        var tableVariableName = AzureCosmosDBNoSQLConstants.TableQueryVariableName;
+        var tableVariableName = AzureCosmosDBNoSQLConstants.ContainerAlias;
 
-        var selectClauseArguments = string.Join(SelectClauseDelimiter,
-            fields.Select(field => $"{tableVariableName}.{field}"));
+        IEnumerable<VectorStoreRecordPropertyModel> projectionProperties = model.Properties;
+        if (!includeVectors)
+        {
+            projectionProperties = projectionProperties.Where(p => p is not VectorStoreRecordVectorPropertyModel);
+        }
+        var fields = projectionProperties.Select(field => field.StorageName);
+
+        var selectClauseArguments = string.Join(SelectClauseDelimiter, fields.Select(field => $"{tableVariableName}.{field}"));
 
         var whereClauseArguments = string.Join(OrConditionDelimiter,
             keys.Select((key, index) =>
                 $"({tableVariableName}.{keyStoragePropertyName} = {RecordKeyVariableName}{index} {AndConditionDelimiter} " +
                 $"{tableVariableName}.{partitionKeyStoragePropertyName} = {PartitionKeyVariableName}{index})"));
 
-        var query =
-            $"SELECT {selectClauseArguments} " +
-            $"FROM {tableVariableName} " +
-            $"WHERE {whereClauseArguments} ";
+        var query = $"""
+                     SELECT {selectClauseArguments}
+                     FROM {tableVariableName}
+                     WHERE {whereClauseArguments}
+                     """;
 
         var queryDefinition = new QueryDefinition(query);
 
@@ -151,44 +246,43 @@ internal static class AzureCosmosDBNoSQLVectorStoreCollectionQueryBuilder
 
     #region private
 
-    private static AzureCosmosDBNoSQLFilter? BuildSearchFilter(
-        VectorSearchFilter? filter,
-        Dictionary<string, string> storagePropertyNames)
+#pragma warning disable CS0618 // VectorSearchFilter is obsolete
+    private static (string WhereClause, Dictionary<string, object?> Parameters) BuildSearchFilter(
+        VectorSearchFilter filter,
+        VectorStoreRecordModel model)
     {
         const string EqualOperator = "=";
         const string ArrayContainsOperator = "ARRAY_CONTAINS";
         const string ConditionValueVariableName = "@cv";
 
-        var tableVariableName = AzureCosmosDBNoSQLConstants.TableQueryVariableName;
+        var tableVariableName = AzureCosmosDBNoSQLConstants.ContainerAlias;
 
-        var filterClauses = filter?.FilterClauses.ToList();
+        var filterClauses = filter.FilterClauses.ToList();
 
-        if (filterClauses is not { Count: > 0 })
-        {
-            return null;
-        }
-
-        var whereClauseArguments = new List<string>();
-        var queryParameters = new Dictionary<string, object>();
+        var whereClauseBuilder = new StringBuilder();
+        var queryParameters = new Dictionary<string, object?>();
 
         for (var i = 0; i < filterClauses.Count; i++)
         {
+            if (i > 0)
+            {
+                whereClauseBuilder.Append(" AND ");
+            }
             var filterClause = filterClauses[i];
 
             string queryParameterName = $"{ConditionValueVariableName}{i}";
             object queryParameterValue;
-            string whereClauseArgument;
 
             if (filterClause is EqualToFilterClause equalToFilterClause)
             {
-                var propertyName = GetStoragePropertyName(equalToFilterClause.FieldName, storagePropertyNames);
-                whereClauseArgument = $"{tableVariableName}.{propertyName} {EqualOperator} {queryParameterName}";
+                var propertyName = GetStoragePropertyName(equalToFilterClause.FieldName, model);
+                whereClauseBuilder.Append($"{tableVariableName}.{propertyName} {EqualOperator} {queryParameterName}");
                 queryParameterValue = equalToFilterClause.Value;
             }
             else if (filterClause is AnyTagEqualToFilterClause anyTagEqualToFilterClause)
             {
-                var propertyName = GetStoragePropertyName(anyTagEqualToFilterClause.FieldName, storagePropertyNames);
-                whereClauseArgument = $"{ArrayContainsOperator}({tableVariableName}.{propertyName}, {queryParameterName})";
+                var propertyName = GetStoragePropertyName(anyTagEqualToFilterClause.FieldName, model);
+                whereClauseBuilder.Append($"{ArrayContainsOperator}({tableVariableName}.{propertyName}, {queryParameterName})");
                 queryParameterValue = anyTagEqualToFilterClause.Value;
             }
             else
@@ -200,25 +294,21 @@ internal static class AzureCosmosDBNoSQLVectorStoreCollectionQueryBuilder
                         nameof(AnyTagEqualToFilterClause)])}");
             }
 
-            whereClauseArguments.Add(whereClauseArgument);
             queryParameters.Add(queryParameterName, queryParameterValue);
         }
 
-        return new AzureCosmosDBNoSQLFilter
-        {
-            WhereClauseArguments = whereClauseArguments,
-            QueryParameters = queryParameters,
-        };
+        return (whereClauseBuilder.ToString(), queryParameters);
     }
+#pragma warning restore CS0618 // VectorSearchFilter is obsolete
 
-    private static string GetStoragePropertyName(string propertyName, Dictionary<string, string> storagePropertyNames)
+    private static string GetStoragePropertyName(string propertyName, VectorStoreRecordModel model)
     {
-        if (!storagePropertyNames.TryGetValue(propertyName, out var storagePropertyName))
+        if (!model.PropertyMap.TryGetValue(propertyName, out var property))
         {
             throw new InvalidOperationException($"Property name '{propertyName}' provided as part of the filter clause is not a valid property name.");
         }
 
-        return storagePropertyName;
+        return property.StorageName;
     }
 
     #endregion

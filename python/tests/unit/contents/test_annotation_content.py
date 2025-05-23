@@ -74,6 +74,7 @@ def test_update_indices():
 
 
 def test_to_str():
+<<<<<<< HEAD
     annotation = AnnotationContent(
         file_id="12345", quote="This is a quote.", start_index=5, end_index=20
     )
@@ -81,6 +82,13 @@ def test_to_str():
         str(annotation)
         == "AnnotationContent(file_id=12345, quote=This is a quote., start_index=5, end_index=20)"
     )
+=======
+    annotation = AnnotationContent(file_id="12345", quote="This is a quote.", start_index=5, end_index=20)
+    assert (
+        str(annotation)
+        == "AnnotationContent(file_id=12345, url=None, quote=This is a quote., start_index=5, end_index=20)"
+    )  # noqa: E501
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 
 def test_to_element():

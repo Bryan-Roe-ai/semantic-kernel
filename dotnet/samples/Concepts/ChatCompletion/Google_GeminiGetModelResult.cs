@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c        Console.WriteLine("======== Inline Function Definition + Invocation ========"); Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Google;
@@ -11,9 +11,14 @@ namespace ChatCompletion;
 public sealed class Google_GeminiGetModelResult(ITestOutputHelper output) : BaseTest(output)
 {
     [Fact]
-    public async Task GetTokenUsageMetadataAsync()
+    public async Task GetTokenUsageMetadata()
     {
         Console.WriteLine("======== Inline Function Definition + Invocation ========");
+
+        Assert.NotNull(TestConfiguration.VertexAI.BearerKey);
+        Assert.NotNull(TestConfiguration.VertexAI.Location);
+        Assert.NotNull(TestConfiguration.VertexAI.ProjectId);
+        Assert.NotNull(TestConfiguration.VertexAI.Gemini.ModelId);
 
         // Create kernel
         Kernel kernel = Kernel.CreateBuilder()

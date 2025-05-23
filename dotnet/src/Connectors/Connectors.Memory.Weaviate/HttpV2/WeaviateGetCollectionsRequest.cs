@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Net.Http;
 
@@ -10,6 +10,6 @@ internal sealed class WeaviateGetCollectionsRequest
 
     public HttpRequestMessage Build()
     {
-        return HttpRequest.CreateGetRequest(ApiRoute, this);
+        return HttpRequest.CreateGetRequest(ApiRoute);
     }
 }

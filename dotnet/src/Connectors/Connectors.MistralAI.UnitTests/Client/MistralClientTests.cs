@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -206,6 +206,8 @@ public sealed class MistralClientTests : MistralTestBase
         Assert.NotNull(request);
         var chatRequest = JsonSerializer.Deserialize<ChatCompletionRequest>(request);
         Assert.NotNull(chatRequest);
+        Assert.Null(chatRequest.DocumentPageLimit);
+        Assert.Null(chatRequest.DocumentImageLimit);
         Assert.Equal("auto", chatRequest.ToolChoice);
         Assert.NotNull(chatRequest.Tools);
         Assert.Single(chatRequest.Tools);
@@ -276,7 +278,7 @@ public sealed class MistralClientTests : MistralTestBase
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12Â°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
+        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
         Assert.Equal("mistral-large-latest", response[0].ModelId);
         Assert.Equal(2, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -330,7 +332,7 @@ public sealed class MistralClientTests : MistralTestBase
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12Â°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
+        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
         Assert.Equal("mistral-large-latest", response[0].ModelId);
         Assert.Equal(2, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -368,7 +370,7 @@ public sealed class MistralClientTests : MistralTestBase
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12Â°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
+        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
         Assert.Equal("mistral-large-latest", response[0].ModelId);
         Assert.Equal(2, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -451,7 +453,7 @@ public sealed class MistralClientTests : MistralTestBase
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", response[0].Content);
+        Assert.Equal("12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", response[0].Content);
         Assert.Null(response[0].ModelId);
         Assert.Equal(1, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -495,7 +497,7 @@ public sealed class MistralClientTests : MistralTestBase
         var lastMessageContent = streamingContent[^1] as StreamingChatMessageContent;
         Assert.NotNull(lastMessageContent);
 
-        Assert.Equal("12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", lastMessageContent.Content);
+        Assert.Equal("12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", lastMessageContent.Content);
         Assert.Equal(AuthorRole.Tool, lastMessageContent.Role);
     }
 
@@ -576,7 +578,7 @@ public sealed class MistralClientTests : MistralTestBase
         var content = new ChatMessageContent()
         {
             Role = AuthorRole.Tool,
-            Items = [new FunctionResultContent("12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy"), new FunctionResultContent("15:20:44")],
+            Items = [new FunctionResultContent("12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy"), new FunctionResultContent("15:20:44")],
         };
 
         // Act
@@ -622,13 +624,160 @@ public sealed class MistralClientTests : MistralTestBase
         Assert.Equal(settings.ResponseFormat, clonedMistralAISettings.ResponseFormat);
     }
 
+    [Fact]
+    public void ToMistralChatMessagesWithArrayOfByteBinaryContentShouldThrow()
+    {
+        // Arrange
+        using var httpClient = new HttpClient();
+        var client = new MistralClient("mistral-large-latest", httpClient, "key");
+        var chatMessage = new ChatMessageContent()
+        {
+            Role = AuthorRole.User,
+            Items =
+            [
+                new BinaryContent(data: new byte[] { 1, 2, 3 }, mimeType: "application/pdf")
+            ],
+        };
+
+        // Act
+        // Assert
+        Assert.Throws<NotSupportedException>(() => client.ToMistralChatMessages(chatMessage, default));
+    }
+
+    [Fact]
+    public void ToMistralChatMessagesWithBase64BinaryContentShouldThrow()
+    {
+        // Arrange
+        using var httpClient = new HttpClient();
+        var client = new MistralClient("mistral-large-latest", httpClient, "key");
+        var chatMessage = new ChatMessageContent()
+        {
+            Role = AuthorRole.User,
+            Items =
+            [
+                new BinaryContent(dataUri: "data:application/pdf:base64,sdfghjyswedfghjjhertgiutdgbg")
+            ],
+        };
+
+        // Act
+        // Assert
+        Assert.Throws<NotSupportedException>(() => client.ToMistralChatMessages(chatMessage, default));
+    }
+
+    [Fact]
+    public void ValidateToMistralChatMessagesWithUrlBinaryContent()
+    {
+        // Arrange
+        using var httpClient = new HttpClient();
+        var client = new MistralClient("mistral-large-latest", httpClient, "key");
+        var chatMessage = new ChatMessageContent()
+        {
+            Role = AuthorRole.User,
+            Items =
+            [
+                new BinaryContent(new Uri("https://arxiv.org/pdf/1805.04770"))
+            ],
+        };
+
+        // Act
+        var message = client.ToMistralChatMessages(chatMessage, default);
+        var contents = message[0].Content as List<ContentChunk>;
+        var content = contents![0] as DocumentUrlChunk;
+
+        // Assert
+        Assert.NotNull(message);
+        Assert.Single(message);
+        Assert.IsType<MistralChatMessage>(message[0]);
+        Assert.Equal("user", message[0].Role);
+
+        Assert.IsType<List<ContentChunk>>(message[0].Content);
+        Assert.NotNull(contents);
+        Assert.Single(contents);
+
+        Assert.IsType<DocumentUrlChunk>(content);
+        Assert.NotNull(content);
+        Assert.Equal("https://arxiv.org/pdf/1805.04770", content.DocumentUrl);
+        Assert.Equal("document_url", content.Type);
+    }
+
+    [Fact]
+    public async Task ValidateToMistralChatMessagesWithDocumentRequestAsync()
+    {
+        // Arrange
+        var client = this.CreateMistralClient("mistral-small-latest", "https://api.mistral.ai/v1/chat/completions", "chat_completions_response_with_document.json");
+
+        var chatHistory = new ChatHistory
+        {
+            new ChatMessageContent(
+                AuthorRole.User,
+                [
+                    new TextContent("Summarize the document for me."),
+                    new BinaryContent(new Uri("https://arxiv.org/pdf/1805.04770"))
+                ]),
+        };
+
+        // Act
+        var executionSettings = new MistralAIPromptExecutionSettings { DocumentPageLimit = 64, DocumentImageLimit = 8 };
+        await client.GetChatMessageContentsAsync(chatHistory, default, executionSettings);
+        var request = this.DelegatingHandler!.RequestContent;
+
+        // Assert
+        Assert.NotNull(request);
+        var chatRequest = JsonSerializer.Deserialize<ChatCompletionRequest>(request);
+        Assert.NotNull(chatRequest);
+        Assert.Equal("mistral-small-latest", chatRequest.Model);
+        Assert.Single(chatRequest.Messages);
+        Assert.Equal("user", chatRequest.Messages[0].Role);
+        Assert.NotNull(chatRequest.Messages[0].Content);
+        Assert.Equal(64, chatRequest.DocumentPageLimit);
+        Assert.Equal(8, chatRequest.DocumentImageLimit);
+
+        // Assert
+        var content = JsonSerializer.Serialize(chatRequest.Messages[0].Content);
+        string json = """[{"text":"Summarize the document for me.","type":"text"},{"document_url":"https://arxiv.org/pdf/1805.04770","type":"document_url"}]""";
+        Assert.Equal(json, content);
+    }
+
+    [Fact]
+    public async Task ValidateToMistralChatMessagesWithDocumentResponseAsync()
+    {
+        // Arrange
+        var client = this.CreateMistralClient("mistral-small-latest", "https://api.mistral.ai/v1/chat/completions", "chat_completions_response_with_document.json");
+
+        var chatHistory = new ChatHistory
+        {
+            new ChatMessageContent(
+                AuthorRole.User,
+                [
+                    new TextContent("Summarize the document for me."),
+                    new BinaryContent(new Uri("https://arxiv.org/pdf/1805.04770"))
+                ]),
+        };
+
+        // Act
+        var executionSettings = new MistralAIPromptExecutionSettings { DocumentPageLimit = 64, DocumentImageLimit = 8 };
+        var response = await client.GetChatMessageContentsAsync(chatHistory, default, executionSettings);
+
+        // Assert
+        Assert.NotNull(response);
+        Assert.Single(response);
+        Assert.Contains("The document titled \"Born-Again Neural Networks\"", response[0].Content);
+        Assert.Equal("mistral-small-latest", response[0].ModelId);
+        Assert.Equal(AuthorRole.Assistant, response[0].Role);
+        Assert.NotNull(response[0].Metadata);
+        Assert.Equal(7, response[0].Metadata?.Count);
+        Assert.NotNull(response[0].Metadata?["Usage"]);
+        Assert.NotNull(response[0].InnerContent);
+        Assert.IsType<MistralChatChoice>(response[0].InnerContent);
+    }
+
     public sealed class WeatherPlugin
     {
         [KernelFunction]
         [Description("Get the current weather in a given location.")]
         public string GetWeather(
             [Description("The city and department, e.g. Marseille, 13")] string location
-        ) => "12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy";
+        ) => "12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy";
     }
 
     internal enum TemperatureUnit { Celsius, Fahrenheit }

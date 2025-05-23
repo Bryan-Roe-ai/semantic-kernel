@@ -1,9 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -37,7 +36,7 @@ public static partial class OpenApiKernelPluginFactory
         OpenApiFunctionExecutionParameters? executionParameters = null,
         CancellationToken cancellationToken = default)
     {
-        Verify.ValidPluginName(pluginName);
+        KernelVerify.ValidPluginName(pluginName);
 
 #pragma warning disable CA2000 // Dispose objects before losing scope. No need to dispose the Http client here. It can either be an internal client using NonDisposableHttpClientHandler or an external client managed by the calling code, which should handle its disposal.
         var httpClient = HttpClientProvider.GetHttpClient(executionParameters?.HttpClient);
@@ -74,7 +73,7 @@ public static partial class OpenApiKernelPluginFactory
         OpenApiFunctionExecutionParameters? executionParameters = null,
         CancellationToken cancellationToken = default)
     {
-        Verify.ValidPluginName(pluginName);
+        KernelVerify.ValidPluginName(pluginName);
 
 #pragma warning disable CA2000 // Dispose objects before losing scope. No need to dispose the Http client here. It can either be an internal client using NonDisposableHttpClientHandler or an external client managed by the calling code, which should handle its disposal.
         var httpClient = HttpClientProvider.GetHttpClient(executionParameters?.HttpClient);
@@ -115,7 +114,7 @@ public static partial class OpenApiKernelPluginFactory
         OpenApiFunctionExecutionParameters? executionParameters = null,
         CancellationToken cancellationToken = default)
     {
-        Verify.ValidPluginName(pluginName);
+        KernelVerify.ValidPluginName(pluginName);
 
 #pragma warning disable CA2000 // Dispose objects before losing scope. No need to dispose the Http client here. It can either be an internal client using NonDisposableHttpClientHandler or an external client managed by the calling code, which should handle its disposal.
         var httpClient = HttpClientProvider.GetHttpClient(executionParameters?.HttpClient);
@@ -139,13 +138,12 @@ public static partial class OpenApiKernelPluginFactory
     /// <param name="specification">The specification model.</param>
     /// <param name="executionParameters">The OpenAPI specification parsing and function execution parameters.</param>
     /// <returns>A <see cref="KernelPlugin"/> instance that contains functions corresponding to the operations defined in the OpenAPI specification.</returns>
-    [Experimental("SKEXP0040")]
     public static KernelPlugin CreateFromOpenApi(
         string pluginName,
         RestApiSpecification specification,
         OpenApiFunctionExecutionParameters? executionParameters = null)
     {
-        Verify.ValidPluginName(pluginName);
+        KernelVerify.ValidPluginName(pluginName);
 
 #pragma warning disable CA2000 // Dispose objects before losing scope. No need to dispose the Http client here. It can either be an internal client using NonDisposableHttpClientHandler or an external client managed by the calling code, which should handle its disposal.
         var httpClient = HttpClientProvider.GetHttpClient(executionParameters?.HttpClient);
@@ -181,10 +179,7 @@ public static partial class OpenApiKernelPluginFactory
             options: new OpenApiDocumentParserOptions
             {
                 IgnoreNonCompliantErrors = executionParameters?.IgnoreNonCompliantErrors ?? false,
-                OperationSelectionPredicate = (context) =>
-                {
-                    return !executionParameters?.OperationsToExclude.Contains(context.Id ?? string.Empty) ?? true;
-                }
+                OperationSelectionPredicate = (context) => SelectOperations(context, executionParameters)
             },
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
@@ -403,7 +398,7 @@ public static partial class OpenApiKernelPluginFactory
     {
         try
         {
-            Verify.ValidFunctionName(operationId);
+            KernelVerify.ValidFunctionName(operationId);
             return operationId;
         }
         catch (ArgumentException)
@@ -427,6 +422,29 @@ public static partial class OpenApiKernelPluginFactory
         logger.LogInformation("""Operation name "{OperationId}" converted to "{Result}" to comply with SK Function name requirements. Use "{Result}" when invoking function.""", operationId, result, result);
 
         return result;
+    }
+
+    /// <summary>
+    /// Selects operations to parse and import.
+    /// </summary>
+    /// <param name="context">Operation selection context.</param>
+    /// <param name="executionParameters">Execution parameters.</param>
+    /// <returns>True if the operation should be selected; otherwise, false.</returns>
+    private static bool SelectOperations(OperationSelectionPredicateContext context, OpenApiFunctionExecutionParameters? executionParameters)
+    {
+#pragma warning disable CS0618 // Type or member is obsolete
+        if (executionParameters?.OperationSelectionPredicate is not null && executionParameters?.OperationsToExclude is { Count: > 0 })
+        {
+            throw new ArgumentException($"{nameof(executionParameters.OperationSelectionPredicate)} and {nameof(executionParameters.OperationsToExclude)} cannot be used together.");
+        }
+
+        if (executionParameters?.OperationSelectionPredicate is { } predicate)
+        {
+            return predicate(context);
+        }
+
+        return !executionParameters?.OperationsToExclude.Contains(context.Id ?? string.Empty) ?? true;
+#pragma warning restore CS0618 // Type or member is obsolete
     }
 
     /// <summary>

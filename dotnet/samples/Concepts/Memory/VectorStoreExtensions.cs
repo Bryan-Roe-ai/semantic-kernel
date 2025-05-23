@@ -1,11 +1,14 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+using Microsoft.Extensions.AI;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Extensions.VectorData;
 >>>>>>> main
 using Microsoft.SemanticKernel.Data;
-using Microsoft.SemanticKernel.Embeddings;
 
 namespace Memory;
 
@@ -43,15 +46,16 @@ internal static class VectorStoreExtensions
     /// <param name="vectorStore">Instance of <see cref="IVectorStore"/> used to created the collection.</param>
     /// <param name="collectionName">The collection name.</param>
     /// <param name="entries">A list of strings.</param>
-    /// <param name="embeddingGenerationService">A text embedding generation service.</param>
+    /// <param name="embeddingGenerator">An embedding generator.</param>
     /// <param name="createRecord">A delegate which can create a record with a valid key for each string and it's embedding.</param>
     internal static async Task<IVectorStoreRecordCollection<TKey, TRecord>> CreateCollectionFromListAsync<TKey, TRecord>(
         this IVectorStore vectorStore,
         string collectionName,
         string[] entries,
-        ITextEmbeddingGenerationService embeddingGenerationService,
+        IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator,
         CreateRecordFromString<TKey, TRecord> createRecord)
         where TKey : notnull
+        where TRecord : notnull
     {
         // Get and create collection if it doesn't exist.
         var collection = vectorStore.GetCollection<TKey, TRecord>(collectionName);
@@ -60,7 +64,7 @@ internal static class VectorStoreExtensions
         // Create records and generate embeddings for them.
         var tasks = entries.Select(entry => Task.Run(async () =>
         {
-            var record = createRecord(entry, await embeddingGenerationService.GenerateEmbeddingAsync(entry).ConfigureAwait(false));
+            var record = createRecord(entry, (await embeddingGenerator.GenerateAsync(entry).ConfigureAwait(false)).Vector);
             await collection.UpsertAsync(record).ConfigureAwait(false);
         }));
         await Task.WhenAll(tasks).ConfigureAwait(false);
@@ -82,15 +86,16 @@ internal static class VectorStoreExtensions
     /// <param name="vectorStore">Instance of <see cref="IVectorStore"/> used to created the collection.</param>
     /// <param name="collectionName">The collection name.</param>
     /// <param name="searchResults">A list of <see cref="TextSearchResult" />s.</param>
-    /// <param name="embeddingGenerationService">A text embedding generation service.</param>
+    /// <param name="embeddingGenerator">An embedding generator service.</param>
     /// <param name="createRecord">A delegate which can create a record with a valid key for each string and it's embedding.</param>
     internal static async Task<IVectorStoreRecordCollection<TKey, TRecord>> CreateCollectionFromTextSearchResultsAsync<TKey, TRecord>(
         this IVectorStore vectorStore,
         string collectionName,
         IList<TextSearchResult> searchResults,
-        ITextEmbeddingGenerationService embeddingGenerationService,
+        IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator,
         CreateRecordFromTextSearchResult<TKey, TRecord> createRecord)
         where TKey : notnull
+        where TRecord : notnull
     {
         // Get and create collection if it doesn't exist.
         var collection = vectorStore.GetCollection<TKey, TRecord>(collectionName);
@@ -99,7 +104,7 @@ internal static class VectorStoreExtensions
         // Create records and generate embeddings for them.
         var tasks = searchResults.Select(searchResult => Task.Run(async () =>
         {
-            var record = createRecord(searchResult, await embeddingGenerationService.GenerateEmbeddingAsync(searchResult.Value!).ConfigureAwait(false));
+            var record = createRecord(searchResult, (await embeddingGenerator.GenerateAsync(searchResult.Value!).ConfigureAwait(false)).Vector);
             await collection.UpsertAsync(record).ConfigureAwait(false);
         }));
         await Task.WhenAll(tasks).ConfigureAwait(false);

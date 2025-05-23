@@ -1399,6 +1399,7 @@ def test_multiple_param_in_prompt():
     func = KernelFunctionFromPrompt("test", prompt="{{$param}}{{$param}}")
     assert len(func.parameters) == 1
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -1465,3 +1466,6 @@ def test_multiple_param_in_prompt():
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+    assert func.metadata.parameters[0].schema_data == {"type": "object"}
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

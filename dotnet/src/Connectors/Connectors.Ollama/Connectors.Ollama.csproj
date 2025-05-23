@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!-- THIS PROPERTY GROUP MUST COME FIRST -->
@@ -24,7 +24,10 @@
   
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.AI" />
-    <PackageReference Include="OllamaSharp" />
+    <PackageReference Include="OllamaSharp">
+      <ExcludeAssets>analyzers</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" />
   </ItemGroup>
 
   <ItemGroup>

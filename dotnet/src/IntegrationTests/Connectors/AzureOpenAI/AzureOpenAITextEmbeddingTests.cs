@@ -1,7 +1,9 @@
 // Copyright (c) Microsoft. All rights reserved.
 
+using System;
 using System.Threading.Tasks;
 using Azure.Identity;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -72,6 +74,9 @@ using System.Threading.Tasks;
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+using Microsoft.Extensions.AI;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using Microsoft.SemanticKernel.Embeddings;
@@ -80,6 +85,7 @@ using Xunit;
 
 namespace SemanticKernel.IntegrationTests.Connectors.AzureOpenAI;
 
+[Obsolete("Temporary Tests for Obsolete AzureOpenAITextEmbeddingGenerationService")]
 public sealed class AzureOpenAITextEmbeddingTests
 {
     public AzureOpenAITextEmbeddingTests()
@@ -114,7 +120,7 @@ public sealed class AzureOpenAITextEmbeddingTests
     [Theory]
     [InlineData(null, 3072)]
     [InlineData(1024, 1024)]
-    public async Task AzureOpenAIWithDimensionsAsync(int? dimensions, int expectedVectorLength)
+    public async Task AzureOpenAITextEmbeddingGenerationWithDimensionsAsync(int? dimensions, int expectedVectorLength)
     {
         // Arrange
         const string TestInputString = "test sentence";

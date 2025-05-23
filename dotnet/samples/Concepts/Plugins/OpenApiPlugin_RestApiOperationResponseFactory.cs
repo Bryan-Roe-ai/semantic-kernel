@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Net;
 using System.Text;
@@ -63,6 +63,13 @@ public sealed class OpenApiPlugin_RestApiOperationResponseFactory(ITestOutputHel
         {
             response.Headers ??= new Dictionary<string, IEnumerable<string>>();
             response.Headers["repair-id"] = values;
+        }
+
+        // Include the request options in the operation response
+        if (context.Request.Options is not null)
+        {
+            response.Data ??= new Dictionary<string, object?>();
+            response.Data["http.request.options"] = context.Request.Options;
         }
 
         // Return the modified response that will be returned to the caller

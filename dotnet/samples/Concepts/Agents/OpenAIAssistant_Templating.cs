@@ -1,17 +1,21 @@
 // Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
 // Copyright (c) Microsoft. All rights reserved.
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Microsoft.SemanticKernel.PromptTemplates.Liquid;
+using OpenAI.Assistants;
 
 namespace Agents;
 
 /// <summary>
 /// Demonstrate parameterized template instruction  for <see cref="OpenAIAssistantAgent"/>.
 /// </summary>
-public class OpenAIAssistant_Templating(ITestOutputHelper output) : BaseAgentsTest(output)
+public class OpenAIAssistant_Templating(ITestOutputHelper output) : BaseAssistantTest(output)
 {
     private readonly static (string Input, string? Style)[] s_inputs =
         [
@@ -24,23 +28,25 @@ public class OpenAIAssistant_Templating(ITestOutputHelper output) : BaseAgentsTe
     [Fact]
     public async Task InvokeAgentWithInstructionsAsync()
     {
-        // Instruction based template always proceseed by KernelPromptTemplateFactory
-        OpenAIAssistantAgent agent = await OpenAIAssistantAgent.CreateAsync(
-                clientProvider: this.GetClientProvider(),
-                definition: new OpenAIAssistantDefinition(this.Model)
-                {
-                    Instructions =
-                        """
-                        Write a one verse poem on the requested topic in the styles of {{$style}}.
-                        Always state the requested style of the poem.
-                        """,
-                    Metadata = AssistantSampleMetadata
-                },
-                kernel: new Kernel(),
-                defaultArguments: new KernelArguments()
-                {
-                    {"style", "haiku"}
-                });
+        // Define the assistant
+        Assistant assistant =
+            await this.AssistantClient.CreateAssistantAsync(
+                this.Model,
+                instructions:
+                    """
+                    Write a one verse poem on the requested topic in the styles of {{$style}}.
+                    Always state the requested style of the poem.
+                    """,
+                metadata: SampleMetadata);
+
+        // Create the agent
+        OpenAIAssistantAgent agent = new(assistant, this.AssistantClient)
+        {
+            Arguments = new()
+            {
+                {"style", "haiku"}
+            },
+        };
 
         await InvokeAssistantAgentWithTemplateAsync(agent);
     }
@@ -53,7 +59,9 @@ public class OpenAIAssistant_Templating(ITestOutputHelper output) : BaseAgentsTe
             """
             Write a one verse poem on the requested topic in the styles of {{$style}}.
             Always state the requested style of the poem.
-            """);
+            """,
+            PromptTemplateConfig.SemanticKernelTemplateFormat,
+            new KernelPromptTemplateFactory());
     }
 
     [Fact]
@@ -82,27 +90,30 @@ public class OpenAIAssistant_Templating(ITestOutputHelper output) : BaseAgentsTe
 
     private async Task InvokeAssistantAgentWithTemplateAsync(
         string instructionTemplate,
-        string? templateFormat = null,
-        IPromptTemplateFactory? templateFactory = null)
+        string templateFormat,
+        IPromptTemplateFactory templateFactory)
     {
-        // Define the agent
-        OpenAIAssistantAgent agent = await OpenAIAssistantAgent.CreateFromTemplateAsync(
-                clientProvider: this.GetClientProvider(),
-                capabilities: new OpenAIAssistantCapabilities(this.Model)
-                {
-                    Metadata = AssistantSampleMetadata
-                },
-                kernel: new Kernel(),
-                defaultArguments: new KernelArguments()
-                {
-                    {"style", "haiku"}
-                },
-                templateConfig: new PromptTemplateConfig
-                {
-                    Template = instructionTemplate,
-                    TemplateFormat = templateFormat,
-                },
-                templateFactory);
+        PromptTemplateConfig config = new()
+        {
+            Template = instructionTemplate,
+            TemplateFormat = templateFormat,
+        };
+
+        // Define the assistant
+        Assistant assistant =
+            await this.AssistantClient.CreateAssistantFromTemplateAsync(
+                this.Model,
+                config,
+                metadata: SampleMetadata);
+
+        // Create the agent
+        OpenAIAssistantAgent agent = new(assistant, this.AssistantClient, plugins: null, templateFactory, templateFormat)
+        {
+            Arguments = new()
+            {
+                {"style", "haiku"}
+            },
+        };
 
         await InvokeAssistantAgentWithTemplateAsync(agent);
     }
@@ -110,7 +121,7 @@ public class OpenAIAssistant_Templating(ITestOutputHelper output) : BaseAgentsTe
     private async Task InvokeAssistantAgentWithTemplateAsync(OpenAIAssistantAgent agent)
     {
         // Create a thread for the agent conversation.
-        string threadId = await agent.CreateThreadAsync(new OpenAIThreadCreationOptions { Metadata = AssistantSampleMetadata });
+        OpenAIAssistantAgentThread thread = new(this.AssistantClient, metadata: SampleMetadata);
 
         try
         {
@@ -118,7 +129,6 @@ public class OpenAIAssistant_Templating(ITestOutputHelper output) : BaseAgentsTe
             foreach ((string input, string? style) in s_inputs)
             {
                 ChatMessageContent request = new(AuthorRole.User, input);
-                await agent.AddChatMessageAsync(threadId, request);
                 this.WriteAgentChatMessage(request);
 
                 KernelArguments? arguments = null;
@@ -128,7 +138,7 @@ public class OpenAIAssistant_Templating(ITestOutputHelper output) : BaseAgentsTe
                     arguments = new() { { "style", style } };
                 }
 
-                await foreach (ChatMessageContent message in agent.InvokeAsync(threadId, arguments))
+                await foreach (ChatMessageContent message in agent.InvokeAsync(request, thread, options: new() { KernelArguments = arguments }))
                 {
                     this.WriteAgentChatMessage(message);
                 }
@@ -136,8 +146,8 @@ public class OpenAIAssistant_Templating(ITestOutputHelper output) : BaseAgentsTe
         }
         finally
         {
-            await agent.DeleteThreadAsync(threadId);
-            await agent.DeleteAsync();
+            await thread.DeleteAsync();
+            await this.AssistantClient.DeleteAssistantAsync(agent.Id);
         }
     }
 }

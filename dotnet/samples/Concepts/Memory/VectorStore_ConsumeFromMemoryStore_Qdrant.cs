@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Text.Json;
 using Azure.Identity;
@@ -23,6 +23,7 @@ namespace Memory;
 /// To run this sample, you need a local instance of Docker running, since the associated fixture
 /// will try and start a Qdrant container in the local docker instance to run against.
 /// </remarks>
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public class VectorStore_ConsumeFromMemoryStore_Qdrant(ITestOutputHelper output, VectorStoreQdrantContainerFixture qdrantFixture) : BaseTest(output), IClassFixture<VectorStoreQdrantContainerFixture>
 {
     private const int VectorSize = 1536;

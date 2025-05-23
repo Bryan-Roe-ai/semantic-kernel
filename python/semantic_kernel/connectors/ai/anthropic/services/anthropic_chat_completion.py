@@ -18,7 +18,7 @@ from anthropic.types import (
     RawMessageStartEvent,
     TextBlock,
 from collections.abc import AsyncGenerator, Callable
-from typing import Any, ClassVar
+from typing import TYPE_CHECKING, Any, ClassVar
 
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
@@ -46,6 +46,7 @@ from semantic_kernel.connectors.ai.anthropic.services.utils import (
 )
 from semantic_kernel.connectors.ai.anthropic.settings.anthropic_settings import AnthropicSettings
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
+<<<<<<< HEAD
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ITEM_TYPES, ChatMessageContent
@@ -53,13 +54,19 @@ from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecut
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ITEM_TYPES, ChatMessageContent
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.contents.chat_history import ChatHistory
-from semantic_kernel.contents.chat_message_content import ITEM_TYPES, ChatMessageContent
+from semantic_kernel.contents.chat_message_content import CMC_ITEM_TYPES, ChatMessageContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
+<<<<<<< HEAD
 from semantic_kernel.contents.function_result_content import FunctionResultContent
 from semantic_kernel.contents.streaming_chat_message_content import ITEM_TYPES as STREAMING_ITEM_TYPES
+=======
+from semantic_kernel.contents.streaming_chat_message_content import STREAMING_CMC_ITEM_TYPES as STREAMING_ITEM_TYPES
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
 from semantic_kernel.contents.streaming_text_content import StreamingTextContent
 from semantic_kernel.contents.text_content import TextContent
@@ -75,11 +82,18 @@ from semantic_kernel.exceptions.service_exceptions import (
     ServiceInvalidResponseError,
     ServiceResponseException,
 )
+<<<<<<< HEAD
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.telemetry.model_diagnostics.decorators import trace_chat_completion
 from semantic_kernel.exceptions.service_exceptions import (
     ServiceInitializationError,
     ServiceResponseException,
+=======
+from semantic_kernel.utils.feature_stage_decorator import experimental
+from semantic_kernel.utils.telemetry.model_diagnostics.decorators import (
+    trace_chat_completion,
+    trace_streaming_chat_completion,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 )
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError, ServiceResponseException
@@ -92,6 +106,9 @@ from semantic_kernel.exceptions.service_exceptions import ServiceInitializationE
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.telemetry.model_diagnostics.decorators import trace_chat_completion
 
+if TYPE_CHECKING:
+    from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
+
 # map finish reasons from Anthropic to Semantic Kernel
 ANTHROPIC_TO_SEMANTIC_KERNEL_FINISH_REASON_MAP = {
     "end_turn": SemanticKernelFinishReason.STOP,
@@ -102,7 +119,7 @@ ANTHROPIC_TO_SEMANTIC_KERNEL_FINISH_REASON_MAP = {
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-@experimental_class
+@experimental
 class AnthropicChatCompletion(ChatCompletionClientBase):
     """Antropic ChatCompletion class."""
     MODEL_PROVIDER_NAME: ClassVar[str] = "anthropic"
@@ -148,7 +165,7 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
             env_file_encoding: The encoding of the environment settings file.
         """
         try:
-            anthropic_settings = AnthropicSettings.create(
+            anthropic_settings = AnthropicSettings(
                 api_key=api_key,
                 chat_model_id=ai_model_id,
                 env_file_path=env_file_path,
@@ -204,7 +221,7 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
     @override
     def _update_function_choice_settings_callback(
         self,
-    ) -> Callable[[FunctionCallChoiceConfiguration, "PromptExecutionSettings", FunctionChoiceType], None]:
+    ) -> Callable[["FunctionCallChoiceConfiguration", "PromptExecutionSettings", FunctionChoiceType], None]:
         return update_settings_from_function_call_configuration
 
     @override
@@ -451,7 +468,7 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
         self, response: Message, response_metadata: dict[str, Any]
     ) -> "ChatMessageContent":
         """Create a chat message content object."""
-        items: list[ITEM_TYPES] = []
+        items: list[CMC_ITEM_TYPES] = []
         items += self._get_tool_calls_from_message(response)
 
         self, 
@@ -524,7 +541,7 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
         role: str | None = None,
         self,
         stream_event: TextEvent | ContentBlockStopEvent | RawMessageDeltaEvent,
-        metadata: dict[str, Any] = {},
+        metadata: dict[str, Any] | None = None,
         function_invoke_attempt: int = 0,
     ) -> StreamingChatMessageContent:
         """Create a streaming chat message content object from a choice."""
@@ -594,7 +611,11 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
             )
         elif isinstance(stream_event, RawMessageDeltaEvent):
             finish_reason = ANTHROPIC_TO_SEMANTIC_KERNEL_FINISH_REASON_MAP[str(stream_event.delta.stop_reason)]
-            metadata["usage"]["output_tokens"] = stream_event.usage.output_tokens
+            output_tokens = stream_event.usage.output_tokens
+            if metadata is None:
+                metadata = {"usage": {"output_tokens": output_tokens}}
+            else:
+                metadata = metadata | {"usage": metadata.get("usage", {}) | {"output_tokens": output_tokens}}
 
         return StreamingChatMessageContent(
             choice_index=0,

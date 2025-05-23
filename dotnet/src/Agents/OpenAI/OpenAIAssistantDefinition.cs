@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -63,6 +64,11 @@
 =======
 >>>>>>> head
 using System.Collections.Generic;
+=======
+// Copyright (c) Microsoft. All rights reserved.
+using System;
+using System.Diagnostics.CodeAnalysis;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Text.Json.Serialization;
 
 namespace Microsoft.SemanticKernel.Agents.OpenAI;
@@ -70,6 +76,7 @@ namespace Microsoft.SemanticKernel.Agents.OpenAI;
 /// <summary>
 /// Defines an assistant.
 /// </summary>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -101,6 +108,10 @@ public sealed class OpenAIAssistantDefinition
 >>>>>>> Stashed changes
 public sealed class OpenAIAssistantDefinition
 =======
+=======
+[Experimental("SKEXP0110")]
+[Obsolete("Use the OpenAI.Assistants.AssistantClient.CreateAssistantAsync() to create an assistant definition.")]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
 >>>>>>> main
 <<<<<<< Updated upstream
@@ -136,34 +147,43 @@ public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
 >>>>>>> head
 {
     /// <summary>
+<<<<<<< HEAD
     /// Identifies the AI model targeted by the agent.
     /// </summary>
     public string ModelId { get; }
 
     /// <summary>
     /// The description of the assistant.
+=======
+    /// Gets the description of the assistant.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Description { get; init; }
 
     /// <summary>
+<<<<<<< HEAD
     /// The assistant's unique id.  (Ignored on create.)
     /// </summary>
     public string Id { get; init; } = string.Empty;
 
     /// <summary>
     /// The system instructions for the assistant to use.
+=======
+    /// Gets the system instructions for the assistant to use.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Instructions { get; init; }
 
     /// <summary>
-    /// The name of the assistant.
+    /// Gets the name of the assistant.
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Name { get; init; }
 
     /// <summary>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -202,6 +222,10 @@ public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
 >>>>>>> head
     /// Provide the captured template format for the assistant if needed for agent retrieval.
     /// (<see cref="OpenAIAssistantAgent.RetrieveAsync"/>)
+=======
+    /// Gets the captured template format for the assistant if needed for agent retrieval
+    /// (<see cref="OpenAIAssistantAgent.RetrieveAsync"/>).
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
     [JsonIgnore]
     public string? TemplateFactoryFormat
@@ -545,7 +569,7 @@ public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
     /// <summary>
     /// Initializes a new instance of the <see cref="OpenAIAssistantDefinition"/> class.
     /// </summary>
-    /// <param name="modelId">The targeted model</param>
+    /// <param name="modelId">The targeted model.</param>
     [JsonConstructor]
     public OpenAIAssistantDefinition(string modelId)
     {

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -33,6 +34,9 @@
 =======
 >>>>>>> Stashed changes
 ﻿// Copyright (c) Microsoft. All rights reserved.
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 <<<<<<< main
@@ -119,6 +123,7 @@ using StackExchange.Redis;
 <<<<<<< main
 =======
 using Microsoft.Extensions.VectorData;
+using Microsoft.Extensions.VectorData.ConnectorSupport;
 using Microsoft.SemanticKernel.Connectors.Redis;
 using Microsoft.SemanticKernel.Connectors.Redis.UnitTests;
 >>>>>>> upstream/main
@@ -134,10 +139,15 @@ namespace SemanticKernel.Connectors.Redis.UnitTests;
 /// </summary>
 public sealed class RedisHashSetVectorStoreRecordMapperTests
 {
+    private static readonly VectorStoreRecordModel s_model
+        = new VectorStoreRecordModelBuilder(RedisHashSetVectorStoreRecordCollection<string, AllTypesModel>.ModelBuildingOptions)
+            .Build(typeof(AllTypesModel), RedisHashSetVectorStoreMappingTestHelpers.s_vectorStoreRecordDefinition, defaultEmbeddingGenerator: null);
+
     [Fact]
     public void MapsAllFieldsFromDataToStorageModel()
     {
         // Arrange.
+<<<<<<< HEAD
         var sut = new RedisHashSetVectorStoreRecordMapper<AllTypesModel>(RedisHashSetVectorStoreMappingTestHelpers.s_vectorStoreRecordDefinition, s_storagePropertyNames);
 <<<<<<< HEAD
 <<<<<<< div
@@ -209,9 +219,12 @@ public sealed class RedisHashSetVectorStoreRecordMapperTests
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+        var sut = new RedisHashSetVectorStoreRecordMapper<AllTypesModel>(s_model);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Act.
-        var actual = sut.MapFromDataToStorageModel(CreateModel("test key"));
+        var actual = sut.MapFromDataToStorageModel(CreateModel("test key"), recordIndex: 0, generatedEmbeddings: null);
 
         // Assert.
         Assert.NotNull(actual.HashEntries);
@@ -344,6 +357,7 @@ public sealed class RedisHashSetVectorStoreRecordMapperTests
     public void MapsAllFieldsFromStorageToDataModel()
     {
         // Arrange.
+<<<<<<< HEAD
         var sut = new RedisHashSetVectorStoreRecordMapper<AllTypesModel>(RedisHashSetVectorStoreMappingTestHelpers.s_vectorStoreRecordDefinition, s_storagePropertyNames);
 <<<<<<< HEAD
 <<<<<<< div
@@ -397,6 +411,9 @@ public sealed class RedisHashSetVectorStoreRecordMapperTests
 >>>>>>> head
         var reader = new VectorStoreRecordPropertyReader(typeof(AllTypesModel), RedisHashSetVectorStoreMappingTestHelpers.s_vectorStoreRecordDefinition, null);
         var sut = new RedisHashSetVectorStoreRecordMapper<AllTypesModel>(reader);
+=======
+        var sut = new RedisHashSetVectorStoreRecordMapper<AllTypesModel>(s_model);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Act.
         var actual = sut.MapFromStorageToDataModel(("test key", RedisHashSetVectorStoreMappingTestHelpers.CreateHashSet()), new() { IncludeVectors = true });
@@ -810,10 +827,10 @@ public sealed class RedisHashSetVectorStoreRecordMapperTests
         [VectorStoreRecordData]
         public bool? NullableBoolData { get; set; }
 
-        [VectorStoreRecordVector]
+        [VectorStoreRecordVector(10)]
         public ReadOnlyMemory<float>? FloatVector { get; set; }
 
-        [VectorStoreRecordVector]
+        [VectorStoreRecordVector(10)]
         public ReadOnlyMemory<double>? DoubleVector { get; set; }
 
         public string NotAnnotated { get; set; } = string.Empty;

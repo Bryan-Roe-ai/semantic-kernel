@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -68,6 +69,9 @@
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+<Project Sdk="Microsoft.NET.Sdk">
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
   <PropertyGroup>
     <!-- THIS PROPERTY GROUP MUST COME FIRST -->

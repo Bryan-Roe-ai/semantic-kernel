@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -44,9 +45,13 @@
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -141,6 +146,7 @@ namespace SemanticKernel.Connectors.UnitTests.Chroma;
 /// <summary>
 /// Unit tests for <see cref="ChromaMemoryStore"/> class.
 /// </summary>
+[Experimental("SKEXP0020")]
 public sealed class ChromaMemoryStoreTests : IDisposable
 {
     private const string CollectionId = "fake-collection-id";

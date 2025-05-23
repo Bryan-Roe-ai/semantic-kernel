@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 <<<<<<< HEAD
 <<<<<<< div
@@ -13,6 +13,7 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 using System.Reflection;
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Stashed changes
@@ -78,6 +79,9 @@ using System.Reflection;
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+using System.Text.Json;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.VectorData;
@@ -176,12 +180,24 @@ namespace SemanticKernel.Connectors.AzureCosmosDBNoSQL.UnitTests;
 public sealed class AzureCosmosDBNoSQLServiceCollectionExtensionsTests
 {
     private readonly IServiceCollection _serviceCollection = new ServiceCollection();
+    private readonly Mock<Database> _mockDatabase = new();
+
+    public AzureCosmosDBNoSQLServiceCollectionExtensionsTests()
+    {
+        var mockClient = new Mock<CosmosClient>();
+
+        mockClient.Setup(l => l.ClientOptions).Returns(new CosmosClientOptions() { UseSystemTextJsonSerializerWithOptions = JsonSerializerOptions.Default });
+
+        this._mockDatabase
+            .Setup(l => l.Client)
+            .Returns(mockClient.Object);
+    }
 
     [Fact]
     public void AddVectorStoreRegistersClass()
     {
         // Arrange
-        this._serviceCollection.AddSingleton<Database>(Mock.Of<Database>());
+        this._serviceCollection.AddSingleton<Database>(this._mockDatabase.Object);
 
         // Act
         this._serviceCollection.AddAzureCosmosDBNoSQLVectorStore();
@@ -316,7 +332,7 @@ public sealed class AzureCosmosDBNoSQLServiceCollectionExtensionsTests
     public void AddVectorStoreRecordCollectionRegistersClass()
     {
         // Arrange
-        this._serviceCollection.AddSingleton<Database>(Mock.Of<Database>());
+        this._serviceCollection.AddSingleton<Database>(this._mockDatabase.Object);
 
         // Act
         this._serviceCollection.AddAzureCosmosDBNoSQLVectorStoreRecordCollection<TestRecord>("testcollection");
@@ -341,11 +357,11 @@ public sealed class AzureCosmosDBNoSQLServiceCollectionExtensionsTests
 
         var collection = serviceProvider.GetRequiredService<IVectorStoreRecordCollection<string, TestRecord>>();
         Assert.NotNull(collection);
-        Assert.IsType<AzureCosmosDBNoSQLVectorStoreRecordCollection<TestRecord>>(collection);
+        Assert.IsType<AzureCosmosDBNoSQLVectorStoreRecordCollection<string, TestRecord>>(collection);
 
-        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorizedSearch<TestRecord>>();
+        var vectorizedSearch = serviceProvider.GetRequiredService<IVectorSearch<TestRecord>>();
         Assert.NotNull(vectorizedSearch);
-        Assert.IsType<AzureCosmosDBNoSQLVectorStoreRecordCollection<TestRecord>>(vectorizedSearch);
+        Assert.IsType<AzureCosmosDBNoSQLVectorStoreRecordCollection<string, TestRecord>>(vectorizedSearch);
     }
 
 #pragma warning disable CA1812 // Avoid uninstantiated internal classes

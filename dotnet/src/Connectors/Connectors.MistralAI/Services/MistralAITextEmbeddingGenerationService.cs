@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -17,6 +17,7 @@ namespace Microsoft.SemanticKernel.Connectors.MistralAI;
 /// <summary>
 /// Mistral text embedding service.
 /// </summary>
+[Obsolete("Use MistralAIEmbeddingGenerator instead.")]
 public sealed class MistralAITextEmbeddingGenerationService : ITextEmbeddingGenerationService
 {
     /// <summary>

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -57,6 +57,7 @@ public static class KernelExtensions
     /// <param name="parameters">Optional parameter descriptions. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
     /// <param name="returnParameter">Optional return parameter description. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
     /// <returns>The created <see cref="KernelFunction"/> for invoking <paramref name="method"/>.</returns>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -64,6 +65,8 @@ public static class KernelExtensions
 >>>>>>> upstream/main
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelFunction CreateFunctionFromMethod(
         this Kernel kernel,
         Delegate method,
@@ -121,6 +124,7 @@ public static class KernelExtensions
     /// <param name="parameters">Optional parameter descriptions. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
     /// <param name="returnParameter">Optional return parameter description. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
     /// <returns>The created <see cref="KernelFunction"/> for invoking <paramref name="method"/>.</returns>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -128,6 +132,8 @@ public static class KernelExtensions
 >>>>>>> upstream/main
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelFunction CreateFunctionFromMethod(
         this Kernel kernel,
         MethodInfo method,
@@ -201,6 +207,7 @@ public static class KernelExtensions
     /// If null, a default factory will be used.
     /// </param>
     /// <returns>The created <see cref="KernelFunction"/> for invoking the prompt.</returns>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -208,6 +215,8 @@ public static class KernelExtensions
 >>>>>>> upstream/main
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelFunction CreateFunctionFromPrompt(
         this Kernel kernel,
         string promptTemplate,
@@ -343,6 +352,7 @@ public static class KernelExtensions
     /// If null, a default factory will be used.
     /// </param>
     /// <returns>The created <see cref="KernelFunction"/> for invoking the prompt.</returns>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -350,6 +360,8 @@ public static class KernelExtensions
 >>>>>>> upstream/main
 =======
 >>>>>>> origin/main
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelFunction CreateFunctionFromPrompt(
         this Kernel kernel,
         PromptTemplateConfig promptConfig,
@@ -404,11 +416,14 @@ public static class KernelExtensions
     /// Methods that have the <see cref="KernelFunctionAttribute"/> attribute will be included in the plugin.
     /// See <see cref="KernelFunctionAttribute"/> attribute for details.
     /// </remarks>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
     public static KernelPlugin CreatePluginFromType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this Kernel kernel, JsonSerializerOptions jsonSerializerOptions, string? pluginName = null)
 =======
     [Experimental("SKEXP0120")]
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelPlugin CreatePluginFromType<[DynamicallyAccessedMembers(
         DynamicallyAccessedMemberTypes.PublicConstructors |
         DynamicallyAccessedMemberTypes.PublicMethods |
@@ -457,6 +472,7 @@ public static class KernelExtensions
     /// Methods that have the <see cref="KernelFunctionAttribute"/> attribute will be included in the plugin.
     /// See <see cref="KernelFunctionAttribute"/> attribute for details.
     /// </remarks>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -469,6 +485,8 @@ public static class KernelExtensions
 <<<<<<< main
 =======
     [Experimental("SKEXP0120")]
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelPlugin CreatePluginFromObject<[DynamicallyAccessedMembersAttribute(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] T>(this Kernel kernel, T target, JsonSerializerOptions jsonSerializerOptions, string? pluginName = null)
     {
         Verify.NotNull(kernel);
@@ -552,11 +570,14 @@ public static class KernelExtensions
     /// Methods that have the <see cref="KernelFunctionAttribute"/> attribute will be included in the plugin.
     /// See <see cref="KernelFunctionAttribute"/> attribute for details.
     /// </remarks>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
     public static KernelPlugin ImportPluginFromType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this Kernel kernel, JsonSerializerOptions jsonSerializerOptions, string? pluginName = null)
 =======
     [Experimental("SKEXP0120")]
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelPlugin ImportPluginFromType<[DynamicallyAccessedMembers(
         DynamicallyAccessedMemberTypes.PublicConstructors |
         DynamicallyAccessedMemberTypes.PublicMethods |
@@ -615,11 +636,14 @@ public static class KernelExtensions
     /// Methods that have the <see cref="KernelFunctionAttribute"/> attribute will be included in the plugin.
     /// See <see cref="KernelFunctionAttribute"/> attribute for details.
     /// </remarks>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
     public static KernelPlugin AddFromType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this ICollection<KernelPlugin> plugins, JsonSerializerOptions jsonSerializerOptions, string? pluginName = null, IServiceProvider? serviceProvider = null)
 =======
     [Experimental("SKEXP0120")]
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelPlugin AddFromType<[DynamicallyAccessedMembers(
         DynamicallyAccessedMemberTypes.PublicConstructors |
         DynamicallyAccessedMemberTypes.PublicMethods |
@@ -678,11 +702,14 @@ public static class KernelExtensions
     /// Methods that have the <see cref="KernelFunctionAttribute"/> attribute will be included in the plugin.
     /// See <see cref="KernelFunctionAttribute"/> attribute for details.
     /// </remarks>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
     public static IKernelBuilderPlugins AddFromType<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IKernelBuilderPlugins plugins, JsonSerializerOptions jsonSerializerOptions, string? pluginName = null)
 =======
     [Experimental("SKEXP0120")]
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static IKernelBuilderPlugins AddFromType<[DynamicallyAccessedMembers(
         DynamicallyAccessedMemberTypes.PublicConstructors |
         DynamicallyAccessedMemberTypes.PublicMethods |
@@ -747,6 +774,7 @@ public static class KernelExtensions
     /// Methods that have the <see cref="KernelFunctionAttribute"/> attribute will be included in the plugin.
     /// See <see cref="KernelFunctionAttribute"/> attribute for details.
     /// </remarks>
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
     public static KernelPlugin ImportPluginFromObject(this Kernel kernel, object target, JsonSerializerOptions jsonSerializerOptions, string? pluginName = null)
@@ -754,6 +782,8 @@ public static class KernelExtensions
         KernelPlugin plugin = CreatePluginFromObject(kernel, target, jsonSerializerOptions, pluginName);
 =======
     [Experimental("SKEXP0120")]
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     public static KernelPlugin ImportPluginFromObject<[DynamicallyAccessedMembersAttribute(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)] T>(this Kernel kernel, T target, JsonSerializerOptions jsonSerializerOptions, string? pluginName = null)
     {
         KernelPlugin plugin = CreatePluginFromObject<T>(kernel, target, jsonSerializerOptions, pluginName);
@@ -1087,6 +1117,7 @@ public static class KernelExtensions
     /// <summary>Creates a plugin containing one function per child directory of the specified <paramref name="pluginDirectory"/>.</summary>
     [RequiresUnreferencedCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection to handle various aspects of the function creation and invocation, making it incompatible with AOT scenarios.")]
+    [ExcludeFromCodeCoverage]
     private static KernelPlugin CreatePluginFromPromptDirectory(
         string pluginDirectory,
         string? pluginName = null,

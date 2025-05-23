@@ -1,6 +1,7 @@
 {
   "recommendations": [
     "ms-azuretools.vscode-azurefunctions",
+<<<<<<< HEAD
     "ms-dotnettools.csharp",
     "vscjava.vscode-gradle",
     "github.copilot-chat",
@@ -59,5 +60,8 @@
     "platformio-ide.disablePIOHomeStartup",
     "platformio-ide.useDevelopmentPIOCore",
     "editor.formatOnSave"
+=======
+    "ms-dotnettools.csharp"
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   ]
 }

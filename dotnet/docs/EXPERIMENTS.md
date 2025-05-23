@@ -227,9 +227,14 @@ You can use the following diagnostic IDs to ignore warnings or errors for a part
 <<<<<<< main
 =======
 | SKEXP0120 | Native-AOT |
+<<<<<<< HEAD
 >>>>>>> upstream/main
 =======
 >>>>>>> origin/main
+=======
+| MEVD9000 | Microsoft.Extensions.VectorData experimental user-facing APIs |
+| MEVD9001 | Microsoft.Extensions.VectorData experimental connector-facing APIs |
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 ## Experimental Features Tracking
 
@@ -473,6 +478,7 @@ You can use the following diagnostic IDs to ignore warnings or errors for a part
 | SKEXP0070 | Hugging Face AI connector |
 | | | | | | | |
 | SKEXP0080 | Process Framework |
+| SKEXP0081 | Process Framework - Foundry Process
 | | | | | | | |
 <<<<<<< div
 <<<<<<< div

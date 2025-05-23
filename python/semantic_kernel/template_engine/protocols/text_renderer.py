@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+from abc import abstractmethod
 from typing import TYPE_CHECKING, Optional, Protocol, runtime_checkable
 
 if TYPE_CHECKING:
@@ -11,6 +12,7 @@ if TYPE_CHECKING:
 class TextRenderer(Protocol):
     """Protocol for static (text) blocks that don't need async rendering."""
 
+<<<<<<< HEAD
 <<<<<<< div
 <<<<<<< div
 =======
@@ -80,6 +82,10 @@ class TextRenderer(Protocol):
     def render(
         self, kernel: "Kernel", arguments: Optional["KernelArguments"] = None
     ) -> str:
+=======
+    @abstractmethod
+    def render(self, kernel: "Kernel", arguments: Optional["KernelArguments"] = None) -> str:
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """Render the block using only the given variables.
 <<<<<<< div
 <<<<<<< div

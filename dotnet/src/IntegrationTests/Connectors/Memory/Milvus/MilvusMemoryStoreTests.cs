@@ -1,7 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Connectors.Milvus;
@@ -11,6 +12,7 @@ using Xunit;
 
 namespace SemanticKernel.IntegrationTests.Connectors.Milvus;
 
+[Experimental("SKEXP0020")]
 public class MilvusMemoryStoreTests(MilvusFixture milvusFixture) : IClassFixture<MilvusFixture>, IAsyncLifetime
 {
     private const string CollectionName = "test";

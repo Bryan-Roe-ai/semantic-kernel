@@ -1,8 +1,10 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System.Text.Json;
+using Azure.AI.OpenAI;
 using Azure.Identity;
 using Memory.VectorStoreFixtures;
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
@@ -54,8 +56,11 @@ using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 =======
 >>>>>>> Stashed changes
 >>>>>>> Stashed changes
+=======
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.VectorData;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel.Connectors.Qdrant;
-using Microsoft.SemanticKernel.Embeddings;
 using Qdrant.Client;
 
 namespace Memory;
@@ -78,10 +83,9 @@ public class VectorStore_DataIngestion_Simple(ITestOutputHelper output, VectorSt
     public async Task ExampleAsync()
     {
         // Create an embedding generation service.
-        var textEmbeddingGenerationService = new AzureOpenAITextEmbeddingGenerationService(
-                TestConfiguration.AzureOpenAIEmbeddings.DeploymentName,
-                TestConfiguration.AzureOpenAIEmbeddings.Endpoint,
-                new AzureCliCredential());
+        var embeddingGenerator = new AzureOpenAIClient(new Uri(TestConfiguration.AzureOpenAIEmbeddings.Endpoint), new AzureCliCredential())
+            .GetEmbeddingClient(TestConfiguration.AzureOpenAIEmbeddings.DeploymentName)
+            .AsIEmbeddingGenerator();
 
         // Initiate the docker container and construct the vector store.
         await qdrantFixture.ManualInitializeAsync();
@@ -95,7 +99,7 @@ public class VectorStore_DataIngestion_Simple(ITestOutputHelper output, VectorSt
         var glossaryEntries = CreateGlossaryEntries().ToList();
         var tasks = glossaryEntries.Select(entry => Task.Run(async () =>
         {
-            entry.DefinitionEmbedding = await textEmbeddingGenerationService.GenerateEmbeddingAsync(entry.Definition);
+            entry.DefinitionEmbedding = (await embeddingGenerator.GenerateAsync(entry.Definition)).Vector;
         }));
         await Task.WhenAll(tasks);
 
@@ -157,7 +161,7 @@ public class VectorStore_DataIngestion_Simple(ITestOutputHelper output, VectorSt
         {
             Key = 3,
             Term = "RAG",
-            Definition = "Retrieval Augmented Generation - a term that refers to the process of retrieving additional data to provide as context to an LLM to use when generating a response (completion) to a userâ€™s question (prompt)."
+            Definition = "Retrieval Augmented Generation - a term that refers to the process of retrieving additional data to provide as context to an LLM to use when generating a response (completion) to a user’s question (prompt)."
         };
     }
 }

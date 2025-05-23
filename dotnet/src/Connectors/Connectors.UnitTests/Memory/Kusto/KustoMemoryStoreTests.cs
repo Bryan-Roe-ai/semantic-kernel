@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace SemanticKernel.Connectors.UnitTests.Kusto;
 /// <summary>
 /// Unit tests for <see cref="KustoMemoryStore"/> class.
 /// </summary>
+[Experimental("SKEXP0020")]
 public class KustoMemoryStoreTests
 {
     private const string CollectionName = "fake_collection";

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -248,6 +248,7 @@ public sealed class BingTextSearch : ITextSearch
         }
     }
 
+#pragma warning disable CS0618 // FilterClause is obsolete
     /// <summary>
     /// Build a query string from the <see cref="TextSearchOptions"/>
     /// </summary>
@@ -287,5 +288,7 @@ public sealed class BingTextSearch : ITextSearch
 
         return fullQuery.ToString();
     }
+#pragma warning restore CS0618 // FilterClause is obsolete
+
     #endregion
 }

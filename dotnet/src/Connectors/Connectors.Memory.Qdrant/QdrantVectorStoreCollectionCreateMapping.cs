@@ -1,8 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.VectorData;
+using Microsoft.Extensions.VectorData.ConnectorSupport;
 using Qdrant.Client.Grpc;
 
 namespace Microsoft.SemanticKernel.Connectors.Qdrant;
@@ -40,10 +41,10 @@ internal static class QdrantVectorStoreCollectionCreateMapping
         { typeof(decimal?), PayloadSchemaType.Float },
 
         { typeof(string), PayloadSchemaType.Keyword },
-        { typeof(DateTime), PayloadSchemaType.Datetime },
+        { typeof(DateTimeOffset), PayloadSchemaType.Datetime },
         { typeof(bool), PayloadSchemaType.Bool },
 
-        { typeof(DateTime?), PayloadSchemaType.Datetime },
+        { typeof(DateTimeOffset?), PayloadSchemaType.Datetime },
         { typeof(bool?), PayloadSchemaType.Bool },
     };
 
@@ -53,16 +54,11 @@ internal static class QdrantVectorStoreCollectionCreateMapping
     /// <param name="vectorProperty">The property to map.</param>
     /// <returns>The mapped <see cref="VectorParams"/>.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the property is missing information or has unsupported options specified.</exception>
-    public static VectorParams MapSingleVector(VectorStoreRecordVectorProperty vectorProperty)
+    public static VectorParams MapSingleVector(VectorStoreRecordVectorPropertyModel vectorProperty)
     {
-        if (vectorProperty!.Dimensions is not > 0)
-        {
-            throw new InvalidOperationException($"Property {nameof(vectorProperty.Dimensions)} on {nameof(VectorStoreRecordVectorProperty)} '{vectorProperty.DataModelPropertyName}' must be set to a positive integer to create a collection.");
-        }
-
         if (vectorProperty!.IndexKind is not null && vectorProperty!.IndexKind != IndexKind.Hnsw)
         {
-            throw new InvalidOperationException($"Index kind '{vectorProperty!.IndexKind}' for {nameof(VectorStoreRecordVectorProperty)} '{vectorProperty.DataModelPropertyName}' is not supported by the Qdrant VectorStore.");
+            throw new InvalidOperationException($"Index kind '{vectorProperty!.IndexKind}' for {nameof(VectorStoreRecordVectorProperty)} '{vectorProperty.ModelName}' is not supported by the Qdrant VectorStore.");
         }
 
         return new VectorParams { Size = (ulong)vectorProperty.Dimensions, Distance = QdrantVectorStoreCollectionCreateMapping.GetSDKDistanceAlgorithm(vectorProperty) };
@@ -72,9 +68,9 @@ internal static class QdrantVectorStoreCollectionCreateMapping
     /// Maps a collection of <see cref="VectorStoreRecordVectorProperty"/> to a qdrant <see cref="VectorParamsMap"/>.
     /// </summary>
     /// <param name="vectorProperties">The properties to map.</param>
-    /// <param name="storagePropertyNames">The mapping of property names to storage names.</param>
     /// <returns>THe mapped <see cref="VectorParamsMap"/>.</returns>
     /// <exception cref="InvalidOperationException">Thrown if the property is missing information or has unsupported options specified.</exception>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< div
 =======
@@ -141,17 +137,16 @@ internal static class QdrantVectorStoreCollectionCreateMapping
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+    public static VectorParamsMap MapNamedVectors(IEnumerable<VectorStoreRecordVectorPropertyModel> vectorProperties)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         var vectorParamsMap = new VectorParamsMap();
 
         foreach (var vectorProperty in vectorProperties)
         {
-            var storageName = storagePropertyNames[vectorProperty.DataModelPropertyName];
-
             // Add each vector property to the vectors map.
-            vectorParamsMap.Map.Add(
-                storageName,
-                MapSingleVector(vectorProperty));
+            vectorParamsMap.Map.Add(vectorProperty.StorageName, MapSingleVector(vectorProperty));
         }
 
         return vectorParamsMap;
@@ -164,20 +159,14 @@ internal static class QdrantVectorStoreCollectionCreateMapping
     /// <param name="vectorProperty">The vector property definition.</param>
     /// <returns>The chosen <see cref="Distance"/>.</returns>
     /// <exception cref="InvalidOperationException">Thrown if a distance function is chosen that isn't supported by qdrant.</exception>
-    public static Distance GetSDKDistanceAlgorithm(VectorStoreRecordVectorProperty vectorProperty)
-    {
-        if (vectorProperty.DistanceFunction is null)
+    public static Distance GetSDKDistanceAlgorithm(VectorStoreRecordVectorPropertyModel vectorProperty)
+        => vectorProperty.DistanceFunction switch
         {
-            return Distance.Cosine;
-        }
-
-        return vectorProperty.DistanceFunction switch
-        {
-            DistanceFunction.CosineSimilarity => Distance.Cosine,
+            DistanceFunction.CosineSimilarity or null => Distance.Cosine,
             DistanceFunction.DotProductSimilarity => Distance.Dot,
             DistanceFunction.EuclideanDistance => Distance.Euclid,
             DistanceFunction.ManhattanDistance => Distance.Manhattan,
-            _ => throw new InvalidOperationException($"Distance function '{vectorProperty.DistanceFunction}' for {nameof(VectorStoreRecordVectorProperty)} '{vectorProperty.DataModelPropertyName}' is not supported by the Qdrant VectorStore.")
+
+            _ => throw new InvalidOperationException($"Distance function '{vectorProperty.DistanceFunction}' for {nameof(VectorStoreRecordVectorProperty)} '{vectorProperty.ModelName}' is not supported by the Qdrant VectorStore.")
         };
-    }
 }

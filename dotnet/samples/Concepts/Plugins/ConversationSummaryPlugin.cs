@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using xRetry;
@@ -181,7 +181,6 @@ Jane: Goodbye!
 
 /* Example Output:
 
-======== SamplePlugins - Conversation Summary Plugin - Summarize ========
 Generated Summary:
 
 A possible summary is:
@@ -199,7 +198,6 @@ A possible summary is:
 - They use a Lorem Ipsum generator, but it repeats itself after a while.
 - They sing the national anthems of Canada and the United States, and then talk about their favorite Seattle Kraken hockey players.
 - They finally reach their desired length of text and say goodbye to each other.
-======== SamplePlugins - Conversation Summary Plugin - Action Items ========
 Generated Action Items:
 
 {
@@ -224,7 +222,6 @@ Generated Action Items:
 {
     "action_items": []
 }
-======== SamplePlugins - Conversation Summary Plugin - Topics ========
 Generated Topics:
 
 {

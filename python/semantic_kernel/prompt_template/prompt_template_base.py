@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -60,6 +61,9 @@ from abc import ABC, abstractmethod
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+from collections.abc import Sequence
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from html import escape
 from typing import TYPE_CHECKING
 
@@ -213,7 +217,7 @@ class PromptTemplateBase(KernelBaseModel, ABC):
     allow_dangerously_set_content: bool = False
 
     @abstractmethod
-    async def render(self, kernel: "Kernel", arguments: "KernelArguments") -> str:
+    async def render(self, kernel: "Kernel", arguments: "KernelArguments | None" = None) -> str:
         """Render the prompt template."""
 
     def _get_trusted_arguments(
@@ -256,7 +260,7 @@ class PromptTemplateBase(KernelBaseModel, ABC):
             allow_dangerously_set_content = True
         return allow_dangerously_set_content
 
-    def _should_escape(self, name: str, input_variables: list["InputVariable"]) -> bool:
+    def _should_escape(self, name: str, input_variables: Sequence["InputVariable"]) -> bool:
         """Check if the variable should be escaped.
 
         If the PromptTemplate allows dangerously set content, then the variable will not be escaped,

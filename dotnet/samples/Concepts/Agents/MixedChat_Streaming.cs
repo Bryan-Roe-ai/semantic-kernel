@@ -1,9 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Chat;
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
+using OpenAI.Assistants;
 
 namespace Agents;
 
@@ -11,7 +12,7 @@ namespace Agents;
 /// Demonstrate consuming "streaming" message for <see cref="ChatCompletionAgent"/> and
 /// <see cref="OpenAIAssistantAgent"/> both participating in an <see cref="AgentChat"/>.
 /// </summary>
-public class MixedChat_Streaming(ITestOutputHelper output) : BaseAgentsTest(output)
+public class MixedChat_Streaming(ITestOutputHelper output) : BaseAssistantTest(output)
 {
     private const string ReviewerName = "ArtDirector";
     private const string ReviewerInstructions =
@@ -45,6 +46,7 @@ public class MixedChat_Streaming(ITestOutputHelper output) : BaseAgentsTest(outp
                 Kernel = this.CreateKernelWithChatCompletion(),
             };
 
+<<<<<<< HEAD
         OpenAIAssistantAgent agentWriter =
             await OpenAIAssistantAgent.CreateAsync(
 <<<<<<< HEAD
@@ -181,6 +183,18 @@ public class MixedChat_Streaming(ITestOutputHelper output) : BaseAgentsTest(outp
 =======
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+        // Define the assistant
+        Assistant assistant =
+            await this.AssistantClient.CreateAssistantAsync(
+                this.Model,
+                name: CopyWriterName,
+                instructions: CopyWriterInstructions,
+                metadata: SampleMetadata);
+
+        // Create the agent
+        OpenAIAssistantAgent agentWriter = new(assistant, this.AssistantClient);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Create a chat for agent interaction.
         AgentGroupChat chat =

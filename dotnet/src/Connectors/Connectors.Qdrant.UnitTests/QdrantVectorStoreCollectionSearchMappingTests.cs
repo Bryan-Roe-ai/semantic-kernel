@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -7,18 +7,39 @@ using System.Linq;
 using Microsoft.SemanticKernel.Data;
 =======
 using Microsoft.Extensions.VectorData;
+<<<<<<< HEAD
 >>>>>>> main
 using Moq;
+=======
+using Microsoft.Extensions.VectorData.ConnectorSupport;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Qdrant.Client.Grpc;
 using Xunit;
 
 namespace Microsoft.SemanticKernel.Connectors.Qdrant.UnitTests;
+
+#pragma warning disable CS0618 // VectorSearchFilter is obsolete
 
 /// <summary>
 /// Contains tests for the <see cref="QdrantVectorStoreCollectionSearchMapping"/> class.
 /// </summary>
 public class QdrantVectorStoreCollectionSearchMappingTests
 {
+    private readonly VectorStoreRecordModel _model =
+        new VectorStoreRecordModelBuilder(QdrantVectorStoreRecordFieldMapping.GetModelBuildOptions(hasNamedVectors: false))
+        .Build(
+            typeof(Dictionary<string, object?>),
+            new()
+            {
+                Properties =
+                [
+                    new VectorStoreRecordKeyProperty("Key", typeof(Guid)) { StoragePropertyName = "storage_key" },
+                    new VectorStoreRecordDataProperty("FieldName", typeof(string)) { StoragePropertyName = "storage_FieldName" },
+                    new VectorStoreRecordVectorProperty("Vector", typeof(ReadOnlyMemory<float>), 10) { StoragePropertyName = "storage_vector" },
+                ]
+            },
+            defaultEmbeddingGenerator: null);
+
     [Theory]
     [InlineData("string")]
     [InlineData("int")]
@@ -39,7 +60,7 @@ public class QdrantVectorStoreCollectionSearchMappingTests
         var filter = new VectorSearchFilter().EqualTo("FieldName", expected);
 
         // Act.
-        var actual = QdrantVectorStoreCollectionSearchMapping.BuildFilter(filter, new Dictionary<string, string>() { { "FieldName", "storage_FieldName" } });
+        var actual = QdrantVectorStoreCollectionSearchMapping.BuildFromLegacyFilter(filter, this._model);
 
         // Assert.
         Assert.Single(actual.Must);
@@ -73,7 +94,7 @@ public class QdrantVectorStoreCollectionSearchMappingTests
         var filter = new VectorSearchFilter().AnyTagEqualTo("FieldName", "Value");
 
         // Act.
-        var actual = QdrantVectorStoreCollectionSearchMapping.BuildFilter(filter, new Dictionary<string, string>() { { "FieldName", "storage_FieldName" } });
+        var actual = QdrantVectorStoreCollectionSearchMapping.BuildFromLegacyFilter(filter, this._model);
 
         // Assert.
         Assert.Single(actual.Must);
@@ -85,29 +106,44 @@ public class QdrantVectorStoreCollectionSearchMappingTests
     public void BuildFilterThrowsForUnknownFieldName()
     {
         // Arrange.
-        var filter = new VectorSearchFilter().EqualTo("FieldName", "Value");
+        var filter = new VectorSearchFilter().EqualTo("UnknownFieldName", "Value");
 
         // Act and Assert.
-        Assert.Throws<InvalidOperationException>(() => QdrantVectorStoreCollectionSearchMapping.BuildFilter(filter, new Dictionary<string, string>()));
+        Assert.Throws<InvalidOperationException>(() => QdrantVectorStoreCollectionSearchMapping.BuildFromLegacyFilter(filter, this._model));
     }
 
     [Fact]
     public void MapScoredPointToVectorSearchResultMapsResults()
     {
+        var responseVector = VectorOutput.Parser.ParseJson("{ \"data\": [1, 2, 3] }");
+
         // Arrange.
         var scoredPoint = new ScoredPoint
         {
             Id = 1,
             Payload = { ["storage_DataField"] = "data 1" },
-            Vectors = new float[] { 1, 2, 3 },
+            Vectors = new VectorsOutput() { Vector = responseVector },
             Score = 0.5f
         };
 
-        var mapperMock = new Mock<IVectorStoreRecordMapper<DataModel, PointStruct>>(MockBehavior.Strict);
-        mapperMock.Setup(x => x.MapFromStorageToDataModel(It.IsAny<PointStruct>(), It.IsAny<StorageToDataModelMapperOptions>())).Returns(new DataModel { Id = 1, DataField = "data 1", Embedding = new float[] { 1, 2, 3 } });
+        var model = new VectorStoreRecordModelBuilder(QdrantVectorStoreRecordFieldMapping.GetModelBuildOptions(hasNamedVectors: false))
+            .Build(
+                typeof(DataModel),
+                new()
+                {
+                    Properties =
+                    [
+                        new VectorStoreRecordKeyProperty("Id", typeof(ulong)),
+                        new VectorStoreRecordDataProperty("DataField", typeof(string)) { StoragePropertyName = "storage_DataField" },
+                        new VectorStoreRecordVectorProperty("Embedding", typeof(ReadOnlyMemory<float>), 10),
+                    ]
+                },
+                defaultEmbeddingGenerator: null);
+
+        var mapper = new QdrantVectorStoreRecordMapper<DataModel>(model, hasNamedVectors: false);
 
         // Act.
-        var actual = QdrantVectorStoreCollectionSearchMapping.MapScoredPointToVectorSearchResult<DataModel>(scoredPoint, mapperMock.Object, true, "Qdrant", "mycollection", "query");
+        var actual = QdrantVectorStoreCollectionSearchMapping.MapScoredPointToVectorSearchResult<DataModel>(scoredPoint, mapper, true, "Qdrant", "myvectorstore", "mycollection", "query");
 
         // Assert.
         Assert.Equal(1ul, actual.Record.Id);

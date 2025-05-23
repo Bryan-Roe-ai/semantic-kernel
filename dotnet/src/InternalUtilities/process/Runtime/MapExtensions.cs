@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿// Copyright (c) Microsoft. All rights reserved.
 <<<<<<< HEAD
 
@@ -9,8 +10,12 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel.Process.Internal;
 =======
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
@@ -35,6 +40,14 @@ internal static class MapExtensions
         else
         {
             startEventId = ProcessConstants.MapEventId;
+            foreach (var kvp in message.Values)
+            {
+                if (kvp.Value is KernelProcessEventData eventData)
+                {
+                    message.Values[kvp.Key] = eventData.RepackAsKernelProcessEventDataList().ToArray();
+                }
+            }
+
             string? parameterName = message.Values.SingleOrDefault(kvp => IsEqual(inputValues, kvp.Value)).Key;
             string proxyId = Guid.NewGuid().ToString("N");
             mapOperation =
@@ -45,6 +58,38 @@ internal static class MapExtensions
         }
 
         return (inputValues, mapOperation, startEventId);
+    }
+
+    public static IEnumerable<KernelProcessEventData> RepackAsKernelProcessEventDataList(this KernelProcessEventData eventData)
+    {
+        var valueData = eventData.ToObject();
+        var valueType = valueData!.GetType();
+
+        if (typeof(IEnumerable).IsAssignableFrom(valueType))
+        {
+            var elementType = valueType.IsArray ? valueType.GetElementType() : valueType.GetGenericArguments().FirstOrDefault();
+            if (elementType != null)
+            {
+                var kernelProcessEventDataList = new List<KernelProcessEventData>();
+                foreach (var item in (IEnumerable)valueData)
+                {
+                    var kernelProcessEventData = KernelProcessEventData.FromObject(item);
+                    if (kernelProcessEventData != null)
+                    {
+                        kernelProcessEventDataList.Add(kernelProcessEventData);
+                    }
+                    else
+                    {
+                        throw new KernelException($"Internal Map Error: Collection contains an element that cannot be serialized - {eventData.ObjectType}/{item.GetType().FullName}.");
+                    }
+                }
+                return kernelProcessEventDataList;
+            }
+
+            throw new KernelException($"Internal Map Error: Input parameter is not a collection of serializable elements - {eventData.ObjectType}.");
+        }
+
+        throw new KernelException($"Internal Map Error: Input parameter is not enumerable - {eventData.ObjectType}.");
     }
 
     private static IEnumerable GetMapInput(this ProcessMessage message, ILogger? logger)
@@ -163,9 +208,23 @@ internal static class MapExtensions
         }
 
         Type valueType = message.TargetEventData.GetType();
+        object? valueData = message.TargetEventData;
+        // Unpacking object to be an array compatible with map step initialization
+        if (message.TargetEventData is KernelProcessEventData eventData)
+        {
+            valueData = eventData.ToObject();
+            valueType = valueData!.GetType();
+
+            if (typeof(IEnumerable).IsAssignableFrom(valueType) && valueType.HasElementType)
+            {
+                var repackedList = eventData.RepackAsKernelProcessEventDataList();
+                valueData = repackedList.ToArray();
+                valueType = valueData!.GetType();
+            }
+        }
 
         return typeof(IEnumerable).IsAssignableFrom(valueType) && valueType.HasElementType ?
-            (IEnumerable)message.TargetEventData :
+            (IEnumerable)valueData! :
             throw new KernelException($"Internal Map Error: Input parameter is not enumerable - {message.SourceId}/{message.DestinationId} [{valueType.FullName}].").Log(logger);
     }
 
@@ -173,7 +232,7 @@ internal static class MapExtensions
     {
         // Fails when zero or multiple candidate edges exist.  No reason a map-operation should be irrational.
         return
-            mapOperation.Edges.SingleOrDefault(kvp => kvp.Value.Any(e => e.OutputTarget.FunctionName == message.FunctionName)).Key ??
+            mapOperation.Edges.SingleOrDefault(kvp => kvp.Value.Any(e => (e.OutputTarget as KernelProcessFunctionTarget)!.FunctionName == message.FunctionName)).Key ??
             throw new InvalidOperationException($"The map operation does not have an input edge that matches the message destination: {mapOperation.State.Name}/{mapOperation.State.Id}.");
     }
 

@@ -1,8 +1,7 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -97,6 +96,8 @@ using Microsoft.SemanticKernel.Memory;
 
 namespace Microsoft.SemanticKernel.Connectors.Pinecone;
 
+#pragma warning disable SKEXP0001 // IMemoryStore is experimental (but we're obsoleting)
+
 /// <summary>
 /// An implementation of <see cref="IMemoryStore"/> for Pinecone Vector database.
 /// </summary>
@@ -107,7 +108,7 @@ namespace Microsoft.SemanticKernel.Connectors.Pinecone;
 /// For that reason, we use the term "Index" in Pinecone to refer to what is a "Collection" in IMemoryStore. So, in the case of Pinecone,
 ///  "Collection" is synonymous with "Index" when referring to IMemoryStore.
 /// </remarks>
-[Experimental("SKEXP0020")]
+[Obsolete("The IMemoryStore abstraction is being obsoleted, use Microsoft.Extensions.VectorData and PineconeVectorStore")]
 public class PineconeMemoryStore : IPineconeMemoryStore
 {
     /// <summary>

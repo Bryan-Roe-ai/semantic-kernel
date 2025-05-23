@@ -184,6 +184,7 @@ class FunctionResult(KernelBaseModel):
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
     Args:
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Stashed changes
@@ -253,6 +254,12 @@ class FunctionResult(KernelBaseModel):
         function (KernelFunctionMetadata): The metadata of the function that was invoked.
         value (Any): The value of the result.
         metadata (Mapping[str, Any]): The metadata of the result.
+=======
+        function: The metadata of the function that was invoked.
+        value: The value of the result.
+        rendered_prompt: The rendered prompt of the result.
+        metadata: The metadata of the result.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     Methods:
         __str__: Get the string representation of the result, will call str() on the value,
@@ -265,6 +272,7 @@ class FunctionResult(KernelBaseModel):
     function: KernelFunctionMetadata
     value: Any
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -276,6 +284,9 @@ class FunctionResult(KernelBaseModel):
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+=======
+    rendered_prompt: str | None = None
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     metadata: dict[str, Any] = Field(default_factory=dict)
 =======
 =======

@@ -17,6 +17,7 @@ from semantic_kernel.contents.image_content import ImageContent
 from semantic_kernel.contents.kernel_content import KernelContent
 from semantic_kernel.contents.text_content import TextContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
+from semantic_kernel.contents.utils.hashing import make_hashable
 from semantic_kernel.exceptions.content_exceptions import ContentInitializationError
 
 if TYPE_CHECKING:
@@ -47,6 +48,7 @@ def set_content_type(cls, v):
 content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
     tag: ClassVar[str] = FUNCTION_RESULT_CONTENT_TAG
     id: str
+    call_id: str | None = None
     result: Any
     name: str | None = None
     function_name: str
@@ -56,10 +58,10 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
 
     def __init__(
         self,
-        content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = FUNCTION_RESULT_CONTENT_TAG,  # type: ignore
         inner_content: Any | None = None,
         ai_model_id: str | None = None,
         id: str | None = None,
+        call_id: str | None = None,
         name: str | None = None,
         function_name: str | None = None,
         plugin_name: str | None = None,
@@ -71,10 +73,10 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
         """Create function result content.
 
         Args:
-            content_type: The content type.
             inner_content (Any | None): The inner content.
             ai_model_id (str | None): The id of the AI model.
             id (str | None): The id of the function call that the result relates to.
+            call_id (str | None): The call id of the function call from the Responses API.
             name (str | None): The name of the function.
                 When not supplied function_name and plugin_name should be supplied.
             function_name (str | None): The function name.
@@ -94,7 +96,6 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
             else:
                 function_name = name
         args = {
-            "content_type": content_type,
             "inner_content": inner_content,
             "ai_model_id": ai_model_id,
             "id": id,
@@ -104,6 +105,8 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
             "result": result,
             "encoding": encoding,
         }
+        if call_id:
+            args["call_id"] = call_id
         if metadata:
             args["metadata"] = metadata
 
@@ -135,16 +138,22 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
         cls: type[_T],
         function_call_content: "FunctionCallContent",
         result: "FunctionResult | TextContent | ChatMessageContent | Any",
-        metadata: dict[str, Any] = {},
+        metadata: dict[str, Any] | None = None,
     ) -> _T:
         """Create an instance from a FunctionCallContent and a result."""
         from semantic_kernel.contents.chat_message_content import ChatMessageContent
         from semantic_kernel.functions.function_result import FunctionResult
 
+<<<<<<< HEAD
         metadata.update(function_call_content.metadata or {})
         metadata.update(getattr(result, "metadata", {}))
         if function_call_content.metadata:
             metadata.update(function_call_content.metadata)
+=======
+        metadata = metadata or {}
+        metadata = metadata | (function_call_content.metadata or {})
+        metadata = metadata | getattr(result, "metadata", {})
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         inner_content = result
         if isinstance(result, FunctionResult):
             result = result.value
@@ -162,6 +171,7 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
             res = result
         return cls(
             id=function_call_content.id or "unknown",
+            call_id=function_call_content.call_id if hasattr(function_call_content, "call_id") else None,
             inner_content=inner_content,
             result=res,
             function_name=function_call_content.function_name,
@@ -213,10 +223,11 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
 
     def __hash__(self) -> int:
         """Return the hash of the function result content."""
+        hashable_result = make_hashable(self.result)
         return hash((
             self.tag,
             self.id,
-            tuple(self.result) if isinstance(self.result, list) else self.result,
+            hashable_result,
             self.name,
             self.function_name,
             self.plugin_name,

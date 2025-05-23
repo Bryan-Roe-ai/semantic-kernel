@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.VectorData;
@@ -196,20 +196,20 @@ public class RedisKernelBuilderExtensionsTests
 >>>>>>> head
 >>>>>>> div
 
-    private void AssertHashSetVectorStoreRecordCollectionCreated<TRecord>()
+    private void AssertHashSetVectorStoreRecordCollectionCreated<TRecord>() where TRecord : notnull
     {
         var kernel = this._kernelBuilder.Build();
         var collection = kernel.Services.GetRequiredService<IVectorStoreRecordCollection<string, TRecord>>();
         Assert.NotNull(collection);
-        Assert.IsType<RedisHashSetVectorStoreRecordCollection<TRecord>>(collection);
+        Assert.IsType<RedisHashSetVectorStoreRecordCollection<string, TRecord>>(collection);
     }
 
-    private void AssertJsonVectorStoreRecordCollectionCreated<TRecord>()
+    private void AssertJsonVectorStoreRecordCollectionCreated<TRecord>() where TRecord : notnull
     {
         var kernel = this._kernelBuilder.Build();
         var collection = kernel.Services.GetRequiredService<IVectorStoreRecordCollection<string, TRecord>>();
         Assert.NotNull(collection);
-        Assert.IsType<RedisJsonVectorStoreRecordCollection<TRecord>>(collection);
+        Assert.IsType<RedisJsonVectorStoreRecordCollection<string, TRecord>>(collection);
     }
 
 #pragma warning disable CA1812 // Avoid uninstantiated internal classes

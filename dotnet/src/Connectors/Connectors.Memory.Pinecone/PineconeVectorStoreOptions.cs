@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 <<<<<<< div
 =======
 <<<<<<< Updated upstream
@@ -62,6 +63,12 @@
 >>>>>>> eab985c52d058dc92abc75034bc790079131ce75
 =======
 >>>>>>> head
+=======
+// Copyright (c) Microsoft. All rights reserved.
+
+using System;
+using Microsoft.Extensions.AI;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 namespace Microsoft.SemanticKernel.Connectors.Pinecone;
 
@@ -71,6 +78,7 @@ namespace Microsoft.SemanticKernel.Connectors.Pinecone;
 public sealed class PineconeVectorStoreOptions
 {
     /// <summary>
+<<<<<<< HEAD
     /// An optional factory to use for constructing <see cref="PineconeVectorStoreRecordCollection{TRecord}"/> instances, if a custom record collection is required.
 <<<<<<< HEAD
 <<<<<<< div
@@ -146,6 +154,15 @@ public sealed class PineconeVectorStoreOptions
 >>>>>>> main
 >>>>>>> Stashed changes
 >>>>>>> head
+=======
+    /// Gets or sets the default embedding generator for vector properties in this collection.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// </summary>
+    public IEmbeddingGenerator? EmbeddingGenerator { get; init; }
+
+    /// <summary>
+    /// An optional factory to use for constructing <see cref="PineconeVectorStoreRecordCollection{TKey, TRecord}"/> instances, if a custom record collection is required.
+    /// </summary>
+    [Obsolete("To control how collections are instantiated, extend your provider's IVectorStore implementation and override GetCollection()")]
     public IPineconeVectorStoreRecordCollectionFactory? VectorStoreCollectionFactory { get; init; }
 }

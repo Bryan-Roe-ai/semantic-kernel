@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 <<<<<<< div
 <<<<<<< div
@@ -178,7 +178,7 @@ public interface ITextToImageService : IAIService
 >>>>>>> head
     /// <returns>Generated image contents</returns>
     [Experimental("SKEXP0001")]
-    public Task<IReadOnlyList<ImageContent>> GetImageContentsAsync(
+    Task<IReadOnlyList<ImageContent>> GetImageContentsAsync(
         TextContent input,
         PromptExecutionSettings? executionSettings = null,
 <<<<<<< div

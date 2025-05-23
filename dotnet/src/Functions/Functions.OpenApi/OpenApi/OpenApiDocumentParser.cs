@@ -25,7 +25,6 @@ namespace Microsoft.SemanticKernel.Plugins.OpenApi;
 /// <summary>
 /// Parser for OpenAPI documents.
 /// </summary>
-[Experimental("SKEXP0040")]
 public sealed class OpenApiDocumentParser(ILoggerFactory? loggerFactory = null)
 {
     /// <summary>
@@ -185,13 +184,14 @@ public sealed class OpenApiDocumentParser(ILoggerFactory? loggerFactory = null)
         try
         {
             var operations = new List<RestApiOperation>();
-            var operationServers = CreateRestApiOperationServers(document.Servers);
+            var globalServers = CreateRestApiOperationServers(document.Servers);
+            var pathServers = CreateRestApiOperationServers(pathItem.Servers);
 
             foreach (var operationPair in pathItem.Operations)
             {
                 var method = operationPair.Key.ToString();
-
                 var operationItem = operationPair.Value;
+                var operationServers = CreateRestApiOperationServers(operationItem.Servers);
 
                 // Skip the operation parsing and don't add it to the result operations list if it's explicitly excluded by the predicate.
                 if (!options?.OperationSelectionPredicate?.Invoke(new OperationSelectionPredicateContext(operationItem.OperationId, path, method, operationItem.Description)) ?? false)
@@ -204,6 +204,7 @@ public sealed class OpenApiDocumentParser(ILoggerFactory? loggerFactory = null)
                 try
                 {
                     var operation = new RestApiOperation(
+<<<<<<< HEAD
                     id: operationItem.OperationId,
                     servers: operationServers,
                     path: path,
@@ -216,6 +217,20 @@ public sealed class OpenApiDocumentParser(ILoggerFactory? loggerFactory = null)
                     responses: CreateRestApiOperationExpectedResponses(operationItem.Responses).ToDictionary(static item => item.Item1, static item => item.Item2),
                     securityRequirements: CreateRestApiOperationSecurityRequirements(operationItem.Security)
                 )
+=======
+                        id: operationItem.OperationId,
+                        servers: globalServers,
+                        pathServers: pathServers,
+                        operationServers: operationServers,
+                        path: path,
+                        method: new HttpMethod(method),
+                        description: string.IsNullOrEmpty(operationItem.Description) ? operationItem.Summary : operationItem.Description,
+                        parameters: CreateRestApiOperationParameters(operationItem.OperationId, operationItem.Parameters.Union(pathItem.Parameters, s_parameterNameAndLocationComparer)),
+                        payload: CreateRestApiOperationPayload(operationItem.OperationId, operationItem.RequestBody),
+                        responses: CreateRestApiOperationExpectedResponses(operationItem.Responses).ToDictionary(static item => item.Item1, static item => item.Item2),
+                        securityRequirements: CreateRestApiOperationSecurityRequirements(operationItem.Security)
+                    )
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     {
                         Extensions = CreateRestApiOperationExtensions(operationItem.Extensions, logger)
                     };
@@ -264,17 +279,24 @@ public sealed class OpenApiDocumentParser(ILoggerFactory? loggerFactory = null)
     /// <param name="servers">Represents servers which hosts the REST API.</param>
     private static List<RestApiServer> CreateRestApiOperationServers(IList<OpenApiServer>? servers)
     {
+<<<<<<< HEAD
         var result = new List<RestApiServer>(servers?.Count ?? 0);
 
         if (servers is null)
         {
             return result;
+=======
+        if (servers == null || servers.Count == 0)
+        {
+            return new List<RestApiServer>();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         }
 
+        var result = new List<RestApiServer>(servers.Count);
         foreach (var server in servers)
         {
             var variables = server.Variables.ToDictionary(item => item.Key, item => new RestApiServerVariable(item.Value.Default, item.Value.Description, item.Value.Enum));
-            result.Add(new(server?.Url, variables));
+            result.Add(new RestApiServer(server.Url, variables, server.Description));
         }
 
         return result;

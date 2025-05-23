@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,7 @@ namespace SemanticKernel.Connectors.Sqlite.UnitTests;
 /// Unit tests of <see cref="SqliteMemoryStore"/>.
 /// </summary>
 [Collection("Sequential")]
+[Obsolete("The IMemoryStore abstraction is being obsoleted")]
 public sealed class SqliteMemoryStoreTests : IDisposable
 {
     private const string DatabaseFile = "SqliteMemoryStoreTests.db";

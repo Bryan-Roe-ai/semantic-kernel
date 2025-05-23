@@ -3,6 +3,7 @@
   "tasks": [
     {
       "label": "clean (functions)",
+<<<<<<< HEAD
       "command": "dotnet",
       "args": [
         "clean",
@@ -36,6 +37,18 @@
       "problemMatcher": "$msCompile",
       "options": {
         "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+=======
+      "command": "dotnet",
+      "args": [
+        "clean",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "type": "process",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       }
     },
     {
@@ -47,6 +60,7 @@
         "/consoleloggerparameters:NoSummary"
       ],
       "type": "process",
+<<<<<<< HEAD
       "group": "build",
       "dependsOn": "clean (functions)",
       "problemMatcher": "$msCompile",
@@ -120,6 +134,16 @@
       "problemMatcher": "$msCompile",
       "options": {
         "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+=======
+      "dependsOn": "clean (functions)",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       }
     },
     {
@@ -129,6 +153,7 @@
         "clean",
         "--configuration",
         "Release",
+<<<<<<< HEAD
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -246,35 +271,19 @@
     {
       "label": "watch (Concepts)",
       "command": "dotnet",
-      "type": "process",
-      "args": [
-        "watch",
-        "run",
-        "--project",
-        "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj"
+=======
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
       ],
-      "problemMatcher": "$msCompile",
-      "group": "build"
-    },
-    {
-      "label": "run (Concepts)",
-      "command": "dotnet",
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       "type": "process",
-      "args": [
-        "run",
-        "--project",
-        "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj",
-        "${input:filter}"
-      ],
       "problemMatcher": "$msCompile",
-      "group": "test",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared",
-        "group": "PR-Validate"
+      "options": {
+        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
       }
     },
     {
+<<<<<<< HEAD
       "label": "daprd-debug",
       "type": "daprd",
       "appId": "processwithdapr",
@@ -324,11 +333,33 @@
     }
   ],
   "inputs": [
+=======
+      "label": "publish (functions)",
+      "command": "dotnet",
+      "args": [
+        "publish",
+        "--configuration",
+        "Release",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "type": "process",
+      "dependsOn": "clean release (functions)",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+      }
+    },
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
-      "id": "filter",
-      "type": "promptString",
-      "default": "",
-      "description": "Enter a filter to pass as argument or filter"
+      "type": "func",
+      "dependsOn": "build (functions)",
+      "options": {
+        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Debug/net6.0"
+      },
+      "command": "host start",
+      "isBackground": true,
+      "problemMatcher": "$func-dotnet-watch"
     }
   ]
 }

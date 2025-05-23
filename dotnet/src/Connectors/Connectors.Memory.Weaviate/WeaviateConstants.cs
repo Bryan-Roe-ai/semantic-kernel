@@ -1,9 +1,12 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 namespace Microsoft.SemanticKernel.Connectors.Weaviate;
 
 internal sealed class WeaviateConstants
 {
+    /// <summary>The name of this vector store for telemetry purposes.</summary>
+    public const string VectorStoreSystemName = "weaviate";
+
     /// <summary>Reserved key property name in Weaviate.</summary>
     internal const string ReservedKeyPropertyName = "id";
 
@@ -13,6 +16,7 @@ internal sealed class WeaviateConstants
     /// <summary>Reserved vector property name in Weaviate.</summary>
     internal const string ReservedVectorPropertyName = "vectors";
 
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< HEAD
 <<<<<<< div
@@ -63,14 +67,23 @@ internal sealed class WeaviateConstants
 =======
 >>>>>>> head
 >>>>>>> div
+=======
+    /// <summary>Reserved single vector property name in Weaviate.</summary>
+    internal const string ReservedSingleVectorPropertyName = "vector";
+
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <summary>Collection property name in Weaviate.</summary>
     internal const string CollectionPropertyName = "class";
 
     /// <summary>Score property name in Weaviate.</summary>
     internal const string ScorePropertyName = "distance";
 
+    /// <summary>Score property name for hybrid search in Weaviate.</summary>
+    internal const string HybridScorePropertyName = "score";
+
     /// <summary>Additional properties property name in Weaviate.</summary>
     internal const string AdditionalPropertiesPropertyName = "_additional";
+<<<<<<< HEAD
 <<<<<<< main
 <<<<<<< main
 =======
@@ -114,4 +127,9 @@ internal sealed class WeaviateConstants
 =======
 >>>>>>> head
 >>>>>>> div
+=======
+
+    /// <summary>Default vectorizer for vector properties in Weaviate.</summary>
+    internal const string DefaultVectorizer = "none";
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 }
