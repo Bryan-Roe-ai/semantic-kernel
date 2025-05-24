@@ -51,7 +51,6 @@ internal sealed class OpenAIAssistantChannel(AssistantClient client, string thre
         OpenAIAssistantAgent agent,
         CancellationToken cancellationToken)
     {
-        // Use activity tracing for diagnostics
         return ActivityExtensions.RunWithActivityAsync(
             () => ModelDiagnostics.StartAgentInvocationActivity(agent.Id, agent.GetDisplayName(), agent.Description),
             () => AssistantThreadActions.InvokeAsync(agent, this._client, this._threadId, invocationOptions: null, providersAdditionalInstructions: null, this.Logger, agent.Kernel, agent.Arguments, cancellationToken),
@@ -486,78 +485,6 @@ internal sealed class OpenAIAssistantChannel(AssistantClient client, string thre
 
             object resultValue = functionResult.Result ?? string.Empty;
 
-    private static ChatMessageContent GenerateFunctionCallContent(string agentName, FunctionCallContent[] functionSteps)
-    {
-        ChatMessageContent functionCallContent = new(AuthorRole.Tool, content: null)
-        {
-            AuthorName = agentName
-        };
-
-        functionCallContent.Items.AddRange(functionSteps);
-
-        return functionCallContent;
-    }
-
-    private static ChatMessageContent GenerateFunctionResultContent(string agentName, FunctionCallContent functionStep, string result)
-    {
-        ChatMessageContent functionCallContent = new(AuthorRole.Tool, content: null)
-        {
-            AuthorName = agentName
-        };
-
-        functionCallContent.Items.Add(
-            new FunctionResultContent(
-                functionStep.FunctionName,
-                functionStep.PluginName,
-                functionStep.Id,
-                result));
-
-        return functionCallContent;
-    }
-
-    private static Task<FunctionResultContent>[] ExecuteFunctionSteps(OpenAIAssistantAgent agent, FunctionCallContent[] functionSteps, CancellationToken cancellationToken)
-    {
-        Task<FunctionResultContent>[] functionTasks = new Task<FunctionResultContent>[functionSteps.Length];
-
-        for (int index = 0; index < functionSteps.Length; ++index)
-        {
-            functionTasks[index] = functionSteps[index].InvokeAsync(agent.Kernel, cancellationToken);
-        }
-
-        return functionTasks;
-    }
-
-    private static ToolOutput[] GenerateToolOutputs(FunctionResultContent[] functionResults)
-    {
-        ToolOutput[] toolOutputs = new ToolOutput[functionResults.Length];
-
-        for (int index = 0; index < functionResults.Length; ++index)
-        {
-            FunctionResultContent functionResult = functionResults[index];
-
-            object resultValue = functionResult.Result ?? string.Empty;
-
-            if (resultValue is not string textResult)
-            {
-                textResult = JsonSerializer.Serialize(resultValue);
-            }
-
-            toolOutputs[index] = new ToolOutput(functionResult.CallId, textResult!);
-        }
-
-        return toolOutputs;
-    }
-
-    private static ToolOutput[] GenerateToolOutputs(FunctionResultContent[] functionResults)
-    {
-        ToolOutput[] toolOutputs = new ToolOutput[functionResults.Length];
-
-        for (int index = 0; index < functionResults.Length; ++index)
-        {
-            FunctionResultContent functionResult = functionResults[index];
-
-            object resultValue = functionResult.Result ?? string.Empty;
-
             if (resultValue is not string textResult)
             {
                 textResult = JsonSerializer.Serialize(resultValue);
@@ -599,6 +526,9 @@ internal sealed class OpenAIAssistantChannel(AssistantClient client, string thre
     protected override Task ResetAsync(CancellationToken cancellationToken = default) =>
         this._client.DeleteThreadAsync(this._threadId, cancellationToken);
 
+<<<<<<< HEAD
+=======
     /// <inheritdoc/>
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     protected override string Serialize() => this._threadId;
 }
