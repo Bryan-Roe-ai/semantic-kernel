@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>SemanticKernel.Functions.Prompty.UnitTests</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
@@ -8,7 +8,6 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <NoWarn>$(NoWarn);CS1591;CA2007,CA1861,CA1869,VSTHRD111,SKEXP0040,SKEXP0010,SKEXP0001</NoWarn>
-    <GenerateEmbeddedFilesManifest>true</GenerateEmbeddedFilesManifest>
   </PropertyGroup>
   <Import Project="$(RepoRoot)/dotnet/src/InternalUtilities/test/TestInternalUtilities.props" />
   
@@ -25,7 +24,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
-    <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" />
   </ItemGroup>
   
   <ItemGroup>
@@ -37,7 +35,6 @@
     <None Update="TestData\**\*.prompty">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <EmbeddedResource Include="TestData\**\*.prompty" />
   </ItemGroup>
   <ItemGroup>
     <None Update="TestData\**\*.json">

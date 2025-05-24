@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -41,9 +41,9 @@ public class BertOnnxTextEmbeddingGenerationServiceTests
                 "A",
                 "Hi",
                 "This is a test. This is only a test.",
-                "Toto, I’ve got a feeling we’re not in Kansas anymore.",
+                "Toto, I�ve got a feeling we�re not in Kansas anymore.",
                 string.Concat(Enumerable.Repeat("abcdefghijklmnopqrstuvwxyz ", 30)),
-                "🙏➡️👤 for your ⏰",
+                "?????? for your ?",
             ];
 
             foreach (string input in inputs)
@@ -160,7 +160,7 @@ public class BertOnnxTextEmbeddingGenerationServiceTests
             "Rachel, Monica, Phoebe, Joey, Chandler, Ross",
             "What is an amphibian?",
             "Frogs, toads, and salamanders are all examples.",
-            "Cos'è un anfibio?",
+            "Cos'� un anfibio?",
             "You ain't never had a friend like me.",
             "Amphibians are four-limbed and ectothermic vertebrates of the class Amphibia.",
             "A frog is green.",
@@ -190,7 +190,7 @@ public class BertOnnxTextEmbeddingGenerationServiceTests
                         "Amphibians are four-limbed and ectothermic vertebrates of the class Amphibia.",
                         "Frogs, toads, and salamanders are all examples.",
                         "A frog is green.",
-                        "Cos'è un anfibio?",
+                        "Cos'� un anfibio?",
                         "They are four-limbed and ectothermic vertebrates.",
                         "A dog is a mammal.",
                         "A tree is green.",
@@ -222,7 +222,7 @@ public class BertOnnxTextEmbeddingGenerationServiceTests
             "Rachel, Monica, Phoebe, Joey, Chandler, Ross",
             "What is an amphibian?",
             "Frogs, toads, and salamanders are all examples.",
-            "Cos'è un anfibio?",
+            "Cos'� un anfibio?",
             "You ain't never had a friend like me.",
             "Amphibians are four-limbed and ectothermic vertebrates of the class Amphibia.",
             "A frog is green.",
@@ -248,7 +248,7 @@ public class BertOnnxTextEmbeddingGenerationServiceTests
                     "Amphibians are four-limbed and ectothermic vertebrates of the class Amphibia.",
                     "Frogs, toads, and salamanders are all examples.",
                     "A frog is green.",
-                    "Cos'è un anfibio?",
+                    "Cos'� un anfibio?",
                     "They are four-limbed and ectothermic vertebrates.",
                     "A dog is a mammal.",
                     "A tree is green.",

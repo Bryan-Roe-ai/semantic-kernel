@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 #if !NET7_0_OR_GREATER
 namespace System.Diagnostics.CodeAnalysis;

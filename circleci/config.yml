@@ -1,0 +1,85 @@
+# https://circleci.com/docs/2.0/config-intro/
+
+version: 2.1
+
+jobs:
+  test:
+    docker:
+      - image: cimg/node:16.8.0-browsers
+    steps:
+      - checkout
+      - run: echo "Running tests using Node.js and browsers"
+      - run: npm install
+      - run: npm test
+      - run: echo "Running tests for .NET project"
+      - run: dotnet restore
+      - run: dotnet build
+      - run: dotnet build
+      - run: ./fix-errors.sh
+      - run: dotnet test --no-build --verbosity normal
+      - run: echo "Verifying installations of dependencies..."
+      - run: npm list
+      - run: pip list
+      - run: dotnet --list-sdks
+
+  build:
+    docker:
+      - image: cimg/node:16.8.0
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run build
+      - run: echo "Building .NET project"
+      - run: dotnet build --no-restore
+      - run: dotnet build
+      - run: dotnet build
+      - run: ./fix-errors.sh
+      - run: echo "Verifying installations of dependencies..."
+      - run: npm list
+      - run: pip list
+      - run: dotnet --list-sdks
+
+  deploy:
+    docker:
+      - image: cimg/node:16.8.0
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run deploy
+      - run: echo "Deploying .NET project"
+      - run: dotnet publish --no-restore
+      - run: dotnet build
+      - run: dotnet build
+      - run: ./fix-errors.sh
+      - run: echo "Verifying installations of dependencies..."
+      - run: npm list
+      - run: pip list
+      - run: dotnet --list-sdks
+
+  verify-codespace-startup:
+    docker:
+      - image: cimg/node:16.8.0
+    steps:
+      - checkout
+      - run: ./fix-codespace-startup.sh
+      - run: echo "Verifying installations of dependencies..."
+      - run: npm list
+      - run: pip list
+      - run: dotnet --list-sdks
+
+  run-api-server:
+    docker:
+      - image: cimg/node:16.8.0
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm start
+
+workflows:
+  test-flow:
+    jobs:
+      - test
+      - build
+      - deploy
+      - verify-codespace-startup
+      - run-api-server

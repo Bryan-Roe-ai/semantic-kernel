@@ -11,7 +11,9 @@ else:
 from pydantic import Field
 from vertexai.generative_models import Tool, ToolConfig
 
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.connectors.ai.prompt_execution_settings import (
+    PromptExecutionSettings,
+)
 
 
 class VertexAIPromptExecutionSettings(PromptExecutionSettings):
@@ -29,8 +31,6 @@ class VertexAIPromptExecutionSettings(PromptExecutionSettings):
 
 class VertexAITextPromptExecutionSettings(VertexAIPromptExecutionSettings):
     """Vertex AI Text Prompt Execution Settings."""
-
-    pass
 
 
 class VertexAIChatPromptExecutionSettings(VertexAIPromptExecutionSettings):

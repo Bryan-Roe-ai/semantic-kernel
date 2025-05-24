@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "type": "completion",
+  "description": "Analyze sentiment of text",
+  "execution_settings": {
+    "default": {
+      "max_tokens": 100,
+      "temperature": 0.0
+    }
+  },
+  "input_variables": [
+    {
+      "name": "input",
+      "description": "The text to analyze for sentiment",
+      "required": true
+    }
+  ]
+}

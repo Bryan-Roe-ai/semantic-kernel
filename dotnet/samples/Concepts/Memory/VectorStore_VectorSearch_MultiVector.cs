@@ -1,10 +1,22 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Azure.AI.OpenAI;
 using Azure.Identity;
+<<<<<<< HEAD
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+using Microsoft.SemanticKernel.Data;
+=======
+=======
 using Microsoft.Extensions.AI;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.InMemory;
+<<<<<<< HEAD
+>>>>>>> main
+using Microsoft.SemanticKernel.Embeddings;
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 namespace Memory;
 
@@ -13,7 +25,11 @@ namespace Memory;
 /// stored in each record and you want to specify which vector to search on.
 ///
 /// The example shows the following steps:
+<<<<<<< HEAD
+/// 1. Create a Volatile Vector Store.
+=======
 /// 1. Create an InMemory Vector Store.
+>>>>>>> main
 /// 2. Generate and add some test data entries.
 /// 3. Search for records based on a specified vector.
 /// </summary>
@@ -27,8 +43,13 @@ public class VectorStore_VectorSearch_MultiVector(ITestOutputHelper output) : Ba
             .GetEmbeddingClient(TestConfiguration.AzureOpenAIEmbeddings.DeploymentName)
             .AsIEmbeddingGenerator(1536);
 
+<<<<<<< HEAD
+        // Construct a volatile vector store.
+        var vectorStore = new VolatileVectorStore();
+=======
         // Construct an InMemory vector store.
         var vectorStore = new InMemoryVectorStore();
+>>>>>>> main
 
         // Get and create collection if it doesn't exist.
         var collection = vectorStore.GetCollection<int, Product>("skproducts");
@@ -55,12 +76,27 @@ public class VectorStore_VectorSearch_MultiVector(ITestOutputHelper output) : Ba
         var resultRecords = await collection.SearchAsync(
             searchVector, top: 1, new()
             {
+<<<<<<< HEAD
+                Top = 1,
+                VectorPropertyName = nameof(Product.DescriptionEmbedding)
+<<<<<<< HEAD
+            }).ToListAsync();
+
+        WriteLine("Search string: " + searchString);
+        WriteLine("Result: " + searchResult.First().Record.Description);
+        WriteLine("Score: " + searchResult.First().Score);
+=======
+            });
+        var resultRecords = await searchResult.Results.ToListAsync();
+=======
                 VectorProperty = r => r.DescriptionEmbedding
             }).ToListAsync();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         WriteLine("Search string: " + searchString);
         WriteLine("Result: " + resultRecords.First().Record.Description);
         WriteLine("Score: " + resultRecords.First().Score);
+>>>>>>> main
         WriteLine();
 
         // Search the store using the feature list embedding.
@@ -71,12 +107,27 @@ public class VectorStore_VectorSearch_MultiVector(ITestOutputHelper output) : Ba
             top: 1,
             new()
             {
+<<<<<<< HEAD
+                Top = 1,
+                VectorPropertyName = nameof(Product.FeatureListEmbedding)
+<<<<<<< HEAD
+            }).ToListAsync();
+
+        WriteLine("Search string: " + searchString);
+        WriteLine("Result: " + searchResult.First().Record.Description);
+        WriteLine("Score: " + searchResult.First().Score);
+=======
+            });
+        resultRecords = await searchResult.Results.ToListAsync();
+=======
                 VectorProperty = r => r.FeatureListEmbedding
             }).ToListAsync();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         WriteLine("Search string: " + searchString);
         WriteLine("Result: " + resultRecords.First().Record.Description);
         WriteLine("Score: " + resultRecords.First().Score);
+>>>>>>> main
         WriteLine();
     }
 

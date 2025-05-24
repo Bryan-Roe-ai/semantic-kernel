@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.TextGeneration;
@@ -123,6 +122,8 @@ public sealed class PromptyTests
     }
 
     [Fact]
+<<<<<<< HEAD:dotnet/src/Functions/Functions.Prompty.UnitTests/PromptyTest.cs
+=======
     public void ItShouldCreateFunctionFromPromptYamlWithEmbeddedFileProvider()
     {
         // Arrange
@@ -186,6 +187,7 @@ public sealed class PromptyTests
     }
 
     [Fact]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/Functions/Functions.Prompty.UnitTests/PromptyTests.cs
     public void ItFailsToParseAnEmptyHeader()
     {
         Kernel kernel = new();

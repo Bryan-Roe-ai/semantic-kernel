@@ -1,6 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Diagnostics.CodeAnalysis;
 
 // This assembly is currently experimental.
-[assembly: Experimental("SKEXP0050")]
+[assembly: Experimental("SKEXP0070")]

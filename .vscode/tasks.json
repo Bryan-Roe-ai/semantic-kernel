@@ -1,79 +1,76 @@
 {
   "version": "2.0.0",
   "tasks": [
-    // *****************************
-    // Contributing (dotnet) - Setup
-    // *****************************
     {
-      "label": "setup (contributing-R#)",
-      "detail": "",
+      "label": "clean (functions)",
+<<<<<<< HEAD
+      "command": "dotnet",
+      "args": [
+        "clean",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "detail": "Install ReSharper Global Tools",
       "group": "build",
-      "dependsOn": ["new tool-manifest", "# Setup"],
+      "dependsOn": [
+        "new tool-manifest",
+        "R# Setup"
+      ],
       "dependsOrder": "sequence"
     },
     {
       "label": "new tool-manifest",
-      "detail": "Install ReSharper Global Tools",
       "command": "dotnet",
       "type": "process",
-      "args": ["new", "tool-manifest"],
+      "args": [
+        "new",
+        "tool-manifest"
+      ],
       "options": {
         "cwd": "${workspaceFolder}/dotnet"
       }
     },
     {
       "label": "R# Setup",
-      "detail": "Install ReSharper Global Tools",
       "command": "dotnet",
       "type": "process",
-      "args": [
-        "tool",
-        "install",
-        "JetBrains.ReSharper.GlobalTools",
-        "--global"
-      ],
+      "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/dotnet"
-      }
-    },
-    // Code Formatting
-    {
-      // Requires 'R# Install' to be run first
-      // r# inspect - dotnet jb inspectcode -o="inspectcode.log" --no-build -s=".\SK-dotnet.sln.DotSettings" -f=Text ".\SK-dotnet.sln"
-      "label": "format-check (contributing-R#)",
+        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+=======
       "command": "dotnet",
-      "type": "process",
-      "group": "build",
       "args": [
-        "jb",
-        "inspectcode",
-        "--output=inspectcode.log",
-        "--no-build",
-        "--settings=SK-dotnet.sln.DotSettings",
-        "--format=Text",
-        "SK-dotnet.sln"
+        "clean",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
       ],
+      "type": "process",
+      "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/dotnet"
+        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       }
     },
     {
-      // r# cleanup - dotnet jb cleanupcode --no-build -p="Built-in: Reformat Code" -s=SK-dotnet.sln.DotSettings SK-dotnet.sln
-      "label": "format (contributing-R#)",
+      "label": "build (functions)",
       "command": "dotnet",
-      "type": "process",
-      "group": "build",
       "args": [
-        "jb",
-        "cleanupcode",
-        "--no-build",
-        "--verbosity=WARN",
-        "--profile=Built-in: Reformat Code",
-        "--settings=SK-dotnet.sln.DotSettings",
-        "SK-dotnet.sln"
+        "build",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
       ],
+      "type": "process",
+<<<<<<< HEAD
+      "group": "build",
+      "dependsOn": "clean (functions)",
+      "problemMatcher": "$msCompile",
       "options": {
-        "cwd": "${workspaceFolder}/dotnet"
+        "cwd": "${workspaceFolder}/dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "group": "PR-Validate"
       }
     },
     {
@@ -83,243 +80,286 @@
       "dependsOn": [
         "R# cleanup",
         "build (Semantic-Kernel)",
-        "test (Semantic-Kernel",
+        "test (Semantic-Kernel)",
         "run (Kernel-Demo)"
       ],
       "dependsOrder": "sequence"
     },
-    // ***************
-    // Kernel (dotnet)
-    // ***************
-    // Build
     {
-      "label": "build (Semantic-Kernel)",
-      "command": "dotnet",
-      "type": "process",
-      "args": [
-        "build",
-        "${workspaceFolder}/dotnet/SK-dotnet.sln",
-        "--configuration",
-        "Release"
-      ],
-      "problemMatcher": "$msCompile",
+      "label": "setup (contributing-python)",
       "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared",
-        "group": "PR-Validate"
-      }
-    },
-    // Test
-    {
-      "label": "test (Semantic-Kernel)",
-      "command": "dotnet",
-      "type": "process",
-      "args": ["test", "SemanticKernel.UnitTests.csproj"],
-      "problemMatcher": "$msCompile",
-      "group": "test",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared",
-        "group": "PR-Validate"
-      },
-      "options": {
-        "cwd": "${workspaceFolder}/dotnet/src/SemanticKernel.UnitTests/"
-      }
+      "dependsOn": [
+        "install poetry",
+        "install python packages"
+      ],
+      "dependsOrder": "sequence"
     },
     {
-      "label": "test (Semantic-Kernel (Code Coverage))",
-      "command": "dotnet",
-      "type": "process",
+      "label": "install poetry",
+      "command": "pip3",
+      "type": "shell",
       "args": [
-        "test",
-        "--results-directory",
-        "${workspaceFolder}/dotnet/TestResults/",
-        "--collect",
-        "XPlat Code Coverage;Format=lcov",
-        "--filter",
-        "${input:filter}",
-        "SemanticKernel.UnitTests.csproj"
+        "install",
+        "poetry"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/python"
+      }
+    },
+    {
+      "label": "install python packages",
+      "command": "poetry",
+      "type": "shell",
+      "args": [
+        "install"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/python"
+      }
+    },
+    {
+      "label": "validate (contributing-python)",
+      "command": "poetry",
+      "type": "shell",
+      "group": "build",
+      "args": [
+        "run",
+        "pre-commit",
+        "run",
+        "-c",
+        ".conf/.pre-commit-config.yaml",
+        "-a"
+      ],
+      "dependsOn": "clean (functions)",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+=======
+      "dependsOn": "clean (functions)",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+      }
+    },
+    {
+      "label": "clean release (functions)",
+      "command": "dotnet",
+      "args": [
+        "clean",
+        "--configuration",
+        "Release",
+<<<<<<< HEAD
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "type": "process",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+      }
+    },
+    {
+      "label": "publish (functions)",
+      "command": "dotnet",
+      "args": [
+        "publish",
+        "--configuration",
+        "Release",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "type": "process",
+      "dependsOn": "clean release (functions)",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+      }
+    },
+    {
+      "label": "start (functions)",
+      "type": "process",
+      "dependsOn": "build (functions)",
+      "command": "dotnet run",
+      "options": {
+        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Debug/net6.0"
+      },
+      "isBackground": true,
+      "problemMatcher": "$func-dotnet-watch"
+    },
+    {
+      "label": "test (Semantic-Kernel-Python)",
+      "command": "poetry",
+      "type": "shell",
+      "args": [
+        "run",
+        "pytest",
+        "tests/unit"
       ],
       "problemMatcher": "$msCompile",
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "shared"
+        "panel": "shared",
+        "group": "PR-Validate"
       },
       "options": {
-        "cwd": "${workspaceFolder}/dotnet/src/SemanticKernel.UnitTests/"
+        "cwd": "${workspaceFolder}/python"
       }
     },
     {
-      "label": "test (Extensions (Code Coverage))",
-      "command": "dotnet",
-      "type": "process",
+      "label": "test (Semantic-Kernel-Python Integration)",
+      "command": "poetry",
+      "type": "shell",
       "args": [
-        "test",
-        "--results-directory",
-        "${workspaceFolder}/dotnet/TestResults/",
-        "--collect",
-        "XPlat Code Coverage;Format=lcov",
-        "--filter",
-        "${input:filter}",
-        "Extensions.UnitTests.csproj"
-      ],
-      "problemMatcher": "$msCompile",
-      "group": "test",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared"
-      },
-      "options": {
-        "cwd": "${workspaceFolder}/dotnet/src/Extensions/Extensions.UnitTests/"
-      }
-    },
-    {
-      "label": "test (ALL (Code Coverage))",
-      "command": "dotnet",
-      "type": "process",
-      "args": [
-        "test",
-        "--results-directory",
-        "${workspaceFolder}/dotnet/TestResults/",
-        "--collect",
-        "XPlat Code Coverage;Format=lcov",
-        "--filter",
+        "run",
+        "pytest",
+        "tests/integration",
+        "-k",
         "${input:filter}"
       ],
       "problemMatcher": "$msCompile",
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "shared"
+        "panel": "shared",
+        "group": "PR-Validate"
       },
       "options": {
-        "cwd": "${workspaceFolder}/dotnet/"
+        "cwd": "${workspaceFolder}/python"
       }
     },
     {
-      "label": "test (Semantic-Kernel Integration (Code Coverage))",
-      "command": "dotnet",
-      "type": "process",
+      "label": "test (Semantic-Kernel-Python ALL)",
+      "command": "poetry",
+      "type": "shell",
       "args": [
-        "test",
-        "--results-directory",
-        "${workspaceFolder}/dotnet/TestResults/",
-        "--collect",
-        "XPlat Code Coverage;Format=lcov",
-        "--filter",
-        "${input:filter}",
-        "IntegrationTests.csproj"
+        "run",
+        "pytest",
+        "tests",
+        "-k",
+        "${input:filter}"
       ],
       "problemMatcher": "$msCompile",
       "group": "test",
       "presentation": {
         "reveal": "always",
-        "panel": "shared"
+        "panel": "shared",
+        "group": "PR-Validate"
       },
       "options": {
-        "cwd": "${workspaceFolder}/dotnet/src/IntegrationTests/"
+        "cwd": "${workspaceFolder}/python"
       }
     },
     {
-      "label": "build (CopilotAgentPluginsDemoSample)",
+      "label": "build (concepts)",
       "command": "dotnet",
       "type": "process",
       "args": [
-        "build",
-        "${workspaceFolder}/dotnet/samples/Demos/CopilotAgentPlugins/CopilotAgentPluginsDemoSample/CopilotAgentPluginsDemoSample.csproj"
-      ]
-    },
-    // ****************
-    // Samples (dotnet)
-    // ****************
-    // Kernel Syntax Examples
-    {
-      "label": "build (Concepts)",
-      "command": "dotnet",
-      "type": "process",
-      "args": [
-        "build",
+        "/property:DebugType=portable",
         "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj",
         "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary",
-        "/property:DebugType=portable"
+        "/consoleloggerparameters:NoSummary"
       ],
-      "problemMatcher": "$msCompile",
-      "group": "build"
+      "group": "build",
+      "problemMatcher": "$msCompile"
     },
     {
       "label": "watch (Concepts)",
       "command": "dotnet",
-      "type": "process",
-      "args": [
-        "watch",
-        "run",
-        "--project",
-        "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj"
+=======
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
       ],
-      "problemMatcher": "$msCompile",
-      "group": "build"
-    },
-    {
-      "label": "run (Concepts)",
-      "command": "dotnet",
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       "type": "process",
-      "args": [
-        "run",
-        "--project",
-        "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj",
-        "${input:filter}"
-      ],
       "problemMatcher": "$msCompile",
-      "group": "test",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared",
-        "group": "PR-Validate"
+      "options": {
+        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
       }
     },
     {
-      "label": "build (ProcessWithDapr)",
-      "command": "dotnet",
-      "type": "process",
-      "args": [
-        "build",
-        "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/ProcessWithDapr.csproj",
-        "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary",
-        "/property:DebugType=portable"
-      ],
-      "problemMatcher": "$msCompile",
-      "group": "build"
-    },
-    {
+<<<<<<< HEAD
       "label": "daprd-debug",
       "type": "daprd",
       "appId": "processwithdapr",
       "logLevel": "debug",
       "appPort": 5000,
       "httpPort": 3500,
-      "dependsOn":["build (ProcessWithDapr)"]
+      "dependsOn": ["build (ProcessWithDapr)"]
     },
     {
       "label": "dapr-down",
       "type": "shell",
-      "command": ["dapr stop --app-id processwithdapr"],
+      "command": "dapr stop --app-id processwithdapr",
       "presentation": {
         "clear": true,
         "close": true,
         "reveal": "never"
       }
+    },
+    {
+      "label": "markdownlint",
+      "type": "markdownlint",
+      "problemMatcher": ["$markdownlint"]
+    },
+    {
+      "label": "func: host start",
+      "type": "func",
+      "command": "host start",
+      "problemMatcher": ["$func-dotnet-watch"]
+    },
+    {
+      "label": "Rebuild: solution",
+      "type": "msbuild",
+      "group": "build",
+      "problemMatcher": ["$msCompile"],
+      "detail": "Rebuild the SK-dotnet.sln solution using dotnet msbuild /t:Rebuild"
+    },
+    {
+      "label": "npm: build - DevSkim-main/DevSkim-VSCode-Plugin",
+      "type": "process",
+      "command": "npm",
+      "args": ["run", "build"],
+      "options": {
+        "cwd": "${workspaceRoot}/DevSkim-VSCode-Plugin"
+      },
+      "group": "build",
+      "detail": "Run npm setup to install dependencies and npm compile to build the project"
     }
   ],
   "inputs": [
+=======
+      "label": "publish (functions)",
+      "command": "dotnet",
+      "args": [
+        "publish",
+        "--configuration",
+        "Release",
+        "/property:GenerateFullPaths=true",
+        "/consoleloggerparameters:NoSummary"
+      ],
+      "type": "process",
+      "dependsOn": "clean release (functions)",
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
+      }
+    },
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
-      "id": "filter",
-      "type": "promptString",
-      "default": "",
-      "description": "Enter a filter to pass as argument or filter"
+      "type": "func",
+      "dependsOn": "build (functions)",
+      "options": {
+        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Debug/net6.0"
+      },
+      "command": "host start",
+      "isBackground": true,
+      "problemMatcher": "$func-dotnet-watch"
     }
   ]
 }

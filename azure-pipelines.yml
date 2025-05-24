@@ -1,0 +1,51 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+- job: BuildAndDeploy
+  displayName: 'Build and Deploy to GitHub Pages'
+  steps:
+  - script: echo Hello, world!
+    displayName: 'Run a one-line script'
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+    displayName: 'Run a multi-line script'
+
+  - script: |
+      docker build -t my-app .
+    displayName: 'Build Docker Image'
+
+  - script: |
+      docker run -p 3000:3000 --env-file .env my-app
+    displayName: 'Run Docker Container'
+
+  - script: |
+      actions/deploy-pages@v4
+    displayName: 'Deploy to GitHub Pages'
+
+  - script: |
+      docker login ghcr.io -u ${{ secrets.GITHUB_ACTOR }} -p ${{ secrets.GITHUB_TOKEN }}
+      docker build . --file Dockerfile --tag ghcr.io/${{ github.repository }}/my-image-name:${{ github.sha }}
+      docker push ghcr.io/${{ github.repository }}/my-image-name:${{ github.sha }}
+    displayName: 'Build and Push Docker Image to GitHub Container Registry'
+
+  - script: |
+      echo "Verifying installations of dependencies..."
+      npm list
+      pip list
+      dotnet --list-sdks
+    displayName: 'Verify Installations of Dependencies'
+
+  - script: |
+      npm start
+    displayName: 'Run npm start'

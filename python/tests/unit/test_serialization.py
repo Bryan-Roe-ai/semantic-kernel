@@ -7,7 +7,9 @@ import typing_extensions as te
 from pydantic import Field, Json
 
 from semantic_kernel.contents.chat_history import ChatHistory
-from semantic_kernel.core_plugins.conversation_summary_plugin import ConversationSummaryPlugin
+from semantic_kernel.core_plugins.conversation_summary_plugin import (
+    ConversationSummaryPlugin,
+)
 from semantic_kernel.core_plugins.http_plugin import HttpPlugin
 from semantic_kernel.core_plugins.math_plugin import MathPlugin
 from semantic_kernel.core_plugins.text_memory_plugin import TextMemoryPlugin
@@ -20,6 +22,38 @@ from semantic_kernel.functions.kernel_function import KernelFunction
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
 from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
 from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
+)
+from semantic_kernel.core_plugins.http_plugin import HttpPlugin
+from semantic_kernel.core_plugins.math_plugin import MathPlugin
+from semantic_kernel.core_plugins.text_memory_plugin import TextMemoryPlugin
+from semantic_kernel.core_plugins.text_plugin import TextPlugin
+from semantic_kernel.core_plugins.time_plugin import TimePlugin
+from semantic_kernel.core_plugins.wait_plugin import WaitPlugin
+from semantic_kernel.core_plugins.web_search_engine_plugin import WebSearchEnginePlugin
+from semantic_kernel.functions.kernel_arguments import KernelArguments
+from semantic_kernel.functions.kernel_function import KernelFunction
+from semantic_kernel.functions.kernel_function_decorator import kernel_function
+from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
+from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
+from semantic_kernel.functions.kernel_plugin_collection import (
+    KernelPluginCollection,
+)
+)
+from semantic_kernel.core_plugins.http_plugin import HttpPlugin
+from semantic_kernel.core_plugins.math_plugin import MathPlugin
+from semantic_kernel.core_plugins.text_memory_plugin import TextMemoryPlugin
+from semantic_kernel.core_plugins.text_plugin import TextPlugin
+from semantic_kernel.core_plugins.time_plugin import TimePlugin
+from semantic_kernel.core_plugins.wait_plugin import WaitPlugin
+from semantic_kernel.core_plugins.web_search_engine_plugin import WebSearchEnginePlugin
+from semantic_kernel.functions.kernel_arguments import KernelArguments
+from semantic_kernel.functions.kernel_function import KernelFunction
+from semantic_kernel.functions.kernel_function_decorator import kernel_function
+from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
+from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
+from semantic_kernel.functions.kernel_plugin_collection import (
+    KernelPluginCollection,
+)
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.memory.null_memory import NullMemory
 from semantic_kernel.memory.semantic_text_memory_base import SemanticTextMemoryBase
@@ -31,6 +65,8 @@ from semantic_kernel.template_engine.blocks.named_arg_block import NamedArgBlock
 from semantic_kernel.template_engine.blocks.text_block import TextBlock
 from semantic_kernel.template_engine.blocks.val_block import ValBlock
 from semantic_kernel.template_engine.blocks.var_block import VarBlock
+
+# from semantic_kernel.template_engine.prompt_template_engine import PromptTemplateEngine
 
 KernelBaseModelFieldT = t.TypeVar("KernelBaseModelFieldT", bound=KernelBaseModel)
 
@@ -59,10 +95,21 @@ def kernel_factory() -> t.Callable[[t.Type[_Serializable]], _Serializable]:
         def my_function(arguments: KernelArguments) -> str:
             return f"F({arguments['input']})"
 
+        @kernel_function(name="function")
+        def my_function(arguments: KernelArguments) -> str:
+            return f"F({arguments['input']})"
+
         return KernelFunction.from_method(
             plugin_name="plugin",
             method=my_function,
         )
+
+    def create_chat_history() -> ChatHistory:
+        return ChatHistory()
+        return KernelFunction.from_native_method(my_function, "plugin")
+
+    def create_chat_history() -> ChatHistory:
+        return ChatHistory()
 
     def create_chat_history() -> ChatHistory:
         return ChatHistory()
@@ -94,13 +141,32 @@ def kernel_factory() -> t.Callable[[t.Type[_Serializable]], _Serializable]:
                     description="bar",
                     default_value="baz",
                     type_="str",
-                    schema_data=KernelParameterMetadata.infer_schema(None, "str", "baz", "bar"),
+                    schema_data=KernelParameterMetadata.infer_schema(
+                        None, "str", "baz", "bar"
+                    ),
                 )
             ],
             is_prompt=True,
             is_asynchronous=False,
         ),
         ChatHistory: create_chat_history(),
+        ),
+        ChatHistory: create_chat_history(),
+        ),
+        ChatHistory: create_chat_history(),
+            type="string",
+            required=True,
+        ),
+        KernelFunctionMetadata: KernelFunctionMetadata(
+            name="foo",
+            plugin_name="bar",
+            description="baz",
+            parameters=[KernelParameterMetadata(name="qux", description="bar", default_value="baz")],
+            is_prompt=True,
+            is_asynchronous=False,
+        ),
+        ChatHistory: create_chat_history(),
+        KernelPluginCollection: create_plugin_collection(),
         NullMemory: NullMemory(),
         KernelFunction: create_kernel_function(),
     }
@@ -128,6 +194,7 @@ BASE_CLASSES = [
 ]
 
 STATELESS_CLASSES = [
+    # PromptTemplateEngine,
     NullMemory,
 ]
 
@@ -145,6 +212,7 @@ PYDANTIC_MODELS = [
     NamedArgBlock,
     KernelParameterMetadata,
     KernelFunctionMetadata,
+    KernelPluginCollection,
     ChatHistory,
 ]
 KERNEL_FUNCTION_OPTIONAL = [KernelFunction]
@@ -180,7 +248,9 @@ class TestUsageInPydanticFields:
     @pytest.mark.parametrize("kernel_type", PYDANTIC_MODELS + STATELESS_CLASSES + KERNEL_FUNCTION_REQUIRED)
     def test_usage_as_required_field(
         self,
-        kernel_factory: t.Callable[[t.Type[KernelBaseModelFieldT]], KernelBaseModelFieldT],
+        kernel_factory: t.Callable[
+            [t.Type[KernelBaseModelFieldT]], KernelBaseModelFieldT
+        ],
         kernel_type: t.Type[KernelBaseModelFieldT],
     ) -> None:
         """Semantic Kernel objects should be valid Pydantic fields.
@@ -191,7 +261,9 @@ class TestUsageInPydanticFields:
         class TestModel(KernelBaseModel):
             """A test model."""
 
-            field: kernel_type = Field(default_factory=lambda: kernel_factory(kernel_type))
+            field: kernel_type = Field(
+                default_factory=lambda: kernel_factory(kernel_type)
+            )
 
         assert_serializable(TestModel(), TestModel)
         assert_serializable(TestModel(field=kernel_factory(kernel_type)), TestModel)

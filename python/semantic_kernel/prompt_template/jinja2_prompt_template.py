@@ -14,7 +14,9 @@ from semantic_kernel.prompt_template.const import JINJA2_TEMPLATE_FORMAT_NAME
 from semantic_kernel.prompt_template.prompt_template_base import PromptTemplateBase
 from semantic_kernel.prompt_template.prompt_template_config import PromptTemplateConfig
 from semantic_kernel.prompt_template.utils import JINJA2_SYSTEM_HELPERS
-from semantic_kernel.prompt_template.utils.template_function_helpers import create_template_helper_from_function
+from semantic_kernel.prompt_template.utils.template_function_helpers import (
+    create_template_helper_from_function,
+)
 
 if TYPE_CHECKING:
     from semantic_kernel.kernel import Kernel
@@ -52,10 +54,14 @@ class Jinja2PromptTemplate(PromptTemplateBase):
 
     @field_validator("prompt_template_config")
     @classmethod
-    def validate_template_format(cls, v: "PromptTemplateConfig") -> "PromptTemplateConfig":
+    def validate_template_format(
+        cls, v: "PromptTemplateConfig"
+    ) -> "PromptTemplateConfig":
         """Validate the template format."""
         if v.template_format != JINJA2_TEMPLATE_FORMAT_NAME:
-            raise ValueError(f"Invalid prompt template format: {v.template_format}. Expected: jinja2")
+            raise ValueError(
+                f"Invalid prompt template format: {v.template_format}. Expected: jinja2"
+            )
         return v
 
     def model_post_init(self, _: Any) -> None:
@@ -63,9 +69,17 @@ class Jinja2PromptTemplate(PromptTemplateBase):
         if not self.prompt_template_config.template:
             self._env = None
             return
-        self._env = ImmutableSandboxedEnvironment(loader=BaseLoader(), enable_async=True)
+        self._env = ImmutableSandboxedEnvironment(
+            loader=BaseLoader(), enable_async=True
+        )
 
+<<<<<<< HEAD
+    async def render(
+        self, kernel: "Kernel", arguments: Optional["KernelArguments"] = None
+    ) -> str:
+=======
     async def render(self, kernel: "Kernel", arguments: "KernelArguments | None" = None) -> str:
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """Render the prompt template.
 
         Using the prompt template, replace the variables with their values
@@ -89,6 +103,23 @@ class Jinja2PromptTemplate(PromptTemplateBase):
         helpers: dict[str, Callable[..., Any]] = {}
         helpers.update(JINJA2_SYSTEM_HELPERS)
         for plugin in kernel.plugins.values():
+<<<<<<< HEAD
+            helpers.update(
+                {
+                    function.fully_qualified_name.replace(
+                        "-", "_"
+                    ): create_template_helper_from_function(
+                        function,
+                        kernel,
+                        arguments,
+                        self.prompt_template_config.template_format,
+                        allow_unsafe_function_output,
+                        enable_async=True,
+                    )
+                    for function in plugin
+                }
+            )
+=======
             helpers.update({
                 function.fully_qualified_name.replace("-", "_"): create_template_helper_from_function(
                     function,
@@ -100,10 +131,15 @@ class Jinja2PromptTemplate(PromptTemplateBase):
                 )
                 for function in plugin
             })
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         if self.prompt_template_config.template is None:
-            raise Jinja2TemplateRenderException("Error rendering template, template is None")
+            raise Jinja2TemplateRenderException(
+                "Error rendering template, template is None"
+            )
         try:
-            template = self._env.from_string(self.prompt_template_config.template, globals=helpers)
+            template = self._env.from_string(
+                self.prompt_template_config.template, globals=helpers
+            )
             return await template.render_async(**arguments)
         except TemplateError as exc:
             logger.error(

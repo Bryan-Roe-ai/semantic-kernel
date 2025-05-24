@@ -9,9 +9,27 @@ from pydantic import ValidationError
 from qdrant_client.async_qdrant_client import AsyncQdrantClient
 
 from semantic_kernel.connectors.memory.qdrant.qdrant_collection import QdrantCollection
+from semantic_kernel.data.vector_store import VectorStore
+from semantic_kernel.data.vector_store_model_definition import (
+    VectorStoreRecordDefinition,
+)
 from semantic_kernel.data.record_definition import VectorStoreRecordDefinition
 from semantic_kernel.data.vector_storage import VectorStore
+from semantic_kernel.exceptions import MemoryConnectorInitializationError
 from semantic_kernel.exceptions import VectorStoreInitializationException
+<<<<<<< HEAD
+from semantic_kernel.utils.experimental_decorator import experimental_class
+from semantic_kernel.utils.telemetry.user_agent import (
+    APP_INFO,
+    prepend_semantic_kernel_to_user_agent,
+)
+
+if TYPE_CHECKING:
+    from semantic_kernel.data.vector_store_record_collection import (
+        VectorStoreRecordCollection,
+    )
+    from semantic_kernel.data import VectorStoreRecordCollection
+=======
 from semantic_kernel.utils.feature_stage_decorator import experimental
 from semantic_kernel.utils.telemetry.user_agent import APP_INFO, prepend_semantic_kernel_to_user_agent
 
@@ -22,6 +40,7 @@ if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
 else:
     from typing_extensions import override  # pragma: no cover
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -78,7 +97,9 @@ class QdrantStore(VectorStore):
             super().__init__(qdrant_client=client, managed_client=False, **kwargs)
             return
 
-        from semantic_kernel.connectors.memory.qdrant.qdrant_settings import QdrantSettings
+        from semantic_kernel.connectors.memory.qdrant.qdrant_settings import (
+            QdrantSettings,
+        )
 
         try:
             settings = QdrantSettings(
@@ -94,13 +115,23 @@ class QdrantStore(VectorStore):
                 env_file_encoding=env_file_encoding,
             )
         except ValidationError as ex:
+            raise MemoryConnectorInitializationError(
+                "Failed to create Qdrant settings.", ex
+            ) from ex
             raise VectorStoreInitializationException("Failed to create Qdrant settings.", ex) from ex
         if APP_INFO:
             kwargs.setdefault("metadata", {})
-            kwargs["metadata"] = prepend_semantic_kernel_to_user_agent(kwargs["metadata"])
+            kwargs["metadata"] = prepend_semantic_kernel_to_user_agent(
+                kwargs["metadata"]
+            )
         try:
-            client = AsyncQdrantClient(**settings.model_dump(exclude_none=True), **kwargs)
+            client = AsyncQdrantClient(
+                **settings.model_dump(exclude_none=True), **kwargs
+            )
         except ValueError as ex:
+            raise MemoryConnectorInitializationError(
+                "Failed to create Qdrant client.", ex
+            ) from ex
             raise VectorStoreInitializationException("Failed to create Qdrant client.", ex) from ex
         super().__init__(qdrant_client=client)
 
@@ -120,7 +151,13 @@ class QdrantStore(VectorStore):
             **kwargs: Additional keyword arguments, passed to the collection constructor.
         """
         if collection_name not in self.vector_record_collections:
+<<<<<<< HEAD
+            self.vector_record_collections[collection_name] = QdrantCollection[
+                data_model_type
+            ](
+=======
             self.vector_record_collections[collection_name] = QdrantCollection(
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                 data_model_type=data_model_type,
                 data_model_definition=data_model_definition,
                 collection_name=collection_name,

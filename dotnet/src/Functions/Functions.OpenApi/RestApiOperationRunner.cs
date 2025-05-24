@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -429,7 +429,7 @@ internal sealed class RestApiOperationRunner
         {
             var argumentName = this.GetArgumentNameForPayload(propertyMetadata.Name, propertyNamespace);
 
-            if (propertyMetadata.Type == "object")
+            if (propertyMetadata.Type == RestApiParameterType.Object)
             {
                 var node = this.BuildJsonObject(propertyMetadata.Properties, arguments, argumentName);
                 result.Add(propertyMetadata.Name, node);

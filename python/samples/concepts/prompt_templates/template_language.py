@@ -3,7 +3,10 @@
 import asyncio
 
 from semantic_kernel import Kernel
-from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAIChatPromptExecutionSettings
+from semantic_kernel.connectors.ai.open_ai import (
+    OpenAIChatCompletion,
+    OpenAIChatPromptExecutionSettings,
+)
 from semantic_kernel.core_plugins import TimePlugin
 from semantic_kernel.prompt_template import KernelPromptTemplate, PromptTemplateConfig
 
@@ -11,7 +14,12 @@ from semantic_kernel.prompt_template import KernelPromptTemplate, PromptTemplate
 async def main():
     kernel = Kernel()
 
-    service_id = "template_language"
+SERVICE_ID = "template_language"
+
+# ... other code ...
+
+kernel.add_service(
+    OpenAIChatCompletion(service_id=SERVICE_ID, ai_model_id=model),
     kernel.add_service(
         OpenAIChatCompletion(service_id=service_id),
     )
@@ -29,14 +37,18 @@ async def main():
 
     print("--- Rendered Prompt ---")
     prompt_template_config = PromptTemplateConfig(template=function_definition)
-    prompt_template = KernelPromptTemplate(prompt_template_config=prompt_template_config)
+    prompt_template = KernelPromptTemplate(
+        prompt_template_config=prompt_template_config
+    )
     rendered_prompt = await prompt_template.render(kernel, arguments=None)
     print(rendered_prompt)
 
     kind_of_day = kernel.add_function(
         plugin_name="TimePlugin",
         template=function_definition,
-        execution_settings=OpenAIChatPromptExecutionSettings(service_id=service_id, max_tokens=100),
+        execution_settings=OpenAIChatPromptExecutionSettings(
+            service_id=service_id, max_tokens=100
+        ),
         function_name="kind_of_day",
         prompt_template=prompt_template,
     )

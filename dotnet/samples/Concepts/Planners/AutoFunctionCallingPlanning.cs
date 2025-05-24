@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Concurrent;
 using System.ComponentModel;
@@ -14,7 +14,8 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Planning;
 using OpenAI.Chat;
-
+using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
+using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
 using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
 
 namespace Planners;
@@ -192,7 +193,7 @@ public class AutoFunctionCallingPlanning(ITestOutputHelper output) : BaseTest(ou
         // Plan execution result: The current UTC time is Tue, 02 Jul 2024 02:23:08 GMT and the weather in Boston is 61 degrees and rainy.
         // Second run:
         // Elapsed Time: 00:00:01.615
-        // Plan execution result: The current UTC time is Tue, 02 Jul 2024 02:23:08 GMT and the current weather in Boston is 61°F and rainy.
+        // Plan execution result: The current UTC time is Tue, 02 Jul 2024 02:23:08 GMT and the current weather in Boston is 61�F and rainy.
     }
 
     /// <summary>
@@ -333,6 +334,11 @@ public class AutoFunctionCallingPlanning(ITestOutputHelper output) : BaseTest(ou
                 usage is ChatTokenUsage completionsUsage &&
                 completionsUsage is not null)
             {
+                tokens += completionsUsage.TotalTokens;
+                tokens += completionsUsage.TotalTokens;
+                tokens += completionsUsage.TotalTokenCount;
+                tokens += completionsUsage.TotalTokenCount;
+                tokens += completionsUsage.TotalTokenCount;
                 tokens += completionsUsage.TotalTokenCount;
             }
         }

@@ -3,6 +3,18 @@
 from pydantic import ValidationError
 from pytest import raises
 
+<<<<<<< HEAD
+from semantic_kernel.data.vector_store_model_definition import (
+    VectorStoreRecordDefinition,
+)
+from semantic_kernel.data.vector_store_record_fields import (
+    VectorStoreRecordDataField,
+    VectorStoreRecordKeyField,
+)
+from semantic_kernel.exceptions.memory_connector_exceptions import (
+    VectorStoreModelException,
+)
+=======
 from semantic_kernel.data import (
     VectorStoreRecordDataField,
     VectorStoreRecordDefinition,
@@ -10,6 +22,7 @@ from semantic_kernel.data import (
 )
 from semantic_kernel.data.record_definition import VectorStoreRecordVectorField
 from semantic_kernel.exceptions import VectorStoreModelException
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 
 def test_vector_store_record_definition():
@@ -46,9 +59,29 @@ def test_no_key_field_fail():
 
 def test_multiple_key_field_fail():
     with raises(VectorStoreModelException):
-        VectorStoreRecordDefinition(fields={"key1": VectorStoreRecordKeyField(), "key2": VectorStoreRecordKeyField()})
+        VectorStoreRecordDefinition(
+            fields={
+                "key1": VectorStoreRecordKeyField(),
+                "key2": VectorStoreRecordKeyField(),
+            }
+        )
 
 
+<<<<<<< HEAD
+def test_no_matching_vector_field_fail():
+    with raises(VectorStoreModelException):
+        VectorStoreRecordDefinition(
+            fields={
+                "id": VectorStoreRecordKeyField(),
+                "content": VectorStoreRecordDataField(
+                    has_embedding=True, embedding_property_name="vector"
+                ),
+            }
+        )
+
+
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 def test_vector_and_non_vector_field_names():
     definition = VectorStoreRecordDefinition(
         fields={

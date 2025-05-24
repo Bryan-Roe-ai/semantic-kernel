@@ -1,5 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Chat;
@@ -57,6 +60,7 @@ public class Step04_KernelFunctionStrategies(ITestOutputHelper output) : BaseAge
             };
 
         KernelFunction terminationFunction =
+            KernelFunctionFactory.CreateFromPrompt(
             AgentGroupChat.CreatePromptFunctionForStrategy(
                 """
                 Determine if the copy has been approved.  If so, respond with a single word: yes
@@ -68,6 +72,10 @@ public class Step04_KernelFunctionStrategies(ITestOutputHelper output) : BaseAge
 
         KernelFunction selectionFunction =
             AgentGroupChat.CreatePromptFunctionForStrategy(
+                """);
+
+        KernelFunction selectionFunction =
+            KernelFunctionFactory.CreateFromPrompt(
                 $$$"""
                 Determine which participant takes the next turn in a conversation based on the the most recent participant.
                 State only the name of the participant to take the next turn.
@@ -83,6 +91,7 @@ public class Step04_KernelFunctionStrategies(ITestOutputHelper output) : BaseAge
 
                 History:
                 {{$history}}
+                """);
                 """,
                 safeParameterNames: "history");
 
@@ -124,6 +133,10 @@ public class Step04_KernelFunctionStrategies(ITestOutputHelper output) : BaseAge
                                 HistoryVariableName = "history",
                                 // Save tokens by not including the entire history in the prompt
                                 HistoryReducer = strategyReducer,
+                                // The prompt variable name for the agents argument.
+                                AgentsVariableName = "agents",
+                                // The prompt variable name for the history argument.
+                                HistoryVariableName = "history",
                                 // Only include the agent names and not the message content
                                 EvaluateNameOnly = true,
                             },

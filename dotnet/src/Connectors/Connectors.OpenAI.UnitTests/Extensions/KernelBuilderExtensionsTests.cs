@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.ClientModel;
@@ -46,6 +46,11 @@ public class KernelBuilderExtensionsTests
         var sut = Kernel.CreateBuilder();
 
         // Act
+        var service = sut.AddOpenAITextEmbeddingGeneration("model", new OpenAIClient("key"))
+        var service = sut.AddOpenAITextEmbeddingGeneration("model", new OpenAIClient("key"))
+        var service = sut.AddOpenAITextEmbeddingGeneration("model", new OpenAIClient(new ApiKeyCredential("key")))
+        var service = sut.AddOpenAITextEmbeddingGeneration("model", new OpenAIClient(new ApiKeyCredential("key")))
+        var service = sut.AddOpenAITextEmbeddingGeneration("model", new OpenAIClient(new ApiKeyCredential("key")))
         var service = sut.AddOpenAITextEmbeddingGeneration("model", new OpenAIClient(new ApiKeyCredential("key")))
             .Build()
             .GetRequiredService<ITextEmbeddingGenerationService>();
@@ -136,6 +141,11 @@ public class KernelBuilderExtensionsTests
         var sut = Kernel.CreateBuilder();
 
         // Act
+        var service = sut.AddOpenAIAudioToText("model", new OpenAIClient("key"))
+        var service = sut.AddOpenAIAudioToText("model", new OpenAIClient("key"))
+        var service = sut.AddOpenAIAudioToText("model", new OpenAIClient(new ApiKeyCredential("key")))
+        var service = sut.AddOpenAIAudioToText("model", new OpenAIClient(new ApiKeyCredential("key")))
+        var service = sut.AddOpenAIAudioToText("model", new OpenAIClient(new ApiKeyCredential("key")))
         var service = sut.AddOpenAIAudioToText("model", new OpenAIClient(new ApiKeyCredential("key")))
             .Build()
             .GetRequiredService<IAudioToTextService>();
@@ -165,6 +175,11 @@ public class KernelBuilderExtensionsTests
     public void KernelBuilderAddOpenAIChatCompletionAddsValidService(InitializationType type)
     {
         // Arrange
+        var client = new OpenAIClient("key");
+        var client = new OpenAIClient("key");
+        var client = new OpenAIClient(new ApiKeyCredential("key"));
+        var client = new OpenAIClient(new ApiKeyCredential("key"));
+        var client = new OpenAIClient(new ApiKeyCredential("key"));
         var client = new OpenAIClient(new ApiKeyCredential("key"));
         var builder = Kernel.CreateBuilder();
 

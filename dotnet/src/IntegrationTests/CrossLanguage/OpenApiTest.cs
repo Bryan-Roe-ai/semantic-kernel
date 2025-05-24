@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.IO;
@@ -14,7 +14,7 @@ namespace SemanticKernel.IntegrationTests.CrossLanguage;
 
 public class OpenApiTest
 {
-    private readonly JsonNode? _expectedJson;
+    private readonly JsonObject? _expectedJson;
 
     public OpenApiTest()
     {

@@ -47,15 +47,13 @@ def default_options() -> dict:
 
 
 @pytest.fixture()
-def ollama_unit_test_env(monkeypatch, host, exclude_list):
+def ollama_unit_test_env(monkeypatch, model_id, host, exclude_list):
     """Fixture to set environment variables for OllamaSettings."""
     if exclude_list is None:
         exclude_list = []
 
     env_vars = {
-        "OLLAMA_CHAT_MODEL_ID": "test_chat_model_id",
-        "OLLAMA_TEXT_MODEL_ID": "test_text_model_id",
-        "OLLAMA_EMBEDDING_MODEL_ID": "test_embedding_model_id",
+        "OLLAMA_MODEL": model_id,
         "OLLAMA_HOST": host,
     }
 
@@ -79,6 +77,8 @@ def mock_streaming_text_response() -> AsyncIterator:
 @pytest.fixture()
 def mock_streaming_chat_response() -> AsyncIterator:
     streaming_chat_response = MagicMock(spec=AsyncGenerator)
-    streaming_chat_response.__aiter__.return_value = [{"message": {"content": "test_response"}}]
+    streaming_chat_response.__aiter__.return_value = [
+        {"message": {"content": "test_response"}}
+    ]
 
     return streaming_chat_response

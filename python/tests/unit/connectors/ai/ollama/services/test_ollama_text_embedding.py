@@ -6,8 +6,12 @@ import numpy
 import pytest
 from numpy import array
 
-from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import OllamaEmbeddingPromptExecutionSettings
-from semantic_kernel.connectors.ai.ollama.services.ollama_text_embedding import OllamaTextEmbedding
+from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import (
+    OllamaEmbeddingPromptExecutionSettings,
+)
+from semantic_kernel.connectors.ai.ollama.services.ollama_text_embedding import (
+    OllamaTextEmbedding,
+)
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError
 
 
@@ -23,6 +27,7 @@ def test_custom_client(model_id, custom_client):
     assert ollama.client == custom_client
 
 
+@pytest.mark.parametrize("exclude_list", [["OLLAMA_MODEL"]], indirect=True)
 def test_invalid_ollama_settings():
     """Test that the service initializes incorrectly with invalid settings."""
     with pytest.raises(ServiceInitializationError):
@@ -64,7 +69,9 @@ async def test_embedding(mock_embedding_client, model_id, prompt):
     )
 
     assert response.all() == array([0.1, 0.2, 0.3]).all()
-    mock_embedding_client.assert_called_once_with(model=model_id, prompt=prompt, options=settings.options)
+    mock_embedding_client.assert_called_once_with(
+        model=model_id, prompt=prompt, options=settings.options
+    )
 
 
 @patch("ollama.AsyncClient.embeddings")
@@ -84,7 +91,9 @@ async def test_embedding_list_input(mock_embedding_client, model_id, prompt):
     assert type(responses) is numpy.ndarray
     assert all(type(response) is numpy.ndarray for response in responses)
     assert mock_embedding_client.call_count == 2
-    mock_embedding_client.assert_called_with(model=model_id, prompt=prompt, options=settings.options)
+    mock_embedding_client.assert_called_with(
+        model=model_id, prompt=prompt, options=settings.options
+    )
 
 
 @patch("ollama.AsyncClient.embeddings")
@@ -101,7 +110,9 @@ async def test_raw_embedding(mock_embedding_client, model_id, prompt):
     )
 
     assert response == [[0.1, 0.2, 0.3]]
-    mock_embedding_client.assert_called_once_with(model=model_id, prompt=prompt, options=settings.options)
+    mock_embedding_client.assert_called_once_with(
+        model=model_id, prompt=prompt, options=settings.options
+    )
 
 
 @patch("ollama.AsyncClient.embeddings")
@@ -119,4 +130,33 @@ async def test_raw_embedding_list_input(mock_embedding_client, model_id, prompt)
 
     assert responses == [[0.1, 0.2, 0.3], [0.1, 0.2, 0.3]]
     assert mock_embedding_client.call_count == 2
-    mock_embedding_client.assert_called_with(model=model_id, prompt=prompt, options=settings.options)
+    mock_embedding_client.assert_called_with(
+        model=model_id, prompt=prompt, options=settings.options
+from unittest.mock import patch
+
+import pytest
+from numpy import array
+
+from semantic_kernel.connectors.ai.ollama.services.ollama_text_embedding import (
+    OllamaTextEmbedding,
+)
+from tests.unit.connectors.ollama.utils import MockResponse
+
+
+@pytest.mark.asyncio
+@patch("aiohttp.ClientSession.post")
+async def test_embedding(mock_post):
+    mock_post.return_value = MockResponse(response=[0.1, 0.2, 0.3])
+    ollama = OllamaTextEmbedding(ai_model_id="test_model")
+    response = await ollama.generate_embeddings(
+        ["test_prompt"],
+    )
+    assert response.all() == array([0.1, 0.2, 0.3]).all()
+    mock_post.assert_called_once_with(
+        "http://localhost:11434/api/embeddings",
+        json={
+            "model": "test_model",
+            "texts": ["test_prompt"],
+            "options": {},
+        },
+    )

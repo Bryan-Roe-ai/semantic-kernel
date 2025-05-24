@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
@@ -111,7 +111,7 @@ public sealed class BingWebPage
     public bool? IsFamilyFriendly { get; set; }
 
     /// <summary>
-    /// A Boolean value that indicates whether the userâ€™s query is frequently used for navigation to different parts of the webpageâ€™s domain.
+    /// A Boolean value that indicates whether the user’s query is frequently used for navigation to different parts of the webpage’s domain.
     /// Is true if users navigate from this page to other parts of the website.
     /// </summary>
     [JsonPropertyName("isNavigational")]

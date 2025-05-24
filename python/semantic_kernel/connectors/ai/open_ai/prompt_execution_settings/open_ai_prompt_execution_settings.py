@@ -3,9 +3,26 @@
 import logging
 from typing import Annotated, Any, Literal
 
+<<<<<<< HEAD
+if sys.version_info >= (3, 11):
+    from typing import Self  # pragma: no cover
+else:
+    from typing_extensions import Self  # pragma: no cover
+
+from pydantic import Field, field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
+
+from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
+from semantic_kernel.connectors.ai.prompt_execution_settings import (
+    PromptExecutionSettings,
+)
+=======
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.exceptions import ServiceInvalidExecutionSettingsError
 
 logger = logging.getLogger(__name__)
@@ -45,9 +62,15 @@ class OpenAITextPromptExecutionSettings(OpenAIPromptExecutionSettings):
     def check_best_of_and_n(self) -> "OpenAITextPromptExecutionSettings":
         """Check that the best_of parameter is not greater than the number_of_responses parameter."""
         best_of = self.best_of or self.extension_data.get("best_of")
-        number_of_responses = self.number_of_responses or self.extension_data.get("number_of_responses")
+        number_of_responses = self.number_of_responses or self.extension_data.get(
+            "number_of_responses"
+        )
 
-        if best_of is not None and number_of_responses is not None and best_of < number_of_responses:
+        if (
+            best_of is not None
+            and number_of_responses is not None
+            and best_of < number_of_responses
+        ):
             raise ServiceInvalidExecutionSettingsError(
                 "When used with number_of_responses, best_of controls the number of candidate completions and n specifies how many to return, therefore best_of must be greater than number_of_responses."  # noqa: E501
             )
@@ -58,11 +81,34 @@ class OpenAITextPromptExecutionSettings(OpenAIPromptExecutionSettings):
 class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
     """Specific settings for the Chat Completion endpoint."""
 
+    response_format: dict[Literal["type"], Literal["text", "json_object"]] | None = None
+    response_format: dict[Literal["type"], Literal["text", "json_object"]] | None = None
+    response_format: (
+        dict[Literal["type"], Literal["text", "json_object"]] | dict[str, Any] | type[BaseModel] | type | None
+    ) = None
     response_format: (
         dict[Literal["type"], Literal["text", "json_object"]] | dict[str, Any] | type[BaseModel] | type | None
     ) = None
     function_call: str | None = None
     functions: list[dict[str, Any]] | None = None
+    messages: list[dict[str, Any]] | None = Field(
+        None, description="Do not set this manually. It is set by the service based on the chat history."
+    )
+    function_call_behavior: FunctionCallBehavior | None = Field(None, exclude=True)
+    tools: list[dict[str, Any]] | None = Field(
+        None,
+        max_length=64,
+        description="Do not set this manually. It is set by the service based on the function choice configuration.",
+    )
+    tool_choice: str | None = Field(
+        None,
+        description="Do not set this manually. It is set by the service based on the function choice configuration.",
+    )
+    structured_json_response: bool = Field(False, description="Do not set this manually. It is set by the service.")
+    stream_options: dict[str, Any] | None = Field(
+        None,
+        description="Additional options to pass when streaming is used. Do not set this manually.",
+    )
     messages: Annotated[
         list[dict[str, Any]] | None, Field(description="Do not set this manually. It is set by the service.")
     ] = None
@@ -146,6 +192,47 @@ class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
 
         return values
 
+<<<<<<< HEAD
+    @model_validator(mode="before")
+    @classmethod
+    def validate_function_calling_behaviors(cls, data) -> Any:
+        """Check if function_call_behavior is set and if so, move to use function_choice_behavior instead."""
+        # In an attempt to phase out the use of `function_call_behavior` in favor of `function_choice_behavior`,
+        # we are syncing the `function_call_behavior` with `function_choice_behavior` if the former is set.
+        # This allows us to make decisions off of `function_choice_behavior`. Anytime the `function_call_behavior`
+        # is updated, this validation will run to ensure the `function_choice_behavior` stays in sync.
+        from semantic_kernel.connectors.ai.function_choice_behavior import (
+            FunctionChoiceBehavior,
+        )
+
+        if isinstance(data, dict) and "function_call_behavior" in data.get(
+            "extension_data", {}
+        ):
+            data["function_choice_behavior"] = (
+                FunctionChoiceBehavior.from_function_call_behavior(
+                    data.get("extension_data", {}).get("function_call_behavior")
+                )
+        from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+
+        if isinstance(data, dict) and "function_call_behavior" in data.get("extension_data", {}):
+            data["function_choice_behavior"] = FunctionChoiceBehavior.from_function_call_behavior(
+                data.get("extension_data", {}).get("function_call_behavior")
+                data.get("extension_data").get("function_call_behavior")
+            )
+        return data
+
+    @field_validator("function_call_behavior", mode="after")
+    @classmethod
+    def check_for_function_call_behavior(cls, v) -> Self:
+        """Check if function_choice_behavior is set, if not, set it to default."""
+        if v is not None:
+            logger.warning(
+                "The `function_call_behavior` parameter is deprecated. Please use the `function_choice_behavior` parameter instead."  # noqa: E501
+            )
+        return v
+
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 class OpenAIEmbeddingPromptExecutionSettings(PromptExecutionSettings):
     """Specific settings for the text embedding endpoint."""

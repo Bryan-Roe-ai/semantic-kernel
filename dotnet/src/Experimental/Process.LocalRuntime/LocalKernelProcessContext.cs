@@ -1,4 +1,13 @@
+<<<<<<< HEAD
+<<<<<<< HEAD
+// Copyright (c) Microsoft. All rights reserved.
+=======
 ﻿// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+using System;
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Process;
 
@@ -12,8 +21,38 @@ public sealed class LocalKernelProcessContext : KernelProcessContext, System.IAs
     private readonly LocalProcess _localProcess;
     private readonly Kernel _kernel;
 
+<<<<<<< HEAD
+    internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventProxy? filter = null)
+<<<<<<< HEAD
+    internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventFilter? filter = null)
+=======
+    internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventProxy? eventProxy = null)
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+=======
     internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventProxy? eventProxy = null, IExternalKernelProcessMessageChannel? externalMessageChannel = null)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
+        Verify.NotNull(kernel, nameof(kernel));
+        Verify.NotNull(process, nameof(process));
+        Verify.NotNull(kernel, nameof(kernel));
+        Verify.NotNullOrWhiteSpace(process.State?.Name);
+
+        this._kernel = kernel;
+        this._localProcess = new LocalProcess(
+            process,
+            kernel)
+        {
+            EventProxy = filter
+        };
+            EventFilter = filter,
+            LoggerFactory = kernel.LoggerFactory,
+        };
+    }
+
+    internal Task StartWithEventAsync(KernelProcessEvent? initialEvent, Kernel? kernel = null)
+    {
+        return this._localProcess.RunOnceAsync(initialEvent);
+    }
         Verify.NotNull(process, nameof(process));
         Verify.NotNull(kernel, nameof(kernel));
         Verify.NotNullOrWhiteSpace(process.State?.Name);
@@ -25,6 +64,16 @@ public sealed class LocalKernelProcessContext : KernelProcessContext, System.IAs
             ExternalMessageChannel = externalMessageChannel,
         };
     }
+        Verify.NotNull(process, nameof(process));
+        Verify.NotNull(kernel, nameof(kernel));
+        Verify.NotNullOrWhiteSpace(process.State?.Name);
+
+        this._kernel = kernel;
+        this._localProcess = new LocalProcess(process, kernel);
+    }
+
+    internal Task StartWithEventAsync(KernelProcessEvent initialEvent, Kernel? kernel = null) =>
+        this._localProcess.RunOnceAsync(initialEvent, kernel);
 
     internal Task StartWithEventAsync(KernelProcessEvent initialEvent, Kernel? kernel = null) =>
         this._localProcess.RunOnceAsync(initialEvent, kernel);

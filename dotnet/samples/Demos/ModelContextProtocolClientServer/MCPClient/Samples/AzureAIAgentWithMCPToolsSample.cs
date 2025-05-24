@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -62,7 +62,7 @@ internal sealed class AzureAIAgentWithMCPToolsSample : BaseSample
         Console.WriteLine(response.Message);
         Console.WriteLine();
 
-        // The expected output is: Today in Boston, the weather is 61°F and rainy. Due to the rain, the likely color of the sky will be gray.
+        // The expected output is: Today in Boston, the weather is 61�F and rainy. Due to the rain, the likely color of the sky will be gray.
 
         // Delete the agent thread after use
         await response!.Thread.DeleteAsync();

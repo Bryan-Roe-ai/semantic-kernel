@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c)        Console.WriteLine("============= Google AI - Gemini Chat Completion with vision =============");Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -41,7 +41,7 @@ public sealed class Google_GeminiVision(ITestOutputHelper output) : BaseTest(out
 
         chatHistory.AddUserMessage(
         [
-            new TextContent("What’s in this image?"),
+            new TextContent("What�s in this image?"),
             // Google AI Gemini API requires the image to be in base64 format, doesn't support URI
             // You have to always provide the mimeType for the image
             new ImageContent(bytes, "image/jpeg"),
@@ -103,7 +103,7 @@ public sealed class Google_GeminiVision(ITestOutputHelper output) : BaseTest(out
 
         chatHistory.AddUserMessage(
         [
-            new TextContent("What’s in this image?"),
+            new TextContent("What�s in this image?"),
             // Vertex AI Gemini API supports both base64 and URI format
             // You have to always provide the mimeType for the image
             new ImageContent(bytes, "image/jpeg"),

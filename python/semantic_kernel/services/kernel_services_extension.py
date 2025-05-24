@@ -7,9 +7,14 @@ from typing import TYPE_CHECKING, TypeVar
 
 from pydantic import Field, field_validator
 
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.connectors.ai.prompt_execution_settings import (
+    PromptExecutionSettings,
+)
 from semantic_kernel.const import DEFAULT_SERVICE_NAME
-from semantic_kernel.exceptions import KernelFunctionAlreadyExistsError, KernelServiceNotFoundError
+from semantic_kernel.exceptions import (
+    KernelFunctionAlreadyExistsError,
+    KernelServiceNotFoundError,
+)
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.services.ai_service_client_base import AIServiceClientBase
 from semantic_kernel.services.ai_service_selector import AIServiceSelector
@@ -37,7 +42,10 @@ class KernelServicesExtension(KernelBaseModel, ABC):
     def rewrite_services(
         cls,
         services: (
-            AI_SERVICE_CLIENT_TYPE | list[AI_SERVICE_CLIENT_TYPE] | dict[str, AI_SERVICE_CLIENT_TYPE] | None
+            AI_SERVICE_CLIENT_TYPE
+            | list[AI_SERVICE_CLIENT_TYPE]
+            | dict[str, AI_SERVICE_CLIENT_TYPE]
+            | None
         ) = None,
     ) -> dict[str, AI_SERVICE_CLIENT_TYPE]:
         """Rewrite services to a dictionary."""
@@ -46,7 +54,10 @@ class KernelServicesExtension(KernelBaseModel, ABC):
         if isinstance(services, AIServiceClientBase):
             return {services.service_id if services.service_id else DEFAULT_SERVICE_NAME: services}  # type: ignore
         if isinstance(services, list):
-            return {s.service_id if s.service_id else DEFAULT_SERVICE_NAME: s for s in services}
+            return {
+                s.service_id if s.service_id else DEFAULT_SERVICE_NAME: s
+                for s in services
+            }
         return services
 
     def select_ai_service(
@@ -68,8 +79,17 @@ class KernelServicesExtension(KernelBaseModel, ABC):
     def get_service(
         self,
         service_id: str | None = None,
+<<<<<<< HEAD
+        type: (
+            type[AI_SERVICE_CLIENT_TYPE]
+            | tuple[type[AI_SERVICE_CLIENT_TYPE], ...]
+            | None
+        ) = None,
+    ) -> AIServiceClientBase:
+=======
         type: type[AI_SERVICE_CLIENT_TYPE] | tuple[type[AI_SERVICE_CLIENT_TYPE], ...] | None = None,
     ) -> AI_SERVICE_CLIENT_TYPE:
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """Get a service by service_id and type.
 
         Type is optional and when not supplied, no checks are done.
@@ -109,12 +129,30 @@ class KernelServicesExtension(KernelBaseModel, ABC):
         return services[service_id]
 
     def get_services_by_type(
+<<<<<<< HEAD
+        self,
+        type: (
+            type[AI_SERVICE_CLIENT_TYPE]
+            | tuple[type[AI_SERVICE_CLIENT_TYPE], ...]
+            | None
+        ),
+    ) -> dict[str, AIServiceClientBase]:
+        """Get all services of a specific type."""
+        if type is None:
+            return self.services
+        return {
+            service.service_id: service
+            for service in self.services.values()
+            if isinstance(service, type)
+        }
+=======
         self, type: type[AI_SERVICE_CLIENT_TYPE] | tuple[type[AI_SERVICE_CLIENT_TYPE], ...] | None
     ) -> Mapping[str, AI_SERVICE_CLIENT_TYPE]:
         """Get all services of a specific type."""
         if type is None:
             return self.services  # type: ignore
         return {service.service_id: service for service in self.services.values() if isinstance(service, type)}  # type: ignore
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     def get_prompt_execution_settings_from_service_id(
         self, service_id: str, type: type[AI_SERVICE_CLIENT_TYPE] | None = None
@@ -126,7 +164,9 @@ class KernelServicesExtension(KernelBaseModel, ABC):
             extension_data={"ai_model_id": service.ai_model_id},
         )
 
-    def add_service(self, service: AIServiceClientBase, overwrite: bool = False) -> None:
+    def add_service(
+        self, service: AIServiceClientBase, overwrite: bool = False
+    ) -> None:
         """Add a single service to the Kernel.
 
         Args:
@@ -136,12 +176,16 @@ class KernelServicesExtension(KernelBaseModel, ABC):
         if service.service_id not in self.services or overwrite:
             self.services[service.service_id] = service
             return
-        raise KernelFunctionAlreadyExistsError(f"Service with service_id '{service.service_id}' already exists")
+        raise KernelFunctionAlreadyExistsError(
+            f"Service with service_id '{service.service_id}' already exists"
+        )
 
     def remove_service(self, service_id: str) -> None:
         """Delete a single service from the Kernel."""
         if service_id not in self.services:
-            raise KernelServiceNotFoundError(f"Service with service_id '{service_id}' does not exist")
+            raise KernelServiceNotFoundError(
+                f"Service with service_id '{service_id}' does not exist"
+            )
         del self.services[service_id]
 
     def remove_all_services(self) -> None:

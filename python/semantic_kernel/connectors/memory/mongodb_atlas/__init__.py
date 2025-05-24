@@ -6,7 +6,9 @@ from semantic_kernel.connectors.memory.mongodb_atlas.mongodb_atlas_collection im
 from semantic_kernel.connectors.memory.mongodb_atlas.mongodb_atlas_memory_store import (
     MongoDBAtlasMemoryStore,
 )
-from semantic_kernel.connectors.memory.mongodb_atlas.mongodb_atlas_settings import MongoDBAtlasSettings
+from semantic_kernel.connectors.memory.mongodb_atlas.mongodb_atlas_settings import (
+    MongoDBAtlasSettings,
+)
 
 __all__ = [
     "MongoDBAtlasCollection",

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
@@ -9,8 +9,12 @@ using Xunit.Abstractions;
 
 namespace SemanticKernel.IntegrationTests.Connectors.Google;
 
+<<<<<<< HEAD
+public sealed class EmbeddingGenerationTests(ITestOutputHelper output) : TestBase(output)
+=======
 [Obsolete("Temporary Test for ITextEmbeddingGenerationService")]
 public sealed class EmbeddingGenerationTests(ITestOutputHelper output) : TestsBase(output)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 {
     private const string Input = "LLM is Large Language Model.";
 

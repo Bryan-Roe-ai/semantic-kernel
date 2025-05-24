@@ -1,0 +1,66 @@
+# This workflow uses actions provided by third parties.
+# Ensure compliance with their terms of service, privacy policy, and support documentation.
+
+name: CodeScan
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '21 7 * * 6'
+
+permissions:
+  contents: none
+  security-events: write
+
+jobs:
+  CodeScan:
+    permissions:
+      contents: read
+      security-events: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Cache SonarQube files
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.sonar
+          key: ${{ runner.os }}-sonar-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-sonar-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Run CodeScan Analysis
+        uses: codescan-io/codescan-scanner-action@v4
+        with:
+          login: ${{ secrets.CODESCAN_AUTH_TOKEN }}
+          organization: ${{ secrets.CODESCAN_ORGANIZATION_KEY }}
+          projectKey: ${{ secrets.CODESCAN_PROJECT_KEY }}
+
+      - name: Verify SARIF file
+        run: test -f codescan.sarif || echo "SARIF file not found!" && exit 1
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: codescan.sarif
+
+      - name: Clean up temporary files and directories
+        run: sudo rm -rf /tmp/*
+
+      - name: Prune Docker system
+        run: docker system prune -f
+
+    fail-fast: false
+    max-parallel: 2

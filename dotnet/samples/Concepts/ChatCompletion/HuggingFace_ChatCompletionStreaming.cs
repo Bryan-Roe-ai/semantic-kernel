@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsof        Console.WriteLine($"======== HuggingFace - Chat Completion - {nameof(UsingServiceStreamingWithHuggingFace)} ========");. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;

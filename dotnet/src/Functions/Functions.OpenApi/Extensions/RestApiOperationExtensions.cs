@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -144,7 +144,7 @@ internal static partial class RestApiOperationExtensions
     {
         return new RestApiParameter(
             RestApiOperation.ContentTypeArgumentName,
-            "string",
+            RestApiParameterType.String,
             isRequired: false,
             expand: false,
             RestApiParameterLocation.Body,
@@ -161,7 +161,7 @@ internal static partial class RestApiOperationExtensions
     {
         return new RestApiParameter(
             RestApiOperation.PayloadArgumentName,
-            operation.Payload?.MediaType == MediaTypeTextPlain ? "string" : "object",
+            operation.Payload?.MediaType == MediaTypeTextPlain ? RestApiParameterType.String : RestApiParameterType.Object,
             isRequired: true,
             expand: false,
             RestApiParameterLocation.Body,

@@ -1,13 +1,17 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
+/// This option is only relevant if <see cref="AllowParallelCalls"/> is set to true.</remarks>
+    [JsonPropertyName("concurrent_invocations")]
+    public bool? ConcurrentInvocations { get; set; } = null;
+}
 
 namespace Microsoft.SemanticKernel;
 
 /// <summary>
-/// Represents the options for a function choice behavior.
+/// Represents the options for a function choice behavior. At the moment this is empty but it is being included for future use.
 /// </summary>
 public sealed class FunctionChoiceBehaviorOptions
 {

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using AzureAISearchIntegrationTests.Support;
 using Microsoft.Extensions.VectorData;

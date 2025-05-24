@@ -8,20 +8,26 @@ This assembly contains implementation of Semantic Kernel Memory Store using [Chr
 
 1. Clone Chroma:
 
-```bash
+```bash {"id":"01J6KPPMQEJFRBZ02BHD12JZMZ"}
 git clone https://github.com/chroma-core/chroma.git
 cd chroma
 ```
 
 2. Run local Chroma server with Docker within Chroma repository root:
 
-```bash
+```bash {"id":"01J6KPPMQEJFRBZ02BHFH091E5"}
 docker-compose up -d --build
 ```
 
 3. Use Semantic Kernel with Chroma, using server local endpoint `http://localhost:8000`:
 
+<<<<<<< HEAD
+   > See [Example 14](../../../samples/Concepts/Memory/SemanticTextMemory_Building.cs) and [Example 15](../../../samples/Concepts/Memory/TextMemoryPlugin_MultipleMemoryStore.cs) for more memory usage examples with the kernel.
+
+```csharp {"id":"01J6KPPMQEJFRBZ02BHGEW2J8E"}
+=======
 ```csharp
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 const string endpoint = "http://localhost:8000";
 
 var memoryWithChroma = new MemoryBuilder()

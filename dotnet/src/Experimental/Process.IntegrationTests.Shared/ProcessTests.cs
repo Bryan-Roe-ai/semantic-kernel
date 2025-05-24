@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 #pragma warning disable IDE0005 // Using directive is unnecessary.
 using System.Linq;
@@ -260,15 +260,15 @@ public sealed class ProcessTests : IClassFixture<ProcessTestFixture>
     /// Process with multiple "long" nested sequential subprocesses and with multiple single step
     /// output fan out only steps
     /// <code>
-    ///            ┌───────────────────────────────────────────────┐
-    ///            │                                               ▼
-    /// ┌───────┐  │   ┌──────────────┐     ┌──────────────┐    ┌──────┐
-    /// │  1st  ├──┼──►│  2nd-nested  ├──┬─►│  3rd-nested  ├─┬─►│ last │
-    /// └───────┘  │   └──────────────┘  │  └──────────────┘ │  └──────┘
-    ///            ▼                     ▼                   ▼
-    ///       ┌─────────┐           ┌─────────┐         ┌─────────┐
-    ///       │ output1 │           │ output2 │         │ output3 │
-    ///       └─────────┘           └─────────┘         └─────────┘
+    ///            +-----------------------------------------------+
+    ///            �                                               ?
+    /// +-------+  �   +--------------+     +--------------+    +------+
+    /// �  1st  +--+--?�  2nd-nested  +----?�  3rd-nested  +---?� last �
+    /// +-------+  �   +--------------+  �  +--------------+ �  +------+
+    ///            ?                     ?                   ?
+    ///       +---------+           +---------+         +---------+
+    ///       � output1 �           � output2 �         � output3 �
+    ///       +---------+           +---------+         +---------+
     /// </code>
     /// </summary>
     /// <returns><see cref="Task"/></returns>
@@ -332,11 +332,11 @@ public sealed class ProcessTests : IClassFixture<ProcessTestFixture>
     /// Input Event: <see cref="EmitterStep.InputEvent"/><br/>
     /// Output Event: <see cref="ProcessTestsEvents.OutputReadyPublic"/><br/>
     /// <code>
-    ///            ┌───────────────────────────────────────────────┐
-    ///            │                                               ▼
-    /// ┌───────┐  │   ┌───────┐    ┌───────┐    ┌────────┐    ┌──────┐
-    /// │  1st  ├──┴──►│  2nd  ├───►│  ...  ├───►│  10th  ├───►│ last │
-    /// └───────┘      └───────┘    └───────┘    └────────┘    └──────┘
+    ///            +-----------------------------------------------+
+    ///            �                                               ?
+    /// +-------+  �   +-------+    +-------+    +--------+    +------+
+    /// �  1st  +-----?�  2nd  +---?�  ...  +---?�  10th  +---?� last �
+    /// +-------+      +-------+    +-------+    +--------+    +------+
     /// </code>
     /// </summary>
     /// <param name="name">name of the process</param>
@@ -376,9 +376,9 @@ public sealed class ProcessTests : IClassFixture<ProcessTestFixture>
     /// Input Event: <see cref="ProcessTestsEvents.StartProcess"/><br/>
     /// Output Events: [<see cref="ProcessTestsEvents.OutputReadyInternal"/>, <see cref="ProcessTestsEvents.OutputReadyPublic"/>]<br/>
     /// <code>
-    /// ┌────────┐    ┌────────┐
-    /// │  echo  ├───►│ repeat │
-    /// └────────┘    └────────┘
+    /// +--------+    +--------+
+    /// �  echo  +---?� repeat �
+    /// +--------+    +--------+
     /// </code>
     /// </summary>
     private ProcessBuilder CreateLinearProcess(string name)
@@ -401,15 +401,15 @@ public sealed class ProcessTests : IClassFixture<ProcessTestFixture>
     /// Input Event: <see cref="ProcessTestsEvents.StartProcess"/><br/>
     /// Output Events: <see cref="ProcessTestsEvents.OutputReadyPublic"/><br/>
     /// <code>
-    /// ┌─────────┐
-    /// │  echoA  ├──────┐
-    /// └─────────┘      ▼
-    ///              ┌────────┐
-    ///              │ fanInC │
-    ///              └────────┘
-    /// ┌─────────┐      ▲
-    /// │ repeatB ├──────┘
-    /// └─────────┘
+    /// +---------+
+    /// �  echoA  +------+
+    /// +---------+      ?
+    ///              +--------+
+    ///              � fanInC �
+    ///              +--------+
+    /// +---------+      ?
+    /// � repeatB +------+
+    /// +---------+
     /// </code>
     /// </summary>
     /// <param name="name">name of the process</param>
@@ -435,15 +435,15 @@ public sealed class ProcessTests : IClassFixture<ProcessTestFixture>
     /// Input Event: <see cref="ProcessTestsEvents.StartProcess"/><br/>
     /// Output Events: <see cref="ProcessStepBuilder.OnFunctionError(string?)"/> <br/>
     /// <code>
-    ///               ┌────────┐
-    ///      ┌───────►│ repeat │
-    ///      │        └────────┘
-    ///  ┌───┴───┐
-    ///  │ error │
-    ///  └───┬───┘
-    ///      │        ┌────────┐
-    ///      └───────►│ report │
-    ///               └────────┘
+    ///               +--------+
+    ///      +-------?� repeat �
+    ///      �        +--------+
+    ///  +-------+
+    ///  � error �
+    ///  +-------+
+    ///      �        +--------+
+    ///      +-------?� report �
+    ///               +--------+
     /// </code>
     /// </summary>
     private ProcessBuilder CreateProcessWithError(string name)

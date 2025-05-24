@@ -1,4 +1,4 @@
-Ôªø// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Reflection;
 using Microsoft.Extensions.AI;
@@ -83,9 +83,9 @@ public class InMemoryVectorStoreFixture : IAsyncLifetime
             "In this guide, you learned how to quickly get started with Semantic Kernel by building a simple AI agent that can interact with an AI service and run your code. To see more examples and learn how to build more complex AI agents, check out our in-depth samples.",
             "The Semantic Kernel extension for Visual Studio Code makes it easy to design and test semantic functions.The extension provides an interface for designing semantic functions and allows you to test them with the push of a button with your existing models and data.",
             "The kernel is the central component of Semantic Kernel.At its simplest, the kernel is a Dependency Injection container that manages all of the services and plugins necessary to run your AI application.",
-            "Semantic Kernel (SK) is a lightweight SDK that lets you mix conventional programming languages, like C# and Python, with the latest in Large Language Model (LLM) AI ‚Äúprompts‚Äù with prompt templating, chaining, and planning capabilities.",
+            "Semantic Kernel (SK) is a lightweight SDK that lets you mix conventional programming languages, like C# and Python, with the latest in Large Language Model (LLM) AI ìpromptsî with prompt templating, chaining, and planning capabilities.",
             "Semantic Kernel is a lightweight, open-source development kit that lets you easily build AI agents and integrate the latest AI models into your C#, Python, or Java codebase. It serves as an efficient middleware that enables rapid delivery of enterprise-grade solutions. Enterprise ready.",
-            "With Semantic Kernel, you can easily build agents that can call your existing code.This power lets you automate your business processes with models from OpenAI, Azure OpenAI, Hugging Face, and more! We often get asked though, ‚ÄúHow do I architect my solution?‚Äù and ‚ÄúHow does it actually work?‚Äù"
+            "With Semantic Kernel, you can easily build agents that can call your existing code.This power lets you automate your business processes with models from OpenAI, Azure OpenAI, Hugging Face, and more! We often get asked though, ìHow do I architect my solution?î and ìHow does it actually work?î"
 
         ];
         var vectorizedSearch = await CreateCollectionFromListAsync<Guid, DataModel>(lines, CreateRecord);

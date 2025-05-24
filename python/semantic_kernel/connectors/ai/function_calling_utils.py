@@ -12,16 +12,29 @@ from semantic_kernel.utils.feature_stage_decorator import experimental
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.function_choice_behavior import (
         FunctionCallChoiceConfiguration,
-        FunctionChoiceType,
+    )
+    from semantic_kernel.connectors.ai.prompt_execution_settings import (
+        PromptExecutionSettings,
+    )
+    from semantic_kernel.functions.kernel_function_metadata import (
+        KernelFunctionMetadata,
+    )
+>>>>>>>+main
+ionChoic        FunctionChoiceType,
     )
     from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
     from semantic_kernel.contents.chat_message_content import ChatMessageContent
     from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
     from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
+<<<<<<< HEAD
+>>>>>>>+upstream/main
+nfiguration(
+=======
     from semantic_kernel.kernel import Kernel
 
 
 def update_settings_from_function_call_configuration(
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     function_choice_configuration: "FunctionCallChoiceConfiguration",
     settings: "PromptExecutionSettings",
     type: "FunctionChoiceType",
@@ -32,6 +45,32 @@ def update_settings_from_function_call_configuration(
         and hasattr(settings, "tool_choice")
         and hasattr(settings, "tools")
     ):
+import logging
+from typing import TYPE_CHECKING, Any
+
+from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_prompt_execution_settings import (
+    OpenAIChatPromptExecutionSettings,
+)
+from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
+
+if TYPE_CHECKING:
+    from semantic_kernel.connectors.ai.function_choice_behavior import (
+        FunctionCallChoiceConfiguration,
+    )
+    from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_prompt_execution_settings import (
+        OpenAIChatPromptExecutionSettings,
+    )
+
+logger = logging.getLogger(__name__)
+
+
+def update_settings_from_function_call_configuration(
+    function_choice_configuration: "FunctionCallChoiceConfiguration",
+    settings: "OpenAIChatPromptExecutionSettings",
+    type: str,
+) -> None:
+    """Update the settings from a FunctionChoiceConfiguration."""
+    if function_choice_configuration.available_functions:
         settings.tool_choice = type
         settings.tools = [
             kernel_function_metadata_to_function_call_format(f)
@@ -50,10 +89,135 @@ def kernel_function_metadata_to_function_call_format(
             "description": metadata.description or "",
             "parameters": {
                 "type": "object",
+<<<<<<< HEAD
+<<<<<<< main
+                "properties": {
+                    param.name: param.schema_data for param in metadata.parameters
+                },
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+<<<<<<< HEAD
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+                "properties": {param.name: param.schema_data for param in metadata.parameters},
+                "properties": {param.name: param.schema_data for param in metadata.parameters if param.is_required},
+>>>>>>> origin/PR
+                "required": [p.name for p in metadata.parameters if p.is_required],
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+=======
+>>>>>>> Stashed changes
+=======
+=======
+<<<<<<< div
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+>>>>>>> head
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+                "properties": {param.name: param.schema_data for param in metadata.parameters},
+                "properties": {param.name: param.schema_data for param in metadata.parameters if param.is_required},
+                "required": [p.name for p in metadata.parameters if p.is_required],
+=======
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
                 "properties": {
                     param.name: param.schema_data for param in metadata.parameters if param.include_in_function_choices
                 },
                 "required": [p.name for p in metadata.parameters if p.is_required and p.include_in_function_choices],
+<<<<<<< HEAD
+>>>>>>> ms/feature-python-search
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< HEAD
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+<<<<<<< div
+=======
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+=======
+>>>>>>> main
+>>>>>>> Stashed changes
+>>>>>>> head
+=======
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             },
         },
     }
@@ -94,7 +258,9 @@ def _combine_filter_dicts(*dicts: dict[str, list[str]]) -> dict:
                     for item in d[key]:
                         combined_functions[item] = None
                 else:
-                    raise ServiceInitializationError(f"Values for filter key '{key}' are not lists.")
+                    raise ServiceInitializationError(
+                        f"Values for filter key '{key}' are not lists."
+                    )
         combined_filters[key] = list(combined_functions.keys())
 
     return combined_filters

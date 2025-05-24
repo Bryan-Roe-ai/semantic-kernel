@@ -11,6 +11,19 @@ if sys.version_info >= (3, 12):
 else:
     from typing_extensions import override  # pragma: no cover
 
+<<<<<<< HEAD
+from semantic_kernel.agents.open_ai.open_ai_assistant_base import OpenAIAssistantBase
+from semantic_kernel.connectors.ai.open_ai.settings.open_ai_settings import (
+    OpenAISettings,
+)
+from semantic_kernel.const import DEFAULT_SERVICE_NAME
+from semantic_kernel.exceptions.agent_exceptions import AgentInitializationException
+from semantic_kernel.utils.experimental_decorator import experimental_class
+from semantic_kernel.utils.telemetry.user_agent import (
+    APP_INFO,
+    prepend_semantic_kernel_to_user_agent,
+)
+=======
 from openai import NOT_GIVEN, AsyncOpenAI, NotGiven
 from openai.lib._parsing._completions import type_to_response_format_param
 from openai.types.beta.assistant import Assistant
@@ -50,6 +63,7 @@ from semantic_kernel.utils.telemetry.agent_diagnostics.decorators import (
     trace_agent_invocation,
 )
 from semantic_kernel.utils.telemetry.user_agent import APP_INFO, prepend_semantic_kernel_to_user_agent
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 if TYPE_CHECKING:
     from openai import AsyncOpenAI
@@ -197,6 +211,38 @@ class OpenAIAssistantAgent(Agent):
             prompt_template_config: The prompt template configuration.
             kwargs: Additional keyword arguments.
         """
+<<<<<<< HEAD
+        openai_settings = OpenAIAssistantAgent._create_open_ai_settings(
+            api_key=api_key,
+            org_id=org_id,
+            ai_model_id=ai_model_id,
+            env_file_path=env_file_path,
+            env_file_encoding=env_file_encoding,
+        )
+
+        if not client and not openai_settings.api_key:
+            raise AgentInitializationError(
+                "The OpenAI API key is required, if a client is not provided."
+            )
+            raise AgentInitializationException("The OpenAI API key is required, if a client is not provided.")
+        if not openai_settings.chat_model_id:
+            raise AgentInitializationException("The OpenAI chat model ID is required.")
+
+        if not client:
+            client = self._create_client(
+                api_key=(
+                    openai_settings.api_key.get_secret_value()
+                    if openai_settings.api_key
+                    else None
+                ),
+                org_id=openai_settings.org_id,
+                default_headers=default_headers,
+            )
+
+        service_id = service_id if service_id else DEFAULT_SERVICE_NAME
+
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         args: dict[str, Any] = {
             "client": client,
             "definition": definition,
@@ -284,6 +330,67 @@ class OpenAIAssistantAgent(Agent):
         if not openai_settings.chat_model_id:
             raise AgentInitializationException("The OpenAI model ID is required.")
 
+<<<<<<< HEAD
+        if code_interpreter_file_ids is not None:
+            code_interpreter_file_ids_combined.extend(code_interpreter_file_ids)
+
+        if code_interpreter_filenames is not None:
+            for file_path in code_interpreter_filenames:
+                try:
+                    file_id = await agent.add_file(file_path=file_path, purpose="assistants")
+                    code_interpreter_file_ids_combined.append(file_id)
+                except FileNotFoundError as ex:
+                    logger.error(
+                        f"Failed to upload code interpreter file with path: `{file_path}` with exception: {ex}"
+                    )
+                    raise AgentInitializationException("Failed to upload code interpreter files.", ex) from ex
+
+        if code_interpreter_file_ids_combined:
+            agent.code_interpreter_file_ids = code_interpreter_file_ids_combined
+            assistant_create_kwargs["code_interpreter_file_ids"] = code_interpreter_file_ids_combined
+
+        vector_store_file_ids_combined: list[str] = []
+
+        if vector_store_file_ids is not None:
+            vector_store_file_ids_combined.extend(vector_store_file_ids)
+
+        if vector_store_filenames is not None:
+            for file_path in vector_store_filenames:
+                try:
+                    file_id = await agent.add_file(file_path=file_path, purpose="assistants")
+                    vector_store_file_ids_combined.append(file_id)
+                except FileNotFoundError as ex:
+                    logger.error(f"Failed to upload vector store file with path: `{file_path}` with exception: {ex}")
+                    raise AgentInitializationException("Failed to upload vector store files.", ex) from ex
+
+        if vector_store_file_ids_combined:
+            agent.file_search_file_ids = vector_store_file_ids_combined
+            if enable_file_search or agent.enable_file_search:
+                vector_store_id = await agent.create_vector_store(file_ids=vector_store_file_ids_combined)
+                agent.vector_store_id = vector_store_id
+                assistant_create_kwargs["vector_store_id"] = vector_store_id
+
+        agent.assistant = await agent.create_assistant(**assistant_create_kwargs)
+        return agent
+
+    @staticmethod
+    def _create_client(
+        api_key: str | None = None,
+        org_id: str | None = None,
+        default_headers: dict[str, str] | None = None,
+    ) -> AsyncOpenAI:
+        """An internal method to create the OpenAI client from the provided arguments.
+
+        Args:
+            api_key: The OpenAI API key.
+            org_id: The OpenAI organization ID. (optional)
+            default_headers: The default headers. (optional)
+
+        Returns:
+            An OpenAI client instance.
+        """
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         merged_headers = dict(copy(default_headers)) if default_headers else {}
         if default_headers:
             merged_headers.update(default_headers)
@@ -298,6 +405,126 @@ class OpenAIAssistantAgent(Agent):
             **kwargs,
         )
 
+<<<<<<< HEAD
+    @staticmethod
+    def _create_open_ai_settings(
+        api_key: str | None = None,
+        org_id: str | None = None,
+        ai_model_id: str | None = None,
+        env_file_path: str | None = None,
+        env_file_encoding: str | None = None,
+    ) -> OpenAISettings:
+        """An internal method to create the OpenAI settings from the provided arguments.
+
+        Args:
+            api_key: The OpenAI API key.
+            org_id: The OpenAI organization ID. (optional)
+            ai_model_id: The AI model ID. (optional)
+            env_file_path: The environment file path. (optional)
+            env_file_encoding: The environment file encoding. (optional)
+
+        Returns:
+            An OpenAI settings instance.
+        """
+        try:
+            openai_settings = OpenAISettings.create(
+                api_key=api_key,
+                org_id=org_id,
+                chat_model_id=ai_model_id,
+                env_file_path=env_file_path,
+                env_file_encoding=env_file_encoding,
+            )
+        except ValidationError as ex:
+            raise AgentInitializationError(
+                "Failed to create OpenAI settings.", ex
+            ) from ex
+            raise AgentInitializationException("Failed to create OpenAI settings.", ex) from ex
+
+        return openai_settings
+
+    async def list_definitions(self) -> AsyncIterable[dict[str, Any]]:
+        """List the assistant definitions.
+
+        Yields:
+            An AsyncIterable of dictionaries representing the OpenAIAssistantDefinition.
+        """
+        assistants = await self.client.beta.assistants.list(order="desc")
+        for assistant in assistants.data:
+            yield self._create_open_ai_assistant_definition(assistant)
+            yield OpenAIAssistantBase._create_open_ai_assistant_definition(assistant)
+
+    @classmethod
+    async def retrieve(
+        cls,
+        *,
+        id: str,
+        kernel: "Kernel | None" = None,
+        api_key: str | None = None,
+        org_id: str | None = None,
+        ai_model_id: str | None = None,
+        client: AsyncOpenAI | None = None,
+        default_headers: dict[str, str] | None = None,
+        env_file_path: str | None = None,
+        env_file_encoding: str | None = None,
+    ) -> "OpenAIAssistantAgent":
+        """Retrieve an assistant by ID.
+
+        Args:
+            id: The assistant ID.
+            kernel: The Kernel instance. (optional)
+            api_key: The OpenAI API key. (optional)
+            org_id: The OpenAI organization ID. (optional)
+            ai_model_id: The AI model ID. (optional)
+            client: The OpenAI client. (optional)
+            default_headers: The default headers. (optional)
+            env_file_path: The environment file path. (optional)
+            env_file_encoding: The environment file encoding. (optional
+
+        Returns:
+            An OpenAIAssistantAgent instance.
+        """
+        openai_settings = OpenAIAssistantAgent._create_open_ai_settings(
+            api_key=api_key,
+            org_id=org_id,
+            ai_model_id=ai_model_id,
+            env_file_path=env_file_path,
+            env_file_encoding=env_file_encoding,
+        )
+        if not client and not openai_settings.api_key:
+            raise AgentInitializationError(
+                "The OpenAI API key is required, if a client is not provided."
+            )
+            raise AgentInitializationException("The OpenAI API key is required, if a client is not provided.")
+        if not openai_settings.chat_model_id:
+            raise AgentInitializationException("The OpenAI chat model ID is required.")
+        if not client:
+            client = OpenAIAssistantAgent._create_client(
+                api_key=(
+                    openai_settings.api_key.get_secret_value()
+                    if openai_settings.api_key
+                    else None
+                ),
+                org_id=openai_settings.org_id,
+                default_headers=default_headers,
+            )
+        assistant = await client.beta.assistants.retrieve(id)
+        assistant_definition = OpenAIAssistantBase._create_open_ai_assistant_definition(
+            assistant
+        )
+        return OpenAIAssistantAgent(kernel=kernel, **assistant_definition)
+        assistant_definition = OpenAIAssistantBase._create_open_ai_assistant_definition(assistant)
+        return OpenAIAssistantAgent(kernel=kernel, assistant=assistant, **assistant_definition)
+        return OpenAIAssistantAgent(
+            kernel=kernel,
+            assistant=assistant,
+            client=client,
+            api_key=api_key,
+            default_headers=default_headers,
+            env_file_path=env_file_path,
+            env_file_encoding=env_file_encoding,
+            **assistant_definition,
+        )
+=======
         return client, openai_settings.chat_model_id
 
     # endregion
@@ -767,5 +994,6 @@ class OpenAIAssistantAgent(Agent):
             # Now yield the current streamed content (StreamingTextContent)
             message.metadata["thread_id"] = thread.id
             yield AgentResponseItem(message=message, thread=thread)
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     # endregion

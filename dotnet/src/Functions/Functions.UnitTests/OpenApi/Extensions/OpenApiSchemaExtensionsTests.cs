@@ -1,8 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.OpenApi.Any;
+using System.Text.Json.Nodes;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel.Plugins.OpenApi;
 using Xunit;
@@ -16,14 +16,14 @@ public class OpenApiSchemaExtensionsTests
         // Arrange
         var schema = new OpenApiSchema
         {
-            Type = "object",
+            Type = JsonSchemaType.Object,
             Properties = new Dictionary<string, OpenApiSchema>
             {
                 ["property1"] = new OpenApiSchema
                 {
-                    Type = "number",
+                    Type = JsonSchemaType.Number,
                     Format = "double",
-                    Default = new OpenApiDouble(12.01)
+                    Default = JsonValue.Create(12.01)
                 }
             }
         };

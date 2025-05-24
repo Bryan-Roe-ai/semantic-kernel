@@ -14,11 +14,17 @@ from semantic_kernel.kernel_pydantic import KernelBaseModel
 
 FILTER_CONTEXT_TYPE = TypeVar("FILTER_CONTEXT_TYPE", bound=FilterContextBase)
 CALLABLE_FILTER_TYPE = Callable[
+<<<<<<< HEAD
+    [FILTER_CONTEXT_TYPE, Callable[[FILTER_CONTEXT_TYPE], None]], None
+=======
     [FILTER_CONTEXT_TYPE, Callable[[FILTER_CONTEXT_TYPE], Awaitable[None]]], Awaitable[None]
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 ]
 
 ALLOWED_FILTERS_LITERAL = Literal[
-    FilterTypes.AUTO_FUNCTION_INVOCATION, FilterTypes.FUNCTION_INVOCATION, FilterTypes.PROMPT_RENDERING
+    FilterTypes.AUTO_FUNCTION_INVOCATION,
+    FilterTypes.FUNCTION_INVOCATION,
+    FilterTypes.PROMPT_RENDERING,
 ]
 FILTER_MAPPING = {
     FilterTypes.FUNCTION_INVOCATION: "function_invocation_filters",
@@ -30,10 +36,22 @@ FILTER_MAPPING = {
 class KernelFilterExtension(KernelBaseModel, ABC):
     """KernelFilterExtension."""
 
-    function_invocation_filters: list[tuple[int, CALLABLE_FILTER_TYPE]] = Field(default_factory=list)
-    prompt_rendering_filters: list[tuple[int, CALLABLE_FILTER_TYPE]] = Field(default_factory=list)
-    auto_function_invocation_filters: list[tuple[int, CALLABLE_FILTER_TYPE]] = Field(default_factory=list)
+    function_invocation_filters: list[tuple[int, CALLABLE_FILTER_TYPE]] = Field(
+        default_factory=list
+    )
+    prompt_rendering_filters: list[tuple[int, CALLABLE_FILTER_TYPE]] = Field(
+        default_factory=list
+    )
+    auto_function_invocation_filters: list[tuple[int, CALLABLE_FILTER_TYPE]] = Field(
+        default_factory=list
+    )
 
+    @experimental_function
+    def add_filter(
+        self,
+        filter_type: ALLOWED_FILTERS_LITERAL | FilterTypes,
+        filter: CALLABLE_FILTER_TYPE,
+    ) -> None:
     def add_filter(self, filter_type: ALLOWED_FILTERS_LITERAL | FilterTypes, filter: CALLABLE_FILTER_TYPE) -> None:
         """Add a filter to the Kernel.
 
@@ -91,6 +109,9 @@ class KernelFilterExtension(KernelBaseModel, ABC):
             raise FilterManagementException("Either hook_id or position should be provided.")
         if position is not None:
             if filter_type is None:
+                raise ValueError(
+                    "Please specify the type of filter when using position."
+                )
                 raise FilterManagementException("Please specify the type of filter when using position.")
             getattr(self, FILTER_MAPPING[filter_type]).pop(position)
             return
@@ -133,7 +154,9 @@ def _rebuild_auto_function_invocation_context() -> None:
 
 
 def _rebuild_function_invocation_context() -> None:
-    from semantic_kernel.filters.functions.function_invocation_context import FunctionInvocationContext
+    from semantic_kernel.filters.functions.function_invocation_context import (
+        FunctionInvocationContext,
+    )
     from semantic_kernel.functions.function_result import FunctionResult  # noqa: F401
     from semantic_kernel.functions.kernel_arguments import KernelArguments  # noqa: F401
     from semantic_kernel.functions.kernel_function import KernelFunction  # noqa: F401
@@ -143,7 +166,9 @@ def _rebuild_function_invocation_context() -> None:
 
 
 def _rebuild_prompt_render_context() -> None:
-    from semantic_kernel.filters.prompts.prompt_render_context import PromptRenderContext
+    from semantic_kernel.filters.prompts.prompt_render_context import (
+        PromptRenderContext,
+    )
     from semantic_kernel.functions.function_result import FunctionResult  # noqa: F401
     from semantic_kernel.functions.kernel_arguments import KernelArguments  # noqa: F401
     from semantic_kernel.functions.kernel_function import KernelFunction  # noqa: F401

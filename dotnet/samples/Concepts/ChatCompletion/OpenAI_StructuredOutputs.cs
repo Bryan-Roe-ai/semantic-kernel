@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Text.Json;
 using Azure.Identity;
@@ -43,6 +43,11 @@ public class OpenAI_StructuredOutputs(ITestOutputHelper output) : BaseTest(outpu
 
         // Initialize ChatResponseFormat object with JSON schema of desired response format.
         ChatResponseFormat chatResponseFormat = ChatResponseFormat.CreateJsonSchemaFormat(
+            name: "movie_result",
+            name: "movie_result",
+            jsonSchemaFormatName: "movie_result",
+            jsonSchemaFormatName: "movie_result",
+            jsonSchemaFormatName: "movie_result",
             jsonSchemaFormatName: "movie_result",
             jsonSchema: BinaryData.FromString("""
                 {
@@ -69,6 +74,11 @@ public class OpenAI_StructuredOutputs(ITestOutputHelper output) : BaseTest(outpu
                     "additionalProperties": false
                 }
                 """),
+            strictSchemaEnabled: true);
+            strictSchemaEnabled: true);
+            jsonSchemaIsStrict: true);
+            jsonSchemaIsStrict: true);
+            jsonSchemaIsStrict: true);
             jsonSchemaIsStrict: true);
 
         // Specify response format by setting ChatResponseFormat object in prompt execution settings.

@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ClientModel;
 using System.ComponentModel;
@@ -257,9 +257,9 @@ internal sealed class Program
         //      -- User audio transcript: What's the weather like in San Francisco, California?
 
         //      -- Begin streaming of new item
-        //    It's 70Â°F and sunny in San Francisco. Sounds like perfect weather for a light jacket or a sweater. Enjoy your trip!
+        //    It's 70°F and sunny in San Francisco. Sounds like perfect weather for a light jacket or a sweater. Enjoy your trip!
         //      -- Item streaming finished, item_id = item_Abc123...
-        //        + [assistant]: It's 70Â°F and sunny in San Francisco. Sounds like perfect weather for a light jacket or a sweater. Enjoy your trip!
+        //        + [assistant]: It's 70°F and sunny in San Francisco. Sounds like perfect weather for a light jacket or a sweater. Enjoy your trip!
 
         //      -- Model turn generation finished.Status: completed
 

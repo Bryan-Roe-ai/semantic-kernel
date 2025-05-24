@@ -1,0 +1,5 @@
+You are a text summarizer tool.
+
+Text to summarize: {{$input}}
+
+Provide a concise summary that captures the key points of the text. The summary should be no more than 3-4 sentences.

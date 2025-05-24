@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 ﻿// Copyright (c) Microsoft. All rights reserved.
+
+=======
+// Copyright (c) Microsoft. All rights reserved.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.SemanticKernel.Process;
 using Microsoft.SemanticKernel.Process.Internal;
 using Microsoft.SemanticKernel.Process.Runtime;
 
@@ -17,9 +23,25 @@ namespace Microsoft.SemanticKernel;
 /// </summary>
 internal class LocalStep : IKernelProcessMessageChannel
 {
+<<<<<<< HEAD
+    /// <summary>
+    /// The generic state type for a process step.
+    /// </summary>
+    private static readonly Type s_genericType = typeof(KernelProcessStep<>);
+
+    private readonly Kernel _kernel;
+    private readonly Queue<LocalEvent> _outgoingEventQueue = new();
+    private readonly Lazy<ValueTask> _initializeTask;
+    private readonly KernelProcessStepInfo _stepInfo;
+    private readonly string _eventNamespace;
+=======
     private readonly Queue<ProcessEvent> _outgoingEventQueue = new();
     protected readonly Lazy<ValueTask> _initializeTask;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     private readonly ILogger _logger;
+
+    private ILogger? _logger; // Note: Use the Logger property to access this field.
+    private ILogger Logger => this._logger ??= this.LoggerFactory?.CreateLogger(this._stepInfo.InnerStepType) ?? NullLogger.Instance;
 
     protected readonly Kernel _kernel;
     protected readonly Dictionary<string, KernelFunction> _functions = [];
@@ -39,8 +61,7 @@ internal class LocalStep : IKernelProcessMessageChannel
     /// </summary>
     /// <param name="stepInfo">An instance of <see cref="KernelProcessStepInfo"/></param>
     /// <param name="kernel">Required. An instance of <see cref="Kernel"/>.</param>
-    /// <param name="parentProcessId">Optional. The Id of the parent process if one exists.</param>
-    public LocalStep(KernelProcessStepInfo stepInfo, Kernel kernel, string? parentProcessId = null)
+    public LocalStep(KernelProcessStepInfo stepInfo, Kernel kernel)
     {
         Verify.NotNull(kernel, nameof(kernel));
         Verify.NotNull(stepInfo, nameof(stepInfo));
@@ -80,9 +101,15 @@ internal class LocalStep : IKernelProcessMessageChannel
     internal string Id => this._stepInfo.State.Id!;
 
     /// <summary>
-    /// An event proxy that can be used to intercept events emitted by the step.
+    /// An event filter that can be used to intercept events emitted by the step.
     /// </summary>
     internal ProcessEventProxy? EventProxy { get; init; }
+    internal ProcessEventFilter? EventFilter { get; init; }
+
+    /// <summary>
+    /// An instance of <see cref="LoggerFactory"/> used to create loggers.
+    /// </summary>
+    internal ILoggerFactory? LoggerFactory { get; init; }
 
     internal IExternalKernelProcessMessageChannel? ExternalMessageChannel { get; init; }
 
@@ -90,7 +117,7 @@ internal class LocalStep : IKernelProcessMessageChannel
     /// Retrieves all events that have been emitted by this step in the previous superstep.
     /// </summary>
     /// <returns>An <see cref="IEnumerable{T}"/> where T is <see cref="KernelProcessEvent"/></returns>
-    internal IEnumerable<ProcessEvent> GetAllEvents()
+    internal IEnumerable<LocalEvent> GetAllEvents()
     {
         var allEvents = this._outgoingEventQueue.ToArray();
         this._outgoingEventQueue.Clear();
@@ -168,12 +195,12 @@ internal class LocalStep : IKernelProcessMessageChannel
     }
 
     /// <summary>
-    /// Handles a <see cref="ProcessMessage"/> that has been sent to the step.
+    /// Handles a <see cref="LocalMessage"/> that has been sent to the step.
     /// </summary>
     /// <param name="message">The message to process.</param>
     /// <returns>A <see cref="Task"/></returns>
     /// <exception cref="KernelException"></exception>
-    internal virtual async Task HandleMessageAsync(ProcessMessage message)
+    internal virtual async Task HandleMessageAsync(LocalMessage message)
     {
         Verify.NotNull(message, nameof(message));
 
@@ -186,14 +213,18 @@ internal class LocalStep : IKernelProcessMessageChannel
         }
 
         string messageLogParameters = string.Join(", ", message.Values.Select(kvp => $"{kvp.Key}: {kvp.Value}"));
-        this._logger.LogDebug("Received message from '{SourceId}' targeting function '{FunctionName}' and parameters '{Parameters}'.", message.SourceId, message.FunctionName, messageLogParameters);
+        this.Logger.LogDebug("Received message from '{SourceId}' targeting function '{FunctionName}' and parameters '{Parameters}'.", message.SourceId, message.FunctionName, messageLogParameters);
 
         if (!string.IsNullOrEmpty(message.GroupId))
         {
             this._logger.LogDebug("Step {StepName} received message from Step named '{SourceId}' with group Id '{GroupId}'.", this.Name, message.SourceId, message.GroupId);
             if (!this._edgeGroupProcessors.TryGetValue(message.GroupId, out LocalEdgeGroupProcessor? edgeGroupProcessor) || edgeGroupProcessor is null)
             {
+<<<<<<< HEAD
+                this.Logger.LogWarning("Step {StepName} already has input for {FunctionName}.{Key}, it is being overwritten with a message from Step named '{SourceId}'.", this.Name, message.FunctionName, kvp.Key, message.SourceId);
+=======
                 throw new KernelException($"Step {this.Name} received message from Step named '{message.SourceId}' with group Id '{message.GroupId}' that is not registered.").Log(this._logger);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             }
 
             if (!edgeGroupProcessor.TryGetResult(message, out Dictionary<string, object?>? result))
@@ -216,7 +247,7 @@ internal class LocalStep : IKernelProcessMessageChannel
         if (invocableFunctions.Count == 0)
         {
             string missingKeysLog() => string.Join(", ", missingKeys.Select(k => $"{k.Key}: {string.Join(", ", k.Value?.Where(v => v.Value == null).Select(v => v.Key) ?? [])}"));
-            this._logger.LogDebug("No invocable functions, missing keys: {MissingKeys}", missingKeysLog());
+            this.Logger.LogDebug("No invocable functions, missing keys: {MissingKeys}", missingKeysLog());
             return;
         }
 
@@ -224,7 +255,7 @@ internal class LocalStep : IKernelProcessMessageChannel
         var targetFunction = invocableFunctions.FirstOrDefault((name) => name == message.FunctionName) ??
             throw new InvalidOperationException($"A message targeting function '{message.FunctionName}' has resulted in a function named '{invocableFunctions.First()}' becoming invocable. Are the function names configured correctly?");
 
-        this._logger.LogDebug("Step with Id `{StepId}` received all required input for function [{TargetFunction}] and is executing.", this.Name, targetFunction);
+        this.Logger.LogDebug("Step with Id `{StepId}` received all required input for function [{TargetFunction}] and is executing.", this.Name, targetFunction);
 
         // Concat all the inputs and run the function
         KernelArguments arguments = new(this._inputs[targetFunction]!);
@@ -251,7 +282,7 @@ internal class LocalStep : IKernelProcessMessageChannel
         }
         catch (Exception ex)
         {
-            this._logger.LogError(ex, "Error in Step {StepName}: {ErrorMessage}", this.Name, ex.Message);
+            this.Logger.LogError(ex, "Error in Step {StepName}: {ErrorMessage}", this.Name, ex.Message);
             this.EmitEvent(
                 ProcessEvent.Create(
                     KernelProcessError.FromException(ex),
@@ -286,6 +317,9 @@ internal class LocalStep : IKernelProcessMessageChannel
         }
 
         // Initialize the input channels
+<<<<<<< HEAD
+        this._initialInputs = this.FindInputChannels();
+=======
         if (this._stepInfo is KernelProcessAgentStep agentStep)
         {
             this._initialInputs = this.FindInputChannels(this._functions, this._logger, this.ExternalMessageChannel, agentStep.AgentDefinition);
@@ -295,16 +329,50 @@ internal class LocalStep : IKernelProcessMessageChannel
             this._initialInputs = this.FindInputChannels(this._functions, this._logger, this.ExternalMessageChannel);
         }
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         this._inputs = this._initialInputs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 
         // Activate the step with user-defined state if needed
-        Type stateType = this._stepInfo.InnerStepType.ExtractStateType(out Type? userStateType, this._logger);
+        Type stateType = this._stepInfo.InnerStepType.ExtractStateType(out Type? userStateType, this.Logger);
         KernelProcessStepState stateObject = this._stepInfo.State;
-        stateObject.InitializeUserState(stateType, userStateType);
+
+        if (TryGetSubtypeOfStatefulStep(this._stepInfo.InnerStepType, out Type? genericStepType) && genericStepType is not null)
+        {
+            // The step is a subclass of KernelProcessStep<>, so we need to extract the generic type argument
+            // and create an instance of the corresponding KernelProcessStepState<>.
+            var userStateType = genericStepType.GetGenericArguments()[0];
+            if (userStateType is null)
+            {
+                var errorMessage = "The generic type argument for the KernelProcessStep subclass could not be determined.";
+                this.Logger.LogError("{ErrorMessage}", errorMessage);
+                throw new KernelException(errorMessage);
+            }
+
+            stateType = typeof(KernelProcessStepState<>).MakeGenericType(userStateType);
+            if (stateType is null)
+            {
+                var errorMessage = "The generic type argument for the KernelProcessStep subclass could not be determined.";
+                this.Logger.LogError("{ErrorMessage}", errorMessage);
+                throw new KernelException(errorMessage);
+            }
+
+            var userState = stateType.GetProperty(nameof(KernelProcessStepState<object>.State))?.GetValue(stateObject);
+            if (userState is null)
+            {
+                stateType.GetProperty(nameof(KernelProcessStepState<object>.State))?.SetValue(stateObject, Activator.CreateInstance(userStateType));
+            }
+        }
+        else
+        {
+            // The step is a KernelProcessStep with no user-defined state, so we can use the base KernelProcessStepState.
+            stateType = typeof(KernelProcessStepState);
+        }
 
         if (stateObject is null)
         {
-            throw new KernelException("The state object for the KernelProcessStep could not be created.").Log(this._logger);
+            var errorMessage = "The state object for the KernelProcessStep could not be created.";
+            this.Logger.LogError("{ErrorMessage}", errorMessage);
+            throw new KernelException(errorMessage);
         }
 
         MethodInfo methodInfo =
@@ -312,22 +380,92 @@ internal class LocalStep : IKernelProcessMessageChannel
             throw new KernelException("The ActivateAsync method for the KernelProcessStep could not be found.").Log(this._logger);
 
         this._stepState = stateObject;
-
         ValueTask activateTask =
             (ValueTask?)methodInfo.Invoke(this._stepInstance, [stateObject]) ??
             throw new KernelException("The ActivateAsync method failed to complete.").Log(this._logger);
 
+<<<<<<< HEAD
+=======
         await this._stepInstance.ActivateAsync(stateObject).ConfigureAwait(false);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         await activateTask.ConfigureAwait(false);
     }
 
     /// <summary>
+<<<<<<< HEAD
+    /// Examines the KernelFunction for the step and creates a dictionary of input channels.
+    /// Some types such as KernelProcessStepContext are special and need to be injected into
+    /// the function parameter. Those objects are instantiated at this point.
+    /// </summary>
+    /// <returns><see cref="Dictionary{TKey, TValue}"/></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    private Dictionary<string, Dictionary<string, object?>?> FindInputChannels()
+    {
+        if (this._functions is null)
+        {
+            var errorMessage = "Internal Error: The step has not been initialized.";
+            this.Logger.LogError("{ErrorMessage}", errorMessage);
+            throw new KernelException(errorMessage);
+        }
+
+        Dictionary<string, Dictionary<string, object?>?> inputs = new();
+        foreach (var kvp in this._functions)
+        {
+            inputs[kvp.Key] = new();
+            foreach (var param in kvp.Value.Metadata.Parameters)
+            {
+                // Optional parameters are should not be added to the input dictionary.
+                if (!param.IsRequired)
+                {
+                    continue;
+                }
+
+                // Parameters of type KernelProcessStepContext are injected by the process
+                // and are instantiated here.
+                if (param.ParameterType == typeof(KernelProcessStepContext))
+                {
+                    inputs[kvp.Key]![param.Name] = new KernelProcessStepContext(this);
+                }
+                else
+                {
+                    inputs[kvp.Key]![param.Name] = null;
+                }
+            }
+        }
+
+        return inputs;
+    }
+
+    /// <summary>
+    /// Attempts to find an instance of <![CDATA['KernelProcessStep<>']]> within the provided types hierarchy.
+    /// </summary>
+    /// <param name="type">The type to examine.</param>
+    /// <param name="genericStateType">The matching type if found, otherwise null.</param>
+    /// <returns>True if a match is found, false otherwise.</returns>
+    /// TODO: Move this to a share process utilities project.
+    private static bool TryGetSubtypeOfStatefulStep(Type? type, out Type? genericStateType)
+    {
+        while (type != null && type != typeof(object))
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == s_genericType)
+            {
+                genericStateType = type;
+                return true;
+            }
+
+            type = type.BaseType;
+        }
+
+        genericStateType = null;
+        return false;
+=======
     /// Deinitializes the step
     /// </summary>
     public virtual Task DeinitializeStepAsync()
     {
         this._logger.LogInformation("Step {Name} has deinitialized", this.Name);
         return Task.CompletedTask;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     /// <summary>
@@ -360,7 +498,7 @@ internal class LocalStep : IKernelProcessMessageChannel
     /// Emits an event from the step.
     /// </summary>
     /// <param name="localEvent">The event to emit.</param>
-    protected void EmitEvent(ProcessEvent localEvent)
+    protected void EmitEvent(LocalEvent localEvent)
     {
         var scopedEvent = this.ScopedEvent(localEvent);
         this._outgoingEventQueue.Enqueue(scopedEvent);
@@ -370,8 +508,8 @@ internal class LocalStep : IKernelProcessMessageChannel
     /// Generates a scoped event for the step.
     /// </summary>
     /// <param name="localEvent">The event.</param>
-    /// <returns>A <see cref="ProcessEvent"/> with the correctly scoped namespace.</returns>
-    protected ProcessEvent ScopedEvent(ProcessEvent localEvent)
+    /// <returns>A <see cref="LocalEvent"/> with the correctly scoped namespace.</returns>
+    protected LocalEvent ScopedEvent(LocalEvent localEvent)
     {
         Verify.NotNull(localEvent, nameof(localEvent));
         return localEvent with { Namespace = this.Id };

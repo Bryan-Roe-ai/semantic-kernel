@@ -1,9 +1,82 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
 using Azure.Identity;
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< div
+=======
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> head
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+// Copyright (c) Microsoft. All rights reserved.
+
+using System.Threading.Tasks;
+>>>>>>> main
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+=======
+// Copyright (c) Microsoft. All rights reserved.
+
+using System.Threading.Tasks;
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
+<<<<<<< div
+=======
+// Copyright (c) Microsoft. All rights reserved.
+
+using System.Threading.Tasks;
+>>>>>>> eab985c52d058dc92abc75034bc790079131ce75
+=======
+>>>>>>> head
+=======
 using Microsoft.Extensions.AI;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
@@ -29,6 +102,9 @@ public sealed class AzureOpenAITextEmbeddingTests
     {
         // Arrange
         var embeddingGenerator = new AzureOpenAITextEmbeddingGenerationService(
+            this._azureOpenAIConfiguration.DeploymentName,
+            this._azureOpenAIConfiguration.Endpoint,
+            this._azureOpenAIConfiguration.ApiKey);
             deploymentName: this._azureOpenAIConfiguration.DeploymentName,
             endpoint: this._azureOpenAIConfiguration.Endpoint,
             credential: new AzureCliCredential());
@@ -51,6 +127,9 @@ public sealed class AzureOpenAITextEmbeddingTests
         const string TestInputString = "test sentence";
 
         var embeddingGenerator = new AzureOpenAITextEmbeddingGenerationService(
+            "text-embedding-3-large",
+            this._azureOpenAIConfiguration.Endpoint,
+            this._azureOpenAIConfiguration.ApiKey,
             deploymentName: "text-embedding-3-large",
             endpoint: this._azureOpenAIConfiguration.Endpoint,
             credential: new AzureCliCredential(),

@@ -16,7 +16,9 @@ logger = logging.getLogger("semantic_kernel")
 class KernelBaseModel(BaseModel):
     """Base class for all pydantic models in the SK."""
 
-    model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True, validate_assignment=True)
+    model_config = ConfigDict(
+        populate_by_name=True, arbitrary_types_allowed=True, validate_assignment=True
+    )
 
 
 T = TypeVar("T", bound="KernelBaseSettings")

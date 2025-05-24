@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using Xunit;
@@ -22,6 +22,11 @@ public class KernelProcessStateTests
 
         // Act
         KernelProcessState state = new(name, "v1", id);
+<<<<<<< HEAD
+        KernelProcessState state = new(name, id);
+=======
+        KernelProcessState state = new(name, "v1", id);
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert
         Assert.Equal(name, state.Name);
@@ -39,6 +44,11 @@ public class KernelProcessStateTests
 
         // Act
         KernelProcessState state = new(name, version: "v1");
+<<<<<<< HEAD
+        KernelProcessState state = new(name);
+=======
+        KernelProcessState state = new(name, version: "v1");
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert
         Assert.Equal(name, state.Name);
@@ -53,6 +63,10 @@ public class KernelProcessStateTests
     {
         // Act & Assert
         var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: null!, version: "v1"));
+<<<<<<< HEAD
+        Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: null!));
+=======
+        var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: null!, version: "v1"));
     }
 
     /// <summary>
@@ -63,5 +77,7 @@ public class KernelProcessStateTests
     {
         // Act & Assert
         var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: "stateName", version: null!));
+        var ex = Assert.Throws<ArgumentNullException>(() => new KernelProcessState(name: "stateName", version: null!));
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     }
 }

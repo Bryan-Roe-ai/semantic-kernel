@@ -1,12 +1,9 @@
----
-# These are optional elements. Feel free to remove any of them.
-status: proposed
-contact: westey-m
-date: 2024-06-05
-deciders: sergeymenshykh, markwallace, rbarreto, dmytrostruk, westey-m, matthewbolanos, eavanvalkenburg
 consulted: stephentoub, dluc, ajcvickers, roji
-informed: 
----
+contact: westey-m
+date: 2024-06-05T00:00:00Z
+deciders: sergeymenshykh, markwallace, rbarreto, dmytrostruk, westey-m, matthewbolanos, eavanvalkenburg
+informed: null
+status: proposed
 
 # Updated Memory Connector Design
 
@@ -14,25 +11,25 @@ informed:
 
 Semantic Kernel has a collection of connectors to popular Vector databases e.g. Azure AI Search, Chroma, Milvus, ...
 Each Memory connector implements a memory abstraction defined by Semantic Kernel and allows developers to easily integrate Vector databases into their applications.
-The current abstractions are experimental and the purpose of this ADR is to progress the design of the abstractions so that they can graduate to non experimental status.
+The current abstractions are experimental and the purpose of this ADR is to progress the design of the abstractions so that they can graduate to non-experimental status.
 
 ### Problems with current design
 
 1. The `IMemoryStore` interface has four responsibilities with different cardinalities. Some are schema aware and others schema agnostic.
-2. The `IMemoryStore` interface only supports a fixed schema for data storage, retrieval and search, which limits its usability by customers with existing data sets.
-2. The `IMemoryStore` implementations are opinionated around key encoding / decoding and collection name sanitization, which limits its usability by customers with existing data sets.
+2. The `IMemoryStore` interface only supports a fixed schema for data storage, retrieval, and search, which limits its usability by customers with existing data sets.
+3. The `IMemoryStore` implementations are opinionated around key encoding/decoding and collection name sanitization, which limits its usability by customers with existing data sets.
 
-Responsibilities:
+### Responsibilities:
 
-|Functional Area|Cardinality|Significance to Semantic Kernel|
-|-|-|-|
-|Collection/Index create|An implementation per store type and model|Valuable when building a store and adding data|
-|Collection/Index list names, exists and delete|An implementation per store type|Valuable when building a store and adding data|
-|Data Storage and Retrieval|An implementation per store type|Valuable when building a store and adding data|
-|Vector Search|An implementation per store type, model and search type|Valuable for many scenarios including RAG, finding contradictory facts based on user input, finding similar memories to merge, etc.|
-
+| Functional Area | Cardinality | Significance to Semantic Kernel |
+| --------------- | ----------- | ------------------------------- |
+| Collection/Index create | An implementation per store type and model | Valuable when building a store and adding data |
+| Collection/Index list names, exists and delete | An implementation per store type | Valuable when building a store and adding data |
+| Data Storage and Retrieval | An implementation per store type | Valuable when building a store and adding data |
+| Vector Search | An implementation per store type, model and search type | Valuable for many scenarios including RAG, finding contradictory facts based on user input, finding similar memories to merge |
 
 ### Memory Store Today
+
 ```cs
 interface IMemoryStore
 {
@@ -72,14 +69,12 @@ interface IMemoryStore
 
 1. The `IMemoryStore` should be split into different interfaces, so that schema aware and schema agnostic operations are separated.
 2. The **Data Storage and Retrieval** and **Vector Search** areas should allow typed access to data and support any schema that is currently available in the customer's data store.
-3. The collection / index create functionality should allow developers to use a common definition that is part of the abstraction to create collections.
-4. The collection / index list/exists/delete functionality should allow management of any collection regardless of schema.
-5. Remove opinionated behaviors from connectors. The opinionated behavior limits the ability of these connectors to be used with pre-existing vector databases. As far as possible these behaviors should be moved into decorators or be injectable.  Examples of opinionated behaviors:
-    1. The AzureAISearch connector encodes keys before storing and decodes them after retrieval since keys in Azure AI Search supports a limited set of characters.
-    2. The AzureAISearch connector sanitizes collection names before using them, since Azure AI Search supports a limited set of characters.
-    3. The Redis connector prepends the collection name on to the front of keys before storing records and also registers the collection name as a prefix for records to be indexed by the index.
+3. The collection/index create functionality should allow developers to use a common definition that is part of the abstraction to create collections.
+4. The collection/index list/exists/delete functionality should allow management of any collection regardless of schema.
+5. Remove opinionated behaviors from connectors. The opinionated behavior limits the ability of these connectors to be used with pre-existing vector databases. As far as possible these behaviors should be removed.
 
 ### Non-functional requirements for new connectors
+
 1. Ensure all connectors are throwing the same exceptions consistently with data about the request made provided in a consistent manner.
 2. Add consistent telemetry for all connectors.
 3. As far as possible integration tests should be runnable on build server.
@@ -152,120 +147,26 @@ classDiagram
     IVectorRecordStore <|-- RedisVectorRecordStore
 ```
 
-How to use your own schema with core sk functionality.
-
-```mermaid
----
-title: Chat History Break Glass
----
-classDiagram
-    note for IVectorRecordStore "Can manage records\nfor any scenario"
-    note for IVectorCollectionCreate "Can create collections\nan dindexes"
-    note for IVectorCollectionNonSchema "Can retrieve/delete any\ncollections and indexes"
-    note for CustomerHistoryVectorCollectionCreate "Creates history collections and indices\nusing Customer requirements"
-    note for CustomerHistoryVectorRecordStore "Decorator class for IVectorRecordStore that maps\nbetween the customer model to our model"
-
-    namespace SKAbstractions{
-        class IVectorCollectionCreate{
-            <<interface>>
-            +CreateCollection
-        }
-
-        class IVectorCollectionNonSchema{
-            <<interface>>
-            +GetCollectionNames
-            +CollectionExists
-            +DeleteCollection
-        }
-
-        class IVectorRecordStore~TModel~{
-            <<interface>>
-            +Upsert(TModel record) string
-            +Get(string key) TModel
-            +Delete(string key) string
-        }
-
-        class ISemanticTextMemory{
-            <<interface>>
-            +SaveInformationAsync()
-            +SaveReferenceAsync()
-            +GetAsync()
-            +DeleteAsync()
-            +SearchAsync()
-            +GetCollectionsAsync()
-        }
-    }
-
-    namespace CustomerProject{
-        class CustomerHistoryModel{
-            +string text
-            +float[] vector
-            +Dictionary~string, string~ properties
-        }
-
-        class CustomerHistoryVectorCollectionCreate{
-            +CreateCollection
-        }
-
-        class CustomerHistoryVectorRecordStore{
-            -IVectorRecordStore~CustomerHistoryModel~ _store
-            +Upsert(ChatHistoryModel record) string
-            +Get(string key) ChatHistoryModel
-            +Delete(string key) string
-        }
-    }
-
-    namespace SKCore{
-        class SemanticTextMemory{
-            -IVectorRecordStore~ChatHistoryModel~ _VectorRecordStore
-            -IMemoryCollectionService _collectionsService
-            -ITextEmbeddingGenerationService _embeddingGenerationService
-        }
-
-        class ChatHistoryPlugin{
-            -ISemanticTextMemory memory
-        }
-
-        class ChatHistoryModel{
-            +string message
-            +float[] embedding
-            +Dictionary~string, string~ metadata
-        }
-    }
-
-    IVectorCollectionCreate <|-- CustomerHistoryVectorCollectionCreate
-
-    IVectorRecordStore <|-- CustomerHistoryVectorRecordStore
-    IVectorRecordStore <.. CustomerHistoryVectorRecordStore
-    CustomerHistoryModel <.. CustomerHistoryVectorRecordStore
-    ChatHistoryModel <.. CustomerHistoryVectorRecordStore
-
-    ChatHistoryModel <.. SemanticTextMemory
-    IVectorRecordStore <.. SemanticTextMemory
-    IVectorCollectionCreate <.. SemanticTextMemory
-
-    ISemanticTextMemory <.. ChatHistoryPlugin
-```
-
 ### Vector Store Cross Store support - General Features
 
 A comparison of the different ways in which stores implement storage capabilities to help drive decisions:
 
-|Feature|Azure AI Search|Weaviate|Redis|Chroma|FAISS|Pinecone|LLamaIndex|PostgreSql|Qdrant|Milvus|
-|-|-|-|-|-|-|-|-|-|-|-|
-|Get Item Support|Y|Y|Y|Y||Y||Y|Y|Y|
-|Batch Operation Support|Y|Y|Y|Y||Y||||Y|
-|Per Item Results for Batch Operations|Y|Y|Y|N||N|||||
-|Keys of upserted records|Y|Y|N<sup>3</sup>|N<sup>3</sup>||N<sup>3</sup>||||Y|
-|Keys of removed records|Y||N<sup>3</sup>|N||N||||N<sup>3</sup>|
-|Retrieval field selection for gets|Y||Y<sup>4<sup>|P<sup>2</sup>||N||Y|Y|Y|
-|Include/Exclude Embeddings for gets|P<sup>1</sup>|Y|Y<sup>4,1<sup>|Y||N||P<sup>1</sup>|Y|N|
-|Failure reasons when batch partially fails|Y|Y|Y|N||N|||||
-|Is Key separate from data|N|Y|Y|Y||Y||N|Y|N|
-|Can Generate Ids|N|Y|N|N||Y||Y|N|Y|
-|Can Generate Embedding|Not Available Via API yet|Y|N|Client Side Abstraction|||||N||
+| Feature | Azure AI Search | Weaviate | Redis | Chroma | FAISS | Pinecone | LLamaIndex | PostgreSql | Qdrant | Milvus |
+| ------- | --------------- | -------- | ----- | ------ | ----- | -------- | ---------- | ---------- | ------ | ------ |
+| Get Item Support | Y | Y | Y | Y | | Y | | Y | Y | Y |
+| Batch Operation Support | Y | Y | Y | Y | | Y | | | | Y |
+| Per Item Results for Batch Operations | Y | Y | Y | N | | N | | | | |
+| Keys of upserted records | Y | Y | N<sup>3</sup> | N<sup>3</sup> | | N<sup>3</sup> | | | | Y |
+| Keys of removed records | Y | | N<sup>3</sup> | N | | N | | | N<sup>3</sup> |
+| Retrieval field selection for gets | Y | | Y<sup>4</sup> | P<sup>2</sup> | | N | | Y | Y | Y |
+| Include/Exclude Embeddings for gets | P<sup>1</sup> | Y | Y<sup>4,1</sup> | Y | | N | | P<sup>1</sup> | Y | N |
+| Failure reasons when batch partially fails | Y | Y | Y | N | | N | | | |
+| Is Key separate from data | N | Y | Y | Y | | Y | | N | Y | N |
+| Can Generate Ids | N | Y | N | N | | Y | | Y | N | Y |
+| Can Generate Embedding | Not Available Via API yet | Y | N | Client Side Abstraction | | | | | N | |
 
 Footnotes:
+
 - P = Partial Support
 - <sup>1</sup> Only if you have the schema, to select the appropriate fields.
 - <sup>2</sup> Supports broad categories of fields only.
@@ -274,25 +175,26 @@ Footnotes:
 
 ### Vector Store Cross Store support - Fields, types and indexing
 
-|Feature|Azure AI Search|Weaviate|Redis|Chroma|FAISS|Pinecone|LLamaIndex|PostgreSql|Qdrant|Milvus|
-|-|-|-|-|-|-|-|-|-|-|-|
-|Field Differentiation|Fields|Key, Props, Vectors|Key, Fields|Key, Document, Metadata, Vector||Key, Metadata, SparseValues, Vector||Fields|Key, Props(Payload), Vectors|Fields|
-|Multiple Vector per record support|Y|Y|Y|N||[N](https://docs.pinecone.io/guides/data/upsert-data#upsert-records-with-metadata)||Y|Y|Y|
-|Index to Collection|1 to 1|1 to 1|1 to many|1 to 1|-|1 to 1|-|1 to 1|1 to 1|1 to 1|
-|Id Type|String|UUID|string with collection name prefix|string||string|UUID|64Bit Int / UUID / ULID|64Bit Unsigned Int / UUID|Int64 / varchar|
-|Supported Vector Types|[Collection(Edm.Byte) / Collection(Edm.Single) / Collection(Edm.Half) / Collection(Edm.Int16) / Collection(Edm.SByte)](https://learn.microsoft.com/en-us/rest/api/searchservice/supported-data-types)|float32|FLOAT32 and FLOAT64|||[Rust f32](https://docs.pinecone.io/troubleshooting/embedding-values-changed-when-upserted)||[single-precision (4 byte float) / half-precision (2 byte float) / binary (1bit) / sparse vectors (4 bytes)](https://github.com/pgvector/pgvector?tab=readme-ov-file#pgvector)|UInt8 / Float32|Binary / Float32 / Float16 / BFloat16 / SparseFloat|
-|Supported Distance Functions|[Cosine / dot prod / euclidean dist (l2 norm)](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#similarity-metrics-used-to-measure-nearness)|[Cosine dist / dot prod / Squared L2 dist / hamming (num of diffs) / manhattan dist](https://weaviate.io/developers/weaviate/config-refs/distances#available-distance-metrics)|[Euclidean dist (L2) / Inner prod (IP) / Cosine dist](https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/vectors/)|[Squared L2 / Inner prod / Cosine similarity](https://docs.trychroma.com/guides#changing-the-distance-function)||[cosine sim / euclidean dist / dot prod](https://docs.pinecone.io/reference/api/control-plane/create_index)||[L2 dist / inner prod / cosine dist / L1 dist / Hamming dist / Jaccard dist (NB: Specified at query time, not index creation time)](https://github.com/pgvector/pgvector?tab=readme-ov-file#pgvector)|[Dot prod / Cosine sim / Euclidean dist (L2) / Manhattan dist](https://qdrant.tech/documentation/concepts/search/)|[Cosine sim / Euclidean dist / Inner Prod](https://milvus.io/docs/index-vector-fields.md)|
-|Supported index types|[Exhaustive KNN (FLAT) / HNSW](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#algorithms-used-in-vector-search)|[HNSW / Flat / Dynamic](https://weaviate.io/developers/weaviate/config-refs/schema/vector-index)|[HNSW / FLAT](https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/vectors/#create-a-vector-field)|[HNSW not configurable](https://cookbook.chromadb.dev/core/concepts/#vector-index-hnsw-index)||[PGA](https://www.pinecone.io/blog/hnsw-not-enough/)||[HNSW / IVFFlat](https://github.com/pgvector/pgvector?tab=readme-ov-file#indexing)|[HNSW for dense](https://qdrant.tech/documentation/concepts/indexing/#vector-index)|<p>[In Memory: FLAT / IVF_FLAT / IVF_SQ8 / IVF_PQ / HNSW / SCANN](https://milvus.io/docs/index.md)</p><p>[On Disk: DiskANN](https://milvus.io/docs/disk_index.md)</p><p>[GPU: GPU_CAGRA / GPU_IVF_FLAT / GPU_IVF_PQ / GPU_BRUTE_FORCE](https://milvus.io/docs/gpu_index.md)</p>|
-
-Footnotes:
-- HNSW = Hierarchical Navigable Small World (HNSW performs an [approximate nearest neighbor (ANN)](https://learn.microsoft.com/en-us/azure/search/vector-search-overview#approximate-nearest-neighbors) search)
-- KNN = k-nearest neighbors (performs a brute-force search that scans the entire vector space)
-- IVFFlat = Inverted File with Flat Compression (This index type uses approximate nearest neighbor search (ANNS) to provide fast searches)
-- Weaviate Dynamic = Starts as flat and switches to HNSW if the number of objects exceed a limit
-- PGA = [Pinecone Graph Algorithm](https://www.pinecone.io/blog/hnsw-not-enough/)
+| Feature | Azure AI Search | Weaviate | Redis | Chroma | FAISS | Pinecone | LLamaIndex | PostgreSql | Qdrant | Milvus |
+| ------- | --------------- | -------- | ----- | ------ | ----- | -------- | ---------- | ---------- | ------ | ------ |
+| Field Differentiation | Fields | Key, Props, Vectors | Key, Fields | Key, Document, Metadata, Vector | | Key, Metadata, SparseValues, Vector | | Fields | Key, Props(Payload), Vectors | Fields |
+| Multiple Vector per record support | Y | Y | Y | N | | [N](https://docs.pinecone.io/guides/data/upsert-data#upsert-records-with-metadata) | | Y | Y | Y |
+| Index to Collection | 1 to 1 | 1 to 1 | 1 to many | 1 to 1 | - | 1 to 1 | - | 1 to 1 | 1 to 1 | 1 to 1 |
+| Id Type | String | UUID | string with collection name prefix | string | | string | UUID | 64Bit Int / UUID / ULID | 64Bit Unsigned Int / UUID | Int64 / varchar |
+| Supported Vector Types | [Collection(Edm.Byte) / Collection(Edm.Single) / Collection(Edm.Half) / Collection(Edm.Int16) / Collection(Edm.SByte)](https://learn.microsoft.com/en-us/rest/api/searchservice/vector-search-api#vector-types) | [Collection(Edm.Byte) / Collection(Edm.Single) / Collection(Edm.Half) / Collection(Edm.Int16) / Collection(Edm.SByte)](https://learn.microsoft.com/en-us/rest/api/searchservice/vector-search-api#vector-types) | [Collection(Edm.Byte) / Collection(Edm.Single) / Collection(Edm.Half) / Collection(Edm.Int16) / Collection(Edm.SByte)](https://learn.microsoft.com/en-us/rest/api/searchservice/vector-search-api#vector-types) | [Collection(Edm.Byte) / Collection(Edm.Single) / Collection(Edm.Half) / Collection(Edm.Int16) / Collection(Edm.SByte)](https://learn.microsoft.com/en-us/rest/api/searchservice/vector-search-api#vector-types) | | [Collection(Edm.Byte) / Collection(Edm.Single) / Collection(Edm.Half) / Collection(Edm.Int16) / Collection(Edm.SByte)](https://learn.microsoft.com/en-us/rest/api/searchservice/vector-search-api#vector-types) | | [Collection(Edm.Byte) / Collection(Edm.Single) / Collection(Edm.Half) / Collection(Edm.Int16) / Collection(Edm.SByte)](https://learn.microsoft.com/en-us/rest/api/searchservice/vector-search-api#vector-types) | [Collection(Edm.Byte) / Collection(Edm.Single) / Collection(Edm.Half) / Collection(Edm.Int16) / Collection(Edm.SByte)](https://learn.microsoft.com/en-us/rest/api/searchservice/vector-search-api#vector-types) | [Collection(Edm.Byte) / Collection(Edm.Single) / Collection(Edm.Half) / Collection(Edm.Int16) / Collection(Edm.SByte)](https://learn.microsoft.com/en-us/rest/api/searchservice/vector-search-api#vector-types) |
+| Supported Distance Functions | [Cosine / dot prod / euclidean dist (l2 norm)](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#similarity-metrics-used-to-measure-nearness) | [Cosine / dot prod / euclidean dist (l2 norm)](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#similarity-metrics-used-to-measure-nearness) | [Cosine / dot prod / euclidean dist (l2 norm)](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#similarity-metrics-used-to-measure-nearness) | [Cosine / dot prod / euclidean dist (l2 norm)](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#similarity-metrics-used-to-measure-nearness) | | [Cosine / dot prod / euclidean dist (l2 norm)](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#similarity-metrics-used-to-measure-nearness) | | [Cosine / dot prod / euclidean dist (l2 norm)](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#similarity-metrics-used-to-measure-nearness) | [Cosine / dot prod / euclidean dist (l2 norm)](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#similarity-metrics-used-to-measure-nearness) | [Cosine / dot prod / euclidean dist (l2 norm)](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#similarity-metrics-used-to-measure-nearness) |
+| Supported index types | [Exhaustive KNN (FLAT) / HNSW](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#algorithms-used-in-vector-search) | [HNSW / Flat / Dynamic](https://weaviate.io/developers/weaviate/search/vector-search#algorithms-used-in-vector-search) | [Exhaustive KNN (FLAT) / HNSW](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#algorithms-used-in-vector-search) | [Exhaustive KNN (FLAT) / HNSW](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#algorithms-used-in-vector-search) | - | [Exhaustive KNN (FLAT) / HNSW](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#algorithms-used-in-vector-search) | - | [Exhaustive KNN (FLAT) / HNSW](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#algorithms-used-in-vector-search) | [Exhaustive KNN (FLAT) / HNSW](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#algorithms-used-in-vector-search) | [Exhaustive KNN (FLAT) / HNSW](https://learn.microsoft.com/en-us/azure/search/vector-search-ranking#algorithms-used-in-vector-search) |
 
 ### Vector Store Cross Store support - Search and filtering
 
+<<<<<<< HEAD
+| Feature | Azure AI Search | Weaviate | Redis | Chroma | FAISS | Pinecone | LLamaIndex | PostgreSql | Qdrant | Milvus |
+| ------- | --------------- | -------- | ----- | ------ | ----- | -------- | ---------- | ---------- | ------ | ------ |
+| Index allows text search | Y | Y | Y | Y (On Metadata by default) | | [Only in combination with Vector](https://docs.pinecone.io/guides/data/understanding-hybrid-search) | | Y (with TSVECTOR field) | Y | Y |
+| Text search query format | [Simple or Full Lucene](https://learn.microsoft.com/en-us/azure/search/search-query-create?tabs=portal-text-query#choose-a-query-type-simple--full) | [wildcard](https://weaviate.io/developers/weaviate/search/similarity) | [Simple or Full Lucene](https://learn.microsoft.com/en-us/azure/search/search-query-create?tabs=portal-text-query#choose-a-query-type-simple--full) | [Simple or Full Lucene](https://learn.microsoft.com/en-us/azure/search/search-query-create?tabs=portal-text-query#choose-a-query-type-simple--full) | | [Simple or Full Lucene](https://learn.microsoft.com/en-us/azure/search/search-query-create?tabs=portal-text-query#choose-a-query-type-simple--full) | | [Simple or Full Lucene](https://learn.microsoft.com/en-us/azure/search/search-query-create?tabs=portal-text-query#choose-a-query-type-simple--full) | [Simple or Full Lucene](https://learn.microsoft.com/en-us/azure/search/search-query-create?tabs=portal-text-query#choose-a-query-type-simple--full) | [Simple or Full Lucene](https://learn.microsoft.com/en-us/azure/search/search-query-create?tabs=portal-text-query#choose-a-query-type-simple--full) |
+| Multi Field Vector Search Support | Y | [N](https://weaviate.io/developers/weaviate/search/similarity) | [Y](https://redis.io/docs/latest/develop/interact/search-and-indexing) | N (no multi vector support) | | N | | [Unclear due to order by syntax](https://github.com/pgvector/pgvector) | N (no multi vector support) | [Y](https://milvus.io/docs/multi-vector-search.md#Step-1-Create-Multiple-AnnSearchRequest-Instances) |
+| Targeted Multi Field Text Search Support | Y | [Y](https://weaviate.io/developers/weaviate/search/hybrid#set-weights-on-property-values) | Y | [Y](https://docs.trychroma.com/guides#using-log
+=======
 |Feature|Azure AI Search|Weaviate|Redis|Chroma|FAISS|Pinecone|LLamaIndex|PostgreSql|Qdrant|Milvus|
 |-|-|-|-|-|-|-|-|-|-|-|
 |Index allows text search|Y|Y|Y|Y (On Metadata by default)||[Only in combination with Vector](https://docs.pinecone.io/guides/data/understanding-hybrid-search)||Y (with TSVECTOR field)|Y|Y|
@@ -993,3 +895,4 @@ Need the following for all features:
   - How to implement your own collection create implementation for break glass scenario.
   - How to implement your own mapper.
   - How to upgrade from the current storage system to the new one.
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

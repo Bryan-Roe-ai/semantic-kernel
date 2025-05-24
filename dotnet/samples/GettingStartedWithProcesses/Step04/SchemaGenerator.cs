@@ -1,4 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+using System.Text.Json;
+using System.Text.Json.Serialization;
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.Extensions.AI;
 using Microsoft.SemanticKernel;
 
@@ -21,6 +26,21 @@ internal static class JsonSchemaGenerator
     /// </summary>
     public static string FromType<TSchemaType>()
     {
+<<<<<<< HEAD
+        JsonSerializerOptions options = new(JsonSerializerOptions.Default)
+        {
+            UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+        };
+        AIJsonSchemaCreateOptions config = new()
+        {
+            IncludeSchemaKeyword = false,
+            DisallowAdditionalProperties = true,
+        };
+
+        return KernelJsonSchemaBuilder.Build(null, typeof(SchemaType), "Intent Result", config).AsJson();
+        return KernelJsonSchemaBuilder.Build(typeof(TSchemaType), "Intent Result", config).AsJson();
+=======
         return KernelJsonSchemaBuilder.Build(typeof(TSchemaType), "Intent Result", s_config).AsJson();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 }

@@ -8,13 +8,29 @@ from semantic_kernel.contents.binary_content import BinaryContent
 
 test_cases = [
     pytest.param(BinaryContent(uri="http://test_uri"), id="uri"),
-    pytest.param(BinaryContent(data=b"test_data", mime_type="image/jpeg", data_format="base64"), id="data"),
-    pytest.param(BinaryContent(data="test_data", mime_type="image/jpeg"), id="data_str"),
-    pytest.param(BinaryContent(uri="http://test_uri", data=b"test_data", mime_type="image/jpeg"), id="both"),
-    pytest.param(BinaryContent(data_uri="data:image/jpeg;base64,dGVzdF9kYXRh"), id="data_uri"),
-    pytest.param(BinaryContent(data_uri="data:image/jpeg;base64,dGVzdF9kYXRh"), id="data_uri_with_params"),
     pytest.param(
-        BinaryContent(data_uri="data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh", metadata={"bar": "baz"}),
+        BinaryContent(data=b"test_data", mime_type="image/jpeg", data_format="base64"),
+        id="data",
+    ),
+    pytest.param(
+        BinaryContent(data="test_data", mime_type="image/jpeg"), id="data_str"
+    ),
+    pytest.param(
+        BinaryContent(uri="http://test_uri", data=b"test_data", mime_type="image/jpeg"),
+        id="both",
+    ),
+    pytest.param(
+        BinaryContent(data_uri="data:image/jpeg;base64,dGVzdF9kYXRh"), id="data_uri"
+    ),
+    pytest.param(
+        BinaryContent(data_uri="data:image/jpeg;base64,dGVzdF9kYXRh"),
+        id="data_uri_with_params",
+    ),
+    pytest.param(
+        BinaryContent(
+            data_uri="data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh",
+            metadata={"bar": "baz"},
+        ),
         id="data_uri_with_params_and_metadata",
     ),
     pytest.param(
@@ -33,7 +49,7 @@ def test_create_empty():
 
 def test_create_uri():
     binary = BinaryContent(uri="http://test_uri")
-    assert str(binary.uri) == "http://test_uri/"
+    if str(binary.uri) != "http://test_uri/": raise AssertionError("URI does not match expected value")
 
 
 def test_create_data():
@@ -54,7 +70,9 @@ def test_create_data_uri_with_params():
 
 
 def test_create_data_uri_with_params_and_metadata():
-    binary = BinaryContent(data_uri="data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh", metadata={"bar": "baz"})
+    binary = BinaryContent(
+        data_uri="data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh", metadata={"bar": "baz"}
+    )
     assert binary.metadata == {"foo": "bar", "bar": "baz"}
 
 
@@ -75,8 +93,14 @@ def test_update_data_str():
 
 
 def test_update_existing_data():
+<<<<<<< HEAD
+    binary = BinaryContent(
+        data_uri="data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh", metadata={"bar": "baz"}
+    )
+=======
     binary = BinaryContent(data_uri="data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh", metadata={"bar": "baz"})
     assert binary._data_uri is not None
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     binary._data_uri.data_format = None
     binary.data = "test_data"
     binary.data = b"test_data"
@@ -97,7 +121,9 @@ def test_to_str_uri():
 
 
 def test_to_str_data():
-    binary = BinaryContent(data=b"test_data", mime_type="image/jpeg", data_format="base64")
+    binary = BinaryContent(
+        data=b"test_data", mime_type="image/jpeg", data_format="base64"
+    )
     assert str(binary) == "data:image/jpeg;base64,dGVzdF9kYXRh"
 
 

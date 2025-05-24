@@ -1,31 +1,30 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text.Json;
 using Microsoft.SemanticKernel;
-using SemanticKernel.UnitTests.Functions.JsonSerializerContexts;
 using Xunit;
 
 namespace SemanticKernel.UnitTests.Functions;
 
 public class KernelFunctionMetadataFactoryTests
 {
-    [Theory]
-    [ClassData(typeof(TestJsonSerializerOptionsForTestParameterAndReturnTypes))]
-    public void ItCanCreateFromType(JsonSerializerOptions? jsos)
+    [Fact]
+    public void ItCanCreateFromType()
     {
         // Arrange
-        Type type = typeof(MyKernelFunctions);
+        var instanceType = typeof(MyKernelFunctions);
 
         // Act
-        IEnumerable<KernelFunctionMetadata> metadata = (jsos is not null ?
-            KernelFunctionMetadataFactory.CreateFromType(type, jsos) :
-            KernelFunctionMetadataFactory.CreateFromType(type)).ToArray();
+        var functionMetadata = KernelFunctionMetadataFactory.CreateFromType(instanceType);
 
         // Assert
+        Assert.NotNull(functionMetadata);
+        Assert.Equal(3, functionMetadata.Count<KernelFunctionMetadata>());
+        Assert.Contains(functionMetadata, f => f.Name == "Function1");
+        Assert.Contains(functionMetadata, f => f.Name == "Function2");
+        Assert.Contains(functionMetadata, f => f.Name == "Function3");
         Assert.Equal(2, metadata.Count());
 
         // Assert Function1 metadata
@@ -79,26 +78,22 @@ public class KernelFunctionMetadataFactoryTests
 #pragma warning disable CA1812 // Used in test case above
     private sealed class MyKernelFunctions
     {
+        // Disallow instantiation of this class.
+        private MyKernelFunctions()
+        {
+        }
+
         [KernelFunction("Function1")]
         [Description("Description for function 1.")]
         public string Function1([Description("Description for parameter 1")] string param1) => $"Function1: {param1}";
 
         [KernelFunction("Function2")]
         [Description("Description for function 2.")]
-        private TestReturnType Function3([Description("Description for parameter 1")] TestParameterType param1)
-        {
-            return new TestReturnType() { Result = int.Parse(param1.Value!) };
-        }
-    }
+        public string Function2([Description("Description for parameter 1")] string param1) => $"Function2: {param1}";
 
-    private sealed class PluginWithNoKernelFunctions
-    {
-        public string Function1([Description("Description for parameter 1")] string param1) => $"Function1: {param1}";
-
-        private TestReturnType Function3([Description("Description for parameter 1")] TestParameterType param1)
-        {
-            return new TestReturnType() { Result = int.Parse(param1.Value!) };
-        }
+        [KernelFunction("Function3")]
+        [Description("Description for function 3.")]
+        public string Function3([Description("Description for parameter 1")] string param1) => $"Function3: {param1}";
     }
 #pragma warning restore CA1812
     #endregion

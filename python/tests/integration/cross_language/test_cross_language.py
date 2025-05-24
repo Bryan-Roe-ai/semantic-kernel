@@ -13,12 +13,19 @@ import pytest_asyncio
 from openai import AsyncOpenAI
 
 from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
-from semantic_kernel.connectors.ai.open_ai.settings.open_ai_settings import OpenAISettings
+from semantic_kernel.connectors.ai.open_ai.settings.open_ai_settings import (
+    OpenAISettings,
+)
+from semantic_kernel.connectors.openapi_plugin import OpenAPIFunctionExecutionParameters
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.functions.kernel_function import KernelFunction
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
-from semantic_kernel.functions.kernel_function_from_method import KernelFunctionFromMethod
-from semantic_kernel.functions.kernel_function_from_prompt import KernelFunctionFromPrompt
+from semantic_kernel.functions.kernel_function_from_method import (
+    KernelFunctionFromMethod,
+)
+from semantic_kernel.functions.kernel_function_from_prompt import (
+    KernelFunctionFromPrompt,
+)
 from semantic_kernel.kernel import Kernel
 
 logger = logging.getLogger(__name__)
@@ -79,7 +86,9 @@ class LoggingTransport(httpx.AsyncBaseTransport):
 class LoggingAsyncClient(httpx.AsyncClient):
     def __init__(self, *args, **kwargs):
         transport = kwargs.pop("transport", None)
-        self.logging_transport = LoggingTransport(transport or httpx.AsyncHTTPTransport())
+        self.logging_transport = LoggingTransport(
+            transport or httpx.AsyncHTTPTransport()
+        )
         super().__init__(*args, **kwargs, transport=self.logging_transport)
 
     @property
@@ -108,6 +117,11 @@ class LoggingAsyncClient(httpx.AsyncClient):
 async def async_clients() -> AsyncGenerator[tuple[AsyncOpenAI, LoggingAsyncClient], None]:
     openai_settings = OpenAISettings()
     logging_async_client = LoggingAsyncClient()
+    async_client = AsyncOpenAI(
+        api_key=openai_settings.api_key.get_secret_value(),
+        http_client=logging_async_client,
+    )
+    return async_client, logging_async_client
     async with AsyncOpenAI(
         api_key=openai_settings.api_key.get_secret_value(), http_client=logging_async_client
     ) as client:
@@ -145,7 +159,10 @@ async def run_prompt(
             )
     else:
         function = KernelFunctionFromPrompt(
-            function_name="test_func", plugin_name="test_plugin", prompt=prompt, template_format=template_format
+            function_name="test_func",
+            plugin_name="test_plugin",
+            prompt=prompt,
+            template_format=template_format,
         )
         await run_function(kernel, is_streaming, function=function, arguments=arguments)
 
@@ -153,6 +170,8 @@ async def run_prompt(
 async def run_function(
     kernel: Kernel,
     is_streaming: bool = False,
+    function: KernelFunction = None,
+    arguments: KernelArguments = None,
     function: KernelFunction | None = None,
     arguments: KernelArguments | None = None,
 ):
@@ -268,7 +287,9 @@ async def test_prompt_with_chat_roles(
     obtained_object = json.loads(request_content)
     assert obtained_object is not None
 
-    data_directory = os.path.join(os.path.dirname(__file__), "data", "prompt_with_chat_roles_expected.json")
+    data_directory = os.path.join(
+        os.path.dirname(__file__), "data", "prompt_with_chat_roles_expected.json"
+    )
     with open(data_directory) as f:
         expected = f.read()
 
@@ -290,11 +311,14 @@ async def test_prompt_with_chat_roles(
 @pytest.mark.parametrize(
     "is_inline, is_streaming, template_format, prompt",
     [
+        (
         pytest.param(
             False,
             False,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
+        ),
+        (
             id="hb_non_inline_non_streaming",
         ),
         pytest.param(
@@ -302,6 +326,8 @@ async def test_prompt_with_chat_roles(
             True,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
+        ),
+        (
             id="hb_non_inline_streaming",
         ),
         pytest.param(
@@ -309,6 +335,8 @@ async def test_prompt_with_chat_roles(
             False,
             "jinja2",
             "Can you help me tell the time in {{city.name}} right now?",
+        ),
+        (
             id="j2_non_inline_non_streaming",
         ),
         pytest.param(
@@ -316,6 +344,8 @@ async def test_prompt_with_chat_roles(
             True,
             "jinja2",
             "Can you help me tell the time in {{city.name}} right now?",
+        ),
+        (
             id="j2_non_inline_streaming",
         ),
         pytest.param(
@@ -323,6 +353,8 @@ async def test_prompt_with_chat_roles(
             False,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
+        ),
+        (
             id="hb_inline_non_streaming",
         ),
         pytest.param(
@@ -330,6 +362,8 @@ async def test_prompt_with_chat_roles(
             True,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
+        ),
+        (
             id="hb_inline_streaming",
         ),
         pytest.param(
@@ -337,6 +371,20 @@ async def test_prompt_with_chat_roles(
             False,
             "jinja2",
             "Can you help me tell the time in {{city.name}} right now?",
+        ),
+        (
+            True,
+            True,
+            "jinja2",
+            "Can you help me tell the time in {{city.name}} right now?",
+        ),
+    ],
+)
+@pytest.mark.asyncio
+async def test_prompt_with_complex_objects(
+    is_inline, is_streaming, template_format, prompt
+):
+    async_client, logging_client = get_new_client()
             id="j2_inline_non_streaming",
         ),
         pytest.param(
@@ -377,7 +425,9 @@ async def test_prompt_with_complex_objects(
     obtained_object = json.loads(request_content)
     assert obtained_object is not None
 
-    data_directory = os.path.join(os.path.dirname(__file__), "data", "prompt_with_complex_objects_expected.json")
+    data_directory = os.path.join(
+        os.path.dirname(__file__), "data", "prompt_with_complex_objects_expected.json"
+    )
     with open(data_directory) as f:
         expected = f.read()
 
@@ -416,11 +466,20 @@ async def test_prompt_with_complex_objects(
         pytest.param(False, True, "jinja2", j2_prompt, id="j2_non_inline_streaming"),
     ],
 )
+<<<<<<< HEAD
+@pytest.mark.asyncio
+async def test_prompt_with_helper_functions(
+    is_inline, is_streaming, template_format, prompt
+):
+    async_client, logging_client = get_new_client()
+async def test_prompt_with_helper_functions(is_inline, is_streaming, template_format, prompt, async_client):
+=======
 async def test_prompt_with_helper_functions(
     is_inline, is_streaming, template_format, prompt, async_clients: tuple[AsyncOpenAI, LoggingAsyncClient]
 ):
     client, logging_async_client = async_clients
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     ai_service = OpenAIChatCompletion(
         service_id="default",
         ai_model_id=OPENAI_MODEL_ID,
@@ -433,9 +492,9 @@ async def test_prompt_with_helper_functions(
 
     func = KernelFunctionFromMethod(
         method=kernel_function(
-            lambda: datetime.datetime(1989, 6, 4, 12, 11, 13, tzinfo=datetime.timezone.utc).strftime(
-                "%a, %d %b %Y %H:%M:%S GMT"
-            ),
+            lambda: datetime.datetime(
+                1989, 6, 4, 12, 11, 13, tzinfo=datetime.timezone.utc
+            ).strftime("%a, %d %b %Y %H:%M:%S GMT"),
             name="Now",
         ),
         plugin_name="Time",
@@ -460,7 +519,9 @@ async def test_prompt_with_helper_functions(
     obtained_object = json.loads(request_content)
     assert obtained_object is not None
 
-    data_directory = os.path.join(os.path.dirname(__file__), "data", "prompt_with_helper_functions_expected.json")
+    data_directory = os.path.join(
+        os.path.dirname(__file__), "data", "prompt_with_helper_functions_expected.json"
+    )
     with open(data_directory) as f:
         expected = f.read()
 
@@ -492,11 +553,20 @@ async def test_prompt_with_helper_functions(
         pytest.param(False, True, "jinja2", j2_simple_prompt, id="j2_non_inline_streaming"),
     ],
 )
+<<<<<<< HEAD
+@pytest.mark.asyncio
+async def test_prompt_with_simple_variable(
+    is_inline, is_streaming, template_format, prompt
+):
+    async_client, logging_client = get_new_client()
+async def test_prompt_with_simple_variable(is_inline, is_streaming, template_format, prompt, async_client):
+=======
 async def test_prompt_with_simple_variable(
     is_inline, is_streaming, template_format, prompt, async_clients: tuple[AsyncOpenAI, LoggingAsyncClient]
 ):
     client, logging_async_client = async_clients
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     ai_service = OpenAIChatCompletion(
         service_id="default",
         ai_model_id=OPENAI_MODEL_ID,
@@ -525,7 +595,9 @@ async def test_prompt_with_simple_variable(
     obtained_object = json.loads(request_content)
     assert obtained_object is not None
 
-    data_directory = os.path.join(os.path.dirname(__file__), "data", "prompt_with_simple_variable_expected.json")
+    data_directory = os.path.join(
+        os.path.dirname(__file__), "data", "prompt_with_simple_variable_expected.json"
+    )
     with open(data_directory) as f:
         expected = f.read()
 
@@ -589,7 +661,9 @@ async def test_simple_prompt(
     obtained_object = json.loads(request_content)
     assert obtained_object is not None
 
-    data_directory = os.path.join(os.path.dirname(__file__), "data", "prompt_simple_expected.json")
+    data_directory = os.path.join(
+        os.path.dirname(__file__), "data", "prompt_simple_expected.json"
+    )
     with open(data_directory) as f:
         expected = f.read()
 
@@ -611,6 +685,45 @@ async def test_simple_prompt(
 @pytest.mark.parametrize(
     "is_streaming, prompt_path, expected_result_path",
     [
+        (False, "simple_prompt_test.yaml", "prompt_simple_expected.json"),
+        (True, "simple_prompt_test.yaml", "prompt_simple_expected.json"),
+        (
+            False,
+            "prompt_with_chat_roles_test_hb.yaml",
+            "prompt_with_chat_roles_expected.json",
+        ),
+        (
+            True,
+            "prompt_with_chat_roles_test_hb.yaml",
+            "prompt_with_chat_roles_expected.json",
+        ),
+        (
+            False,
+            "prompt_with_chat_roles_test_j2.yaml",
+            "prompt_with_chat_roles_expected.json",
+        ),
+        (
+            True,
+            "prompt_with_chat_roles_test_j2.yaml",
+            "prompt_with_chat_roles_expected.json",
+        ),
+        (
+            False,
+            "prompt_with_simple_variable_test.yaml",
+            "prompt_with_simple_variable_expected.json",
+        ),
+        (
+            True,
+            "prompt_with_simple_variable_test.yaml",
+            "prompt_with_simple_variable_expected.json",
+        ),
+    ],
+)
+@pytest.mark.asyncio
+async def test_yaml_prompt(
+    is_streaming, prompt_path, expected_result_path, kernel: Kernel
+):
+    async_client, logging_client = get_new_client()
         pytest.param(
             False, "simple_prompt_test.yaml", "prompt_simple_expected.json", id="simple_prompt_test_non_streaming"
         ),
@@ -673,7 +786,9 @@ async def test_yaml_prompt(
     prompt_dir = os.path.join(os.path.dirname(__file__), "data", f"{prompt_path}")
     with open(prompt_dir) as f:
         prompt_str = f.read()
-    function = KernelFunctionFromPrompt.from_yaml(yaml_str=prompt_str, plugin_name="yaml_plugin")
+    function = KernelFunctionFromPrompt.from_yaml(
+        yaml_str=prompt_str, plugin_name="yaml_plugin"
+    )
 
     await run_function(kernel=kernel, is_streaming=is_streaming, function=function)
 
@@ -686,7 +801,9 @@ async def test_yaml_prompt(
     obtained_object = json.loads(request_content)
     assert obtained_object is not None
 
-    data_directory = os.path.join(os.path.dirname(__file__), "data", f"{expected_result_path}")
+    data_directory = os.path.join(
+        os.path.dirname(__file__), "data", f"{expected_result_path}"
+    )
     with open(data_directory) as f:
         expected = f.read()
 
@@ -705,7 +822,14 @@ async def test_yaml_prompt(
 # region Test OpenAPI Plugin Load
 
 
+<<<<<<< HEAD
+async def setup_openapi_function_call(kernel, function_name, arguments):
+    openapi_spec_file = os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json"
+    )
+=======
 async def setup_openapi_function_call(kernel: Kernel, function_name, arguments):
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     from semantic_kernel.connectors.openapi_plugin import OpenAPIFunctionExecutionParameters
 
     openapi_spec_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json")
@@ -734,7 +858,11 @@ async def setup_openapi_function_call(kernel: Kernel, function_name, arguments):
                 "headers": dict(request.headers),
             }
         else:
-            request_details = {"method": request.method, "url": str(request.url), "params": dict(request.url.params)}
+            request_details = {
+                "method": request.method,
+                "url": str(request.url),
+                "params": dict(request.url.params),
+            }
 
     transport = httpx.MockTransport(mock_request)
 
@@ -750,7 +878,12 @@ async def setup_openapi_function_call(kernel: Kernel, function_name, arguments):
         assert plugin is not None
         with contextlib.suppress(Exception):
             # It is expected that the API call will fail, ignore
-            await run_function(kernel=kernel, is_streaming=False, function=plugin[function_name], arguments=arguments)
+            await run_function(
+                kernel=kernel,
+                is_streaming=False,
+                function=plugin[function_name],
+                arguments=arguments,
+            )
 
         return request_details
 
@@ -791,18 +924,25 @@ async def test_openapi_delete_light_by_id(kernel: Kernel):
 
 async def test_openapi_create_lights(kernel: Kernel):
     request_content = await setup_openapi_function_call(
-        kernel, function_name="CreateLights", arguments=KernelArguments(roomId=1, lightName="disco")
+        kernel,
+        function_name="CreateLights",
+        arguments=KernelArguments(roomId=1, lightName="disco"),
     )
 
     assert request_content is not None
 
     assert request_content.get("method") == "POST"
-    assert request_content.get("url") == "https://127.0.0.1/Lights?roomId=1&lightName=disco"
+    assert (
+        request_content.get("url")
+        == "https://127.0.0.1/Lights?roomId=1&lightName=disco"
+    )
 
 
 async def test_openapi_put_light_by_id(kernel: Kernel):
     request_content = await setup_openapi_function_call(
-        kernel, function_name="PutLightById", arguments=KernelArguments(id=1, hexColor="11EE11")
+        kernel,
+        function_name="PutLightById",
+        arguments=KernelArguments(id=1, hexColor="11EE11"),
     )
 
     assert request_content is not None

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -173,6 +173,8 @@ public class OpenAIPromptExecutionSettings : PromptExecutionSettings
     /// <para>- <see cref="string"/> values: <c>"json_object"</c>, <c>"text"</c>;</para>
     /// <para>- <see cref="ChatResponseFormat"/> object;</para>
     /// <para>- <see cref="Type"/> object, which will be used to automatically create a JSON schema.</para>
+    /// Possible values are: "json_object", "text", <see cref="ChatResponseFormat"/> object.
+
     /// </remarks>
     [JsonPropertyName("response_format")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -507,6 +509,7 @@ public class OpenAIPromptExecutionSettings : PromptExecutionSettings
         openAIExecutionSettings!.FunctionChoiceBehavior = executionSettings.FunctionChoiceBehavior;
 
         return openAIExecutionSettings;
+        return openAIExecutionSettings!;
     }
 
     /// <summary>

@@ -1,4 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+=======
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -62,3 +64,4 @@ internal static class MongoConstants
         typeof(ReadOnlyMemory<float>?)
     ];
 }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

@@ -1,4 +1,4 @@
-﻿name: TopMovies
+name: TopMovies
 template: |
   What are the top 10 movies of all time?
 template_format: semantic-kernel

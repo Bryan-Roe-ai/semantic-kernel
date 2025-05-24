@@ -13,6 +13,14 @@ from openai.types.beta.threads.image_file_content_block import ImageFileContentB
 from openai.types.beta.threads.text import Text
 from openai.types.beta.threads.text_content_block import TextContentBlock
 
+from semantic_kernel.agents.open_ai.open_ai_assistant_base import OpenAIAssistantBase
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.agents.open_ai.open_ai_assistant_base import OpenAIAssistantBase
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.agents.open_ai.open_ai_assistant_base import OpenAIAssistantBase
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
+from semantic_kernel.agents.open_ai.open_ai_assistant_base import OpenAIAssistantBase
+from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.agents.chat_completion.chat_completion_agent import ChatCompletionAgent
 from semantic_kernel.agents.open_ai.open_ai_assistant_agent import OpenAIAssistantAgent
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
@@ -150,6 +158,7 @@ async def test_invoke_agent():
         assert isinstance(message, ChatMessageContent)
 
 
+@pytest.mark.asyncio
 async def test_invoke_agent_invalid_instance_throws():
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
 
@@ -211,11 +220,46 @@ async def test_invoke_streaming_agent_invalid_instance_throws():
     agent._is_deleted = False
     channel = OpenAIAssistantChannel(client=client, thread_id=thread_id)
 
-    with pytest.raises(AgentChatException, match=f"Agent is not of the expected type {type(OpenAIAssistantAgent)}."):
+<<<<<<< HEAD:python/tests/unit/agents/test_open_ai_assistant_channel.py
+    with pytest.raises(AgentChatException, match=f"Agent is not of the expected type {type(OpenAIAssistantBase)}."):
         async for _ in channel.invoke_stream(agent, []):
             pass
 
 
+@pytest.mark.asyncio
+async def test_invoke_agent_deleted():
+    from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
+
+    client = MagicMock(spec=AsyncOpenAI)
+    thread_id = "test_thread"
+    agent = MagicMock(spec=OpenAIAssistantBase)
+    agent._is_deleted = True
+    channel = OpenAIAssistantChannel(client=client, thread_id=thread_id)
+
+    with pytest.raises(AgentChatException, match="Agent is deleted"):
+        async for _ in channel.invoke(agent):
+            pass
+
+
+@pytest.mark.asyncio
+async def test_invoke_streaming_agent_deleted():
+    from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
+
+    client = MagicMock(spec=AsyncOpenAI)
+    thread_id = "test_thread"
+    agent = MagicMock(spec=OpenAIAssistantBase)
+    agent._is_deleted = True
+    channel = OpenAIAssistantChannel(client=client, thread_id=thread_id)
+
+    with pytest.raises(AgentChatException, match="Agent is deleted"):
+=======
+    with pytest.raises(AgentChatException, match=f"Agent is not of the expected type {type(OpenAIAssistantAgent)}."):
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/tests/unit/agents/openai_assistant/test_open_ai_assistant_channel.py
+        async for _ in channel.invoke_stream(agent, []):
+            pass
+
+
+@pytest.mark.asyncio
 async def test_invoke_agent_wrong_type():
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
 

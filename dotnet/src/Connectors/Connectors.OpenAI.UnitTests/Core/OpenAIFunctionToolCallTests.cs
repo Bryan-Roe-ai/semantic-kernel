@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.ClientModel.Primitives;
@@ -22,8 +22,16 @@ public sealed class OpenAIFunctionToolCallTests
     public void FullyQualifiedNameReturnsValidName(string toolCallName, string expectedName)
     {
         // Arrange
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", toolCallName, string.Empty);
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", toolCallName, string.Empty);
         var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
         var toolCall = ChatToolCall.CreateFunctionToolCall("id", toolCallName, BinaryData.FromString(args));
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", toolCallName, BinaryData.FromString(args));
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", toolCallName, BinaryData.FromString(args));
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", toolCallName, args);
         var openAIFunctionToolCall = new OpenAIFunctionToolCall(toolCall);
 
         // Act & Assert
@@ -35,6 +43,9 @@ public sealed class OpenAIFunctionToolCallTests
     public void ToStringReturnsCorrectValue()
     {
         // Arrange
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin_MyFunction", "{\n \"location\": \"San Diego\",\n \"max_price\": 300\n}");
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin_MyFunction", "{\n \"location\": \"San Diego\",\n \"max_price\": 300\n}");
+        var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin_MyFunction", BinaryData.FromString("{\n \"location\": \"San Diego\",\n \"max_price\": 300\n}"));
         var toolCall = ChatToolCall.CreateFunctionToolCall("id", "MyPlugin_MyFunction", BinaryData.FromString("{\n \"location\": \"San Diego\",\n \"max_price\": 300\n}"));
         var openAIFunctionToolCall = new OpenAIFunctionToolCall(toolCall);
 
@@ -81,6 +92,10 @@ public sealed class OpenAIFunctionToolCallTests
 
         Assert.Equal("test-id", toolCall.Id);
         Assert.Equal("test-function", toolCall.FunctionName);
+        Assert.Equal("test-argument", toolCall.FunctionArguments);
+        Assert.Equal("test-argument", toolCall.FunctionArguments);
+        Assert.Equal("test-argument", toolCall.FunctionArguments.ToString());
+        Assert.Equal("test-argument", toolCall.FunctionArguments.ToString());
         Assert.Equal("test-argument", toolCall.FunctionArguments.ToString());
     }
 

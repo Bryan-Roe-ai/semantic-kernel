@@ -1,7 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Data;
+=======
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.InMemory;
+>>>>>>> main
 
 namespace Memory;
 
@@ -9,7 +13,11 @@ namespace Memory;
 /// An example showing how to do paging when there are many records in the database and you want to page through these page by page.
 ///
 /// The example shows the following steps:
+<<<<<<< HEAD
+/// 1. Create a Volatile Vector Store.
+=======
 /// 1. Create an InMemory Vector Store.
+>>>>>>> main
 /// 2. Generate and add some test data entries.
 /// 3. Read the data back using vector search by paging through the results page by page.
 /// </summary>
@@ -18,8 +26,13 @@ public class VectorStore_VectorSearch_Paging(ITestOutputHelper output) : BaseTes
     [Fact]
     public async Task VectorSearchWithPagingAsync()
     {
+<<<<<<< HEAD
+        // Construct a volatile vector store.
+        var vectorStore = new VolatileVectorStore();
+=======
         // Construct an InMemory vector store.
         var vectorStore = new InMemoryVectorStore();
+>>>>>>> main
 
         // Get and create collection if it doesn't exist.
         var collection = vectorStore.GetCollection<int, TextSnippet>("skglossary");
@@ -53,6 +66,18 @@ public class VectorStore_VectorSearch_Paging(ITestOutputHelper output) : BaseTes
                 new()
                 {
                     Skip = page * 10
+<<<<<<< HEAD
+                }).ToListAsync();
+
+            // Print the results.
+            foreach (var result in currentPageResults)
+            {
+                Console.WriteLine($"Key: {result.Record.Key}, Text: {result.Record.Text}");
+            }
+
+            // Stop when we got back less than the requested number of results.
+            moreResults = currentPageResults.Count == 10;
+=======
                 });
 
             // Print the results.
@@ -65,6 +90,7 @@ public class VectorStore_VectorSearch_Paging(ITestOutputHelper output) : BaseTes
 
             // Stop when we got back less than the requested number of results.
             moreResults = pageCount == 10;
+>>>>>>> main
             page++;
         }
     }

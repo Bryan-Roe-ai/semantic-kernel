@@ -1,0 +1,11 @@
+messages:
+  - role: system
+    content: ''
+  - role: user
+    content: >-
+      • Updating code or configuration files used to provide input to an AI
+      system?
+
+      • Modifying a file structure or format for an AI model’s input?
+model: microsoft/phi-4-reasoning
+modelParameters: {}

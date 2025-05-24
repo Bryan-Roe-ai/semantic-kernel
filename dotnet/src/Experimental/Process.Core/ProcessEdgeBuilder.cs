@@ -1,5 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+=======
+// Copyright (c) Microsoft. All rights reserved.
 
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System;
 
 namespace Microsoft.SemanticKernel;
@@ -9,6 +12,18 @@ namespace Microsoft.SemanticKernel;
 /// </summary>
 public sealed class ProcessEdgeBuilder : ProcessStepEdgeBuilder
 {
+<<<<<<< HEAD
+    private readonly ProcessBuilder _source;
+    private readonly string _eventId;
+    internal ProcessFunctionTargetBuilder? Target { get; set; }
+
+    /// <summary>
+    /// The event Id that the edge fires on.
+    /// </summary>
+    internal string EventId { get; }
+
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <summary>
     /// The source step of the edge.
     /// </summary>
@@ -21,12 +36,26 @@ public sealed class ProcessEdgeBuilder : ProcessStepEdgeBuilder
     /// <param name="eventId">The Id of the event.</param>
     internal ProcessEdgeBuilder(ProcessBuilder source, string eventId) : base(source, eventId, eventId)
     {
+<<<<<<< HEAD
+        this._source = source;
+        this._eventId = eventId;
+        Verify.NotNull(source, nameof(source));
+        Verify.NotNullOrWhiteSpace(eventId, nameof(eventId));
+
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         this.Source = source;
     }
 
     /// <summary>
     /// Sends the output of the source step to the specified target when the associated event fires.
     /// </summary>
+    /// <param name="outputTarget">The output target.</param>
+    public void SendEventTo(ProcessStepEdgeBuilder outputTarget)
+    {
+        this._source.LinkTo(this._eventId, outputTarget);
+    }
+
     public ProcessEdgeBuilder SendEventTo(ProcessFunctionTargetBuilder target)
     {
         return this.SendEventTo(target as ProcessTargetBuilder);

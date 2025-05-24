@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
 using System.Text.Json.Serialization;
@@ -133,10 +133,10 @@ public sealed class TransformPlugin(ITestOutputHelper output) : BaseTest(output)
         Console.WriteLine(await kernel.InvokePromptAsync("I am going diving what animals would I like to see?", new(settings)));
 
         // Example response
-        // Your favorite color is Green. 🌿
+        // Your favorite color is Green. ??
         // Your favorite cold-blooded animal is a lizard.
-        // Your favorite marine animal is the Tuna. 🐟
-        // Your favorite creepy crawly is a spider! 🕷️
+        // Your favorite marine animal is the Tuna. ??
+        // Your favorite creepy crawly is a spider! ???
     }
 
     public delegate bool IncludeKernelParameter(KernelParameterMetadata parameter);

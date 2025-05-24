@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified AI Assistant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            border-right: 1px solid #ddd;
+            padding: 15px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status {
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        #plugin-list,
+        #file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 15px 0;
+        }
+
+        #plugin-list li,
+        #file-list li {
+            padding: 8px;
+            margin: 4px 0;
+            background: #f5f5f5;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #plugin-list li:hover,
+        #file-list li:hover {
+            background: #e0e0e0;
+        }
+
+        .upload-group {
+            margin-bottom: 15px;
+        }
+
+        #chat-log {
+            flex: 1;
+            padding: 15px;
+            background: #fff;
+            overflow-y: auto;
+        }
+
+        .message {
+            max-width: 80%;
+            margin: 5px 0;
+            padding: 8px 12px;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+
+        .user {
+            background: #e3f2fd;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .ai {
+            background: #f1f1f1;
+            align-self: flex-start;
+        }
+
+        .plugin-msg {
+            background: #e6f7e6;
+            border-left: 4px solid #4caf50;
+            font-family: monospace;
+        }
+
+        .input-area {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+            background: #fafafa;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            margin-left: 8px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            background: #4caf50;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .typing {
+            display: none;
+            padding: 0 10px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="status"><span id="status-dot" class="status-dot"></span><span id="status-text">Checking...</span>
+        </div>
+        <h2>Plugins</h2>
+        <ul id="plugin-list"></ul>
+        <h2>Files</h2>
+        <ul id="file-list"></ul>
+        <div class="upload-group">
+            <input type="file" id="file-upload" style="width:100%;" />
+            <button id="upload-btn">Upload</button>
+        </div>
+    </div>
+    <div class="main">
+        <div id="chat-log"></div>
+        <div class="typing" id="typing-indicator">AI is typing...</div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Type a message or command..." />
+            <button id="send-btn">Send</button>
+            <button id="clear-btn">Clear</button>
+        </div>
+    </div>
+    <script>
+        const api = 'http://localhost:8000';
+        const chatLog = document.getElementById('chat-log');
+        const typing = document.getElementById('typing-indicator');
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
+        const pluginList = document.getElementById('plugin-list');
+        const fileList = document.getElementById('file-list');
+        const fileInput = document.getElementById('file-upload');
+        const uploadBtn = document.getElementById('upload-btn');
+        const sendBtn = document.getElementById('send-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const userInput = document.getElementById('user-input');
+
+        // Initialize
+        checkBackend(); loadPlugins(); loadFiles(); loadHistory();
+
+        sendBtn.onclick = sendMessage;
+        clearBtn.onclick = clearChat;
+        uploadBtn.onclick = uploadFile;
+        fileList.onclick = e => { if (e.target.tagName === 'LI') showFile(e.target.textContent); };
+        pluginList.onclick = e => { if (e.target.tagName === 'LI') invokePlugin(e.target.dataset.func, e.target.dataset.type); };
+        userInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+
+        function appendMessage(text, cls) { const div = document.createElement('div'); div.className = 'message ' + cls; div.textContent = text; chatLog.appendChild(div); chatLog.scrollTop = chatLog.scrollHeight; }
+
+        async function checkBackend() {
+            try { const res = await fetch(api + '/ping'); if (res.ok) { statusDot.style.background = '#4caf50'; statusText.textContent = 'Connected'; } else throw ''; }
+            catch { statusDot.style.background = '#f44336'; statusText.textContent = 'Disconnected'; }
+        }
+
+        async function loadPlugins() {
+            try { const res = await fetch(api + '/api/plugins'); const js = await res.json(); pluginList.innerHTML = ''; js.functions.forEach(f => { const li = document.createElement('li'); li.textContent = f.id; li.dataset.func = f.id; li.dataset.type = f.type; pluginList.appendChild(li); }); }
+            catch (err) { console.error(err); }
+        }
+
+        async function loadFiles() {
+            try { const res = await fetch(api + '/files/list'); const files = await res.json(); fileList.innerHTML = ''; files.forEach(f => { const li = document.createElement('li'); li.textContent = f; fileList.appendChild(li); }); }
+            catch (err) { console.error(err); }
+        }
+
+        async function uploadFile() {
+            if (!fileInput.files.length) return;
+            const fd = new FormData(); fd.append('file', fileInput.files[0]);
+            try {
+                const res = await fetch(api + '/api/upload', { method: 'POST', body: fd }); const js = await res.json(); loadFiles(); if (js.analysis) showFileAnalysis(js.analysis, fileInput.files[0].name);
+            }
+            catch (err) { console.error(err); }
+        }
+
+        async function showFile(name) {
+            try { const res = await fetch(api + '/api/analyze/' + encodeURIComponent(name)); const js = await res.json(); showFileAnalysis(js, name); }
+            catch (err) { console.error(err); }
+        }
+
+        function showFileAnalysis(analysis, filename) {
+            appendMessage(`Analysis of ${filename}:`, 'plugin-msg');
+            for (const k in analysis) { appendMessage(`${k}: ${JSON.stringify(analysis[k])}`, 'plugin-msg'); }
+        }
+
+        async function invokePlugin(funcId, type) {
+            const input = prompt(`Input for ${funcId}:`); if (input === null) return;
+            const endpoint = (type === 'python' ? '/api/run_python' : '/api/run_plugin');
+            try {
+                const res = await fetch(api + endpoint + `?plugin_id=${funcId.split('.')[0]}&function_id=${funcId}&input_text=${encodeURIComponent(input)}`);
+                const js = await res.json(); appendMessage(`Result(${funcId}): ${js.result || js.error}`, 'plugin-msg');
+            }
+            catch (err) { console.error(err); }
+        }
+
+        async function sendMessage() {
+            const msg = userInput.value.trim(); if (!msg) return;
+            appendMessage(msg, 'user'); userInput.value = ''; typing.style.display = 'block';
+            try {
+                const res = await fetch(api + '/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg }) });
+                const js = await res.json(); appendMessage(js.reply || js.error || 'No response', 'ai'); saveHistory(msg, js.reply);
+            } catch (err) { appendMessage('Error connecting to backend', 'ai'); console.error(err); }
+            finally { typing.style.display = 'none'; }
+        }
+
+        function clearChat() { chatLog.innerHTML = ''; saveHistory(null, null); }
+
+        function saveHistory(user, ai) {
+            let hist = JSON.parse(localStorage.getItem('chatHist') || '[]'); if (user && ai) hist.push({ u: user, a: ai }); else hist = []; localStorage.setItem('chatHist', JSON.stringify(hist));
+        }
+
+        function loadHistory() {
+            const hist = JSON.parse(localStorage.getItem('chatHist') || '[]'); hist.forEach(h => { appendMessage(h.u, 'user'); appendMessage(h.a, 'ai'); });
+        }
+    </script>
+</body>
+
+</html>

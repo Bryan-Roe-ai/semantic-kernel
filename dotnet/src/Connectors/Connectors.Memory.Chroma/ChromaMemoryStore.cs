@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -74,7 +74,14 @@ public class ChromaMemoryStore : IMemoryStore
         {
             this._logger.LogError("Cannot delete non-existent collection {0}", collectionName);
             throw new KernelException($"Cannot delete non-existent collection {collectionName}", e);
+        catch (SKException e) when (CollectionDoesNotExistException(e, collectionName))
+        {
+            this._logger.LogError("Cannot delete non-existent collection {0}", collectionName);
+            throw new SKException($"Cannot delete non-existent collection {collectionName}", e);
         }
+        this._logger.LogInformation("Attempting to delete collection {0}", collectionName);
+        await this._chromaClient.DeleteCollectionAsync(collectionName, cancellationToken).ConfigureAwait(false);
+        this._logger.LogInformation("Successfully deleted collection {0}", collectionName);
     }
 
     /// <inheritdoc />
@@ -224,6 +231,7 @@ public class ChromaMemoryStore : IMemoryStore
     private const string IncludeMetadatas = "metadatas";
     private const string IncludeEmbeddings = "embeddings";
     private const string IncludeDistances = "distances";
+    private const string CollectionDoesNotExistErrorFormat = "Collection {0} does not exist";
 
     private readonly ILogger _logger;
     private readonly IChromaClient _chromaClient;
@@ -234,6 +242,8 @@ public class ChromaMemoryStore : IMemoryStore
         return
             await this.GetCollectionAsync(collectionName, cancellationToken).ConfigureAwait(false) ??
             throw new KernelException($"Collection {collectionName} does not exist");
+            throw new SKException($"Collection {collectionName} does not exist");
+            throw new SKException($"Collection {collectionName} does not exist");
     }
 
     private async Task<ChromaCollectionModel?> GetCollectionAsync(string collectionName, CancellationToken cancellationToken)
@@ -243,6 +253,8 @@ public class ChromaMemoryStore : IMemoryStore
             return await this._chromaClient.GetCollectionAsync(collectionName, cancellationToken).ConfigureAwait(false);
         }
         catch (HttpOperationException e) when (VerifyCollectionDoesNotExistMessage(e.ResponseContent, collectionName))
+        catch (HttpOperationException e) when (e.ResponseContent?.Contains(string.Format(CultureInfo.InvariantCulture, CollectionDoesNotExistErrorFormat, collectionName)) ?? false)
+        catch (SKException e) when (CollectionDoesNotExistException(e, collectionName))
         {
             this._logger.LogDebug("Collection {0} does not exist", collectionName);
 
@@ -304,6 +316,8 @@ public class ChromaMemoryStore : IMemoryStore
         return
             JsonSerializer.Deserialize<MemoryRecordMetadata>(serializedMetadata, JsonOptionsCache.Default) ??
             throw new KernelException("Unable to deserialize memory record metadata.");
+            JsonSerializer.Deserialize<MemoryRecordMetadata>(serializedMetadata, this._jsonSerializerOptions) ??
+            throw new SKException("Unable to deserialize memory record metadata.");
     }
 
     private ReadOnlyMemory<float> GetEmbeddingForMemoryRecord(List<float[]>? embeddings, int recordIndex)
@@ -331,6 +345,11 @@ public class ChromaMemoryStore : IMemoryStore
     private static bool VerifyCollectionDoesNotExistMessage(string? responseContent, string collectionName)
     {
         return responseContent?.Contains(string.Format(CultureInfo.InvariantCulture, "Collection {0} does not exist", collectionName)) ?? false;
+    /// <param name="exception">Chroma exception.</param>
+    /// <param name="collectionName">Collection name.</param>
+    private static bool CollectionDoesNotExistException(Exception exception, string collectionName)
+    {
+        return exception?.Message?.Contains(string.Format(CultureInfo.InvariantCulture, "Collection {0} does not exist", collectionName)) ?? false;
     }
 
     #endregion

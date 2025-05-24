@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -68,7 +68,7 @@ public sealed class MistralClientTests : MistralTestBase
 
         // Act
         var executionSettings = new MistralAIPromptExecutionSettings { MaxTokens = 1024, Temperature = 0.9 };
-        await client.GetChatMessageContentsAsync(chatHistory, default, executionSettings);
+        await client.GetChatMessageContentsAsync(chatHistory, executionSettings);
 
         // Assert
         var request = this.DelegatingHandler!.RequestContent;
@@ -94,7 +94,7 @@ public sealed class MistralClientTests : MistralTestBase
         {
             new ChatMessageContent(AuthorRole.User, "What is the best French cheese?")
         };
-        var response = await client.GetChatMessageContentsAsync(chatHistory, default);
+        var response = await client.GetChatMessageContentsAsync(chatHistory);
 
         // Assert
         Assert.NotNull(response);
@@ -114,7 +114,7 @@ public sealed class MistralClientTests : MistralTestBase
 
         // Act
         List<string> data = ["Hello", "world"];
-        var response = await client.GenerateEmbeddingsAsync(data, default);
+        var response = await client.GenerateEmbeddingsAsync(data);
 
         // Assert
         Assert.NotNull(response);
@@ -135,7 +135,7 @@ public sealed class MistralClientTests : MistralTestBase
         };
 
         // Act
-        var response = client.GetStreamingChatMessageContentsAsync(chatHistory, default);
+        var response = client.GetStreamingChatMessageContentsAsync(chatHistory);
         var chunks = new List<StreamingChatMessageContent>();
         await foreach (var chunk in response)
         {
@@ -168,7 +168,7 @@ public sealed class MistralClientTests : MistralTestBase
         };
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(async () => await client.GetChatMessageContentsAsync(chatHistory, default));
+        await Assert.ThrowsAsync<ArgumentException>(async () => await client.GetChatMessageContentsAsync(chatHistory));
     }
 
     [Fact]
@@ -179,7 +179,7 @@ public sealed class MistralClientTests : MistralTestBase
         var chatHistory = new ChatHistory();
 
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(async () => await client.GetChatMessageContentsAsync(chatHistory, default));
+        await Assert.ThrowsAsync<ArgumentException>(async () => await client.GetChatMessageContentsAsync(chatHistory));
     }
 
     [Fact]
@@ -199,7 +199,7 @@ public sealed class MistralClientTests : MistralTestBase
         kernel.Plugins.AddFromType<WeatherPlugin>();
 
         // Act
-        await client.GetChatMessageContentsAsync(chatHistory, default, executionSettings, kernel);
+        await client.GetChatMessageContentsAsync(chatHistory, executionSettings, kernel);
 
         // Assert
         var request = this.DelegatingHandler!.RequestContent;
@@ -232,7 +232,7 @@ public sealed class MistralClientTests : MistralTestBase
 
         // Act
         var executionSettings = new MistralAIPromptExecutionSettings { ToolCallBehavior = MistralAIToolCallBehavior.AutoInvokeKernelFunctions };
-        var response = client.GetStreamingChatMessageContentsAsync(chatHistory, default, executionSettings, kernel);
+        var response = client.GetStreamingChatMessageContentsAsync(chatHistory, executionSettings, kernel);
         var chunks = new List<StreamingChatMessageContent>();
         await foreach (var chunk in response)
         {
@@ -273,12 +273,12 @@ public sealed class MistralClientTests : MistralTestBase
         {
             new ChatMessageContent(AuthorRole.User, "What is the weather like in Paris?")
         };
-        var response = await client.GetChatMessageContentsAsync(chatHistory, default, executionSettings, kernel);
+        var response = await client.GetChatMessageContentsAsync(chatHistory, executionSettings, kernel);
 
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12Â°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
+        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
         Assert.Equal("mistral-large-latest", response[0].ModelId);
         Assert.Equal(2, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -299,7 +299,7 @@ public sealed class MistralClientTests : MistralTestBase
         {
             new ChatMessageContent(AuthorRole.User, "What is the weather like in Paris?")
         };
-        var response = await client.GetChatMessageContentsAsync(chatHistory, default, executionSettings, kernel);
+        var response = await client.GetChatMessageContentsAsync(chatHistory, executionSettings, kernel);
 
         // Assert
         Assert.NotNull(response);
@@ -327,12 +327,12 @@ public sealed class MistralClientTests : MistralTestBase
         {
             new ChatMessageContent(AuthorRole.User, "What is the weather like in Paris?")
         };
-        var response = await client.GetChatMessageContentsAsync(chatHistory, default, executionSettings, kernel);
+        var response = await client.GetChatMessageContentsAsync(chatHistory, executionSettings, kernel);
 
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12Â°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
+        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
         Assert.Equal("mistral-large-latest", response[0].ModelId);
         Assert.Equal(2, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -365,12 +365,12 @@ public sealed class MistralClientTests : MistralTestBase
         {
             new ChatMessageContent(AuthorRole.User, "What is the weather like in Paris?")
         };
-        var response = await client.GetChatMessageContentsAsync(chatHistory, default, executionSettings, kernel);
+        var response = await client.GetChatMessageContentsAsync(chatHistory, executionSettings, kernel);
 
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12Â°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
+        Assert.Equal("The weather in Paris is mostly cloudy with a temperature of 12°C. The wind speed is 11 KMPH and the humidity is at 48%.", response[0].Content);
         Assert.Equal("mistral-large-latest", response[0].ModelId);
         Assert.Equal(2, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -409,11 +409,11 @@ public sealed class MistralClientTests : MistralTestBase
 
         if (isStreaming)
         {
-            await client.GetStreamingChatMessageContentsAsync(chatHistory, default, executionSettings, kernel).ToListAsync();
+            await client.GetStreamingChatMessageContentsAsync(chatHistory, executionSettings, kernel).ToListAsync();
         }
         else
         {
-            await client.GetChatMessageContentsAsync(chatHistory, default, executionSettings, kernel);
+            await client.GetChatMessageContentsAsync(chatHistory, executionSettings, kernel);
         }
 
         // Assert
@@ -448,12 +448,12 @@ public sealed class MistralClientTests : MistralTestBase
         {
             new ChatMessageContent(AuthorRole.User, "What is the weather like in Paris?")
         };
-        var response = await client.GetChatMessageContentsAsync(chatHistory, default, executionSettings, kernel);
+        var response = await client.GetChatMessageContentsAsync(chatHistory, executionSettings, kernel);
 
         // Assert
         Assert.NotNull(response);
         Assert.Single(response);
-        Assert.Equal("12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", response[0].Content);
+        Assert.Equal("12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", response[0].Content);
         Assert.Null(response[0].ModelId);
         Assert.Equal(1, this.DelegatingHandler!.SendAsyncCallCount);
         Assert.Equal(3, chatHistory.Count);
@@ -485,7 +485,7 @@ public sealed class MistralClientTests : MistralTestBase
         List<StreamingKernelContent> streamingContent = [];
 
         // Act
-        await foreach (var item in client.GetStreamingChatMessageContentsAsync(chatHistory, default, executionSettings, kernel))
+        await foreach (var item in client.GetStreamingChatMessageContentsAsync(chatHistory, executionSettings, kernel))
         {
             streamingContent.Add(item);
         }
@@ -497,7 +497,7 @@ public sealed class MistralClientTests : MistralTestBase
         var lastMessageContent = streamingContent[^1] as StreamingChatMessageContent;
         Assert.NotNull(lastMessageContent);
 
-        Assert.Equal("12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", lastMessageContent.Content);
+        Assert.Equal("12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy", lastMessageContent.Content);
         Assert.Equal(AuthorRole.Tool, lastMessageContent.Role);
     }
 
@@ -517,7 +517,7 @@ public sealed class MistralClientTests : MistralTestBase
         };
 
         // Act
-        var messages = client.ToMistralChatMessages(chatMessage, default);
+        var messages = client.ToMistralChatMessages(chatMessage);
 
         // Assert
         Assert.NotNull(messages);
@@ -562,7 +562,7 @@ public sealed class MistralClientTests : MistralTestBase
         };
 
         // Act
-        var messages = client.ToMistralChatMessages(content, default);
+        var messages = client.ToMistralChatMessages(content);
 
         // Assert
         Assert.NotNull(messages);
@@ -578,11 +578,11 @@ public sealed class MistralClientTests : MistralTestBase
         var content = new ChatMessageContent()
         {
             Role = AuthorRole.Tool,
-            Items = [new FunctionResultContent("12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy"), new FunctionResultContent("15:20:44")],
+            Items = [new FunctionResultContent("12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy"), new FunctionResultContent("15:20:44")],
         };
 
         // Act
-        var messages = client.ToMistralChatMessages(content, default);
+        var messages = client.ToMistralChatMessages(content);
 
         // Assert
         Assert.NotNull(messages);
@@ -777,7 +777,7 @@ public sealed class MistralClientTests : MistralTestBase
         [Description("Get the current weather in a given location.")]
         public string GetWeather(
             [Description("The city and department, e.g. Marseille, 13")] string location
-        ) => "12Â°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy";
+        ) => "12°C\nWind: 11 KMPH\nHumidity: 48%\nMostly cloudy";
     }
 
     internal enum TemperatureUnit { Celsius, Fahrenheit }

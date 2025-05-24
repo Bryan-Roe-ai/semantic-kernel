@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -203,6 +203,7 @@ public sealed class OpenAIFunction
         // If there's a description, incorporate it.
         if (!string.IsNullOrWhiteSpace(description))
         {
+            return KernelJsonSchemaBuilder.Build(null, typeof(string), description);
             return allowStrictSchemaAdherence ?
                 GetOptionalStringSchemaWithDescription(description!) :
                 KernelJsonSchemaBuilder.Build(typeof(string), description, AIJsonSchemaCreateOptions.Default);

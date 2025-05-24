@@ -1,4 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+=======
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
 using Microsoft.SemanticKernel;
@@ -17,3 +19,4 @@ public sealed class StaticTextPlugin
         [Description("Value of the day to append")] string day) =>
         input + day;
 }
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

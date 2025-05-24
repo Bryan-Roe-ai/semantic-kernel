@@ -12,8 +12,12 @@ from semantic_kernel.connectors.ai.azure_ai_inference import (
     AzureAIInferenceChatCompletion,
     AzureAIInferenceChatPromptExecutionSettings,
 )
-from semantic_kernel.connectors.ai.azure_ai_inference.azure_ai_inference_settings import AzureAIInferenceSettings
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
+from semantic_kernel.connectors.ai.azure_ai_inference.azure_ai_inference_settings import (
+    AzureAIInferenceSettings,
+)
+from semantic_kernel.connectors.ai.function_choice_behavior import (
+    FunctionChoiceBehavior,
+)
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.utils.finish_reason import FinishReason
 from semantic_kernel.exceptions.service_exceptions import (
@@ -26,9 +30,20 @@ from semantic_kernel.utils.telemetry.user_agent import SEMANTIC_KERNEL_USER_AGEN
 
 
 # region init
-def test_azure_ai_inference_chat_completion_init(azure_ai_inference_unit_test_env, model_id) -> None:
+def test_azure_ai_inference_chat_completion_init(
+    azure_ai_inference_unit_test_env, model_id
+) -> None:
     """Test initialization of AzureAIInferenceChatCompletion"""
+<<<<<<< HEAD
+from semantic_kernel.contents.chat_history import ChatHistory
+from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError
+
+
+def test_azure_ai_inference_chat_completion_init(azure_ai_inference_unit_test_env, model_id) -> None:
+    azure_ai_inference = AzureAIInferenceChatCompletion(model_id)
+=======
     azure_ai_inference = AzureAIInferenceChatCompletion(model_id, instruction_role="developer")
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     assert azure_ai_inference.ai_model_id == model_id
     assert azure_ai_inference.service_id == model_id
@@ -51,7 +66,10 @@ def test_azure_ai_inference_chat_completion_client_init(
     assert isinstance(mock_client.call_args.kwargs["endpoint"], str)
     assert mock_client.call_args.kwargs["endpoint"] == str(settings.endpoint)
     assert isinstance(mock_client.call_args.kwargs["credential"], AzureKeyCredential)
-    assert mock_client.call_args.kwargs["credential"].key == settings.api_key.get_secret_value()
+    assert (
+        mock_client.call_args.kwargs["credential"].key
+        == settings.api_key.get_secret_value()
+    )
     assert mock_client.call_args.kwargs["user_agent"] == SEMANTIC_KERNEL_USER_AGENT
 
 
@@ -59,6 +77,9 @@ def test_azure_ai_inference_chat_completion_init_with_service_id(
     azure_ai_inference_unit_test_env, model_id, service_id
 ) -> None:
     """Test initialization of AzureAIInferenceChatCompletion with service_id"""
+def test_azure_ai_inference_chat_completion_init_with_service_id(
+    azure_ai_inference_unit_test_env, model_id, service_id
+) -> None:
     azure_ai_inference = AzureAIInferenceChatCompletion(model_id, service_id=service_id)
 
     assert azure_ai_inference.ai_model_id == model_id
@@ -71,7 +92,9 @@ def test_azure_ai_inference_chat_completion_init_with_service_id(
     [AzureAIInferenceChatCompletion.__name__],
     indirect=True,
 )
-def test_azure_ai_inference_chat_completion_init_with_custom_client(azure_ai_inference_client, model_id) -> None:
+def test_azure_ai_inference_chat_completion_init_with_custom_client(
+    azure_ai_inference_client, model_id
+) -> None:
     """Test initialization of AzureAIInferenceChatCompletion with custom client"""
     client = azure_ai_inference_client
     azure_ai_inference = AzureAIInferenceChatCompletion(model_id, client=client)
@@ -81,6 +104,20 @@ def test_azure_ai_inference_chat_completion_init_with_custom_client(azure_ai_inf
     assert azure_ai_inference.client == client
 
 
+@pytest.mark.parametrize(
+    "exclude_list", [["AZURE_AI_INFERENCE_API_KEY"]], indirect=True
+)
+def test_azure_ai_inference_chat_completion_init_with_empty_api_key(
+    azure_ai_inference_unit_test_env, model_id
+) -> None:
+    """Test initialization of AzureAIInferenceChatCompletion with empty API key"""
+    with pytest.raises(ServiceInitializationError):
+        AzureAIInferenceChatCompletion(model_id)
+
+
+@pytest.mark.parametrize(
+    "exclude_list", [["AZURE_AI_INFERENCE_ENDPOINT"]], indirect=True
+)
 @pytest.mark.parametrize("exclude_list", [["AZURE_AI_INFERENCE_ENDPOINT"]], indirect=True)
 def test_azure_ai_inference_chat_completion_init_with_empty_endpoint(
     azure_ai_inference_unit_test_env, model_id
@@ -90,9 +127,14 @@ def test_azure_ai_inference_chat_completion_init_with_empty_endpoint(
         AzureAIInferenceChatCompletion(model_id, env_file_path="fake_path")
 
 
-def test_prompt_execution_settings_class(azure_ai_inference_unit_test_env, model_id) -> None:
+def test_prompt_execution_settings_class(
+    azure_ai_inference_unit_test_env, model_id
+) -> None:
     azure_ai_inference = AzureAIInferenceChatCompletion(model_id)
-    assert azure_ai_inference.get_prompt_execution_settings_class() == AzureAIInferenceChatPromptExecutionSettings
+    assert (
+        azure_ai_inference.get_prompt_execution_settings_class()
+        == AzureAIInferenceChatPromptExecutionSettings
+    )
 
 
 # endregion init
@@ -121,7 +163,11 @@ async def test_azure_ai_inference_chat_completion(
 
     mock_complete.return_value = mock_azure_ai_inference_chat_completion_response
 
+    responses = await azure_ai_inference_service.get_chat_message_contents(
+        chat_history=chat_history, settings=settings
+    )
     responses = await azure_ai_inference_service.get_chat_message_contents(chat_history=chat_history, settings=settings)
+    await azure_ai_inference_service.get_chat_message_contents(chat_history, settings)
 
     mock_complete.assert_awaited_once_with(
         messages=[UserMessage(content=user_message_content)],
@@ -163,7 +209,11 @@ async def test_azure_ai_inference_chat_completion_with_standard_parameters(
 
     mock_complete.return_value = mock_azure_ai_inference_chat_completion_response
 
+    responses = await azure_ai_inference_service.get_chat_message_contents(
+        chat_history=chat_history, settings=settings
+    )
     responses = await azure_ai_inference_service.get_chat_message_contents(chat_history=chat_history, settings=settings)
+    await azure_ai_inference_service.get_chat_message_contents(chat_history, settings)
 
     mock_complete.assert_awaited_once_with(
         messages=[UserMessage(content=user_message_content)],
@@ -200,11 +250,15 @@ async def test_azure_ai_inference_chat_completion_with_extra_parameters(
     chat_history.add_user_message(user_message_content)
     extra_parameters = {"test_key": "test_value"}
 
-    settings = AzureAIInferenceChatPromptExecutionSettings(extra_parameters=extra_parameters)
+    settings = AzureAIInferenceChatPromptExecutionSettings(
+        extra_parameters=extra_parameters
+    )
 
     mock_complete.return_value = mock_azure_ai_inference_chat_completion_response
 
-    responses = await azure_ai_inference_service.get_chat_message_contents(chat_history=chat_history, settings=settings)
+    responses = await azure_ai_inference_service.get_chat_message_contents(
+        chat_history=chat_history, settings=settings
+    )
 
     mock_complete.assert_awaited_once_with(
         messages=[UserMessage(content=user_message_content)],
@@ -276,7 +330,9 @@ async def test_azure_ai_inference_chat_completion_with_function_choice_behavior(
     )
     settings.function_choice_behavior.maximum_auto_invoke_attempts = 1
 
-    mock_complete.return_value = mock_azure_ai_inference_chat_completion_response_with_tool_call
+    mock_complete.return_value = (
+        mock_azure_ai_inference_chat_completion_response_with_tool_call
+    )
 
     responses = await azure_ai_inference_service.get_chat_message_contents(
         chat_history=chat_history,
@@ -409,9 +465,15 @@ async def test_azure_ai_inference_streaming_chat_completion(
     chat_history.add_user_message(user_message_content)
     settings = AzureAIInferenceChatPromptExecutionSettings()
 
-    mock_complete.return_value = mock_azure_ai_inference_streaming_chat_completion_response
+    mock_complete.return_value = (
+        mock_azure_ai_inference_streaming_chat_completion_response
+    )
 
-    async for messages in azure_ai_inference_service.get_streaming_chat_message_contents(chat_history, settings):
+    async for (
+        messages
+    ) in azure_ai_inference_service.get_streaming_chat_message_contents(
+        chat_history, settings
+    ):
         assert len(messages) == 1
         assert messages[0].role == "assistant"
         assert messages[0].content == "Hello"
@@ -452,9 +514,15 @@ async def test_azure_ai_inference_chat_streaming_completion_with_standard_parame
         top_p=0.5,
     )
 
-    mock_complete.return_value = mock_azure_ai_inference_streaming_chat_completion_response
+    mock_complete.return_value = (
+        mock_azure_ai_inference_streaming_chat_completion_response
+    )
 
-    async for messages in azure_ai_inference_service.get_streaming_chat_message_contents(chat_history, settings):
+    async for (
+        messages
+    ) in azure_ai_inference_service.get_streaming_chat_message_contents(
+        chat_history, settings
+    ):
         assert len(messages) == 1
         assert messages[0].role == "assistant"
         assert messages[0].content == "Hello"
@@ -492,11 +560,19 @@ async def test_azure_ai_inference_streaming_chat_completion_with_extra_parameter
     chat_history.add_user_message(user_message_content)
     extra_parameters = {"test_key": "test_value"}
 
-    settings = AzureAIInferenceChatPromptExecutionSettings(extra_parameters=extra_parameters)
+    settings = AzureAIInferenceChatPromptExecutionSettings(
+        extra_parameters=extra_parameters
+    )
 
-    mock_complete.return_value = mock_azure_ai_inference_streaming_chat_completion_response
+    mock_complete.return_value = (
+        mock_azure_ai_inference_streaming_chat_completion_response
+    )
 
-    async for messages in azure_ai_inference_service.get_streaming_chat_message_contents(chat_history, settings):
+    async for (
+        messages
+    ) in azure_ai_inference_service.get_streaming_chat_message_contents(
+        chat_history, settings
+    ):
         assert len(messages) == 1
         assert messages[0].role == "assistant"
         assert messages[0].content == "Hello"
@@ -572,8 +648,13 @@ async def test_azure_ai_inference_streaming_chat_completion_with_function_choice
     )
     settings.function_choice_behavior.maximum_auto_invoke_attempts = 1
 
-    mock_complete.return_value = mock_azure_ai_inference_streaming_chat_completion_response_with_tool_call
+    mock_complete.return_value = (
+        mock_azure_ai_inference_streaming_chat_completion_response_with_tool_call
+    )
 
+    async for (
+        messages
+    ) in azure_ai_inference_service.get_streaming_chat_message_contents(
     kernel.add_function(plugin_name="TestPlugin", function=decorated_native_function)
 
     all_messages = []
@@ -623,9 +704,13 @@ async def test_azure_ai_inference_streaming_chat_completion_with_function_choice
         function_choice_behavior=FunctionChoiceBehavior.Auto(),
     )
 
-    mock_complete.return_value = mock_azure_ai_inference_streaming_chat_completion_response
+    mock_complete.return_value = (
+        mock_azure_ai_inference_streaming_chat_completion_response
+    )
 
-    async for messages in azure_ai_inference_service.get_streaming_chat_message_contents(
+    async for (
+        messages
+    ) in azure_ai_inference_service.get_streaming_chat_message_contents(
         chat_history,
         settings,
         kernel=kernel,
@@ -692,3 +777,10 @@ async def test_azure_ai_inference_streaming_response_format_json_schema(
 
 
 # endregion streaming chat completion
+    await azure_ai_inference_service.get_chat_message_contents(chat_history, settings)
+
+    mock_complete.assert_awaited_once_with(
+        messages=[UserMessage(content=user_message_content)],
+        model_extras=extra_parameters,
+        **settings.prepare_settings_dict(),
+    )

@@ -1,4 +1,4 @@
-ï»¿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Text;
 using Microsoft.SemanticKernel;
@@ -41,6 +41,7 @@ namespace FunctionCalling;
 ///      To enable manual invocation, the caller needs to set the `autoInvoke` parameter to `false` when specifying either <see cref="FunctionChoiceBehavior.Auto"/>
 ///      or <see cref="FunctionChoiceBehavior.Required"/> in the <see cref="PromptExecutionSettings"/>.
 ///
+///    SK supports only sequential invocation of functions in the automatic invocation mode at the moment. To invoke functions concurrently, a caller will need to do this manually.
 /// ** Options **
 ///    The following aspects of the function choice behaviors can be changed via the `options` constructor's parameter of type <see cref="FunctionChoiceBehaviorOptions"/> each behavior accepts:
 ///    * The <see cref="FunctionChoiceBehaviorOptions.AllowConcurrentInvocation"/> option enables concurrent invocation of functions by SK.
@@ -460,7 +461,7 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
         ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(
-            "Good morning! Whatâ€™s the current time and latest news headlines?",
+            "Good morning! What’s the current time and latest news headlines?",
             settings,
             kernel);
 
@@ -487,7 +488,7 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
         ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(
-            "Good morning! Whatâ€™s the current time and latest news headlines?",
+            "Good morning! What’s the current time and latest news headlines?",
             settings,
             kernel);
 
@@ -515,7 +516,7 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
         ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(
-            "Good morning! Whatâ€™s the current time and latest news headlines?",
+            "Good morning! What’s the current time and latest news headlines?",
             settings,
             kernel);
 
@@ -549,9 +550,14 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         // Add a plugin with some helper functions we want to allow the model to call.
         kernel.ImportPluginFromFunctions("HelperFunctions",
         [
+<<<<<<< HEAD
+            kernel.CreateFunctionFromMethod(() => DateTime.UtcNow.ToString("R"), "GetCurrentUtcDateTime", "Retrieves the current date time in UTC."),
+            kernel.CreateFunctionFromMethod((string cityName, string currentDateTime) =>
+=======
             kernel.CreateFunctionFromMethod(() => new List<string> { "Squirrel Steals Show", "Dog Wins Lottery" }, "GetLatestNewsTitles", "Retrieves latest news titles."),
             kernel.CreateFunctionFromMethod(() => DateTime.UtcNow.ToString("R"), "GetCurrentDateTimeInUtc", "Retrieves the current date time in UTC."),
             kernel.CreateFunctionFromMethod((string cityName, string currentDateTimeInUtc) =>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                 cityName switch
                 {
                     "Boston" => "61 and rainy",

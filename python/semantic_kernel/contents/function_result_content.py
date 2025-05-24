@@ -5,6 +5,11 @@ from xml.etree.ElementTree import Element  # nosec
 
 from pydantic import Field, field_serializer
 from typing_extensions import deprecated
+from functools import cached_property
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, TypeVar
+from xml.etree.ElementTree import Element  # nosec
+
+from pydantic import Field
 
 from semantic_kernel.const import DEFAULT_FULLY_QUALIFIED_NAME_SEPARATOR
 from semantic_kernel.contents.const import FUNCTION_RESULT_CONTENT_TAG, TEXT_CONTENT_TAG, ContentTypes
@@ -28,10 +33,19 @@ TAG_CONTENT_MAP = {
 _T = TypeVar("_T", bound="FunctionResultContent")
 
 
+
+
+
 class FunctionResultContent(KernelContent):
     """This class represents function result content."""
 
-    content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(FUNCTION_RESULT_CONTENT_TAG, init=False)  # type: ignore
+from pydantic import Field, validator
+
+@validator('content_type', pre=True, always=True)
+def set_content_type(cls, v):
+    return FUNCTION_RESULT_CONTENT_TAG
+
+content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
     tag: ClassVar[str] = FUNCTION_RESULT_CONTENT_TAG
     id: str
     call_id: str | None = None
@@ -39,6 +53,7 @@ class FunctionResultContent(KernelContent):
     name: str | None = None
     function_name: str
     plugin_name: str | None = None
+    result: Any
     encoding: str | None = None
 
     def __init__(
@@ -115,6 +130,7 @@ class FunctionResultContent(KernelContent):
         """Create an instance from an Element."""
         if element.tag != cls.tag:
             raise ContentInitializationError(f"Element tag is not {cls.tag}")  # pragma: no cover
+            raise ContentInitializationError(f"Element tag is not {cls.tag}")
         return cls(id=element.get("id", ""), result=element.text, name=element.get("name", None))
 
     @classmethod
@@ -128,9 +144,16 @@ class FunctionResultContent(KernelContent):
         from semantic_kernel.contents.chat_message_content import ChatMessageContent
         from semantic_kernel.functions.function_result import FunctionResult
 
+<<<<<<< HEAD
+        metadata.update(function_call_content.metadata or {})
+        metadata.update(getattr(result, "metadata", {}))
+        if function_call_content.metadata:
+            metadata.update(function_call_content.metadata)
+=======
         metadata = metadata or {}
         metadata = metadata | (function_call_content.metadata or {})
         metadata = metadata | getattr(result, "metadata", {})
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         inner_content = result
         if isinstance(result, FunctionResult):
             result = result.value
@@ -153,6 +176,7 @@ class FunctionResultContent(KernelContent):
             result=res,
             function_name=function_call_content.function_name,
             plugin_name=function_call_content.plugin_name,
+            name=function_call_content.name,
             ai_model_id=function_call_content.ai_model_id,
             metadata=metadata,
         )

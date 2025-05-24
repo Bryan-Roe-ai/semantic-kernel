@@ -1,0 +1,67 @@
+# Bandit Workflow
+# This workflow scans Python code for security vulnerabilities using Bandit.
+# Results are uploaded to the GitHub Security tab, and team members are notified in case of failure.
+
+name: Bandit
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 0 * * *'  # Run daily at midnight
+
+permissions:
+  contents: read  # for actions/checkout to fetch code
+  security-events: write  # for github/codeql-action/upload-sarif to upload SARIF results
+
+jobs:
+  bandit:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # Step 2: Run lint
+      - name: Run lint
+        run: npm run lint
+
+      # Step 3: Run Bandit Scan
+      - name: Run Bandit Scan
+        uses: shundor/python-bandit-scan@v2
+        with:
+          path: ./src  # Scan only the main source directory
+          level: HIGH  # Report only high-severity issues
+          confidence: MEDIUM  # Include medium-confidence issues
+          excluded_paths: tests/,docs/  # Exclude tests and documentation
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Ensure secure access
+
+      # Step 4: Validate SARIF file before uploading
+      - name: Validate SARIF file
+        run: |
+          if [ ! -f bandit-results.sarif ]; then
+            echo "SARIF file not found. Failing the workflow."
+            exit 1
+          fi
+
+      # Step 5: Upload results to GitHub Security tab
+      - name: Upload Bandit scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: bandit-results.sarif
+
+      # Step 6: Notify the team if the workflow fails
+      - name: Notify Team on Failure
+        if: failure()
+        run: |
+          gh issue create --title "Bandit Scan Failed" --body "Bandit detected security issues. Check the Security tab for details."
+
+      # Step 7: Trigger conditional workflows
+      - name: Trigger Ensure Success Workflow
+        if: success()
+        run: |
+          gh workflow run ensure-success.yml

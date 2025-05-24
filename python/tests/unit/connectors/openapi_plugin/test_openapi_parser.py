@@ -15,7 +15,9 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 def test_parse_parameters_missing_in_field():
     parser = OpenApiParser()
     parameters = [{"name": "param1", "schema": {"type": "string"}}]
-    with pytest.raises(PluginInitializationError, match="Parameter param1 is missing 'in' field"):
+    with pytest.raises(
+        PluginInitializationError, match="Parameter param1 is missing 'in' field"
+    ):
         parser._parse_parameters(parameters)
 
 
@@ -108,7 +110,9 @@ def test_get_payload_properties_hierarchy_max_depth_exceeded():
 def test_create_rest_api_operation_payload_media_type_none():
     parser = OpenApiParser()
     request_body = {"content": {"application/xml": {"schema": {"type": "object"}}}}
-    with pytest.raises(Exception, match="Neither of the media types of operation_id is supported."):
+    with pytest.raises(
+        Exception, match="Neither of the media types of operation_id is supported."
+    ):
         parser._create_rest_api_operation_payload("operation_id", request_body)
 
 

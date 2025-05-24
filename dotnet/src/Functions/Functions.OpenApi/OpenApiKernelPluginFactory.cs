@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -304,11 +304,15 @@ public static partial class OpenApiKernelPluginFactory
         // Add unstructured metadata, specific to Open API, to the metadata property bag.
         var additionalMetadata = new Dictionary<string, object?>
         {
+<<<<<<< HEAD
+            { OpenApiKernelPluginFactory.OperationExtensionsMethodKey, operation.Method.ToString().ToUpperInvariant() }
+=======
             { OpenApiKernelPluginFactory.OperationExtensionsMethodKey, operation.Method.ToString().ToUpperInvariant() },
             { OpenApiKernelPluginFactory.OperationExtensionsOperationKey, operation },
             { OpenApiKernelPluginFactory.OperationExtensionsInfoKey, info },
             { OpenApiKernelPluginFactory.OperationExtensionsSecurityKey, security },
             { OpenApiKernelPluginFactory.OperationExtensionsServerUrlsKey, operation.Servers is { Count: > 0 } servers && !string.IsNullOrEmpty(servers[0].Url) ? [servers[0].Url! ] : Array.Empty<string>() }
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         };
 
         if (operation.Extensions is { Count: > 0 })
@@ -334,6 +338,8 @@ public static partial class OpenApiKernelPluginFactory
     /// <summary>The metadata property bag key to use when storing the method of an operation.</summary>
     private const string OperationExtensionsMethodKey = "method";
 
+<<<<<<< HEAD
+=======
     /// <summary>The metadata property bag key to use when storing the operation.</summary>
     private const string OperationExtensionsOperationKey = "operation";
 
@@ -346,6 +352,7 @@ public static partial class OpenApiKernelPluginFactory
     /// <summary>The metadata property bag key to use when storing the server of an operation.</summary>
     private const string OperationExtensionsServerUrlsKey = "server-urls";
 
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// <summary>The metadata property bag key to use for the list of extension values provided in the swagger file at the operation level.</summary>
     private const string OperationExtensionsMetadataKey = "operation-extensions";
 
@@ -448,21 +455,21 @@ public static partial class OpenApiKernelPluginFactory
     {
         return parameter.Type switch
         {
-            "string" => typeof(string),
-            "boolean" => typeof(bool),
-            "number" => parameter.Format switch
+            RestApiParameterType.String => typeof(string),
+            RestApiParameterType.Boolean => typeof(bool),
+            RestApiParameterType.Number => parameter.Format switch
             {
                 "float" => typeof(float),
                 "double" => typeof(double),
                 _ => typeof(double)
             },
-            "integer" => parameter.Format switch
+            RestApiParameterType.Integer => parameter.Format switch
             {
                 "int32" => typeof(int),
                 "int64" => typeof(long),
                 _ => typeof(long)
             },
-            "object" => typeof(object),
+            RestApiParameterType.Object => typeof(object),
             _ => null
         };
     }

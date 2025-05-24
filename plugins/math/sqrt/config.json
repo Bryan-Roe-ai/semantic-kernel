@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "type": "completion",
+  "description": "Calculate the square root of a number",
+  "execution_settings": {
+    "default": {
+      "max_tokens": 100,
+      "temperature": 0.0
+    }
+  },
+  "input_variables": [
+    {
+      "name": "input",
+      "description": "The number to calculate the square root of",
+      "required": true
+    }
+  ]
+}

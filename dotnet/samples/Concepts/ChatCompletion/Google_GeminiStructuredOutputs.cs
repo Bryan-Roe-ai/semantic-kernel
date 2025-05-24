@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 using Google.Apis.Auth.OAuth2;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Google;
-using OpenAI.Chat;
+using Open            this.Console.WriteLine("============= Google AI - Gemini Chat Completion Structured Outputs ============="); I.Chat;
 using Directory = System.IO.Directory;
 using File = System.IO.File;
 

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections;
@@ -20,6 +20,10 @@ public sealed class OpenAIChatMessageContentTests
     public void ConstructorsWorkCorrectly()
     {
         // Arrange
+        List<ChatToolCall> toolCalls = [ChatToolCall.CreateFunctionToolCall("id", "name", "args")];
+        List<ChatToolCall> toolCalls = [ChatToolCall.CreateFunctionToolCall("id", "name", "args")];
+        List<ChatToolCall> toolCalls = [ChatToolCall.CreateFunctionToolCall("id", "name", BinaryData.FromString("args"))];
+        List<ChatToolCall> toolCalls = [ChatToolCall.CreateFunctionToolCall("id", "name", BinaryData.FromString("args"))];
         List<ChatToolCall> toolCalls = [ChatToolCall.CreateFunctionToolCall("id", "name", BinaryData.FromString("args"))];
 
         // Act
@@ -35,11 +39,22 @@ public sealed class OpenAIChatMessageContentTests
     public void GetOpenAIFunctionToolCallsReturnsCorrectList()
     {
         // Arrange
+        List<ChatToolCall> toolCalls = [
+            ChatToolCall.CreateFunctionToolCall("id1", "name", string.Empty),
+            ChatToolCall.CreateFunctionToolCall("id2", "name", string.Empty)];
+        List<ChatToolCall> toolCalls = [
+            ChatToolCall.CreateFunctionToolCall("id1", "name", string.Empty),
+            ChatToolCall.CreateFunctionToolCall("id2", "name", string.Empty)];
         var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
 
         List<ChatToolCall> toolCalls = [
             ChatToolCall.CreateFunctionToolCall("id1", "name", BinaryData.FromString(args)),
             ChatToolCall.CreateFunctionToolCall("id2", "name", BinaryData.FromString(args))];
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+
+        List<ChatToolCall> toolCalls = [
+            ChatToolCall.CreateFunctionToolCall("id1", "name", args),
+            ChatToolCall.CreateFunctionToolCall("id2", "name", args)];
 
         var content1 = new OpenAIChatMessageContent(AuthorRole.User, "content", "model-id", toolCalls);
         var content2 = new OpenAIChatMessageContent(AuthorRole.User, "content", "model-id", []);
@@ -64,13 +79,27 @@ public sealed class OpenAIChatMessageContentTests
         // Arrange
         var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
 
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+
+        var args = JsonSerializer.Serialize(new Dictionary<string, object?>());
+
         IReadOnlyDictionary<string, object?> metadata = readOnlyMetadata ?
             new CustomReadOnlyDictionary<string, object?>(new Dictionary<string, object?> { { "key", "value" } }) :
             new Dictionary<string, object?> { { "key", "value" } };
 
         List<ChatToolCall> toolCalls = [
+            ChatToolCall.CreateFunctionToolCall("id1", "name", string.Empty),
+            ChatToolCall.CreateFunctionToolCall("id2", "name", string.Empty)];
+            ChatToolCall.CreateFunctionToolCall("id1", "name", string.Empty),
+            ChatToolCall.CreateFunctionToolCall("id2", "name", string.Empty)];
             ChatToolCall.CreateFunctionToolCall("id1", "name", BinaryData.FromString(args)),
             ChatToolCall.CreateFunctionToolCall("id2", "name", BinaryData.FromString(args))];
+            ChatToolCall.CreateFunctionToolCall("id1", "name", BinaryData.FromString(args)),
+            ChatToolCall.CreateFunctionToolCall("id2", "name", BinaryData.FromString(args))];
+            ChatToolCall.CreateFunctionToolCall("id1", "name", BinaryData.FromString(args)),
+            ChatToolCall.CreateFunctionToolCall("id2", "name", BinaryData.FromString(args))];
+            ChatToolCall.CreateFunctionToolCall("id1", "name", args),
+            ChatToolCall.CreateFunctionToolCall("id2", "name", args)];
 
         // Act
         var content1 = new OpenAIChatMessageContent(AuthorRole.User, "content1", "model-id1", [], metadata);

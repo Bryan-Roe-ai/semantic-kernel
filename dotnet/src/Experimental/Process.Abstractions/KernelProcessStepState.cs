@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Concurrent;
@@ -10,6 +10,7 @@ namespace Microsoft.SemanticKernel;
 /// <summary>
 /// Represents the state of an individual step in a process.
 /// </summary>
+public class KernelProcessStepState
 [DataContract]
 [KnownType(nameof(GetKnownTypes))]
 public record KernelProcessStepState
@@ -65,6 +66,10 @@ public record KernelProcessStepState
     {
         Verify.NotNullOrWhiteSpace(name, nameof(name));
         Verify.NotNullOrWhiteSpace(version, nameof(version));
+<<<<<<< HEAD
+=======
+        Verify.NotNullOrWhiteSpace(version, nameof(version));
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         this.Id = id;
         this.Name = name;
@@ -76,6 +81,7 @@ public record KernelProcessStepState
 /// Represents the state of an individual step in a process that includes a user-defined state object.
 /// </summary>
 /// <typeparam name="TState">The type of the user-defined state.</typeparam>
+public sealed class KernelProcessStepState<TState> : KernelProcessStepState where TState : class, new()
 [DataContract]
 public sealed record KernelProcessStepState<TState> : KernelProcessStepState where TState : class, new()
 {

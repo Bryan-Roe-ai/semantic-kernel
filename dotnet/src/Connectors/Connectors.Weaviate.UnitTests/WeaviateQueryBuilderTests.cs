@@ -1,11 +1,16 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Connectors.Weaviate;
+using Microsoft.SemanticKernel.Data;
+=======
 using Microsoft.Extensions.VectorData;
 using Microsoft.Extensions.VectorData.ProviderServices;
 using Microsoft.SemanticKernel.Connectors.Weaviate;
+>>>>>>> main
 using Xunit;
 
 namespace SemanticKernel.Connectors.Weaviate.UnitTests;

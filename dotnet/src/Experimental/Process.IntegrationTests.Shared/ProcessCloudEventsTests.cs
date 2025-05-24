@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 #pragma warning disable IDE0005 // Using directive is unnecessary.
 using System;
@@ -164,13 +164,13 @@ public sealed class ProcessCloudEventsTests : IClassFixture<ProcessTestFixture>
     /// Input Event: <see cref="ProcessTestsEvents.StartProcess"/><br/>
     /// Output Events: [<see cref="ProcessTestsEvents.OutputReadyInternal"/>, <see cref="ProcessTestsEvents.OutputReadyPublic"/>]<br/>
     /// <code>
-    /// ┌────────┐    ┌────────┐
-    /// │  echo  ├───►│ repeat ├───►
-    /// └────────┘ │  └────────┘ │
+    /// +--------+    +--------+
+    /// �  echo  +---?� repeat +---?
+    /// +--------+ �  +--------+ �
     ///
-    ///            │  ┌───────┐  │
-    ///            └─►│ proxy │◄─┘
-    ///               └───────┘
+    ///            �  +-------+  �
+    ///            +-?� proxy �?-+
+    ///               +-------+
     /// </code>
     /// </summary>
     private ProcessBuilder CreateLinearProcessWithEmitTopic(string name)

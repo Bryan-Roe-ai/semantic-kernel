@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Linq;
@@ -389,6 +389,7 @@ public class PromptTemplateConfigTests
                   "model_id": "gpt-4",
                   "function_choice_behavior": {
                     "type": "auto",
+                    "functions":["p1.f1"]
                     "functions":["p1.f1"],
                     "options":{
                         "allow_concurrent_invocation": true,
@@ -431,6 +432,7 @@ public class PromptTemplateConfigTests
                   "model_id": "gpt-4",
                   "function_choice_behavior": {
                     "type": "required",
+                    "functions":["p1.f1"]
                     "functions":["p1.f1"],
                     "options":{
                         "allow_concurrent_invocation": true,

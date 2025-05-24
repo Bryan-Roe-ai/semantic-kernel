@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using Microsoft.SemanticKernel;
@@ -12,8 +12,8 @@ public class IListExtensionsTests
     public void ItShouldAddRangeOfElementsToTargetList()
     {
         // Arrange
-        IList<int> target = [];
-        int[] source = [1, 2, 3];
+        IList<int> target = new List<int>();
+        int[] source = new int[] { 1, 2, 3 };
 
         // Act
         target.AddRange(source);

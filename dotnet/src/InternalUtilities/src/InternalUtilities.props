@@ -1,5 +1,29 @@
 <Project>
+<<<<<<< HEAD
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    
+    <!-- Build Properties -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors>CS8600-CS8900</WarningsAsErrors>
+    <NoWarn>$(NoWarn);1701;1702</NoWarn>
+    
+    <!-- Output Paths -->
+    <OutputPath>$(MSBuildThisFileDirectory)bin\$(Configuration)</OutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj\</BaseIntermediateOutputPath>
+    
+    <!-- Package Properties -->
+    <Authors>YourCompanyName</Authors>
+    <Company>YourCompanyName</Company>
+    <Product>InternalUtilities</Product>
+    <Copyright>Copyright © $([System.DateTime]::Now.Year)</Copyright>
+  </PropertyGroup>
+=======
   <ItemGroup>
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/**/*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 </Project>

@@ -19,6 +19,16 @@ from semantic_kernel.exceptions import (
     FunctionCallInvalidArgumentsException,
     FunctionCallInvalidNameException,
 )
+from functools import cached_property
+from typing import TYPE_CHECKING, Any, ClassVar, Literal, TypeVar
+from xml.etree.ElementTree import Element  # nosec
+
+from pydantic import Field
+
+from semantic_kernel.contents.const import FUNCTION_CALL_CONTENT_TAG, ContentTypes
+from semantic_kernel.contents.kernel_content import KernelContent
+from semantic_kernel.exceptions import FunctionCallInvalidArgumentsException, FunctionCallInvalidNameException
+from semantic_kernel.exceptions.content_exceptions import ContentInitializationError
 
 if TYPE_CHECKING:
     from semantic_kernel.functions.kernel_arguments import KernelArguments
@@ -98,6 +108,19 @@ class FunctionCallContent(KernelContent):
             args["metadata"] = metadata
 
         super().__init__(**args)
+    arguments: str | None = None
+
+    EMPTY_VALUES: ClassVar[list[str | None]] = ["", "{}", None]
+
+    @cached_property
+    def function_name(self) -> str:
+        """Get the function name."""
+        return self.split_name()[1]
+
+    @cached_property
+    def plugin_name(self) -> str | None:
+        """Get the plugin name."""
+        return self.split_name()[0]
 
     def __str__(self) -> str:
         """Return the function call as a string."""
@@ -145,6 +168,13 @@ class FunctionCallContent(KernelContent):
         if arg1 in EMPTY_VALUES:
             return arg2 or "{}"
         if arg2 in EMPTY_VALUES:
+    def combine_arguments(self, arg1: str | None, arg2: str | None) -> str:
+        """Combine two arguments."""
+        if arg1 in self.EMPTY_VALUES and arg2 in self.EMPTY_VALUES:
+            return "{}"
+        if arg1 in self.EMPTY_VALUES:
+            return arg2 or "{}"
+        if arg2 in self.EMPTY_VALUES:
             return arg1 or "{}"
         return (arg1 or "") + (arg2 or "")
 
@@ -157,6 +187,9 @@ class FunctionCallContent(KernelContent):
         try:
             return json.loads(self.arguments)
         except json.JSONDecodeError as exc:
+            raise FunctionCallInvalidArgumentsException(
+                "Function Call arguments are not valid JSON."
+            ) from exc
             logger.debug("Function Call arguments are not valid JSON. Trying to preprocess.")
             try:
                 # Python strings can be single quoted, but JSON strings should be double quoted.
@@ -208,6 +241,11 @@ class FunctionCallContent(KernelContent):
         if self.name:
             element.set("name", self.name)
         if self.arguments:
+            element.text = (
+                json.dumps(self.arguments)
+                if isinstance(self.arguments, dict)
+                else self.arguments
+            )
             element.text = json.dumps(self.arguments) if isinstance(self.arguments, Mapping) else self.arguments
         return element
 
@@ -215,17 +253,46 @@ class FunctionCallContent(KernelContent):
     def from_element(cls: type[_T], element: Element) -> _T:
         """Create an instance from an Element."""
         if element.tag != cls.tag:
+            raise ContentInitializationError(
+                f"Element tag is not {cls.tag}"
+            )  # pragma: no cover
             raise ContentInitializationError(f"Element tag is not {cls.tag}")  # pragma: no cover
+            raise ContentInitializationError(f"Element tag is not {cls.tag}")
 
-        return cls(name=element.get("name"), id=element.get("id"), arguments=element.text or "")
+        return cls(
+            name=element.get("name"), id=element.get("id"), arguments=element.text or ""
+        )
 
     def to_dict(self) -> dict[str, str | Any]:
         """Convert the instance to a dictionary."""
+        args = (
+            json.dumps(self.arguments)
+            if isinstance(self.arguments, dict)
+            else self.arguments
+        )
+        return {
+            "id": self.id,
+            "type": "function",
+            "function": {"name": self.name, "arguments": args},
+        }
         args = json.dumps(self.arguments) if isinstance(self.arguments, Mapping) else self.arguments
         return {"id": self.id, "type": "function", "function": {"name": self.name, "arguments": args}}
 
     def __hash__(self) -> int:
         """Return the hash of the function call content."""
+<<<<<<< HEAD
+        return hash(
+            (
+                self.tag,
+                self.id,
+                self.index,
+                self.name,
+                self.function_name,
+                self.plugin_name,
+                self.arguments,
+            )
+        )
+=======
         args_hashable = frozenset(self.arguments.items()) if isinstance(self.arguments, Mapping) else None
         return hash((
             self.tag,
@@ -237,3 +304,4 @@ class FunctionCallContent(KernelContent):
             self.plugin_name,
             args_hashable,
         ))
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

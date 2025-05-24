@@ -1,4 +1,4 @@
-﻿# Native-AOT Samples
+# Native-AOT Samples
 This application demonstrates how to use the Semantic Kernel Native-AOT compatible API in a Native-AOT application.
 
 ## Running Samples
@@ -32,9 +32,9 @@ At the moment, the following Semantic Kernel packages are AOT compatible:
 
 | Package                   | AOT compatible |  
 |--------------------------|----------------|  
-| SemanticKernel.Abstractions | ✔️              |  
-| SemanticKernel.Core         | ✔️              |  
-| Connectors.Onnx            | ✔️              |  
+| SemanticKernel.Abstractions | ??              |  
+| SemanticKernel.Core         | ??              |  
+| Connectors.Onnx            | ??              |  
 
 Other packages are not AOT compatible yet, but we plan to make them compatible in the future.
 

@@ -18,7 +18,7 @@ If you have set up those credentials as secrets within Secret Manager or through
 
 ### To set your secrets with Secret Manager:
 
-```
+```sh {"id":"01J6KPW1GVTA7TMS3JR5BS6DDY"}
 dotnet user-secrets init
 
 dotnet user-secrets set "OpenAI:ApiKey" "..."
@@ -31,7 +31,7 @@ dotnet user-secrets set "AzureContainerAppSessionPool:Endpoint" " .. endpoint ..
 
 Use these names:
 
-```
+```sh {"id":"01J6KPW1GVTA7TMS3JR90XESJN"}
 # OpenAI
 OpenAI__ApiKey
 OpenAI__ChatModelId
@@ -54,6 +54,6 @@ User: Show me the contents of this file
 
 Assistant: The contents of the file "test-file.txt" are as follows:
 
-```text
+```text {"id":"01J6KPW1GVTA7TMS3JRA9N82E0"}
 the contents of the file
 ```

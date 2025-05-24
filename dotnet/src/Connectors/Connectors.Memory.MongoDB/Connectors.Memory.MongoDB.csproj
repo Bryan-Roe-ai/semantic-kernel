@@ -1,21 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <!-- THIS PROPERTY GROUP MUST COME FIRST -->
     <AssemblyName>Microsoft.SemanticKernel.Connectors.MongoDB</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
+<<<<<<< HEAD
+    <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
+    <VersionSuffix>alpha</VersionSuffix>
+=======
     <TargetFrameworks>net8.0;netstandard2.0;net462</TargetFrameworks>
     <IsAotCompatible Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net8.0'))">true</IsAotCompatible>
     <VersionSuffix>preview</VersionSuffix>
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   </PropertyGroup>
 
   <!-- IMPORT NUGET PACKAGE SHARED PROPERTIES -->
   <Import Project="$(RepoRoot)/dotnet/nuget/nuget-package.props" />
   <Import Project="$(RepoRoot)/dotnet/src/InternalUtilities/src/RestrictedInternalUtilities.props" />
-
-  <ItemGroup>
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/connectors/Memory/MongoDB/*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>
 
   <PropertyGroup>
     <!-- NuGet Package Settings -->
@@ -34,10 +35,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VectorData.Abstractions\VectorData.Abstractions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="SemanticKernel.Connectors.MongoDB.UnitTests" />
   </ItemGroup>
 
 </Project>

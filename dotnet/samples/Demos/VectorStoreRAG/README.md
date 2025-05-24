@@ -1,4 +1,4 @@
-﻿# Vector Store RAG Demo
+# Vector Store RAG Demo
 
 This sample demonstrates how to ingest text from pdf files into a vector store and ask questions about the content
 using an LLM while using RAG to supplement the LLM with additional information from the vector store.

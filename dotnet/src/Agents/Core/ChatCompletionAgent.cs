@@ -1,6 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
+<<<<<<< HEAD
+=======
 
 using System;
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -20,8 +23,33 @@ namespace Microsoft.SemanticKernel.Agents;
 /// Represents a <see cref="Agent"/> specialization based on <see cref="IChatCompletionService"/>.
 /// </summary>
 /// <remarks>
+<<<<<<< HEAD
+/// NOTE: Enable OpenAIPromptExecutionSettings.FunctionChoiceBehavior for agent plugins.
+/// (<see cref="ChatHistoryKernelAgent.Arguments"/>)
+/// </remarks>
+public sealed class ChatCompletionAgent : ChatHistoryKernelAgent
+{
+    /// <inheritdoc/>
+    public override async IAsyncEnumerable<ChatMessageContent> InvokeAsync(
+        ChatHistory history,
+        KernelArguments? arguments = null,
+        Kernel? kernel = null,
+        IReadOnlyList<ChatMessageContent> history,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        kernel ??= this.Kernel;
+        arguments ??= this.Arguments;
+
+        (IChatCompletionService chatCompletionService, PromptExecutionSettings? executionSettings) = GetChatCompletionService(kernel, arguments);
+
+        ChatHistory chat = this.SetupAgentChatHistory(history);
+
+/// NOTE: Enable <see cref="PromptExecutionSettings.FunctionChoiceBehavior"/> for agent plugins.
+/// (<see cref="KernelAgent.Arguments"/>)
+=======
 /// NOTE: Enable <see cref="PromptExecutionSettings.FunctionChoiceBehavior"/> for agent plugins
 /// (<see cref="Agent.Arguments"/>).
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 /// </remarks>
 public sealed class ChatCompletionAgent : ChatHistoryAgent
 {
@@ -141,6 +169,9 @@ public sealed class ChatCompletionAgent : ChatHistoryAgent
         ChatHistory history,
         KernelArguments? arguments = null,
         Kernel? kernel = null,
+<<<<<<< HEAD
+        IReadOnlyList<ChatMessageContent> history,
+=======
         CancellationToken cancellationToken = default)
     {
         string agentName = this.GetDisplayName();
@@ -315,6 +346,7 @@ public sealed class ChatCompletionAgent : ChatHistoryAgent
         KernelArguments? arguments = null,
         Kernel? kernel = null,
         string? additionalInstructions = null,
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         kernel ??= this.Kernel;
@@ -325,9 +357,14 @@ public sealed class ChatCompletionAgent : ChatHistoryAgent
 
         int messageCount = chat.Count;
 
+<<<<<<< HEAD
+        this.Logger.LogAgentChatServiceInvokingAgent(nameof(InvokeAsync), this.Id, chatCompletionService.GetType());
+        this.Logger.LogDebug("[{MethodName}] Invoking {ServiceType}.", nameof(InvokeAsync), chatCompletionService.GetType());
+=======
         Type serviceType = chatCompletionService.GetType();
 
         this.Logger.LogAgentChatServiceInvokingAgent(nameof(InvokeAsync), this.Id, agentName, serviceType);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         IReadOnlyList<ChatMessageContent> messages =
             await chatCompletionService.GetChatMessageContentsAsync(
@@ -336,7 +373,15 @@ public sealed class ChatCompletionAgent : ChatHistoryAgent
                 kernel,
                 cancellationToken).ConfigureAwait(false);
 
+<<<<<<< HEAD
+        this.Logger.LogAgentChatServiceInvokedAgent(nameof(InvokeAsync), this.Id, chatCompletionService.GetType(), messages.Count);
+        if (this.Logger.IsEnabled(LogLevel.Information)) // Avoid boxing if not enabled
+        {
+            this.Logger.LogInformation("[{MethodName}] Invoked {ServiceType} with message count: {MessageCount}.", nameof(InvokeAsync), chatCompletionService.GetType(), messages.Count);
+        }
+=======
         this.Logger.LogAgentChatServiceInvokedAgent(nameof(InvokeAsync), this.Id, agentName, serviceType, messages.Count);
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         // Capture mutated messages related function calling / tools
         for (int messageIndex = messageCount; messageIndex < chat.Count; messageIndex++)
@@ -367,6 +412,15 @@ public sealed class ChatCompletionAgent : ChatHistoryAgent
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         kernel ??= this.Kernel;
+<<<<<<< HEAD
+        arguments ??= this.Arguments;
+
+        (IChatCompletionService chatCompletionService, PromptExecutionSettings? executionSettings) = GetChatCompletionService(kernel, arguments);
+
+        ChatHistory chat = this.SetupAgentChatHistory(history);
+        arguments = this.MergeArguments(arguments);
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         (IChatCompletionService chatCompletionService, PromptExecutionSettings? executionSettings) = GetChatCompletionService(kernel, this.Arguments.MergeArguments(arguments));
 
@@ -419,5 +473,81 @@ public sealed class ChatCompletionAgent : ChatHistoryAgent
         }
     }
 
+<<<<<<< HEAD
+    /// <inheritdoc/>
+    protected override Task<AgentChannel> RestoreChannelAsync(string channelState, CancellationToken cancellationToken)
+    {
+        ChatHistory history =
+            JsonSerializer.Deserialize<ChatHistory>(channelState) ??
+            throw new KernelException("Unable to restore channel: invalid state.");
+        return Task.FromResult<AgentChannel>(new ChatHistoryChannel(history));
+    }
+
+    internal static (IChatCompletionService service, PromptExecutionSettings? executionSettings) GetChatCompletionService(Kernel kernel, KernelArguments? arguments)
+    /// <inheritdoc/>
+    protected override Task<AgentChannel> CreateChannelAsync(CancellationToken cancellationToken)
+    {
+        ChatHistoryChannel channel =
+            new()
+            {
+                Logger = this.LoggerFactory.CreateLogger<ChatHistoryChannel>()
+            };
+
+        return Task.FromResult<AgentChannel>(channel);
+    }
+
+    /// <inheritdoc/>
+    protected override Task<AgentChannel> RestoreChannelAsync(string channelState, CancellationToken cancellationToken)
+    {
+        ChatHistory history =
+            JsonSerializer.Deserialize<ChatHistory>(channelState) ??
+            throw new KernelException("Unable to restore channel: invalid state.");
+        return Task.FromResult<AgentChannel>(new ChatHistoryChannel(history));
+    }
+
+    private (IChatCompletionService service, PromptExecutionSettings? executionSettings) GetChatCompletionService(Kernel kernel, KernelArguments? arguments)
+
+    internal static (IChatCompletionService service, PromptExecutionSettings? executionSettings) GetChatCompletionService(Kernel kernel, KernelArguments? arguments)
+    {
+        // Need to provide a KernelFunction to the service selector as a container for the execution-settings.
+        KernelFunction nullPrompt = KernelFunctionFactory.CreateFromPrompt("placeholder", arguments?.ExecutionSettings?.Values);
+        (IChatCompletionService chatCompletionService, PromptExecutionSettings? executionSettings) =
+            kernel.ServiceSelector.SelectAIService<IChatCompletionService>(
+                kernel,
+                nullPrompt,
+                arguments ?? []);
+
+        return (chatCompletionService, executionSettings);
+    }
+
+    private ChatHistory SetupAgentChatHistory(IReadOnlyList<ChatMessageContent> history)
+    {
+        ChatHistory chat = [];
+
+        if (!string.IsNullOrWhiteSpace(this.Instructions))
+        {
+            chat.Add(new ChatMessageContent(AuthorRole.System, this.Instructions) { AuthorName = this.Name });
+
+    private async Task<ChatHistory> SetupAgentChatHistoryAsync(
+        IReadOnlyList<ChatMessageContent> history,
+        KernelArguments? arguments,
+        Kernel kernel,
+        CancellationToken cancellationToken)
+    {
+        ChatHistory chat = [];
+
+        string? instructions = await this.FormatInstructionsAsync(kernel, arguments, cancellationToken).ConfigureAwait(false);
+
+        if (!string.IsNullOrWhiteSpace(instructions))
+        {
+            chat.Add(new ChatMessageContent(AuthorRole.System, instructions) { AuthorName = this.Name });
+        }
+
+        chat.AddRange(history);
+
+        return chat;
+    }
+=======
     #endregion
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 }

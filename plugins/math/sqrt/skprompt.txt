@@ -1,0 +1,3 @@
+I need to calculate the square root of {{$input}}.
+
+Calculate the square root and provide the result as a number, formatted with 2 decimal places if needed.

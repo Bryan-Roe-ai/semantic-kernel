@@ -1,0 +1,37 @@
+name: ADR Report Generation
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Runs weekly on Sunday at midnight
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  generate-adr-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install markdown
+
+      - name: Generate ADR Report
+        run: |
+          python scripts/generate_adr_report.py
+
+      - name: Notify on failure
+        if: failure()
+        run: echo "ADR report generation failed! Check the logs for details."

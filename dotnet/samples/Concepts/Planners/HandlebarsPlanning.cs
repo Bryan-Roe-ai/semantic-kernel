@@ -1,4 +1,4 @@
-Ôªø// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -336,11 +336,11 @@ public class HandlebarsPlanning(ITestOutputHelper output) : BaseTest(output)
             {{json translatedPoem}}
 
             Result:
-            Il √©tait une fois un gars nomm√© Doe,
-            Dont la vie √©tait un spectacle comique,
-            Il tr√©buchait et tombait,
-            Mais riait √† travers tout cela,
-            Alors qu'il dansait dans la vie, de-ci de-l√†.
+            Il Ètait une fois un gars nommÈ Doe,
+            Dont la vie Ètait un spectacle comique,
+            Il trÈbuchait et tombait,
+            Mais riait ‡ travers tout cela,
+            Alors qu'il dansait dans la vie, de-ci de-l‡.
         */
     }
 

@@ -1,15 +1,18 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Azure.AI.Agents.Persistent;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
+<<<<<<< HEAD
+using Microsoft.SemanticKernel.Agents.AzureAI;
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
 using OpenAI.Assistants;
 using OpenAI.Files;
-
 using ChatTokenUsage = OpenAI.Chat.ChatTokenUsage;
 
 /// <summary>
@@ -33,6 +36,8 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
     /// Metadata key to indicate the assistant as created for a sample.
     /// </summary>
     protected const string SampleMetadataKey = "sksample";
+
+    protected override bool ForceOpenAI => true;
 
     /// <summary>
     /// Metadata to indicate the object was created for a sample.
@@ -59,6 +64,50 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
     }
 
     /// <summary>
+<<<<<<< HEAD
+    /// Provide a <see cref="OpenAIClientProvider"/> according to the configuration settings.
+    /// </summary>
+    protected AzureAIClientProvider GetAzureProvider()
+    {
+        //if (this.UseOpenAIConfig) // %%%
+        //{
+        //    throw new InvalidOperationException("Azure provider is not available when using OpenAI configuration.");
+        //}
+
+        return AzureAIClientProvider.ForAzureOpenAI("eastus.api.azureml.ms;5b742c40-bc2b-4a4f-902f-ee9f644d8844;rg-crickman-ai;sc-xx8889760-8651", new AzureCliCredential()); // %%% CONFIG
+    }
+
+    /// <summary>
+    /// Provide a <see cref="OpenAIClientProvider"/> according to the configuration settings.
+    /// </summary>
+    protected OpenAIClientProvider GetClientProvider()
+    {
+        return
+            this.UseOpenAIConfig ?
+                OpenAIClientProvider.ForOpenAI(this.ApiKey) :
+                OpenAIClientProvider.ForAzureOpenAI(this.ApiKey, new Uri(this.Endpoint!));
+                OpenAIClientProvider.ForOpenAI(this.ApiKey) :
+                OpenAIClientProvider.ForAzureOpenAI(this.ApiKey, new Uri(this.Endpoint!));
+                OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(this.ApiKey)) :
+                OpenAIClientProvider.ForAzureOpenAI(new ApiKeyCredential(this.ApiKey), new Uri(this.Endpoint!));
+                OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(this.ApiKey)) :
+                OpenAIClientProvider.ForAzureOpenAI(new ApiKeyCredential(this.ApiKey), new Uri(this.Endpoint!));
+                OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(this.ApiKey)) :
+                OpenAIClientProvider.ForAzureOpenAI(new ApiKeyCredential(this.ApiKey), new Uri(this.Endpoint!));
+                OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(this.ApiKey)) :
+                OpenAIClientProvider.ForAzureOpenAI(new ApiKeyCredential(this.ApiKey), new Uri(this.Endpoint!));
+                OpenAIClientProvider.ForOpenAI(new ApiKeyCredential(this.ApiKey ?? throw new ConfigurationNotFoundException("OpenAI:ApiKey"))) :
+                !string.IsNullOrWhiteSpace(this.ApiKey) ?
+                    OpenAIClientProvider.ForAzureOpenAI(new ApiKeyCredential(this.ApiKey), new Uri(this.Endpoint!)) :
+                    OpenAIClientProvider.ForAzureOpenAI(new AzureCliCredential(), new Uri(this.Endpoint!));
+<<<<<<< main
+=======
+    }
+>>>>>>> upstream/agents-azureai
+
+    /// <summary>
+=======
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// Common method to write formatted agent chat content to the console.
     /// </summary>
     protected void WriteAgentChatMessage(ChatMessageContent message)
@@ -125,6 +174,10 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
         }
     }
 
+    protected async Task DownloadResponseContentAsync(FileClient client, ChatMessageContent message)
+    protected async Task DownloadResponseContentAsync(FileClient client, ChatMessageContent message)
+    protected async Task DownloadResponseContentAsync(OpenAIFileClient client, ChatMessageContent message)
+    protected async Task DownloadResponseContentAsync(OpenAIFileClient client, ChatMessageContent message)
     protected async Task DownloadResponseContentAsync(OpenAIFileClient client, ChatMessageContent message)
     {
         foreach (KernelContent item in message.Items)
@@ -136,6 +189,10 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
         }
     }
 
+    protected async Task DownloadResponseImageAsync(FileClient client, ChatMessageContent message)
+    protected async Task DownloadResponseImageAsync(FileClient client, ChatMessageContent message)
+    protected async Task DownloadResponseImageAsync(OpenAIFileClient client, ChatMessageContent message)
+    protected async Task DownloadResponseImageAsync(OpenAIFileClient client, ChatMessageContent message)
     protected async Task DownloadResponseImageAsync(OpenAIFileClient client, ChatMessageContent message)
     {
         foreach (KernelContent item in message.Items)
@@ -147,6 +204,10 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
         }
     }
 
+    private async Task DownloadFileContentAsync(FileClient client, string fileId, bool launchViewer = false)
+    {
+        OpenAIFileInfo fileInfo = client.GetFile(fileId);
+        if (fileInfo.Purpose == OpenAIFilePurpose.AssistantsOutput)
     private async Task DownloadFileContentAsync(OpenAIFileClient client, string fileId, bool launchViewer = false)
     {
         OpenAIFile fileInfo = client.GetFile(fileId);
@@ -169,6 +230,12 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
                     {
                         FileName = "cmd.exe",
                         Arguments = $"/C start {filePath}"
+                        FileName = "cmd.exe",
+                        Arguments = $"/C start {filePath}"
+                        FileName = filePath,
+                        UseShellExecute = true
+                        FileName = filePath,
+                        UseShellExecute = true
                     });
             }
         }

@@ -25,6 +25,12 @@ async def test_run_openapi_operation_success(kernel: Kernel):
     operation.summary = "Test Summary"
     operation.description = "Test Description"
     operation.get_parameters.return_value = [
+        RestApiOperationParameter(
+            name="param1",
+            type="string",
+            location=RestApiOperationParameterLocation.QUERY,
+            is_required=True,
+        )
         RestApiParameter(name="param1", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
     ]
 
@@ -73,6 +79,12 @@ async def test_run_openapi_operation_missing_required_param(kernel: Kernel):
     operation.summary = "Test Summary"
     operation.description = "Test Description"
     operation.get_parameters.return_value = [
+        RestApiOperationParameter(
+            name="param1",
+            type="string",
+            location=RestApiOperationParameterLocation.QUERY,
+            is_required=True,
+        )
         RestApiParameter(name="param1", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
     ]
 
@@ -120,6 +132,12 @@ async def test_run_openapi_operation_runner_exception(kernel: Kernel):
     operation.summary = "Test Summary"
     operation.description = "Test Description"
     operation.get_parameters.return_value = [
+        RestApiOperationParameter(
+            name="param1",
+            type="string",
+            location=RestApiOperationParameterLocation.QUERY,
+            is_required=True,
+        )
         RestApiParameter(name="param1", type="string", location=RestApiParameterLocation.QUERY, is_required=True)
     ]
 
@@ -156,7 +174,10 @@ async def test_run_openapi_operation_runner_exception(kernel: Kernel):
 
         kwargs = {"param1": "value1"}
 
-        with pytest.raises(FunctionExecutionException, match="Error running OpenAPI operation: test_operation"):
+        with pytest.raises(
+            FunctionExecutionException,
+            match="Error running OpenAPI operation: test_operation",
+        ):
             await run_openapi_operation(kernel, **kwargs)
 
 
@@ -215,10 +236,21 @@ async def test_run_openapi_operation_alternative_name(kernel: Kernel):
         assert runner.run_operation.call_args[0][1]["param1"] == "value1"
 
 
+@pytest.mark.asyncio
+@patch(
+    "semantic_kernel.connectors.openapi_plugin.openapi_parser.OpenApiParser.parse",
+    return_value=None,
+)
 @patch("semantic_kernel.connectors.openapi_plugin.openapi_parser.OpenApiParser.parse", return_value=None)
 async def test_create_functions_from_openapi_raises_exception(mock_parse):
     """Test that an exception is raised when parsing fails."""
-    with pytest.raises(FunctionExecutionException, match="Error parsing OpenAPI document: test_openapi_document_path"):
-        create_functions_from_openapi(plugin_name="test_plugin", openapi_document_path="test_openapi_document_path")
+    with pytest.raises(
+        FunctionExecutionException,
+        match="Error parsing OpenAPI document: test_openapi_document_path",
+    ):
+        create_functions_from_openapi(
+            plugin_name="test_plugin",
+            openapi_document_path="test_openapi_document_path",
+        )
 
     mock_parse.assert_called_once_with("test_openapi_document_path")

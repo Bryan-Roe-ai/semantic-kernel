@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.ClientModel;
@@ -24,7 +24,6 @@ using Moq;
 using OpenAI;
 using OpenAI.Chat;
 using Xunit;
-
 using ChatMessageContent = Microsoft.SemanticKernel.ChatMessageContent;
 
 namespace SemanticKernel.Connectors.OpenAI.UnitTests.Services;
@@ -80,11 +79,10 @@ public sealed class OpenAIChatCompletionServiceTests : IDisposable
     }
 
     [Theory]
-    [InlineData("http://localhost:1234", "http://localhost:1234/chat/completions")]
-    [InlineData("http://localhost:8080", "http://localhost:8080/chat/completions")]
-    [InlineData("https://something:8080", "https://something:8080/chat/completions")] // Accepts TLS Secured endpoints
-    [InlineData("http://localhost:1234/v2", "http://localhost:1234/v2/chat/completions")]
-    [InlineData("http://localhost:8080/v2", "http://localhost:8080/v2/chat/completions")]
+    [InlineData("http://localhost:1234/v1/chat/completions", "http://localhost:1234/v1/chat/completions")] // Uses full path when provided
+    [InlineData("http://localhost:1234/", "http://localhost:1234/v1/chat/completions")]
+    [InlineData("http://localhost:8080", "http://localhost:8080/v1/chat/completions")]
+    [InlineData("https://something:8080", "https://something:8080/v1/chat/completions")] // Accepts TLS Secured endpoints
     public async Task ItUsesCustomEndpointsWhenProvidedDirectlyAsync(string endpointProvided, string expectedEndpoint)
     {
         // Arrange
@@ -100,11 +98,10 @@ public sealed class OpenAIChatCompletionServiceTests : IDisposable
     }
 
     [Theory]
-    [InlineData("http://localhost:1234", "http://localhost:1234/chat/completions")]
-    [InlineData("http://localhost:8080", "http://localhost:8080/chat/completions")]
-    [InlineData("https://something:8080", "https://something:8080/chat/completions")] // Accepts TLS Secured endpoints
-    [InlineData("http://localhost:1234/v2", "http://localhost:1234/v2/chat/completions")]
-    [InlineData("http://localhost:8080/v2", "http://localhost:8080/v2/chat/completions")]
+    [InlineData("http://localhost:1234/v1/chat/completions", "http://localhost:1234/v1/chat/completions")] // Uses full path when provided
+    [InlineData("http://localhost:1234/", "http://localhost:1234/v1/chat/completions")]
+    [InlineData("http://localhost:8080", "http://localhost:8080/v1/chat/completions")]
+    [InlineData("https://something:8080", "https://something:8080/v1/chat/completions")] // Accepts TLS Secured endpoints
     public async Task ItUsesCustomEndpointsWhenProvidedAsBaseAddressAsync(string endpointProvided, string expectedEndpoint)
     {
         // Arrange
@@ -133,7 +130,7 @@ public sealed class OpenAIChatCompletionServiceTests : IDisposable
         await chatCompletion.GetChatMessageContentsAsync(this._chatHistoryForTest, this._executionSettings);
 
         // Assert
-        Assert.Equal("http://localhost:12312/chat/completions", this._messageHandlerStub.RequestUri!.ToString());
+        Assert.Equal("http://localhost:12312/v1/chat/completions", this._messageHandlerStub.RequestUri!.ToString());
     }
 
     [Fact]
@@ -157,6 +154,11 @@ public sealed class OpenAIChatCompletionServiceTests : IDisposable
     public void ConstructorWithOpenAIClientWorksCorrectly(bool includeLoggerFactory)
     {
         // Arrange & Act
+        var client = new OpenAIClient("key");
+        var client = new OpenAIClient("key");
+        var client = new OpenAIClient(new ApiKeyCredential("key"));
+        var client = new OpenAIClient(new ApiKeyCredential("key"));
+        var client = new OpenAIClient(new ApiKeyCredential("key"));
         var client = new OpenAIClient(new ApiKeyCredential("key"));
         var service = includeLoggerFactory ?
             new OpenAIChatCompletionService("model-id", client, loggerFactory: this._mockLoggerFactory.Object) :
@@ -646,6 +648,10 @@ public sealed class OpenAIChatCompletionServiceTests : IDisposable
 
         using var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK) { Content = new StringContent(ChatCompletionResponse) };
         this._messageHandlerStub.ResponseToReturn = response;
+        this._messageHandlerStub.ResponseToReturn = new HttpResponseMessage(System.Net.HttpStatusCode.OK)
+        { Content = new StringContent(ChatCompletionResponse) };
+        using var response = new HttpResponseMessage(System.Net.HttpStatusCode.OK) { Content = new StringContent(ChatCompletionResponse) };
+        this._messageHandlerStub.ResponseToReturn = response;
 
         var chatHistory = new ChatHistory();
         chatHistory.AddUserMessage(Prompt);
@@ -985,6 +991,10 @@ public sealed class OpenAIChatCompletionServiceTests : IDisposable
                 format = JsonSerializer.Deserialize<JsonElement>(formatValue);
                 break;
             case "ChatResponseFormat":
+                format = formatValue == "text" ? ChatResponseFormat.Text : ChatResponseFormat.JsonObject;
+                format = formatValue == "text" ? ChatResponseFormat.Text : ChatResponseFormat.JsonObject;
+                format = formatValue == "text" ? ChatResponseFormat.CreateTextFormat() : ChatResponseFormat.CreateJsonObjectFormat();
+                format = formatValue == "text" ? ChatResponseFormat.CreateTextFormat() : ChatResponseFormat.CreateJsonObjectFormat();
                 format = formatValue == "text" ? ChatResponseFormat.CreateTextFormat() : ChatResponseFormat.CreateJsonObjectFormat();
                 break;
         }
@@ -1254,6 +1264,11 @@ public sealed class OpenAIChatCompletionServiceTests : IDisposable
     {
         // Arrange
         object responseFormat = typedResponseFormat ? typeof(MathReasoning) : ChatResponseFormat.CreateJsonSchemaFormat(
+            name: "MathReasoning",
+            name: "MathReasoning",
+            jsonSchemaFormatName: "MathReasoning",
+            jsonSchemaFormatName: "MathReasoning",
+            jsonSchemaFormatName: "MathReasoning",
             jsonSchemaFormatName: "MathReasoning",
             jsonSchema: BinaryData.FromString("""
                 {
@@ -1277,6 +1292,11 @@ public sealed class OpenAIChatCompletionServiceTests : IDisposable
                     "additionalProperties": false
                 }
                 """),
+            strictSchemaEnabled: true);
+            strictSchemaEnabled: true);
+            jsonSchemaIsStrict: true);
+            jsonSchemaIsStrict: true);
+            jsonSchemaIsStrict: true);
             jsonSchemaIsStrict: true);
 
         var executionSettings = new OpenAIPromptExecutionSettings { ResponseFormat = responseFormat };

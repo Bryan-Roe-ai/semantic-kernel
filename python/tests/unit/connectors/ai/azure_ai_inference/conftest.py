@@ -17,6 +17,8 @@ from azure.ai.inference.models import (
     StreamingChatCompletionsUpdate,
     StreamingChatResponseToolCallUpdate,
 )
+import pytest
+from azure.ai.inference.aio import ChatCompletionsClient, EmbeddingsClient
 from azure.core.credentials import AzureKeyCredential
 
 from semantic_kernel.connectors.ai.azure_ai_inference import (
@@ -36,7 +38,9 @@ def service_id() -> str:
 
 
 @pytest.fixture()
-def azure_ai_inference_unit_test_env(monkeypatch, exclude_list, override_env_param_dict):
+def azure_ai_inference_unit_test_env(
+    monkeypatch, exclude_list, override_env_param_dict
+):
     """Fixture to set environment variables for Azure AI Inference Unit Tests."""
     if exclude_list is None:
         exclude_list = []
@@ -86,7 +90,9 @@ def model_diagnostics_test_env(monkeypatch, exclude_list, override_env_param_dic
 
 
 @pytest.fixture(scope="function")
-def azure_ai_inference_client(azure_ai_inference_unit_test_env, request) -> ChatCompletionsClient | EmbeddingsClient:
+def azure_ai_inference_client(
+    azure_ai_inference_unit_test_env, request
+) -> ChatCompletionsClient | EmbeddingsClient:
     """Fixture to create Azure AI Inference client for unit tests."""
     endpoint = azure_ai_inference_unit_test_env["AZURE_AI_INFERENCE_ENDPOINT"]
     api_key = azure_ai_inference_unit_test_env["AZURE_AI_INFERENCE_API_KEY"]
@@ -112,9 +118,13 @@ def azure_ai_inference_service(azure_ai_inference_unit_test_env, model_id, reque
     api_key = azure_ai_inference_unit_test_env["AZURE_AI_INFERENCE_API_KEY"]
 
     if request.param == AzureAIInferenceChatCompletion.__name__:
-        return AzureAIInferenceChatCompletion(model_id, api_key=api_key, endpoint=endpoint)
+        return AzureAIInferenceChatCompletion(
+            model_id, api_key=api_key, endpoint=endpoint
+        )
     if request.param == AzureAIInferenceTextEmbedding.__name__:
-        return AzureAIInferenceTextEmbedding(model_id, api_key=api_key, endpoint=endpoint)
+        return AzureAIInferenceTextEmbedding(
+            model_id, api_key=api_key, endpoint=endpoint
+        )
 
     raise ValueError(f"Service {request.param} not supported.")
 
@@ -144,7 +154,9 @@ def mock_azure_ai_inference_chat_completion_response(model_id) -> ChatCompletion
 
 
 @pytest.fixture()
-def mock_azure_ai_inference_chat_completion_response_with_tool_call(model_id) -> ChatCompletions:
+def mock_azure_ai_inference_chat_completion_response_with_tool_call(
+    model_id,
+) -> ChatCompletions:
     return ChatCompletions(
         id="test_id",
         created=datetime.datetime.now(),
@@ -176,7 +188,9 @@ def mock_azure_ai_inference_chat_completion_response_with_tool_call(model_id) ->
 
 
 @pytest.fixture()
-def mock_azure_ai_inference_streaming_chat_completion_response(model_id) -> AsyncIterator:
+def mock_azure_ai_inference_streaming_chat_completion_response(
+    model_id,
+) -> AsyncIterator:
     streaming_chat_response = MagicMock(spec=AsyncGenerator)
     streaming_chat_response.__aiter__.return_value = [
         StreamingChatCompletionsUpdate(
@@ -218,7 +232,9 @@ def mock_azure_ai_inference_streaming_chat_completion_response(model_id) -> Asyn
 
 
 @pytest.fixture()
-def mock_azure_ai_inference_streaming_chat_completion_response_with_tool_call(model_id) -> AsyncIterator:
+def mock_azure_ai_inference_streaming_chat_completion_response_with_tool_call(
+    model_id,
+) -> AsyncIterator:
     streaming_chat_response = MagicMock(spec=AsyncGenerator)
     streaming_chat_response.__aiter__.return_value = [
         StreamingChatCompletionsUpdate(

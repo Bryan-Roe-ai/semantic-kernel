@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System.Net;
 using Microsoft.Extensions.VectorData;
@@ -132,7 +132,7 @@ internal sealed class DataLoader<TKey>(
             {
                 var chatHistory = new ChatHistory();
                 chatHistory.AddUserMessage([
-                    new TextContent("What’s in this image?"),
+                    new TextContent("What�s in this image?"),
                     new ImageContent(imageBytes, "image/png"),
                 ]);
                 var result = await chatCompletionService.GetChatMessageContentsAsync(chatHistory, cancellationToken: cancellationToken).ConfigureAwait(false);

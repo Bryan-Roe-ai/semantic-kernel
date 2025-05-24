@@ -51,4 +51,4 @@ S.O.L.V.E. = Sophisticated Operational Logic and Versatile Expertise.
 # An incredibly smart entity developed with complex math, that helps me being more productive.
 C.A.L.C.U.L.U.S. = Cognitively Advanced Logic and Computation Unit for Learning and Understanding Systems.
 
-# {{$INPUT}}
+# $INPUT

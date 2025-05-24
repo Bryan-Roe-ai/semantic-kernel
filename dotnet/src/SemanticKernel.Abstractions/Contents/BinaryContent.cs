@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using Microsoft.SemanticKernel.Text;
 #pragma warning disable CA1056 // URI-like properties should not be strings
 #pragma warning disable CA1055 // URI-like parameters should not be strings
 #pragma warning disable CA1054 // URI-like parameters should not be strings
+// These warnings are disabled because the properties and parameters are intentionally kept as strings for flexibility and ease of use within the Semantic Kernel.
 
 namespace Microsoft.SemanticKernel;
 
@@ -19,13 +20,15 @@ namespace Microsoft.SemanticKernel;
 [Experimental("SKEXP0001")]
 public class BinaryContent : KernelContent
 {
-    private string? _dataUri;
+    private string? _dataUriString;
     private ReadOnlyMemory<byte>? _data;
     private Uri? _referencedUri;
 
     /// <summary>
     /// The binary content.
     /// </summary>
+    // The 'Content' property is deprecated in favor of 'Data' to provide a more descriptive name.
+    // The 'Content' property is deprecated in favor of 'Data' to provide a more descriptive name.
     [JsonIgnore, Obsolete("Use Data instead")]
     public ReadOnlyMemory<byte>? Content => this.Data;
 

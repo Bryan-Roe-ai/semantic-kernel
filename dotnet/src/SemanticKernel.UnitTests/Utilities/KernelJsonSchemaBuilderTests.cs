@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
 using Xunit;
@@ -22,8 +22,8 @@ public class KernelJsonSchemaBuilderTests
     {
         public ClassWithDefaultValuesInConstructorForTypesThatCanRepresentOtherTypes(object? content = null, KernelJsonSchema? schema = null)
         {
-            this.Content = content;
-            this.Schema = schema;
+            this.Content = content ?? new object();
+            this.Schema = schema ?? new KernelJsonSchema();
         }
 
         public object? Content { get; set; }

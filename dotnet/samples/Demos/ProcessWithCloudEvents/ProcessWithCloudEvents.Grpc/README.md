@@ -1,4 +1,4 @@
-﻿# Process With Cloud Events - using gRPC
+# Process With Cloud Events - using gRPC
 
 For using gRPC, this demo follows the guidelines suggested for any [gRPC ASP.NET Core App](https://learn.microsoft.com/en-us/aspnet/core/grpc/test-tools?view=aspnetcore-9.0).
 

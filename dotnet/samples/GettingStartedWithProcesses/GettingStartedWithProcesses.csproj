@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AssemblyName>GettingStartedWithProcesses</AssemblyName>
@@ -61,9 +61,21 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
+<<<<<<< HEAD
+    <EmbeddedResource Include="..\LearnResources\Resources\Grimms-*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+=======
+    <EmbeddedResource Include="$(RepoRoot)/dotnet/samples/LearnResources/Resources/Grimms-The-King-of-the-Golden-Mountain.txt" Link="%(RecursiveDir)Resources/%(Filename)%(Extension)"/>
+    <EmbeddedResource Include="$(RepoRoot)/dotnet/samples/LearnResources/Resources/Grimms-The-Water-of-Life.txt" Link="%(RecursiveDir)Resources/%(Filename)%(Extension)"/>
+    <EmbeddedResource Include="$(RepoRoot)/dotnet/samples/LearnResources/Resources/Grimms-The-White-Snake.txt" Link="%(RecursiveDir)Resources/%(Filename)%(Extension)"/>
+>>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+=======
     <EmbeddedResource Include="$(RepoRoot)/dotnet/samples/LearnResources/Resources/Grimms-The-King-of-the-Golden-Mountain.txt" Link="%(RecursiveDir)Resources/%(Filename)%(Extension)" />
     <EmbeddedResource Include="$(RepoRoot)/dotnet/samples/LearnResources/Resources/Grimms-The-Water-of-Life.txt" Link="%(RecursiveDir)Resources/%(Filename)%(Extension)" />
     <EmbeddedResource Include="$(RepoRoot)/dotnet/samples/LearnResources/Resources/Grimms-The-White-Snake.txt" Link="%(RecursiveDir)Resources/%(Filename)%(Extension)" />
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   </ItemGroup>
 
 </Project>

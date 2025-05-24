@@ -5,11 +5,31 @@ from typing import TypeVar
 
 from pydantic import Field, field_validator, model_validator
 
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.connectors.ai.prompt_execution_settings import (
+    PromptExecutionSettings,
+)
 from semantic_kernel.const import DEFAULT_SERVICE_NAME
 from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
 from semantic_kernel.kernel_pydantic import KernelBaseModel
-from semantic_kernel.prompt_template.const import KERNEL_TEMPLATE_FORMAT_NAME, TEMPLATE_FORMAT_TYPES
+from semantic_kernel.prompt_template.const import (
+    KERNEL_TEMPLATE_FORMAT_NAME,
+    TEMPLATE_FORMAT_TYPES,
+)
+from semantic_kernel.prompt_template.input_variable import InputVariable
+
+PromptExecutionSettingsT = TypeVar(
+    "PromptExecutionSettingsT", bound=PromptExecutionSettings
+)
+import json
+import logging
+from typing import Dict, List, Optional, TypeVar, Union
+
+from pydantic import Field, field_validator
+from typing_extensions import Literal
+
+from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
+from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
+from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.prompt_template.input_variable import InputVariable
 
 PromptExecutionSettingsT = TypeVar("PromptExecutionSettingsT", bound=PromptExecutionSettings)
@@ -48,13 +68,36 @@ class PromptTemplateConfig(KernelBaseModel):
         """Verify that input variable default values are string only."""
         for variable in self.input_variables:
             if variable.default and not isinstance(variable.default, str):
-                raise TypeError(f"Default value for input variable {variable.name} must be a string.")
+                raise TypeError(
+                    f"Default value for input variable {variable.name} must be a string."
+                )
         return self
+    name: Optional[str] = ""
+    description: Optional[str] = ""
+    template: Optional[str] = None
+    template_format: Optional[str] = "semantic-kernel"
+    input_variables: List[InputVariable] = Field(default_factory=list)
+    execution_settings: Dict[str, PromptExecutionSettings] = Field(default_factory=dict)
 
     @field_validator("execution_settings", mode="before")
     @classmethod
     def rewrite_execution_settings(
+<<<<<<< HEAD
+        cls,
+        settings: None | (
+            PromptExecutionSettings
+            | list[PromptExecutionSettings]
+            | dict[str, PromptExecutionSettings]
+        ),
+        settings: PromptExecutionSettings | list[PromptExecutionSettings] | dict[str, PromptExecutionSettings] | None,
+    ) -> dict[str, PromptExecutionSettings]:
+        settings: Optional[
+            Union[PromptExecutionSettings, List[PromptExecutionSettings], Dict[str, PromptExecutionSettings]]
+        ],
+    ) -> Dict[str, PromptExecutionSettings]:
+=======
         cls: type[_T],
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         settings: PromptExecutionSettings
         | Sequence[PromptExecutionSettings]
         | MutableMapping[str, PromptExecutionSettings]
@@ -69,13 +112,29 @@ class PromptTemplateConfig(KernelBaseModel):
             return {s.service_id or DEFAULT_SERVICE_NAME: s for s in settings}
         return settings
 
-    def add_execution_settings(self, settings: PromptExecutionSettings, overwrite: bool = True) -> None:
+    def add_execution_settings(
+        self, settings: PromptExecutionSettings, overwrite: bool = True
+    ) -> None:
         """Add execution settings to the prompt template."""
         if settings.service_id in self.execution_settings and not overwrite:
             return
         self.execution_settings[settings.service_id or DEFAULT_SERVICE_NAME] = settings
         logger.warning("Execution settings already exist and overwrite is set to False")
 
+    def get_kernel_parameter_metadata(self) -> list[KernelParameterMetadata]:
+            return {settings.service_id or "default": settings}
+        if isinstance(settings, list):
+            return {s.service_id or "default": s for s in settings}
+        return settings
+
+    def add_execution_settings(self, settings: PromptExecutionSettings, overwrite: bool = True) -> None:
+        """Add execution settings to the prompt template."""
+        if settings.service_id in self.execution_settings and not overwrite:
+            return
+        self.execution_settings[settings.service_id or "default"] = settings
+        logger.warning("Execution settings already exist and overwrite is set to False")
+
+    def get_kernel_parameter_metadata(self) -> List[KernelParameterMetadata]:
     def get_kernel_parameter_metadata(self) -> Sequence[KernelParameterMetadata]:
         """Get the kernel parameter metadata for the input variables."""
         return [
@@ -85,6 +144,17 @@ class PromptTemplateConfig(KernelBaseModel):
                 default_value=variable.default,
                 type_=variable.json_schema,  # TODO (moonbox3): update to handle complex JSON schemas # type: ignore
                 is_required=variable.is_required,
+                type_=variable.json_schema,  # TODO (moonbox3): update to handle complex JSON schemas
+                is_required=variable.is_required,
+                type_=variable.json_schema,  # TODO (moonbox3): update to handle complex JSON schemas
+                is_required=variable.is_required,
+                type_=variable.json_schema,  # TODO (moonbox3): update to handle complex JSON schemas
+                is_required=variable.is_required,
+                type_=variable.json_schema,  # TODO (moonbox3): update to handle complex JSON schemas
+                is_required=variable.is_required,
+                type_=variable.json_schema,  # TODO: update to handle complex JSON schemas
+                required=variable.is_required,
+                expose=True,
             )
             for variable in self.input_variables
         ]
@@ -102,6 +172,22 @@ class PromptTemplateConfig(KernelBaseModel):
                 f"specified JSON string: {json_str} with exception: {exc}"
             ) from exc
 
+        try:
+            parsed_json = json.loads(json_str)
+            config = PromptTemplateConfig(**parsed_json)
+        except Exception as e:
+            raise ValueError(
+                "Unable to deserialize PromptTemplateConfig from the "
+                f"specified JSON string: {json_str} with exception: {e}"
+            )
+
+        # Verify that input variable default values are string only
+        for variable in config.input_variables:
+            if variable.default and not isinstance(variable.default, str):
+                raise ValueError(f"Default value for input variable {variable.name} must be a string for {config.name}")
+
+        return config
+
     @classmethod
     def restore(
         cls: type[_T],
@@ -112,7 +198,14 @@ class PromptTemplateConfig(KernelBaseModel):
         input_variables: MutableSequence[InputVariable] | None = None,
         execution_settings: MutableMapping[str, PromptExecutionSettings] | None = None,
         allow_dangerously_set_content: bool = False,
+<<<<<<< HEAD
+        template_format: Literal["semantic-kernel"] = "semantic-kernel",
+        input_variables: List[InputVariable] = [],
+        execution_settings: Dict[str, PromptExecutionSettings] = {},
+    ) -> "PromptTemplateConfig":
+=======
     ) -> _T:
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """Restore a PromptTemplateConfig instance from the specified parameters.
 
         Args:
@@ -123,6 +216,8 @@ class PromptTemplateConfig(KernelBaseModel):
             input_variables: The input variables for the prompt.
             execution_settings: The execution settings for the prompt.
             allow_dangerously_set_content: Allow content without encoding.
+            input_variables: The input variables for the prompt.
+            execution_settings: The execution settings for the prompt.
 
         Returns:
             A new PromptTemplateConfig instance.

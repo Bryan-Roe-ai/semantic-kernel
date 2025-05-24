@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 #pragma warning disable IDE0005 // Using directive is unnecessary.
 using System;
@@ -23,9 +23,39 @@ namespace Microsoft.SemanticKernel;
 [ExcludeFromCodeCoverage]
 internal static class KernelJsonSchemaBuilder
 {
+    private static readonly JsonSerializerOptions s_options = CreateDefaultOptions();
     private static JsonSerializerOptions? s_options;
+<<<<<<< HEAD
+    private static readonly JsonSchemaMapperConfiguration s_config = new()
+    private static readonly AIJsonSchemaCreateOptions s_schemaOptions = new()
+    internal static readonly AIJsonSchemaCreateOptions s_schemaOptions = new()
+    {
+        IncludeSchemaKeyword = false,
+        IncludeTypeInEnumSchemas = true,
+        RequireAllProperties = false,
+        DisallowAdditionalProperties = false,
+    };
+=======
     internal static readonly AIJsonSchemaCreateOptions s_schemaOptions = new();
+>>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
+    [RequiresUnreferencedCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
+    [RequiresDynamicCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
+    public static KernelJsonSchema Build(Type type, string? description = null, JsonSchemaMapperConfiguration? configuration = null)
+    {
+        return Build(type, GetDefaultOptions(), description, configuration);
+    }
+
+    public static KernelJsonSchema Build(
+        JsonSerializerOptions? options,
+        Type type,
+        string? description = null,
+        JsonSchemaMapperConfiguration? configuration = null)
+    {
+        var serializerOptions = options ?? s_options;
+        var mapperConfiguration = configuration ?? s_config;
+
+        JsonNode jsonSchema = serializerOptions.GetJsonSchema(type, mapperConfiguration);
     private static readonly JsonElement s_trueSchemaAsObject = JsonDocument.Parse("{}").RootElement;
     private static readonly JsonElement s_falseSchemaAsObject = JsonDocument.Parse("""{"not":true}""").RootElement;
 
@@ -42,6 +72,20 @@ internal static class KernelJsonSchemaBuilder
         string? description = null,
         AIJsonSchemaCreateOptions? configuration = null)
     {
+        var mapperConfiguration = configuration ?? s_config;
+
+        JsonNode jsonSchema = options.GetJsonSchema(type, mapperConfiguration);
+        Debug.Assert(jsonSchema.GetValueKind() is JsonValueKind.Object or JsonValueKind.False or JsonValueKind.True);
+
+        if (jsonSchema is not JsonObject jsonObj)
+        {
+            // Transform boolean schemas into object equivalents.
+            jsonObj = jsonSchema.GetValue<bool>()
+                ? new JsonObject()
+                : new JsonObject { ["not"] = true };
+        }
+
+        if (!string.IsNullOrWhiteSpace(description))
         configuration ??= s_schemaOptions;
         // To be compatible with the previous behavior of MEAI 9.3.0 (when description is empty, should not be included in the schema)
         string? schemaDescription = string.IsNullOrEmpty(description) ? null : description;
@@ -56,6 +100,20 @@ internal static class KernelJsonSchemaBuilder
                 break;
         }
 
+        return KernelJsonSchema.Parse(jsonObj.ToJsonString(serializerOptions)); 
+        KernelJsonSchema.Parse(jsonObj.ToJsonString(options));
+    }
+
+    private static JsonSerializerOptions CreateDefaultOptions()
+    {
+        JsonSerializerOptions options = new()
+        {
+            TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+            Converters = { new JsonStringEnumConverter() },
+        };
+        options.MakeReadOnly();
+        return options;
+        return KernelJsonSchema.Parse(jsonObj.ToJsonString(options));
         return KernelJsonSchema.Parse(schemaDocument.GetRawText());
     }
 

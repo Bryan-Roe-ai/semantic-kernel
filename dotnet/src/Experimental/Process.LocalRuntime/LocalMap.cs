@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -56,7 +56,7 @@ internal sealed class LocalMap : LocalStep
                     processContext.StartWithEventAsync(
                         new KernelProcessEvent
                         {
-                            Id = startEventId,
+                            Id = ProcessConstants.MapEventId,
                             Data = value
                         });
 #pragma warning restore CA2000 // Dispose objects before losing scope

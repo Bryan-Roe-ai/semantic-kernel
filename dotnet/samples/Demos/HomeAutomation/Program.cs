@@ -1,4 +1,4 @@
-﻿/*
+/*
  Copyright (c) Microsoft. All rights reserved.
 
  Example that demonstrates how to use Semantic Kernel in conjunction with dependency injection.

@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URL=${MONGODB_URL}
+      - MONGODB_DB_NAME=${MONGODB_DB_NAME}
+      - MONGODB_DIRECT_CONNECTION=${MONGODB_DIRECT_CONNECTION}
+      - COOKIE_NAME=${COOKIE_NAME}
+      - HF_ACCESS_TOKEN=${HF_ACCESS_TOKEN}
+      - SERPAPI_KEY=${SERPAPI_KEY}
+      - OPENID_CLIENT_ID=${OPENID_CLIENT_ID}
+      - OPENID_CLIENT_SECRET=${OPENID_CLIENT_SECRET}
+      - OPENID_SCOPES=${OPENID_SCOPES}
+      - OPENID_PROVIDER_URL=${OPENID_PROVIDER_URL}
+      - MODELS=${MODELS}
+      - OLD_MODELS=${OLD_MODELS}
+      - PUBLIC_ORIGIN=${PUBLIC_ORIGIN}
+      - PUBLIC_SHARE_PREFIX=${PUBLIC_SHARE_PREFIX}
+      - PUBLIC_GOOGLE_ANALYTICS_ID=${PUBLIC_GOOGLE_ANALYTICS_ID}
+      - PUBLIC_DEPRECATED_GOOGLE_ANALYTICS_ID=${PUBLIC_DEPRECATED_GOOGLE_ANALYTICS_ID}
+      - PUBLIC_ANNOUNCEMENT_BANNERS=${PUBLIC_ANNOUNCEMENT_BANNERS}
+      - PARQUET_EXPORT_DATASET=${PARQUET_EXPORT_DATASET}
+      - PARQUET_EXPORT_HF_TOKEN=${PARQUET_EXPORT_HF_TOKEN}
+      - PARQUET_EXPORT_SECRET=${PARQUET_EXPORT_SECRET}
+      - PUBLIC_APP_NAME=${PUBLIC_APP_NAME}
+      - PUBLIC_APP_ASSETS=${PUBLIC_APP_ASSETS}
+      - PUBLIC_APP_COLOR=${PUBLIC_APP_COLOR}
+      - PUBLIC_APP_DATA_SHARING=${PUBLIC_APP_DATA_SHARING}
+      - PUBLIC_APP_DATA_DISCLAIMER=${PUBLIC_APP_DATA_DISCLAIMER}
+      - API_KEY=${API_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - OpenAISettings__ApiKey=${OpenAISettings__ApiKey}
+      - OpenAISettings__ChatModel=${OpenAISettings__ChatModel}
+      - AzureOpenAISettings__Endpoint=${AzureOpenAISettings__Endpoint}
+      - AzureOpenAISettings__ChatModelDeployment=${AzureOpenAISettings__ChatModelDeployment}
+      - AZURE_BLOB_STORAGE_ENDPOINT=${AZURE_BLOB_STORAGE_ENDPOINT}
+      - AZURE_COGNITIVE_SERVICES_ENDPOINT=${AZURE_COGNITIVE_SERVICES_ENDPOINT}
+      - COSMOS_DB_ENDPOINT=${COSMOS_DB_ENDPOINT}
+      - KEY_VAULT_ENDPOINT=${KEY_VAULT_ENDPOINT}
+      - AZURE_DEVOPS_ORGANIZATION_URL=${AZURE_DEVOPS_ORGANIZATION_URL}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '512M'
+        reservations:
+          cpus: '0.25'
+          memory: '256M'
+
+  db:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '512M'
+        reservations:
+          cpus: '0.25'
+          memory: '256M'
+
+  chat-bot:
+    image: ghcr.io/${{ github.repository }}/my-image-name:${{ env.IMAGE_TAG }}
+    ports:
+      - "8080:8080"
+    environment:
+      - CHAT_BOT_API_KEY=${CHAT_BOT_API_KEY}
+      - CHAT_BOT_MODEL=${CHAT_BOT_MODEL}
+      - CHAT_BOT_ENDPOINT=${CHAT_BOT_ENDPOINT}
+      - CHAT_BOT_SECRET=${CHAT_BOT_SECRET}
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '512M'
+        reservations:
+          cpus: '0.25'
+          memory: '256M'
+
+volumes:
+  mongo-data:

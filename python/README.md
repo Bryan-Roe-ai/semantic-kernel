@@ -62,6 +62,9 @@ service_id="chat-gpt"
 kernel.add_service(
     OpenAIChatCompletion(
         service_id=service_id,
+        ai_model_id="gpt-3.5-turbo",
+        api_key=api_key,
+        org_id=org_id
     )
 )
 
@@ -69,6 +72,9 @@ kernel.add_service(
 # kernel.add_service(
 #   AzureChatCompletion(
 #       service_id=service_id,
+#       deployment_name=deployment,
+#       base_url=endpoint,
+#       api_key=api_key
 #   )
 # )
 
@@ -179,3 +185,89 @@ things stand in matching the features and functionality of the main SK branch.
 Over time there will be some features available only in the Python version, and
 others only in the C# version, for example, adapters to external services,
 scientific libraries, etc.
+# Quickstart with Poetry
+
+## Installation
+
+Install the Poetry package manager and create a project virtual environment.
+
+```bash
+# Install poetry package
+pip3 install poetry
+# Use poetry to install project deps
+poetry install
+# Use poetry to activate project venv
+poetry shell
+```
+
+Make sure you have an
+[Open AI API Key](https://openai.com/api/) or
+[Azure Open AI service key](https://learn.microsoft.com/azure/cognitive-services/openai/quickstart?pivots=rest-api)
+
+Copy those keys into a `.env` file in this repo
+
+```
+OPENAI_API_KEY=""
+OPENAI_ORG_ID=""
+AZURE_OPENAI_API_KEY=""
+AZURE_OPENAI_ENDPOINT=""
+```
+
+### Quickstart ⚡
+
+```python
+import semantic_kernel as sk
+
+kernel = sk.create_kernel()
+
+api_key, org_id = sk.openai_settings_from_dot_env()
+
+kernel.config.add_openai_completion_backend(
+    "davinci-002", "text-davinci-002", api_key, org_id
+)
+
+sk_prompt = """
+{{$input}}
+
+Give me the TLDR in 5 words.
+"""
+
+text_to_summarize = """
+    1) A robot may not injure a human being or, through inaction,
+    allow a human being to come to harm.
+
+    2) A robot must obey orders given it by human beings except where
+    such orders would conflict with the First Law.
+
+    3) A robot must protect its own existence as long as such protection
+    does not conflict with the First or Second Law.
+"""
+
+tldr_function = sk.extensions.create_semantic_function(
+    kernel,
+    sk_prompt,
+    max_tokens=200,
+    temperature=0,
+    top_p=0.5,
+)
+
+summary = await kernel.run_on_str_async(text_to_summarize, tldr_function)
+output = str(summary.variables).strip()
+print("Output: " + output)
+
+# Output: Protect humans, follow orders, survive.
+```
+
+## Enhancing Documentation
+
+### Detailed Explanations and Examples
+
+To enhance the existing documentation, we have added more detailed explanations and examples to help users understand how to use the various features of the repository. These explanations and examples are included in the relevant sections of the documentation files such as `README.md` and `java/README.md`.
+
+### Code Snippets and Usage Examples
+
+We have included more code snippets and usage examples in the documentation to provide practical guidance on how to use the repository's features. These code snippets and examples are designed to help users quickly grasp the concepts and apply them in their own projects.
+
+### Repository Structure Explanation
+
+To help users navigate the repository, we have added a section that explains the structure of the repository and the purpose of each directory and file. This section provides an overview of the repository's organization and helps users understand where to find specific components and resources.
