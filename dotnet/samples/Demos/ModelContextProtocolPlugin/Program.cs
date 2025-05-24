@@ -24,7 +24,7 @@ await using var mcpClient = await McpClientFactory.CreateAsync(new StdioClientTr
 {
     Name = "MCPServer",
     Command = "npx",
-    Arguments = ["-y", "@modelcontextprotocol/server-github"],
+    Arguments = ["-y", "@modelcontextprotocol/server-github"]
 }));
 
 // Retrieve the list of tools available on the GitHub server

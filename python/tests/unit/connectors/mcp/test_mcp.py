@@ -230,3 +230,14 @@ async def test_kernel_as_mcp_server(kernel: "Kernel", decorated_native_function,
     assert types.ListToolsRequest in server.request_handlers
     assert types.CallToolRequest in server.request_handlers
     assert server.name == "Semantic Kernel MCP Server"
+
+
+async def test_github_mcp_plugin(kernel: "Kernel"):
+    async with MCPStdioPlugin(
+        name="github",
+        command="docker",
+        args=["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"],
+        env={"GITHUB_PERSONAL_ACCESS_TOKEN": "<your_token>"},
+    ) as github_plugin:
+        # Add plugin to kernel
+        kernel.add_plugin(github_plugin)

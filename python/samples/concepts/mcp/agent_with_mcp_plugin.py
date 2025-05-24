@@ -31,8 +31,7 @@ USER_INPUTS = [
 async def main():
     # 1. Create the agent
     async with MCPStdioPlugin(
-        name="Github",
-        description="Github Plugin",
+        name="github",
         command="docker",
         args=["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"],
         env={"GITHUB_PERSONAL_ACCESS_TOKEN": os.getenv("GITHUB_PERSONAL_ACCESS_TOKEN")},
