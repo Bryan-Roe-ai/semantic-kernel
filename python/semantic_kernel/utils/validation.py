@@ -81,3 +81,4 @@ def validate_function_param_name(value: Optional[str]) -> None:
             f"Invalid function parameter name: {value}. Function parameter "
             f"names may only contain ASCII letters, digits, and underscores."
         )
+FUNCTION_PARAM_NAME_REGEX = r"^[0-9A-Za-z_-]+$"

@@ -440,6 +440,9 @@ class Kernel(
             function_result=FunctionResult(
                 function=function_to_call.metadata, value=None
             ),
+            function_call_content=function_call,
+            execution_settings=execution_settings,
+            function_result=FunctionResult(function=function_to_call.metadata, value=None),
             function_count=function_call_count or 0,
             request_sequence_index=request_index or 0,
         )
@@ -465,7 +468,13 @@ class Kernel(
     ):
         """Inner auto function invocation handler."""
         try:
-            result = await context.function.invoke(context.kernel, context.arguments)
+            result = await context.function.invoke(
+                context.kernel,
+                context.arguments,
+                metadata=context.function_call_content.metadata | context.function_call_content.to_dict()
+                if context.function_call_content
+                else {},
+            )
             if result:
                 context.function_result = result
         except Exception as exc:

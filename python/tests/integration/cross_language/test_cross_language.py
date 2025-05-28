@@ -17,6 +17,7 @@ from semantic_kernel.connectors.ai.open_ai.settings.open_ai_settings import (
     OpenAISettings,
 )
 from semantic_kernel.connectors.openapi_plugin import OpenAPIFunctionExecutionParameters
+from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion, OpenAISettings
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.functions.kernel_function import KernelFunction
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
@@ -30,7 +31,7 @@ from semantic_kernel.kernel import Kernel
 
 logger = logging.getLogger(__name__)
 
-OPENAI_MODEL_ID = "gpt-3.5-turbo"
+OPENAI_MODEL_ID = "gpt-4.1-nano"
 
 # region Test Prompts
 
@@ -466,20 +467,17 @@ async def test_prompt_with_complex_objects(
         pytest.param(False, True, "jinja2", j2_prompt, id="j2_non_inline_streaming"),
     ],
 )
-<<<<<<< HEAD
 @pytest.mark.asyncio
 async def test_prompt_with_helper_functions(
     is_inline, is_streaming, template_format, prompt
 ):
     async_client, logging_client = get_new_client()
 async def test_prompt_with_helper_functions(is_inline, is_streaming, template_format, prompt, async_client):
-=======
 async def test_prompt_with_helper_functions(
     is_inline, is_streaming, template_format, prompt, async_clients: tuple[AsyncOpenAI, LoggingAsyncClient]
 ):
     client, logging_async_client = async_clients
 
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     ai_service = OpenAIChatCompletion(
         service_id="default",
         ai_model_id=OPENAI_MODEL_ID,
@@ -553,20 +551,17 @@ async def test_prompt_with_helper_functions(
         pytest.param(False, True, "jinja2", j2_simple_prompt, id="j2_non_inline_streaming"),
     ],
 )
-<<<<<<< HEAD
 @pytest.mark.asyncio
 async def test_prompt_with_simple_variable(
     is_inline, is_streaming, template_format, prompt
 ):
     async_client, logging_client = get_new_client()
 async def test_prompt_with_simple_variable(is_inline, is_streaming, template_format, prompt, async_client):
-=======
 async def test_prompt_with_simple_variable(
     is_inline, is_streaming, template_format, prompt, async_clients: tuple[AsyncOpenAI, LoggingAsyncClient]
 ):
     client, logging_async_client = async_clients
 
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     ai_service = OpenAIChatCompletion(
         service_id="default",
         ai_model_id=OPENAI_MODEL_ID,
@@ -822,14 +817,11 @@ async def test_yaml_prompt(
 # region Test OpenAPI Plugin Load
 
 
-<<<<<<< HEAD
 async def setup_openapi_function_call(kernel, function_name, arguments):
     openapi_spec_file = os.path.join(
         os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json"
     )
-=======
 async def setup_openapi_function_call(kernel: Kernel, function_name, arguments):
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     from semantic_kernel.connectors.openapi_plugin import OpenAPIFunctionExecutionParameters
 
     openapi_spec_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json")
