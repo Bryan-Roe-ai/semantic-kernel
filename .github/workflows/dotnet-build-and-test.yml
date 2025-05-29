@@ -46,14 +46,11 @@ jobs:
       dotnetChanges: ${{ steps.filter.outputs.dotnet }}
     steps:
       - uses: actions/checkout@v4
-<<<<<<< HEAD
 
       - uses: dorny/paths-filter@v3
-=======
         with:
           persist-credentials: false
       - uses: dorny/paths-filter@v2
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         id: filter
         with:
           filters: |
@@ -91,12 +88,9 @@ jobs:
     environment: ${{ matrix.environment }}
     steps:
       - uses: actions/checkout@v4
-<<<<<<< HEAD
 
-=======
         with:
           persist-credentials: false
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       - name: Setup dotnet ${{ matrix.dotnet }}
         uses: actions/setup-dotnet@v4
         with:
@@ -197,8 +191,9 @@ jobs:
           targetdir: "./TestResults/Reports"
           reporttypes: "JsonSummary"
           assemblyfilters: "+Microsoft.SemanticKernel.Abstractions;+Microsoft.SemanticKernel.Core;+Microsoft.SemanticKernel.PromptTemplates.Handlebars;+Microsoft.SemanticKernel.Connectors.OpenAI;+Microsoft.SemanticKernel.Connectors.AzureOpenAI;+Microsoft.SemanticKernel.Yaml;+Microsoft.SemanticKernel.Agents.Abstractions;+Microsoft.SemanticKernel.Agents.Core;+Microsoft.SemanticKernel.Agents.OpenAI"
-=======
         uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
+=======
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.7
         with:
           reports: "./TestResults/Coverage/**/coverage.cobertura.xml"
           targetdir: "./TestResults/Reports"
