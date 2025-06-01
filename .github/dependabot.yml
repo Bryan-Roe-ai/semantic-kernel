@@ -1,6 +1,7 @@
 version: 2
+
 updates:
-  # Consolidated nuget dependencies
+  # C#/.NET (NuGet)
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
@@ -20,8 +21,13 @@ updates:
       - "dependencies"
       - "nuget"
       - "automated-update"
+    groups:
+      # Group all NuGet updates into a single PR per run
+      dotnet-dependencies:
+        patterns:
+          - "*"
 
-  # Maintain dependencies for npm
+  # JavaScript/Node (npm) for sample apps
   - package-ecosystem: "npm"
     directory: "/samples/apps"
     schedule:
@@ -31,8 +37,12 @@ updates:
       - "npm"
       - "dependencies"
       - "automated-update"
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
 
-  # Maintain dependencies for pip
+  # Python (pip)
   - package-ecosystem: "pip"
     directory: "/python/"
     schedule:
@@ -42,8 +52,27 @@ updates:
       - "python"
       - "dependencies"
       - "automated-update"
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
 
-  # Maintain dependencies for github-actions
+  # Java (Maven)
+  - package-ecosystem: "maven"
+    directory: "/samples/java/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels:
+      - "java"
+      - "dependencies"
+      - "automated-update"
+    groups:
+      java-dependencies:
+        patterns:
+          - "*"
+
+  # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -53,8 +82,12 @@ updates:
       - "github-actions"
       - "dependencies"
       - "automated-update"
+    groups:
+      actions-dependencies:
+        patterns:
+          - "*"
 
-  # Maintain dependencies for devcontainers
+  # Devcontainers
   - package-ecosystem: "devcontainers"
     directory: "/"
     schedule:
@@ -64,3 +97,15 @@ updates:
       - "devcontainers"
       - "dependencies"
       - "automated-update"
+    groups:
+      devcontainers-dependencies:
+        patterns:
+          - "*"
+
+# General options
+# Limit the number of open PRs to reduce noise
+open-pull-requests-limit: 10
+
+# Enable security updates for all package ecosystems
+# (Dependabot does this by default, but this is explicit)
+# See: https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/enabling-and-disabling-version-updates
