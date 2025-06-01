@@ -7,6 +7,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name      # <-- Update with your team if desired
     ignore:
       - dependency-name: "System.*"
         update-types: ["version-update:semver-major"]
@@ -22,7 +26,6 @@ updates:
       - "nuget"
       - "automated-update"
     groups:
-      # Group all NuGet updates into a single PR per run
       dotnet-dependencies:
         patterns:
           - "*"
@@ -33,6 +36,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name
     labels:
       - "npm"
       - "dependencies"
@@ -48,6 +55,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name
     labels:
       - "python"
       - "dependencies"
@@ -63,6 +74,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name
     labels:
       - "java"
       - "dependencies"
@@ -78,6 +93,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name
     labels:
       - "github-actions"
       - "dependencies"
@@ -93,6 +112,10 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name
     labels:
       - "devcontainers"
       - "dependencies"
@@ -103,9 +126,19 @@ updates:
           - "*"
 
 # General options
-# Limit the number of open PRs to reduce noise
 open-pull-requests-limit: 10
 
-# Enable security updates for all package ecosystems
-# (Dependabot does this by default, but this is explicit)
+# Enable security updates for all package ecosystems (explicit, even though default)
 # See: https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/enabling-and-disabling-version-updates
+
+# Uncomment and configure below for private registries if needed
+# registries:
+#   - type: npm-registry
+#     url: https://registry.example.com
+#     token: ${{ secrets.NPM_TOKEN }}
+
+# Target branch for updates (uncomment if not using 'main')
+# target-branch: main
+
+# Automerge (uncomment if desired and safe for your workflow)
+# automerge: true
