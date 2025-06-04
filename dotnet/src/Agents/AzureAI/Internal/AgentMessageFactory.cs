@@ -35,9 +35,57 @@ internal static class AgentMessageFactory
         return
             message.Items
                 .OfType<FileReferenceContent>()
+                .Where(fileContent => fileContent.Tools?.Any() ?? false)
                 .Select(
                     fileContent =>
-                        new MessageAttachment(fileContent.FileId, [.. GetToolDefinition(fileContent.Tools)]));
+                        new MessageAttachment(fileContent.FileId, [.. GetToolDefinition(fileContent.Tools!)]));
+
+        static IEnumerable<ToolDefinition> GetToolDefinition(IEnumerable<string> tools)
+        {
+            foreach (string tool in tools)
+            {
+                if (s_toolMetadata.TryGetValue(tool, out ToolDefinition? toolDefinition))
+                {
+                    yield return toolDefinition;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Translates a set of <see cref="ChatMessageContent"/> to a set of <see cref="MessageInputContentBlock"/>.
+    /// </summary>
+    /// <param name="message">A <see cref="ChatMessageContent"/> object/</param>
+    public static IEnumerable<MessageInputContentBlock> GetMessageContent(ChatMessageContent? message)
+    {
+        if (message is not null)
+        {
+            foreach (KernelContent content in message.Items)
+            {
+                if (content is TextContent textContent)
+                {
+                    yield return new MessageInputTextBlock(content.ToString());
+                }
+                else if (content is ImageContent imageContent)
+                {
+                    if (imageContent.Uri != null)
+                    {
+                        MessageImageUriParam imageUrlParam = new(uri: imageContent.Uri.ToString());
+                        yield return new MessageInputImageUriBlock(imageUrlParam);
+                    }
+                    else if (!string.IsNullOrWhiteSpace(imageContent.DataUri))
+                    {
+                        MessageImageUriParam imageUrlParam = new(uri: imageContent.DataUri!);
+                        yield return new MessageInputImageUriBlock(imageUrlParam);
+                    }
+                }
+                else if (content is FileReferenceContent fileContent)
+                {
+                    MessageImageFileParam fileParam = new(fileContent.FileId);
+                    yield return new MessageInputImageFileBlock(fileParam);
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -76,20 +124,8 @@ internal static class AgentMessageFactory
         }
     }
 
-    private static readonly Dictionary<string, ToolDefinition> s_toolMetadata = new()
-    {
-        { AzureAIAgent.Tools.CodeInterpreter, new CodeInterpreterToolDefinition() },
-        { AzureAIAgent.Tools.FileSearch, new FileSearchToolDefinition() },
-    };
-
-    private static IEnumerable<ToolDefinition> GetToolDefinition(IEnumerable<string>? tools)
-    {
-        if (tools is null)
-        {
-            yield break;
-        }
-
-        foreach (string tool in tools)
+    private static readonly Dictionary<string, ToolDefinition> s_toolMetadata =
+        new()
         {
             if (s_toolMetadata.TryGetValue(tool, out ToolDefinition? toolDefinition))
             {
@@ -372,4 +408,7 @@ internal static class AgentMessageFactory
             return false;
         }
     }
+            { AzureAIAgent.Tools.CodeInterpreter, new CodeInterpreterToolDefinition() },
+            { AzureAIAgent.Tools.FileSearch, new FileSearchToolDefinition() },
+        };
 }

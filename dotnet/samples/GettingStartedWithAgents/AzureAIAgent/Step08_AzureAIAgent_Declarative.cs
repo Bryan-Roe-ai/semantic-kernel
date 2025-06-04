@@ -146,20 +146,20 @@ public class Step08_AzureAIAgent_Declarative : BaseAzureAgentTest
     public async Task AzureAIAgentWithBingGrounding()
     {
         var text =
-            $"""
+            """
             type: foundry_agent
             name: BingAgent
             instructions: Answer questions using Bing to provide grounding context.
             description: This agent answers questions using Bing to provide grounding context.
             model:
-              id: ${TestConfiguration.AzureAI:ChatModelId}
+              id: ${AzureAI:ChatModelId}
               options:
                 temperature: 0.4
             tools:
               - type: bing_grounding
                 options:
                   tool_connections:
-                    - {TestConfiguration.AzureAI.BingConnectionId}
+                    - ${AzureAI:BingConnectionId}
             """;
         AzureAIAgentFactory factory = new();
 
@@ -175,21 +175,21 @@ public class Step08_AzureAIAgent_Declarative : BaseAzureAgentTest
     public async Task AzureAIAgentWithFileSearch()
     {
         var text =
-            $"""
+            """
             type: foundry_agent
             name: FileSearchAgent
             instructions: Answer questions using available files to provide grounding context.
             description: This agent answers questions using available files to provide grounding context.
             model:
-              id: ${TestConfiguration.AzureAI:ChatModelId}
-              options:
+              id: ${AzureAI:ChatModelId}
+              optisons:
                 temperature: 0.4
             tools:
               - type: file_search
                 description: Grounding with available files.
                 options:
                   vector_store_ids:
-                    - {TestConfiguration.AzureAI.VectorStoreId}
+                    - ${AzureAI.VectorStoreId}
             """;
         AzureAIAgentFactory factory = new();
 
@@ -420,6 +420,7 @@ public class Step08_AzureAIAgent_Declarative : BaseAzureAgentTest
     {
         var builder = Kernel.CreateBuilder();
         builder.Services.AddSingleton(this.Client);
+        builder.Services.AddSingleton(this.CreateFoundryProjectClient());
         this._kernel = builder.Build();
     }
 
@@ -439,10 +440,6 @@ public class Step08_AzureAIAgent_Declarative : BaseAzureAgentTest
                 agentThread = response.Thread;
                 WriteAgentChatMessage(response);
             }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error invoking agent: {e.Message}");
         }
         finally
         {

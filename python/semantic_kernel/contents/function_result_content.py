@@ -47,7 +47,7 @@ def set_content_type(cls, v):
 
 content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
     tag: ClassVar[str] = FUNCTION_RESULT_CONTENT_TAG
-    id: str
+    id: str | None = None
     call_id: str | None = None
     result: Any
     name: str | None = None
@@ -119,7 +119,8 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
     def to_element(self) -> Element:
         """Convert the instance to an Element."""
         element = Element(self.tag)
-        element.set("id", self.id)
+        if self.id:
+            element.set("id", self.id)
         if self.name:
             element.set("name", self.name)
         element.text = str(self.result)
@@ -193,7 +194,7 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
 
         return StreamingChatMessageContent(role=AuthorRole.TOOL, choice_index=0, items=[self])
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> dict[str, str | Any]:
         """Convert the instance to a dictionary."""
         return {
             "tool_call_id": self.id,

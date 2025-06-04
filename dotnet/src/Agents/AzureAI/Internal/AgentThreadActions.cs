@@ -70,18 +70,16 @@ internal static class AgentThreadActions
             return;
         }
 
-        string? content = message.Content;
-        if (string.IsNullOrWhiteSpace(content))
-        {
-            return;
-        }
-
         await client.Messages.CreateMessageAsync(
             threadId,
             message.Role == AuthorRole.User ? AzureAIP.MessageRole.User : AzureAIP.MessageRole.Agent,
             content,
             attachments: null, // %%%
             AgentMessageFactory.GetMetadata(message),
+            role: message.Role == AuthorRole.User ? MessageRole.User : MessageRole.Agent,
+            contentBlocks: AgentMessageFactory.GetMessageContent(message),
+            attachments: AgentMessageFactory.GetAttachments(message),
+            metadata: AgentMessageFactory.GetMetadata(message),
             cancellationToken).ConfigureAwait(false);
     }
 
@@ -160,6 +158,12 @@ internal static class AgentThreadActions
         logger.LogAzureAIAgentCreatingRun(nameof(InvokeAsync), threadId);
 
         AzureAIP.ToolDefinition[]? tools = [.. agent.Definition.Tools, .. kernel.Plugins.SelectMany(p => p.Select(f => f.ToToolDefinition(p.Name)))];
+        // Add unique functions from the Kernel which are not already present in the agent's tools
+        HashSet<string> functionToolNames = new(tools.OfType<FunctionToolDefinition>().Select(t => t.Name));
+        IEnumerable<FunctionToolDefinition> functionTools = kernel.Plugins
+            .SelectMany(kp => kp.Select(kf => kf.ToToolDefinition(kp.Name)))
+            .Where(tool => !functionToolNames.Contains(tool.Name));
+        tools.AddRange(functionTools);
 
         string? instructions = await agent.GetInstructionsAsync(kernel, arguments, cancellationToken).ConfigureAwait(false);
 
@@ -196,7 +200,7 @@ internal static class AgentThreadActions
                 logger.LogAzureAIAgentProcessingRunSteps(nameof(InvokeAsync), run.Id, threadId);
 
                 // Execute functions in parallel and post results at once.
-                FunctionCallContent[] functionCalls = steps.SelectMany(step => ParseFunctionStep(agent, step)).ToArray();
+                FunctionCallContent[] functionCalls = [.. steps.SelectMany(step => ParseFunctionStep(agent, step))];
                 if (functionCalls.Length > 0)
                 {
                     // Emit function-call content
@@ -428,7 +432,7 @@ internal static class AgentThreadActions
                     {
                         yield return toolContent;
                     }
-                    else if (detailsUpdate.FunctionName != null || detailsUpdate.FunctionArguments != null)
+                    else if (detailsUpdate.FunctionArguments != null)
                     {
                         yield return
                             new StreamingChatMessageContent(AuthorRole.Assistant, null)
@@ -482,7 +486,7 @@ internal static class AgentThreadActions
                 }
 
                 // Execute functions in parallel and post results at once.
-                FunctionCallContent[] functionCalls = activeSteps.SelectMany(step => ParseFunctionStep(agent, step)).ToArray();
+                FunctionCallContent[] functionCalls = [.. activeSteps.SelectMany(step => ParseFunctionStep(agent, step))];
                 if (functionCalls.Length > 0)
                 {
                     // Emit function-call content
@@ -504,7 +508,7 @@ internal static class AgentThreadActions
 
                     foreach (RunStep step in activeSteps)
                     {
-                        stepFunctionResults.Add(step.Id, functionResults.Where(result => step.Id == toolMap[result.CallId!]).ToArray());
+                        stepFunctionResults.Add(step.Id, [.. functionResults.Where(result => step.Id == toolMap[result.CallId!])]);
                     }
                 }
             }
@@ -755,9 +759,9 @@ internal static class AgentThreadActions
 
         if (!string.IsNullOrWhiteSpace(functionArguments))
         {
-            foreach (var argumentKvp in JsonSerializer.Deserialize<Dictionary<string, object>>(functionArguments!)!)
+            foreach (KeyValuePair<string, object> argumentKvp in JsonSerializer.Deserialize<Dictionary<string, object>>(functionArguments!) ?? [])
             {
-                arguments[argumentKvp.Key] = argumentKvp.Value.ToString();
+                arguments[argumentKvp.Key] = argumentKvp.Value?.ToString();
             }
         }
 

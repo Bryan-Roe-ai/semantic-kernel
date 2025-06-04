@@ -156,6 +156,7 @@ def _format_tool_message(message: ChatMessageContent) -> ToolMessage:
     # The API expects the result to be a string, so we need to convert it to a string
     return ToolMessage(
         content=str(message.items[0].result), tool_call_id=message.items[0].id
+        content=str(message.items[0].result), tool_call_id=message.items[0].id if message.items[0].id else "None"
     )
 
 

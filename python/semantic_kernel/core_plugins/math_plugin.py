@@ -1,178 +1,17 @@
 # Copyright (c) Microsoft. All rights reserved.
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
 from typing import Annotated
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-
-from typing import Annotated
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-
-from typing import Annotated
-=======
->>>>>>> Stashed changes
-=======
-
-from typing import Annotated
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-
-from typing import Annotated
-=======
 import sys
 
 if sys.version_info >= (3, 9):
     from typing import Annotated
 else:
     from typing_extensions import Annotated
->>>>>>> ms/small_fixes
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
 
 
 class MathPlugin:
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     """Description: MathPlugin provides a set of functions to make Math calculations.
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-    """Description: MathPlugin provides a set of functions to make Math calculations.
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-    """Description: MathPlugin provides a set of functions to make Math calculations.
-=======
->>>>>>> Stashed changes
-=======
-    """Description: MathPlugin provides a set of functions to make Math calculations.
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-    """Description: MathPlugin provides a set of functions to make Math calculations.
-=======
-    """
-    Description: MathPlugin provides a set of functions to make Math calculations.
->>>>>>> ms/small_fixes
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
     Usage:
         kernel.add_plugin(MathPlugin(), plugin_name="math")
@@ -182,156 +21,39 @@ class MathPlugin:
         {{math.Subtract}} => Returns the difference of input and amount (provided in the KernelArguments)
     """
 
+    def _parse_number(self, val: int | float | str) -> float:
+        """Helper to parse a value as a float (supports int, float, str)."""
+        if isinstance(val, (int, float)):
+            return float(val)
+        try:
+            return float(val)
+        except Exception as ex:
+            raise ValueError(f"Cannot convert {val!r} to float for math operation") from ex
+
     @kernel_function(name="Add")
     def add(
         self,
-        input: Annotated[int | str, "The first number to add"],
-        amount: Annotated[int | str, "The second number to add"],
-    ) -> Annotated[int, "The result"]:
-        """Returns the Addition result of the values provided."""
-        if isinstance(input, str):
-            input = int(input)
-        if isinstance(amount, str):
-            amount = int(amount)
+        input: Annotated[int | float | str, "The first number to add"],
+        amount: Annotated[int | float | str, "The second number to add"],
+    ) -> Annotated[float, "The result"]:
+        """Returns the addition result of the values provided (supports float and int)."""
+        x = self._parse_number(input)
+        y = self._parse_number(amount)
+        return x + y
 
-        return input + amount
-
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     @kernel_function(name="Subtract")
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-    @kernel_function(name="Subtract")
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-    @kernel_function(name="Subtract")
-=======
->>>>>>> Stashed changes
-=======
-    @kernel_function(name="Subtract")
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-    @kernel_function(name="Subtract")
-=======
     @kernel_function(
         description="Subtracts value to a value",
         name="Subtract",
     )
->>>>>>> ms/small_fixes
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
     def subtract(
         self,
-<<<<<<< HEAD
         input: Annotated[int, "the first number"],
         amount: Annotated[int, "the number to subtract"],
     ) -> int:
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
         input: Annotated[int | str, "The number to subtract from"],
         amount: Annotated[int | str, "The number to subtract"],
     ) -> Annotated[int, "The result"]:
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
-        """Returns the difference of numbers provided."""
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-        """Returns the difference of numbers provided."""
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-        """Returns the difference of numbers provided."""
-=======
->>>>>>> Stashed changes
-=======
-        """Returns the difference of numbers provided."""
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-        """Returns the difference of numbers provided."""
-=======
         """
         Returns the difference of numbers provided.
 
@@ -339,92 +61,12 @@ class MathPlugin:
         :param context: Contains the context to get the numbers from
         :return: The resulting subtraction as a string
         """
->>>>>>> ms/small_fixes
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
         if isinstance(input, str):
             input = int(input)
         if isinstance(amount, str):
             amount = int(amount)
-
-<<<<<<< HEAD
     @staticmethod
     def add_or_subtract(input: int, amount: int, add: bool) -> int:
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        """Helper function to perform addition or subtraction based on the add flag."""
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-        """Helper function to perform addition or subtraction based on the add flag."""
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-        """Helper function to perform addition or subtraction based on the add flag."""
-=======
->>>>>>> Stashed changes
-=======
-        """Helper function to perform addition or subtraction based on the add flag."""
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-        """Helper function to perform addition or subtraction based on the add flag."""
-=======
         """
         Helper function to perform addition or subtraction based on the add flag.
 
@@ -433,42 +75,12 @@ class MathPlugin:
         :param add: If True, performs addition, otherwise performs subtraction
         :return: The resulting sum or subtraction as a string
         """
->>>>>>> ms/small_fixes
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
         return input + amount if add else input - amount
-=======
         return input - amount
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+        input: Annotated[int | float | str, "The number to subtract from"],
+        amount: Annotated[int | float | str, "The number to subtract"],
+    ) -> Annotated[float, "The result"]:
+        """Returns the difference of numbers provided (supports float and int)."""
+        x = self._parse_number(input)
+        y = self._parse_number(amount)
+        return x - y
