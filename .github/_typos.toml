@@ -72,8 +72,9 @@ dall = "dall"             # OpenAI model name
     "dotnet/samples/Concepts/Resources/Plugins/CopilotAgentPlugins/README.md"
     "SK-dotnet.sln.DotSettings"
 	"WomensSuffrage.txt",
-=======
     "SK-dotnet.sln.DotSettings",
+=======
+    "SK-dotnet.slnx.DotSettings",
     "**/azure_ai_search_hotel_samples/README.md",
     "**/Demos/ProcessFrameworkWithAspire/ProcessFramework.Aspire/ProcessFramework.Aspire.ProcessOrchestrator/Program.cs",
     "**/Demos/ProcessFrameworkWithAspire/**/*.http",

@@ -139,6 +139,8 @@ namespace Microsoft.SemanticKernel;
 >>>>>>> Stashed changes
 >>>>>>> head
 #pragma warning disable SKEXP0110
+[JsonDerivedType(typeof(ActionContent), typeDiscriminator: nameof(ActionContent))]
+[JsonDerivedType(typeof(ReasoningContent), typeDiscriminator: nameof(ReasoningContent))]
 [JsonDerivedType(typeof(AnnotationContent), typeDiscriminator: nameof(AnnotationContent))]
 [JsonDerivedType(typeof(FileReferenceContent), typeDiscriminator: nameof(FileReferenceContent))]
 #pragma warning disable SKEXP0110

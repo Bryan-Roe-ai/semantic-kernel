@@ -9,8 +9,6 @@ using Xunit;
 
 namespace SemanticKernel.UnitTests.Contents;
 
-#pragma warning disable SKEXP0110
-
 /// <summary>
 /// Unit testing of <see cref="AnnotationContent"/>.
 /// </summary>
