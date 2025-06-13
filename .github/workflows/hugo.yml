@@ -13,7 +13,6 @@ permissions:
 concurrency:
   group: "pages"
   cancel-in-progress: false
-  timeout-minutes: 10
 
 defaults:
   run:
