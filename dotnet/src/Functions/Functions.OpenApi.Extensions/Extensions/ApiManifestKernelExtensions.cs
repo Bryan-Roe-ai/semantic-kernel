@@ -147,7 +147,6 @@ public static class ApiManifestKernelExtensions
                 DocumentLoader.LoadDocumentFromFilePathAsStream(parsedDescriptionUrl.LocalPath,
                     logger);
 
-<<<<<<< HEAD
             // TODO: Refactor the code to the new readers available in the OpenAPI.NET V2
             ReadResult documentReadResult = await OpenApiModelFactory.LoadAsync(
                 input: openApiDocumentStream,
@@ -158,13 +157,11 @@ public static class ApiManifestKernelExtensions
                 },
                 cancellationToken).ConfigureAwait(false);
 
-=======
             var documentReadResult = await new OpenApiStreamReader(new()
             {
                 BaseUrl = parsedDescriptionUrl
             }
             ).ReadAsync(openApiDocumentStream, cancellationToken).ConfigureAwait(false);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             var openApiDocument = documentReadResult.OpenApiDocument;
             var openApiDiagnostic = documentReadResult.OpenApiDiagnostic;
 

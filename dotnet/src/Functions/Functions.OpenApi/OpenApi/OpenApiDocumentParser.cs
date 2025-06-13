@@ -204,7 +204,6 @@ public sealed class OpenApiDocumentParser(ILoggerFactory? loggerFactory = null)
                 try
                 {
                     var operation = new RestApiOperation(
-<<<<<<< HEAD
                     id: operationItem.OperationId,
                     servers: operationServers,
                     path: path,
@@ -217,7 +216,6 @@ public sealed class OpenApiDocumentParser(ILoggerFactory? loggerFactory = null)
                     responses: CreateRestApiOperationExpectedResponses(operationItem.Responses).ToDictionary(static item => item.Item1, static item => item.Item2),
                     securityRequirements: CreateRestApiOperationSecurityRequirements(operationItem.Security)
                 )
-=======
                         id: operationItem.OperationId,
                         servers: globalServers,
                         pathServers: pathServers,
@@ -230,7 +228,6 @@ public sealed class OpenApiDocumentParser(ILoggerFactory? loggerFactory = null)
                         responses: CreateRestApiOperationExpectedResponses(operationItem.Responses).ToDictionary(static item => item.Item1, static item => item.Item2),
                         securityRequirements: CreateRestApiOperationSecurityRequirements(operationItem.Security)
                     )
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     {
                         Extensions = CreateRestApiOperationExtensions(operationItem.Extensions, logger),
                         Summary = operationItem.Summary
@@ -280,17 +277,20 @@ public sealed class OpenApiDocumentParser(ILoggerFactory? loggerFactory = null)
     /// <param name="servers">Represents servers which hosts the REST API.</param>
     private static List<RestApiServer> CreateRestApiOperationServers(IList<OpenApiServer>? servers)
     {
-<<<<<<< HEAD
+        var result = new List<RestApiServer>(servers?.Count ?? 0);
         var result = new List<RestApiServer>(servers?.Count ?? 0);
 
         if (servers is null)
         {
             return result;
-=======
+        }
+
+        if (servers is null)
+        {
+            return result;
         if (servers == null || servers.Count == 0)
         {
             return new List<RestApiServer>();
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         }
 
         var result = new List<RestApiServer>(servers.Count);
