@@ -1,17 +1,19 @@
 # Frogbot Scan Pull Request Workflow
-#
-# This workflow automatically scans new pull requests for security vulnerabilities
-# using JFrog Xray via Frogbot. See: https://github.com/jfrog/frogbot#frogbot
+# This workflow scans PRs for security vulnerabilities using JFrog Xray via Frogbot.
+# Docs: https://github.com/jfrog/frogbot#frogbot
 
 name: "Frogbot Scan Pull Request"
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    branches: [main, develop] # Limit to main branches (adjust as needed)
+  schedule:
+    - cron: '0 3 * * 1' # Weekly scan on Mondays at 3 AM UTC
 
 permissions:
   contents: read
-  pull-requests: write # Minimize permissions if possible
+  pull-requests: write
 
 jobs:
   scan-pull-request:
@@ -19,42 +21,54 @@ jobs:
     environment: frogbot
 
     steps:
-      # Step 1: Checkout Pull Request Code
       - name: Checkout PR Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      # Step 2: Validate Required Secrets
       - name: Validate Required Secrets
         run: |
-          if [[ -z "${{ secrets.JF_URL }}" || -z "${{ secrets.JF_ACCESS_TOKEN }}" ]]; then
-            echo "Required secrets (JF_URL or JF_ACCESS_TOKEN) are missing!"
+          missing=()
+          [[ -z "${{ secrets.JF_URL }}" ]] && missing+=("JF_URL")
+          [[ -z "${{ secrets.JF_ACCESS_TOKEN }}" ]] && missing+=("JF_ACCESS_TOKEN")
+          if [ ${#missing[@]} -ne 0 ]; then
+            echo "Missing required secrets: ${missing[*]}"
             exit 1
           fi
 
-      # Step 3: Cache Dependencies
-      - name: Cache Dependencies
-        uses: actions/cache@v3
+      - name: Cache JFrog Directory
+        uses: actions/cache@v4
         with:
           path: ~/.jfrog
           key: ${{ runner.os }}-frogbot-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-frogbot-
+            ${{ runner.os }}-
 
-      # Step 4: Run Frogbot Security Scan
+      # Uncomment and customize the next step if your project requires dependency installation
+      # - name: Install Dependencies
+      #   run: npm ci
+
       - name: Frogbot Security Scan
         uses: jfrog/frogbot@v2.10.0
         env:
           JF_URL: ${{ secrets.JF_URL }}
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-          # Uncomment and configure if required:
-          # JF_INSTALL_DEPS_CMD: "npm install"
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Uncomment if your project requires dependency installation
+          # JF_INSTALL_DEPS_CMD: "npm ci"
           # JF_DEPS_REPO: ""
           # JF_RELEASES_REPO: ""
-          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 5: Handle Errors
-      - name: Handle Errors
+      - name: Handle Frogbot Failures
         if: failure()
-        run: echo "Workflow failed. Please check the logs for details."
+        run: |
+          echo "Frogbot scan failed. Please check the logs above for details."
+          # Optionally, send a notification to Slack/Teams/email here.
+
+      # Optional: Add a step to upload scan reports or artifacts if needed
+      # - name: Upload Scan Report
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: frogbot-report
+      #     path: path/to/report
