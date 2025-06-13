@@ -37,6 +37,7 @@
     <EmbeddedResource Include="Resources\weather.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\weather.json" />
   </ItemGroup>
 
   <ItemGroup>
