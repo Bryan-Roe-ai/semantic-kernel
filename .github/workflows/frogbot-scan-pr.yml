@@ -1,12 +1,17 @@
+# Frogbot Scan Pull Request Workflow
+#
+# This workflow automatically scans new pull requests for security vulnerabilities
+# using JFrog Xray via Frogbot. See: https://github.com/jfrog/frogbot#frogbot
+
 name: "Frogbot Scan Pull Request"
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
 
 permissions:
-  pull-requests: write
   contents: read
+  pull-requests: write # Minimize permissions if possible
 
 jobs:
   scan-pull-request:
@@ -14,8 +19,8 @@ jobs:
     environment: frogbot
 
     steps:
-      # Step 1: Checkout the pull request code
-      - name: Checkout Pull Request Code
+      # Step 1: Checkout Pull Request Code
+      - name: Checkout PR Code
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
@@ -37,8 +42,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-frogbot-
 
-      # Step 4: Run Frogbot
-      - name: Run Frogbot Security Scan
+      # Step 4: Run Frogbot Security Scan
+      - name: Frogbot Security Scan
         uses: jfrog/frogbot@v2.10.0
         env:
           JF_URL: ${{ secrets.JF_URL }}
