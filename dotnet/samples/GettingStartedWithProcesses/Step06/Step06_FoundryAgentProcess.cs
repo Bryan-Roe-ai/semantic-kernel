@@ -10,6 +10,7 @@ using Microsoft.SemanticKernel.Agents.OpenAI;
 using OpenAI;
 
 namespace Step06;
+
 public class Step06_FoundryAgentProcess : BaseTest
 {
     public Step06_FoundryAgentProcess(ITestOutputHelper output) : base(output, redirectSystemConsoleOutput: true)

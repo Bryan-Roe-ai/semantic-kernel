@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 #pragma warning disable IDE0005 // Using directive is unnecessary.
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -59,6 +60,32 @@ public sealed class ProcessTests : IClassFixture<ProcessTestFixture>
 
         // Assert
         this.AssertStepStateLastMessage(processInfo, nameof(RepeatStep), expectedLastMessage: string.Join(" ", Enumerable.Repeat(testInput, 2)));
+    }
+
+    /// <summary>
+    /// Tests a simple process with a WhenAll event listener
+    /// </summary>
+    /// <returns></returns>
+    [Fact]
+    public async Task ProcessWithWhenAllListenerAsync()
+    {
+        // Arrange
+        OpenAIConfiguration configuration = this._configuration.GetSection("OpenAI").Get<OpenAIConfiguration>()!;
+        this._kernelBuilder.AddOpenAIChatCompletion(
+            modelId: configuration.ModelId!,
+            apiKey: configuration.ApiKey);
+
+        Kernel kernel = this._kernelBuilder.Build();
+        var process = this.GetProcess().Build();
+
+        // Act
+        string testInput = "Test";
+        //var processHandle = await this._fixture.StartAsync("cStep", Guid.NewGuid().ToString(), new() { Id = ProcessTestsEvents.StartProcess, Data = testInput });
+        var processHandle = await this._fixture.StartProcessAsync(process, kernel, new() { Id = ProcessTestsEvents.StartProcess, Data = testInput });
+        var processInfo = await processHandle.GetStateAsync();
+
+        // Assert
+        this.AssertStepState(processInfo, "cStep", (KernelProcessStepState<CStepState> state) => state.State?.CurrentCycle == 3);
     }
 
     /// <summary>
@@ -327,6 +354,66 @@ public sealed class ProcessTests : IClassFixture<ProcessTestFixture>
 
     #region Predefined ProcessBuilders for testing
 
+    private ProcessBuilder GetProcess()
+    {
+        // Create the process builder.
+        ProcessBuilder processBuilder = new("ProcessWithDapr");
+
+        // Add some steps to the process.
+        var kickoffStep = processBuilder.AddStepFromType<KickoffStep>(id: "kickoffStep");
+        var myAStep = processBuilder.AddStepFromType<AStep>(id: "aStep");
+        var myBStep = processBuilder.AddStepFromType<BStep>(id: "bStep");
+
+        // ########## Configuring initial state on steps in a process ###########
+        // For demonstration purposes, we add the CStep and configure its initial state with a CurrentCycle of 1.
+        // Initializing state in a step can be useful for when you need a step to start out with a predetermines
+        // configuration that is not easily accomplished with dependency injection.
+        var myCStep = processBuilder.AddStepFromType<CStep, CStepState>(initialState: new() { CurrentCycle = 1 }, id: "cStep");
+
+        // Setup the input event that can trigger the process to run and specify which step and function it should be routed to.
+        processBuilder
+            .OnInputEvent(CommonEvents.StartProcess)
+            .SendEventTo(new ProcessFunctionTargetBuilder(kickoffStep));
+
+        // When the kickoff step is finished, trigger both AStep and BStep.
+        kickoffStep
+            .OnEvent(CommonEvents.StartARequested)
+            .SendEventTo(new ProcessFunctionTargetBuilder(myAStep))
+            .SendEventTo(new ProcessFunctionTargetBuilder(myBStep));
+
+        // When step A and step B have finished, trigger the CStep.
+        processBuilder
+            .ListenFor()
+                .AllOf(new()
+                {
+                    new(messageType: CommonEvents.AStepDone, source: myAStep),
+                    new(messageType: CommonEvents.BStepDone, source: myBStep)
+                })
+                .SendEventTo(new ProcessStepTargetBuilder(myCStep, inputMapping: (inputEvents) =>
+                {
+                    // Map the input events to the CStep's input parameters.
+                    // In this case, we are mapping the output of AStep to the first input parameter of CStep
+                    // and the output of BStep to the second input parameter of CStep.
+                    return new()
+                    {
+                        { "astepdata", inputEvents[$"aStep.{CommonEvents.AStepDone}"] },
+                        { "bstepdata", inputEvents[$"bStep.{CommonEvents.BStepDone}"] }
+                    };
+                }));
+
+        // When CStep has finished without requesting an exit, activate the Kickoff step to start again.
+        myCStep
+            .OnEvent(CommonEvents.CStepDone)
+            .SendEventTo(new ProcessFunctionTargetBuilder(kickoffStep));
+
+        // When the CStep has finished by requesting an exit, stop the process.
+        myCStep
+            .OnEvent(CommonEvents.ExitRequested)
+            .StopProcess();
+
+        return processBuilder;
+    }
+
     /// <summary>
     /// Sample long sequential process, each step has a delay.<br/>
     /// Input Event: <see cref="EmitterStep.InputEvent"/><br/>
@@ -474,9 +561,7 @@ public sealed class ProcessTests : IClassFixture<ProcessTestFixture>
             Assert.Equal(expectedInvocationCount.Value, outputStepResult.State.InvocationCount);
         }
     }
-
-#if !NET
-    private void AssertStepState<T>(KernelProcess processInfo, string stepName, Predicate<KernelProcessStepState<T>> predicate) where T : class, new()
+    private void AssertStepState<T>(KernelProcess processInfo, string stepName, Func<KernelProcessStepState<T>, bool> predicate) where T : class, new()
     {
         KernelProcessStepInfo? stepInfo = processInfo.Steps.FirstOrDefault(s => s.State.Name == stepName);
         Assert.NotNull(stepInfo);
@@ -484,6 +569,5 @@ public sealed class ProcessTests : IClassFixture<ProcessTestFixture>
         Assert.NotNull(outputStepResult?.State);
         Assert.True(predicate(outputStepResult));
     }
-#endif
     #endregion
 }

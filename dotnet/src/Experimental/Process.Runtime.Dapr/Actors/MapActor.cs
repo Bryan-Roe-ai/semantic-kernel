@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-<<<<<<< HEAD
 using System.Threading.Tasks;
 using Dapr.Actors.Runtime;
 using Microsoft.Extensions.Logging;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel.Process.Internal;
 using Microsoft.SemanticKernel.Process.Runtime;
 using Microsoft.SemanticKernel.Process.Serialization;
-=======
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,7 +21,6 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.SemanticKernel.Process.Internal;
 using Microsoft.SemanticKernel.Process.Runtime;
 using Microsoft.SemanticKernel.Process.Serialization;
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 namespace Microsoft.SemanticKernel;
 
@@ -33,7 +30,6 @@ internal sealed class MapActor : StepActor, IMap
 
     private bool _isInitialized;
     private HashSet<string> _mapEvents = [];
-<<<<<<< HEAD
     private ILogger? _logger;
     private KernelProcessMap? _map;
 
@@ -49,9 +45,7 @@ internal sealed class MapActor : StepActor, IMap
     /// <param name="loggerFactory">Optional. A <see cref="ILoggerFactory"/>.</param>
     public MapActor(ActorHost host, Kernel kernel, ILoggerFactory? loggerFactory)
         : base(host, kernel, loggerFactory)
-=======
     private HashSet<string> _mapEvents = [];
-<<<<<<< HEAD
     private ILogger? _logger;
     private KernelProcessMap? _map;
 
@@ -67,7 +61,6 @@ internal sealed class MapActor : StepActor, IMap
     /// <param name="loggerFactory">Optional. A <see cref="ILoggerFactory"/>.</param>
     public MapActor(ActorHost host, Kernel kernel, ILoggerFactory? loggerFactory)
         : base(host, kernel, loggerFactory)
-=======
     private HashSet<string> _mapEvents = [];
     private ILogger? _logger;
     private KernelProcessMap? _map;
@@ -81,7 +74,9 @@ internal sealed class MapActor : StepActor, IMap
     /// <param name="kernel">An instance of <see cref="Kernel"/></param>
     public MapActor(ActorHost host, Kernel kernel)
         : base(host, kernel)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+    /// <param name="registeredProcesses"></param>
+    public MapActor(ActorHost host, Kernel kernel, IReadOnlyDictionary<string, KernelProcess> registeredProcesses)
+        : base(host, kernel, registeredProcesses)
     {
     }
 
@@ -89,12 +84,9 @@ internal sealed class MapActor : StepActor, IMap
 
     public async Task InitializeMapAsync(DaprMapInfo mapInfo, string? parentProcessId)
     {
-<<<<<<< HEAD
         Verify.NotNull(mapInfo);
         Verify.NotNull(mapInfo.MapStep);
 
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         // Only initialize once. This check is required as the actor can be re-activated from persisted state and
         // this should not result in multiple initializations.
         if (this._isInitialized)
@@ -103,43 +95,34 @@ internal sealed class MapActor : StepActor, IMap
         }
 
         this.InitializeMapActor(mapInfo, parentProcessId);
-<<<<<<< HEAD
         await this.InitializeMapActorAsync(mapInfo, parentProcessId).ConfigureAwait(false);
-=======
         this.InitializeMapActor(mapInfo, parentProcessId);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         this._isInitialized = true;
 
         // Save the state
         await this.StateManager.AddStateAsync(DaprProcessMapStateName, mapInfo).ConfigureAwait(false);
         await this.StateManager.AddStateAsync(ActorStateKeys.StepParentProcessId, parentProcessId).ConfigureAwait(false);
-<<<<<<< HEAD
         //await this.StateManager.AddStateAsync("parentProcessId", parentProcessId).ConfigureAwait(false);
         //await this.StateManager.AddStateAsync("kernelStepActivated", true).ConfigureAwait(false);
         await this.StateManager.SaveStateAsync().ConfigureAwait(false);
     }
 
-=======
         await this.StateManager.AddStateAsync(ActorStateKeys.StepParentProcessId, parentProcessId).ConfigureAwait(false);
         await this.StateManager.SaveStateAsync().ConfigureAwait(false);
     }
 
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// <summary>
     /// When the process is used as a step within another process, this method will be called
     /// rather than ToKernelProcessAsync when extracting the state.
     /// </summary>
     /// <returns>A <see cref="Task{T}"/> where T is <see cref="KernelProcess"/></returns>
     public override Task<DaprStepInfo> ToDaprStepInfoAsync() => Task.FromResult<DaprStepInfo>(this._mapInfo!);
-<<<<<<< HEAD
     public override async Task<DaprStepInfo> ToDaprStepInfoAsync()
     {
         return await this.ToDaprMapInfoAsync().ConfigureAwait(false);
     }
-=======
     public override Task<DaprStepInfo> ToDaprStepInfoAsync() => Task.FromResult<DaprStepInfo>(this._mapInfo!);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     protected override async Task OnActivateAsync()
     {
@@ -148,13 +131,10 @@ internal sealed class MapActor : StepActor, IMap
         {
             this.ParentProcessId = await this.StateManager.GetStateAsync<string>(ActorStateKeys.StepParentProcessId).ConfigureAwait(false);
             this.InitializeMapActor(existingMapInfo.Value, this.ParentProcessId);
-<<<<<<< HEAD
             this.ParentProcessId = await this.StateManager.GetStateAsync<string>("parentProcessId").ConfigureAwait(false);
             await this.InitializeMapActorAsync(existingMapInfo.Value, this.ParentProcessId).ConfigureAwait(false);
-=======
             this.ParentProcessId = await this.StateManager.GetStateAsync<string>(ActorStateKeys.StepParentProcessId).ConfigureAwait(false);
             this.InitializeMapActor(existingMapInfo.Value, this.ParentProcessId);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         }
     }
 
@@ -162,11 +142,8 @@ internal sealed class MapActor : StepActor, IMap
     /// The name of the step.
     /// </summary>
     protected override string Name => this._mapInfo?.State.Name ?? throw new KernelException("The Map must be initialized before accessing the Name property.");
-<<<<<<< HEAD
     protected override string Name => this._map?.State.Name ?? throw new KernelException("The Map must be initialized before accessing the Name property.");
-=======
     protected override string Name => this._mapInfo?.State.Name ?? throw new KernelException("The Map must be initialized before accessing the Name property.");
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     #endregion
 
@@ -184,14 +161,18 @@ internal sealed class MapActor : StepActor, IMap
         {
             KernelProcess mapProcess = mapOperation with { State = mapOperation.State with { Id = $"{this.Name}-{mapOperations.Count}-{Guid.NewGuid():N}" } };
             DaprKernelProcessContext processContext = new(mapProcess);
-            Task processTask =
-                processContext.StartWithEventAsync(
-                    new KernelProcessEvent
-                    {
-                        Id = startEventId,
-                        Data = value
-                    },
-                    eventProxyStepId: this.Id);
+
+            Task processTask = Task.CompletedTask;
+
+            // TODO: This needs to be updated to not dynamically create a process. Map will be broken until then.
+            //Task processTask =
+            //    processContext.StartWithEventAsync(
+            //        new KernelProcessEvent
+            //        {
+            //            Id = startEventId,
+            //            Data = value
+            //        },
+            //        eventProxyStepId: this.Id);
 
             mapOperations.Add(processTask);
         }
@@ -256,7 +237,6 @@ internal sealed class MapActor : StepActor, IMap
     }
 
     private void InitializeMapActor(DaprMapInfo mapInfo, string? parentProcessId)
-<<<<<<< HEAD
         await Task.Delay(0).ConfigureAwait(false); // %%% TODO
     }
 
@@ -279,7 +259,6 @@ internal sealed class MapActor : StepActor, IMap
     }
 
     private sealed record TypedResult(Type ResultType, Array Results);
-=======
         // Initialize the current operation
         (IEnumerable inputValues, KernelProcess mapOperation, string startEventId) = this._map!.Initialize(message, this._logger);
 
@@ -362,7 +341,7 @@ internal sealed class MapActor : StepActor, IMap
         this.ParentProcessId = parentProcessId;
         this._logger = this._kernel.LoggerFactory?.CreateLogger(this._mapInfo.State.Name) ?? new NullLogger<MapActor>();
         this._outputEdges = this._mapInfo.Edges.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToList());
-        this._eventNamespace = $"{this._mapInfo.State.Name}_{this._mapInfo.State.Id}";
+        this._eventNamespace = this._mapInfo.State.Id;
 
         // Capture the events that the map is interested in as hashtable for performant lookup
         this._mapEvents = [.. this._mapInfo.Edges.Keys.Select(key => key.Split(ProcessConstants.EventIdSeparator).Last())];
@@ -371,5 +350,4 @@ internal sealed class MapActor : StepActor, IMap
     }
 
     private sealed record TypedResult(Type ResultType, Array Results);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 }

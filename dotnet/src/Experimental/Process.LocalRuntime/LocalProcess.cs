@@ -9,10 +9,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-<<<<<<< HEAD
-=======
 using Microsoft.SemanticKernel.Agents;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel.Process;
 using Microsoft.SemanticKernel.Process.Internal;
 using Microsoft.SemanticKernel.Process.Runtime;
@@ -219,6 +216,12 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
         // Initialize the input and output edges for the process
         this._outputEdges = this._process.Edges.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToList());
 
+        // Initialize Storage Manager
+        if (this.StorageManager != null)
+        {
+            await this.StorageManager.InitializeAsync().ConfigureAwait(false);
+        }
+
         // TODO: Pull user state from persisted state on resume.
         this._processStateManager = new ProcessStateManager(this._process.UserStateType, null);
 
@@ -275,12 +278,10 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
                         ParentProcessId = this.Id,
                         RootProcessId = this.RootProcessId,
                         EventProxy = this.EventProxy,
-<<<<<<< HEAD
                         LoggerFactory = this.LoggerFactory,
                         EventFilter = this.EventFilter,
-=======
                         ExternalMessageChannel = this.ExternalMessageChannel,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+                        StorageManager = this.StorageManager,
                     };
             }
             else if (step is KernelProcessMap mapStep)
@@ -320,13 +321,12 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
                     new LocalStep(step, this._kernel)
                     {
                         ParentProcessId = this.Id,
-<<<<<<< HEAD
                         EventProxy = this.EventProxy,
                         LoggerFactory = this.LoggerFactory,
                         EventFilter = this.EventFilter,
-=======
                         EventProxy = this.EventProxy
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+                        EventProxy = this.EventProxy,
+                        StorageManager = this.StorageManager,
                     };
             }
 
@@ -353,7 +353,7 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
 
         try
         {
-            // 
+            //
             await this.EnqueueOnEnterMessagesAsync(messageChannel).ConfigureAwait(false);
 
             // Run the Pregel algorithm until there are no more messages being sent.
@@ -529,11 +529,8 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
             {
                 foreach (var edge in edges)
                 {
-<<<<<<< HEAD
                     LocalMessage message = LocalMessageFactory.CreateFromEdge(edge, externalEvent.Data);
-=======
                     ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, externalEvent.Id, externalEvent.Data);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     messageChannel.Enqueue(message);
                 }
             }
@@ -546,11 +543,8 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
     /// </summary>
     /// <param name="step">The step containing outgoing events to process.</param>
     /// <param name="messageChannel">The message channel where messages should be enqueued.</param>
-<<<<<<< HEAD
     private void EnqueueStepMessages(LocalStep step, Queue<LocalMessage> messageChannel)
-=======
     private async Task EnqueueStepMessagesAsync(LocalStep step, Queue<ProcessMessage> messageChannel)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         var allStepEvents = step.GetAllEvents();
         foreach (ProcessEvent stepEvent in allStepEvents)
@@ -561,7 +555,6 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
                 base.EmitEvent(stepEvent);
             }
 
-<<<<<<< HEAD
             // Get the edges for the event and queue up the messages to be sent to the next steps.
             bool foundEdge = false;
             foreach (KernelProcessEdge edge in step.GetEdgeForEvent(stepEvent.QualifiedId))
@@ -570,9 +563,17 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
                 messageChannel.Enqueue(message);
                 foundEdge = true;
             }
-=======
             await this.EnqueueEdgesAsync(step.GetEdgeForEvent(stepEvent.QualifiedId), messageChannel, stepEvent).ConfigureAwait(false);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+                bool isConditionMet = await edge.Condition.Callback(stepEvent.ToKernelProcessEvent(), this._processStateManager?.GetState()).ConfigureAwait(false);
+                if (!isConditionMet)
+                {
+                    continue;
+                }
+
+                ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, stepEvent.SourceId, stepEvent.Data, stepEvent.WrittenToThread);
+                messageChannel.Enqueue(message);
+                foundEdge = true;
+            }
 
             //// Get the edges for the event and queue up the messages to be sent to the next steps.
             //bool foundEdge = false;
@@ -675,15 +676,17 @@ internal sealed class LocalProcess : LocalStep, System.IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        if (this.StorageManager != null)
+        {
+            await this.StorageManager.CloseAsync().ConfigureAwait(false);
+        }
+
         this._externalEventChannel.Writer.Complete();
         this._joinableTaskContext.Dispose();
-<<<<<<< HEAD
-=======
         foreach (var step in this._steps)
         {
             await step.DeinitializeStepAsync().ConfigureAwait(false);
         }
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         this._processCancelSource?.Dispose();
     }
 }
