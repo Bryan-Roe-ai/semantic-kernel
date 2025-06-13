@@ -35,7 +35,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.jfrog
-          key: ${{ runner.os }}-jfrog-cache-${{ github.sha }}
+          key: ${{ runner.os }}-jfrog-cache
           restore-keys: |
             ${{ runner.os }}-jfrog-cache
 
