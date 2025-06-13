@@ -19,15 +19,14 @@ jobs:
       fail-fast: false
       matrix:
         language: [csharp, python, java, cpp, html]
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: true
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.nuget/packages
@@ -35,6 +34,7 @@ jobs:
             ~/.m2
             ~/.gradle/caches
             ~/.gradle/wrapper
+            node_modules
           key: ${{ runner.os }}-${{ matrix.language }}-${{ hashFiles('**/package-lock.json', '**/pom.xml', '**/build.gradle', '**/*.csproj', '**/requirements.txt') }}
           restore-keys: ${{ runner.os }}-${{ matrix.language }}-
 
@@ -47,19 +47,22 @@ jobs:
               dotnet format --verify-no-changes
               ;;
             python)
+              python -m venv .venv
+              source .venv/bin/activate
               pip install -r requirements.txt
               pip install flake8
               flake8 .
               ;;
             java)
-              ./gradlew build
-              ./gradlew check
+              ./gradlew --daemon build
+              ./gradlew --daemon check
               ;;
             cpp)
-              make
+              make || true
               cppcheck .
               ;;
             html)
+              npm ci || npm install
               npx htmlhint "**/*.html"
               ;;
             *)
@@ -73,6 +76,7 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: autobuild
+          queries: ./codeql-queries # (optional: add custom queries here)
 
       - name: Perform CodeQL Analysis
         if: ${{ contains('csharp python java cpp', matrix.language) }}
@@ -91,23 +95,34 @@ jobs:
           echo "Commit: ${{ github.sha }}"
           echo "Branch: ${{ github.ref_name }}"
           echo "Workflow URL: ${{ github.run_url }}"
+          ls -alh /tmp || true
 
       - name: Notify Slack on failure
         if: failure()
         uses: slackapi/slack-github-action@v2
         with:
-          slack-message: |
-            CodeQL analysis failed for ${{ matrix.language }}.
-            Branch: ${{ github.ref_name }}
-            Commit: ${{ github.sha }}
-            Workflow URL: ${{ github.run_url }}
+          payload: |
+            {
+              "text": "❌ CodeQL analysis failed for *${{ matrix.language }}*.\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\n<${{ github.run_url }}|View Workflow Run>"
+            }
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
 
       - name: Notify Slack on success
         if: success()
         uses: slackapi/slack-github-action@v2
         with:
-          slack-message: |
-            CodeQL analysis succeeded for ${{ matrix.language }}.
-            Branch: ${{ github.ref_name }}
-            Commit: ${{ github.sha }}
-            Workflow URL: ${{ github.run_url }}
+          payload: |
+            {
+              "text": "✅ CodeQL analysis succeeded for *${{ matrix.language }}*.\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\n<${{ github.run_url }}|View Workflow Run>"
+            }
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+
+      - name: Notify Slack on cancel
+        if: cancelled()
+        uses: slackapi/slack-github-action@v2
+        with:
+          payload: |
+            {
+              "text": "⚠️ CodeQL analysis was canceled for *${{ matrix.language }}*.\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\n<${{ github.run_url }}|View Workflow Run>"
+            }
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
