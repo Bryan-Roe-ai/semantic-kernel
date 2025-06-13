@@ -115,7 +115,7 @@ internal static class AgentThreadActions
 
                 assistantName ??= message.AssistantId;
 
-                ChatMessageContent content = GenerateMessageContent(assistantName, message);
+                ChatMessageContent content = message.ToChatMessageContent(assistantName);
 
                 if (content.Items.Count > 0)
                 {
@@ -280,7 +280,7 @@ internal static class AgentThreadActions
 
                     if (message is not null)
                     {
-                        ChatMessageContent content = GenerateMessageContent(agent.GetName(), message, completedStep);
+                        ChatMessageContent content = message.ToChatMessageContent(agent.GetName(), completedStep);
 
                         if (content.Items.Count > 0)
                         {
@@ -532,6 +532,7 @@ internal static class AgentThreadActions
                         if (message != null)
                         {
                             ChatMessageContent content = GenerateMessageContent(agent.GetName(), message, step, logger);
+                            ChatMessageContent content = message.ToChatMessageContent(agent.GetName(), step);
                             messages?.Add(content);
                         }
                     }
@@ -689,6 +690,85 @@ internal static class AgentThreadActions
             new(annotation.Text)
             {
                 Quote = annotation.Text,
+    private static StreamingChatMessageContent GenerateStreamingMessageContent(string? assistantName, MessageContentUpdate update)
+    {
+        StreamingChatMessageContent content =
+            new(AuthorRole.Assistant, content: null)
+            {
+                AuthorName = assistantName,
+            };
+
+        // Process text content
+        if (!string.IsNullOrEmpty(update.Text))
+        {
+            content.Items.Add(new StreamingTextContent(update.Text));
+        }
+        // Process image content
+        else if (update.ImageFileId != null)
+        {
+            content.Items.Add(new StreamingFileReferenceContent(update.ImageFileId));
+        }
+        // Process annotations
+        else if (update.TextAnnotation != null)
+        {
+            content.Items.Add(GenerateStreamingAnnotationContent(update.TextAnnotation));
+        }
+
+        if (update.Role.HasValue && update.Role.Value != MessageRole.User)
+        {
+            content.Role = new(update.Role.Value.ToString() ?? MessageRole.Agent.ToString());
+        }
+
+        return content;
+    }
+
+    private static StreamingChatMessageContent? GenerateStreamingCodeInterpreterContent(string? assistantName, RunStepDetailsUpdate update)
+    {
+        StreamingChatMessageContent content =
+            new(AuthorRole.Assistant, content: null)
+            {
+                AuthorName = assistantName,
+            };
+
+        // Process text content
+        if (update.CodeInterpreterInput != null)
+        {
+            content.Items.Add(new StreamingTextContent(update.CodeInterpreterInput));
+            content.Metadata = new Dictionary<string, object?> { { AzureAIAgent.CodeInterpreterMetadataKey, true } };
+        }
+
+        if ((update.CodeInterpreterOutputs?.Count ?? 0) > 0)
+        {
+            foreach (RunStepDeltaCodeInterpreterOutput output in update.CodeInterpreterOutputs!)
+            {
+                if (output is RunStepDeltaCodeInterpreterImageOutput imageOutput)
+                {
+                    content.Items.Add(new StreamingFileReferenceContent(imageOutput.Image.FileId));
+                }
+            }
+        }
+
+        return content.Items.Count > 0 ? content : null;
+    }
+
+    private static StreamingAnnotationContent GenerateStreamingAnnotationContent(TextAnnotationUpdate annotation)
+    {
+        string? fileId = null;
+
+        if (!string.IsNullOrEmpty(annotation.OutputFileId))
+        {
+            fileId = annotation.OutputFileId;
+        }
+        else if (!string.IsNullOrEmpty(annotation.InputFileId))
+        {
+            fileId = annotation.InputFileId;
+        }
+
+        return
+            new(annotation.TextToReplace)
+            {
+                StartIndex = annotation.StartIndex ?? 0,
+                EndIndex = annotation.EndIndex ?? 0,
                 FileId = fileId,
             };
     }
@@ -716,6 +796,7 @@ internal static class AgentThreadActions
     //}
 
     private static ChatMessageContent GenerateCodeInterpreterContent(string agentName, string pythonCode, AzureAIP.RunStep completedStep)
+    private static ChatMessageContent GenerateCodeInterpreterContent(string agentName, string pythonCode, RunStep completedStep)
     {
         Dictionary<string, object?> metadata = GenerateToolCallMetadata(completedStep);
         metadata[AzureAIAgent.CodeInterpreterMetadataKey] = true;

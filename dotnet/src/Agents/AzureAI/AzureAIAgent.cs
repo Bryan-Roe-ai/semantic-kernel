@@ -128,6 +128,7 @@ public sealed class AzureAIAgent : KernelAgent
 
     /// <summary>
     /// The associated client.
+    /// The Agent SDK client.
     /// </summary>
     public PersistentAgentsClient Client { get; }
 
