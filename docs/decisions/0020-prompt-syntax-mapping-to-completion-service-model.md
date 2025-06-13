@@ -9,7 +9,6 @@ status: accepted
 # Mapping of prompt syntax to completion service model
 
 ## Context and Problem Statement
-
 For example, [the chat completion syntax](https://github.com/microsoft/semantic-kernel/blob/main/docs/decisions/0014-chat-completion-roles-in-prompt.md) in chat completion prompts:
 
 should be mapped to an instance of the [ChatHistory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/ChatCompletion/ChatHistory.cs) class with two chat messages:
