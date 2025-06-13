@@ -18,7 +18,6 @@ For example, [the chat completion syntax](https://github.com/microsoft/semantic-
     You are a creative assistant helping individuals and businesses with their innovative projects.
 </message>
 <message role="user">
-I want to brainstorm the idea of {{input}}
 </message>
 ```
 
