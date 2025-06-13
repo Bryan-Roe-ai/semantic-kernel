@@ -14,7 +14,7 @@ from semantic_kernel.connectors.memory.qdrant.const import (
     TYPE_MAPPER_VECTOR,
 )
 from semantic_kernel.connectors.memory.qdrant.utils import AsyncQdrantClientWrapper
-<<<<<<< HEAD
+
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
@@ -23,8 +23,7 @@ from semantic_kernel.data.vector_store_record_collection import (
 )
 from semantic_kernel.data.vector_store_record_fields import VectorStoreRecordVectorField
 from semantic_kernel.data.kernel_search_results import KernelSearchResults
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.data.record_definition import VectorStoreRecordDefinition, VectorStoreRecordVectorField
 from semantic_kernel.data.text_search import KernelSearchResults
 from semantic_kernel.data.vector_search import (
@@ -45,16 +44,15 @@ from semantic_kernel.exceptions.memory_connector_exceptions import (
 from semantic_kernel.exceptions.memory_connector_exceptions import MemoryConnectorException
 from semantic_kernel.exceptions.search_exceptions import VectorSearchExecutionException
 from semantic_kernel.kernel_types import OneOrMany
-<<<<<<< HEAD
+
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.telemetry.user_agent import (
     APP_INFO,
     prepend_semantic_kernel_to_user_agent,
 )
-=======
+
 from semantic_kernel.utils.feature_stage_decorator import experimental
 from semantic_kernel.utils.telemetry.user_agent import APP_INFO, prepend_semantic_kernel_to_user_agent
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover

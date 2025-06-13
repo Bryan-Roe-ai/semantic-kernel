@@ -20,14 +20,11 @@ from semantic_kernel.exceptions import (
 )
 from semantic_kernel.memory.memory_record import MemoryRecord
 from semantic_kernel.memory.memory_store_base import MemoryStoreBase
-<<<<<<< HEAD
 from semantic_kernel.utils.experimental_decorator import (
     experimental_class,
     experimental_function,
 )
-=======
 from semantic_kernel.utils.feature_stage_decorator import experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 logger: logging.Logger = logging.getLogger(__name__)
 

@@ -17,7 +17,6 @@ from semantic_kernel.data.record_definition import VectorStoreRecordDefinition
 from semantic_kernel.data.vector_storage import VectorStore
 from semantic_kernel.exceptions import MemoryConnectorInitializationError
 from semantic_kernel.exceptions import VectorStoreInitializationException
-<<<<<<< HEAD
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.telemetry.user_agent import (
     APP_INFO,
@@ -29,7 +28,6 @@ if TYPE_CHECKING:
         VectorStoreRecordCollection,
     )
     from semantic_kernel.data import VectorStoreRecordCollection
-=======
 from semantic_kernel.utils.feature_stage_decorator import experimental
 from semantic_kernel.utils.telemetry.user_agent import APP_INFO, prepend_semantic_kernel_to_user_agent
 
@@ -40,7 +38,6 @@ if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
 else:
     from typing_extensions import override  # pragma: no cover
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -151,13 +148,10 @@ class QdrantStore(VectorStore):
             **kwargs: Additional keyword arguments, passed to the collection constructor.
         """
         if collection_name not in self.vector_record_collections:
-<<<<<<< HEAD
             self.vector_record_collections[collection_name] = QdrantCollection[
                 data_model_type
             ](
-=======
             self.vector_record_collections[collection_name] = QdrantCollection(
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                 data_model_type=data_model_type,
                 data_model_definition=data_model_definition,
                 collection_name=collection_name,

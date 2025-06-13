@@ -26,35 +26,26 @@ from semantic_kernel.connectors.memory.azure_ai_search.const import (
     TYPE_MAPPER_DATA,
     TYPE_MAPPER_VECTOR,
 )
-<<<<<<< HEAD
-<<<<<<< HEAD
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
 from semantic_kernel.data.vector_store_record_fields import (
-=======
 from semantic_kernel.data.record_definition.vector_store_model_definition import VectorStoreRecordDefinition
 from semantic_kernel.data.record_definition.vector_store_record_fields import (
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-=======
 from semantic_kernel.data.record_definition import (
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     VectorStoreRecordDataField,
     VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
     VectorStoreRecordVectorField,
 )
 from semantic_kernel.exceptions import ServiceInitializationError
-<<<<<<< HEAD
 from semantic_kernel.utils.experimental_decorator import experimental_function
 from semantic_kernel.utils.telemetry.user_agent import (
     APP_INFO,
     prepend_semantic_kernel_to_user_agent,
 )
-=======
 from semantic_kernel.utils.feature_stage_decorator import experimental
 from semantic_kernel.utils.telemetry.user_agent import APP_INFO, prepend_semantic_kernel_to_user_agent
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 if TYPE_CHECKING:
     from azure.core.credentials_async import AsyncTokenCredential
@@ -202,13 +193,10 @@ def data_model_definition_to_azure_ai_search_index(
                 algo_class(
                     name=algo_name,
                     parameters=algo_params(
-<<<<<<< HEAD
                         metric=DISTANCE_FUNCTION_MAP[
                             field.distance_function or "default"
                         ],
-=======
                         metric=distance_metric,
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
                     ),
                 )
             )

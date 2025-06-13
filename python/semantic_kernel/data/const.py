@@ -3,78 +3,11 @@
 import operator
 from collections.abc import Callable
 from enum import Enum
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
 from typing import Final
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-from typing import Final
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-from typing import Final
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-from typing import Final
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
-from typing import Final
-
-<<<<<<< HEAD
 DEFAULT_FUNCTION_NAME: Final[str] = "search"
 DEFAULT_DESCRIPTION: Final[str] = (
     "Perform a search for content related to the specified query and return string results"
 )
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 class IndexKind(str, Enum):
     """Index kinds for similarity search.
@@ -157,43 +90,6 @@ class DistanceFunction(str, Enum):
     EUCLIDEAN_DISTANCE = "euclidean_distance"
     EUCLIDEAN_SQUARED_DISTANCE = "euclidean_squared_distance"
     MANHATTAN = "manhattan"
-<<<<<<< main
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
 
 
 class VectorSearchQueryTypes(str, Enum):
@@ -219,46 +115,7 @@ DEFAULT_DESCRIPTION: Final[str] = (
     "Perform a search for content related to the specified query and return string results"
 )
 DEFAULT_COUNT: Final[int] = 5
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
     HAMMING = "hamming"
-<<<<<<< HEAD
->>>>>>> upstream/main
-=======
-
 
 DISTANCE_FUNCTION_DIRECTION_HELPER: Final[dict[DistanceFunction, Callable[[int | float, int | float], bool]]] = {
     DistanceFunction.COSINE_SIMILARITY: operator.gt,
@@ -287,4 +144,3 @@ class TextSearchFunctions(str, Enum):
     SEARCH = "search"
     GET_TEXT_SEARCH_RESULT = "get_text_search_result"
     GET_SEARCH_RESULT = "get_search_result"
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

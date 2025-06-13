@@ -13,7 +13,6 @@ from redis.commands.search.field import Field as RedisField
 from redis.commands.search.field import NumericField, TagField, TextField, VectorField
 from redisvl.query.filter import FilterExpression, Num, Tag, Text
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.memory.azure_ai_search.const import (
     DISTANCE_FUNCTION_MAP,
 )
@@ -25,7 +24,6 @@ from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
 from semantic_kernel.data.vector_store_record_fields import (
-=======
 from semantic_kernel.connectors.memory.redis.const import (
     DISTANCE_FUNCTION_MAP,
     TYPE_MAPPER_VECTOR,
@@ -36,7 +34,6 @@ from semantic_kernel.data.filter_clauses.any_tags_equal_to_filter_clause import 
 from semantic_kernel.data.filter_clauses.equal_to_filter_clause import EqualTo
 from semantic_kernel.data.record_definition.vector_store_model_definition import VectorStoreRecordDefinition
 from semantic_kernel.data.record_definition.vector_store_record_fields import (
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 =======
 from semantic_kernel.data.record_definition import (
 >>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

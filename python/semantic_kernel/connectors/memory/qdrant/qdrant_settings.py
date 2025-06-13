@@ -29,12 +29,9 @@ class QdrantSettings(KernelBaseSettings):
     def validate_settings(cls, values: dict):
         """Validate the settings."""
         if (
-<<<<<<< HEAD
             "url" not in values
-=======
             isinstance(values, dict)
             and "url" not in values
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
             and "host" not in values
             and "path" not in values
             and "location" not in values

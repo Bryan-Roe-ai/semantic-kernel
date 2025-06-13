@@ -8,7 +8,6 @@ from semantic_kernel.connectors.ai.open_ai import (
     OpenAIChatCompletion,
     OpenAIChatPromptExecutionSettings,
 )
-<<<<<<< HEAD
 from semantic_kernel.connectors.search.bing.bing_search import BingSearch
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.data.filters.text_search_filter import TextSearchFilter
@@ -35,7 +34,6 @@ kernel.add_functions(
             ),
         )
     ],
-=======
 from semantic_kernel.connectors.search.bing import BingSearch
 from semantic_kernel.contents import ChatHistory
 from semantic_kernel.filters import FilterTypes, FunctionInvocationContext
@@ -82,7 +80,6 @@ kernel.add_plugin(
             ),
         ],
     )
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 )
 chat_function = kernel.add_function(
     prompt="{{$chat_history}}{{$user_input}}",
@@ -123,11 +120,8 @@ async def log_bing_filter(
             print(f'  Skip: "{context.arguments["skip"]}"')
         await next(context)
         print("Bing search completed.")
-<<<<<<< HEAD
         # print("  raw results:")
         # print(f"    {context.result}")
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     else:
         await next(context)
 
@@ -159,11 +153,8 @@ async def main():
     print(
         "Welcome to the chat bot!\
         \n  Type 'exit' to exit.\
-<<<<<<< HEAD
         \n  Try a math question to see the function calling in action (i.e. what is 3+3?)."
-=======
         \n  Try to find out more about the inner workings of Semantic Kernel."
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     )
     while chatting:
         chatting = await chat()

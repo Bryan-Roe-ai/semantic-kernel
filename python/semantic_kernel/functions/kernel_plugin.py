@@ -13,7 +13,6 @@ from typing import TYPE_CHECKING, Annotated, Any, TypeVar
 from pydantic import Field, StringConstraints
 from typing_extensions import deprecated
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.openai_plugin.openai_authentication_config import (
     OpenAIAuthenticationConfig,
 )
@@ -26,8 +25,6 @@ from semantic_kernel.connectors.openapi_plugin.openapi_manager import (
 )
 from semantic_kernel.connectors.utils.document_loader import DocumentLoader
 from semantic_kernel.data.text_search.text_search import TextSearch
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.exceptions import PluginInitializationError
 from semantic_kernel.exceptions.function_exceptions import FunctionInitializationError
 from semantic_kernel.functions.kernel_function import KernelFunction
@@ -54,8 +51,8 @@ if TYPE_CHECKING:
     from semantic_kernel.functions.kernel_function_metadata import (
         KernelFunctionMetadata,
     )
-=======
     from semantic_kernel.data.text_search import TextSearch
+=======
     from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
 >>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
@@ -566,7 +563,6 @@ class KernelPlugin(KernelBaseModel):
         for name, cls_instance in inspect.getmembers(module, inspect.isclass):
             if cls_instance.__module__ != module_name:
                 continue
-<<<<<<< HEAD
             instance = getattr(module, name)(
                 **class_init_arguments.get(name, {}) if class_init_arguments else {}
             )
@@ -575,7 +571,6 @@ class KernelPlugin(KernelBaseModel):
                 description=description,
                 plugin_instance=instance,
             )
-=======
             # Check whether this class has at least one @kernel_function decorated method
             has_kernel_function = False
             for _, method in inspect.getmembers(cls_instance, inspect.isfunction):
@@ -587,79 +582,7 @@ class KernelPlugin(KernelBaseModel):
             init_args = class_init_arguments.get(name, {}) if class_init_arguments else {}
             instance = getattr(module, name)(**init_args)
             return cls.from_object(plugin_name=plugin_name, description=description, plugin_instance=instance)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         raise PluginInitializationError(f"No class found in file: {py_file}")
-
-    @classmethod
-    def from_text_search_with_search(
-        cls: type[_T],
-        text_search: "TextSearch",
-        plugin_name: str,
-        plugin_description: str | None = None,
-        **kwargs: Any,
-    ) -> _T:
-        """Creates a plugin that wraps the text search "search" function.
-
-        Args:
-            text_search: The text search to use.
-            plugin_name: The name of the plugin.
-            plugin_description: The description of the search plugin.
-            **kwargs: The keyword arguments to use to create the search function.
-
-        Returns:
-            a KernelPlugin.
-        """
-        return cls(name=plugin_name, description=plugin_description, functions=[text_search.create_search(**kwargs)])
-
-    @classmethod
-    def from_text_search_with_get_text_search_results(
-        cls: type[_T],
-        text_search: "TextSearch",
-        plugin_name: str,
-        plugin_description: str | None = None,
-        **kwargs: Any,
-    ) -> _T:
-        """Creates a plugin that wraps the text search "get_text_search_results" function.
-
-        Args:
-            text_search: The text search to use.
-            plugin_name: The name of the plugin.
-            plugin_description: The description of the search plugin.
-            **kwargs: The keyword arguments to use to create the search function.
-
-        Returns:
-            a KernelPlugin.
-        """
-        return cls(
-            name=plugin_name,
-            description=plugin_description,
-            functions=[text_search.create_get_text_search_results(**kwargs)],
-        )
-
-    @classmethod
-    def from_text_search_with_get_search_results(
-        cls: type[_T],
-        text_search: "TextSearch",
-        plugin_name: str,
-        plugin_description: str | None = None,
-        **kwargs: Any,
-    ) -> _T:
-        """Creates a plugin that wraps the text search "get_search_results" function.
-
-        Args:
-            text_search: The text search to use.
-            plugin_name: The name of the plugin.
-            plugin_description: The description of the search plugin.
-            **kwargs: The keyword arguments to use to create the search function.
-
-        Returns:
-            a KernelPlugin.
-        """
-        return cls(
-            name=plugin_name,
-            description=plugin_description,
-            functions=[text_search.create_get_search_results(**kwargs)],
-        )
 
     # endregion
     # region Internal Static Methods

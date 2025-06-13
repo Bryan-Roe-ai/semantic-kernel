@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-<<<<<<< HEAD
 import json
 import logging
 from abc import abstractmethod
@@ -20,7 +19,6 @@ from semantic_kernel.utils.experimental_decorator import experimental_class
 
 TModel = TypeVar("TModel")
 TKey = TypeVar("TKey")
-=======
 import logging
 import sys
 from abc import abstractmethod
@@ -65,18 +63,15 @@ if sys.version_info >= (3, 11):
 else:
     from typing_extensions import Self  # pragma: no cover
 
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 logger = logging.getLogger(__name__)
 
 
-<<<<<<< HEAD
 @experimental_class
 class VectorSearch(VectorStoreRecordCollection[TKey, TModel], SearchBase, Generic[TKey, TModel]):
     """Method for searching vectors."""
 
     # region: New abstract methods to be implemented by vector stores
-=======
 # region: Filters
 
 
@@ -140,17 +135,14 @@ class VectorSearchBase(VectorStoreRecordHandler[TKey, TModel], Generic[TKey, TMo
         return VectorSearchOptions
 
     # region: Abstract methods to be implemented by vector stores
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     @abstractmethod
     async def _inner_search(
         self,
-<<<<<<< HEAD
         options: SearchOptions | None = None,
         **kwargs: Any,
     ) -> Sequence[Mapping[str, Any | float | None]] | None:
         """Inner search method."""
-=======
         options: VectorSearchOptions,
         search_text: str | None = None,
         vectorizable_text: str | None = None,
@@ -194,16 +186,13 @@ class VectorSearchBase(VectorStoreRecordHandler[TKey, TModel], Generic[TKey, TMo
             VectorSearchOptionsException: If the search options are invalid.
 
         """
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         ...
 
     @abstractmethod
     def _get_record_from_result(self, result: Any) -> Any:
-<<<<<<< HEAD
         """Get the record from the result.
 
         Does any unpacking or processing of the result to get just the record.
-=======
         """Get the record from the returned search result.
 
         Does any unpacking or processing of the result to get just the record.
@@ -215,13 +204,11 @@ class VectorSearchBase(VectorStoreRecordHandler[TKey, TModel], Generic[TKey, TMo
 
         This method is used as part of the _get_vector_search_results_from_results method,
         the output of it is passed to the deserializer.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """
         ...
 
     @abstractmethod
     def _get_score_from_result(self, result: Any) -> float | None:
-<<<<<<< HEAD
         """Get the score from the result."""
         ...
 
@@ -333,7 +320,6 @@ class VectorSearchBase(VectorStoreRecordHandler[TKey, TModel], Generic[TKey, TMo
 
     def _get_metadata_from_results(self, results: Sequence[Any]) -> dict[str, Any]:
         return {"scores": [self._get_score_from_result(res) for res in results]}
-=======
         """Get the score from the result.
 
         Does any unpacking or processing of the result to get just the score.
@@ -614,4 +600,3 @@ async def add_vector_to_records(
     return records
 
     # endregion
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
