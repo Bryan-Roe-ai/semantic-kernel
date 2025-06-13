@@ -1,7 +1,6 @@
 ---
 consulted: null
 contact: SergeyMenshykh
-date: 2023-10-27T00:00:00Z
 deciders: markwallace, mabolan
 informed: null
 status: accepted
@@ -17,7 +16,6 @@ For example, [the chat completion syntax](https://github.com/microsoft/semantic-
 <message role="system">
     You are a creative assistant helping individuals and businesses with their innovative projects.
 </message>
-<message role="user">
 </message>
 ```
 
@@ -59,9 +57,5 @@ Cons:
 - Prompts can be run by Kernel.RunAsync method only.
 
 ## Decision Outcome
-<<<<<<< HEAD
 
 It was agreed to go with the option 1 - `1. Completion connector classes` since it a more flexible solution and allows adding new connectors without modifying the `SemanticFunction` class.
-=======
-It was agreed to go with the option 1 - `1. Completion connector classes` since it a more flexible solution and allows adding new connectors without modifying the `SemanticFunction` class.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
