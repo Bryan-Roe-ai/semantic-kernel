@@ -15,7 +15,6 @@ For example, [the chat completion syntax](https://github.com/microsoft/semantic-
 ```xml {"id":"01J6KQ4X95SWVAHSNMREEGWABW"}
 <message role="system">
     You are a creative assistant helping individuals and businesses with their innovative projects.
-</message>
 ```
 
 should be mapped to an instance of the [ChatHistory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/ChatCompletion/ChatHistory.cs) class with two chat messages:
