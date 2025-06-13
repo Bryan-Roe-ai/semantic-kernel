@@ -11,8 +11,6 @@ status: accepted
 
 ## Context and Problem Statement
 
-Today, SK runs all prompts using the text completion service by simply passing the rendered prompt as is, without any modifications, directly to a configured text completion service/connector. With the addition of new chat completion prompt and potentially other prompt types, such as image, on the horizon, we need a way to map completion-specific prompt syntax to the corresponding completion service data model.
-
 For example, [the chat completion syntax](https://github.com/microsoft/semantic-kernel/blob/main/docs/decisions/0014-chat-completion-roles-in-prompt.md) in chat completion prompts:
 
 ```xml {"id":"01J6KQ4X95SWVAHSNMREEGWABW"}
@@ -20,7 +18,7 @@ For example, [the chat completion syntax](https://github.com/microsoft/semantic-
     You are a creative assistant helping individuals and businesses with their innovative projects.
 </message>
 <message role="user">
-    I want to brainstorm the idea of {{$input}}
+I want to brainstorm the idea of {{input}}
 </message>
 ```
 
