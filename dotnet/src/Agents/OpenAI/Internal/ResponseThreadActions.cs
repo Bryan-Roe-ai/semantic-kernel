@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.SemanticKernel.Agents.Extensions;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.FunctionCalling;
 using OpenAI.Responses;
@@ -27,14 +28,13 @@ internal static class ResponseThreadActions
         AgentInvokeOptions options,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        var kernel = options?.Kernel ?? agent.Kernel;
         var responseAgentThread = agentThread as OpenAIResponseAgentThread;
 
         var overrideHistory = history;
         if (!agent.StoreEnabled)
         {
             // Use the thread chat history
-            overrideHistory = [.. GetChatHistory(agentThread, history)];
+            overrideHistory = [.. GetChatHistory(agentThread)];
         }
 
         var creationOptions = ResponseCreationOptionsFactory.CreateOptions(agent, agentThread, options);
@@ -42,7 +42,7 @@ internal static class ResponseThreadActions
         var inputItems = overrideHistory.Select(c => c.ToResponseItem()).ToList();
         FunctionCallsProcessor functionProcessor = new();
         FunctionChoiceBehaviorOptions functionOptions = new() { AllowConcurrentInvocation = true, AllowParallelCalls = true, RetainArgumentTypes = true };
-        for (int requestIndex = 0; ; requestIndex++)
+        for (int requestIndex = 0; requestIndex <= MaximumAutoInvokeAttempts; requestIndex++)
         {
             // Create a response using the OpenAI Responses API
             var clientResult = await agent.Client.CreateResponseAsync(inputItems, creationOptions, cancellationToken).ConfigureAwait(false);
@@ -64,12 +64,6 @@ internal static class ResponseThreadActions
             overrideHistory.Add(message);
             yield return message;
 
-            // Reached maximum auto invocations
-            if (requestIndex == MaximumAutoInvokeAttempts)
-            {
-                break;
-            }
-
             // Check if there are any functions to invoke.
             var functionCalls = response.OutputItems
                 .OfType<FunctionCallResponseItem>()
@@ -86,7 +80,7 @@ internal static class ResponseThreadActions
                     message,
                     (_) => true,
                     functionOptions,
-                    kernel,
+                    options.GetKernel(agent),
                     isStreaming: false,
                     cancellationToken).ToArrayAsync(cancellationToken).ConfigureAwait(false);
             var functionOutputItems = functionResults.Select(fr => ResponseItem.CreateFunctionCallOutputItem(fr.CallId, fr.Result?.ToString() ?? string.Empty)).ToList();
@@ -102,8 +96,7 @@ internal static class ResponseThreadActions
             }
 
             // Return the function results as a message
-            ChatMessageContentItemCollection items = new();
-            items.AddRange(functionResults);
+            ChatMessageContentItemCollection items = [.. functionResults];
             ChatMessageContent functionResultMessage = new()
             {
                 Role = AuthorRole.Tool,
@@ -121,14 +114,13 @@ internal static class ResponseThreadActions
         AgentInvokeOptions? options,
         [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        var kernel = options?.Kernel ?? agent.Kernel;
         var responseAgentThread = agentThread as OpenAIResponseAgentThread;
 
         var overrideHistory = history;
         if (!agent.StoreEnabled)
         {
             // Use the thread chat history
-            overrideHistory = [.. GetChatHistory(agentThread, history)];
+            overrideHistory = [.. GetChatHistory(agentThread)];
         }
 
         var inputItems = overrideHistory.Select(m => m.ToResponseItem()).ToList();
@@ -137,7 +129,7 @@ internal static class ResponseThreadActions
         FunctionCallsProcessor functionProcessor = new();
         FunctionChoiceBehaviorOptions functionOptions = new() { AllowConcurrentInvocation = true, AllowParallelCalls = true, RetainArgumentTypes = true };
         ChatMessageContent? message = null;
-        for (int requestIndex = 0; ; requestIndex++)
+        for (int requestIndex = 0; requestIndex < MaximumAutoInvokeAttempts; requestIndex++)
         {
             // Make the call to the OpenAIResponseClient and process the streaming results.
             DateTimeOffset? createdAt = null;
@@ -240,12 +232,6 @@ internal static class ResponseThreadActions
                 inputItems.AddRange(response.OutputItems);
             }
 
-            // Reached maximum auto invocations
-            if (requestIndex == MaximumAutoInvokeAttempts)
-            {
-                break;
-            }
-
             // Check if there a function to invoke.
             if (functionCallUpdateContent is null)
             {
@@ -258,8 +244,8 @@ internal static class ResponseThreadActions
                     message!,
                     (_) => true,
                     functionOptions,
-                    kernel,
-                    isStreaming: false,
+                    options.GetKernel(agent),
+                    isStreaming: true,
                     cancellationToken).ToArrayAsync(cancellationToken).ConfigureAwait(false);
             var functionOutputItems = functionResults.Select(fr => ResponseItem.CreateFunctionCallOutputItem(fr.CallId, fr.Result?.ToString() ?? string.Empty)).ToList();
 
@@ -274,21 +260,26 @@ internal static class ResponseThreadActions
             }
 
             // Return the function results as a message
-            ChatMessageContentItemCollection items = new();
-            items.AddRange(functionResults);
-            StreamingChatMessageContent functionResultMessage = new(
-                AuthorRole.Tool,
-                content: null)
+            ChatMessageContentItemCollection items = [.. functionResults];
+            ChatMessageContent functionResultMessage = new()
             {
-                ModelId = modelId,
-                InnerContent = functionCallUpdateContent,
-                Items = [functionCallUpdateContent],
+                Role = AuthorRole.Tool,
+                Items = items,
             };
-            yield return functionResultMessage;
+            StreamingChatMessageContent streamingFunctionResultMessage =
+                new(AuthorRole.Tool,
+                    content: null)
+                {
+                    ModelId = modelId,
+                    InnerContent = functionCallUpdateContent,
+                    Items = [functionCallUpdateContent],
+                };
+            overrideHistory.Add(functionResultMessage);
+            yield return streamingFunctionResultMessage;
         }
     }
 
-    private static ChatHistory GetChatHistory(AgentThread agentThread, ChatHistory history)
+    private static ChatHistory GetChatHistory(AgentThread agentThread)
     {
         if (agentThread is ChatHistoryAgentThread chatHistoryAgentThread)
         {
@@ -296,17 +287,6 @@ internal static class ResponseThreadActions
         }
 
         throw new InvalidOperationException("The agent thread is not a ChatHistoryAgentThread.");
-    }
-
-    private static void UpdateResponseId(AgentThread agentThread, string id)
-    {
-        if (agentThread is OpenAIResponseAgentThread openAIResponseAgentThread)
-        {
-            openAIResponseAgentThread.ResponseId = id;
-            return;
-        }
-
-        throw new InvalidOperationException("The agent thread is not an OpenAIResponseAgentThread.");
     }
 
     private static void ThrowIfIncompleteOrFailed(OpenAIResponseAgent agent, OpenAIResponse response)
