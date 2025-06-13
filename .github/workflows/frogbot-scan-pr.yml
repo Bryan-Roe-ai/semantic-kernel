@@ -42,8 +42,8 @@ jobs:
           path: ~/.jfrog
           key: ${{ runner.os }}-frogbot-${{ github.sha }}
           restore-keys: |
+            ${{ runner.os }}-frogbot-${{ github.ref_name }}-
             ${{ runner.os }}-frogbot-
-            ${{ runner.os }}-
 
       # Uncomment and customize the next step if your project requires dependency installation
       # - name: Install Dependencies
