@@ -25,14 +25,11 @@ env:
   AZURE_OPENAI_TEXT_TO_IMAGE_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_TEXT_TO_IMAGE_DEPLOYMENT_NAME }}
   AZURE_OPENAI_API_VERSION: ${{ vars.AZURE_OPENAI_API_VERSION }}
   AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-<<<<<<< HEAD
-=======
   AZURE_OPENAI_AUDIO_TO_TEXT_ENDPOINT: ${{ secrets.AZURE_OPENAI_AUDIO_TO_TEXT_ENDPOINT }}
   AZURE_OPENAI_TEXT_TO_AUDIO_ENDPOINT: ${{ secrets.AZURE_OPENAI_TEXT_TO_AUDIO_ENDPOINT }}
   AZURE_AI_AGENT_ENDPOINT: ${{ secrets.AZURE_AI_AGENT_ENDPOINT }}
   AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME: ${{ secrets.AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME }}
   AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME: ${{ vars.AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME }}
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   BING_API_KEY: ${{ secrets.BING_API_KEY }}
   OPENAI_RESPONSES_MODEL_ID: ${{ vars.OPENAI_RESPONSES_MODEL_ID }}
   OPENAI_CHAT_MODEL_ID: ${{ vars.OPENAI_CHAT_MODEL_ID }}
@@ -57,19 +54,16 @@ env:
   MISTRALAI_EMBEDDING_MODEL_ID: ${{ vars.MISTRALAI_EMBEDDING_MODEL_ID }}
   ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
   ANTHROPIC_CHAT_MODEL_ID: ${{ vars.ANTHROPIC_CHAT_MODEL_ID }}
-<<<<<<< HEAD
   OLLAMA_CHAT_MODEL_ID: "${{ vars.OLLAMA_CHAT_MODEL_ID || '' }}"
   OLLAMA_CHAT_MODEL_ID_IMAGE: "${{ vars.OLLAMA_CHAT_MODEL_ID_IMAGE || '' }}"
   OLLAMA_CHAT_MODEL_ID_TOOL_CALL: "${{ vars.OLLAMA_CHAT_MODEL_ID_TOOL_CALL || '' }}"
   OLLAMA_TEXT_MODEL_ID: "${{ vars.OLLAMA_TEXT_MODEL_ID || '' }}"
   OLLAMA_EMBEDDING_MODEL_ID: "${{ vars.OLLAMA_EMBEDDING_MODEL_ID || '' }}"
-=======
   OLLAMA_CHAT_MODEL_ID: "${{ vars.OLLAMA_CHAT_MODEL_ID || '' }}" # llama3.2:1b
   OLLAMA_CHAT_MODEL_ID_IMAGE: "${{ vars.OLLAMA_CHAT_MODEL_ID_IMAGE || '' }}" # moondream
   OLLAMA_CHAT_MODEL_ID_TOOL_CALL: "${{ vars.OLLAMA_CHAT_MODEL_ID_TOOL_CALL || '' }}" # llama3.2:1b
   OLLAMA_TEXT_MODEL_ID: "${{ vars.OLLAMA_TEXT_MODEL_ID || '' }}" # llama3.2:1b
   OLLAMA_EMBEDDING_MODEL_ID: "${{ vars.OLLAMA_EMBEDDING_MODEL_ID || '' }}" # nomic-embed-text
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   GOOGLE_AI_GEMINI_MODEL_ID: ${{ vars.GOOGLE_AI_GEMINI_MODEL_ID }}
   GOOGLE_AI_EMBEDDING_MODEL_ID: ${{ vars.GOOGLE_AI_EMBEDDING_MODEL_ID }}
   GOOGLE_AI_API_KEY: ${{ secrets.GOOGLE_AI_API_KEY }}
@@ -102,8 +96,6 @@ jobs:
         if: steps.filter.outputs.python != 'true'
         run: echo "NOT python file"
 
-<<<<<<< HEAD
-=======
   python-merge-gate-ai-services:
     name: Python Pre-Merge Integration Tests - AI Services (incl samples using those)
     needs: paths-filter
@@ -125,7 +117,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
           version: "0.5.x"
           enable-cache: true
@@ -180,7 +172,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
           version: "0.5.x"
           enable-cache: true
@@ -221,7 +213,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
           version: "0.5.x"
           enable-cache: true
@@ -270,7 +262,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
           version: "0.5.x"
           enable-cache: true
@@ -335,7 +327,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v6
         with:
           version: "0.5.x"
           enable-cache: true
@@ -358,7 +350,6 @@ jobs:
         run: |
           uv run pytest -v --log-cli-level=INFO --durations=20 -n logical --dist loadfile --dist worksteal ./tests/integration/memory ./tests/samples
 
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
   python-integration-tests:
     name: Python Integration Tests
     needs: paths-filter
@@ -401,23 +392,21 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-<<<<<<< HEAD
           python-version: ${{ matrix.python-version }}
       - name: Restore uv cache
         id: cache
         uses: actions/cache@v4
+        uses: astral-sh/setup-uv@v6
         with:
           path: ${{ env.UV_CACHE_DIR }}
           key: uv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/uv.lock') }}
       - name: Install dependencies with hnswlib native disabled
         if: matrix.os == 'macos-latest' && matrix.python-version == '3.11'
-=======
           version: "0.5.x"
           enable-cache: true
           cache-suffix: ${{ runner.os }}-${{ matrix.python-version }}
           cache-dependency-glob: "**/uv.lock"
       - name: Install dependencies
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         run: |
           export HNSWLIB_NO_NATIVE=1
           uv sync --all-extras --dev
@@ -463,7 +452,6 @@ jobs:
         shell: bash
         # Ollama tests are very unstable at the moment. It often fails to pull models from the Ollama server. Thus, Ollama is disabled for now.
         run: |
-<<<<<<< HEAD
           uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration ./tests/samples -v --junitxml=pytest.xml
       - name: Surface failing tests
         if: always()
@@ -476,7 +464,6 @@ jobs:
           title: Test results
       - name: Minimize uv cache
         run: uv cache prune --ci
-=======
           uv run pytest -v -n logical --dist loadfile --dist worksteal -m "not ollama" ./tests/integration/completions
       - name: Run Integration Tests - Embeddings
         id: run_tests_embeddings
@@ -516,7 +503,6 @@ jobs:
         shell: bash
         run: |
           uv run pytest -v -n logical --dist loadfile --dist worksteal ./tests/integration/audio_to_text ./tests/integration/text_to_audio ./tests/integration/text_to_image
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
   python-integration-tests-check:
     if: always()
@@ -526,14 +512,11 @@ jobs:
       fail-fast: false
     needs:
       [
-<<<<<<< HEAD
-=======
         python-merge-gate-ai-services,
         python-merge-gate-ollama,
         python-merge-gate-memory,
         python-merge-gate-agents,
         python-merge-gate-multi-modality,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         python-integration-tests,
       ]
     steps:
