@@ -1,11 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import asyncio
-import datetime
-
-from azure.core.credentials import AccessToken
-from azure.core.exceptions import ClientAuthenticationError
-from azure.identity import DefaultAzureCredential
 
 from semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion import (
     AzureChatCompletion,
@@ -44,6 +39,10 @@ async def auth_callback() -> str:
 
     return auth_token.token
 
+from semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion import AzureChatCompletion
+from semantic_kernel.core_plugins.sessions_python_tool.sessions_python_plugin import SessionsPythonTool
+from semantic_kernel.kernel import Kernel
+
 
 async def main():
     kernel = Kernel()
@@ -54,7 +53,7 @@ async def main():
     )
     kernel.add_service(chat_service)
 
-    python_code_interpreter = SessionsPythonTool(auth_callback=auth_callback)
+    python_code_interpreter = SessionsPythonTool()
 
     sessions_tool = kernel.add_plugin(python_code_interpreter, "PythonCodeInterpreter")
 

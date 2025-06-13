@@ -1,11 +1,8 @@
 // Copyright (c) Microsoft. All rights reserved.
 package com.microsoft.semantickernel.connectors.ai.openai.util;
 
-<<<<<<<+HEAD
 import com.azure.ai.openai.OpenAIAsyncClient;
 import com.microsoft.semantickernel.exceptions.ConfigurationException;
-=======
->>>>>>> ce2496df6e0c39a7c9c1a70b1e013e81a7b8d9b9
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,11 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-<<<<<<<+HEAD
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-=======
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -31,7 +26,6 @@ import com.microsoft.semantickernel.exceptions.ConfigurationException;
 /**
  * This class contains unit tests for loading configurations in the OpenAIAsyncClient.
  */
->>>>>>>+ce2496df6e0c39a
 public class ConfigLoadingTest {
 
     @Test
@@ -64,7 +58,6 @@ public class ConfigLoadingTest {
         File props = Files.createTempFile(dir, "a", ".properties").toFile();
 
         try (FileWriter fos = new FileWriter(props)) {
-<<<<<<<+HEAD
             entries.forEach(
                     e -> {
                         try {
@@ -73,7 +66,6 @@ public class ConfigLoadingTest {
                             ioException.printStackTrace();
                         }
                     });
-=======
             entries.forEach((String e) -> {
                 try {
                     fos.write(e + System.lineSeparator());
@@ -81,7 +73,6 @@ public class ConfigLoadingTest {
                     throw new RuntimeException(ioException);
                 }
             });
->>>>>>>+ce2496df6e0c39a
         }
         return props;
     }

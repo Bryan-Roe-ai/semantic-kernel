@@ -5,7 +5,6 @@ This connector uses the SQL Server database engine to implement [Vector Store](h
 > [!IMPORTANT]  
 > The features needed to use this connector are available in preview in Azure SQL only at the moment. Please take a look at the [Public Preview of Native Vector Support in Azure SQL Database](https://devblogs.microsoft.com/azure-sql/exciting-announcement-public-preview-of-native-vector-support-in-azure-sql-database/) for more information.
 
-<<<<<<< HEAD
 ## Quick start
 
 Create a new .NET console application:
@@ -76,7 +75,6 @@ var ai = kernel.GetRequiredService<IChatCompletionService>();
 var chat = new ChatHistory("You are an AI assistant that helps people find information.");
 var builder = new StringBuilder();
 while (true)
-=======
 Here's an example of how to use the SQL Server Vector Store connector in your Semantic Kernel application:
 
 ```csharp
@@ -84,7 +82,6 @@ Here's an example of how to use the SQL Server Vector Store connector in your Se
     Vector store schema    
 */
 public sealed class BlogPost
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 {
     [VectorStoreRecordKey]
     public int Id { get; set; }

@@ -1,8 +1,5 @@
 // Copyright (c) Microsoft. All rights reserved.
-<<<<<<< HEAD
 // Copyright (c) Microsoft. All rights reserved.
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System.Collections.Generic;
 using System.Text.Json;
 using OpenAI.Assistants;

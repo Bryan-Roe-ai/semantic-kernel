@@ -5,15 +5,13 @@ using System.Diagnostics;
 using Azure.AI.Agents.Persistent;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
-<<<<<<< HEAD
 using Microsoft.SemanticKernel.Agents.AzureAI;
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
 using OpenAI.Assistants;
 using OpenAI.Files;
 using ChatTokenUsage = OpenAI.Chat.ChatTokenUsage;
+using UsageDetails = Microsoft.Extensions.AI.UsageDetails;
 
 /// <summary>
 /// Base class for samples that demonstrate the usage of host agents
@@ -64,7 +62,6 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
     }
 
     /// <summary>
-<<<<<<< HEAD
     /// Provide a <see cref="OpenAIClientProvider"/> according to the configuration settings.
     /// </summary>
     protected AzureAIClientProvider GetAzureProvider()
@@ -100,14 +97,9 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
                 !string.IsNullOrWhiteSpace(this.ApiKey) ?
                     OpenAIClientProvider.ForAzureOpenAI(new ApiKeyCredential(this.ApiKey), new Uri(this.Endpoint!)) :
                     OpenAIClientProvider.ForAzureOpenAI(new AzureCliCredential(), new Uri(this.Endpoint!));
-<<<<<<< main
-=======
     }
->>>>>>> upstream/agents-azureai
 
     /// <summary>
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// Common method to write formatted agent chat content to the console.
     /// </summary>
     protected void WriteAgentChatMessage(ChatMessageContent message)
@@ -174,6 +166,10 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
             {
                 WriteUsage(chatUsage.TotalTokenCount, chatUsage.InputTokenCount, chatUsage.OutputTokenCount);
             }
+            else if (usage is UsageDetails usageDetails)
+            {
+                WriteUsage(usageDetails.TotalTokenCount ?? 0, usageDetails.InputTokenCount ?? 0, usageDetails.OutputTokenCount ?? 0);
+            }
         }
 
         string FormatAuthor() => message.AuthorName is not null ? $" - {message.AuthorName ?? " * "}" : string.Empty;
@@ -188,6 +184,29 @@ public abstract class BaseAgentsTest(ITestOutputHelper output) : BaseTest(output
     protected async Task DownloadResponseContentAsync(FileClient client, ChatMessageContent message)
     protected async Task DownloadResponseContentAsync(OpenAIFileClient client, ChatMessageContent message)
     protected async Task DownloadResponseContentAsync(OpenAIFileClient client, ChatMessageContent message)
+    /// <summary>
+    /// Common method to write formatted agent streaming chat content to the console.
+    /// </summary>
+    protected async Task<AgentThread?> WriteAgentStreamMessageAsync(IAsyncEnumerable<AgentResponseItem<StreamingChatMessageContent>> responseItems)
+    {
+        var first = true;
+        AgentThread? thread = null;
+        await foreach (var responseItem in responseItems)
+        {
+            var message = responseItem.Message;
+            if (first)
+            {
+                Console.Write($"# {message.AuthorName ?? message.Role.ToString()}> ");
+                first = false;
+            }
+            Console.Write(message.Content);
+            thread = responseItem.Thread;
+        }
+        Console.WriteLine();
+
+        return thread;
+    }
+
     protected async Task DownloadResponseContentAsync(OpenAIFileClient client, ChatMessageContent message)
     {
         foreach (KernelContent item in message.Items)

@@ -5,17 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-<<<<<<< HEAD
+
 using System.Text;
 using System.Text.Json;
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
+
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.OpenAI;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using OpenAI.Assistants;
 using Xunit;
 
@@ -32,6 +31,7 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
     private readonly Kernel _emptyKernel;
 
     /// <summary>
+
     /// Verify the invocation and response of <see cref="OpenAIAssistantAgent.CreateAsync"/>
     /// for an agent with only required properties defined.
     /// </summary>
@@ -470,6 +470,9 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
     /// <summary>
     /// Verify the invocation and response of <see cref="OpenAIAssistantAgent.CreateAsync"/>
     /// for an agent with json-response mode enabled.
+
+    /// Verify invocation via <see cref="AgentGroupChat"/>.
+
     /// </summary>
     [Fact]
     public async Task VerifyOpenAIAssistantAgentCreationWithJsonResponseAsync()
@@ -640,7 +643,7 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
     {
         // Arrange
         OpenAIAssistantAgent agent = await this.CreateAgentAsync();
-<<<<<<< HEAD
+
         // Assert
         Assert.False(agent.IsDeleted);
 
@@ -651,15 +654,15 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
         this.SetupResponse(HttpStatusCode.OK, OpenAIAssistantResponseContent.DeleteAgent);
         this.SetupResponse(HttpStatusCode.OK, OpenAIAssistantResponseContent.DeleteAgent);
         this.SetupResponse(HttpStatusCode.OK, ResponseContent.DeleteAgent);
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
+
         this.SetupResponse(HttpStatusCode.OK, OpenAIAssistantResponseContent.DeleteAgent);
 
         // Act
         bool isDeleted = await agent.DeleteAsync();
 
         // Assert
-<<<<<<< HEAD
+
         Assert.True(agent.IsDeleted);
         await Assert.ThrowsAsync<KernelException>(() => agent.AddChatMessageAsync("threadid", new(AuthorRole.User, "test")));
         await Assert.ThrowsAsync<KernelException>(() => agent.InvokeAsync("threadid").ToArrayAsync().AsTask());
@@ -677,9 +680,9 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
         await Assert.ThrowsAsync<KernelException>(() => agent.InvokeAsync("threadid").ToArrayAsync().AsTask());
         await Assert.ThrowsAsync<KernelException>(() => agent.InvokeStreamingAsync("threadid").ToArrayAsync().AsTask());
         await Assert.ThrowsAsync<KernelException>(() => agent.InvokeStreamingAsync("threadid", new OpenAIAssistantInvocationOptions()).ToArrayAsync().AsTask());
-=======
+
         Assert.True(isDeleted);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     }
 
     /// <summary>
@@ -916,6 +919,7 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
             OpenAIAssistantResponseContent.GetTextMessage("Hello, how can I help you?"));
 
         // Act
+
         AgentResponseItem<StreamingChatMessageContent>[] messages = await agent.InvokeStreamingAsync(new ChatMessageContent(AuthorRole.User, "Hi")).ToArrayAsync();
 
         // Assert
@@ -965,6 +969,16 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
         // Act
         ChatMessageContent[] messages = await agent.InvokeAsync("threadid").ToArrayAsync();
 
+        Task OnIntermediateMessage(ChatMessageContent message)
+        {
+            // Assert intermediate messages
+            Assert.NotNull(message);
+            Assert.Equal("Hello, how can I help you?", message.Content);
+            return Task.CompletedTask;
+        }
+        AgentResponseItem<StreamingChatMessageContent>[] messages = await agent.InvokeStreamingAsync(new ChatMessageContent(AuthorRole.User, "Hi"), options: new() { OnIntermediateMessage = OnIntermediateMessage }).ToArrayAsync();
+
+
         // Assert
         Assert.Single(messages);
         Assert.Single(messages[0].Items);
@@ -981,6 +995,7 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
     }
 
     /// <summary>
+
     /// Verify direction invocation of <see cref="OpenAIAssistantAgent"/>.
     /// </summary>
     [Fact]
@@ -1017,6 +1032,8 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
     }
 
     /// <summary>
+
+
     /// Verify complex chat interaction across multiple states.
     /// </summary>
     [Fact]
@@ -1139,6 +1156,7 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
     }
 
     /// <summary>
+
     /// Verify message retrieval via <see cref="OpenAIAssistantAgent.GetThreadMessagesAsync(string, System.Threading.CancellationToken)"/>.
     /// </summary>
     [Fact]
@@ -1221,6 +1239,8 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
     }
 
     /// <summary>
+
+
     /// Verify complex chat interaction across multiple states.
     /// </summary>
     [Fact]
@@ -1263,6 +1283,7 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
     /// Verify ability to list agent definitions.
     /// </summary>
     [Fact]
+
     public async Task VerifyOpenAIAssistantAgentListDefinitionAsync()
     {
         // Arrange
@@ -1453,7 +1474,7 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
         Assert.NotNull(agent);
         Assert.NotNull(agent.Id);
         Assert.NotNull(agent.Definition);
-<<<<<<< HEAD
+
      Assert.Equal(sourceDefinition.ModelId, agent.Definition.ModelId);
 
         // Verify core properties
@@ -1558,6 +1579,9 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
     }
 
     private Task<OpenAIAssistantAgent> CreateAgentAsync()
+
+    public async Task VerifyOpenAIAssistantAgentWithFunctionCallAsync()
+
     {
         OpenAIAssistantDefinition definition = new("testmodel");
 
@@ -1613,6 +1637,7 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
         }
     }
 
+
     private sealed class MyPlugin
     {
         [KernelFunction]
@@ -1640,6 +1665,8 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
 
         ValidateAgentDefinition(agent, capabilities, templateConfig);
     }
+
+
 
     private static void ValidateAgentDefinition(OpenAIAssistantAgent agent, OpenAIAssistantDefinition expectedConfig)
     {
@@ -1675,9 +1702,9 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
         Assert.False(agent.IsDeleted);
         Assert.NotNull(agent.Definition);
         Assert.Equal(expectedConfig.ModelId, agent.Definition.ModelId);
-=======
+
         Assert.Equal(expectedConfig.ModelId, agent.Definition.Model);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 
         // Verify core properties
         Assert.Equal(expectedInstructions ?? string.Empty, agent.Instructions);
@@ -2103,17 +2130,21 @@ public sealed class OpenAIAssistantAgentTests : IDisposable
         Assert.Equal(expectedConfig.CodeInterpreterFileIds, agent.Definition.ToolResources.CodeInterpreter?.FileIds);
     }
 
-    private Task<OpenAIAssistantAgent> CreateAgentAsync()
+    private async Task<OpenAIAssistantAgent> CreateAgentAsync()
     {
         OpenAIAssistantDefinition definition = new("testmodel");
 
         this.SetupResponse(HttpStatusCode.OK, definition);
 
-        return
-            OpenAIAssistantAgent.CreateAsync(
-                this.CreateTestClient(),
-                definition,
-                this._emptyKernel);
+        var clientProvider = this.CreateTestClient();
+        var assistantClient = clientProvider.Client.GetAssistantClient();
+        var assistantCreationOptions = new AssistantCreationOptions();
+        var model = await assistantClient.CreateAssistantAsync("testmodel", assistantCreationOptions);
+
+        return new OpenAIAssistantAgent(model, assistantClient)
+        {
+            Kernel = this._emptyKernel
+        };
     }
 
     private OpenAIClientProvider CreateTestClient(bool targetAzure = false)

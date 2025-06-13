@@ -1,70 +1,5 @@
-<<<<<<< HEAD:dotnet/src/Agents/Core/ChatHistoryKernelAgent.cs
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-﻿// Copyright (c) Microsoft. All rights reserved.
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-﻿// Copyright (c) Microsoft. All rights reserved.
-=======
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/Agents/Core/ChatHistoryAgent.cs
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -79,120 +14,16 @@ namespace Microsoft.SemanticKernel.Agents;
 /// Represents a <see cref="Agent"/> specialization bound to a <see cref="ChatHistoryChannel"/>.
 /// </summary>
 /// <remarks>
-<<<<<<< HEAD:dotnet/src/Agents/Core/ChatHistoryKernelAgent.cs
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 /// NOTE: Enable OpenAIPromptExecutionSettings.FunctionChoiceBehavior for agent plugins.
 /// (<see cref="ChatHistoryKernelAgent.Arguments"/>)
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-/// NOTE: Enable OpenAIPromptExecutionSettings.FunctionChoiceBehavior for agent plugins.
-/// (<see cref="ChatHistoryKernelAgent.Arguments"/>)
-=======
 /// NOTE: Enable <see cref="PromptExecutionSettings.FunctionChoiceBehavior"/> for agent plugins.
 /// (<see cref="KernelAgent.Arguments"/>)
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-/// NOTE: Enable <see cref="PromptExecutionSettings.FunctionChoiceBehavior"/> for agent plugins.
-/// (<see cref="KernelAgent.Arguments"/>)
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-/// NOTE: Enable <see cref="PromptExecutionSettings.FunctionChoiceBehavior"/> for agent plugins.
-/// (<see cref="KernelAgent.Arguments"/>)
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
-=======
-/// NOTE: Enable <see cref="PromptExecutionSettings.FunctionChoiceBehavior"/> for agent plugins
-/// (<see cref="Agent.Arguments"/>).
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/Agents/Core/ChatHistoryAgent.cs
+
 /// </remarks>
 [Experimental("SKEXP0110")]
 public abstract class ChatHistoryAgent : Agent
 {
     /// <summary>
-<<<<<<< HEAD:dotnet/src/Agents/Core/ChatHistoryKernelAgent.cs
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     /// Optional arguments for the agent.
     /// </summary>
     public KernelArguments? Arguments { get; init; }
@@ -201,51 +32,12 @@ public abstract class ChatHistoryAgent : Agent
     public IChatHistoryReducer? HistoryReducer { get; init; }
 
     /// <inheritdoc/>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     /// An optional reducer for limiting the size of the conversation history.
     /// </summary>
     public KernelArguments? Arguments { get; init; }
 
     /// <summary>
     /// Optionally specify a <see cref="IChatHistoryReducer"/> to reduce the history.
-=======
-    /// Gets an optional <see cref="IChatHistoryReducer"/> to reduce the history.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/Agents/Core/ChatHistoryAgent.cs
     /// </summary>
     /// <remarks>
     /// The reducer is automatically applied to the history before invoking the agent, only when using
@@ -261,92 +53,17 @@ public abstract class ChatHistoryAgent : Agent
     /// <param name="arguments">Optional arguments to pass to the agents's invocation, including any <see cref="PromptExecutionSettings"/>.</param>
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use by the agent.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
-<<<<<<< HEAD:dotnet/src/Agents/Core/ChatHistoryKernelAgent.cs
     /// <returns>Asynchronous enumeration of response messages.</returns>
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
     /// <returns>An asynchronous enumeration of response messages.</returns>
     [Obsolete("Use InvokeAsync with AgentThread instead.")]
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/Agents/Core/ChatHistoryAgent.cs
     public abstract IAsyncEnumerable<ChatMessageContent> InvokeAsync(
+    protected internal abstract IAsyncEnumerable<ChatMessageContent> InvokeAsync(
         ChatHistory history,
         KernelArguments? arguments = null,
         Kernel? kernel = null,
         CancellationToken cancellationToken = default);
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     /// <inheritdoc/>
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-    /// <inheritdoc/>
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-    /// <inheritdoc/>
-=======
->>>>>>> Stashed changes
-=======
-    /// <inheritdoc/>
-=======
->>>>>>> Stashed changes
->>>>>>> head
     /// <summary>
     /// Invokes the assistant to respond to the provided history with streaming response.
     /// </summary>
@@ -354,47 +71,11 @@ public abstract class ChatHistoryAgent : Agent
     /// <param name="arguments">Optional arguments to pass to the agents's invocation, including any <see cref="PromptExecutionSettings"/>.</param>
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use by the agent.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
-<<<<<<< HEAD:dotnet/src/Agents/Core/ChatHistoryKernelAgent.cs
     /// <returns>Asynchronous enumeration of response messages.</returns>
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
     /// <returns>An asynchronous enumeration of response messages.</returns>
     [Obsolete("Use InvokeStreamingAsync with AgentThread instead.")]
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/Agents/Core/ChatHistoryAgent.cs
     public abstract IAsyncEnumerable<StreamingChatMessageContent> InvokeStreamingAsync(
+    protected internal abstract IAsyncEnumerable<StreamingChatMessageContent> InvokeStreamingAsync(
         ChatHistory history,
         KernelArguments? arguments = null,
         Kernel? kernel = null,
@@ -405,74 +86,10 @@ public abstract class ChatHistoryAgent : Agent
     /// </summary>
     /// <param name="history">The source history.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
-<<<<<<< HEAD:dotnet/src/Agents/Core/ChatHistoryKernelAgent.cs
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     /// <returns></returns>
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-    /// <returns></returns>
-=======
     /// <returns>True if reduction has occurred.</returns>
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-    /// <returns>True if reduction has occurred.</returns>
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
     /// <returns><see langword="true"/> if reduction occurred.</returns>
     [Experimental("SKEXP0110")]
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/Agents/Core/ChatHistoryAgent.cs
     public Task<bool> ReduceAsync(ChatHistory history, CancellationToken cancellationToken = default) =>
         history.ReduceInPlaceAsync(this.HistoryReducer, cancellationToken);
 

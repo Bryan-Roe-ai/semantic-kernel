@@ -1,6 +1,5 @@
 # Semantic Kernel
 
-<<<<<<< HEAD
 Integrate cutting-edge LLM technology quickly and easily into your apps.
 
 ## Table of Contents
@@ -456,7 +455,6 @@ if __name__ == "__main__":
    ```yaml
    name: Handle Not Found Error
 
-<<<<<<< HEAD
    on:
      pull_request:
        types: [opened, synchronize]
@@ -467,11 +465,9 @@ if __name__ == "__main__":
        steps:
          - name: Checkout code
            uses: actions/checkout@v4
-=======
 We welcome your contributions and suggestions to the SK community! One of the easiest ways to participate is to engage in discussions in the GitHub repository. Bug reports and fixes are welcome!
 
 For new features, components, or extensions, please open an issue and discuss with us before sending a PR. This is to avoid rejection as we might be taking the core in a different direction, but also to consider the impact on the larger ecosystem.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
          - name: Check for Not Found Error
            run: |
@@ -491,16 +487,13 @@ We welcome contributions from the community! To contribute to this project, plea
 
 1. **Fork the repository**: Create a fork of the repository to work on your changes.
 
-<<<<<<< HEAD
 2. **Create a branch**: Create a new branch for your changes.
-=======
 This project has adopted the
 [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information, see the
 [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/)
 or contact [opencode@microsoft.com](mailto:opencode@microsoft.com)
 with any additional questions or comments.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
    ```bash
    git checkout -b my-feature-branch

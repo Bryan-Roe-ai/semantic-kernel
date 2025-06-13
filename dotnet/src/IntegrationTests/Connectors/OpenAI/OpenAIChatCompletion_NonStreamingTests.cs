@@ -13,6 +13,7 @@ using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.TextGeneration;
 using OpenAI.Chat;
 using SemanticKernel.IntegrationTests.TestSettings;
+using xRetry;
 using Xunit;
 
 namespace SemanticKernel.IntegrationTests.Connectors.OpenAI;
@@ -172,11 +173,11 @@ public sealed class OpenAIChatCompletionNonStreamingTests : BaseIntegrationTest
         Assert.Empty((logProbabilityInfo as IReadOnlyList<ChatTokenLogProbabilityDetails>)!);
     }
 
-    [Fact]
+    [RetryFact]
     public async Task ChatCompletionWithWebSearchAsync()
     {
         // Arrange
-        var kernel = this.CreateAndInitializeKernel(modelIdOverride: "gpt-4o-mini-search-preview");
+        var kernel = this.CreateAndInitializeKernel(modelIdOverride: "gpt-4o-search-preview");
         var chatService = kernel.Services.GetRequiredService<IChatCompletionService>();
         var settings = new OpenAIPromptExecutionSettings
         {
@@ -184,7 +185,7 @@ public sealed class OpenAIChatCompletionNonStreamingTests : BaseIntegrationTest
         };
 
         // Act
-        var result = await chatService.GetChatMessageContentAsync("What are the top 3 trending news currently", settings, kernel);
+        var result = await chatService.GetChatMessageContentAsync("What are the top 3 trending news items from the web today?", settings, kernel);
 
         // Assert
         var chatCompletion = Assert.IsType<ChatCompletion>(result.InnerContent);

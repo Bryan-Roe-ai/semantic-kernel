@@ -1,16 +1,16 @@
 // Copyright (c) Microsoft. All rights reserved.
-<<<<<<< HEAD
-using System;
-using System.ClientModel;
-=======
 
 using System;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+using System.ClientModel;
+
+
+
+using System;
+
+
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -37,7 +37,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
     internal const string TemplateMetadataKey = "__template_format";
 
     /// <summary>
-<<<<<<< HEAD
+
     /// Optional arguments for the agent.
     /// </summary>
     /// <remarks>
@@ -47,9 +47,9 @@ public sealed partial class OpenAIAssistantAgent : Agent
 
     /// <summary>
     /// The assistant definition.
-=======
+
     /// Initializes a new instance of the <see cref="OpenAIAssistantAgent"/> class.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// </summary>
     /// <param name="definition">The assistant definition.</param>
     /// <param name="client">The OpenAI provider for accessing the Assistant API service.</param>
@@ -101,22 +101,12 @@ public sealed partial class OpenAIAssistantAgent : Agent
     public Assistant Definition { get; }
 
     /// <summary>
-    /// Gets a value that indicates whether the assistant has been deleted via <see cref="DeleteAsync(CancellationToken)"/>.
-    /// </summary>
-    /// <remarks>
-    /// An assistant removed by other means will result in an exception when invoked.
-    /// </remarks>
-    [Experimental("SKEXP0110")]
-    [Obsolete("Use the OpenAI.Assistants.AssistantClient to manage the Assistant definition lifecycle. This method will be removed after May 1st 2025.")]
-    public bool IsDeleted { get; private set; }
-
-    /// <summary>
     /// Gets the polling behavior for run processing.
     /// </summary>
     public RunPollingOptions PollingOptions { get; } = new();
 
     /// <summary>
-<<<<<<< HEAD
+
     /// Expose predefined tools for run-processing.
     /// The assistant definition.
     /// </summary>
@@ -183,16 +173,17 @@ public sealed partial class OpenAIAssistantAgent : Agent
     }
     /// Expose predefined tools for run-processing.
     /// Expose predefined tools for run-processing.
-=======
+
     /// Gets or sets the run creation options for the assistant.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// </summary>
     public RunCreationOptions? RunOptions { get; init; }
+
 
     /// <summary>
     /// Create a new <see cref="OpenAIAssistantAgent"/>.
     /// </summary>
-<<<<<<< HEAD
+
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
     /// <param name="clientProvider">OpenAI client provider for accessing the API service.</param>
     /// <param name="definition">The assistant definition.</param>
@@ -204,10 +195,10 @@ public sealed partial class OpenAIAssistantAgent : Agent
         OpenAIAssistantDefinition definition,
     /// <param name="clientProvider">OpenAI client provider for accessing the API service.</param>
     /// <param name="capabilities">Defines the assistant's capabilities.</param>
-=======
+
     /// <param name="clientProvider">The OpenAI client provider for accessing the API service.</param>
     /// <param name="capabilities">The assistant's capabilities.</param>
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
     /// <param name="defaultArguments">Required arguments that provide default template parameters, including any <see cref="PromptExecutionSettings"/>.</param>
     /// <param name="templateConfig">The prompt template configuration.</param>
@@ -344,7 +335,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
     /// <summary>
     /// Retrieves an <see cref="OpenAIAssistantAgent"/> by identifier.
     /// </summary>
-<<<<<<< HEAD
+
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
     /// <param name="provider">Configuration for accessing the API service.</param>
     /// <param name="id">The agent identifier</param>
@@ -361,10 +352,10 @@ public sealed partial class OpenAIAssistantAgent : Agent
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
     /// <param name="provider">Configuration for accessing the API service.</param>
     /// <param name="id">The agent identifier</param>
-=======
+
     /// <param name="clientProvider">The configuration for accessing the API service.</param>
     /// <param name="id">The agent identifier.</param>
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
     /// <param name="defaultArguments">Optional default arguments, including any <see cref="PromptExecutionSettings"/>.</param>
     /// <param name="templateFactory">An optional factory to produce the <see cref="IPromptTemplate"/> for the agent.</param>
@@ -375,12 +366,12 @@ public sealed partial class OpenAIAssistantAgent : Agent
     public static async Task<OpenAIAssistantAgent> RetrieveAsync(
 #pragma warning disable SKEXP0110 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
         OpenAIClientProvider clientProvider,
-<<<<<<< HEAD
+
         Kernel kernel,
         OpenAIClientProvider provider,
-=======
+
 #pragma warning restore SKEXP0110 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         string id,
         Kernel kernel,
         KernelArguments? defaultArguments = null,
@@ -393,12 +384,12 @@ public sealed partial class OpenAIAssistantAgent : Agent
         Verify.NotNullOrWhiteSpace(id, nameof(id));
 
         // Create the client
-<<<<<<< HEAD
+
         AssistantClient client = CreateClient(clientProvider);
         AssistantClient client = CreateClient(provider);
-=======
+
         AssistantClient client = clientProvider.Client.GetAssistantClient();
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 
         // Retrieve the assistant
         Assistant model = await client.GetAssistantAsync(id, cancellationToken).ConfigureAwait(false);
@@ -414,12 +405,12 @@ public sealed partial class OpenAIAssistantAgent : Agent
 
         // Instantiate the agent
         return
-<<<<<<< HEAD
+
             new OpenAIAssistantAgent(model, clientProvider, client)
             new OpenAIAssistantAgent(model, provider, client)
-=======
+
             new OpenAIAssistantAgent(model, clientProvider.AssistantClient)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
             {
                 Kernel = kernel,
                 Arguments = defaultArguments ?? [],
@@ -468,13 +459,13 @@ public sealed partial class OpenAIAssistantAgent : Agent
         // Validate input
         Verify.NotNullOrWhiteSpace(threadId, nameof(threadId));
 
-<<<<<<< HEAD
+
         return await this._client.DeleteThreadAsync(threadId, cancellationToken).ConfigureAwait(false);
 
         ThreadDeletionResult result = await this._client.DeleteThreadAsync(threadId, cancellationToken).ConfigureAwait(false);
-=======
+
         ThreadDeletionResult result = await this.Client.DeleteThreadAsync(threadId, cancellationToken).ConfigureAwait(false);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 
         return result.Deleted;
 
@@ -490,7 +481,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
     }
 
     /// <summary>
-<<<<<<< HEAD
+
     /// Uploads an file for the purpose of using with assistant.
     /// </summary>
     /// <param name="stream">The content to upload</param>
@@ -524,8 +515,8 @@ public sealed partial class OpenAIAssistantAgent : Agent
     }
 
     /// <summary>
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
+
     /// Adds a message to the specified thread.
     /// </summary>
     /// <param name="threadId">The thread identifier.</param>
@@ -566,12 +557,12 @@ public sealed partial class OpenAIAssistantAgent : Agent
     {
         if (!this.IsDeleted)
         {
-<<<<<<< HEAD
+
             this.IsDeleted = (await this._client.DeleteAssistantAsync(this.Id, cancellationToken).ConfigureAwait(false)).Value;
             AssistantDeletionResult result = await this._client.DeleteAssistantAsync(this.Id, cancellationToken).ConfigureAwait(false);
-=======
+
             AssistantDeletionResult result = await this.Client.DeleteAssistantAsync(this.Id, cancellationToken).ConfigureAwait(false);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
             this.IsDeleted = result.Deleted;
             AssistantDeletionResult result = await this._client.DeleteAssistantAsync(this.Id, cancellationToken).ConfigureAwait(false);
             this.IsDeleted = result.Deleted;
@@ -582,6 +573,8 @@ public sealed partial class OpenAIAssistantAgent : Agent
 
         return this.IsDeleted;
     }
+
+
 
     /// <inheritdoc/>
     public override IAsyncEnumerable<AgentResponseItem<ChatMessageContent>> InvokeAsync(
@@ -618,7 +611,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
     {
         Verify.NotNull(messages);
 
-        var openAIAssistantAgentThread = await this.EnsureThreadExistsWithMessagesAsync(
+        OpenAIAssistantAgentThread openAIAssistantAgentThread = await this.EnsureThreadExistsWithMessagesAsync(
             messages,
             thread,
             () => new OpenAIAssistantAgentThread(this.Client),
@@ -632,13 +625,13 @@ public sealed partial class OpenAIAssistantAgent : Agent
             AdditionalInstructions = options?.AdditionalInstructions,
         });
 
-        var kernel = (options?.Kernel ?? this.Kernel).Clone();
+        Kernel kernel = (options?.Kernel ?? this.Kernel).Clone();
 
         // Get the context contributions from the AIContextProviders.
-#pragma warning disable SKEXP0110 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-        var providersContext = await openAIAssistantAgentThread.AIContextProviders.ModelInvokingAsync(messages, cancellationToken).ConfigureAwait(false);
+#pragma warning disable SKEXP0110, SKEXP0130 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+        AIContext providersContext = await openAIAssistantAgentThread.AIContextProviders.ModelInvokingAsync(messages, cancellationToken).ConfigureAwait(false);
         kernel.Plugins.AddFromAIContext(providersContext, "Tools");
-#pragma warning restore SKEXP0110 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+#pragma warning restore SKEXP0110, SKEXP0130 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
         var invokeResults = ActivityExtensions.RunWithActivityAsync(
             () => ModelDiagnostics.StartAgentInvocationActivity(this.Id, this.GetDisplayName(), this.Description),
@@ -679,6 +672,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
         }
     }
 
+
     /// <summary>
     /// Invokes the assistant on the specified thread.
     /// </summary>
@@ -686,12 +680,12 @@ public sealed partial class OpenAIAssistantAgent : Agent
     /// <param name="arguments">Optional arguments to pass to the agents's invocation, including any <see cref="PromptExecutionSettings"/>.</param>
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use by the agent.</param>
     /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
-<<<<<<< HEAD
+
     /// <returns>Asynchronous enumeration of messages.</returns>
     /// <returns>Asynchronous enumeration of response messages.</returns>
-=======
+
     /// <returns>An asynchronous enumeration of response messages.</returns>
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// <remarks>
     /// The "arguments" parameter is not currently used by the agent, but is provided for future extensibility.
     /// </remarks>
@@ -715,7 +709,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
     /// <remarks>
     /// The "arguments" parameter is not currently used by the agent, but is provided for future extensibility.
     /// </remarks>
-<<<<<<< HEAD
+
     public IAsyncEnumerable<ChatMessageContent> InvokeAsync(
         string threadId,
         KernelArguments? arguments = null,
@@ -737,10 +731,10 @@ public sealed partial class OpenAIAssistantAgent : Agent
     /// The `arguments` parameter is not currently used by the agent, but is provided for future extensibility.
     /// </remarks>
     public async IAsyncEnumerable<ChatMessageContent> InvokeAsync(
-=======
+
     [Obsolete("Use InvokeAsync with AgentThread instead. This method will be removed after May 1st 2025.")]
     public IAsyncEnumerable<ChatMessageContent> InvokeAsync(
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         string threadId,
         RunCreationOptions? options,
         KernelArguments? arguments = null,
@@ -764,6 +758,8 @@ public sealed partial class OpenAIAssistantAgent : Agent
             }
         }
     }
+
+
 
     /// <inheritdoc/>
     public override IAsyncEnumerable<AgentResponseItem<StreamingChatMessageContent>> InvokeStreamingAsync(
@@ -800,25 +796,29 @@ public sealed partial class OpenAIAssistantAgent : Agent
     {
         Verify.NotNull(messages);
 
-<<<<<<< HEAD
+
+
         kernel ??= this.Kernel;
         arguments ??= this.Arguments;
         arguments = this.MergeArguments(arguments);
-=======
+
         var openAIAssistantAgentThread = await this.EnsureThreadExistsWithMessagesAsync(
+
+        OpenAIAssistantAgentThread openAIAssistantAgentThread = await this.EnsureThreadExistsWithMessagesAsync(
+
             messages,
             thread,
             () => new OpenAIAssistantAgentThread(this.Client),
             cancellationToken).ConfigureAwait(false);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-        var kernel = (options?.Kernel ?? this.Kernel).Clone();
+
+        Kernel kernel = (options?.Kernel ?? this.Kernel).Clone();
 
         // Get the context contributions from the AIContextProviders.
-#pragma warning disable SKEXP0110 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-        var providersContext = await openAIAssistantAgentThread.AIContextProviders.ModelInvokingAsync(messages, cancellationToken).ConfigureAwait(false);
+#pragma warning disable SKEXP0110, SKEXP0130 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+        AIContext providersContext = await openAIAssistantAgentThread.AIContextProviders.ModelInvokingAsync(messages, cancellationToken).ConfigureAwait(false);
         kernel.Plugins.AddFromAIContext(providersContext, "Tools");
-#pragma warning restore SKEXP0110 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+#pragma warning restore SKEXP0110, SKEXP0130 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
 
         // Create options that use the RunCreationOptions from the options param if provided or
         // falls back to creating a new RunCreationOptions if additional instructions is provided
@@ -829,7 +829,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
         });
 
 #pragma warning disable SKEXP0001 // ModelDiagnostics is marked experimental.
-        var newMessagesReceiver = new ChatHistory();
+        ChatHistory newMessagesReceiver = [];
         var invokeResults = ActivityExtensions.RunWithActivityAsync(
             () => ModelDiagnostics.StartAgentInvocationActivity(this.Id, this.GetDisplayName(), this.Description),
             () => InternalInvokeStreamingAsync(),
@@ -869,8 +869,9 @@ public sealed partial class OpenAIAssistantAgent : Agent
         }
     }
 
+
     /// <summary>
-<<<<<<< HEAD
+
     /// Invoke the assistant on the specified thread.
     /// </summary>
     /// <param name="threadId">The thread identifier</param>
@@ -878,9 +879,9 @@ public sealed partial class OpenAIAssistantAgent : Agent
     /// <param name="arguments">Optional arguments to pass to the agents's invocation, including any <see cref="PromptExecutionSettings"/>.</param>
     /// <param name="kernel">The <see cref="Kernel"/> containing services, plugins, and other state for use by the agent.</param>
     /// Invoke the assistant on the specified thread with streaming response.
-=======
+
     /// Invokes the assistant on the specified thread with streaming response.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// </summary>
     /// <param name="threadId">The thread identifier.</param>
     /// <param name="arguments">Optional arguments to pass to the agents's invocation, including any <see cref="PromptExecutionSettings"/>.</param>
@@ -930,12 +931,12 @@ public sealed partial class OpenAIAssistantAgent : Agent
     [Obsolete("Use InvokeStreamingAsync with AgentThread instead. This method will be removed after May 1st 2025.")]
     public IAsyncEnumerable<StreamingChatMessageContent> InvokeStreamingAsync(
         string threadId,
-<<<<<<< HEAD
+
         ChatHistory messages,
         OpenAIAssistantInvocationOptions? options,
-=======
+
         RunCreationOptions? options,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         KernelArguments? arguments = null,
         Kernel? kernel = null,
         ChatHistory? messages = null,
@@ -948,7 +949,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
             cancellationToken);
 #pragma warning restore SKEXP0001 // ModelDiagnostics is marked experimental.
 
-<<<<<<< HEAD
+
         kernel ??= this.Kernel;
         arguments ??= this.Arguments;
         arguments = this.MergeArguments(arguments);
@@ -963,14 +964,16 @@ public sealed partial class OpenAIAssistantAgent : Agent
         yield return typeof(OpenAIAssistantChannel).FullName!;
 
         foreach (string key in this._channelKeys)
-=======
+
         IAsyncEnumerable<StreamingChatMessageContent> InternalInvokeStreamingAsync()
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         {
             kernel ??= this.Kernel;
             return AssistantThreadActions.InvokeStreamingAsync(this, this.Client, threadId, messages, options, providersAdditionalInstructions: null, this.Logger, kernel, arguments, cancellationToken);
         }
     }
+
+
 
     /// <inheritdoc/>
     [Experimental("SKEXP0110")]
@@ -1009,7 +1012,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
         this.Logger.LogInformation("[{MethodName}] Created assistant thread: {ThreadId}", nameof(CreateChannelAsync), thread.Id);
 
     internal Task<string?> GetInstructionsAsync(Kernel kernel, KernelArguments? arguments, CancellationToken cancellationToken) =>
-<<<<<<< HEAD
+
         this.FormatInstructionsAsync(kernel, arguments, cancellationToken);
     /// <inheritdoc/>
     protected override async Task<AgentChannel> RestoreChannelAsync(string channelState, CancellationToken cancellationToken)
@@ -1024,9 +1027,9 @@ public sealed partial class OpenAIAssistantAgent : Agent
 
         return new OpenAIAssistantChannel(this._client, thread.Id);
     }
-=======
+
         this.RenderInstructionsAsync(kernel, arguments, cancellationToken);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 
     /// <inheritdoc/>
     [Experimental("SKEXP0110")]
@@ -1042,6 +1045,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
 
         return new OpenAIAssistantChannel(this.Client, thread.Id);
     }
+
 
     [Obsolete]
     private static OpenAIAssistantDefinition CreateAssistantDefinition(Assistant model)
@@ -1074,7 +1078,7 @@ public sealed partial class OpenAIAssistantAgent : Agent
             ExecutionOptions = options,
         };
     }
-<<<<<<< HEAD
+
 
     private static AssistantCreationOptions CreateAssistantCreationOptions(OpenAIAssistantDefinition definition)
     {
@@ -1165,6 +1169,8 @@ public sealed partial class OpenAIAssistantAgent : Agent
             yield return key;
         }
     }
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
+
+
+
 }
