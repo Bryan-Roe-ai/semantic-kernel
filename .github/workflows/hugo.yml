@@ -48,7 +48,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Install Node.js dependencies
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+        run: |
+          if [[ -f package-lock.json || -f npm-shrinkwrap.json ]]; then
+            npm ci
+          else
+            npm install
+          fi
       - name: Build with Hugo
         env:
           HUGO_ENVIRONMENT: production
