@@ -1,6 +1,7 @@
 name: 'Attest Build Provenance'
 description: 'Generate provenance attestations for build artifacts'
-author: 'GitHub'
+author: 'Bryan Roe / Your Team'
+
 branding:
   color: 'blue'
   icon: 'lock'
@@ -8,63 +9,69 @@ branding:
 inputs:
   subject-path:
     description: >
-      Path to the artifact serving as the subject of the attestation. Must
-      specify exactly one of "subject-path", "subject-digest", or
-      "subject-checksums". May contain a glob pattern or list of paths
-      (total subject count cannot exceed 1024).
+      Path(s) to artifacts to attest. Specify only one of 'subject-path', 'subject-digest', or 'subject-checksums'.
     required: false
   subject-digest:
     description: >
-      Digest of the subject for which provenance will be generated. Must be in
-      the form "algorithm:hex_digest" (e.g. "sha256:abc123..."). Must specify
-      exactly one of "subject-path", "subject-digest", or "subject-checksums".
+      Digest in "algo:hex" form. Specify only one of 'subject-path', 'subject-digest', or 'subject-checksums'.
     required: false
   subject-name:
     description: >
-      Subject name as it should appear in the attestation. Required when
-      identifying the subject with the "subject-digest" input.
+      Subject name for the attestation. Required if using 'subject-digest'.
+    required: false
   subject-checksums:
     description: >
-      Path to checksums file containing digest and name of subjects for
-      attestation. Must specify exactly one of "subject-path", "subject-digest",
-      or "subject-checksums".
+      Path to checksums file with digest+name. Specify only one input type.
     required: false
   push-to-registry:
     description: >
-      Whether to push the provenance statement to the image registry. Requires
-      that the "subject-name" parameter specify the fully-qualified image name
-      and that the "subject-digest" parameter be specified. Defaults to false.
+      Push provenance to registry. Requires 'subject-name' (FQIN) and 'subject-digest'.
     default: false
     required: false
   show-summary:
     description: >
-      Whether to attach a list of generated attestations to the workflow run
-      summary page. Defaults to true.
+      Attach attestation summary to workflow run.
     default: true
     required: false
   github-token:
     description: >
-      The GitHub token used to make authenticated API requests.
-    default: ${{ github.token }}
+      GitHub token for API requests.
+    default: ${{ secrets.GITHUB_TOKEN }}
     required: false
 
 outputs:
   bundle-path:
-    description: 'The path to the file containing the attestation bundle.'
+    description: 'Path to the attestation bundle file.'
     value: ${{ steps.attest.outputs.bundle-path }}
   attestation-id:
-    description: 'The ID of the attestation.'
+    description: 'Attestation ID.'
     value: ${{ steps.attest.outputs.attestation-id }}
   attestation-url:
-    description: 'The URL for the attestation summary.'
+    description: 'Attestation summary URL.'
     value: ${{ steps.attest.outputs.attestation-url }}
 
 runs:
   using: 'composite'
   steps:
-    - uses: actions/attest-build-provenance/predicate@1176ef556905f349f669722abf30bce1a6e16e01 # predicate@1.1.5
+    # Validate that only one subject input is set
+    - name: Validate subject input
+      shell: bash
+      run: |
+        count=0
+        [[ -n "${{ inputs.subject-path }}" ]] && count=$((count+1))
+        [[ -n "${{ inputs.subject-digest }}" ]] && count=$((count+1))
+        [[ -n "${{ inputs.subject-checksums }}" ]] && count=$((count+1))
+        if [[ $count -ne 1 ]]; then
+          echo "Error: Specify exactly one of subject-path, subject-digest, or subject-checksums."
+          exit 1
+        fi
+
+    - name: Generate Build Provenance Predicate
+      uses: actions/attest-build-provenance/predicate@v1.1.5
       id: generate-build-provenance-predicate
-    - uses: actions/attest@ce27ba3b4a9a139d9a20a4a07d69fabb52f1e5bc # v2.4.0
+
+    - name: Attest
+      uses: actions/attest@v2.4.0
       id: attest
       with:
         subject-path: ${{ inputs.subject-path }}
@@ -76,3 +83,10 @@ runs:
         push-to-registry: ${{ inputs.push-to-registry }}
         show-summary: ${{ inputs.show-summary }}
         github-token: ${{ inputs.github-token }}
+
+    - name: Output summary (optional)
+      shell: bash
+      run: |
+        echo "Attestation bundle: ${{ steps.attest.outputs.bundle-path }}"
+        echo "Attestation ID: ${{ steps.attest.outputs.attestation-id }}"
+        echo "Attestation URL: ${{ steps.attest.outputs.attestation-url }}"
