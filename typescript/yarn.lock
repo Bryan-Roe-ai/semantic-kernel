@@ -38,9 +38,9 @@ __metadata:
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
   checksum: 631f02c9c279f2ae90637a4989cc9d75c1c27aefd16b6e8eb90f98a4d0bddaccfd1cb1387be12101d1ab0f9bbf0c47e2451b4de0cf2870462a7d9ed3de8da3f2
-"axios@npm:^1.3.4":
+"axios@npm:^1.8.2":
   version: 1.3.4
-  resolution: "axios@npm:1.3.4"
+  resolution: "axios@npm:1.8.2"
   dependencies:
     follow-redirects: ^1.15.0
     form-data: ^4.0.0
@@ -130,7 +130,7 @@ __metadata:
   resolution: "semantic-kernel@workspace:."
   dependencies:
     "@types/node": ^18.15.3
-    axios: ^1.3.4
+    axios: ^1.8.2
     prettier: ^2.8.4
     typescript: ^5.0.2
   languageName: unknown
