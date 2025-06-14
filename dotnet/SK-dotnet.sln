@@ -72187,7 +72187,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProcessWithCloudEvents", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessWithCloudEvents.Processes", "samples\Demos\ProcessWithCloudEvents\ProcessWithCloudEvents.Processes\ProcessWithCloudEvents.Processes.csproj", "{31F6608A-FD36-F529-A5FC-C954A0B5E29E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessWithCloudEvents.Grpc", "samples\Demos\ProcessWithCloudEvents\ProcessWithCloudEvents.Grpc\ProcessWithCloudEvents.Grpc.csproj", "{08D84994-794A-760F-95FD-4EFA8998A16D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessWithCloudEvents.Grpc.DaprRuntime", "samples\Demos\ProcessWithCloudEvents\ProcessWithCloudEvents.Grpc\ProcessWithCloudEvents.Grpc.DaprRuntime.csproj", "{08D84994-794A-760F-95FD-4EFA8998A16D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtime", "Runtime", "{A70ED5A7-F8E1-4A57-9455-3C05989542DA}"
 EndProject
@@ -72227,6 +72227,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatWithAgent.Web", "samples\Demos\Hosting\Agent\ChatWithAgent.Web\ChatWithAgent.Web.csproj", "{518EBD17-F582-9E69-2716-57C9329DC0BE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatWithAgent.Configuration", "samples\Demos\Hosting\Agent\ChatWithAgent.Configuration\ChatWithAgent.Configuration.csproj", "{02663844-E371-416A-969A-66B6512BB2E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessWithCloudEvents.Grpc.LocalRuntime", "samples\Demos\ProcessWithCloudEvents\ProcessWithCloudEvents.Grpc.LocalRuntime\ProcessWithCloudEvents.Grpc.LocalRuntime.csproj", "{955BD976-597B-C698-0CAA-32AF9FA61BA0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73246,6 +73248,7 @@ Global
 		{38059FCB-2CD7-C0DE-AE71-DA4D0245ECC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38059FCB-2CD7-C0DE-AE71-DA4D0245ECC7}.Release|Any CPU.Build.0 = Release|Any CPU
 
+
 		{9B61C42F-63FE-4043-83E7-4B8BA3D74BEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B61C42F-63FE-4043-83E7-4B8BA3D74BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B61C42F-63FE-4043-83E7-4B8BA3D74BEB}.Publish|Any CPU.ActiveCfg = Release|Any CPU
@@ -73276,6 +73279,13 @@ Global
 		{02663844-E371-416A-969A-66B6512BB2E1}.Publish|Any CPU.Build.0 = Release|Any CPU
 		{02663844-E371-416A-969A-66B6512BB2E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02663844-E371-416A-969A-66B6512BB2E1}.Release|Any CPU.Build.0 = Release|Any CPU
+
+		{955BD976-597B-C698-0CAA-32AF9FA61BA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{955BD976-597B-C698-0CAA-32AF9FA61BA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{955BD976-597B-C698-0CAA-32AF9FA61BA0}.Publish|Any CPU.ActiveCfg = Release|Any CPU
+		{955BD976-597B-C698-0CAA-32AF9FA61BA0}.Publish|Any CPU.Build.0 = Release|Any CPU
+		{955BD976-597B-C698-0CAA-32AF9FA61BA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{955BD976-597B-C698-0CAA-32AF9FA61BA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73496,12 +73506,15 @@ Global
 
 		{38059FCB-2CD7-C0DE-AE71-DA4D0245ECC7} = {6823CD5E-2ABE-41EB-B865-F86EC13F0CF9}
 
+
 		{D1FD2171-A467-4F2D-9CF1-4B0DB753A689} = {41AC66EE-B656-4CDF-A512-C7259C2F6CF7}
 		{9B61C42F-63FE-4043-83E7-4B8BA3D74BEB} = {D1FD2171-A467-4F2D-9CF1-4B0DB753A689}
 		{FCEB6560-A377-88A0-3FFC-D82ACCCEB211} = {D1FD2171-A467-4F2D-9CF1-4B0DB753A689}
 		{CB494B28-A90B-C2AA-F7BB-CFD2A88639A0} = {D1FD2171-A467-4F2D-9CF1-4B0DB753A689}
 		{518EBD17-F582-9E69-2716-57C9329DC0BE} = {D1FD2171-A467-4F2D-9CF1-4B0DB753A689}
 		{02663844-E371-416A-969A-66B6512BB2E1} = {D1FD2171-A467-4F2D-9CF1-4B0DB753A689}
+
+		{955BD976-597B-C698-0CAA-32AF9FA61BA0} = {7C092DD9-9985-4D18-A817-15317D984149}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FBDC56A3-86AD-4323-AA0F-201E59123B83}

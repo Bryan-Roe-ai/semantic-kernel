@@ -72,6 +72,7 @@ public record KernelProcessStepInfo
     /// </summary>
     public IReadOnlyDictionary<string, IReadOnlyCollection<KernelProcessEdge>> Edges =>
         this._outputEdges.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyCollection<KernelProcessEdge>)kvp.Value.AsReadOnly());
+    public IReadOnlyDictionary<string, IReadOnlyCollection<KernelProcessEdge>> Edges { get; init; }
 
     /// <summary>
     /// A dictionary of input mappings for the grouped edges.
@@ -88,14 +89,11 @@ public record KernelProcessStepInfo
         Verify.NotNull(state);
 
         this.InnerStepType = innerStepType;
-<<<<<<< main
         this._outputEdges = edges;
         this.State = state;
         this.Edges = edges.ToDictionary(kvp => kvp.Key, kvp => (IReadOnlyCollection<KernelProcessEdge>)kvp.Value.AsReadOnly());
-=======
         this._outputEdges = edges;
         this.State = state;
->>>>>>> origin/main
         this._state = state;
         this.IncomingEdgeGroups = incomingEdgeGroups;
 

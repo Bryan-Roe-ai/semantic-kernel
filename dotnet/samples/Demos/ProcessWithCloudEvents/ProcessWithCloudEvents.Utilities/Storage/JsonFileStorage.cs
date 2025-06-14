@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System.IO;
+#pragma warning disable IDE0005 // Using directive is unnecessary
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
+#pragma warning restore IDE0005 // Using directive is unnecessary
 
-namespace SemanticKernel.Process.TestsShared.Services;
+namespace ProcessWithCloudEvents.SharedComponents.Storage;
 
 internal sealed class JsonFileStorage : IProcessStorageConnector
 {
@@ -18,6 +17,11 @@ internal sealed class JsonFileStorage : IProcessStorageConnector
 
     public JsonFileStorage(string storageDirectory)
     {
+        if (string.IsNullOrWhiteSpace(storageDirectory))
+        {
+            throw new ArgumentException("Storage directory cannot be null or empty.", nameof(storageDirectory));
+        }
+
         this._storageDirectory = storageDirectory;
         Directory.CreateDirectory(this._storageDirectory);
     }

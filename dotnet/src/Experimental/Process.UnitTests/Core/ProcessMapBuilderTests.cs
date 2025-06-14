@@ -29,9 +29,9 @@ public class ProcessMapBuilderTests
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert
-        Assert.NotNull(map.Id);
-        Assert.NotNull(map.Name);
-        Assert.Contains(nameof(SimpleTestStep), map.Name);
+        Assert.NotNull(map.StepId);
+        Assert.NotNull(map.StepId);
+        Assert.Contains(nameof(SimpleTestStep), map.StepId);
         Assert.NotNull(map.MapOperation);
         Assert.Equal(step, map.MapOperation);
 <<<<<<< HEAD
@@ -86,9 +86,9 @@ public class ProcessMapBuilderTests
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert
-        Assert.NotNull(map.Id);
-        Assert.NotNull(map.Name);
-        Assert.Contains(process.Name, map.Name);
+        Assert.NotNull(map.StepId);
+        Assert.NotNull(map.StepId);
+        Assert.Contains(process.StepId, map.StepId);
         Assert.NotNull(map.MapOperation);
         Assert.Equal(process, map.MapOperation);
 <<<<<<< HEAD
@@ -133,7 +133,7 @@ public class ProcessMapBuilderTests
         Assert.NotNull(processMap);
         Assert.Equal(processMap.Edges.Count, map.Edges.Count);
         Assert.Equal(processMap.Edges.Single().Value.Count, map.Edges.First().Value.Count);
-        Assert.Equal((processMap.Edges.Single().Value.Single().OutputTarget as KernelProcessFunctionTarget)!.StepId, (map.Edges.Single().Value[0].Target as ProcessFunctionTargetBuilder)!.Step.Id);
+        Assert.Equal((processMap.Edges.Single().Value.Single().OutputTarget as KernelProcessFunctionTarget)!.StepId, (map.Edges.Single().Value[0].Target as ProcessFunctionTargetBuilder)!.Step.StepId);
     }
 
     /// <summary>
@@ -177,8 +177,8 @@ public class ProcessMapBuilderTests
         // Assert
         Assert.NotNull(processMap);
         Assert.IsType<KernelProcessMap>(processMap);
-        Assert.Equal(map.Name, processMap.State.Name);
-        Assert.Equal(map.Id, processMap.State.Id);
+        Assert.Equal(map.StepId, processMap.State.StepId);
+        Assert.Equal(map.StepId, processMap.State.RunId);
     }
 
     /// <summary>

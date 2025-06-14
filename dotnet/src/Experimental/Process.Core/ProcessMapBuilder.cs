@@ -3,10 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.SemanticKernel.Process.Models;
-<<<<<<< HEAD
-=======
-using Microsoft.SemanticKernel.Process.Models;
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 namespace Microsoft.SemanticKernel;
 
@@ -17,7 +13,6 @@ namespace Microsoft.SemanticKernel;
 /// </summary>
 public sealed class ProcessMapBuilder : ProcessStepBuilder
 {
-<<<<<<< HEAD
     private readonly ProcessBuilder _mapProcess;
     internal readonly ProcessFunctionTargetBuilder _mapTarget;
 
@@ -26,7 +21,7 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
     /// </summary>
     /// <param name="mapOperation">The target of the map operation.  May target a step or process</param>
     internal ProcessMapBuilder(ProcessStepBuilder mapOperation)
-        : base($"Map{mapOperation.Name}", mapOperation.ProcessBuilder)
+        : base($"Map{mapOperation.StepId}", mapOperation.ProcessBuilder)
     {
         this.MapOperation = mapOperation;
     }
@@ -61,7 +56,6 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
     /// </summary>
     internal ProcessStepBuilder MapOperation { get; }
 
-=======
     /// <summary>
     /// Initializes a new instance of the <see cref="ProcessMapBuilder"/> class.
     /// </summary>
@@ -102,7 +96,6 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
     /// </summary>
     internal ProcessStepBuilder MapOperation { get; }
 
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     /// <inheritdoc/>
     /// <remarks>
     /// Never called as the map is a proxy for the map operation and does not have a function target.
@@ -121,7 +114,6 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
         }
 
         return this.MapOperation.ResolveFunctionTarget(functionName, parameterName);
-<<<<<<< HEAD
         return new KernelProcessFunctionTarget(this.Id, this._mapTarget.FunctionName, this._mapTarget.ParameterName);
     }
 
@@ -177,7 +169,6 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
             .SendEventTo(mapTarget);
 
         return transformBuilder;
-=======
         if (this.MapOperation is ProcessBuilder processOperation)
         {
             throw new KernelException($"Map operation is a process.  Use {nameof(ProcessMapBuilder)}.{nameof(WhereInputEventIs)} to resolve target.");
@@ -187,21 +178,16 @@ public sealed class ProcessMapBuilder : ProcessStepBuilder
     }
 
     /// <inheritdoc/>
-    internal override KernelProcessStepInfo BuildStep(ProcessBuilder processBuilder, KernelProcessStepStateMetadata? stateMetadata = null)
+    internal override KernelProcessStepInfo BuildStep(ProcessBuilder processBuilder)
     {
-        KernelProcessMapStateMetadata? mapMetadata = stateMetadata as KernelProcessMapStateMetadata;
-
         // Build the edges first
         var builtEdges = this.Edges.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Select(e => e.Build()).ToList());
 
         // Define the map state
-        KernelProcessMapState state = new(this.Name, this.Version, this.Id);
+        KernelProcessMapState state = new(this.StepId, this.Version, this.StepId);
 
-<<<<<<< HEAD
         return new KernelProcessMap(state, this.MapOperation.BuildStep(mapMetadata?.OperationState), builtEdges);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-=======
         return new KernelProcessMap(state, this.MapOperation.BuildStep(processBuilder, mapMetadata?.OperationState), builtEdges);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+        return new KernelProcessMap(state, this.MapOperation.BuildStep(processBuilder), builtEdges);
     }
 }

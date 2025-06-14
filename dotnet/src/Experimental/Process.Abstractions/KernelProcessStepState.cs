@@ -41,14 +41,14 @@ public record KernelProcessStepState
     /// This may be null until a process containing this step has been invoked.
     /// </summary>
     [DataMember]
-    public string? Id { get; init; }
+    public string? RunId { get; set; }
 
     /// <summary>
     /// The name of the Step. This is intended to be human readable and is not required to be unique. If
     /// not provided, the name will be derived from the steps .NET type.
     /// </summary>
     [DataMember]
-    public string Name { get; init; }
+    public string StepId { get; init; }
 
     /// <summary>
     /// Version of the state
@@ -71,8 +71,8 @@ public record KernelProcessStepState
         Verify.NotNullOrWhiteSpace(version, nameof(version));
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
-        this.Id = id;
-        this.Name = name;
+        this.RunId = id;
+        this.StepId = name;
         this.Version = version;
     }
 }
@@ -102,8 +102,8 @@ public sealed record KernelProcessStepState<TState> : KernelProcessStepState whe
     {
         Verify.NotNullOrWhiteSpace(name);
 
-        this.Id = id;
-        this.Name = name;
+        this.RunId = id;
+        this.StepId = name;
         this.Version = version;
     }
 }

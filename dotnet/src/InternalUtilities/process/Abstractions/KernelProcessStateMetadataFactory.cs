@@ -17,8 +17,8 @@ internal static class ProcessStateMetadataFactory
     {
         KernelProcessStateMetadata metadata = new()
         {
-            Name = kernelProcess.State.Name,
-            Id = kernelProcess.State.Id,
+            Name = kernelProcess.State.StepId,
+            Id = kernelProcess.State.RunId,
             VersionInfo = kernelProcess.State.Version,
             StepsState = [],
         };
@@ -29,6 +29,7 @@ internal static class ProcessStateMetadataFactory
         foreach (KernelProcessStepInfo step in kernelProcess.Steps)
         {
             metadata.StepsState.Add(step.State.Name, step.ToProcessStateMetadata());
+            metadata.StepsState.Add(step.State.StepId, step.ToProcessStateMetadata());
         }
 
         return metadata;
@@ -44,15 +45,12 @@ internal static class ProcessStateMetadataFactory
         {
             return KernelProcessMapToProcessStateMetadata(stepMap);
         }
-<<<<<<< HEAD
         else if (stepInfo is KernelProcessMap stepMap)
         {
             return KernelProcessMapToProcessStateMetadata(stepMap);
-=======
         else if (stepInfo is KernelProcessProxy stepProxy)
         {
             return KernelProcessProxyToProcessStateMetadata(stepProxy);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         }
 
         return StepInfoToProcessStateMetadata(stepInfo);
@@ -63,8 +61,8 @@ internal static class ProcessStateMetadataFactory
         return
             new()
             {
-                Name = stepMap.State.Name,
-                Id = stepMap.State.Id,
+                Name = stepMap.State.StepId,
+                Id = stepMap.State.RunId,
                 VersionInfo = stepMap.State.Version,
                 OperationState = ToProcessStateMetadata(stepMap.Operation),
             };
@@ -74,8 +72,8 @@ internal static class ProcessStateMetadataFactory
     {
         return new()
         {
-            Name = stepProxy.State.Name,
-            Id = stepProxy.State.Id,
+            Name = stepProxy.State.StepId,
+            Id = stepProxy.State.RunId,
             VersionInfo = stepProxy.State.Version,
             PublishTopics = stepProxy.ProxyMetadata?.PublishTopics ?? [],
             EventMetadata = stepProxy.ProxyMetadata?.EventMetadata ?? [],
@@ -90,8 +88,8 @@ internal static class ProcessStateMetadataFactory
     {
         KernelProcessStepStateMetadata metadata = new()
         {
-            Name = stepInfo.State.Name,
-            Id = stepInfo.State.Id,
+            Name = stepInfo.State.StepId,
+            Id = stepInfo.State.RunId,
             VersionInfo = stepInfo.State.Version
         };
 
