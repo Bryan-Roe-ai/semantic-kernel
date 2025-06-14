@@ -1,6 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-from typing_extensions import deprecated
+import sys
 
 <<<<<<< HEAD
 from semantic_kernel.services.ai_service_client_base import AIServiceClientBase
@@ -53,6 +53,11 @@ if TYPE_CHECKING:
 from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase as NewEmbeddingGeneratorBase
 from semantic_kernel.utils.feature_stage_decorator import experimental
 >>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
 
 
 @deprecated(

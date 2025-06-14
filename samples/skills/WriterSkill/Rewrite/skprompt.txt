@@ -2,3 +2,8 @@ Rewrite the given text like it was written in this style or by: {{input_style}}.
 MUST RETAIN THE MEANING AND FACTUAL CONTENT AS THE ORIGINAL.
 
 {{input_text}}
+Rewrite the given text like it was written in this style or by: {{$style}}. 
+MUST RETAIN THE MEANING AND FACTUAL CONTENT AS THE ORIGINAL.
+
+
+{{$input}}

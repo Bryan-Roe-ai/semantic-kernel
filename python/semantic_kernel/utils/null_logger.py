@@ -1,90 +1,23 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 from logging import Logger
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
 
 class NullLogger(Logger):
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
->>>>>>> head
 
 
 class NullLogger(Logger):
 from functools import wraps
 from logging import Logger, getLogger
 from typing import Any, Callable
->>>>>>> origin/main
 
 logger: Logger = getLogger(__name__)
 
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
 # TODO: delete
-=======
 logger: Logger = getLogger(__name__)
 
 # TODO: delete
-
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-
-=======
-# TODO: delete
-
->>>>>>> Stashed changes
-=======
-# TODO: delete
->>>>>>> head
-
->>>>>>> Stashed changes
-
-<<<<<<< main
 class NullLogger(Logger):
-=======
 def _nullify(fn) -> Callable[[Any], None]:
     """General wrapper to not call wrapped function"""
 
@@ -103,29 +36,9 @@ class _NullerMeta(type):
 
 
 class NullLogger(Logger, metaclass=_NullerMeta):
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+class NullLogger(Logger):
     """
     A logger that does nothing.
     """
@@ -138,46 +51,6 @@ class NullLogger(Logger, metaclass=_NullerMeta):
 
     def info(self, _: str) -> None:
         pass
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
->>>>>>> head
 
     def warning(self, _: str) -> None:
         pass
@@ -192,40 +65,6 @@ class NullLogger(Logger, metaclass=_NullerMeta):
                 "the same goes for all 'log' and 'logger' arguments.",
             )
         )
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
 
     def warning(self, _: str) -> None:
         pass

@@ -1,5 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 using System;
+// Copyright (c) Microsoft. All rights reserved.
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -126,6 +128,7 @@ public sealed class AzureAIAgent : KernelAgent
 
     /// <summary>
     /// The associated client.
+    /// The Agent SDK client.
     /// </summary>
     public PersistentAgentsClient Client { get; }
 
@@ -196,6 +199,20 @@ public sealed class AzureAIAgent : KernelAgent
         CancellationToken cancellationToken = default)
     {
         return this.InvokeAsync(threadId, options: null, arguments, kernel, cancellationToken);
+    /// <inheritdoc/>
+    public override IAsyncEnumerable<AgentResponseItem<ChatMessageContent>> InvokeAsync(
+        ICollection<ChatMessageContent> messages,
+        AgentThread? thread = null,
+        AgentInvokeOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        return this.InvokeAsync(
+            messages,
+            thread,
+            options is null ?
+                null :
+                options is AzureAIAgentInvokeOptions azureAIAgentInvokeOptions ? azureAIAgentInvokeOptions : new AzureAIAgentInvokeOptions(options),
+            cancellationToken);
     }
 
     /// <summary>
@@ -238,6 +255,29 @@ public sealed class AzureAIAgent : KernelAgent
                 new AzureAIAgentInvokeOptions() { AdditionalInstructions = mergedAdditionalInstructions } :
                 new AzureAIAgentInvokeOptions(options) { AdditionalInstructions = mergedAdditionalInstructions };
         }
+        AzureAIAgentThread azureAIAgentThread = await this.EnsureThreadExistsWithMessagesAsync(
+            messages,
+            thread,
+            () => new AzureAIAgentThread(this.Client),
+            cancellationToken).ConfigureAwait(false);
+
+        Kernel kernel = (options?.Kernel ?? this.Kernel).Clone();
+
+        // Get the context contributions from the AIContextProviders.
+#pragma warning disable SKEXP0110, SKEXP0130 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+        AIContext providersContext = await azureAIAgentThread.AIContextProviders.ModelInvokingAsync(messages, cancellationToken).ConfigureAwait(false);
+        kernel.Plugins.AddFromAIContext(providersContext, "Tools");
+#pragma warning restore SKEXP0110, SKEXP0130 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+
+        string mergedAdditionalInstructions = FormatAdditionalInstructions(providersContext, options);
+        var extensionsContextOptions = options is null ?
+            new AzureAIAgentInvokeOptions() { AdditionalInstructions = mergedAdditionalInstructions } :
+            new AzureAIAgentInvokeOptions(options) { AdditionalInstructions = mergedAdditionalInstructions };
+
+        var invokeResults = ActivityExtensions.RunWithActivityAsync(
+            () => ModelDiagnostics.StartAgentInvocationActivity(this.Id, this.GetDisplayName(), this.Description),
+            () => InternalInvokeAsync(),
+            cancellationToken);
 
         await foreach ((bool isVisible, ChatMessageContent message) in AgentThreadActions.InvokeAsync(
             this,
@@ -280,18 +320,84 @@ public sealed class AzureAIAgent : KernelAgent
         AzureAIInvocationOptions? options,
         KernelArguments? arguments = null,
         Kernel? kernel = null,
+    /// <inheritdoc/>
+    public override IAsyncEnumerable<AgentResponseItem<StreamingChatMessageContent>> InvokeStreamingAsync(
+        ICollection<ChatMessageContent> messages,
+        AgentThread? thread = null,
+        AgentInvokeOptions? options = null,
+        CancellationToken cancellationToken = default)
+    {
+        return this.InvokeStreamingAsync(
+            messages,
+            thread,
+            options is null ?
+                null :
+                options is AzureAIAgentInvokeOptions azureAIAgentInvokeOptions ? azureAIAgentInvokeOptions : new AzureAIAgentInvokeOptions(options),
+            cancellationToken);
+    }
+
+    /// <summary>
+    /// Invoke the agent with the provided message and arguments.
+    /// </summary>
+    /// <param name="messages">The messages to pass to the agent.</param>
+    /// <param name="thread">The conversation thread to continue with this invocation. If not provided, creates a new thread.</param>
+    /// <param name="options">Optional parameters for agent invocation.</param>
+    /// <param name="cancellationToken">The <see cref="CancellationToken"/> to monitor for cancellation requests. The default is <see cref="CancellationToken.None"/>.</param>
+    /// <returns>An async list of response items that each contain a <see cref="StreamingChatMessageContent"/> and an <see cref="AgentThread"/>.</returns>
+    /// <remarks>
+    /// To continue this thread in the future, use an <see cref="AgentThread"/> returned in one of the response items.
+    /// </remarks>
+    public async IAsyncEnumerable<AgentResponseItem<StreamingChatMessageContent>> InvokeStreamingAsync(
+        ICollection<ChatMessageContent> messages,
+        AgentThread? thread = null,
+        AzureAIAgentInvokeOptions? options = null,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         this.ThrowIfDeleted();
 
         kernel = (options?.Kernel ?? kernel ?? this.Kernel).Clone();
         arguments = this.MergeArguments(arguments);
+        AzureAIAgentThread azureAIAgentThread = await this.EnsureThreadExistsWithMessagesAsync(
+            messages,
+            thread,
+            () => new AzureAIAgentThread(this.Client),
+            cancellationToken).ConfigureAwait(false);
 
         // Get the context contributions from the AIContextProviders if available
         AzureAIAgentInvocationOptions? extensionsContextOptions = null;
 
         if (options != null && options is AzureAIAgentInvokeOptions agentOptions &&
             agentOptions.Thread != null && agentOptions.Thread is AzureAIAgentThread azureAIAgentThread)
+        // Get the context contributions from the AIContextProviders.
+#pragma warning disable SKEXP0110, SKEXP0130 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+        AIContext providersContext = await azureAIAgentThread.AIContextProviders.ModelInvokingAsync(messages, cancellationToken).ConfigureAwait(false);
+        kernel.Plugins.AddFromAIContext(providersContext, "Tools");
+#pragma warning restore SKEXP0110, SKEXP0130 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+
+        string mergedAdditionalInstructions = FormatAdditionalInstructions(providersContext, options);
+        var extensionsContextOptions = options is null ?
+            new AzureAIAgentInvokeOptions() { AdditionalInstructions = mergedAdditionalInstructions } :
+            new AzureAIAgentInvokeOptions(options) { AdditionalInstructions = mergedAdditionalInstructions };
+
+        // Invoke the Agent with the thread that we already added our message to, and with
+        // a chat history to receive complete messages.
+        ChatHistory newMessagesReceiver = [];
+        var invokeResults = ActivityExtensions.RunWithActivityAsync(
+            () => ModelDiagnostics.StartAgentInvocationActivity(this.Id, this.GetDisplayName(), this.Description),
+            () => AgentThreadActions.InvokeStreamingAsync(
+                this,
+                this.Client,
+                azureAIAgentThread.Id!,
+                newMessagesReceiver,
+                extensionsContextOptions.ToAzureAIInvocationOptions(),
+                this.Logger,
+                kernel,
+                options?.KernelArguments,
+                cancellationToken),
+            cancellationToken);
+
+        // Return the chunks to the caller.
+        await foreach (var result in invokeResults.ConfigureAwait(false))
         {
 #pragma warning disable SKEXP0110 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
             var providersContext = await azureAIAgentThread.AIContextProviders.ModelInvokingAsync(null, cancellationToken).ConfigureAwait(false);
@@ -465,19 +571,4 @@ public sealed class AzureAIAgent : KernelAgent
         await Task.Delay(100); // Simulate async operation
         return $"Processed input: {input}";
     }
-
-    private static string MergeAdditionalInstructions(string? optionsAdditionalInstructions, string? extensionsContext) =>
-        (optionsAdditionalInstructions, extensionsContext) switch
-        {
-            (string ai, string ec) when !string.IsNullOrWhiteSpace(ai) && !string.IsNullOrWhiteSpace(ec) => string.Concat(
-                ai,
-                Environment.NewLine,
-                Environment.NewLine,
-                ec),
-            (string ai, string ec) when string.IsNullOrWhiteSpace(ai) => ec,
-            (string ai, string ec) when string.IsNullOrWhiteSpace(ec) => ai,
-            (null, string ec) => ec,
-            (string ai, null) => ai,
-            _ => string.Empty
-        };
 }

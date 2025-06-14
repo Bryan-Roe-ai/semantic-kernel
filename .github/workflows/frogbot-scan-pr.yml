@@ -1,23 +1,16 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support documentation.
-
-# Frogbot Scan Pull Request does the following:
-# Automatically scans new pull requests for security vulnerabilities.
-# Uses JFrog Xray to scan the project.
-# Read more about Frogbot here - https://github.com/jfrog/frogbot#frogbot
-
-# Some projects require creating a frogbot-config.yml file. Read more about it here - https://github.com/jfrog/frogbot/blob/master/docs/frogbot-config.md
-
-name: "Frogbot Scan Pull Request"
+name: Frogbot Scan Pull Request
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, synchronize, reopened]
+    branches: [main, develop]
+  schedule:
+    - cron: '0 3 * * 1'
 
 permissions:
-  pull-requests: write
   contents: read
+  pull-requests: write
+  # issues: write
 
 jobs:
   scan-pull-request:
@@ -25,80 +18,58 @@ jobs:
     environment: frogbot
 
     steps:
-      # Step 1: Checkout the pull request code
-      - name: Checkout Pull Request Code
-        uses: actions/checkout@v3
+      - name: Checkout PR Code
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      # Step 2: Validate Required Secrets
       - name: Validate Required Secrets
         run: |
-          if [[ -z "${{ secrets.JF_URL }}" || -z "${{ secrets.JF_ACCESS_TOKEN }}" ]]; then
-            echo "Required secrets are missing!"
+          missing=()
+          [[ -z "${{ secrets.JF_URL }}" ]] && missing+=("JF_URL")
+          [[ -z "${{ secrets.JF_ACCESS_TOKEN }}" ]] && missing+=("JF_ACCESS_TOKEN")
+          [[ -z "${{ secrets.GITHUB_TOKEN }}" ]] && missing+=("GITHUB_TOKEN")
+          if [ ${#missing[@]} -ne 0 ]; then
+            echo "Missing required secrets: ${missing[*]}"
             exit 1
           fi
 
-      # Step 3: Cache Dependencies (Optional)
-      - name: Cache Dependencies
-        uses: actions/cache@v3
+      - name: Cache JFrog Directory
+        uses: actions/cache@v4
         with:
           path: ~/.jfrog
-          key: ${{ runner.os }}-frogbot-${{ github.sha }}
+          key: ${{ runner.os }}-frogbot-${{ github.ref_name }}-${{ github.run_id }}
           restore-keys: |
+            ${{ runner.os }}-frogbot-${{ github.ref_name }}-
             ${{ runner.os }}-frogbot-
 
-      # Step 4: Run Frogbot
-      - name: Run Frogbot Security Scan
+      # - name: Install Dependencies (uncomment if needed)
+      #   run: pip install -r requirements.txt
+
+      - name: Frogbot Security Scan
         uses: jfrog/frogbot@v2.10.0
         env:
-          # [Mandatory]
-          # JFrog platform URL
           JF_URL: ${{ secrets.JF_URL }}
-
-          # [Mandatory if JF_USER and JF_PASSWORD are not provided]
-          # JFrog access token with 'read' permissions on Xray service
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-
-          # [Optional - Dependency Installation Command]
-          # The command that installs the project dependencies (e.g., "npm i", "nuget restore" or "dotnet restore")
-          # Uncomment and set this if your project requires it:
-          # JF_INSTALL_DEPS_CMD: "npm install"
-
-          # [Optional - Dependency Repository]
-          # Set the repository to download dependencies, if needed:
-          # JF_DEPS_REPO: ""
-
-          # [Optional - Remote Repository for Offline Machines]
-          # If the machine running Frogbot has no internet access:
-          # JF_RELEASES_REPO: ""
-
-          # GitHub token automatically generated for the job
           JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 5: Handle Errors Gracefully
-      - name: Handle Errors
+      - name: Handle Frogbot Failures
         if: failure()
-        run: echo "Workflow failed. Please check the logs for details."
+        run: |
+          echo "Frogbot scan failed. Please check the logs above for details."
+          # Optional: Send notification or open issue
 
-      # Step 6: Install systemd
-      - name: Install systemd
-        run: sudo apt-get update && sudo apt-get install -y systemd
+      - name: Upload Frogbot Scan Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frogbot-report
+          path: path/to/report
 
-      # Step 7: Start systemd
-      - name: Start systemd
-        run: sudo systemctl start systemd
+      # Optional: Notify Maintainers for scheduled scan
+      # - name: Notify Maintainers of Scheduled Scan
+      #   if: github.event_name == 'schedule'
+      #   run: echo "Scheduled scan done. Please review the results."
 
-      # Step 8: Verify systemd status
-      - name: Verify systemd status
-        run: sudo systemctl status systemd
-
-      # Step 9: Fix Errors
-      - name: Fix Errors
-        if: failure()
-        run: ./fix-errors.sh
-
-      # Step 10: Log Error Message
-      - name: Log Error Message
-        if: failure()
-        run: echo "Error occurred during the Frogbot scan pull request process"
+# Frogbot Docs: https://github.com/jfrog/frogbot#frogbot
+# JFrog Xray Docs: https://jfrog.com/xray/

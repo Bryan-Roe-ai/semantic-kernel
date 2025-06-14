@@ -14,7 +14,6 @@ if sys.version_info >= (3, 12):
 else:
     from typing_extensions import override  # pragma: no cover
 
-<<<<<<< HEAD
 <<<<<<< HEAD:python/semantic_kernel/connectors/memory/volatile/volatile_store.py
 
 from semantic_kernel.connectors.memory.volatile.volatile_collection import (
@@ -27,10 +26,8 @@ from semantic_kernel.data.vector_store_model_definition import (
 from semantic_kernel.data.vector_store_record_collection import (
     VectorStoreRecordCollection,
 )
-=======
 from semantic_kernel.connectors.memory.in_memory.in_memory_collection import InMemoryVectorCollection
 from semantic_kernel.data import VectorStore, VectorStoreRecordCollection, VectorStoreRecordDefinition
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/semantic_kernel/connectors/memory/in_memory/in_memory_store.py
 from semantic_kernel.utils.experimental_decorator import experimental_class
 
 =======

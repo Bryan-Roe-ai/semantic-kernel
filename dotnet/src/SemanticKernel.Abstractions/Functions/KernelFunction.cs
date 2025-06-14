@@ -1860,7 +1860,7 @@ public abstract class KernelFunction : FullyQualifiedAIFunction
         kernel ??= this.Kernel;
         Verify.NotNull(kernel);
 
-        using var activity = s_activitySource.StartActivity(this.Name);
+        using var activity = s_activitySource.StartFunctionActivity(this.Name, this.Description);
         ILogger logger = kernel.LoggerFactory.CreateLogger(typeof(KernelFunction)) ?? NullLogger.Instance;
 
         // Ensure arguments are initialized.
@@ -1963,7 +1963,7 @@ public abstract class KernelFunction : FullyQualifiedAIFunction
         kernel ??= this.Kernel;
         Verify.NotNull(kernel);
 
-        using var activity = s_activitySource.StartActivity(this.Name);
+        using var activity = s_activitySource.StartFunctionActivity(this.Name, this.Description);
         ILogger logger = kernel.LoggerFactory.CreateLogger(this.Name) ?? NullLogger.Instance;
 
         arguments ??= [];

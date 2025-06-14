@@ -1,74 +1,74 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
+
+
+
+
+
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
+
+
+
 using System.Collections.Generic;
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
 using System;
 using System.Diagnostics.CodeAnalysis;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 using System.Text.Json.Serialization;
 
 namespace Microsoft.SemanticKernel.Agents.OpenAI;
@@ -76,102 +76,102 @@ namespace Microsoft.SemanticKernel.Agents.OpenAI;
 /// <summary>
 /// Defines an assistant.
 /// </summary>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
+
 public sealed class OpenAIAssistantDefinition
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public sealed class OpenAIAssistantDefinition
-=======
-=======
+
+
 [Experimental("SKEXP0110")]
 [Obsolete("Use the OpenAI.Assistants.AssistantClient.CreateAssistantAsync() to create an assistant definition.")]
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
+
+
+
+
+
+
 public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
+
+
+
 {
     /// <summary>
-<<<<<<< HEAD
+
     /// Identifies the AI model targeted by the agent.
     /// </summary>
     public string ModelId { get; }
 
     /// <summary>
     /// The description of the assistant.
-=======
+
     /// Gets the description of the assistant.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Description { get; init; }
 
     /// <summary>
-<<<<<<< HEAD
+
     /// The assistant's unique id.  (Ignored on create.)
     /// </summary>
     public string Id { get; init; } = string.Empty;
 
     /// <summary>
     /// The system instructions for the assistant to use.
-=======
+
     /// Gets the system instructions for the assistant to use.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Instructions { get; init; }
@@ -183,49 +183,51 @@ public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
     public string? Name { get; init; }
 
     /// <summary>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /// Provide the captured template format for the assistant if needed for agent retrieval.
     /// (<see cref="OpenAIAssistantAgent.RetrieveAsync"/>)
-=======
+
     /// Gets the captured template format for the assistant if needed for agent retrieval
+
     /// (<see cref="OpenAIAssistantAgent.RetrieveAsync"/>).
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
+
     /// </summary>
     [JsonIgnore]
     public string? TemplateFactoryFormat
@@ -242,40 +244,40 @@ public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
             return templateFormat;
         }
     }
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /// Optional file-ids made available to the code_interpreter tool, if enabled.
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -300,118 +302,118 @@ public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
     public bool EnableJsonResponse { get; init; }
 
     /// <summary>
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /// A set of up to 16 key/value pairs that can be attached to an agent, used for
     /// storing additional information about that object in a structured format.Keys
     /// may be up to 64 characters in length and values may be up to 512 characters in length.
     /// </summary>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< div
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /// Initializes a new instance of the <see cref="OpenAIAssistantDefinition"/> class.
     /// </summary>
     /// <param name="modelId">The targeted model</param>
     [JsonConstructor]
     public OpenAIAssistantDefinition(string modelId)
         : base(modelId) { }
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IReadOnlyDictionary<string, string>? Metadata { get; init; }
 
@@ -420,40 +422,40 @@ public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public float? Temperature { get; init; }
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /// <summary>
     /// An alternative to sampling with temperature, called nucleus sampling, where the model
@@ -477,42 +479,42 @@ public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
     /// </summary>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public OpenAIAssistantExecutionOptions? ExecutionOptions { get; init; }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /// Provide the captured template format for the assistant if needed for agent retrieval.
     /// (<see cref="OpenAIAssistantAgent.RetrieveAsync"/>)
     /// </summary>
@@ -531,40 +533,40 @@ public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
             return templateFormat;
         }
     }
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OpenAIAssistantDefinition"/> class.
@@ -577,63 +579,63 @@ public sealed class OpenAIAssistantDefinition : OpenAIAssistantCapabilities
 
         this.ModelId = modelId;
     }
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         : base(modelId) { }
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         : base(modelId) { }
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
+
+
+
+
+
         : base(modelId) { }
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
+
+
+
+
         : base(modelId) { }
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
 }

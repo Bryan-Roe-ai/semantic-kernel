@@ -1,10 +1,10 @@
 ---
 # These are optional elements. Feel free to remove any of them.
 status: {proposed}
-date: {2023-11-10}
+date: 2023-11-10
 deciders: SergeyMenshykh, markwallace, rbarreto, dmytrostruk
-consulted: 
-informed: 
+consulted:
+informed:
 ---
 # Add AI Service Metadata
 

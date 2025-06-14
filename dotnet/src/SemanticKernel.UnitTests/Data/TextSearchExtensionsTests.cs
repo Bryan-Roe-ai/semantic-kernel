@@ -31,6 +31,30 @@ public class TextSearchExtensionsTests
             { TextSearch.CreateSearch(CustomSearchMethodOptions()) },
             { TextSearch.CreateGetTextSearchResults(CustomSearchMethodOptions()) },
             { TextSearch.CreateGetSearchResults(CustomSearchMethodOptions()) },
+            { TextSearch.CreateWithSearch(5, "SearchPlugin") },
+            { TextSearch.CreateWithSearch(5, "SearchPlugin", JsonSerializerOptions) },
+            { TextSearch.CreateWithGetTextSearchResults(5, "SearchPlugin") },
+            { TextSearch.CreateWithGetTextSearchResults(5, "SearchPlugin", JsonSerializerOptions) },
+            { TextSearch.CreateWithGetSearchResults(5, "SearchPlugin") },
+            { TextSearch.CreateWithGetSearchResults(5, "SearchPlugin", JsonSerializerOptions) },
+        };
+    public static TheoryData<KernelFunction, string> StandardFunctions => new()
+        {
+            { TextSearch.CreateSearch(5), "Search" },
+            { TextSearch.CreateSearch(5, JsonSerializerOptions), "Search" },
+            { TextSearch.CreateGetTextSearchResults(5), "GetTextSearchResults" },
+            { TextSearch.CreateGetTextSearchResults(5, JsonSerializerOptions), "GetTextSearchResults" },
+            { TextSearch.CreateGetSearchResults(5), "GetSearchResults" },
+            { TextSearch.CreateGetSearchResults(5, JsonSerializerOptions), "GetSearchResults" },
+        };
+    public static TheoryData<KernelFunction> CustomFunctions => new()
+       {
+            { TextSearch.CreateSearch(5, CustomSearchMethodOptions()) },
+            { TextSearch.CreateSearch(5, JsonSerializerOptions, CustomSearchMethodOptions()) },
+            { TextSearch.CreateGetTextSearchResults(5, CustomSearchMethodOptions()) },
+            { TextSearch.CreateGetTextSearchResults(5, JsonSerializerOptions, CustomSearchMethodOptions()) },
+            { TextSearch.CreateGetSearchResults(5, CustomSearchMethodOptions()) },
+            { TextSearch.CreateGetSearchResults(5, JsonSerializerOptions, CustomSearchMethodOptions()) },
        };
 
     public static TheoryData<KernelFunction, int> FunctionsWithCount => new()
@@ -38,6 +62,12 @@ public class TextSearchExtensionsTests
             { TextSearch.CreateSearch(searchOptions: new() { Top = 10 }), 10 },
             { TextSearch.CreateGetTextSearchResults(searchOptions: new() { Top = 10 }), 10 },
             { TextSearch.CreateGetSearchResults(searchOptions: new() { Top = 10 }), 10 },
+            { TextSearch.CreateSearch(top: 10), 10 },
+            { TextSearch.CreateSearch(10, JsonSerializerOptions), 10 },
+            { TextSearch.CreateGetTextSearchResults(10), 10 },
+            { TextSearch.CreateGetTextSearchResults(10, JsonSerializerOptions), 10 },
+            { TextSearch.CreateGetSearchResults(10), 10 },
+            { TextSearch.CreateGetSearchResults(10, JsonSerializerOptions), 10 },
        };
 
     [Theory]
@@ -132,7 +162,7 @@ public class TextSearchExtensionsTests
                 new KernelParameterMetadata("query") { Description = "What to search for", IsRequired = true },
                 new KernelParameterMetadata("custom") { Description = "Some custom parameter", IsRequired = true },
             ],
-            ReturnParameter = new() { ParameterType = typeof(KernelSearchResults<string>) },
+            ReturnParameter = new() { ParameterType = typeof(List<string>) },
         };
     #endregion
 }

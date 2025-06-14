@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 // Copyright (c) Microsoft. All rights reserved.
-=======
-﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-using System;
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+using System;.
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Process;
 
@@ -21,16 +13,13 @@ public sealed class LocalKernelProcessContext : KernelProcessContext, System.IAs
     private readonly LocalProcess _localProcess;
     private readonly Kernel _kernel;
 
-<<<<<<< HEAD
     internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventProxy? filter = null)
-<<<<<<< HEAD
     internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventFilter? filter = null)
-=======
     internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventProxy? eventProxy = null)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-=======
     internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventProxy? eventProxy = null, IExternalKernelProcessMessageChannel? externalMessageChannel = null)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+    private readonly ProcessStorageManager? _storageConnector;
+
+    internal LocalKernelProcessContext(KernelProcess process, Kernel kernel, ProcessEventProxy? eventProxy = null, IExternalKernelProcessMessageChannel? externalMessageChannel = null, IProcessStorageConnector? storageConnector = null, string? instanceId = null)
     {
         Verify.NotNull(kernel, nameof(kernel));
         Verify.NotNull(process, nameof(process));
@@ -55,13 +44,19 @@ public sealed class LocalKernelProcessContext : KernelProcessContext, System.IAs
     }
         Verify.NotNull(process, nameof(process));
         Verify.NotNull(kernel, nameof(kernel));
-        Verify.NotNullOrWhiteSpace(process.State?.Name);
+        Verify.NotNullOrWhiteSpace(process.State?.StepId);
+
+        if (storageConnector != null)
+        {
+            this._storageConnector = new(storageConnector);
+        }
 
         this._kernel = kernel;
-        this._localProcess = new LocalProcess(process, kernel)
+        this._localProcess = new LocalProcess(process, kernel, instanceId)
         {
             EventProxy = eventProxy,
             ExternalMessageChannel = externalMessageChannel,
+            StorageManager = this._storageConnector,
         };
     }
         Verify.NotNull(process, nameof(process));

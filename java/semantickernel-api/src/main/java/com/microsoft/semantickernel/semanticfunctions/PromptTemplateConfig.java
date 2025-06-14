@@ -2,11 +2,6 @@
 package com.microsoft.semantickernel.semanticfunctions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-<<<<<<< AI
-=======
-<<<<<<< main
-<<<<<<< HEAD
->>>>>>> main
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.microsoft.semantickernel.builders.Buildable;
@@ -19,38 +14,24 @@ import reactor.util.annotation.Nullable;
 
 /** Prompt template configuration */
 @JsonIgnoreProperties(ignoreUnknown = true)
-<<<<<<< AI
 import com.fasterxml.jackson.annotation.JsonProperty;
-=======
-=======
 import com.fasterxml.jackson.annotation.JsonProperty;
-=======
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.semantickernel.exceptions.SKException;
 import com.microsoft.semantickernel.orchestration.PromptExecutionSettings;
->>>>>>> origin/main-auto-tune
->>>>>>> main
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-<<<<<<< AI
-=======
-<<<<<<< main
->>>>>>> main
 import com.microsoft.semantickernel.builders.Buildable;
 import com.microsoft.semantickernel.builders.BuildersSingleton;
 import com.microsoft.semantickernel.builders.SemanticKernelBuilder;
 import reactor.util.annotation.Nullable;
 
 /** Prompt template configuration */
-<<<<<<< AI
-=======
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
-=======
 import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nullable;
@@ -59,8 +40,6 @@ import javax.annotation.Nullable;
  * Metadata for a prompt template.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
->>>>>>> origin/main-auto-tune
->>>>>>> main
 public class PromptTemplateConfig {
 
     /**
@@ -108,14 +87,8 @@ public class PromptTemplateConfig {
             Collections.emptyMap());
     }
 
-<<<<<<< AI
-=======
-<<<<<<< main
-<<<<<<< HEAD
->>>>>>> main
     public int getSchema() {
         return schema;
-=======
     /**
      * Constructor for a prompt template config
      *
@@ -159,7 +132,6 @@ public class PromptTemplateConfig {
         } else {
             this.executionSettings = new HashMap<>(executionSettings);
         }
->>>>>>> origin/main-auto-tune
     }
 
     /**
@@ -191,17 +163,9 @@ public class PromptTemplateConfig {
             outputVariable,
             executionSettings);
     }
-<<<<<<< AI
-=======
-<<<<<<< main
-=======
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
 
     /** Builder for CompletionConfig */
     public static class CompletionConfigBuilder implements SemanticKernelBuilder<CompletionConfig> {
-=======
->>>>>>> origin/main-auto-tune
 
     /**
      * Copy constructor.
@@ -461,24 +425,14 @@ public class PromptTemplateConfig {
             return this;
         }
 
-<<<<<<< main
         public SemanticKernelBuilder<CompletionConfig> builder() {
-<<<<<<< AI
-=======
-<<<<<<< HEAD
->>>>>>> main
             return BuildersSingleton.INST.getInstance(CompletionConfigBuilder.class);
         }
 
         public List<String> getStopSequences() {
             return Collections.unmodifiableList(stopSequences);
-<<<<<<< AI
           return BuildersSingleton.INST.getInstance(CompletionConfigBuilder.class);
-=======
-=======
           return BuildersSingleton.INST.getInstance(CompletionConfigBuilder.class);
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
-=======
         /**
          * Set the template of the prompt template config.
          *
@@ -488,8 +442,6 @@ public class PromptTemplateConfig {
         public Builder withTemplate(String template) {
             this.template = template;
             return this;
->>>>>>> origin/main-auto-tune
->>>>>>> main
         }
 
         /**

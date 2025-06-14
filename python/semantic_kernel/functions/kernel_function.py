@@ -37,6 +37,7 @@ from semantic_kernel.prompt_template.handlebars_prompt_template import (
 from semantic_kernel.prompt_template.jinja2_prompt_template import Jinja2PromptTemplate
 from semantic_kernel.prompt_template.kernel_prompt_template import KernelPromptTemplate
 from semantic_kernel.prompt_template.prompt_template_base import PromptTemplateBase
+from semantic_kernel.utils.telemetry.model_diagnostics import function_tracer
 
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
@@ -713,7 +714,7 @@ class KernelFunction(KernelBaseModel):
         )
         function_context = FunctionInvocationContext(function=self, kernel=kernel, arguments=arguments)
 
-        with tracer.start_as_current_span(self.fully_qualified_name) as current_span:
+        with function_tracer.start_as_current_span(tracer, self, metadata) as current_span:
             KernelFunctionLogMessages.log_function_invoking(logger, self.fully_qualified_name)
             KernelFunctionLogMessages.log_function_arguments(logger, arguments)
 
@@ -810,7 +811,7 @@ class KernelFunction(KernelBaseModel):
         )
 >>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
-        with tracer.start_as_current_span(self.fully_qualified_name) as current_span:
+        with function_tracer.start_as_current_span(tracer, self, metadata) as current_span:
             KernelFunctionLogMessages.log_function_streaming_invoking(logger, self.fully_qualified_name)
             KernelFunctionLogMessages.log_function_arguments(logger, arguments)
 

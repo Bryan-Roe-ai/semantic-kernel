@@ -35,28 +35,6 @@ using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
-<<<<<<< Updated upstream
-=======
->>>>>>> ms/features/bugbash-prep
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 >>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

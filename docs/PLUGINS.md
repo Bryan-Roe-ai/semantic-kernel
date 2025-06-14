@@ -1,6 +1,5 @@
 # Plugins in Semantic Kernel
 
-<<<<<<< HEAD
 The Semantic Kernel provides a powerful plugin system that allows you to extend its functionality and integrate with various AI services. This document provides an overview of the plugins module, its features, and examples of how to use it effectively.
 
 ## Overview
@@ -188,8 +187,6 @@ print(result)
 - **Translation**: Create plugins that translate text between different languages using AI services.
 
 By leveraging the plugins module, you can enhance the capabilities of the Semantic Kernel, streamline your workflows, and achieve better results with minimal manual intervention.
-=======
 This document has been moved to the Semantic Kernel Documentation site. You can find it by navigating to the [What is a Plugin?](https://learn.microsoft.com/en-us/semantic-kernel/concepts/plugins) page.
 
 To make an update on the page, file a PR on the [docs repo.](https://github.com/MicrosoftDocs/semantic-kernel-docs/blob/main/semantic-kernel/concepts/plugins/index.md)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

@@ -9,6 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ModelContextProtocol" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
@@ -20,6 +28,7 @@
     <ProjectReference Include="..\..\..\..\src\Agents\AzureAI\Agents.AzureAI.csproj" />
     <ProjectReference Include="..\..\..\..\src\Agents\Core\Agents.Core.csproj" />
     <ProjectReference Include="..\..\..\..\src\Connectors\Connectors.OpenAI\Connectors.OpenAI.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Connectors\Connectors.AzureOpenAI\Connectors.AzureOpenAI.csproj" />
     <ProjectReference Include="..\..\..\..\src\SemanticKernel.Abstractions\SemanticKernel.Abstractions.csproj" />
     <ProjectReference Include="..\..\..\..\src\SemanticKernel.Core\SemanticKernel.Core.csproj" />
   </ItemGroup>

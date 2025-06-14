@@ -9,35 +9,26 @@ com.azure.ai.openai.OpenAIAsyncClient;
 import com.azure.ai.openai.models.Choice;
 import com.azure.ai.openai.models.Completions;
 import com.azure.ai.openai.models.CompletionsOptions;
-<<<<<<< HEAD
 import com.microsoft.semantickernel.Verify;
 import com.microsoft.semantickernel.ai.AIException;
 import com.microsoft.semantickernel.chatcompletion.ChatRequestSettings;
-=======
 import com.microsoft.semantickernel.ai.AIException;
->>>>>>> main
 import com.microsoft.semantickernel.connectors.ai.openai.azuresdk.ClientBase;
 import com.microsoft.semantickernel.exceptions.NotSupportedException;
 import com.microsoft.semantickernel.exceptions.NotSupportedException.ErrorCodes;
 import com.microsoft.semantickernel.textcompletion.CompletionRequestSettings;
-<<<<<<< HEAD
 import com.microsoft.semantickernel.textcompletion.CompletionType;
-=======
->>>>>>> main
 import com.microsoft.semantickernel.textcompletion.TextCompletion;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-<<<<<<< HEAD
 import java.util.function.BiFunction;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import reactor.core.publisher.Flux;
-=======
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
->>>>>>> main
 import reactor.core.publisher.Mono;
 
 /// <summary>
@@ -46,12 +37,9 @@ import reactor.core.publisher.Mono;
 // https://learn.microsoft.com/en-us/dotnet/azure/sdk/logging
 /// </summary>
 public class OpenAITextCompletion extends ClientBase implements TextCompletion {
-<<<<<<< HEAD
 
     private final CompletionType defaultCompletionType;
 
-=======
->>>>>>> main
     /// <summary>
     /// Create an instance of the OpenAI text completion connector
     /// </summary>
@@ -70,7 +58,6 @@ public class OpenAITextCompletion extends ClientBase implements TextCompletion {
     @Inject
     public OpenAITextCompletion(OpenAIAsyncClient client, String modelId) {
         super(client, modelId);
-<<<<<<< HEAD
         defaultCompletionType = CompletionType.STREAMING;
     }
 
@@ -79,8 +66,6 @@ public class OpenAITextCompletion extends ClientBase implements TextCompletion {
         super(client, modelId);
 
         this.defaultCompletionType = defaultCompletionType;
-=======
->>>>>>> main
     }
 
     @Override
@@ -89,7 +74,6 @@ public class OpenAITextCompletion extends ClientBase implements TextCompletion {
         return this.internalCompleteTextAsync(text, requestSettings);
     }
 
-<<<<<<< HEAD
     @Override
     public Flux<String> completeStreamAsync(
             @Nonnull String text, @Nonnull CompletionRequestSettings requestSettings) {
@@ -140,22 +124,17 @@ public class OpenAITextCompletion extends ClientBase implements TextCompletion {
 
     private CompletionsOptions getCompletionsOptions(
             String text, CompletionRequestSettings requestSettings) {
-=======
     protected Mono<List<String>> internalCompleteTextAsync(
             String text, CompletionRequestSettings requestSettings) {
         // TODO
 
->>>>>>> main
         if (requestSettings.getMaxTokens() < 1) {
             throw new AIException(AIException.ErrorCodes.INVALID_REQUEST, "Max tokens must be >0");
         }
 
-<<<<<<< HEAD
         CompletionsOptions options =
-=======
         CompletionsOptions completionsOptions =
->>>>>>> main
-                new CompletionsOptions(Collections.singletonList(text))
+        new CompletionsOptions(Collections.singletonList(text))
                         .setMaxTokens(requestSettings.getMaxTokens())
                         .setTemperature(requestSettings.getTemperature())
                         .setTopP(requestSettings.getTopP())
@@ -166,7 +145,6 @@ public class OpenAITextCompletion extends ClientBase implements TextCompletion {
                         .setBestOf(requestSettings.getBestOf())
                         .setLogitBias(new HashMap<>());
 
-<<<<<<< HEAD
         if (requestSettings instanceof ChatRequestSettings) {
             options = options.setStop(requestSettings.getStopSequences());
         }
@@ -178,7 +156,6 @@ public class OpenAITextCompletion extends ClientBase implements TextCompletion {
         @Nullable private OpenAIAsyncClient client;
         @Nullable private String modelId;
         private CompletionType defaultCompletionType = CompletionType.STREAMING;
-=======
         return getClient()
                 .getCompletions(getModelId(), completionsOptions)
                 .flatMapIterable(Completions::getChoices)
@@ -189,7 +166,6 @@ public class OpenAITextCompletion extends ClientBase implements TextCompletion {
     public static final class Builder implements TextCompletion.Builder {
         @Nullable private OpenAIAsyncClient client;
         @Nullable private String modelId;
->>>>>>> main
 
         public Builder withOpenAIClient(OpenAIAsyncClient client) {
             this.client = client;
@@ -202,15 +178,12 @@ public class OpenAITextCompletion extends ClientBase implements TextCompletion {
         }
 
         @Override
-<<<<<<< HEAD
         public Builder withDefaultCompletionType(CompletionType completionType) {
             this.defaultCompletionType = completionType;
             return this;
         }
 
         @Override
-=======
->>>>>>> main
         public TextCompletion build() {
             if (client == null) {
                 throw new NotSupportedException(ErrorCodes.NOT_SUPPORTED, "OpenAI client not set");
@@ -218,11 +191,8 @@ public class OpenAITextCompletion extends ClientBase implements TextCompletion {
             if (modelId == null) {
                 throw new NotSupportedException(ErrorCodes.NOT_SUPPORTED, "Model ID not set");
             }
-<<<<<<< HEAD
             return new OpenAITextCompletion(client, modelId, defaultCompletionType);
-=======
             return new OpenAITextCompletion(client, modelId);
->>>>>>> main
         }
     }
 }

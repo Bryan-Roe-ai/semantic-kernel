@@ -414,7 +414,7 @@ public abstract class Agent
 
         if (thread is not TThreadType concreteThreadType)
         {
-            throw new KernelException($"{this.GetType().Name} currently only supports agent threads of type {nameof(TThreadType)}.");
+            throw new KernelException($"{this.GetType().Name} currently only supports agent threads of type {typeof(TThreadType).Name}.");
         }
 
         // We have to explicitly call create here to ensure that the thread is created
@@ -459,5 +459,39 @@ public abstract class Agent
     protected Task NotifyThreadOfNewMessage(AgentThread thread, ChatMessageContent message, CancellationToken cancellationToken)
     {
         return thread.OnNewMessageAsync(message, cancellationToken);
+    }
+
+    /// <summary>
+    /// Default formatting for additional instructions for the AI agent based on the provided context and invocation options.
+    /// </summary>
+    /// <param name="context">The context containing relevant information for the AI agent's operation.</param>
+    /// <param name="options">Optional parameters that influence the invocation behavior. Can be <see langword="null"/>.</param>
+    /// <returns>A formatted string representing the additional instructions for the AI agent.</returns>
+#pragma warning disable SKEXP0130 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+    protected static string FormatAdditionalInstructions(AIContext context, AgentInvokeOptions? options)
+#pragma warning restore SKEXP0130 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+    {
+        return string.Concat(ProcessInstructions());
+
+        IEnumerable<string> ProcessInstructions()
+        {
+            bool hasInstructions = false;
+            if (options?.AdditionalInstructions is not null)
+            {
+                yield return options!.AdditionalInstructions;
+                hasInstructions = true;
+            }
+
+            if (!string.IsNullOrWhiteSpace(context.Instructions))
+            {
+                if (hasInstructions)
+                {
+                    yield return Environment.NewLine;
+                    yield return Environment.NewLine;
+                }
+
+                yield return context.Instructions!;
+            }
+        }
     }
 }

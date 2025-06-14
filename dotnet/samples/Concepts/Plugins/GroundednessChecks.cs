@@ -1,9 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
-using Microsoft.SemanticKernel.Planning.Handlebars;
-using Microsoft.SemanticKernel.Plugins.Core;
 using xRetry;
 
 namespace Plugins;
@@ -65,59 +62,6 @@ her a beggar. My father came to her aid and two years later they married.
 
         Console.WriteLine("\n======== Excise Entities ========");
         Console.WriteLine(excisionResult.GetValue<string>());
-    }
-
-    [Fact]
-    public async Task PlanningWithGroundednessAsync()
-    {
-        var targetTopic = "people and places";
-        var samples = "John, Jane, mother, brother, Paris, Rome";
-        var ask = @$"Make a summary of the following text. Then make a list of entities
-related to {targetTopic} (such as {samples}) which are present in the summary.
-Take this list of entities, and from it make another list of those which are not
-grounded in the original input text. Finally, rewrite your summary to remove the entities
-which are not grounded in the original.";
-
-        Console.WriteLine("\n======== Planning - Groundedness Checks ========");
-
-        var kernel = Kernel.CreateBuilder()
-            .AddAzureOpenAIChatCompletion(
-                deploymentName: TestConfiguration.AzureOpenAI.ChatDeploymentName,
-                endpoint: TestConfiguration.AzureOpenAI.Endpoint,
-                apiKey: TestConfiguration.AzureOpenAI.ApiKey,
-                modelId: TestConfiguration.AzureOpenAI.ChatModelId)
-            .Build();
-
-        string folder = RepoFiles.SamplePluginsPath();
-        kernel.ImportPluginFromPromptDirectory(Path.Combine(folder, "SummarizePlugin"));
-        kernel.ImportPluginFromPromptDirectory(Path.Combine(folder, "GroundingPlugin"));
-
-        kernel.ImportPluginFromType<TextPlugin>();
-
-        var planner = new HandlebarsPlanner(
-            new HandlebarsPlannerOptions()
-            {
-                // When using OpenAI models, we recommend using low values for temperature and top_p to minimize planner hallucinations.
-                ExecutionSettings = new OpenAIPromptExecutionSettings()
-                {
-                    Temperature = 0.0,
-                    TopP = 0.1,
-                }
-            });
-
-        var initialArguments = new KernelArguments()
-        {
-            { "groundingText", GroundingText}
-        };
-        var plan = await planner.CreatePlanAsync(kernel, ask, initialArguments);
-
-        Console.WriteLine($"======== Goal: ========\n{ask}");
-        Console.WriteLine($"======== Plan ========\n{plan}");
-
-        var result = await plan.InvokeAsync(kernel, initialArguments);
-
-        Console.WriteLine("======== Result ========");
-        Console.WriteLine(result);
     }
 
     private const string GroundingText = """

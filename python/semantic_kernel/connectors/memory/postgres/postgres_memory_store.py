@@ -11,14 +11,11 @@ from psycopg.sql import SQL, Identifier
 from psycopg_pool import ConnectionPool
 from pydantic import ValidationError
 
-<<<<<<< main
 from semantic_kernel.connectors.memory.postgres.postgres_settings import (
     PostgresSettings,
 )
-=======
 from semantic_kernel.connectors.memory.postgres.constants import DEFAULT_SCHEMA, MAX_DIMENSIONALITY
 from semantic_kernel.connectors.memory.postgres.postgres_settings import PostgresSettings
->>>>>>> upstream/main
 from semantic_kernel.exceptions import (
     ServiceInitializationError,
     ServiceResourceNotFoundError,
@@ -83,13 +80,10 @@ class PostgresMemoryStore(MemoryStoreBase):
 
         self._default_dimensionality = default_dimensionality
         self._connection_pool = ConnectionPool(
-<<<<<<< main
             postgres_settings.connection_string.get_secret_value(),
             min_size=min_pool,
             max_size=max_pool,
-=======
             min_size=min_pool, max_size=max_pool, open=True, kwargs=postgres_settings.get_connection_args()
->>>>>>> upstream/main
         )
         self._schema = schema
         atexit.register(self._connection_pool.close)

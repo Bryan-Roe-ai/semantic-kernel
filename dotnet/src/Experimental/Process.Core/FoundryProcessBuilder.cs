@@ -8,11 +8,11 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using Azure.AI.Agents.Persistent;
 using Azure.Core;
 using Azure.Identity;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.AzureAI;
-using Microsoft.SemanticKernel.Process.Models;
 
 namespace Microsoft.SemanticKernel;
 
@@ -50,11 +50,11 @@ public class FoundryProcessBuilder<TProcessState> where TProcessState : class, n
     /// Adds a step to the process from a declarative agent.
     /// </summary>
     /// <param name="agentDefinition">The <see cref="AgentDefinition"/></param>
-    /// <param name="id">The unique Id of the step. If not provided, the name of the step Type will be used.</param>
+    /// <param name="stepId">The unique Id of the step. If not provided, the name of the step Type will be used.</param>
     /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
     /// <param name="defaultThread">Specifies the thread reference to be used by the agent. If not provided, the agent will create a new thread for each invocation.</param>
     /// <param name="humanInLoopMode">Specifies the human-in-the-loop mode for the agent. If not provided, the default is <see cref="HITLMode.Never"/>.</param>
-    public ProcessAgentBuilder<TProcessState> AddStepFromAgent(AgentDefinition agentDefinition, string? id = null, IReadOnlyList<string>? aliases = null, string? defaultThread = null, HITLMode humanInLoopMode = HITLMode.Never)
+    public ProcessAgentBuilder<TProcessState> AddStepFromAgent(AgentDefinition agentDefinition, string? stepId = null, IReadOnlyList<string>? aliases = null, string? defaultThread = null, HITLMode humanInLoopMode = HITLMode.Never)
     {
         Verify.NotNull(agentDefinition);
         if (agentDefinition.Type != AzureAIAgentFactory.AzureAIAgentType)
@@ -62,7 +62,30 @@ public class FoundryProcessBuilder<TProcessState> where TProcessState : class, n
             throw new ArgumentException($"The agent type '{agentDefinition.Type}' is not supported. Only '{AzureAIAgentFactory.AzureAIAgentType}' is supported.");
         }
 
-        return this._processBuilder.AddStepFromAgent<TProcessState>(agentDefinition, id, aliases, defaultThread, humanInLoopMode);
+        return this._processBuilder.AddStepFromAgent<TProcessState>(agentDefinition, stepId, aliases, defaultThread, humanInLoopMode);
+    }
+
+    /// <summary>
+    /// Adds a step to the process from a <see cref="PersistentAgent"/>.
+    /// </summary>
+    /// <param name="persistentAgent">The <see cref="AgentDefinition"/></param>
+    /// <param name="stepId">The unique Id of the step. If not provided, the name of the step Type will be used.</param>
+    /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
+    /// <param name="defaultThread">Specifies the thread reference to be used by the agent. If not provided, the agent will create a new thread for each invocation.</param>
+    /// <param name="humanInLoopMode">Specifies the human-in-the-loop mode for the agent. If not provided, the default is <see cref="HITLMode.Never"/>.</param>
+    public ProcessAgentBuilder<TProcessState> AddStepFromAgent(PersistentAgent persistentAgent, string? stepId = null, IReadOnlyList<string>? aliases = null, string? defaultThread = null, HITLMode humanInLoopMode = HITLMode.Never)
+    {
+        Verify.NotNull(persistentAgent);
+
+        var agentDefinition = new AgentDefinition
+        {
+            Id = persistentAgent.Id,
+            Type = AzureAIAgentFactory.AzureAIAgentType,
+            Name = persistentAgent.Name,
+            Description = persistentAgent.Description
+        };
+
+        return this._processBuilder.AddStepFromAgent<TProcessState>(agentDefinition, stepId, aliases, defaultThread, humanInLoopMode);
     }
 
     /// <summary>
@@ -149,9 +172,9 @@ public class FoundryProcessBuilder<TProcessState> where TProcessState : class, n
     /// </summary>
     /// <returns>An instance of <see cref="KernelProcess"/></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public KernelProcess Build(KernelProcessStateMetadata? stateMetadata = null)
+    public KernelProcess Build()
     {
-        return this._processBuilder.Build(stateMetadata);
+        return this._processBuilder.Build();
     }
 
     /// <summary>
@@ -203,6 +226,16 @@ public class FoundryProcessBuilder<TProcessState> where TProcessState : class, n
         var process = this.Build();
         var workflow = await WorkflowBuilder.BuildWorkflow(process).ConfigureAwait(false);
         return WorkflowSerializer.SerializeToJson(workflow);
+    }
+
+    /// <summary>
+    /// Serializes the process to YAML.
+    /// </summary>
+    public async Task<string> ToYamlAsync()
+    {
+        var process = this.Build();
+        var workflow = await WorkflowBuilder.BuildWorkflow(process).ConfigureAwait(false);
+        return WorkflowSerializer.SerializeToYaml(workflow);
     }
 
     private class FoundryWorkflow

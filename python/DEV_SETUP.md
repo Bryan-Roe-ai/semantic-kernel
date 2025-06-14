@@ -28,6 +28,9 @@ AZURE_OPENAI_API_KEY=""
 # System setup
 
 To get started, you'll need VSCode and a local installation of Python 3.x.
+# System setup
+
+To get started, you'll need VSCode and a local installation of at least Python 3.8.
 
 You can run:
 
@@ -1246,6 +1249,22 @@ AZURE_OPENAI_ENDPOINT=""
 This is assuming the upstream branch refers to the main repository. If you have a different name for the upstream branch, you can replace `upstream` with the name of your upstream branch.
 
 After running the rebase command, you may need to resolve any conflicts that arise. If you are unsure how to resolve a conflict, please refer to the [GitHub's documentation on resolving conflicts](https://docs.github.com/en/get-started/using-git/resolving-merge-conflicts-after-a-git-rebase), or for [VSCode](https://code.visualstudio.com/docs/sourcecontrol/overview#_merge-conflicts).
+
+Ensure you have the WSL extension for VSCode installed (and the Python extension
+for VSCode installed).
+
+You'll also need `pip3` installed. If you don't yet have a `python3` install in WSL,
+you can run:
+
+```bash
+sudo apt-get update && sudo apt-get install python3 python3-pip
+```
+
+ℹ️ **Note**: if you don't have your PATH setup to find executables installed by `pip3`,
+you may need to run `~/.local/bin/poetry install` and `~/.local/bin/poetry shell`
+instead. You can fix this by adding `export PATH="$HOME/.local/bin:$PATH"` to
+your `~/.bashrc` and closing/re-opening the terminal.\_
+
 # LLM setup
 
 Make sure you have an
@@ -1288,6 +1307,7 @@ running samples in the repo and developing apps using Python SK.
     poetry shell
 
 To run the same checks that are run during the Azure Pipelines build, you can run:
+To run style checks, you can run:
 
     poetry run pre-commit run -c .conf/.pre-commit-config.yaml -a
 
@@ -1303,3 +1323,7 @@ it will prompt you to install them).
 # Tests
 
 You should be able to run the example under the [tests](tests) folder.
+You should be able to run the examples under the [tests/end-to-end](tests/end-to-end/) folder.
+Run pytests with the following:
+
+    poetry run pytest

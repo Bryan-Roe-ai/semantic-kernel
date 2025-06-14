@@ -11,7 +11,6 @@ if sys.version_info >= (3, 12):
 else:
     from typing_extensions import override  # pragma: no cover
 
-<<<<<<< HEAD
 from semantic_kernel.agents.open_ai.open_ai_assistant_base import OpenAIAssistantBase
 from semantic_kernel.connectors.ai.open_ai.settings.open_ai_settings import (
     OpenAISettings,
@@ -23,7 +22,6 @@ from semantic_kernel.utils.telemetry.user_agent import (
     APP_INFO,
     prepend_semantic_kernel_to_user_agent,
 )
-=======
 from openai import NOT_GIVEN, AsyncOpenAI, NotGiven
 from openai.lib._parsing._completions import type_to_response_format_param
 from openai.types.beta.assistant import Assistant
@@ -63,7 +61,6 @@ from semantic_kernel.utils.telemetry.agent_diagnostics.decorators import (
     trace_agent_invocation,
 )
 from semantic_kernel.utils.telemetry.user_agent import APP_INFO, prepend_semantic_kernel_to_user_agent
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 if TYPE_CHECKING:
     from openai import AsyncOpenAI
@@ -211,7 +208,6 @@ class OpenAIAssistantAgent(Agent):
             prompt_template_config: The prompt template configuration.
             kwargs: Additional keyword arguments.
         """
-<<<<<<< HEAD
         openai_settings = OpenAIAssistantAgent._create_open_ai_settings(
             api_key=api_key,
             org_id=org_id,
@@ -241,8 +237,6 @@ class OpenAIAssistantAgent(Agent):
 
         service_id = service_id if service_id else DEFAULT_SERVICE_NAME
 
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         args: dict[str, Any] = {
             "client": client,
             "definition": definition,
@@ -330,7 +324,6 @@ class OpenAIAssistantAgent(Agent):
         if not openai_settings.chat_model_id:
             raise AgentInitializationException("The OpenAI model ID is required.")
 
-<<<<<<< HEAD
         if code_interpreter_file_ids is not None:
             code_interpreter_file_ids_combined.extend(code_interpreter_file_ids)
 
@@ -389,8 +382,6 @@ class OpenAIAssistantAgent(Agent):
         Returns:
             An OpenAI client instance.
         """
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         merged_headers = dict(copy(default_headers)) if default_headers else {}
         if default_headers:
             merged_headers.update(default_headers)
@@ -405,7 +396,6 @@ class OpenAIAssistantAgent(Agent):
             **kwargs,
         )
 
-<<<<<<< HEAD
     @staticmethod
     def _create_open_ai_settings(
         api_key: str | None = None,
@@ -524,7 +514,6 @@ class OpenAIAssistantAgent(Agent):
             env_file_encoding=env_file_encoding,
             **assistant_definition,
         )
-=======
         return client, openai_settings.chat_model_id
 
     # endregion
@@ -994,6 +983,5 @@ class OpenAIAssistantAgent(Agent):
             # Now yield the current streamed content (StreamingTextContent)
             message.metadata["thread_id"] = thread.id
             yield AgentResponseItem(message=message, thread=thread)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     # endregion

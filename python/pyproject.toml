@@ -44,7 +44,6 @@ pytest = "^8.2.1"
 pytest-cov = ">=5.0.0"
 mypy = ">=1.10.0"
 ruff = ">=0.5.2,<0.7.0"
-=======
 readme = "README.md"
 # Version read from __version__ field in __init__.py by Flit
 dynamic = ["version"]
@@ -66,6 +65,9 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
+    # azure agents
+    "azure-ai-projects >= 1.0.0b11",
+    "azure-ai-agents >= 1.1.0b1",
     "aiohttp ~= 3.8",
     "cloudevents ~=1.0",
     "pydantic >=2.0,!=2.10.0,!=2.10.1,!=2.10.2,!=2.10.3,<2.12",
@@ -110,10 +112,7 @@ autogen = [
 aws = [
     "boto3>=1.36.4,<1.39.0",
 ]
-# This is temporary to get the PR reviewed, and will be replaced when their new version is public.
 azure = [
-    "azure-ai-projects >= 1.0.0b11",
-    "azure-ai-agents >= 1.0.0",
     "azure-ai-inference >= 1.0.0b6",
     "azure-core-tracing-opentelemetry >= 1.0.0b11",
     "azure-search-documents >= 11.6.0b4",
@@ -131,13 +130,13 @@ faiss = [
     "faiss-cpu>=1.10.0"
 ]
 google = [
-    "google-cloud-aiplatform == 1.93.0",
+    "google-cloud-aiplatform == 1.96.0",
     "google-generativeai ~= 0.8"
 ]
 hugging_face = [
     "transformers[torch] ~= 4.28",
     "sentence-transformers >= 2.2,< 5.0",
-    "torch == 2.7.0"
+    "torch == 2.7.1"
 ]
 mcp = [
     "mcp>=1.8",
@@ -258,6 +257,7 @@ select = [
 ignore = [
     "D100", #allow missing docstring in public module
     "D104", #allow missing docstring in public package
+    "D418", #allow docstring on overloaded function
     "TD003", #allow missing link to todo issue
     "FIX002" #allow todo
 ]
@@ -286,8 +286,42 @@ exclude_dirs = ["tests"]
 
 [tool.flit.module]
 name = "semantic_kernel"
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 [build-system]
 requires = ["flit-core >= 3.9,<4.0"]
 build-backend = "flit_core.buildapi"
+=======
+[tool.poetry]
+name = "semantic-kernel"
+version = "0.2.1.dev"
+description = ""
+authors = ["Microsoft <SK-Support@microsoft.com>"]
+readme = "README.md"
+packages = [{include = "semantic_kernel"}]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+numpy = "^1.24.2"
+openai = "^0.27.0"
+aiofiles = "^23.1.0"
+asyncio = "^3.4.3"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^2.21.0"
+black = {version = "^23.1.0", allow-prereleases = true}
+ipykernel = "^6.21.1"
+pytest = "7.2.0"
+ruff = "^0.0.257"
+pytest-asyncio = "^0.21.0"
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff]
+line-length = 120
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+>>>>>>> 626da41b3eb7fe27ea08bdb86fd21c20978bcd2d

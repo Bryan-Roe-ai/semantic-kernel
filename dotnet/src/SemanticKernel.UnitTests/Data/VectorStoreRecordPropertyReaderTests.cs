@@ -1,70 +1,70 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
 using System.Linq;
 using System.Reflection;
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 using System.Linq;
 using System.Reflection;
-=======
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.VectorData;
@@ -74,40 +74,40 @@ namespace SemanticKernel.UnitTests.Data;
 
 public class VectorStoreRecordPropertyReaderTests
 {
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     [Fact]
     public void SplitDefinitionsAndVerifyReturnsProperties()
     {
@@ -428,40 +428,40 @@ public class VectorStoreRecordPropertyReaderTests
         // Assert.
         assertJsonNameMap(jsonNameMap1);
         assertJsonNameMap(jsonNameMap2);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< div
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     [Theory]
     [MemberData(nameof(NoKeyTypeAndDefinitionCombos))]
     public void ConstructorFailsForNoKey(Type type, VectorStoreRecordDefinition? definition)
@@ -881,6 +881,95 @@ public class VectorStoreRecordPropertyReaderTests
         Assert.Equal("json_data2", sut.GetJsonPropertyName("Data2"));
     }
 
+    [Theory]
+    [MemberData(nameof(MultiPropsTypeAndDefinitionCombos))]
+    public void GetVectorPropertyOrSingleReturnsRequestedVectorAndThrowsForInvalidVector(Type type, VectorStoreRecordDefinition? definition)
+    {
+        // Arrange.
+        var sut = new VectorStoreRecordPropertyReader(type, definition, null);
+
+        // Act & Assert.
+        Assert.Equal("Vector2", sut.GetVectorPropertyOrSingle("Vector2").DataModelPropertyName);
+        Assert.Throws<InvalidOperationException>(() => sut.GetVectorPropertyOrSingle("DoesNotExist"));
+    }
+
+    [Theory]
+    [MemberData(nameof(NoVectorsTypeAndDefinitionCombos))]
+    public void GetVectorPropertyOrSingleThrowsForMultipleVectors(Type type, VectorStoreRecordDefinition? definition)
+    {
+        // Arrange.
+        var sut = new VectorStoreRecordPropertyReader(type, definition, null);
+
+        // Act & Assert.
+        Assert.Throws<InvalidOperationException>(() => sut.GetVectorPropertyOrSingle(null));
+    }
+
+    [Theory]
+    [MemberData(nameof(NoVectorsTypeAndDefinitionCombos))]
+    public void GetVectorPropertyOrSingleThrowsForNoVectors(Type type, VectorStoreRecordDefinition? definition)
+    {
+        // Arrange.
+        var sut = new VectorStoreRecordPropertyReader(type, definition, null);
+
+        // Act & Assert.
+        Assert.Throws<InvalidOperationException>(() => sut.GetVectorPropertyOrSingle(null));
+    }
+
+    [Theory]
+    [MemberData(nameof(MultiPropsTypeAndDefinitionCombos))]
+    public void GetFullTextDataPropertyOrOnlyReturnsRequestedPropOrOnlyTextDataPropAndThrowsForInvalidProp(Type type, VectorStoreRecordDefinition? definition)
+    {
+        // Arrange.
+        var sut = new VectorStoreRecordPropertyReader(type, definition, null);
+
+        // Act & Assert.
+        Assert.Equal("Data1", sut.GetFullTextDataPropertyOrSingle("Data1").DataModelPropertyName);
+        Assert.Equal("Data1", sut.GetFullTextDataPropertyOrSingle(null).DataModelPropertyName);
+        Assert.Throws<InvalidOperationException>(() => sut.GetFullTextDataPropertyOrSingle("DoesNotExist"));
+    }
+
+    [Theory]
+    [MemberData(nameof(NoVectorsTypeAndDefinitionCombos))]
+    public void GetFullTextDataPropertyOrOnlyThrowsForNoTextDataProps(Type type, VectorStoreRecordDefinition? definition)
+    {
+        // Arrange.
+        var sut = new VectorStoreRecordPropertyReader(type, definition, null);
+
+        // Act & Assert.
+        Assert.Throws<InvalidOperationException>(() => sut.GetFullTextDataPropertyOrSingle(null));
+    }
+
+    [Theory]
+    [MemberData(nameof(MultiPropsTypeAndDefinitionCombos))]
+    public void GetFullTextDataPropertyOrOnlyThrowsForNonFullTextSearchProp(Type type, VectorStoreRecordDefinition? definition)
+    {
+        // Arrange.
+        var sut = new VectorStoreRecordPropertyReader(type, definition, null);
+
+        // Act & Assert.
+        Assert.Throws<InvalidOperationException>(() => sut.GetFullTextDataPropertyOrSingle("Data2"));
+    }
+
+    [Fact]
+    public void GetFullTextDataPropertyOrOnlyThrowsForMultipleMatchingProps()
+    {
+        // Arrange.
+        var properties = new List<VectorStoreRecordProperty>
+        {
+            new VectorStoreRecordKeyProperty("Key", typeof(string)),
+            new VectorStoreRecordDataProperty("Data1", typeof(string)) { IsFullTextSearchable = true },
+            new VectorStoreRecordDataProperty("Data2", typeof(string)) { IsFullTextSearchable = true }
+        };
+        var definition = new VectorStoreRecordDefinition
+        {
+            Properties = properties
+        };
+        var sut = new VectorStoreRecordPropertyReader(typeof(object), definition, null);
+
+        // Act & Assert.
+        Assert.Throws<InvalidOperationException>(() => sut.GetFullTextDataPropertyOrSingle(null));
+    }
+
     public static IEnumerable<object?[]> NoKeyTypeAndDefinitionCombos()
     {
         yield return new object?[] { typeof(NoKeyModel), s_noKeyDefinition };
@@ -925,40 +1014,40 @@ public class VectorStoreRecordPropertyReaderTests
     {
         yield return new object?[] { typeof(EnumerablePropsModel), s_enumerablePropsDefinition };
         yield return new object?[] { typeof(EnumerablePropsModel), null };
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 #pragma warning disable CA1812 // Invalid unused classes error, since I am using these for testing purposes above.
@@ -967,72 +1056,72 @@ public class VectorStoreRecordPropertyReaderTests
     {
     }
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _noKeyDefinition = new();
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _noKeyDefinition = new();
-=======
+
     private static readonly VectorStoreRecordDefinition s_noKeyDefinition = new();
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static readonly VectorStoreRecordDefinition s_noKeyDefinition = new();
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
+
+
+
+
+
+
     private static readonly VectorStoreRecordDefinition s_noKeyDefinition = new();
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
+
+
+
 
     private sealed class NoVectorModel
     {
@@ -1040,67 +1129,67 @@ public class VectorStoreRecordPropertyReaderTests
         public string Key { get; set; } = string.Empty;
     }
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _noVectorDefinition = new()
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _noVectorDefinition = new()
-=======
+
     private static readonly VectorStoreRecordDefinition s_noVectorDefinition = new()
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static readonly VectorStoreRecordDefinition s_noVectorDefinition = new()
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
     {
         Properties =
         [
@@ -1117,70 +1206,70 @@ public class VectorStoreRecordPropertyReaderTests
         public string Key2 { get; set; } = string.Empty;
     }
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _multiKeysDefinition = new()
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _multiKeysDefinition = new()
-=======
+
     private static readonly VectorStoreRecordDefinition s_multiKeysDefinition = new()
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static readonly VectorStoreRecordDefinition s_multiKeysDefinition = new()
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
+
+
+
+
+
+
     private static readonly VectorStoreRecordDefinition s_multiKeysDefinition = new()
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
+
+
+
     {
         Properties =
         [
@@ -1203,69 +1292,69 @@ public class VectorStoreRecordPropertyReaderTests
         public string NotAnnotated { get; set; } = string.Empty;
     }
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _singlePropsDefinition = new()
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _singlePropsDefinition = new()
-=======
+
     private static readonly VectorStoreRecordDefinition s_singlePropsDefinition = new()
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static readonly VectorStoreRecordDefinition s_singlePropsDefinition = new()
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
     {
         Properties =
         [
@@ -1283,287 +1372,286 @@ public class VectorStoreRecordPropertyReaderTests
         [VectorStoreRecordData(IsFilterable = true, IsFullTextSearchable = true)]
         public string Data1 { get; set; } = string.Empty;
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
         [VectorStoreRecordData]
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         [VectorStoreRecordData]
-=======
+
         [VectorStoreRecordData(StoragePropertyName = "storage_data2")]
         [JsonPropertyName("json_data2")]
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         [VectorStoreRecordData(StoragePropertyName = "storage_data2")]
         [JsonPropertyName("json_data2")]
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
         public string Data2 { get; set; } = string.Empty;
 
         [VectorStoreRecordVector(4, DistanceFunction.DotProductSimilarity, IndexKind.Flat)]
         public ReadOnlyMemory<float> Vector1 { get; set; }
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
         [VectorStoreRecordVector]
         [JsonPropertyName("vector-2")]
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         [VectorStoreRecordVector]
         [JsonPropertyName("vector-2")]
-=======
+
         [VectorStoreRecordVector(StoragePropertyName = "storage_vector2")]
         [JsonPropertyName("json_vector2")]
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         [VectorStoreRecordVector(StoragePropertyName = "storage_vector2")]
         [JsonPropertyName("json_vector2")]
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
+
+
+
+
+
+
         [VectorStoreRecordVector(StoragePropertyName = "storage_vector2")]
         [JsonPropertyName("json_vector2")]
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
+
+
         public ReadOnlyMemory<float> Vector2 { get; set; }
 
         public string NotAnnotated { get; set; } = string.Empty;
     }
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _multiPropsDefinition = new()
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _multiPropsDefinition = new()
-=======
+
     private static readonly VectorStoreRecordDefinition s_multiPropsDefinition = new()
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static readonly VectorStoreRecordDefinition s_multiPropsDefinition = new()
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
     {
         Properties =
         [
             new VectorStoreRecordKeyProperty("Key", typeof(string)),
             new VectorStoreRecordDataProperty("Data1", typeof(string)) { IsFilterable = true, IsFullTextSearchable = true },
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
             new VectorStoreRecordDataProperty("Data2", typeof(string)) { StoragePropertyName = "data_2" },
             new VectorStoreRecordVectorProperty("Vector1", typeof(ReadOnlyMemory<float>)) { Dimensions = 4, IndexKind = IndexKind.Flat, DistanceFunction = DistanceFunction.DotProductSimilarity },
             new VectorStoreRecordVectorProperty("Vector2", typeof(ReadOnlyMemory<float>))
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             new VectorStoreRecordDataProperty("Data2", typeof(string)) { StoragePropertyName = "data_2" },
             new VectorStoreRecordVectorProperty("Vector1", typeof(ReadOnlyMemory<float>)) { Dimensions = 4, IndexKind = IndexKind.Flat, DistanceFunction = DistanceFunction.DotProductSimilarity },
             new VectorStoreRecordVectorProperty("Vector2", typeof(ReadOnlyMemory<float>))
-=======
+
             new VectorStoreRecordDataProperty("Data2", typeof(string)) { StoragePropertyName = "storage_data2" },
             new VectorStoreRecordVectorProperty("Vector1", typeof(ReadOnlyMemory<float>)) { Dimensions = 4, IndexKind = IndexKind.Flat, DistanceFunction = DistanceFunction.DotProductSimilarity },
             new VectorStoreRecordVectorProperty("Vector2", typeof(ReadOnlyMemory<float>)) { StoragePropertyName = "storage_vector2" }
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             new VectorStoreRecordDataProperty("Data2", typeof(string)) { StoragePropertyName = "storage_data2" },
             new VectorStoreRecordVectorProperty("Vector1", typeof(ReadOnlyMemory<float>)) { Dimensions = 4, IndexKind = IndexKind.Flat, DistanceFunction = DistanceFunction.DotProductSimilarity },
             new VectorStoreRecordVectorProperty("Vector2", typeof(ReadOnlyMemory<float>)) { StoragePropertyName = "storage_vector2" }
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
         ]
     };
 
@@ -1587,69 +1675,69 @@ public class VectorStoreRecordPropertyReaderTests
         public string NotAnnotated { get; set; } = string.Empty;
     }
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _enumerablePropsDefinition = new()
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private readonly VectorStoreRecordDefinition _enumerablePropsDefinition = new()
-=======
+
     private static readonly VectorStoreRecordDefinition s_enumerablePropsDefinition = new()
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static readonly VectorStoreRecordDefinition s_enumerablePropsDefinition = new()
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
     {
         Properties =
         [
@@ -1661,46 +1749,46 @@ public class VectorStoreRecordPropertyReaderTests
         ]
     };
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
+
+
+
+
+
+
+
+
+
+
 #pragma warning restore CA1812 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
+
+
+
+
+
+
+
+
+
+
+
+
 #pragma warning restore CA1812 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
+
+
+
+
+
+
 #pragma warning restore CA1812 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-=======
->>>>>>> Stashed changes
-=======
+
+
+
 #pragma warning restore CA1812 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
     private sealed class StorageNamesPropsModel
     {
         [VectorStoreRecordKey(StoragePropertyName = "storage_key")]
@@ -1732,38 +1820,38 @@ public class VectorStoreRecordPropertyReaderTests
     };
 
 #pragma warning restore CA1812
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

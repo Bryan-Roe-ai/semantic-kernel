@@ -1,11 +1,16 @@
 version: 2
+
 updates:
-  # Consolidated nuget dependencies
+  # C#/.NET (NuGet)
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name      # <-- Update with your team if desired
     ignore:
       - dependency-name: "System.*"
         update-types: ["version-update:semver-major"]
@@ -20,47 +25,120 @@ updates:
       - "dependencies"
       - "nuget"
       - "automated-update"
+    groups:
+      dotnet-dependencies:
+        patterns:
+          - "*"
 
-  # Maintain dependencies for npm
+  # JavaScript/Node (npm) for sample apps
   - package-ecosystem: "npm"
     directory: "/samples/apps"
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name
     labels:
       - "npm"
       - "dependencies"
       - "automated-update"
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
 
-  # Maintain dependencies for pip
+  # Python (pip)
   - package-ecosystem: "pip"
     directory: "/python/"
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name
     labels:
       - "python"
       - "dependencies"
       - "automated-update"
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
 
-  # Maintain dependencies for github-actions
+  # Java (Maven)
+  - package-ecosystem: "maven"
+    directory: "/samples/java/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name
+    labels:
+      - "java"
+      - "dependencies"
+      - "automated-update"
+    groups:
+      java-dependencies:
+        patterns:
+          - "*"
+
+  # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name
     labels:
       - "github-actions"
       - "dependencies"
       - "automated-update"
+    groups:
+      actions-dependencies:
+        patterns:
+          - "*"
 
-  # Maintain dependencies for devcontainers
+  # Devcontainers
   - package-ecosystem: "devcontainers"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
+    assignees:
+      - Bryan-Roe
+    reviewers:
+      - your-team-name
     labels:
       - "devcontainers"
       - "dependencies"
       - "automated-update"
+    groups:
+      devcontainers-dependencies:
+        patterns:
+          - "*"
+
+# General options
+open-pull-requests-limit: 10
+
+# Enable security updates for all package ecosystems (explicit, even though default)
+# See: https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/enabling-and-disabling-version-updates
+
+# Uncomment and configure below for private registries if needed
+# registries:
+#   - type: npm-registry
+#     url: https://registry.example.com
+#     token: ${{ secrets.NPM_TOKEN }}
+
+# Target branch for updates (uncomment if not using 'main')
+# target-branch: main
+
+# Automerge (uncomment if desired and safe for your workflow)
+# automerge: true

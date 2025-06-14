@@ -2,7 +2,6 @@
 
 The Semantic Kernel Planner module is a powerful tool that allows you to automatically orchestrate AI tasks and workflows. This document provides an overview of the planner module, its features, and examples of how to use it effectively.
 
-<<<<<<< HEAD
 ## Overview
 
 The planner module enables you to define and execute plans that consist of multiple steps, each representing a specific task or action. These plans can be used to automate complex workflows, coordinate multiple AI services, and achieve specific goals.
@@ -105,6 +104,4 @@ The planner module can be used in various scenarios, including:
 - **Workflow Automation**: Automate complex workflows that involve multiple steps and dependencies, such as customer support processes, data pipelines, and more.
 
 By leveraging the planner module, you can streamline your AI workflows, improve efficiency, and achieve better results with minimal manual intervention.
-=======
 To make an update on the page, file a PR on the [docs repo.](https://github.com/MicrosoftDocs/semantic-kernel-docs/blob/main/semantic-kernel/concepts/planning.md)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

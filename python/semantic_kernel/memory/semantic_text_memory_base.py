@@ -1,18 +1,23 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+import sys
 from abc import abstractmethod
 from typing import TYPE_CHECKING, Any, TypeVar
 
 from semantic_kernel.kernel_pydantic import KernelBaseModel
-from semantic_kernel.utils.feature_stage_decorator import experimental
 
 if TYPE_CHECKING:
     from semantic_kernel.memory.memory_query_result import MemoryQueryResult
 
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
+
 SemanticTextMemoryT = TypeVar("SemanticTextMemoryT", bound="SemanticTextMemoryBase")
 
 
-@experimental
+@deprecated("This class will be removed in a future version.")
 class SemanticTextMemoryBase(KernelBaseModel):
     """Base class for semantic text memory."""
 
@@ -81,90 +86,13 @@ class SemanticTextMemoryBase(ABC):
         self,
         collection: str,
         key: str,
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     ) -> "MemoryQueryResult | None":
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
     ) -> "MemoryQueryResult | None":
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
     ) -> "MemoryQueryResult | None":
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
     ) -> "MemoryQueryResult | None":
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
     ) -> "MemoryQueryResult | None":
-=======
         # TODO: with_embedding: bool,
     ) -> Optional[MemoryQueryResult]:
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
         """Get information from the memory (calls the memory store's get method).
 
         Args:

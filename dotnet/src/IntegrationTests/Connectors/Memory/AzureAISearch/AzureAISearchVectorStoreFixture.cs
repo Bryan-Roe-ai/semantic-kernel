@@ -65,6 +65,7 @@ public class AzureAISearchVectorStoreFixture : IAsyncLifetime
     public static AzureAISearchConfiguration? GetAzureAISearchConfiguration()
     {
         return s_configuration.GetSection("AzureAISearch").Get<AzureAISearchConfiguration>();
+        return s_configuration.GetRequiredSection("AzureAISearch").Get<AzureAISearchConfiguration>();
     }
 
     /// <summary>
@@ -72,13 +73,11 @@ public class AzureAISearchVectorStoreFixture : IAsyncLifetime
     /// </summary>
     public AzureAISearchVectorStoreFixture()
     {
-<<<<<<< HEAD
         var config = s_configuration.GetRequiredSection("AzureAISearch").Get<AzureAISearchConfiguration>();
         
         var config = this._configuration.GetRequiredSection("AzureAISearch").Get<AzureAISearchConfiguration>();
-=======
         var config = GetAzureAISearchConfiguration();
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+        var config = GetAzureAISearchConfiguration();
         Assert.NotNull(config);
         this.Config = config;
         this.SearchIndexClient = new SearchIndexClient(new Uri(config.ServiceUrl), new AzureKeyCredential(config.ApiKey));
@@ -151,7 +150,6 @@ public class AzureAISearchVectorStoreFixture : IAsyncLifetime
     {
         await AzureAISearchVectorStoreFixture.DeleteIndexIfExistsAsync(this._testIndexName, this.SearchIndexClient);
         await AzureAISearchVectorStoreFixture.CreateIndexAsync(this._testIndexName, this.SearchIndexClient);
-<<<<<<< HEAD
         AzureAISearchVectorStoreFixture.UploadDocuments(this.SearchIndexClient.GetSearchClient(this._testIndexName));
         AzureAISearchVectorStoreFixture.UploadDocuments(this.SearchIndexClient.GetSearchClient(this._testIndexName));
 await AzureAISearchVectorStoreFixture.UploadDocumentsAsync(this.SearchIndexClient.GetSearchClient(this._testIndexName));
@@ -161,9 +159,7 @@ await AzureAISearchVectorStoreFixture.UploadDocumentsAsync(this.SearchIndexClien
         AzureAISearchVectorStoreFixture.UploadDocuments(this.SearchIndexClient.GetSearchClient(this._testIndexName));
         await AzureAISearchVectorStoreFixture.UploadDocumentsAsync(this.SearchIndexClient.GetSearchClient(this._testIndexName), this.EmbeddingGenerator);
         await AzureAISearchVectorStoreFixture.UploadDocumentsAsync(this.SearchIndexClient.GetSearchClient(this._testIndexName), this.EmbeddingGenerator);
-=======
         await this.UploadDocumentsAsync(this.SearchIndexClient.GetSearchClient(this._testIndexName), this.EmbeddingGenerator);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
 
     /// <summary>
@@ -252,14 +248,11 @@ await AzureAISearchVectorStoreFixture.UploadDocumentsAsync(this.SearchIndexClien
     /// Upload test documents to the index.
     /// </summary>
     /// <param name="searchClient">The client to use for uploading the documents.</param>
-<<<<<<< HEAD
     public static async Task UploadDocumentsAsync(SearchClient searchClient)
     /// <param name="embeddingGenerator">An instance of <see cref="ITextEmbeddingGenerationService"/> to generate embeddings.</param>
     public static async Task UploadDocumentsAsync(SearchClient searchClient, ITextEmbeddingGenerationService embeddingGenerator)
-=======
     /// <param name="embeddingGenerator">An instance of <see cref="IEmbeddingGenerator"/> to generate embeddings.</param>
     public async Task UploadDocumentsAsync(SearchClient searchClient, IEmbeddingGenerator<string, Embedding<float>> embeddingGenerator)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         this.Embedding = (await embeddingGenerator.GenerateAsync("This is a great hotel")).Vector;
 
@@ -277,12 +270,9 @@ await AzureAISearchVectorStoreFixture.UploadDocumentsAsync(this.SearchIndexClien
                     HotelId = "BaseSet-1",
                     HotelName = "Hotel 1",
                     Description = "This is a great hotel",
-<<<<<<< HEAD
                     DescriptionEmbedding = embedding,
                     DescriptionEmbedding = new[] { 30f, 31f, 32f, 33f },
-=======
                     DescriptionEmbedding = this.Embedding,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     Tags = new[] { "pool", "air conditioning", "concierge" },
                     ParkingIncluded = false,
                     LastRenovationDate = new DateTimeOffset(1970, 1, 18, 0, 0, 0, TimeSpan.Zero),
@@ -294,12 +284,9 @@ await AzureAISearchVectorStoreFixture.UploadDocumentsAsync(this.SearchIndexClien
                     HotelId = "BaseSet-2",
                     HotelName = "Hotel 2",
                     Description = "This is a great hotel",
-<<<<<<< HEAD
                     DescriptionEmbedding = embedding,
                     DescriptionEmbedding = new[] { 30f, 31f, 32f, 33f },
-=======
                     DescriptionEmbedding = this.Embedding,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     Tags = new[] { "pool", "free wifi", "concierge" },
                     ParkingIncluded = false,
                     LastRenovationDate = new DateTimeOffset(1979, 2, 18, 0, 0, 0, TimeSpan.Zero),
@@ -311,12 +298,9 @@ await AzureAISearchVectorStoreFixture.UploadDocumentsAsync(this.SearchIndexClien
                     HotelId = "BaseSet-3",
                     HotelName = "Hotel 3",
                     Description = "This is a great hotel",
-<<<<<<< HEAD
                     DescriptionEmbedding = embedding,
                     DescriptionEmbedding = new[] { 30f, 31f, 32f, 33f },
-=======
                     DescriptionEmbedding = this.Embedding,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     Tags = new[] { "air conditioning", "bar", "continental breakfast" },
                     ParkingIncluded = true,
                     LastRenovationDate = new DateTimeOffset(2015, 9, 20, 0, 0, 0, TimeSpan.Zero),
@@ -328,12 +312,9 @@ await AzureAISearchVectorStoreFixture.UploadDocumentsAsync(this.SearchIndexClien
                     HotelId = "BaseSet-4",
                     HotelName = "Hotel 4",
                     Description = "This is a great hotel",
-<<<<<<< HEAD
                     DescriptionEmbedding = embedding,
                     DescriptionEmbedding = new[] { 30f, 31f, 32f, 33f },
-=======
                     DescriptionEmbedding = this.Embedding,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                     Tags = new[] { "concierge", "view", "24-hour front desk service" },
                     ParkingIncluded = true,
                     LastRenovationDate = new DateTimeOffset(1960, 2, 06, 0, 0, 0, TimeSpan.Zero),

@@ -21,22 +21,28 @@ from semantic_kernel.data import (
     VectorStoreRecordVectorField,
 )
 from semantic_kernel.data.record_definition import vectorstoremodel
+from semantic_kernel.data.vector import VectorStoreCollectionDefinition, VectorStoreField, vectorstoremodel
 from semantic_kernel.exceptions import VectorStoreModelException
+
+
+def get_field(defn, name):
+    return next(f for f in defn.fields if f.name == name)
 
 
 def test_vanilla():
     @vectorstoremodel
-    class DataModelClass:
+    class DataModelClassVanilla:
         def __init__(
             self,
-            content: Annotated[str, VectorStoreRecordDataField()],
-            content2: Annotated[str, VectorStoreRecordDataField],
-            vector: Annotated[list[float], VectorStoreRecordVectorField()],
-            id: Annotated[str, VectorStoreRecordKeyField()],
+            content: Annotated[str, VectorStoreField("data")],
+            content2: Annotated[str, VectorStoreField("data")],
+            vector: Annotated[list[float], VectorStoreField("vector", dimensions=5)],
+            id: Annotated[str, VectorStoreField("key")],
             non_vector_store_content: str | None = None,
             optional_content: Annotated[
                 str | None, VectorStoreRecordDataField()
             ] = None,
+            optional_content: Annotated[str | None, VectorStoreField("data")] = None,
             annotated_content: Annotated[str | None, "description"] = None,
         ):
             self.content = content
@@ -64,15 +70,30 @@ def test_vanilla():
     assert data_model_definition.key_field_name == "id"
     assert data_model_definition.container_mode is False
     assert data_model_definition.vector_field_names == ["vector"]
+    assert hasattr(DataModelClassVanilla, "__kernel_vectorstoremodel__")
+    assert hasattr(DataModelClassVanilla, "__kernel_vectorstoremodel_definition__")
+    definition: VectorStoreCollectionDefinition = DataModelClassVanilla.__kernel_vectorstoremodel_definition__
+    assert len(definition.fields) == 5
+    assert get_field(definition, "content").name == "content"
+    assert get_field(definition, "content").type_ == "str"
+    assert get_field(definition, "content2").name == "content2"
+    assert get_field(definition, "content2").type_ == "str"
+    assert get_field(definition, "vector").name == "vector"
+    assert get_field(definition, "id").name == "id"
+    assert get_field(definition, "optional_content").name == "optional_content"
+    assert get_field(definition, "optional_content").type_ == "str"
+    assert definition.key_name == "id"
+    assert definition.container_mode is False
+    assert definition.vector_field_names == ["vector"]
 
 
 def test_vanilla_2():
     @vectorstoremodel()
-    class DataModelClass:
+    class DataModelClassVanilla2:
         def __init__(
             self,
-            content: Annotated[str, VectorStoreRecordDataField()],
-            id: Annotated[str, VectorStoreRecordKeyField()],
+            content: Annotated[str, VectorStoreField("data")],
+            id: Annotated[str, VectorStoreField("key")],
         ):
             self.content = content
             self.id = id
@@ -83,18 +104,22 @@ def test_vanilla_2():
         DataModelClass.__kernel_vectorstoremodel_definition__
     )
     assert len(data_model_definition.fields) == 2
+    assert hasattr(DataModelClassVanilla2, "__kernel_vectorstoremodel__")
+    assert hasattr(DataModelClassVanilla2, "__kernel_vectorstoremodel_definition__")
+    definition: VectorStoreCollectionDefinition = DataModelClassVanilla2.__kernel_vectorstoremodel_definition__
+    assert len(definition.fields) == 2
 
 
 def test_dataclass():
     @vectorstoremodel
     @dataclass
-    class DataModelClass:
-        content: Annotated[str, VectorStoreRecordDataField()]
-        content2: Annotated[str, VectorStoreRecordDataField]
-        vector: Annotated[list[float], VectorStoreRecordVectorField()]
-        id: Annotated[str, VectorStoreRecordKeyField()]
+    class DataModelClassDataclass:
+        content: Annotated[str, VectorStoreField("data")]
+        content2: Annotated[str, VectorStoreField("data")]
+        vector: Annotated[list[float], VectorStoreField("vector", dimensions=5)]
+        id: Annotated[str, VectorStoreField("key")]
         non_vector_store_content: str | None = None
-        optional_content: Annotated[str | None, VectorStoreRecordDataField()] = None
+        optional_content: Annotated[str | None, VectorStoreField("data")] = None
         annotated_content: Annotated[str | None, "description"] = None
 
     assert hasattr(DataModelClass, "__kernel_vectorstoremodel__")
@@ -114,6 +139,21 @@ def test_dataclass():
     assert data_model_definition.key_field_name == "id"
     assert data_model_definition.container_mode is False
     assert data_model_definition.vector_field_names == ["vector"]
+    assert hasattr(DataModelClassDataclass, "__kernel_vectorstoremodel__")
+    assert hasattr(DataModelClassDataclass, "__kernel_vectorstoremodel_definition__")
+    definition: VectorStoreCollectionDefinition = DataModelClassDataclass.__kernel_vectorstoremodel_definition__
+    assert len(definition.fields) == 5
+    assert get_field(definition, "content").name == "content"
+    assert get_field(definition, "content").type_ == "str"
+    assert get_field(definition, "content2").name == "content2"
+    assert get_field(definition, "content2").type_ == "str"
+    assert get_field(definition, "vector").name == "vector"
+    assert get_field(definition, "id").name == "id"
+    assert get_field(definition, "optional_content").name == "optional_content"
+    assert get_field(definition, "optional_content").type_ == "str"
+    assert definition.key_name == "id"
+    assert definition.container_mode is False
+    assert definition.vector_field_names == ["vector"]
 
 
 def test_dataclass_inverse_fail():
@@ -122,19 +162,19 @@ def test_dataclass_inverse_fail():
         @dataclass
         @vectorstoremodel
         class DataModelClass:
-            id: Annotated[str, VectorStoreRecordKeyField()]
-            content: Annotated[str, VectorStoreRecordDataField()]
+            id: Annotated[str, VectorStoreField("key")]
+            content: Annotated[str, VectorStoreField("data")]
 
 
 def test_pydantic_base_model():
     @vectorstoremodel
-    class DataModelClass(BaseModel):
-        content: Annotated[str, VectorStoreRecordDataField()]
-        content2: Annotated[str, VectorStoreRecordDataField]
-        vector: Annotated[list[float], VectorStoreRecordVectorField()]
-        id: Annotated[str, VectorStoreRecordKeyField()]
+    class DataModelClassPydantic(BaseModel):
+        content: Annotated[str, VectorStoreField("data")]
+        content2: Annotated[str, VectorStoreField("data")]
+        vector: Annotated[list[float], VectorStoreField("vector", dimensions=5)]
+        id: Annotated[str, VectorStoreField("key")]
         non_vector_store_content: str | None = None
-        optional_content: Annotated[str | None, VectorStoreRecordDataField()] = None
+        optional_content: Annotated[str | None, VectorStoreField("data")] = None
         annotated_content: Annotated[str | None, "description"] = None
 
     assert hasattr(DataModelClass, "__kernel_vectorstoremodel__")
@@ -154,18 +194,33 @@ def test_pydantic_base_model():
     assert data_model_definition.key_field_name == "id"
     assert data_model_definition.container_mode is False
     assert data_model_definition.vector_field_names == ["vector"]
+    assert hasattr(DataModelClassPydantic, "__kernel_vectorstoremodel__")
+    assert hasattr(DataModelClassPydantic, "__kernel_vectorstoremodel_definition__")
+    definition: VectorStoreCollectionDefinition = DataModelClassPydantic.__kernel_vectorstoremodel_definition__
+    assert len(definition.fields) == 5
+    assert get_field(definition, "content").name == "content"
+    assert get_field(definition, "content").type_ == "str"
+    assert get_field(definition, "content2").name == "content2"
+    assert get_field(definition, "content2").type_ == "str"
+    assert get_field(definition, "vector").name == "vector"
+    assert get_field(definition, "id").name == "id"
+    assert get_field(definition, "optional_content").name == "optional_content"
+    assert get_field(definition, "optional_content").type_ == "str"
+    assert definition.key_name == "id"
+    assert definition.container_mode is False
+    assert definition.vector_field_names == ["vector"]
 
 
 def test_pydantic_dataclass():
     @vectorstoremodel
     @pydantic_dataclass
-    class DataModelClass:
-        content: Annotated[str, VectorStoreRecordDataField()]
-        content2: Annotated[str, VectorStoreRecordDataField]
-        vector: Annotated[list[float], VectorStoreRecordVectorField()]
-        id: Annotated[str, VectorStoreRecordKeyField()]
+    class DataModelClassPydanticDataclass:
+        content: Annotated[str, VectorStoreField("data")]
+        content2: Annotated[str, VectorStoreField("data")]
+        vector: Annotated[list[float], VectorStoreField("vector", dimensions=5)]
+        id: Annotated[str, VectorStoreField("key")]
         non_vector_store_content: str | None = None
-        optional_content: Annotated[str | None, VectorStoreRecordDataField()] = None
+        optional_content: Annotated[str | None, VectorStoreField("data")] = None
         annotated_content: Annotated[str | None, "description"] = None
 
     assert hasattr(DataModelClass, "__kernel_vectorstoremodel__")
@@ -185,6 +240,21 @@ def test_pydantic_dataclass():
     assert data_model_definition.key_field_name == "id"
     assert data_model_definition.container_mode is False
     assert data_model_definition.vector_field_names == ["vector"]
+    assert hasattr(DataModelClassPydanticDataclass, "__kernel_vectorstoremodel__")
+    assert hasattr(DataModelClassPydanticDataclass, "__kernel_vectorstoremodel_definition__")
+    definition: VectorStoreCollectionDefinition = DataModelClassPydanticDataclass.__kernel_vectorstoremodel_definition__
+    assert len(definition.fields) == 5
+    assert get_field(definition, "content").name == "content"
+    assert get_field(definition, "content").type_ == "str"
+    assert get_field(definition, "content2").name == "content2"
+    assert get_field(definition, "content2").type_ == "str"
+    assert get_field(definition, "vector").name == "vector"
+    assert get_field(definition, "id").name == "id"
+    assert get_field(definition, "optional_content").name == "optional_content"
+    assert get_field(definition, "optional_content").type_ == "str"
+    assert definition.key_name == "id"
+    assert definition.container_mode is False
+    assert definition.vector_field_names == ["vector"]
 
 
 def test_empty_model():
@@ -250,58 +320,51 @@ def test_non_vector_list_and_dict():
     assert data_model_definition.fields["dict3"].name == "dict3"
     assert data_model_definition.fields["dict3"].property_type == "dict"
     assert data_model_definition.container_mode is False
+    class DataModelClassListDict:
+        key: Annotated[str, VectorStoreField("key")]
+        list1: Annotated[list[int], VectorStoreField("data")]
+        list2: Annotated[list[str], VectorStoreField("data")]
+        list3: Annotated[list[str] | None, VectorStoreField("data")]
+        dict1: Annotated[dict[str, int], VectorStoreField("data")]
+        dict2: Annotated[dict[str, str], VectorStoreField("data")]
+        dict3: Annotated[dict[str, str] | None, VectorStoreField("data")]
+
+    assert hasattr(DataModelClassListDict, "__kernel_vectorstoremodel__")
+    assert hasattr(DataModelClassListDict, "__kernel_vectorstoremodel_definition__")
+    definition: VectorStoreCollectionDefinition = DataModelClassListDict.__kernel_vectorstoremodel_definition__
+    assert len(definition.fields) == 7
+    assert get_field(definition, "list1").name == "list1"
+    assert get_field(definition, "list1").type_ == "list[int]"
+    assert get_field(definition, "list2").name == "list2"
+    assert get_field(definition, "list2").type_ == "list[str]"
+    assert get_field(definition, "list3").name == "list3"
+    assert get_field(definition, "list3").type_ == "list[str]"
+    assert get_field(definition, "dict1").name == "dict1"
+    assert get_field(definition, "dict1").type_ == "dict[str, int]"
+    assert get_field(definition, "dict2").name == "dict2"
+    assert get_field(definition, "dict2").type_ == "dict[str, str]"
+    assert get_field(definition, "dict3").name == "dict3"
+    assert get_field(definition, "dict3").type_ == "dict[str, str]"
+    assert definition.container_mode is False
 
 
 def test_vector_fields_checks():
     @vectorstoremodel
-    class DataModelClass(BaseModel):
+    class DataModelClassVectorFields(BaseModel):
         model_config = ConfigDict(arbitrary_types_allowed=True)
-        id: Annotated[str, VectorStoreRecordKeyField()]
-        vector_str: Annotated[str, VectorStoreRecordVectorField()]
-        vector_list: Annotated[list[float], VectorStoreRecordVectorField()]
+        id: Annotated[str, VectorStoreField("key")]
+        vector_str: Annotated[str, VectorStoreField("vector", dimensions=5)]
+        vector_list: Annotated[list[float], VectorStoreField("vector", dimensions=5)]
         vector_array: Annotated[
             ndarray,
-            VectorStoreRecordVectorField(
-                serialize_function=lambda _: [0.1],  # fake functions
-                deserialize_function=lambda _: "test",  # fake functions
-            ),
+            VectorStoreField("vector", dimensions=5),
         ]
 
-    assert hasattr(DataModelClass, "__kernel_vectorstoremodel__")
-    assert hasattr(DataModelClass, "__kernel_vectorstoremodel_definition__")
-    data_model_definition: VectorStoreRecordDefinition = DataModelClass.__kernel_vectorstoremodel_definition__
-    assert len(data_model_definition.fields) == 4
-    assert data_model_definition.fields["id"].name == "id"
-    assert data_model_definition.fields["vector_str"].property_type == "str"
-    assert data_model_definition.fields["vector_list"].property_type == "float"
-    assert data_model_definition.fields["vector_array"].property_type == "ndarray"
-
-
-def test_vector_fields_array_without_serialization():
-    with raises(VectorStoreModelException):
-
-        @vectorstoremodel
-        class DataModelClass(BaseModel):
-            model_config = ConfigDict(arbitrary_types_allowed=True)
-            id: Annotated[str, VectorStoreRecordKeyField()]
-            vector_array: Annotated[
-                ndarray,
-                VectorStoreRecordVectorField(
-                    serialize_function=lambda _: [0.1],  # fake functions
-                    # deserialize_function=lambda _: "test",  # fake functions
-                ),
-            ]
-
-    with raises(VectorStoreModelException):
-
-        @vectorstoremodel
-        class DataModelClass(BaseModel):
-            model_config = ConfigDict(arbitrary_types_allowed=True)
-            id: Annotated[str, VectorStoreRecordKeyField()]
-            vector_array: Annotated[
-                ndarray,
-                VectorStoreRecordVectorField(
-                    # serialize_function=lambda _: [0.1],  # fake functions
-                    deserialize_function=lambda _: "test",  # fake functions
-                ),
-            ]
+    assert hasattr(DataModelClassVectorFields, "__kernel_vectorstoremodel__")
+    assert hasattr(DataModelClassVectorFields, "__kernel_vectorstoremodel_definition__")
+    definition: VectorStoreCollectionDefinition = DataModelClassVectorFields.__kernel_vectorstoremodel_definition__
+    assert len(definition.fields) == 4
+    assert get_field(definition, "id").name == "id"
+    assert get_field(definition, "vector_str").type_ == "str"
+    assert get_field(definition, "vector_list").type_ == "float"
+    assert get_field(definition, "vector_array").type_ == "ndarray"

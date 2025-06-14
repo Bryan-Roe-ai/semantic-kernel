@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <!-- THIS PROPERTY GROUP MUST COME FIRST -->
-    <AssemblyName>Microsoft.SemanticKernel.Connectors.Chroma</AssemblyName>
+    <AssemblyName>Microsoft.SemanticKernel.Connectors.Memory.Chroma</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
-    <TargetFrameworks>net8.0;netstandard2.0;net462</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <VersionSuffix>alpha</VersionSuffix>
   </PropertyGroup>
 
@@ -19,6 +19,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Text.Json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Plugins\Plugins.Memory\Plugins.Memory.csproj" />
     <ProjectReference Include="..\..\SemanticKernel.Core\SemanticKernel.Core.csproj" />
   </ItemGroup>
 

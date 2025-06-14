@@ -4,14 +4,11 @@ from typing import ClassVar
 
 from pydantic import SecretStr
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.memory.mongodb_atlas.utils import (
     DEFAULT_DB_NAME,
     DEFAULT_SEARCH_INDEX_NAME,
 )
-=======
 from semantic_kernel.connectors.memory.mongodb_atlas.const import DEFAULT_DB_NAME, DEFAULT_SEARCH_INDEX_NAME
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.kernel_pydantic import KernelBaseSettings
 from semantic_kernel.utils.feature_stage_decorator import experimental
 

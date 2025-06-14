@@ -23,3 +23,4 @@ Q: Organization to protect the freedom and security of its member countries in N
 A: N.A.T.O: North Atlantic Treaty Organization.  
 
 Q:{$input}
+Q:{{$input}}

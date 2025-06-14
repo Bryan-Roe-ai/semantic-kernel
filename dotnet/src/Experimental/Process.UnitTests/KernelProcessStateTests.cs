@@ -29,8 +29,8 @@ public class KernelProcessStateTests
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert
-        Assert.Equal(name, state.Name);
-        Assert.Equal(id, state.Id);
+        Assert.Equal(name, state.StepId);
+        Assert.Equal(id, state.RunId);
     }
 
     /// <summary>
@@ -51,8 +51,8 @@ public class KernelProcessStateTests
 >>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert
-        Assert.Equal(name, state.Name);
-        Assert.Null(state.Id);
+        Assert.Equal(name, state.StepId);
+        Assert.Null(state.RunId);
     }
 
     /// <summary>

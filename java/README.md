@@ -200,3 +200,9 @@ We have included more code snippets and usage examples in the documentation to p
 ### Repository Structure Explanation
 
 To help users navigate the repository, we have added a section that explains the structure of the repository and the purpose of each directory and file. This section provides an overview of the repository's organization and helps users understand where to find specific components and resources.
+The Semantic Kernel for Java code has moved
+to [semantic-kernel-java](https://github.com/microsoft/semantic-kernel-java), please make code changes and submit issues
+to that repository. This move is purely to ease the development. The various Semantic Kernel languages are all still 
+aligned in their development.
+
+Project coordination is still performed within this [Project Board](https://github.com/orgs/microsoft/projects/866).

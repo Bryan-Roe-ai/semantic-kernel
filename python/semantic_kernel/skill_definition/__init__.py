@@ -12,5 +12,8 @@ __all__ = [
     "sk_function",
     "sk_function_name",
     "sk_function_input",
+
+__all__ = [
+    "sk_function",
     "sk_function_context_parameter",
 ]

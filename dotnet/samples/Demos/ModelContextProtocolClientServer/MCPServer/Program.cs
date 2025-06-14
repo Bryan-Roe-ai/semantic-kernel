@@ -1,12 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using MCPServer;
-using MCPServer.ProjectResources;
-using MCPServer.Prompts;
-using MCPServer.Resources;
 using MCPServer.Tools;
-using Microsoft.Extensions.AI;
-using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Connectors.InMemory;
@@ -15,8 +10,6 @@ using ModelContextProtocol.Server;
 
 var builder = Host.CreateEmptyApplicationBuilder(settings: null);
 
-// Load and validate configuration
-(string embeddingModelId, string chatModelId, string apiKey) = GetConfiguration();
 
 // Register the kernel
 IKernelBuilder kernelBuilder = builder.Services.AddKernel();
@@ -34,6 +27,64 @@ kernelBuilder.Services.AddSingleton<VectorStore, InMemoryVectorStore>();
 kernelBuilder.Services.AddOpenAIEmbeddingGenerator(embeddingModelId, apiKey);
 
 // Register MCP server
+using Azure.Monitor.OpenTelemetry.Exporter;
+using MCPServer;
+using Microsoft.SemanticKernel;
+using ModelContextProtocol;
+using OpenTelemetry.Resources;
+using OpenTelemetry;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Metrics;
+using MCPServer.Resources;
+
+// Enable Application Insights telemetry
+string connectionString = GetAppInsightsConnectionString();
+
+// Enable diagnostics with sensitive data.
+AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive", true);
+
+var resourceBuilder = ResourceBuilder
+    .CreateDefault()
+    .AddService("SKTelemetry");
+
+using var traceProvider = Sdk.CreateTracerProviderBuilder()
+    .SetResourceBuilder(resourceBuilder)
+    .AddSource("Microsoft.SemanticKernel*")
+    .AddAzureMonitorTraceExporter(options => options.ConnectionString = connectionString)
+    .Build();
+
+using var meterProvider = Sdk.CreateMeterProviderBuilder()
+    .SetResourceBuilder(resourceBuilder)
+    .AddMeter("Microsoft.SemanticKernel*")
+    .AddAzureMonitorMetricExporter(options => options.ConnectionString = connectionString)
+    .Build();
+
+using var loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder.AddOpenTelemetry(options =>
+    {
+        options.SetResourceBuilder(resourceBuilder);
+        options.AddAzureMonitorLogExporter(options => options.ConnectionString = connectionString);
+        options.IncludeFormattedMessage = true;
+        options.IncludeScopes = true;
+    });
+    builder.AddFilter("Microsoft.SemanticKernel*", LogLevel.Trace);
+});
+
+// Build the kernel
+IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
+kernelBuilder.Services.AddSingleton<ILoggerFactory>(loggerFactory);
+
+Kernel kernel = kernelBuilder.Build();
+
+// Import a OpenAPI plugin defined weather.json OpenAPI/Swagger spec
+using Stream stream = EmbeddedResource.ReadAsStream("weather.json");
+await kernel.ImportPluginFromOpenApiAsync("Weather", stream);
+
+// Register a function invocation filter to validate function calls
+kernel.AutoFunctionInvocationFilters.Add(new ContentSafetyAutoFunctionInvocationFilter());
+
+var builder = Host.CreateEmptyApplicationBuilder(settings: null);
 builder.Services
     .AddMcpServer()
     .WithStdioServerTransport()
@@ -57,12 +108,18 @@ builder.Services
 await builder.Build().RunAsync();
 
 /// <summary>
-/// Gets configuration.
+/// Creates a sales assistant agent that can place orders and handle refunds.
 /// </summary>
-static (string EmbeddingModelId, string ChatModelId, string ApiKey) GetConfiguration()
+/// <remarks>
+/// The agent is created with an OpenAI chat completion service and a plugin for order processing.
+/// </remarks>
+static Agent CreateSalesAssistantAgent()
 {
     // Load and validate configuration
     IConfigurationRoot config = new ConfigurationBuilder()
+static string GetAppInsightsConnectionString()
+{
+    var config = new ConfigurationBuilder()
         .AddUserSecrets<Program>()
         .AddEnvironmentVariables()
         .Build();
@@ -147,13 +204,15 @@ static ResourceTemplateDefinition CreateVectorStoreSearchResourceTemplate(Kernel
 
 static Agent CreateSalesAssistantAgent(string chatModelId, string apiKey)
 {
+    (string deploymentName, string endPoint, string apiKey) = GetConfiguration();
+
     IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
 
     // Register the SK plugin for the agent to use
     kernelBuilder.Plugins.AddFromType<OrderProcessingUtils>();
 
     // Register chat completion service
-    kernelBuilder.Services.AddOpenAIChatCompletion(chatModelId, apiKey);
+    kernelBuilder.Services.AddAzureOpenAIChatCompletion(deploymentName: deploymentName, endpoint: endPoint, apiKey: apiKey);
 
     // Using a dedicated kernel with the `OrderProcessingUtils` plugin instead of the global kernel has a few advantages:
     // - The agent has access to only relevant plugins, leading to better decision-making regarding which plugin to use.
@@ -171,4 +230,35 @@ static Agent CreateSalesAssistantAgent(string chatModelId, string apiKey)
         Kernel = kernel,
         Arguments = new KernelArguments(new PromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() }),
     };
+    return config["ApplicationInsights:ConnectionString"]!;
+}
+
+/// <summary>
+/// Gets configuration.
+/// </summary>
+static (string DeploymentName, string Endpoint, string ApiKey) GetConfiguration()
+{
+    // Load and validate configuration
+    IConfigurationRoot config = new ConfigurationBuilder()
+        .AddUserSecrets<Program>()
+        .AddEnvironmentVariables()
+        .Build();
+
+    if (config["AzureOpenAI:Endpoint"] is not { } endpoint)
+    {
+        const string Message = "Please provide a valid AzureOpenAI:Endpoint to run this sample.";
+        Console.Error.WriteLine(Message);
+        throw new InvalidOperationException(Message);
+    }
+
+    if (config["AzureOpenAI:ApiKey"] is not { } apiKey)
+    {
+        const string Message = "Please provide a valid AzureOpenAI:ApiKey to run this sample.";
+        Console.Error.WriteLine(Message);
+        throw new InvalidOperationException(Message);
+    }
+
+    string deploymentName = config["AzureOpenAI:ChatDeploymentName"] ?? "gpt-4o-mini";
+
+    return (deploymentName, endpoint, apiKey);
 }

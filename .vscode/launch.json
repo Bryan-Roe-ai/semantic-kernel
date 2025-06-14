@@ -2,7 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-<<<<<<< HEAD
       "name": ".NET Core Launch (dotnet-kernel-syntax-examples)",
       "type": "coreclr",
       "request": "launch",
@@ -10,7 +9,6 @@
       "program": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples/bin/Debug/net6.0/KernelSyntaxExamples.dll",
       "args": [],
       "cwd": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples"
-=======
       "name": "CAPs - Demo Sample",
       "type": "coreclr",
       "request": "launch",
@@ -33,7 +31,6 @@
       "cwd": "${workspaceFolder}/dotnet/samples/Concepts",
       "console": "internalConsole",
       "stopAtEntry": false
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     },
     {
       "name": "Attach to .NET Functions",
@@ -45,29 +42,24 @@
       "name": "RobotCode: Default",
       "type": "robotcode",
       "request": "launch",
-<<<<<<< HEAD
       "presentation": {
         "hidden": true
       },
       "purpose": "default"
-=======
       "module": "pytest",
       "args": [
         "${file}"
       ]
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     },
     {
       "name": "Python: FastAPI",
       "type": "debugpy",
       "request": "launch",
-<<<<<<< HEAD
       "module": "uvicorn",
       "args": ["app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"],
       "console": "integratedTerminal",
       "justMyCode": true,
       "cwd": "${workspaceFolder}"
-=======
       "projectPath": "${workspaceFolder}\\dotnet\\samples\\Demos\\HuggingFaceImageToText.csproj",
       "launchConfigurationId": "TargetFramework=;HuggingFaceImageToText"
     },
@@ -107,7 +99,6 @@
           "ignoreFailures": true
         }
       ]
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     }
   ]
 }

@@ -16,7 +16,8 @@
   <PropertyGroup>
     <!-- NuGet Package Settings -->
     <Title>Semantic Kernel Process - Abstractions</Title>
-    <Description>Semantic Kernel Process abstractions. This package is automatically installed by Semantic Kernel Process packages if needed.</Description>
+    <Description>Semantic Kernel Process abstractions. This package is automatically installed by
+      Semantic Kernel Process packages if needed.</Description>
   </PropertyGroup>
 
   <ItemGroup>

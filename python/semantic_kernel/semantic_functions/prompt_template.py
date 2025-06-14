@@ -12,6 +12,8 @@ from semantic_kernel.template_engine.blocks.block_types import BlockTypes
 from semantic_kernel.template_engine.blocks.var_block import VarBlock
 from semantic_kernel.template_engine.prompt_template_engine_base import (
     PromptTemplateEngineBase,
+from semantic_kernel.template_engine.protocols.prompt_templating_engine import (
+    PromptTemplatingEngine,
 )
 from semantic_kernel.utils.null_logger import NullLogger
 
@@ -22,6 +24,7 @@ if TYPE_CHECKING:
 class PromptTemplate(PromptTemplateBase):
     _template: str
     _template_engine: PromptTemplateEngineBase
+    _template_engine: PromptTemplatingEngine
     _log: Logger
     _prompt_config: PromptTemplateConfig
 
@@ -29,6 +32,7 @@ class PromptTemplate(PromptTemplateBase):
         self,
         template: str,
         template_engine: PromptTemplateEngineBase,
+        template_engine: PromptTemplatingEngine,
         prompt_config: PromptTemplateConfig,
         log: Optional[Logger] = None,
     ) -> None:
@@ -54,6 +58,7 @@ class PromptTemplate(PromptTemplateBase):
         blocks = self._template_engine.extract_blocks(self._template)
         for block in blocks:
             if block.type != BlockTypes.Variable:
+            if block.type != BlockTypes.VARIABLE:
                 continue
             if block is None:
                 continue

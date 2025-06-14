@@ -3,7 +3,6 @@
   "tasks": [
     {
       "label": "clean (functions)",
-<<<<<<< HEAD
       "command": "dotnet",
       "args": [
         "clean",
@@ -37,7 +36,6 @@
       "problemMatcher": "$msCompile",
       "options": {
         "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
-=======
       "command": "dotnet",
       "args": [
         "clean",
@@ -48,7 +46,6 @@
       "problemMatcher": "$msCompile",
       "options": {
         "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       }
     },
     {
@@ -60,7 +57,6 @@
         "/consoleloggerparameters:NoSummary"
       ],
       "type": "process",
-<<<<<<< HEAD
       "group": "build",
       "dependsOn": "clean (functions)",
       "problemMatcher": "$msCompile",
@@ -134,7 +130,6 @@
       "problemMatcher": "$msCompile",
       "options": {
         "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
-=======
       "dependsOn": "clean (functions)",
       "group": {
         "kind": "build",
@@ -143,7 +138,6 @@
       "problemMatcher": "$msCompile",
       "options": {
         "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       }
     },
     {
@@ -153,7 +147,6 @@
         "clean",
         "--configuration",
         "Release",
-<<<<<<< HEAD
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
@@ -271,11 +264,9 @@
     {
       "label": "watch (Concepts)",
       "command": "dotnet",
-=======
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       "type": "process",
       "problemMatcher": "$msCompile",
       "options": {
@@ -283,7 +274,6 @@
       }
     },
     {
-<<<<<<< HEAD
       "label": "daprd-debug",
       "type": "daprd",
       "appId": "processwithdapr",
@@ -333,7 +323,6 @@
     }
   ],
   "inputs": [
-=======
       "label": "publish (functions)",
       "command": "dotnet",
       "args": [
@@ -350,7 +339,6 @@
         "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
       }
     },
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
       "type": "func",
       "dependsOn": "build (functions)",

@@ -18,106 +18,111 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - language: csharp
-            build-mode: autobuild
-          - language: python
-            build-mode: autobuild
-          - language: java
-            build-mode: autobuild
-          - language: cpp
-            build-mode: autobuild
-          - language: html
-            build-mode: autobuild
-
+        language: [csharp, python, java, cpp, html]
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        submodules: true
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
 
-    - name: Cache dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.cache
-          ~/.m2
-          ~/.gradle/caches
-          ~/.gradle/wrapper
-          ~/.nuget/packages
-          .venv
-        key: ${{ runner.os }}-build-${{ matrix.language }}-${{ hashFiles('**/package-lock.json', '**/pom.xml', '**/build.gradle', '**/*.csproj', '**/Cargo.lock', '**/requirements.txt') }}
-        restore-keys: ${{ runner.os }}-build-${{ matrix.language }}-
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.nuget/packages
+            .venv
+            ~/.m2
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            node_modules
+          key: ${{ runner.os }}-${{ matrix.language }}-${{ hashFiles('**/package-lock.json', '**/pom.xml', '**/build.gradle', '**/*.csproj', '**/requirements.txt') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.language }}-
 
-    - name: Set up dependencies
-      run: |
-        if [ "${{ matrix.language }}" == "csharp" ]; then
-          dotnet restore
-        elif [ "${{ matrix.language }}" == "python" ]; then
-          pip install -r requirements.txt
-        elif [ "${{ matrix.language }}" == "java" ]; then
-          ./gradlew build
-        elif [ "${{ matrix.language }}" == "cpp" ]; then
-          make
-        fi
+      - name: Set up dependencies and lint
+        run: |
+          set -e
+          case "${{ matrix.language }}" in
+            csharp)
+              dotnet restore
+              dotnet format --verify-no-changes
+              ;;
+            python)
+              python -m venv .venv
+              source .venv/bin/activate
+              pip install -r requirements.txt
+              pip install flake8
+              flake8 .
+              ;;
+            java)
+              ./gradlew --daemon build
+              ./gradlew --daemon check
+              ;;
+            cpp)
+              make || true
+              cppcheck .
+              ;;
+            html)
+              npm ci || npm install
+              npx htmlhint "**/*.html"
+              ;;
+            *)
+              echo "No setup or linting for ${{ matrix.language }}"
+              ;;
+          esac
 
-    - name: Run lint
-      run: |
-        if [ "${{ matrix.language }}" == "python" ]; then
-          pip install flake8 && flake8 .
-        elif [ "${{ matrix.language }}" == "csharp" ]; then
-          dotnet format --verify-no-changes
-        elif [ "${{ matrix.language }}" == "cpp" ]; then
-          cppcheck .
-        elif [ "${{ matrix.language }}" == "java" ]; then
-          ./gradlew check
-        elif [ "${{ matrix.language }}" == "html" ]; then
-          npx htmlhint "**/*.html"
-        else
-          echo "No linting configured for ${{ matrix.language }}"
-        fi
+      - name: Initialize CodeQL
+        if: ${{ contains('csharp python java cpp', matrix.language) }}
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: autobuild
+          queries: ./codeql-queries # (optional: add custom queries here)
 
-    - name: Initialize CodeQL
-      if: ${{ contains('csharp python java cpp', matrix.language) }}
-      uses: github/codeql-action/init@v4
-      with:
-        languages: ${{ matrix.language }}
-        build-mode: ${{ matrix.build-mode }}
+      - name: Perform CodeQL Analysis
+        if: ${{ contains('csharp python java cpp', matrix.language) }}
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{ matrix.language }}"
 
-    - name: Perform CodeQL Analysis
-      if: ${{ contains('csharp python java cpp', matrix.language) }}
-      uses: github/codeql-action/analyze@v4
-      with:
-        category: "/language:${{ matrix.language }}"
+      - name: Clean up temporary files
+        run: find /tmp -mindepth 1 -delete || true
 
-    - name: Clean up temporary files
-      run: find /tmp -mindepth 1 -delete
+      - name: Debug info on failure
+        if: failure()
+        run: |
+          echo "Runner OS: ${{ runner.os }}"
+          echo "Language: ${{ matrix.language }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Workflow URL: ${{ github.run_url }}"
+          ls -alh /tmp || true
 
-    - name: Debug info on failure
-      if: failure()
-      run: |
-        echo "Runner OS: ${{ runner.os }}"
-        echo "Language: ${{ matrix.language }}"
-        echo "Commit: ${{ github.sha }}"
-        echo "Branch: ${{ github.ref_name }}"
-        echo "Workflow URL: ${{ github.run_url }}"
+      - name: Notify Slack on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v2
+        with:
+          payload: |
+            {
+              "text": "❌ CodeQL analysis failed for *${{ matrix.language }}*.\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\n<${{ github.run_url }}|View Workflow Run>"
+            }
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
 
-    - name: Notify Slack on failure
-      if: failure()
-      uses: slackapi/slack-github-action@v2
-      with:
-        slack-message: |
-          CodeQL analysis failed for ${{ matrix.language }}.
-          Branch: ${{ github.ref_name }}
-          Commit: ${{ github.sha }}
-          Workflow URL: ${{ github.run_url }}
+      - name: Notify Slack on success
+        if: success()
+        uses: slackapi/slack-github-action@v2
+        with:
+          payload: |
+            {
+              "text": "✅ CodeQL analysis succeeded for *${{ matrix.language }}*.\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\n<${{ github.run_url }}|View Workflow Run>"
+            }
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
 
-    - name: Notify Slack on success
-      if: success()
-      uses: slackapi/slack-github-action@v2
-      with:
-        slack-message: |
-          CodeQL analysis succeeded for ${{ matrix.language }}.
-          Branch: ${{ github.ref_name }}
-          Commit: ${{ github.sha }}
-          Workflow URL: ${{ github.run_url }}
+      - name: Notify Slack on cancel
+        if: cancelled()
+        uses: slackapi/slack-github-action@v2
+        with:
+          payload: |
+            {
+              "text": "⚠️ CodeQL analysis was canceled for *${{ matrix.language }}*.\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\n<${{ github.run_url }}|View Workflow Run>"
+            }
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}

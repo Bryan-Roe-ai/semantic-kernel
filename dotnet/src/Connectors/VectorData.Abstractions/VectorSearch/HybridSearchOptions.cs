@@ -1,70 +1,56 @@
-// Copyright (c) Microsoft. All rights reserved.
-
-using System;
-using System.Linq.Expressions;
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 namespace Microsoft.Extensions.VectorData;
 
 /// <summary>
-/// Defines options for hybrid search when using a dense vector and string keywords to do the search.
+/// Options for hybrid search when using a dense vector and string keywords to do the search.
 /// </summary>
-public class HybridSearchOptions<TRecord>
+public class HybridSearchOptions
 {
-    private int _skip = 0;
-
     /// <summary>
     /// Gets or sets a search filter to use before doing the hybrid search.
     /// </summary>
-#pragma warning disable CS0618 // Type or member is obsolete
-    [Obsolete("Use Filter instead")]
-    public VectorSearchFilter? OldFilter { get; set; }
-#pragma warning restore CS0618 // Type or member is obsolete
+    public VectorSearchFilter? Filter { get; init; }
 
     /// <summary>
-    /// Gets or sets a search filter to use before doing the vector search.
+    /// Gets or sets the name of the target dense vector property to search on.
+    /// Use the name of the vector property from your data model or as provided in the record definition.
+    /// If not provided will look if there is a vector property, and
+    /// will throw if either none or multiple exist.
     /// </summary>
-    public Expression<Func<TRecord, bool>>? Filter { get; set; }
+    public string? VectorPropertyName { get; init; }
 
     /// <summary>
-    /// Gets or sets the target dense vector property to search on.
-    /// Only needs to be set when the collection has multiple vector properties.
+    /// Gets or sets the name of the additional target property to do the text/keyword search on.
+    /// The property must have full text search enabled.
+    /// Use the name of the data property from your data model or as provided in the record definition.
+    /// If not provided will look if there is a text property with full text search enabled, and
+    /// will throw if either none or multiple exist.
     /// </summary>
-    /// <remarks>
-    /// If this property isn't set, <see cref="IKeywordHybridSearchable{TRecord}.HybridSearchAsync{TInput}(TInput, System.Collections.Generic.ICollection{string}, int, Microsoft.Extensions.VectorData.HybridSearchOptions{TRecord}?, System.Threading.CancellationToken)"/> checks if there is a vector property to use by default, and
-    /// throws if either none or multiple exist.
-    /// </remarks>
-    public Expression<Func<TRecord, object?>>? VectorProperty { get; set; }
+    public string? AdditionalPropertyName { get; init; }
 
     /// <summary>
-    /// Gets or sets the additional target property to do the text or keyword search on.
-    /// The property must have full text indexing enabled.
+    /// Gets or sets the maximum number of results to return.
     /// </summary>
-    /// <remarks>
-    /// If this property isn't set, <see cref="IKeywordHybridSearchable{TRecord}.HybridSearchAsync{TInput}(TInput, System.Collections.Generic.ICollection{string}, int, Microsoft.Extensions.VectorData.HybridSearchOptions{TRecord}?, System.Threading.CancellationToken)"/> checks if there is a text property with full text indexing enabled, and
-    /// throws an exception if either none or multiple exist.
-    /// </remarks>
-    public Expression<Func<TRecord, object?>>? AdditionalProperty { get; set; }
+    public int Top { get; init; } = 3;
 
     /// <summary>
-    /// Gets or sets the number of results to skip before returning results, that is, the index of the first result to return.
+    /// Gets or sets the number of results to skip before returning results, i.e. the index of the first result to return.
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">The value is less than 0.</exception>
-    public int Skip
-    {
-        get => this._skip;
-        set
-        {
-            if (value < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value), "Skip must be greater than or equal to 0.");
-            }
-
-            this._skip = value;
-        }
-    }
+    public int Skip { get; init; } = 0;
 
     /// <summary>
     /// Gets or sets a value indicating whether to include vectors in the retrieval result.
     /// </summary>
-    public bool IncludeVectors { get; set; }
+    public bool IncludeVectors { get; init; } = false;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the total count should be included in the results.
+    /// </summary>
+    /// <remarks>
+    /// Default value is false.
+    /// Not all vector search implementations will support this option in which case the total
+    /// count will be null even if requested via this option.
+    /// </remarks>
+    public bool IncludeTotalCount { get; init; } = false;
 }

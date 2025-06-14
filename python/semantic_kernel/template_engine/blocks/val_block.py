@@ -2,160 +2,30 @@
 
 import logging
 from re import S, compile
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
->>>>>>> head
 from typing import TYPE_CHECKING, Any, ClassVar
 
 from pydantic import model_validator
 
 from semantic_kernel.exceptions import ValBlockSyntaxError
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 from semantic_kernel.template_engine.blocks.block import Block
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
 from typing import TYPE_CHECKING, Any, ClassVar, Optional, Tuple
 
 from pydantic import model_validator
 
->>>>>>> ms/small_fixes
->>>>>>> origin/main
 from semantic_kernel.template_engine.blocks.block import Block
 from semantic_kernel.template_engine.blocks.block_errors import ValBlockSyntaxError
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
 from typing import TYPE_CHECKING, Any, ClassVar, Optional, Tuple
 
 from pydantic import model_validator
 
->>>>>>> ms/small_fixes
 from semantic_kernel.template_engine.blocks.block import Block
 from semantic_kernel.template_engine.blocks.block_errors import ValBlockSyntaxError
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-=======
 from typing import TYPE_CHECKING, Any, ClassVar, Optional, Tuple
 
 from pydantic import model_validator
 
->>>>>>> ms/small_fixes
 from semantic_kernel.template_engine.blocks.block import Block
 from semantic_kernel.template_engine.blocks.block_errors import ValBlockSyntaxError
->>>>>>> main
-=======
->>>>>>> head
 from semantic_kernel.template_engine.blocks.block_types import BlockTypes
 
 if TYPE_CHECKING:
@@ -194,95 +64,14 @@ class ValBlock(Block):
     """
 
     type: ClassVar[BlockTypes] = BlockTypes.VALUE
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     value: str | None = ""
     quote: str | None = "'"
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
     value: str | None = ""
     quote: str | None = "'"
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
     value: str | None = ""
     quote: str | None = "'"
-=======
     value: Optional[str] = ""
     quote: Optional[str] = "'"
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
 
     @model_validator(mode="before")
     @classmethod
@@ -304,95 +93,77 @@ class ValBlock(Block):
             fields["quote"] = quote
         return fields
 
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     def render(self, *_: "Kernel | KernelArguments | None") -> str:
         """Render the value block."""
         return self.value or ""
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
     def render(self, *_: "Kernel | KernelArguments | None") -> str:
         """Render the value block."""
         return self.value or ""
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
     def render(self, *_: "Kernel | KernelArguments | None") -> str:
         """Render the value block."""
         return self.value or ""
-=======
     def render(self, *_: Tuple["Kernel", Optional["KernelArguments"]]) -> str:
         return self.value
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
+from logging import Logger
+from typing import Optional, Tuple
+
+from semantic_kernel.orchestration.context_variables import ContextVariables
+from semantic_kernel.template_engine.blocks.block import Block
+from semantic_kernel.template_engine.blocks.block_types import BlockTypes
+from semantic_kernel.template_engine.blocks.symbols import Symbols
+from semantic_kernel.template_engine.protocols.text_renderer import TextRenderer
+
+
+class ValBlock(Block, TextRenderer):
+    def __init__(self, content: Optional[str] = None, log: Optional[Logger] = None):
+        super().__init__(content=content and content.strip(), log=log)
+
+        if len(self.content) < 2:
+            err = "A value must have single quotes or double quotes on both sides"
+            self.log.error(err)
+            self._value = ""
+            self._first = "\0"
+            self._last = "\0"
+            return
+
+        self._first = self.content[0]
+        self._last = self.content[-1]
+        self._value = self.content[1:-1]
+
+    @property
+    def type(self) -> BlockTypes:
+        return BlockTypes.VALUE
+
+    def is_valid(self) -> Tuple[bool, str]:
+        if len(self.content) < 2:
+            error_msg = "A value must have single quotes or double quotes on both sides"
+            self.log.error(error_msg)
+            return False, error_msg
+
+        if self._first != Symbols.DBL_QUOTE and self._first != Symbols.SGL_QUOTE:
+            error_msg = (
+                "A value must be wrapped in either single quotes or double quotes"
+            )
+            self.log.error(error_msg)
+            return False, error_msg
+
+        if self._first != self._last:
+            error_msg = (
+                "A value must be defined using either single quotes or "
+                "double quotes, not both"
+            )
+            self.log.error(error_msg)
+            return False, error_msg
+
+        return True, ""
+
+    def render(self, _: Optional[ContextVariables] = None) -> str:
+        return self._value
+
+    @staticmethod
+    def has_val_prefix(text: Optional[str]) -> bool:
+        return (
+            text is not None
+            and len(text) > 0
+            and (text[0] == Symbols.DBL_QUOTE or text[0] == Symbols.SGL_QUOTE)
+        )

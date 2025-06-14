@@ -1,28 +1,4 @@
----
-consulted: null
-contact: SergeyMenshykh
-date: 2023-10-27T00:00:00Z
-deciders: markwallace, mabolan
-informed: null
-status: accepted
----
-
-# Mapping of prompt syntax to completion service model
-
-## Context and Problem Statement
-
-Today, SK runs all prompts using the text completion service by simply passing the rendered prompt as is, without any modifications, directly to a configured text completion service/connector. With the addition of new chat completion prompt and potentially other prompt types, such as image, on the horizon, we need a way to map completion-specific prompt syntax to the corresponding completion service data model.
-
 For example, [the chat completion syntax](https://github.com/microsoft/semantic-kernel/blob/main/docs/decisions/0014-chat-completion-roles-in-prompt.md) in chat completion prompts:
-
-```xml {"id":"01J6KQ4X95SWVAHSNMREEGWABW"}
-<message role="system">
-    You are a creative assistant helping individuals and businesses with their innovative projects.
-</message>
-<message role="user">
-    I want to brainstorm the idea of {{$input}}
-</message>
-```
 
 should be mapped to an instance of the [ChatHistory](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/ChatCompletion/ChatHistory.cs) class with two chat messages:
 
@@ -62,9 +38,5 @@ Cons:
 - Prompts can be run by Kernel.RunAsync method only.
 
 ## Decision Outcome
-<<<<<<< HEAD
 
 It was agreed to go with the option 1 - `1. Completion connector classes` since it a more flexible solution and allows adding new connectors without modifying the `SemanticFunction` class.
-=======
-It was agreed to go with the option 1 - `1. Completion connector classes` since it a more flexible solution and allows adding new connectors without modifying the `SemanticFunction` class.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

@@ -2,7 +2,6 @@
 
 import logging
 from typing import TYPE_CHECKING, Any
-from urllib.parse import urlparse
 
 <<<<<<< HEAD
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import (
@@ -192,6 +191,7 @@ def _create_function_from_operation(
 
             options = RestApiRunOptions(
                 server_url_override=(
+<<<<<<< main
                     urlparse(execution_parameters.server_url_override)
                     if execution_parameters
                     else None
@@ -201,6 +201,16 @@ def _create_function_from_operation(
                     if document_uri is not None
                     else None
                 ),
+=======
+                    execution_parameters.server_url_override
+                    if execution_parameters and execution_parameters.server_url_override is not None
+                    else None
+                ),
+                api_host_url=Uri(document_uri).get_left_part() if document_uri is not None else None,
+                timeout=execution_parameters.timeout
+                if execution_parameters and execution_parameters.timeout is not None
+                else None,
+>>>>>>> upstream/main
             )
 
             return await runner.run_operation(operation, kernel_arguments, options)

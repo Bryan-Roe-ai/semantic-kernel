@@ -8,7 +8,7 @@ In this example we setup two ONNX AI Services:
 
 > [!IMPORTANT]
 > You can modify to use any other combination of models enabled for ONNX runtime.
-
+ 
 ## Semantic Kernel used Features
 
 - [Chat Completion Service](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/SemanticKernel.Abstractions/AI/ChatCompletion/IChatCompletionService.cs) - Using the Chat Completion Service from [Onnx Connector](https://github.com/microsoft/semantic-kernel/blob/main/dotnet/src/Connectors/Connectors.Onnx/OnnxRuntimeGenAIChatCompletionService.cs) to generate responses from the Local Model.
@@ -36,7 +36,7 @@ git clone https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx
 > Both `BGE-Micro-V2` and `Phi-3` models are too large to be downloaded by the `git clone` command alone if you don't have [git-lfs extension](https://git-lfs.com/) installed, for this you may need to download the models manually and overwrite the files in the cloned directories.
 
 - Manual download [BGE-Micro-V2](https://huggingface.co/TaylorAI/bge-micro-v2/resolve/main/onnx/model.onnx?download=true) (69 MB)
-- Manual download [Phi-3-Mini-4k CPU](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx/resolve/main/cpu_and_mobile/cpu-int4-rtn-block-32/phi3-mini-4k-instruct-cpu-int4-rtn-block-32.onnx.data?download=true) (˜2.7 GB)
+- Manual download [Phi-3-Mini-4k CPU](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-onnx/resolve/main/cpu_and_mobile/cpu-int4-rtn-block-32/phi3-mini-4k-instruct-cpu-int4-rtn-block-32.onnx.data?download=true) (Ëœ2.7 GB)
 
 Update the `Program.cs` file lines below with the paths to the models you downloaded in the previous step.
 

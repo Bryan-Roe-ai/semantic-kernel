@@ -4,6 +4,8 @@ from typing import List
 
 from semantic_kernel.diagnostics.verify import Verify
 from semantic_kernel.skill_definition.parameter_view import ParameterView
+from semantic_kernel.skill_definition.parameter_view import ParameterView
+from semantic_kernel.utils.validation import validate_function_name
 
 
 class FunctionView:
@@ -24,6 +26,7 @@ class FunctionView:
         is_asynchronous: bool = True,
     ) -> None:
         Verify.valid_function_name(name)
+        validate_function_name(name)
 
         self._name = name
         self._skill_name = skill_name
@@ -59,6 +62,8 @@ class FunctionView:
     @name.setter
     def name(self, value: str) -> None:
         Verify.valid_function_name(value)
+        validate_function_name(value)
+
         self._name = value
 
     @skill_name.setter

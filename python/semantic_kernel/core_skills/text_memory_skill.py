@@ -12,6 +12,11 @@ from semantic_kernel.skill_definition import (
 
 class TextMemorySkill:
 
+from semantic_kernel.orchestration.sk_context import SKContext
+from semantic_kernel.skill_definition import sk_function, sk_function_context_parameter
+
+
+class TextMemorySkill:
     COLLECTION_PARAM = "collection"
     RELEVANCE_PARAM = "relevance"
     KEY_PARAM = "key"
@@ -22,6 +27,11 @@ class TextMemorySkill:
     @sk_function("Recall a fact from the long term memory")
     @sk_function_name("recall")
     @sk_function_input(description="The information to retrieve")
+    @sk_function(
+        description="Recall a fact from the long term memory",
+        name="recall",
+        input_description="The information to retrieve",
+    )
     @sk_function_context_parameter(
         name=COLLECTION_PARAM,
         description="The collection to search for information",
@@ -33,6 +43,7 @@ class TextMemorySkill:
         default_value=DEFAULT_RELEVANCE,
     )
     async def recall_async(ask: str, context: SKContext) -> str:
+    async def recall_async(self, ask: str, context: SKContext) -> str:
         """
         Recall a fact from the long term memory.
 
@@ -52,6 +63,10 @@ class TextMemorySkill:
         assert context.variables is not None  # for type checker
         Verify.not_null(context.memory, "Context has no memory")
         assert context.memory is not None  # for type checker
+        if context.variables is None:
+            raise ValueError("Context has no variables")
+        if context.memory is None:
+            raise ValueError("Context has no memory")
 
         collection = (
             context.variables[TextMemorySkill.COLLECTION_PARAM]
@@ -61,6 +76,8 @@ class TextMemorySkill:
         Verify.not_empty(
             collection, "Memory collection not defined for TextMemorySkill"
         )
+        if not collection:
+            raise ValueError("Memory collection not defined for TextMemorySkill")
 
         relevance = (
             context.variables[TextMemorySkill.RELEVANCE_PARAM]
@@ -84,6 +101,11 @@ class TextMemorySkill:
     @sk_function("Save information to semantic memory")
     @sk_function_name("save")
     @sk_function_input(description="The information to save")
+    @sk_function(
+        description="Save information to semantic memory",
+        name="save",
+        input_description="The information to save",
+    )
     @sk_function_context_parameter(
         name=COLLECTION_PARAM,
         description="The collection to save the information",
@@ -94,6 +116,7 @@ class TextMemorySkill:
         description="The unique key to associate with the information",
     )
     async def save_async(text: str, context: SKContext):
+    async def save_async(self, text: str, context: SKContext):
         """
         Save a fact to the long term memory.
 
@@ -111,6 +134,10 @@ class TextMemorySkill:
         assert context.variables is not None  # for type checker
         Verify.not_null(context.memory, "Context has no memory")
         assert context.memory is not None  # for type checker
+        if context.variables is None:
+            raise ValueError("Context has no variables")
+        if context.memory is None:
+            raise ValueError("Context has no memory")
 
         collection = (
             context.variables[TextMemorySkill.COLLECTION_PARAM]
@@ -120,6 +147,8 @@ class TextMemorySkill:
         Verify.not_empty(
             collection, "Memory collection not defined for TextMemorySkill"
         )
+        if not collection:
+            raise ValueError("Memory collection not defined for TextMemorySkill")
 
         key = (
             context.variables[TextMemorySkill.KEY_PARAM]
@@ -128,5 +157,7 @@ class TextMemorySkill:
         )
         Verify.not_empty(key, "Memory key not defined for TextMemorySkill")
         assert key is not None  # for type checker
+        if not key:
+            raise ValueError("Memory key not defined for TextMemorySkill")
 
         await context.memory.save_information_async(collection, text=text, id=key)

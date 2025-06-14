@@ -22,7 +22,7 @@ from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.agents.open_ai.open_ai_assistant_base import OpenAIAssistantBase
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.agents.chat_completion.chat_completion_agent import ChatCompletionAgent
-from semantic_kernel.agents.open_ai.open_ai_assistant_agent import OpenAIAssistantAgent
+from semantic_kernel.agents.open_ai.openai_assistant_agent import OpenAIAssistantAgent
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.contents.text_content import TextContent

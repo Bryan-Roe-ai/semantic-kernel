@@ -52,7 +52,6 @@ dall = "dall"             # OpenAI model name
     "PopulationByCountry.csv",
     "PopulationByAdmin1.csv",
     "WomensSuffrage.txt",
-<<<<<<< HEAD
 ]
 
 [default.extend-words]
@@ -72,13 +71,13 @@ dall = "dall"             # OpenAI model name
     "dotnet/samples/Concepts/Resources/Plugins/CopilotAgentPlugins/README.md"
     "SK-dotnet.sln.DotSettings"
 	"WomensSuffrage.txt",
-=======
     "SK-dotnet.sln.DotSettings",
+    "SK-dotnet.slnx.DotSettings",
     "**/azure_ai_search_hotel_samples/README.md",
     "**/Demos/ProcessFrameworkWithAspire/ProcessFramework.Aspire/ProcessFramework.Aspire.ProcessOrchestrator/Program.cs",
     "**/Demos/ProcessFrameworkWithAspire/**/*.http",
+    "**/samples/GettingStartedWithProcesses/**/States/**/*.json",
     "**/samples/Concepts/Resources/travel-destination-overview.txt"
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 ]
 
 [default.extend-words]

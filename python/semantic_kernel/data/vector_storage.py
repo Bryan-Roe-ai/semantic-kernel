@@ -66,13 +66,10 @@ class VectorStoreRecordHandler(KernelBaseModel, Generic[TKey, TModel]):
 
     @model_validator(mode="before")
     @classmethod
-<<<<<<< HEAD:python/semantic_kernel/data/vector_storage/vector_store_record_collection.py
     def _ensure_data_model_definition(
         cls: type[_T], data: dict[str, Any]
     ) -> dict[str, Any]:
-=======
     def _ensure_data_model_definition(cls: type[_T], data: Any) -> dict[str, Any]:
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/semantic_kernel/data/vector_storage.py
         """Ensure there is a  data model definition, if it isn't passed, try to get it from the data model type."""
         if isinstance(data, dict) and not data.get("data_model_definition"):
             data["data_model_definition"] = getattr(
@@ -84,7 +81,6 @@ class VectorStoreRecordHandler(KernelBaseModel, Generic[TKey, TModel]):
         """Post init function that sets the key field and container mode values, and validates the datamodel."""
         self._validate_data_model()
 
-<<<<<<< HEAD:python/semantic_kernel/data/vector_storage/vector_store_record_collection.py
     async def __aenter__(self) -> "VectorStoreRecordCollection":
         """Enter the context manager."""
         return self
@@ -174,8 +170,6 @@ class VectorStoreRecordHandler(KernelBaseModel, Generic[TKey, TModel]):
         """
         ...  # pragma: no cover
 
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/semantic_kernel/data/vector_storage.py
     def _validate_data_model(self):
         """Internal function that can be overloaded by child classes to validate datatypes, etc.
 
@@ -232,7 +226,6 @@ class VectorStoreRecordHandler(KernelBaseModel, Generic[TKey, TModel]):
         """
         ...  # pragma: no cover
 
-<<<<<<< HEAD:python/semantic_kernel/data/vector_storage/vector_store_record_collection.py
     async def create_collection_if_not_exists(self, **kwargs: Any) -> bool:
         """Create the collection in the service if it does not exists.
 
@@ -511,8 +504,6 @@ class VectorStoreRecordHandler(KernelBaseModel, Generic[TKey, TModel]):
         except Exception as exc:
             raise VectorStoreOperationException(f"Error deleting records: {exc}") from exc
 
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/semantic_kernel/data/vector_storage.py
     # region Serialization methods
 
     def serialize(self, records: OneOrMany[TModel], **kwargs: Any) -> OneOrMany[Any]:
@@ -883,7 +874,6 @@ class VectorStoreRecordHandler(KernelBaseModel, Generic[TKey, TModel]):
                 record = self._deserialize_vector(record)
             return self.data_model_type.model_validate(record)  # type: ignore
         data_model_dict: dict[str, Any] = {}
-<<<<<<< HEAD:python/semantic_kernel/data/vector_storage/vector_store_record_collection.py
         for field_name in self.data_model_definition.fields:
             if not include_vectors and field_name in self.data_model_definition.vector_field_names:
                 continue
@@ -903,7 +893,6 @@ class VectorStoreRecordHandler(KernelBaseModel, Generic[TKey, TModel]):
             value = record[field_name]
             if func := getattr(self.data_model_definition.fields[field_name], "deserialize_function", None):
                 value = func(value)
-=======
         for field_name, field in self.data_model_definition.fields.items():
             value = record.get(field_name, None)
             if isinstance(field, VectorStoreRecordVectorField):
@@ -914,7 +903,6 @@ class VectorStoreRecordHandler(KernelBaseModel, Generic[TKey, TModel]):
             elif value is None:
                 # if the field is not a vector field, then it should have a value.
                 raise VectorStoreModelDeserializationException(f"Field {field_name} is None, cannot deserialize.")
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/semantic_kernel/data/vector_storage.py
             data_model_dict[field_name] = value
         if self.data_model_type is dict:
             return data_model_dict  # type: ignore

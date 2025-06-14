@@ -10,14 +10,12 @@ ignorePatterns:
   - pattern: "./issues"
   - pattern: "./discussions"
   - pattern: "./pulls"
-<<<<<<< HEAD
   - pattern: "^http://localhost"
   - pattern: "^https://localhost"
   - pattern: "^https://platform.openai.com"
   - pattern: "^https://outlook.office.com/bookings"
 
 # Base URL for the links
-=======
   - pattern: "https:\/\/platform.openai.com"
   - pattern: "https:\/\/outlook.office.com/bookings"
 excludedFiles:
@@ -34,7 +32,6 @@ excludedDirs:
   - ./docs/decisions
   - ./dotnet/samples
   - ./python/samples
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 baseUrl: https://github.com/microsoft/semantic-kernel/
 
 # Status codes that indicate the link is alive

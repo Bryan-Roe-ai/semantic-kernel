@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Connectors\Connectors.AzureOpenAI\Connectors.AzureOpenAI.csproj" />
-    <ProjectReference Include="..\Connectors\Connectors.Memory.InMemory\Connectors.Memory.InMemory.csproj" />
+    <ProjectReference Include="..\VectorData\InMemory\InMemory.csproj" />
     <ProjectReference Include="..\SemanticKernel.Abstractions\SemanticKernel.Abstractions.csproj" />
     <ProjectReference Include="..\SemanticKernel.Core\SemanticKernel.Core.csproj" />
   </ItemGroup>
@@ -40,6 +40,7 @@
   <Import Project="$(RepoRoot)/dotnet/src/InternalUtilities/connectors/AI/FunctionCalling/FunctionCallingUtilities.props" />
 
   <ItemGroup>
+<<<<<<< main
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/test/AssertExtensions.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/StreamJsonParser.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Data/VectorStoreRecordMapping.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
@@ -65,6 +66,17 @@
     <None Update="TestData\skills\TestSkill\WithServices\skprompt.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+=======
+    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/test/AssertExtensions.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
+    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Type/TypeExtensions.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
+    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Http/**/*.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
+    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/openai/**/*.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
+    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/SseData.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
+    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/SseJsonParser.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
+    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/SseLine.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
+    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/SseReader.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
+    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/StreamJsonParser.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
+>>>>>>> upstream/main
   </ItemGroup>
 
   <ItemGroup>

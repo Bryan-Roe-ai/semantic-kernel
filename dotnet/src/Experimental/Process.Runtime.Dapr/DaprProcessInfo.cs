@@ -30,7 +30,7 @@ public sealed record DaprProcessInfo : DaprStepInfo
         var processStepInfo = this.ToKernelProcessStepInfo();
         if (this.State is not KernelProcessState state)
         {
-            throw new KernelException($"Unable to read state from process with name '{this.State.Name}' and Id '{this.State.Id}'.");
+            throw new KernelException($"Unable to read state from process with name '{this.State.StepId}' and Id '{this.State.RunId}'.");
         }
 
         List<KernelProcessStepInfo> steps = [];
@@ -47,6 +47,10 @@ public sealed record DaprProcessInfo : DaprStepInfo
             else if (step is DaprProxyInfo proxyStep)
             {
                 steps.Add(proxyStep.ToKernelProcessProxy());
+            }
+            else if (step is DaprAgentStepInfo agentStep)
+            {
+                steps.Add(agentStep.ToKernelProcessAgentStep());
             }
             else
             {
@@ -82,6 +86,10 @@ public sealed record DaprProcessInfo : DaprStepInfo
             else if (step is KernelProcessProxy proxyStep)
             {
                 daprSteps.Add(DaprProxyInfo.FromKernelProxyInfo(proxyStep));
+            }
+            else if (step is KernelProcessAgentStep agentStep)
+            {
+                daprSteps.Add(DaprAgentStepInfo.FromKernelProcessAgentStep(agentStep));
             }
             else
             {

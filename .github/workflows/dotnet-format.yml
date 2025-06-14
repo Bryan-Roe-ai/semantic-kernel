@@ -12,13 +12,11 @@ on:
 
 jobs:
   check-format:
-<<<<<<< HEAD
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-=======
     strategy:
       fail-fast: false
       matrix:
@@ -35,7 +33,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -56,6 +53,16 @@ jobs:
 
     - name: Install systemd
       run: sudo apt-get update && sudo apt-get install -y systemd
+                dir=$(echo ${dir%/*})
+              done
+            done
+          else
+            # if the changed-files step failed, run dotnet on the whole slnx instead of specific projects
+            csproj_files=$(find ./ -type f -name "*.slnx" | tr '\n' ' ');
+          fi
+          csproj_files=($(printf "%s\n" "${csproj_files[@]}" | sort -u))
+          echo "Found ${#csproj_files[@]} unique csproj/slnx files: ${csproj_files[*]}"
+          echo "::set-output name=csproj_files::${csproj_files[*]}"
 
     - name: Start systemd
       run: sudo systemctl start systemd

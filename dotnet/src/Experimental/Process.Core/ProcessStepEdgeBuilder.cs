@@ -11,12 +11,9 @@ namespace Microsoft.SemanticKernel;
 /// </summary>
 public class ProcessStepEdgeBuilder
 {
-<<<<<<< HEAD
     internal ProcessFunctionTargetBuilder? OutputTarget { get; private set; }
     internal ProcessFunctionTargetBuilder? Target { get; set; }
-=======
     internal ProcessTargetBuilder? Target { get; set; }
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     /// <summary>
     /// The event data that the edge fires on.
@@ -68,15 +65,13 @@ public class ProcessStepEdgeBuilder
     internal KernelProcessEdge Build(ProcessBuilder? processBuilder = null)
     {
         Verify.NotNull(this.Source?.Id);
-<<<<<<< HEAD
         Verify.NotNull(this.OutputTarget);
 
         return new KernelProcessEdge(this.Source.Id, this.OutputTarget.Build());
         Verify.NotNull(this.Target);
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+        Verify.NotNull(this.Source?.StepId);
 
-        if (this.Target is null || this.Source?.Id is null)
+        if (this.Target is null || this.Source?.StepId is null)
         {
             throw new InvalidOperationException("A target and Source must be specified before building the edge.");
         }
@@ -85,13 +80,13 @@ public class ProcessStepEdgeBuilder
         {
             if (this.EdgeGroupBuilder is not null && this.Target is ProcessStepTargetBuilder stepTargetBuilder)
             {
-                var messageSources = this.EdgeGroupBuilder.MessageSources.Select(e => new KernelProcessMessageSource(e.MessageType, e.Source.Id)).ToList();
+                var messageSources = this.EdgeGroupBuilder.MessageSources.Select(e => new KernelProcessMessageSource(e.MessageType, e.Source.StepId)).ToList();
                 var edgeGroup = new KernelProcessEdgeGroup(this.EdgeGroupBuilder.GroupId, messageSources, stepTargetBuilder.InputMapping);
                 functionTargetBuilder.Step.RegisterGroupInputMapping(edgeGroup);
             }
         }
 
-        return new KernelProcessEdge(this.Source.Id, this.Target.Build(processBuilder), groupId: this.EdgeGroupBuilder?.GroupId, this.Condition, this.VariableUpdate);
+        return new KernelProcessEdge(this.Source.StepId, this.Target.Build(processBuilder), groupId: this.EdgeGroupBuilder?.GroupId, this.Condition, this.VariableUpdate);
     }
 
     /// <summary>
@@ -131,16 +126,10 @@ public class ProcessStepEdgeBuilder
             throw new InvalidOperationException("An output target has already been set.");
         }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         this.OutputTarget = outputTarget;
         this.Target = outputTarget;
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         if (this.Source is ProcessMapBuilder && target.Step is ProcessMapBuilder)
-=======
         if (target is ProcessFunctionTargetBuilder functionTargetBuilder)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         {
             if (functionTargetBuilder.Step is ProcessMapBuilder && this.Source is ProcessMapBuilder)
             {

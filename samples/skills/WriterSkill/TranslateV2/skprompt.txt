@@ -6,6 +6,7 @@ I want you to only reply the correction, the improvements and nothing else, do n
 
 Sentence: """
 {{INPUT}}
+{{$INPUT}}
 """
 
 Translation:

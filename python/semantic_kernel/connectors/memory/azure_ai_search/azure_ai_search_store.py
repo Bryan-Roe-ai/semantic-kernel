@@ -30,14 +30,11 @@ if TYPE_CHECKING:
     from azure.core.credentials import AzureKeyCredential, TokenCredential
     from azure.core.credentials_async import AsyncTokenCredential
 
-<<<<<<< HEAD
     from semantic_kernel.data.vector_store_record_collection import (
         VectorStoreRecordCollection,
     )
     from semantic_kernel.data import VectorStoreRecordCollection
-=======
     from semantic_kernel.data.vector_storage import VectorStoreRecordCollection
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
