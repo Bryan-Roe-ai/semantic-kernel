@@ -1,4 +1,5 @@
 // Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ public sealed class AzureAISearchConfigConditionAttribute : Attribute, ITestCond
     {
         var config = AzureAISearchVectorStoreFixture.GetAzureAISearchConfiguration();
         var isMet = config is not null && !string.IsNullOrWhiteSpace(config?.ServiceUrl) && !string.IsNullOrWhiteSpace(config?.ApiKey);
+        var isMet = config is not null && !string.IsNullOrWhiteSpace(config.ServiceUrl) && !string.IsNullOrWhiteSpace(config.ApiKey);
 
         return ValueTask.FromResult(isMet);
     }
