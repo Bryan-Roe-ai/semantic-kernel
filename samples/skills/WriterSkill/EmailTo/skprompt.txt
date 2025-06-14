@@ -28,4 +28,9 @@ Dexter
 
 Thanks,
 {{sender}}
+{{$to}}
+{{$input}}
+
+Thanks,
+{{$sender}}
 +++++

@@ -18,6 +18,10 @@ if TYPE_CHECKING:
 
 
 class SKFunctionBase(ABC):
+    FUNCTION_PARAM_NAME_REGEX = r"^[0-9A-Za-z_]*$"
+    FUNCTION_NAME_REGEX = r"^[0-9A-Za-z_]*$"
+    SKILL_NAME_REGEX = r"^[0-9A-Za-z_]*$"
+
     @property
     @abstractmethod
     def name(self) -> str:
@@ -91,6 +95,30 @@ class SKFunctionBase(ABC):
         pass
 
     @abstractmethod
+    def invoke(
+        self,
+        input: Optional[str] = None,
+        context: Optional[SKContext] = None,
+        settings: Optional[CompleteRequestSettings] = None,
+        log: Optional[Logger] = None
+        # TODO: ctoken
+    ) -> SKContext:
+        """
+        Invokes the function with an explicit string input
+
+        Keyword Arguments:
+            input {str} -- The explicit string input (default: {None})
+            context {SKContext} -- The context to use
+            settings {CompleteRequestSettings} -- LLM completion settings
+            log {Logger} -- Application logger
+
+        Returns:
+            SKContext -- The updated context, potentially a new one if
+            context switching is implemented.
+        """
+        pass
+
+    @abstractmethod
     async def invoke_async(
         self,
         input: Optional[str] = None,
@@ -120,6 +148,31 @@ class SKFunctionBase(ABC):
         input: ContextVariables,
         memory: SemanticTextMemoryBase,
         skills: "ReadOnlySkillCollectionBase",
+    def invoke_with_vars(
+        self,
+        input: ContextVariables,
+        memory: Optional[SemanticTextMemoryBase] = None,
+        log: Optional[Logger] = None,
+    ) -> SKContext:
+        """
+        Invokes the function with a custom input
+
+        Arguments:
+            input {ContextVariables} -- The custom input
+            memory {SemanticTextMemoryBase} -- The memory to use
+            log {Logger} -- Application logger
+
+        Returns:
+            SKContext -- The updated context, potentially a new one if
+            context switching is implemented.
+        """
+        pass
+
+    @abstractmethod
+    async def invoke_with_vars_async(
+        self,
+        input: ContextVariables,
+        memory: Optional[SemanticTextMemoryBase] = None,
         log: Optional[Logger] = None,
     ) -> SKContext:
         """

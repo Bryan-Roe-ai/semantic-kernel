@@ -40,6 +40,17 @@ class OpenAITextCompletion(TextCompletionClientBase):
         self._org_id = org_id
         self._log = log if log is not None else NullLogger()
 
+        self.open_ai_instance = self._setup_open_ai()
+
+    def _setup_open_ai(self) -> Any:
+        import openai
+
+        openai.api_key = self._api_key
+        if self._org_id is not None:
+            openai.organization = self._org_id
+
+        return openai
+
     async def complete_simple_async(
         self, prompt: str, request_settings: CompleteRequestSettings
     ) -> str:
@@ -58,6 +69,10 @@ class OpenAITextCompletion(TextCompletionClientBase):
 
         Verify.not_empty(prompt, "The prompt is empty")
         Verify.not_null(request_settings, "The request settings cannot be empty")
+        if not prompt:
+            raise ValueError("The prompt cannot be `None` or empty")
+        if request_settings is None:
+            raise ValueError("The request settings cannot be `None`")
 
         if request_settings.max_tokens < 1:
             raise AIException(
@@ -87,6 +102,15 @@ class OpenAITextCompletion(TextCompletionClientBase):
         try:
             response: Any = await openai.Completion.acreate(
                 model=self._model_id,
+        model_args = {}
+        if self.open_ai_instance.api_type in ["azure", "azure_ad"]:
+            model_args["engine"] = self._model_id
+        else:
+            model_args["model"] = self._model_id
+
+        try:
+            response: Any = await self.open_ai_instance.Completion.acreate(
+                **model_args,
                 prompt=prompt,
                 temperature=request_settings.temperature,
                 top_p=request_settings.top_p,
@@ -96,6 +120,8 @@ class OpenAITextCompletion(TextCompletionClientBase):
                 stop=(
                     request_settings.stop_sequences
                     if len(request_settings.stop_sequences) > 0
+                    if request_settings.stop_sequences is not None
+                    and len(request_settings.stop_sequences) > 0
                     else None
                 ),
             )

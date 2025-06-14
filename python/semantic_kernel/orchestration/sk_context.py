@@ -132,6 +132,13 @@ class SKContext:
         """
         return self._skill_collection
 
+    @skills.setter
+    def skills(self, value: ReadOnlySkillCollectionBase) -> None:
+        """
+        Set the value of skills collection
+        """
+        self._skill_collection = value
+    
     @property
     def log(self) -> Logger:
         """
@@ -178,6 +185,8 @@ class SKContext:
             SKFunctionBase -- The function.
         """
         Verify.not_null(self._skill_collection, "The skill collection hasn't been set")
+        if self._skill_collection is None:
+            raise ValueError("The skill collection hasn't been set")
         assert self._skill_collection is not None  # for type checker
 
         if self._skill_collection.has_native_function(skill_name, function_name):
@@ -235,3 +244,4 @@ class SKContext:
             return True, the_func
 
         return False, None
+

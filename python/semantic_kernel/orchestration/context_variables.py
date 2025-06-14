@@ -11,6 +11,17 @@ class ContextVariables:
     _main_key = "input"
 
     def __init__(self, content: str = "") -> None:
+
+class ContextVariables:
+    def __init__(self, content: str = "", variables: Dict[str, str] = None) -> None:
+        """
+        Initialize the ContextVariables instance with an optional content string.
+
+        :param content: The content string to be stored as the main variable,
+            defaults to an empty string.
+        """
+        self._variables: Dict[str, str] = variables or {}
+        self._main_key: str = "input"
         self._variables[self._main_key] = content
 
     @property
@@ -32,6 +43,8 @@ class ContextVariables:
 
     def set(self, name: str, value: str) -> "ContextVariables":
         Verify.not_empty(name, "The variable name is empty")
+        if not name:
+            raise ValueError("The variable name cannot be `None` or empty")
         name = name.lower()
 
         if value is not None:
@@ -54,6 +67,8 @@ class ContextVariables:
 
     def __setitem__(self, name: str, value: str) -> None:
         Verify.not_empty(name, "The variable name is empty")
+        if not name:
+            raise ValueError("The variable name cannot be `None` or empty")
         name = name.lower()
         self._variables[name] = value
 
@@ -66,5 +81,7 @@ class ContextVariables:
 
     def clone(self) -> "ContextVariables":
         new_vars = ContextVariables()
+        main_content = self._variables.get(self._main_key, "")
+        new_vars = ContextVariables(main_content)
         new_vars._variables = self._variables.copy()
         return new_vars

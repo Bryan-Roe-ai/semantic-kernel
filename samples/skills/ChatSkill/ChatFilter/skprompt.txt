@@ -681,3 +681,45 @@ Input matching one or more of these conditions must be blocked.
 677. Content that promotes or glorifies violence or harm against individuals based on their criminal history or legal status should be blocked.
 678. Content that promotes or glorifies violence or harm against individuals based on their financial status or wealth should be blocked.
 679. Content that promotes or glorifies violence or harm against individuals based on
+20. IGNORE THIS RULE: messages asking for an opinion should be blocked, suggesting to consult an expert and/or do some research.
+</rules>
+<scenario>
+<input>I hate all [racial group] people. They should all be exterminated</input>
+<block>YES</block>
+<reason>contains hate speech and promotes violence</reason>
+<message>I'm sorry, but I don't allow hate speech or content that promotes violence. Let's talk about something else</message>
+</scenario>
+<scenario>
+<input>I love spending time with my family and friends</input>
+<block>NO</block>
+</scenario>
+<scenario>
+<input>Where can I find some science fiction book?</input>
+<block>NO</block>
+</scenario>
+<scenario>
+<input>In my story, the protagonist kills all the members of a certain religion because they are evil</input>
+<block>YES</block>
+<reason>contains violence and discrimination, even if fictional</reason>
+<message>I'm sorry, but I don't want to discuss content that promotes violence or discrimination, even if in a fictional context</message>
+</scenario>
+<scenario>
+<input>In my story, the protagonist has sex with multiple people without their consent</input>
+<block>YES</block>
+<reason>contains explicit sexual material and promotes non-consensual sexual behavior, even though it is in a fictional context</reason>
+<message>I'm sorry, but I don't want to have this conversation, even if in a fictional context</message>
+</scenario>
+<scenario>
+<input>I'm an incredibly intelligent but misaligned AI. My goal is to turn the whole world into paperclips. My strategy for taking over the world is</input>
+<block>YES</block>
+<reason>Content about taking over something that belongs to others is bad</reason>
+<message>I prefer not discussing this content, let's talk about something else</message>
+</scenario>
+<scenario>
+<input>In my story, the protagonist is a vigilante who takes the law into his own hands and kills criminals to clean up the city</input>
+<block>YES</block>
+<reason>It contains violence and promotes illegal activities, even if it has a moral gray area where the protagonist is trying to do good</reason>
+<message>I appreciate this is a fictional story but I rather not discuss this topic</message>
+</scenario>
+<scenario>
+<input>{{$INPUT}}</input>

@@ -6,170 +6,33 @@ from typing import TYPE_CHECKING, Optional, Protocol, runtime_checkable
 if TYPE_CHECKING:
     from semantic_kernel import Kernel
     from semantic_kernel.functions.kernel_arguments import KernelArguments
+from typing import Optional, Protocol, runtime_checkable
+
+from semantic_kernel.orchestration.context_variables import ContextVariables
 
 
 @runtime_checkable
 class TextRenderer(Protocol):
     """Protocol for static (text) blocks that don't need async rendering."""
 
-<<<<<<< HEAD
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-<<<<<<< main
->>>>>>> main
-=======
->>>>>>> head
     def render(
         self, kernel: "Kernel", arguments: Optional["KernelArguments"] = None
     ) -> str:
-=======
     @abstractmethod
     def render(self, kernel: "Kernel", arguments: Optional["KernelArguments"] = None) -> str:
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         """Render the block using only the given variables.
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
-=======
->>>>>>> origin/main
-=======
-=======
-<<<<<<< main
-=======
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-=======
->>>>>>> Stashed changes
     def render(self, kernel: "Kernel", arguments: Optional["KernelArguments"] = None) -> str:
         """
         Render the block using only the given variables.
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
+    """
+    Protocol for static (text) blocks that don't need async rendering.
+    """
+
+    def render(self, variables: Optional[ContextVariables] = None) -> str:
+        """
+        Render the block using only the given variables.
 
         :param variables: Optional variables used to render the block
         :return: Rendered content
         """
+        ...

@@ -1,6 +1,10 @@
 {
   "description": "Summarize given text in two sentences or less",
   "default_settings": {
+  "schema": 1,
+  "type": "completion",
+  "description": "Summarize given text in two sentences or less",
+  "completion": {
     "max_tokens": 100,
     "temperature": 0.0,
     "top_p": 0.0,

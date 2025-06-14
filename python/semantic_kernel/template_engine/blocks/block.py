@@ -12,72 +12,6 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 
 class Block(KernelBaseModel):
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-<<<<<<< main
->>>>>>> main
-=======
->>>>>>> head
     """A block."""
 
     type: ClassVar[BlockTypes] = BlockTypes.UNDEFINED
@@ -117,6 +51,20 @@ class Block(ABC):
     @abstractmethod
     def render(self, variables: Optional[ContextVariables]) -> str:
         pass
+from logging import Logger
+from typing import Optional, Tuple
+
+from semantic_kernel.template_engine.blocks.block_types import BlockTypes
+from semantic_kernel.utils.null_logger import NullLogger
+
+
+class Block:
+    def __init__(
+        self, content: Optional[str] = None, log: Optional[Logger] = NullLogger
+    ) -> None:
+        self._content = content or ""
+        self._log = log or NullLogger()
+        self._type = BlockTypes.UNDEFINED
 
     @property
     def type(self) -> BlockTypes:
@@ -125,50 +73,6 @@ class Block(ABC):
     @property
     def content(self) -> str:
         return self._content
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
-=======
->>>>>>> origin/main
-=======
-=======
-<<<<<<< main
-=======
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-=======
->>>>>>> Stashed changes
     type: ClassVar[BlockTypes] = BlockTypes.UNDEFINED
     content: str
 
@@ -176,38 +80,10 @@ class Block(ABC):
     @classmethod
     def content_strip(cls, content: str):
         return content.strip()
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
+
+    @property
+    def log(self) -> Logger:
+        return self._log
+
+    def is_valid(self) -> Tuple[bool, str]:
+        raise NotImplementedError("Subclasses must implement this method.")

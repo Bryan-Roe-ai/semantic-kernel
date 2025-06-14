@@ -41,6 +41,7 @@ class PromptTemplateConfig:
         config = PromptTemplateConfig()
         config.schema = data.get("schema")
         config.type = data.get("type)")
+        config.type = data.get("type")
         config.description = data.get("description")
 
         # Some skills may not have all completion parameters defined
@@ -53,6 +54,14 @@ class PromptTemplateConfig:
         config.completion.max_tokens = completition_dict.get("max_tokens")
         config.completion.stop_sequences = completition_dict.get("stop_sequences")
         config.default_backends = data.get("default_backends")
+        completion_dict = data["completion"]
+        config.completion.temperature = completion_dict.get("temperature")
+        config.completion.top_p = completion_dict.get("top_p")
+        config.completion.presence_penalty = completion_dict.get("presence_penalty")
+        config.completion.frequency_penalty = completion_dict.get("frequency_penalty")
+        config.completion.max_tokens = completion_dict.get("max_tokens")
+        config.completion.stop_sequences = completion_dict.get("stop_sequences", [])
+        config.default_backends = data.get("default_backends", [])
 
         # Some skills may not have input parameters defined
         config.input = PromptTemplateConfig.InputConfig()

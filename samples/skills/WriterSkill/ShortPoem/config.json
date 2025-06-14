@@ -1,6 +1,10 @@
 {
   "description": "Turn a scenario into a short and entertaining poem.",
   "default_settings": {
+  "schema": 1,
+  "type": "completion",
+  "description": "Turn a scenario into a short and entertaining poem.",
+  "completion": {
     "max_tokens": 60,
     "temperature": 0.5,
     "top_p": 0.0,
@@ -10,4 +14,5 @@
   "default_backends": [
     "text-davinci-002"
   ]
+  }
 }

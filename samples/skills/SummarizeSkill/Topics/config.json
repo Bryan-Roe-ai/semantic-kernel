@@ -1,6 +1,10 @@
 {
   "description": "Analyze given text or document and extract key topics worth remembering",
   "default_settings": {
+  "schema": 1,
+  "type": "completion",
+  "description": "Analyze given text or document and extract key topics worth remembering",
+  "completion": {
     "max_tokens": 128,
     "temperature": 0.0,
     "top_p": 0.0,

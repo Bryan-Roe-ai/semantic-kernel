@@ -547,6 +547,7 @@ class Kernel(
             inputs[field_to_store] = vectors[0]  # type: ignore
             return
         setattr(inputs, field_to_store, vectors[0])
+import inspect
 from logging import Logger
 from typing import Any, Dict, Optional
 
@@ -563,6 +564,14 @@ from semantic_kernel.configuration.kernel_config import KernelConfig
 from semantic_kernel.diagnostics.verify import Verify
 from semantic_kernel.kernel_base import KernelBase
 from semantic_kernel.kernel_exception import KernelException
+from semantic_kernel.ai.chat_completion_client_base import ChatCompletionClientBase
+from semantic_kernel.ai.chat_request_settings import ChatRequestSettings
+from semantic_kernel.ai.complete_request_settings import CompleteRequestSettings
+from semantic_kernel.ai.text_completion_client_base import TextCompletionClientBase
+from semantic_kernel.kernel_base import KernelBase
+from semantic_kernel.kernel_config import KernelConfig
+from semantic_kernel.kernel_exception import KernelException
+from semantic_kernel.kernel_extensions import KernelExtensions
 from semantic_kernel.memory.semantic_text_memory_base import SemanticTextMemoryBase
 from semantic_kernel.orchestration.context_variables import ContextVariables
 from semantic_kernel.orchestration.sk_context import SKContext
@@ -586,12 +595,24 @@ class Kernel(KernelBase):
     _config: KernelConfig
     _skill_collection: SkillCollectionBase
     _prompt_template_engine: PromptTemplateEngineBase
+from semantic_kernel.template_engine.protocols.prompt_templating_engine import (
+    PromptTemplatingEngine,
+)
+from semantic_kernel.utils.validation import validate_function_name, validate_skill_name
+
+
+class Kernel(KernelBase, KernelExtensions):
+    _log: Logger
+    _config: KernelConfig
+    _skill_collection: SkillCollectionBase
+    _prompt_template_engine: PromptTemplatingEngine
     _memory: SemanticTextMemoryBase
 
     def __init__(
         self,
         skill_collection: SkillCollectionBase,
         prompt_template_engine: PromptTemplateEngineBase,
+        prompt_template_engine: PromptTemplatingEngine,
         memory: SemanticTextMemoryBase,
         config: KernelConfig,
         log: Logger,
@@ -601,6 +622,9 @@ class Kernel(KernelBase):
         self._skill_collection = skill_collection
         self._prompt_template_engine = prompt_template_engine
         self._memory = memory
+
+    def kernel(self) -> KernelBase:
+        return self
 
     @property
     def config(self) -> KernelConfig:
@@ -616,6 +640,7 @@ class Kernel(KernelBase):
 
     @property
     def prompt_template_engine(self) -> PromptTemplateEngineBase:
+    def prompt_template_engine(self) -> PromptTemplatingEngine:
         return self._prompt_template_engine
 
     @property
@@ -634,6 +659,8 @@ class Kernel(KernelBase):
 
         Verify.valid_skill_name(skill_name)
         Verify.valid_function_name(function_name)
+        validate_skill_name(skill_name)
+        validate_function_name(function_name)
 
         function = self._create_semantic_function(
             skill_name, function_name, function_config
@@ -734,6 +761,14 @@ class Kernel(KernelBase):
                 functions.append(
                     SKFunction.from_native_method(candidate, skill_name, self.logger)
                 )
+        for _, candidate in inspect.getmembers(skill_instance, inspect.ismethod):
+            # If the method is a semantic function, register it
+            if not hasattr(candidate, "__sk_function__"):
+                continue
+
+            functions.append(
+                SKFunction.from_native_method(candidate, skill_name, self.logger)
+            )
 
         self.logger.debug(f"Methods imported: {len(functions)}")
 
@@ -1141,3 +1176,51 @@ class Kernel(KernelBase):
 
     # endregion
 >>>>>>> ms/small_fixes
+        if function_config.has_chat_prompt:
+            backend = self._config.get_ai_backend(
+                ChatCompletionClientBase,
+                function_config.prompt_template_config.default_backends[0]
+                if len(function_config.prompt_template_config.default_backends) > 0
+                else None,
+            )
+
+            function.set_chat_configuration(
+                ChatRequestSettings.from_completion_config(
+                    function_config.prompt_template_config.completion
+                )
+            )
+
+            if backend is None:
+                raise AIException(
+                    AIException.ErrorCodes.InvalidConfiguration,
+                    "Could not load chat backend, unable to prepare semantic function. "
+                    "Function description: "
+                    "{function_config.prompt_template_config.description}",
+                )
+
+            function.set_chat_backend(lambda: backend(self))
+        else:
+            backend = self._config.get_ai_backend(
+                TextCompletionClientBase,
+                function_config.prompt_template_config.default_backends[0]
+                if len(function_config.prompt_template_config.default_backends) > 0
+                else None,
+            )
+
+            function.set_ai_configuration(
+                CompleteRequestSettings.from_completion_config(
+                    function_config.prompt_template_config.completion
+                )
+            )
+
+            if backend is None:
+                raise AIException(
+                    AIException.ErrorCodes.InvalidConfiguration,
+                    "Could not load text backend, unable to prepare semantic function. "
+                    "Function description: "
+                    "{function_config.prompt_template_config.description}",
+                )
+
+            function.set_ai_backend(lambda: backend(self))
+
+        return function

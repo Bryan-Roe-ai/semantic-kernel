@@ -145,6 +145,9 @@ class DelegateHandlers:
                 value.__wrapped__, "_delegate_type"
             ):
                 if value.__wrapped__._delegate_type == delegate_type:
+            wrapped = getattr(value, "__wrapped__", getattr(value, "__func__", None))
+            if name.startswith("handle_") and hasattr(wrapped, "_delegate_type"):
+                if wrapped._delegate_type == delegate_type:
                     return value
 
         return DelegateHandlers.handle_unknown

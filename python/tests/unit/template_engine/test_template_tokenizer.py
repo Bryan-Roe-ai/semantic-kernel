@@ -2,95 +2,17 @@
 
 from pytest import mark, raises
 
-<<<<<<< HEAD
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 from semantic_kernel.exceptions import TemplateSyntaxError
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
 from semantic_kernel.exceptions import TemplateSyntaxError
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
 from semantic_kernel.exceptions import TemplateSyntaxError
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
 from semantic_kernel.exceptions import TemplateSyntaxError
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
 from semantic_kernel.exceptions import TemplateSyntaxError
-=======
 from semantic_kernel.template_engine.blocks.block_errors import (
     TemplateSyntaxError,
 )
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
-=======
 from semantic_kernel.template_engine.blocks.block_errors import TemplateSyntaxError
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+from pytest import mark
+
 from semantic_kernel.template_engine.blocks.block_types import BlockTypes
 from semantic_kernel.template_engine.template_tokenizer import TemplateTokenizer
 
@@ -115,6 +37,8 @@ from semantic_kernel.template_engine.template_tokenizer import TemplateTokenizer
 )
 def test_it_parses_text_without_code(text, block_type):
     blocks = TemplateTokenizer.tokenize(text)
+    target = TemplateTokenizer()
+    blocks = target.tokenize(text)
 
     assert len(blocks) == 1
     assert blocks[0].type == block_type
@@ -127,6 +51,7 @@ def test_it_parses_text_without_code(text, block_type):
         (" ", BlockTypes.TEXT),
         ("   ", BlockTypes.TEXT),
         (" aaa  ", BlockTypes.TEXT),
+        ("{{$}}", BlockTypes.VARIABLE),
         ("{{$a}}", BlockTypes.VARIABLE),
         ("{{ $a}}", BlockTypes.VARIABLE),
         ("{{ $a }}", BlockTypes.VARIABLE),
@@ -146,6 +71,8 @@ def test_it_parses_text_without_code(text, block_type):
 )
 def test_it_parses_basic_blocks(text, block_type):
     blocks = TemplateTokenizer.tokenize(text)
+    target = TemplateTokenizer()
+    blocks = target.tokenize(text)
 
     assert len(blocks) == 1
     assert blocks[0].type == block_type
@@ -157,11 +84,15 @@ def test_it_parses_basic_blocks(text, block_type):
         (None, 1),
         ("", 1),
         ("}}{{a}} {{b}}x", 5),
+        ("}}{{ -a}} {{b}}x", 5),
+        ("}}{{ -a\n}} {{b}}x", 5),
         ("}}{{ -a\n} } {{b}}x", 3),
     ],
 )
 def test_it_tokenizes_the_right_token_count(template, block_count):
     blocks = TemplateTokenizer.tokenize(template)
+    target = TemplateTokenizer()
+    blocks = target.tokenize(template)
 
     assert len(blocks) == block_count
 
@@ -190,100 +121,20 @@ def test_it_tokenizes_the_right_token_count(template, block_count):
 def test_invalid_syntax(template, error):
     with raises(error):
         TemplateTokenizer.tokenize(template)
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
 
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-
-
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-
-
-=======
-
-
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
 def test_it_tokenizes_edge_cases_correctly_1():
     blocks1 = TemplateTokenizer.tokenize("{{{{a}}")
     blocks2 = TemplateTokenizer.tokenize("{{'{{a}}")
     blocks3 = TemplateTokenizer.tokenize("{{'a}}")
     blocks4 = TemplateTokenizer.tokenize("{{a'}}")
+def test_it_tokenizes_edge_cases_correctly_1():
+    target = TemplateTokenizer()
+
+    blocks1 = target.tokenize("{{{{a}}")
+    blocks2 = target.tokenize("{{'{{a}}")
+    blocks3 = target.tokenize("{{'a}}")
+    blocks4 = target.tokenize("{{a'}}")
 
     assert len(blocks1) == 2
     assert len(blocks2) == 1
@@ -301,6 +152,37 @@ def test_it_tokenizes_edge_cases_correctly_3():
     template = "}}{{{{$a}}}} {{b}}$x}}"
 
     blocks = TemplateTokenizer.tokenize(template)
+def test_it_tokenizes_edge_cases_correctly_2():
+    target = TemplateTokenizer()
+
+    template = "}}{{{ {$a}}}} {{b}}x}}"
+
+    blocks = target.tokenize(template)
+
+    assert len(blocks) == 5
+
+    assert blocks[0].content == "}}{"
+    assert blocks[0].type == BlockTypes.TEXT
+
+    assert blocks[1].content == "{$a"
+    assert blocks[1].type == BlockTypes.CODE
+
+    assert blocks[2].content == "}} "
+    assert blocks[2].type == BlockTypes.TEXT
+
+    assert blocks[3].content == "b"
+    assert blocks[3].type == BlockTypes.CODE
+
+    assert blocks[4].content == "x}}"
+    assert blocks[4].type == BlockTypes.TEXT
+
+
+def test_it_tokenizes_edge_cases_correctly_3():
+    target = TemplateTokenizer()
+
+    template = "}}{{{{$a}}}} {{b}}$x}}"
+
+    blocks = target.tokenize(template)
 
     assert len(blocks) == 5
 
@@ -323,11 +205,22 @@ def test_it_tokenizes_edge_cases_correctly_3():
 @mark.parametrize(
     "template",
     [
+        ("{{a$}}"),
+        ("{{a$a}}"),
+        ("{{a''}}"),
+        ('{{a""}}'),
+        ("{{a'b'}}"),
+        ('{{a"b"}}'),
+        ("{{a'b'   }}"),
+        ('{{a"b"    }}'),
         ("{{ asis 'f\\'oo' }}"),
     ],
 )
 def test_it_tokenizes_edge_cases_correctly_4(template):
     blocks = TemplateTokenizer.tokenize(template)
+    target = TemplateTokenizer()
+
+    blocks = target.tokenize(template)
 
     assert len(blocks) == 1
     assert blocks[0].type == BlockTypes.CODE
@@ -335,91 +228,22 @@ def test_it_tokenizes_edge_cases_correctly_4(template):
 
 
 def test_it_tokenizes_a_typical_prompt():
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     template = "this is a {{ $prompt }} with {{$some}} variables and {{function $calls}} {{ and 'values' }}"
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
     template = "this is a {{ $prompt }} with {{$some}} variables and {{function $calls}} {{ and 'values' }}"
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
     template = "this is a {{ $prompt }} with {{$some}} variables and {{function $calls}} {{ and 'values' }}"
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
     template = "this is a {{ $prompt }} with {{$some}} variables and {{function $calls}} {{ and 'values' }}"
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
     template = "this is a {{ $prompt }} with {{$some}} variables and {{function $calls}} {{ and 'values' }}"
-=======
     template = "this is a {{ $prompt }} with {{$some}} variables " "and {{function $calls}} {{ and 'values' }}"
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
 
     blocks = TemplateTokenizer.tokenize(template)
+    target = TemplateTokenizer()
+
+    template = (
+        "this is a {{ $prompt }} with {{$some}} variables "
+        "and {{function $calls}} {{ and 'values' }}"
+    )
+
+    blocks = target.tokenize(template)
 
     assert len(blocks) == 8
 

@@ -8,6 +8,7 @@ has prioritized maximum flexibility for the developer to be both lightweight and
 extensible.
 
 ## What is a Function?
+# What is a Function?
 
 ![image](https://user-images.githubusercontent.com/371009/221742673-3ee8abb8-fe10-4669-93e5-5096d3d09580.png)
 
@@ -25,30 +26,35 @@ capabilities. When they are represented as pure LLM AI prompts in semantic funct
 the word "function" and "prompt" can be used interchangeably.
 
 ## What is the relationship between semantic functions and skills?
+# What is the relationship between semantic functions and skills?
 
 A skill is the container in which functions live. You can think of a semantic skill
 as a directory of folders that contain multiple directories of semantic functions
 or a single directory as well.
 
 ```plaintext
+```
 SkillName (directory name)
 │
 └─── Function1Name (directory name)
 │   
 └─── Function2Name (directory name)
 ```plaintext
+```
 
 Each function directory will have an skprompt.txt file and a config.json file. There's
 much more to learn about semantic functions in Building Semantic Functions if you
 wish to go deeper.
 
 ## What is the relationship between native functions and skills?
+# What is the relationship between native functions and skills?
 
 Native functions are loosely inspired by Azure Functions and exist as individual
 native skill files as in MyNativeSkill.cs below:
 
 ```plaintext
 
+```
 MyAppSource
 │
 └───MySkillsDirectory
@@ -66,6 +72,7 @@ MyAppSource
 Each file will contain multiple native functions that are associated with a skill.
 
 ## Where to find skills in the GitHub repo
+# Where to find skills in the GitHub repo
 
 Skills are stored in one of three places:
 

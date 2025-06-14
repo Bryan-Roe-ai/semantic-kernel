@@ -43,6 +43,9 @@ class OpenAITextEmbedding(EmbeddingGeneratorBase):
         self._log = log if log is not None else NullLogger()
 
     async def generate_embeddings_async(self, texts: List[str]) -> ndarray:
+        self.open_ai_instance = self._setup_open_ai()
+
+    def _setup_open_ai(self) -> Any:
         import openai
 
         openai.api_key = self._api_key
@@ -52,6 +55,18 @@ class OpenAITextEmbedding(EmbeddingGeneratorBase):
         try:
             response: Any = await openai.Embedding.acreate(
                 model=self._model_id,
+        return openai
+
+    async def generate_embeddings_async(self, texts: List[str]) -> ndarray:
+        model_args = {}
+        if self.open_ai_instance.api_type in ["azure", "azure_ad"]:
+            model_args["engine"] = self._model_id
+        else:
+            model_args["model"] = self._model_id
+
+        try:
+            response: Any = await self.open_ai_instance.Embedding.acreate(
+                **model_args,
                 input=texts,
             )
 

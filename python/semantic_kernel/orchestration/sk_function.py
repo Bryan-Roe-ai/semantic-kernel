@@ -7,6 +7,16 @@ from typing import Any, Callable, List, Optional
 from semantic_kernel.ai.complete_request_settings import CompleteRequestSettings
 from semantic_kernel.ai.text_completion_client_base import TextCompletionClientBase
 from semantic_kernel.diagnostics.verify import Verify
+import asyncio
+import threading
+from enum import Enum
+from logging import Logger
+from typing import Any, Callable, List, Optional, cast
+
+from semantic_kernel.ai.chat_completion_client_base import ChatCompletionClientBase
+from semantic_kernel.ai.chat_request_settings import ChatRequestSettings
+from semantic_kernel.ai.complete_request_settings import CompleteRequestSettings
+from semantic_kernel.ai.text_completion_client_base import TextCompletionClientBase
 from semantic_kernel.kernel_exception import KernelException
 from semantic_kernel.memory.null_memory import NullMemory
 from semantic_kernel.memory.semantic_text_memory_base import SemanticTextMemoryBase
@@ -16,6 +26,7 @@ from semantic_kernel.orchestration.delegate_inference import DelegateInference
 from semantic_kernel.orchestration.delegate_types import DelegateTypes
 from semantic_kernel.orchestration.sk_context import SKContext
 from semantic_kernel.orchestration.sk_function_base import SKFunctionBase
+from semantic_kernel.semantic_functions.chat_prompt_template import ChatPromptTemplate
 from semantic_kernel.semantic_functions.semantic_function_config import (
     SemanticFunctionConfig,
 )
@@ -28,6 +39,24 @@ from semantic_kernel.utils.null_logger import NullLogger
 
 
 class SKFunction(SKFunctionBase):
+    """
+    Semantic Kernel function.
+    """
+
+    class RunThread(threading.Thread):
+        """
+        Async code wrapper to allow running async code inside external
+        event loops such as Jupyter notebooks.
+        """
+
+        def __init__(self, code):
+            self.code = code
+            self.result = None
+            super().__init__()
+
+        def run(self):
+            self.result = asyncio.run(self.code)
+
     _parameters: List[ParameterView]
     _delegate_type: DelegateTypes
     _function: Callable[..., Any]
@@ -39,6 +68,13 @@ class SKFunction(SKFunctionBase):
     @staticmethod
     def from_native_method(method, skill_name="", log=None) -> "SKFunction":
         Verify.not_null(method, "Method is empty")
+    _chat_backend: Optional[ChatCompletionClientBase]
+    _chat_request_settings: ChatRequestSettings
+
+    @staticmethod
+    def from_native_method(method, skill_name="", log=None) -> "SKFunction":
+        if method is None:
+            raise ValueError("Method cannot be `None`")
 
         assert method.__sk_function__ is not None, "Method is not a SK function"
         assert method.__sk_function_name__ is not None, "Method name is empty"
@@ -54,6 +90,18 @@ class SKFunction(SKFunctionBase):
                     param["name"], param["description"], param["default_value"]
                 )
             )
+        # sk_function_context_parameters are optionals
+        if hasattr(method, "__sk_function_context_parameters__"):
+            for param in method.__sk_function_context_parameters__:
+                assert "name" in param, "Parameter name is empty"
+                assert "description" in param, "Parameter description is empty"
+                assert "default_value" in param, "Parameter default value is empty"
+
+                parameters.append(
+                    ParameterView(
+                        param["name"], param["description"], param["default_value"]
+                    )
+                )
 
         if hasattr(method, "__sk_function_input_description__"):
             input_param = ParameterView(
@@ -92,6 +140,41 @@ class SKFunction(SKFunctionBase):
                     prompt, request_settings
                 )
                 context.variables.update(completion)
+        if function_config is None:
+            raise ValueError("Function configuration cannot be `None`")
+
+        async def _local_func(client, request_settings, context):
+            if client is None:
+                raise ValueError("AI LLM backend cannot be `None`")
+
+            try:
+                if function_config.has_chat_prompt:
+                    as_chat_prompt = cast(
+                        ChatPromptTemplate, function_config.prompt_template
+                    )
+
+                    # Similar to non-chat, render prompt (which renders to a
+                    # list of <role, content> messages)
+                    messages = await as_chat_prompt.render_messages_async(context)
+                    completion = await client.complete_chat_async(
+                        messages, request_settings
+                    )
+
+                    # Add the last message from the rendered chat prompt
+                    # (which will be the user message) and the response
+                    # from the model (the assistant message)
+                    _, content = messages[-1]
+                    as_chat_prompt.add_user_message(content)
+                    as_chat_prompt.add_assistant_message(completion)
+
+                    # Update context
+                    context.variables.update(completion)
+                else:
+                    prompt = await function_config.prompt_template.render_async(context)
+                    completion = await client.complete_simple_async(
+                        prompt, request_settings
+                    )
+                    context.variables.update(completion)
             except Exception as e:
                 # TODO: "critical exceptions"
                 context.fail(str(e), e)
@@ -159,6 +242,8 @@ class SKFunction(SKFunctionBase):
         self._skill_collection = None
         self._ai_backend = None
         self._ai_request_settings = CompleteRequestSettings()
+        self._chat_backend = None
+        self._chat_request_settings = ChatRequestSettings()
 
     def set_default_skill_collection(
         self, skills: ReadOnlySkillCollectionBase
@@ -170,14 +255,35 @@ class SKFunction(SKFunctionBase):
         self, ai_backend: Callable[[], TextCompletionClientBase]
     ) -> "SKFunction":
         Verify.not_null(ai_backend, "AI LLM backend factory is empty")
+        if ai_backend is None:
+            raise ValueError("AI LLM backend factory cannot be `None`")
         self._verify_is_semantic()
         self._ai_backend = ai_backend()
         return self
 
     def set_ai_configuration(self, settings: CompleteRequestSettings) -> "SKFunction":
         Verify.not_null(settings, "AI LLM request settings are empty")
+    def set_chat_backend(
+        self, chat_backend: Callable[[], ChatCompletionClientBase]
+    ) -> "SKFunction":
+        if chat_backend is None:
+            raise ValueError("Chat LLM backend factory cannot be `None`")
+        self._verify_is_semantic()
+        self._chat_backend = chat_backend()
+        return self
+
+    def set_ai_configuration(self, settings: CompleteRequestSettings) -> "SKFunction":
+        if settings is None:
+            raise ValueError("AI LLM request settings cannot be `None`")
         self._verify_is_semantic()
         self._ai_request_settings = settings
+        return self
+
+    def set_chat_configuration(self, settings: ChatRequestSettings) -> "SKFunction":
+        if settings is None:
+            raise ValueError("Chat LLM request settings cannot be `None`")
+        self._verify_is_semantic()
+        self._chat_request_settings = settings
         return self
 
     def describe(self) -> FunctionView:
@@ -189,6 +295,62 @@ class SKFunction(SKFunctionBase):
             parameters=self._parameters,
         )
 
+    def __call__(
+        self,
+        input: Optional[str] = None,
+        context: Optional[SKContext] = None,
+        settings: Optional[CompleteRequestSettings] = None,
+        log: Optional[Logger] = None,
+    ) -> SKContext:
+        return self.invoke(input=input, context=context, settings=settings, log=log)
+
+    def invoke(
+        self,
+        input: Optional[str] = None,
+        context: Optional[SKContext] = None,
+        settings: Optional[CompleteRequestSettings] = None,
+        log: Optional[Logger] = None,
+    ) -> SKContext:
+        if context is None:
+            if self._skill_collection is None:
+                raise ValueError("Skill collection cannot be `None`")
+            assert self._skill_collection is not None
+
+            context = SKContext(
+                ContextVariables(""),
+                NullMemory.instance,  # type: ignore
+                self._skill_collection,
+                log if log is not None else self._log,
+                # TODO: ctoken?
+            )
+
+        if input is not None:
+            context.variables.update(input)
+
+        # Check if there is an event loop
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = None
+
+        # Handle "asyncio.run() cannot be called from a running event loop"
+        if loop and loop.is_running():
+            if self.is_semantic:
+                thread = self.RunThread(self._invoke_semantic_async(context, settings))
+                thread.start()
+                thread.join()
+                return thread.result
+            else:
+                thread = self.RunThread(self._invoke_native_async(context))
+                thread.start()
+                thread.join()
+                return thread.result
+        else:
+            if self.is_semantic:
+                return asyncio.run(self._invoke_semantic_async(context, settings))
+            else:
+                return asyncio.run(self._invoke_native_async(context))
+
     async def invoke_async(
         self,
         input: Optional[str] = None,
@@ -198,6 +360,8 @@ class SKFunction(SKFunctionBase):
     ) -> SKContext:
         if context is None:
             Verify.not_null(self._skill_collection, "Skill collection is empty")
+            if self._skill_collection is None:
+                raise ValueError("Skill collection cannot be `None`")
             assert self._skill_collection is not None
 
             context = SKContext(
@@ -228,6 +392,36 @@ class SKFunction(SKFunctionBase):
             memory,
             skills,
             log if log is not None else self._log,
+    def invoke_with_vars(
+        self,
+        input: ContextVariables,
+        memory: Optional[SemanticTextMemoryBase] = None,
+        log: Optional[Logger] = None,
+    ) -> SKContext:
+        tmp_context = SKContext(
+            variables=input,
+            skill_collection=self._skill_collection,
+            memory=memory if memory is not None else NullMemory.instance,
+            logger=log if log is not None else self._log,
+        )
+
+        try:
+            return self.invoke(input=None, context=tmp_context, log=log)
+        except Exception as e:
+            tmp_context.fail(str(e), e)
+            return tmp_context
+
+    async def invoke_with_vars_async(
+        self,
+        input: ContextVariables,
+        memory: Optional[SemanticTextMemoryBase] = None,
+        log: Optional[Logger] = None,
+    ) -> SKContext:
+        tmp_context = SKContext(
+            variables=input,
+            skill_collection=self._skill_collection,
+            memory=memory if memory is not None else NullMemory.instance,
+            logger=log if log is not None else self._log,
         )
 
         try:
@@ -245,6 +439,20 @@ class SKFunction(SKFunctionBase):
             settings = self._ai_request_settings
 
         new_context = await self._function(self._ai_backend, settings, context)
+            if self._ai_backend is not None:
+                settings = self._ai_request_settings
+            elif self._chat_backend is not None:
+                settings = self._chat_request_settings
+            else:
+                raise KernelException(
+                    KernelException.ErrorCodes.UnknownError,
+                    "Semantic functions must have either an AI backend or Chat backend",
+                )
+
+        backend = (
+            self._ai_backend if self._ai_backend is not None else self._chat_backend
+        )
+        new_context = await self._function(backend, settings, context)
         context.variables.merge_or_overwrite(new_context.variables)
         return context
 
@@ -254,6 +462,9 @@ class SKFunction(SKFunctionBase):
         self._ensure_context_has_skills(context)
 
         delegate = DelegateHandlers.get_handler(self._delegate_type)
+        # for python3.9 compatibility (staticmethod is not callable)
+        if not hasattr(delegate, "__call__"):
+            delegate = delegate.__func__
         new_context = await delegate(self._function, context)
 
         return new_context
