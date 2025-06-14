@@ -1,12 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using MCPServer;
-using MCPServer.ProjectResources;
-using MCPServer.Prompts;
-using MCPServer.Resources;
 using MCPServer.Tools;
-using Microsoft.Extensions.AI;
-using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Connectors.InMemory;
@@ -15,8 +10,6 @@ using ModelContextProtocol.Server;
 
 var builder = Host.CreateEmptyApplicationBuilder(settings: null);
 
-// Load and validate configuration
-(string embeddingModelId, string chatModelId, string apiKey) = GetConfiguration();
 
 // Register the kernel
 IKernelBuilder kernelBuilder = builder.Services.AddKernel();
@@ -115,9 +108,12 @@ builder.Services
 await builder.Build().RunAsync();
 
 /// <summary>
-/// Gets configuration.
+/// Creates a sales assistant agent that can place orders and handle refunds.
 /// </summary>
-static (string EmbeddingModelId, string ChatModelId, string ApiKey) GetConfiguration()
+/// <remarks>
+/// The agent is created with an OpenAI chat completion service and a plugin for order processing.
+/// </remarks>
+static Agent CreateSalesAssistantAgent()
 {
     // Load and validate configuration
     IConfigurationRoot config = new ConfigurationBuilder()
@@ -208,13 +204,15 @@ static ResourceTemplateDefinition CreateVectorStoreSearchResourceTemplate(Kernel
 
 static Agent CreateSalesAssistantAgent(string chatModelId, string apiKey)
 {
+    (string deploymentName, string endPoint, string apiKey) = GetConfiguration();
+
     IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
 
     // Register the SK plugin for the agent to use
     kernelBuilder.Plugins.AddFromType<OrderProcessingUtils>();
 
     // Register chat completion service
-    kernelBuilder.Services.AddOpenAIChatCompletion(chatModelId, apiKey);
+    kernelBuilder.Services.AddAzureOpenAIChatCompletion(deploymentName: deploymentName, endpoint: endPoint, apiKey: apiKey);
 
     // Using a dedicated kernel with the `OrderProcessingUtils` plugin instead of the global kernel has a few advantages:
     // - The agent has access to only relevant plugins, leading to better decision-making regarding which plugin to use.
@@ -233,4 +231,34 @@ static Agent CreateSalesAssistantAgent(string chatModelId, string apiKey)
         Arguments = new KernelArguments(new PromptExecutionSettings() { FunctionChoiceBehavior = FunctionChoiceBehavior.Auto() }),
     };
     return config["ApplicationInsights:ConnectionString"]!;
+}
+
+/// <summary>
+/// Gets configuration.
+/// </summary>
+static (string DeploymentName, string Endpoint, string ApiKey) GetConfiguration()
+{
+    // Load and validate configuration
+    IConfigurationRoot config = new ConfigurationBuilder()
+        .AddUserSecrets<Program>()
+        .AddEnvironmentVariables()
+        .Build();
+
+    if (config["AzureOpenAI:Endpoint"] is not { } endpoint)
+    {
+        const string Message = "Please provide a valid AzureOpenAI:Endpoint to run this sample.";
+        Console.Error.WriteLine(Message);
+        throw new InvalidOperationException(Message);
+    }
+
+    if (config["AzureOpenAI:ApiKey"] is not { } apiKey)
+    {
+        const string Message = "Please provide a valid AzureOpenAI:ApiKey to run this sample.";
+        Console.Error.WriteLine(Message);
+        throw new InvalidOperationException(Message);
+    }
+
+    string deploymentName = config["AzureOpenAI:ChatDeploymentName"] ?? "gpt-4o-mini";
+
+    return (deploymentName, endpoint, apiKey);
 }
