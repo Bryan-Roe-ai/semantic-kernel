@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <!-- THIS PROPERTY GROUP MUST COME FIRST -->
-    <AssemblyName>Microsoft.SemanticKernel.Connectors.HuggingFace</AssemblyName>
+    <AssemblyName>Microsoft.SemanticKernel.Connectors.Memory.Postgres</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
-    <TargetFrameworks>net8.0;netstandard2.0</TargetFrameworks>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionSuffix>preview</VersionSuffix>
+    <VersionSuffix>alpha</VersionSuffix>
   </PropertyGroup>
 
   <!-- IMPORT NUGET PACKAGE SHARED PROPERTIES -->
@@ -15,15 +14,17 @@
 
   <PropertyGroup>
     <!-- NuGet Package Settings -->
-    <Title>Semantic Kernel - Hugging Face AI connectors</Title>
-    <Description>Semantic Kernel connectors for Hugging Face. Contains clients for text generation and text embedding generation.</Description>
+    <Title>Semantic Kernel - Postgres Connector</Title>
+    <Description>Postgres(with pgvector extension) connector for Semantic Kernel plugins and semantic memory</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="SemanticKernel.Connectors.HuggingFace.UnitTests" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
+    <PackageReference Include="Pgvector" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Plugins\Plugins.Memory\Plugins.Memory.csproj" />
     <ProjectReference Include="..\..\SemanticKernel.Core\SemanticKernel.Core.csproj" />
   </ItemGroup>
 
