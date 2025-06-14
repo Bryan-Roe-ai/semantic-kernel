@@ -9,6 +9,12 @@
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
+       {
+      "label": "Create PR with MCP",
+      "type": "shell",
+      "command": "python scripts/create_pr_with_mcp.py", // Or your script path
+      "problemMatcher": []
+    },
       "detail": "Install ReSharper Global Tools",
       "group": "build",
       "dependsOn": [
