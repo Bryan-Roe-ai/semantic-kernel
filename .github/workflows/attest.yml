@@ -7,6 +7,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write # Needed for provenance attestation
+  actions: read
+
 jobs:
   build-and-attest:
     runs-on: ubuntu-latest
@@ -15,25 +20,50 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Replace this with your build process
-      - name: Build project
+      # Optionally cache dependencies here (example for npm)
+      # - name: Cache dependencies
+      #   uses: actions/cache@v4
+      #   with:
+      #     path: ~/.npm
+      #     key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-npm-
+
+      - name: Set up secure artifact directory
         run: |
-          mkdir -p dist
-          echo "Hello, World!" > dist/my-artifact.txt
+          ARTIFACT_DIR=$(mktemp -d)
+          echo "ARTIFACT_DIR=$ARTIFACT_DIR" >> $GITHUB_ENV
+
+      # Replace this with your real build process
+      - name: Build project (example)
+        run: |
+          echo "Hello, World!" > "$ARTIFACT_DIR/my-artifact.txt"
+
+      - name: Generate artifact checksum
+        run: |
+          sha256sum "$ARTIFACT_DIR/my-artifact.txt" > "$ARTIFACT_DIR/my-artifact.txt.sha256"
 
       - name: Generate provenance attestation
         uses: github/attest-build-provenance@v1
         with:
-          subject-path: dist/my-artifact.txt
+          subject-path: ${{ env.ARTIFACT_DIR }}/my-artifact.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: my-artifact
-          path: dist/my-artifact.txt
+          path: ${{ env.ARTIFACT_DIR }}/my-artifact.txt
+
+      - name: Upload artifact checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact.txt.sha256
+          path: ${{ env.ARTIFACT_DIR }}/my-artifact.txt.sha256
 
       - name: Upload attestation
         uses: actions/upload-artifact@v4
         with:
           name: my-artifact.intoto.jsonl
-          path: dist/my-artifact.intoto.jsonl
+          path: ${{ env.ARTIFACT_DIR }}/my-artifact.intoto.jsonl
+
+    # Branch protection can be enforced via repository settings
