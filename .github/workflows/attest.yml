@@ -1,0 +1,39 @@
+name: Build & Attest Provenance
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-attest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Replace this with your build process
+      - name: Build project
+        run: |
+          mkdir -p dist
+          echo "Hello, World!" > dist/my-artifact.txt
+
+      - name: Generate provenance attestation
+        uses: github/attest-build-provenance@v1
+        with:
+          subject-path: dist/my-artifact.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: dist/my-artifact.txt
+
+      - name: Upload attestation
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact.intoto.jsonl
+          path: dist/my-artifact.intoto.jsonl
