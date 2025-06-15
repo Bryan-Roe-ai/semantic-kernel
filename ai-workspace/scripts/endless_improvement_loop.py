@@ -657,6 +657,24 @@ class EndlessImprovementLoop:
             logger.info("Meta-learning agent not available")
 
         try:
+            from adaptive_learning_agent import AdaptiveLearningAgent
+            self.agents.append(AdaptiveLearningAgent("adaptive_learning", self.workspace_root))
+        except ImportError:
+            logger.info("Adaptive learning agent not available")
+
+        try:
+            from quantum_computing_agent import QuantumComputingAgent
+            self.agents.append(QuantumComputingAgent("quantum_computing", self.workspace_root))
+        except ImportError:
+            logger.info("Quantum computing agent not available")
+
+        try:
+            from neural_evolution_agent import NeuralEvolutionAgent
+            self.agents.append(NeuralEvolutionAgent("neural_evolution", self.workspace_root))
+        except ImportError:
+            logger.info("Neural evolution agent not available")
+
+        try:
             from multi_agent_coordinator import MultiAgentCoordinator
             coordinator = MultiAgentCoordinator("coordinator", self.workspace_root)
             # Register all agents with the coordinator
