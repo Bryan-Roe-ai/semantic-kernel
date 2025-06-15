@@ -370,7 +370,7 @@ async def get_mcp_status():
     """Get MCP integration status"""
     if not mcp_client:
         return {"status": "unavailable", "message": "MCP client not initialized"}
-    
+
     try:
         health = await mcp_client.health_check()
         return {"status": "available", "health": health}
@@ -382,7 +382,7 @@ async def get_mcp_tools():
     """Get available MCP tools"""
     if not mcp_client:
         return {"tools": {}, "message": "MCP client not available"}
-    
+
     try:
         tools = await mcp_client.get_available_tools()
         return tools
@@ -394,13 +394,13 @@ async def execute_github_tool(request: dict):
     """Execute a GitHub MCP tool"""
     if not mcp_client:
         return {"error": "MCP client not available", "status": "error"}
-    
+
     tool_name = request.get("tool")
     parameters = request.get("parameters", {})
-    
+
     if not tool_name:
         return {"error": "Tool name required", "status": "error"}
-    
+
     try:
         result = await mcp_client.execute_github_tool(tool_name, parameters)
         return result
@@ -412,7 +412,7 @@ async def get_claude_config():
     """Get Claude Desktop MCP configuration"""
     if not mcp_client:
         return {"error": "MCP client not available", "status": "error"}
-    
+
     try:
         config = await mcp_client.create_mcp_config_for_claude()
         return config

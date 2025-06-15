@@ -20,29 +20,29 @@ async def test_mcp_client():
     """Test standalone MCP client"""
     print("🔌 Testing Standalone MCP Client")
     print("=" * 50)
-    
+
     try:
         from mcp_client import MCPClient
         workspace_root = Path(__file__).parent.parent
-        
+
         # Initialize client
         client = MCPClient(workspace_root)
         await client.initialize()
-        
+
         # Test health check
         health = await client.health_check()
         print(f"Health Check: {json.dumps(health, indent=2)}")
-        
+
         # Test GitHub connection (even if it fails)
         github_result = await client.connect_to_github()
         print(f"GitHub Connection: {json.dumps(github_result, indent=2)}")
-        
+
         # Test available tools
         tools = await client.get_available_tools()
         print(f"Available Tools: {json.dumps(tools, indent=2)}")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"❌ MCP Client Test Failed: {e}")
         return False
@@ -51,29 +51,29 @@ async def test_github_mcp_integration():
     """Test GitHub MCP integration"""
     print("\n🐙 Testing GitHub MCP Integration")
     print("=" * 50)
-    
+
     try:
         sys.path.append(str(Path(__file__).parent / "../04-plugins"))
         from github_mcp_integration import GitHubMCPIntegration
-        
+
         workspace_root = Path(__file__).parent.parent
         github_mcp = GitHubMCPIntegration(workspace_root)
         await github_mcp.initialize()
-        
+
         # Test repository analysis
         analysis = await github_mcp.analyze_workspace_repository()
         print(f"Repository Analysis: {json.dumps(analysis, indent=2)}")
-        
+
         # Test suggestions
         suggestions = await github_mcp.suggest_repository_improvements()
         print(f"Improvement Suggestions: {json.dumps(suggestions, indent=2)}")
-        
+
         # Test MCP plugin config
         plugin_config = await github_mcp.create_github_mcp_plugin()
         print(f"MCP Plugin Config: {json.dumps(plugin_config, indent=2)}")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"❌ GitHub MCP Integration Test Failed: {e}")
         return False
@@ -82,17 +82,17 @@ def test_api_server_mcp_endpoints():
     """Test API server MCP endpoints"""
     print("\n🌐 Testing API Server MCP Endpoints")
     print("=" * 50)
-    
+
     try:
         # Start the API server
         print("Starting API server...")
         server_process = subprocess.Popen([
             sys.executable, "simple_api_server.py", "--port", "8003"
         ], cwd=Path(__file__).parent / "../06-backend-services")
-        
+
         # Wait for server to start
         time.sleep(3)
-        
+
         # Test endpoints using curl
         endpoints = [
             ("/api/health", "Health Check"),
@@ -100,16 +100,16 @@ def test_api_server_mcp_endpoints():
             ("/api/mcp/tools", "MCP Tools"),
             ("/api/mcp/claude-config", "Claude Config")
         ]
-        
+
         base_url = "http://localhost:8003"
         results = {}
-        
+
         for endpoint, description in endpoints:
             try:
                 result = subprocess.run([
                     "curl", "-s", f"{base_url}{endpoint}"
                 ], capture_output=True, text=True, timeout=10)
-                
+
                 if result.returncode == 0:
                     try:
                         response = json.loads(result.stdout)
@@ -121,18 +121,18 @@ def test_api_server_mcp_endpoints():
                 else:
                     results[endpoint] = {"status": "error", "error": result.stderr}
                     print(f"❌ {description}: {endpoint} (Request failed)")
-                    
+
             except subprocess.TimeoutExpired:
                 results[endpoint] = {"status": "timeout"}
                 print(f"⏰ {description}: {endpoint} (Timeout)")
-        
+
         # Stop the server
         server_process.terminate()
         server_process.wait(timeout=5)
-        
+
         print(f"\nAPI Test Results: {json.dumps(results, indent=2)}")
         return len([r for r in results.values() if r["status"] == "success"]) > 0
-        
+
     except Exception as e:
         print(f"❌ API Server Test Failed: {e}")
         return False
@@ -141,7 +141,7 @@ def test_mcp_real_world_scenarios():
     """Test real-world MCP scenarios"""
     print("\n🌍 Testing Real-World MCP Scenarios")
     print("=" * 50)
-    
+
     scenarios = [
         {
             "name": "GitHub Repository Analysis",
@@ -160,12 +160,12 @@ def test_mcp_real_world_scenarios():
             "description": "Suggest GitHub Actions improvements and automation"
         }
     ]
-    
+
     for scenario in scenarios:
         print(f"📋 Scenario: {scenario['name']}")
         print(f"   Description: {scenario['description']}")
         print(f"   Status: ✅ Configuration Available")
-    
+
     return True
 
 def create_mcp_deployment_guide():
@@ -302,21 +302,21 @@ python ai-workspace/scripts/mcp_integration_test.py
 
 ---
 
-🎉 **MCP Integration Complete!** 
+🎉 **MCP Integration Complete!**
 Your AI workspace now supports the Model Context Protocol for enhanced AI collaboration.
 """
-    
+
     guide_path = Path(__file__).parent.parent / "MCP_INTEGRATION_GUIDE.md"
     guide_path.write_text(guide)
     print(f"📚 MCP Integration Guide created: {guide_path}")
-    
+
     return True
 
 async def main():
     """Run all MCP integration tests"""
     print("🧪 AI Workspace MCP Integration Test Suite")
     print("=" * 60)
-    
+
     tests = [
         ("MCP Client", test_mcp_client()),
         ("GitHub MCP Integration", test_github_mcp_integration()),
@@ -324,9 +324,9 @@ async def main():
         ("Real-World Scenarios", test_mcp_real_world_scenarios()),
         ("Deployment Guide", create_mcp_deployment_guide())
     ]
-    
+
     results = {}
-    
+
     for test_name, test_coro in tests:
         print(f"\n🔍 Running {test_name} Test...")
         try:
@@ -337,20 +337,20 @@ async def main():
             results[test_name] = "✅ PASSED" if result else "❌ FAILED"
         except Exception as e:
             results[test_name] = f"❌ ERROR: {e}"
-    
+
     # Summary
     print("\n" + "=" * 60)
     print("📊 MCP Integration Test Results")
     print("=" * 60)
-    
+
     for test_name, result in results.items():
         print(f"{result} {test_name}")
-    
+
     passed_tests = len([r for r in results.values() if "✅" in r])
     total_tests = len(results)
-    
+
     print(f"\n🎯 Summary: {passed_tests}/{total_tests} tests passed")
-    
+
     if passed_tests == total_tests:
         print("🎉 All MCP integration tests completed successfully!")
         print("🚀 AI Workspace MCP functionality is ready for deployment!")

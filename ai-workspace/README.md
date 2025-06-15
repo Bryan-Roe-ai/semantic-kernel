@@ -176,6 +176,7 @@ python scripts/ai_workspace_monitor.py --report 24
 ```
 
 **Monitors**:
+
 - System resources (CPU, Memory, Disk, GPU)
 - API endpoint health
 - Service availability
@@ -197,6 +198,7 @@ python scripts/deployment_automator.py validate
 ```
 
 **Supported Platforms**:
+
 - Docker & Docker Compose
 - Kubernetes
 - Azure (Container Instances, App Service)
@@ -215,6 +217,7 @@ python scripts/ai_workspace_optimizer.py --quick
 ```
 
 **Features**:
+
 - Cleanup temporary files
 - Disk usage analysis
 - Cache optimization

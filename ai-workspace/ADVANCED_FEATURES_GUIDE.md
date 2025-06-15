@@ -25,6 +25,7 @@ python ai_workspace_control.py --batch batches/quick-setup.batch
 **Purpose**: Optimize workspace performance and clean up files
 
 **Features**:
+
 - Clean temporary files and caches
 - Analyze disk usage by directory
 - Optimize cache directories
@@ -34,6 +35,7 @@ python ai_workspace_control.py --batch batches/quick-setup.batch
 - Comprehensive health checks
 
 **Usage**:
+
 ```bash
 # Full optimization
 python scripts/ai_workspace_optimizer.py
@@ -50,6 +52,7 @@ python ai_workspace_control.py --tool optimizer --command optimize
 **Purpose**: Real-time monitoring and alerting for the AI workspace
 
 **Features**:
+
 - System resource monitoring (CPU, memory, disk, GPU)
 - Service health monitoring
 - API endpoint monitoring
@@ -58,6 +61,7 @@ python ai_workspace_control.py --tool optimizer --command optimize
 - Docker container monitoring
 
 **Usage**:
+
 ```bash
 # Start monitoring (interactive)
 python scripts/ai_workspace_monitor.py
@@ -70,6 +74,7 @@ python scripts/ai_workspace_monitor.py --interval 60
 ```
 
 **Monitoring Thresholds**:
+
 - CPU: 80%
 - Memory: 85%
 - Disk: 90%
@@ -81,6 +86,7 @@ python scripts/ai_workspace_monitor.py --interval 60
 **Purpose**: Automated deployment to various environments
 
 **Features**:
+
 - Multi-environment support (development, staging, production)
 - Multiple deployment modes (Docker, Kubernetes, Azure, AWS)
 - Pre/post-deployment validation
@@ -89,6 +95,7 @@ python scripts/ai_workspace_monitor.py --interval 60
 - Deployment history tracking
 
 **Usage**:
+
 ```bash
 # Deploy to production with Docker
 python scripts/deployment_automator.py deploy --environment production --mode docker
@@ -104,11 +111,13 @@ python scripts/deployment_automator.py list
 ```
 
 **Supported Environments**:
+
 - `development`: Development environment with debug settings
 - `staging`: Staging environment for testing
 - `production`: Production environment with optimized settings
 
 **Supported Deployment Modes**:
+
 - `docker`: Docker Compose deployment
 - `kubernetes`: Kubernetes cluster deployment
 - `azure`: Azure Container Instances or App Service
@@ -119,6 +128,7 @@ python scripts/deployment_automator.py list
 **Purpose**: Advanced model lifecycle management
 
 **Features**:
+
 - Download models from multiple sources
 - Model registry with metadata
 - Model optimization (quantization, pruning, distillation)
@@ -128,6 +138,7 @@ python scripts/deployment_automator.py list
 - Checksum verification
 
 **Usage**:
+
 ```bash
 # List all models
 python scripts/ai_model_manager.py list
@@ -152,6 +163,7 @@ python scripts/ai_model_manager.py cleanup --days 30 --confirm
 ```
 
 **Model Sources Supported**:
+
 - Hugging Face Hub (`microsoft/DialoGPT-medium` or `hf:model-name`)
 - Direct URLs (`https://example.com/model.bin`)
 - Local files (`file:/path/to/model`)
@@ -222,6 +234,7 @@ python ai_workspace_control.py --batch my_batch.batch
 ## 📋 Predefined Batch Files
 
 ### 1. Quick Setup (`batches/quick-setup.batch`)
+
 - Workspace optimization
 - Deployment validation
 - API endpoint testing
@@ -230,6 +243,7 @@ python ai_workspace_control.py --batch my_batch.batch
 - Monitoring report generation
 
 ### 2. Full Deployment (`batches/full-deployment.batch`)
+
 - Pre-deployment optimization
 - Docker container building
 - Deployment validation
@@ -237,6 +251,7 @@ python ai_workspace_control.py --batch my_batch.batch
 - Service testing
 
 ### 3. Maintenance (`batches/maintenance.batch`)
+
 - Cleanup temporary files
 - Remove old models (30+ days)
 - Generate system reports
@@ -328,7 +343,7 @@ Add to your `.github/workflows/` for automated operations:
 name: AI Workspace Maintenance
 on:
   schedule:
-    - cron: '0 2 * * *'  # Daily at 2 AM
+    - cron: "0 2 * * *" # Daily at 2 AM
 
 jobs:
   maintenance:
@@ -361,16 +376,19 @@ Set up cron jobs for regular maintenance:
 ### Common Issues
 
 1. **Script Permissions**:
+
    ```bash
    chmod +x scripts/*.py scripts/*.sh
    ```
 
 2. **Missing Dependencies**:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 3. **Docker Issues**:
+
    ```bash
    # Check Docker status
    python ai_workspace_control.py --tool docker --command docker-build
@@ -385,6 +403,7 @@ Set up cron jobs for regular maintenance:
 ### Log Files
 
 Check logs in `logs/` directory:
+
 - `optimization_report.json`: Optimization results
 - `alerts.log`: System alerts
 - `metrics_YYYYMMDD.json`: Daily metrics
