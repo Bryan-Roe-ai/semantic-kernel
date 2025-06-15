@@ -36,6 +36,18 @@ cp ISSUE_RESOLUTION.md $DIST_DIR/ 2>/dev/null || true
 # Disable Jekyll processing
 touch $DIST_DIR/.nojekyll
 
+# Copy CNAME file if it exists (for custom domains)
+echo "🌐 Checking for CNAME file..."
+if [ -f "../CNAME" ]; then
+    echo "   Found CNAME file in repository root, copying to dist/"
+    cp "../CNAME" $DIST_DIR/
+elif [ -f "CNAME" ]; then
+    echo "   Found CNAME file in ai-workspace, copying to dist/"
+    cp "CNAME" $DIST_DIR/
+else
+    echo "   No CNAME file found - using default GitHub Pages domain"
+fi
+
 # Create deployment info
 echo "ℹ️ Creating deployment info..."
 cat > $DIST_DIR/deployment-info.txt << EOF
