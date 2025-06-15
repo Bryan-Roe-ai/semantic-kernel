@@ -631,6 +631,30 @@ class EndlessImprovementLoop:
             self.agents.append(InfrastructureAgent("infrastructure", self.workspace_root))
         except ImportError:
             logger.info("Infrastructure agent not available")
+        
+        try:
+            from cognitive_agent import CognitiveAgent
+            self.agents.append(CognitiveAgent("cognitive", self.workspace_root))
+        except ImportError:
+            logger.info("Cognitive agent not available")
+        
+        try:
+            from predictive_analytics_agent import PredictiveAnalyticsAgent
+            self.agents.append(PredictiveAnalyticsAgent("predictive_analytics", self.workspace_root))
+        except ImportError:
+            logger.info("Predictive analytics agent not available")
+        
+        try:
+            from autonomous_optimization_agent import AutonomousOptimizationAgent
+            self.agents.append(AutonomousOptimizationAgent("autonomous_optimization", self.workspace_root))
+        except ImportError:
+            logger.info("Autonomous optimization agent not available")
+        
+        try:
+            from meta_learning_agent import MetaLearningAgent
+            self.agents.append(MetaLearningAgent("meta_learning", self.workspace_root))
+        except ImportError:
+            logger.info("Meta-learning agent not available")
     
     async def start_endless_loop(self, cycle_interval: int = 300):  # 5 minutes default
         """Start the endless improvement loop."""
