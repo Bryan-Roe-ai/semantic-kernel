@@ -1,0 +1,151 @@
+version: '3.8'
+
+services:
+  # =============================================================================
+  # Main AI Workspace Service
+  # =============================================================================
+  ai-workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: semantic-kernel-ai-workspace
+    ports:
+      - "8000:8000"   # Backend API
+      - "8888:8888"   # Jupyter Lab
+      - "3000:3000"   # Web Interface
+      - "80:80"       # Main Portal (Nginx)
+    volumes:
+      # Persistent data
+      - ai_data:/app/data
+      - ai_models:/app/models
+      - ai_uploads:/app/uploads
+      - ai_logs:/app/logs
+      # Configuration (optional override)
+      - ./.env:/app/.env:ro
+      # Development mode (uncomment for development)
+      # - ./01-notebooks:/app/01-notebooks
+      # - ./06-backend-services:/app/06-backend-services
+    environment:
+      - ENVIRONMENT=production
+      - DEBUG=false
+      - LOG_LEVEL=INFO
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY:-}
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT:-}
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY:-}
+    networks:
+      - ai-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # =============================================================================
+  # Redis Cache Service
+  # =============================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: ai-workspace-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ai-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =============================================================================
+  # Vector Database (Optional - Chroma)
+  # =============================================================================
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: ai-workspace-chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - CHROMA_SERVER_HOST=0.0.0.0
+      - CHROMA_SERVER_HTTP_PORT=8000
+    networks:
+      - ai-network
+    restart: unless-stopped
+
+  # =============================================================================
+  # Monitoring Service (Optional - Prometheus)
+  # =============================================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ai-workspace-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - ai-network
+    restart: unless-stopped
+
+  # =============================================================================
+  # Log Aggregation (Optional - Grafana)
+  # =============================================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ai-workspace-grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - ai-network
+    restart: unless-stopped
+
+# =============================================================================
+# Networks
+# =============================================================================
+networks:
+  ai-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# =============================================================================
+# Volumes
+# =============================================================================
+volumes:
+  ai_data:
+    driver: local
+  ai_models:
+    driver: local
+  ai_uploads:
+    driver: local
+  ai_logs:
+    driver: local
+  redis_data:
+    driver: local
+  chroma_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
