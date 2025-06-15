@@ -1242,3 +1242,36 @@ package-lock.json
 # Logs
 logs/
 *.log
+
+# Repository Organization
+.cleanup/
+.backup/
+.archive/
+*.tmp
+*.temp
+*.bak
+*.old
+
+# AI Workspace
+ai-workspace/cache/
+ai-workspace/logs/
+ai-workspace/venv/
+ai-workspace/.env
+
+# Development
+.vscode/settings.json
+.idea/
+*.log
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
