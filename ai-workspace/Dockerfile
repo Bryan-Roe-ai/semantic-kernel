@@ -34,9 +34,9 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Copy requirements and install Python dependencies
-COPY requirements.txt /tmp/
+COPY requirements-minimal.txt /tmp/
 RUN pip install --upgrade pip && \
-    pip install -r /tmp/requirements.txt
+    pip install -r /tmp/requirements-minimal.txt
 
 # =============================================================================
 # Stage 3: Application Build

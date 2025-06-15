@@ -1,0 +1,4 @@
+# Minimal requirements for FastAPI
+fastapi
+uvicorn[standard]
+python-multipart
