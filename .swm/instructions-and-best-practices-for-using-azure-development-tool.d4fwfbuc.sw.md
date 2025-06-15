@@ -43,7 +43,7 @@ var client = new BlobServiceClient(new Uri("https://<your-storage-account>.blob.
 
 ### Common Issues
 
-1. **Tool Not Found**: Ensure the tool is installed and available in your system\\'s PATH.
+1. **Tool Not Found**: Ensure the tool is installed and available in your system's PATH.
 2. **Authentication Errors**: Verify your Azure credentials and ensure they have the necessary permissions.
 3. **Network Issues**: Check your network connection and ensure you can access Azure services.
 
