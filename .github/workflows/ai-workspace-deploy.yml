@@ -18,7 +18,7 @@ permissions:
 
 # Allow only one concurrent deployment
 concurrency:
-  group: "ai-workspace-deploy"
+  group: "pages"
   cancel-in-progress: false
 
 env:
