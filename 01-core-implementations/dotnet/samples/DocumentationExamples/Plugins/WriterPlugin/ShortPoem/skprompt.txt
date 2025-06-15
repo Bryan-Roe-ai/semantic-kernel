@@ -1,0 +1,7 @@
+Generate a short funny poem or limerick to explain the given event. Be creative and be funny. Let your imagination run wild.
+Event: {{$eventName}} = "My Event"
+
+config:
+  eventName: "My Event"
+Event: {{$input}}
+Event: {{$input}}

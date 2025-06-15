@@ -1,0 +1,164 @@
+name: Python CI/CD
+
+on:
+  push:
+    branches: [main, develop, "feature/*", "release/*"]
+    paths:
+      - "python/**"
+      - ".github/workflows/ci-python.yml"
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "python/**"
+      - ".github/workflows/ci-python.yml"
+  workflow_dispatch:
+
+env:
+  PYTHON_VERSION: "3.11"
+
+jobs:
+  # Build and test Python code
+  build-and-test:
+    name: Build & Test Python
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+
+      - name: Install dependencies
+        run: |
+          cd python
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
+          pip install pytest pytest-cov flake8 black isort mypy
+
+      - name: Lint with flake8
+        run: |
+          cd python
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Format check with black
+        run: |
+          cd python
+          black --check .
+
+      - name: Import sort check
+        run: |
+          cd python
+          isort --check-only .
+
+      - name: Type check with mypy
+        run: |
+          cd python
+          mypy . --ignore-missing-imports
+
+      - name: Test with pytest
+        run: |
+          cd python
+          pytest --cov=semantic_kernel --cov-report=xml --cov-report=html
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        if: matrix.python-version == '3.11'
+        with:
+          file: python/coverage.xml
+          flags: python
+          name: python-coverage
+
+  # Security scanning
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install security tools
+        run: |
+          pip install bandit safety
+
+      - name: Run Bandit security scan
+        run: |
+          cd python
+          bandit -r . -f json -o bandit-results.json || true
+
+      - name: Run Safety check
+        run: |
+          cd python
+          safety check --json --output safety-results.json || true
+
+      - name: Upload security scan results
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-scan-results
+          path: |
+            python/bandit-results.json
+            python/safety-results.json
+
+  # Package and publish
+  package:
+    name: Package Python
+    runs-on: ubuntu-latest
+    needs: [build-and-test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: Build package
+        run: |
+          cd python
+          python -m build
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-packages
+          path: python/dist/*
+
+      - name: Publish to PyPI (on release)
+        if: startsWith(github.ref, 'refs/tags/python-')
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          cd python
+          twine upload dist/*

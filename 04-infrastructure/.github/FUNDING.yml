@@ -1,0 +1,14 @@
+# These are supported funding model platforms
+
+github: [Bryan-Roe]
+patreon: bryanroe
+open_collective: bryanroe
+ko_fi: bryanroe
+tidelift: npm/semantic-kernel
+community_bridge: cloud-foundry
+liberapay: bryanroe
+issuehunt: bryanroe
+lfx_crowdfunding: cloud-foundry
+polar: bryanroe
+buy_me_a_coffee: bryanroe
+custom: ['https://example1.com', 'https://example2.com']

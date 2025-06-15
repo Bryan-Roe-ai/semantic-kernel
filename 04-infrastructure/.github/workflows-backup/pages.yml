@@ -1,0 +1,121 @@
+# GitHub Pages Deployment Workflow
+name: Deploy AI Workspace to GitHub Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+    paths:
+      - "docs/**"
+      - "ai-workspace/**"
+      - ".github/workflows/pages.yml"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Sync AI Workspace content to docs
+        run: |
+          echo "🔄 Syncing AI workspace content to docs folder..."
+          echo "📁 Repository organization: Using organized structure with symlinks"
+
+          # Ensure docs directory exists
+          mkdir -p docs
+
+          # Resolve ai-workspace symlink and copy content
+          AI_WORKSPACE_PATH="02-ai-workspace"
+          if [ -L "ai-workspace" ]; then
+            AI_WORKSPACE_PATH="$(readlink ai-workspace)"
+            echo "📎 Using symlink target: $AI_WORKSPACE_PATH"
+          elif [ -d "ai-workspace" ]; then
+            AI_WORKSPACE_PATH="ai-workspace"
+            echo "📁 Using direct path: $AI_WORKSPACE_PATH"
+          fi
+
+          # Copy main HTML files from ai-workspace
+          if [ -f "$AI_WORKSPACE_PATH/05-samples-demos/index.html" ]; then
+            cp "$AI_WORKSPACE_PATH/05-samples-demos/index.html" docs/
+            echo "✅ Copied index.html"
+          else
+            echo "⚠️  index.html not found in $AI_WORKSPACE_PATH/05-samples-demos/"
+          fi
+
+          if [ -f "$AI_WORKSPACE_PATH/05-samples-demos/custom-llm-studio.html" ]; then
+            cp "$AI_WORKSPACE_PATH/05-samples-demos/custom-llm-studio.html" docs/
+            echo "✅ Copied custom-llm-studio.html"
+          else
+            echo "⚠️  custom-llm-studio.html not found in $AI_WORKSPACE_PATH/05-samples-demos/"
+          fi
+
+          # Copy JavaScript files
+          if [ -f "$AI_WORKSPACE_PATH/05-samples-demos/server.js" ]; then
+            cp "$AI_WORKSPACE_PATH/05-samples-demos/server.js" docs/
+            echo "✅ Copied server.js"
+          fi
+
+          if [ -f "$AI_WORKSPACE_PATH/05-samples-demos/express-rate.js" ]; then
+            cp "$AI_WORKSPACE_PATH/05-samples-demos/express-rate.js" docs/
+            echo "✅ Copied express-rate.js"
+          fi
+
+          # Copy samples directory (resolve symlinks)
+          if [ -d "$AI_WORKSPACE_PATH/05-samples-demos/samples" ]; then
+            rm -rf docs/samples 2>/dev/null || true
+            cp -rL "$AI_WORKSPACE_PATH/05-samples-demos/samples" docs/ 2>/dev/null || cp -r "$AI_WORKSPACE_PATH/05-samples-demos/samples" docs/
+            echo "✅ Copied samples directory"
+          fi
+
+          # Ensure .nojekyll file exists to disable Jekyll processing
+          touch docs/.nojekyll
+          echo "✅ Created .nojekyll file"
+
+          # Create deployment timestamp
+          echo "Last updated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" > docs/last-deployment.txt
+          echo "✅ Updated deployment timestamp"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./docs"
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Output deployment URL
+        run: |
+          echo "🚀 GitHub Pages deployment completed!"
+          echo "📍 Site URL: ${{ steps.deployment.outputs.page_url }}"
+          echo ""
+          echo "Your site is now available at:"
+          echo "${{ steps.deployment.outputs.page_url }}"

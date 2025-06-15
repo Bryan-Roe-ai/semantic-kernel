@@ -1,0 +1,155 @@
+# This workflow will build and push a Docker container to an Azure Web App when a commit is pushed to your default branch.
+#
+# This workflow assumes you have already created the target Azure App Service web app.
+# For instructions see https://docs.microsoft.com/en-us/azure/app-service/quickstart-custom-container?tabs=dotnet&pivots=container-linux
+#
+# To configure this workflow:
+#
+# 1. Download the Publish Profile for your Azure Web App. You can download this file from the Overview page of your Web App in the Azure Portal.
+#    For more information: https://docs.microsoft.com/en-us/azure/app-service/deploy-github-actions?tabs=applevel#generate-deployment-credentials
+#
+# 2. Create a secret in your repository named AZURE_WEBAPP_PUBLISH_PROFILE, paste the publish profile contents as the value of the secret.
+#    For instructions on obtaining the publish profile see: https://docs.microsoft.com/azure/app-service/deploy-github-actions#configure-the-github-secret
+#
+# 3. Create a GitHub Personal access token with "repo" and "read:packages" permissions.
+#
+# 4. Create three app settings on your Azure Web app:
+#       DOCKER_REGISTRY_SERVER_URL: Set this to "https://ghcr.io"
+#       DOCKER_REGISTRY_SERVER_USERNAME: Set this to the GitHub username or organization that owns the repository
+#       DOCKER_REGISTRY_SERVER_PASSWORD: Set this to the value of your PAT token from the previous step
+#
+# 5. Change the value for the AZURE_WEBAPP_NAME.
+#
+# For more information on GitHub Actions for Azure: https://github.com/Azure/Actions
+# For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
+
+name: Build and deploy a container to an Azure Web App
+
+env:
+  AZURE_WEBAPP_NAME: your-azure-webapp-name # set this to the name of your Azure Web App
+  # The secret should be named AZURE_WEBAPP_PUBLISH_PROFILE.
+  # This secret contains the contents of your Azure Web App's publish profile XML file.
+  # You can download the publish profile from the Azure Portal (Web App > Overview > Get publish profile).
+  # Add this secret in your GitHub repository settings under Settings > Secrets and variables > Actions.
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to GitHub container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Lowercase the repo name and username
+        run: |
+          echo "REPO=${GITHUB_REPOSITORY,,}" >> $GITHUB_ENV
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ghcr.io/${{ env.REPO }}:${{ github.sha }}
+          file: ./Dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run tests
+        run: |
+          echo "Running tests..."
+          # Add your test commands here
+          npm install
+          npm test
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Integrate additional service
+        uses: codacy/codacy-analysis-cli-action@v4
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
+
+      - name: Verify installations of dependencies
+        run: |
+          echo "Verifying installations of dependencies..."
+          npm list
+          pip list
+          dotnet --list-sdks
+
+      # Removed systemd installation and status steps as they are not supported in GitHub Actions runners.
+
+      - name: Increase memory limit for Docker containers
+        run: echo "DOCKER_OPTS=\"--default-ulimit nofile=1024:4096 --memory=4g\"" | sudo tee -a /etc/default/docker
+
+      - name: Restart Docker service
+        run: sudo service docker restart
+
+      - name: Handle out-of-memory errors by retrying the build process
+        run: |
+          for i in {1..3}; do
+            dotnet build && break || sleep 10;
+          done
+
+      - name: Run Docker security scan
+        run: trivy image --severity CRITICAL,HIGH --no-progress --exit-code 1 ghcr.io/${{ env.REPO }}:${{ github.sha }}
+
+  deploy:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: "Development"
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Lowercase the repo name and username
+        run: echo "REPO=${GITHUB_REPOSITORY,,}" >>${GITHUB_ENV}
+
+      - name: Verify available disk space
+        run: df -h
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          images: "ghcr.io/${{ env.REPO }}:${{ github.sha }}"
+
+      - name: Deploy to additional Azure services
+        run: |
+          echo "Deploying to additional Azure services..."
+          az webapp deployment source config-zip --resource-group myResourceGroup --name ${{ env.AZURE_WEBAPP_NAME }} --src myApp.zip
+
+      - name: Use Docker secrets for managing sensitive information
+        run: |
+          echo "Setting up Docker secrets..."
+          docker secret create my_secret_key /path/to/secret/file
+
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      # Removed Docker secrets step as Docker Swarm secrets are not supported in GitHub Actions runners.
+      - name: Show container logs
+        run: docker logs <container_id>
+
+      - name: Set up health checks
+        run: |
+          docker exec <container_id> curl --fail http://localhost:3000/health || exit 1

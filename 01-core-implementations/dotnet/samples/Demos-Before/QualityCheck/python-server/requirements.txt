@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic
+bert_score==0.3.11
+nltk
+evaluate
+cmake
+unbabel-comet

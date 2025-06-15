@@ -1,0 +1,105 @@
+name: Ensure Success
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  ensure-success:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        python-version: [3.9, 3.10]  # Test across multiple Python versions
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ matrix.python-version }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Validate dependencies
+        run: pip check
+
+      # --- Lint and Format Early for Fast Feedback ---
+      - name: Lint Code
+        run: flake8 .
+
+      - name: Check Formatting
+        run: black --check .
+
+      # --- Run Tests and Coverage ---
+      - name: Install coverage
+        run: pip install coverage
+
+      - name: Run tests with coverage
+        run: |
+          coverage run -m pytest
+          coverage xml
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+
+      # --- Systemd Setup: Only if needed and on Linux ---
+      - name: Install systemd
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y systemd
+      - name: Start systemd
+        if: runner.os == 'Linux'
+        run: sudo systemctl start systemd
+      - name: Verify systemd status
+        if: runner.os == 'Linux'
+        run: sudo systemctl status systemd
+
+      # --- Check Workflow Status Script (if required) ---
+      - name: Check workflow status
+        run: |
+          chmod +x scripts/check-workflow-status.sh
+          ./scripts/check-workflow-status.sh
+
+      # --- Error Handling and Notification ---
+      - name: Fix Errors and Log
+        if: failure()
+        run: |
+          ./fix-errors.sh || true
+          echo "Error occurred during the ensure success process"
+
+      - name: Notify on Failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.example.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "Workflow Failed"
+          body: "The Ensure Success workflow failed. Please check."
+          to: maintainer@example.com
+
+# Documentation and Best Practices:
+# - Add a badge for this workflow to your README.
+# - Make sure that secrets are stored securely in GitHub settings.
+# - Consider adding Slack/Teams notifications for faster alerts.
+# - Review and update dependencies, actions, and scripts routinely for latest security and performance enhancements.

@@ -1,0 +1,63 @@
+name: Jekyll site CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Cache gems
+      uses: actions/cache@v3
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-gems-
+    
+    - name: Build the site in the jekyll/builder container
+      run: |
+        docker run \
+        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
+        jekyll/builder:4.2.0 /bin/bash -c "chmod -R 755 /srv/jekyll && jekyll build --future"
+    
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main'
+      run: |
+        docker run \
+        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
+        jekyll/builder:4.2.0 /bin/bash -c "chmod -R 755 /srv/jekyll && jekyll build --future"
+        git config --global user.email "you@example.com"
+        git config --global user.name "GitHub Action"
+        cd _site
+        git init
+        git add .
+        git commit -m "Deploy Jekyll site"
+        git push --force --quiet "https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" main:gh-pages
+
+    - name: Set up Docker for containerized deployment
+      run: |
+        echo "Setting up Docker..."
+        docker build -t jekyll-site .
+        docker run -d -p 4000:4000 jekyll-site
+
+    - name: Verify installations of dependencies
+      run: |
+        echo "Verifying installations of dependencies..."
+        # Add your verification commands here
+        npm list
+        pip list
+        dotnet --list-sdks
+
+    - name: Run the API server
+      run: |
+        echo "Running the API server..."
+        # Add your commands to run the API server here
+        npm start

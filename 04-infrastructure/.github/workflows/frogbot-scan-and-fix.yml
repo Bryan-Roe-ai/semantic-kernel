@@ -1,0 +1,57 @@
+name: "Frogbot Scan and Fix"
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write           # Needed for PR creation
+  pull-requests: write     # Needed for PR operations
+  security-events: write   # Needed for security scanning
+
+jobs:
+  frogbot-scan-and-fix:
+    runs-on: ubuntu-latest
+    steps:
+
+      # 1. Lint the workflow itself first
+      - name: Lint workflow
+        uses: rhysd/actionlint@v1
+
+      # 2. Validate required secrets early and fail if missing
+      - name: Validate required secrets
+        run: |
+          if [ -z "${{ secrets.JF_URL }}" ] || [ -z "${{ secrets.JF_ACCESS_TOKEN }}" ]; then
+            echo "Required secrets JF_URL or JF_ACCESS_TOKEN are missing. Exiting."
+            exit 1
+          fi
+
+      # 3. Check out the codebase
+      - name: Check out the codebase
+        uses: actions/checkout@v4
+
+      # 4. Cache JFrog dependencies
+      - name: Cache JFrog CLI configuration
+        uses: actions/cache@v3
+        with:
+          path: ~/.jfrog
+          key: ${{ runner.os }}-jfrog-cache
+          restore-keys: |
+            ${{ runner.os }}-jfrog-cache
+
+      # 5. Frogbot Scan and Fix
+      - name: Frogbot Scan and Fix
+        uses: jfrog/frogbot@v2  # Use a stable tag instead of a SHA if possible
+        env:
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 6. Error handling (runs only if previous steps failed)
+      - name: Run custom error fix script if scan fails
+        if: failure()
+        run: ./fix-errors.sh
+
+      - name: Log error message if scan fails
+        if: failure()
+        run: echo "Error occurred during the Frogbot scan and fix process"

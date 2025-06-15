@@ -1,0 +1,33 @@
+name: Handle Not Found Error
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  handle-not-found-error:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Check for Not Found Error
+        run: |
+          if grep -i -q "Not Found.*repository-content" $GITHUB_EVENT_PATH; then
+            echo "Error found: Repository content not found error detected"
+            exit 1
+          else
+            echo "No Not Found error found."
+          fi
+
+      - name: Fix Errors
+        run: ./fix-errors.sh
+
+      - name: Fix Errors
+        if: failure()
+        run: ./fix-errors.sh
+
+      - name: Log Error Message
+        if: failure()
+        run: echo "Error occurred during the handle not found error process"

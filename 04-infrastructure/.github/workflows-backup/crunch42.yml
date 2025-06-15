@@ -1,0 +1,60 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by separate terms of service, privacy policy, and support documentation.
+
+# This workflow locates REST API file contracts (Swagger or OpenAPI format, v2 and v3, JSON and YAML)
+# and runs 300+ security checks on them using 42Crunch Security Audit technology to uncover
+# potential vulnerabilities related to authentication, authorization, as well as data validation.
+
+# Documentation: https://docs.42crunch.com/latest/content/tasks/integrate_github_actions.htm
+# To use this workflow, you need a 42Crunch platform account. If you do not have one, contact: https://42crunch.com/request-demo.
+
+name: "42Crunch REST API Static Security Testing"
+
+# Standard Code Scanning triggers
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '35 14 * * 1' # Adjusted for weekly schedule at 14:35 UTC on Mondays
+
+permissions:
+  contents: read # Required for actions/checkout
+  security-events: write # Necessary for uploading results to GitHub Code Scanning
+
+jobs:
+  rest-api-static-security-testing:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # For actions/checkout to fetch code
+      security-events: write # For 42Crunch/api-security-audit-action to upload results
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Validate if OpenAPI files exist
+      - name: Validate OpenAPI files existence
+        run: |
+          if ! find . -name "*.json" -o -name "*.yaml" | grep -q .; then
+            echo "No OpenAPI files found. Exiting."
+            exit 1
+          fi
+
+      # Run 42Crunch REST API Static Security Testing
+      - name: 42Crunch REST API Static Security Testing
+        uses: 42Crunch/api-security-audit-action@v1.2.3 # Use specific version, not "latest"
+        with:
+          api-token: ${{ secrets.API_TOKEN }}
+          min-score: 75 # Fail if any OpenAPI file scores lower than 75
+          upload-to-code-scanning: true
+          github-token: ${{ github.token }}
+
+      # Notification on failure (optional)
+      - name: Notify on failure
+        if: failure()
+        run: echo "Security Testing failed. Please check the logs."

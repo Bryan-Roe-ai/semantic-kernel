@@ -1,0 +1,37 @@
+# Sobelow Workflow: Improved and Optimized
+# This workflow integrates Sobelow for security-focused static analysis
+# and includes additional best practices for security, performance, and maintainability.
+
+name: Sobelow
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '30 19 * * 2' # Scheduled to run every Tuesday at 19:30 UTC
+
+permissions:
+  contents: read
+  security-events: write # Required for uploading SARIF results
+  actions: read # For private repositories to get Action run statuses
+
+jobs:
+  security-scan:
+    name: Run Sobelow Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the codebase
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Run Sobelow static analysis
+      - name: Run Sobelow Analysis
+        uses: sobelow/action@v1.0.1
+
+      # Upload SARIF results
+      - name: Upload SARIF Report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif

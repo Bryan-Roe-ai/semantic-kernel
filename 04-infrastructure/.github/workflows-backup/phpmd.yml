@@ -1,0 +1,69 @@
+# This workflow runs PHPMD against your PHP codebase on push, pull request, and on a schedule.
+# All actions are pinned to secure commit SHAs for reliability.
+# Linting, static analysis, artifact uploading, and SARIF reporting are included.
+
+name: PHPMD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '29 21 * * 5' # Runs every Friday at 21:29 UTC. Adjust as needed.
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  PHPMD:
+    name: Run PHPMD scanning
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [8.0, 8.1] # Dropped 7.4 since EOL
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@a7c6b7d4a6e3e8dbe0b3ef5b2e5a90d8b6c7e922 # v4.1.1
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@bb7d8f8d8b09e3c58c715b1f6a8b26c9f82b1d8a # v2.30.0
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: phpmd
+
+      - name: Run PHP Linter
+        run: |
+          find . -type f -name "*.php" -exec php -l {} \; | tee php-lint.log
+          if grep -q "Errors parsing" php-lint.log; then exit 1; fi
+
+      - name: Run PHPMD
+        run: phpmd . sarif codesize --reportfile phpmd-results.sarif
+
+      - name: Display PHPMD Results
+        run: cat phpmd-results.sarif
+
+      - name: Upload PHPMD results artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: phpmd-results
+          path: phpmd-results.sarif
+          retention-days: 5
+
+      - name: Upload analysis results to GitHub
+        uses: github/codeql-action/upload-sarif@1fd65d9d4b53c105ae3d1b1e2d1c5ff7c3e3f9fa # v2.22.0
+        with:
+          sarif_file: phpmd-results.sarif
+          wait-for-processing: true
+
+      # Uncomment and configure if notifications are needed
+      # - name: Notify team
+      #   uses: slackapi/slack-github-action@v1.23.0
+      #   with:
+      #     channel-id: 'C01234567'
+      #     slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}

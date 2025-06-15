@@ -1,0 +1,65 @@
+# This workflow uses actions provided by a third-party (NowSecure) and is governed by separate terms of service, privacy policy, and support documentation.
+# NowSecure: The Mobile Security Experts <https://www.nowsecure.com/>.
+#
+# To use this workflow, you must have a token for NowSecure Platform. If you are a NowSecure customer, you can find it in NowSecure Platform.
+# If you *are not* a NowSecure customer, click here to sign up for a free trial to get access: <https://bit.ly/ns-git-sbom>.
+#
+# Instructions:
+# 1. In the settings for your repository, click "Secrets" then "New repository secret". Name the secret "NS_TOKEN" and paste in your Platform token.
+#    If you do not have a Platform token, or wish to create a new one for GitHub, visit NowSecure Platform and go to "Profile & Preferences" then create a token labelled "GitHub".
+# 2. Follow the annotated workflow below and make any necessary modifications, then save the workflow to your repository.
+
+name: "NowSecure Mobile SBOM"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '40 3 * * 6' # Adjust schedule as needed
+
+permissions:
+  contents: read
+
+jobs:
+  nowsecure:
+    name: Generate Mobile SBOM with NowSecure
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Ensure only necessary permissions are granted
+
+    steps:
+      # Step 1: Checkout the repository code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Build the mobile application
+      - name: Build Mobile Application
+        run: |
+          # Build your Android or iOS application. Replace with the appropriate build command.
+          ./gradlew assembleDebug
+
+      # Step 3: Validate the APK/IPA file (optional but recommended)
+      - name: Validate Build Output
+        run: |
+          if [ ! -f "app-debug.apk" ]; then
+            echo "Error: APK file not found!"
+            exit 1
+          fi
+
+      # Step 4: Upload to NowSecure for SBOM generation
+      - name: Upload App to NowSecure
+        uses: nowsecure/nowsecure-sbom-action@ecb731b6f17a83fa53f756f9dae2ec7034c5ed7c
+        with:
+          token: ${{ secrets.NS_TOKEN }}
+          app_file: app-debug.apk # Path to the APK or IPA file
+          group_id: ${{ secrets.NS_GROUP_ID }} # Use a secret for group ID to avoid hardcoding
+
+      # Step 5: Notify on workflow completion (failure or success)
+      - name: Notify Team via Slack (Optional)
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"NowSecure Mobile SBOM workflow failed. Please check logs."}' $SLACK_WEBHOOK_URL

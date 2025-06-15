@@ -1,0 +1,163 @@
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "**/*.md"
+      - ".github/workflows/docs.yml"
+  pull_request:
+    paths:
+      - "docs/**"
+      - "**/*.md"
+      - ".github/workflows/docs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Check documentation quality
+  docs-quality:
+    name: Documentation Quality Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: npm
+
+      - name: Install markdown tools
+        run: |
+          npm install -g markdownlint-cli markdown-link-check
+
+      - name: Lint markdown files
+        run: |
+          markdownlint '**/*.md' --ignore node_modules --ignore .git
+
+      - name: Check markdown links
+        run: |
+          find . -name "*.md" -not -path "./node_modules/*" -not -path "./.git/*" | \
+          xargs markdown-link-check --config .github/markdown-link-check-config.json
+
+      - name: Spell check
+        uses: streetsidesoftware/cspell-action@v6
+        with:
+          files: "**/*.md"
+          config: ".github/cspell.json"
+
+  # Build and deploy documentation site
+  build-docs:
+    name: Build Documentation Site
+    runs-on: ubuntu-latest
+    needs: docs-quality
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          if [ -f "docs/package.json" ]; then
+            cd docs
+            npm ci
+          fi
+
+      - name: Build documentation
+        run: |
+          if [ -f "docs/package.json" ]; then
+            cd docs
+            npm run build
+          else
+            # Simple static site generation
+            mkdir -p _site
+            cp -r docs/* _site/ 2>/dev/null || true
+            cp *.md _site/ 2>/dev/null || true
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/_site
+
+  # Deploy to GitHub Pages
+  deploy-docs:
+    name: Deploy Documentation
+    runs-on: ubuntu-latest
+    needs: build-docs
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Generate API documentation
+  api-docs:
+    name: Generate API Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Generate .NET API docs
+        run: |
+          cd dotnet
+          if command -v docfx &> /dev/null; then
+            docfx docfx.json
+          else
+            echo "DocFX not installed, skipping .NET API docs"
+          fi
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate Python API docs
+        run: |
+          cd python
+          pip install sphinx sphinx-rtd-theme
+          if [ -f "docs/conf.py" ]; then
+            sphinx-build -b html docs docs/_build/html
+          else
+            echo "Sphinx config not found, skipping Python API docs"
+          fi
+
+      - name: Upload API documentation
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-documentation
+          path: |
+            dotnet/_site/
+            python/docs/_build/html/

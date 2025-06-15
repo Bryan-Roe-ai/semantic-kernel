@@ -1,0 +1,75 @@
+name: Frogbot Scan Pull Request
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main, develop]
+  schedule:
+    - cron: '0 3 * * 1'
+
+permissions:
+  contents: read
+  pull-requests: write
+  # issues: write
+
+jobs:
+  scan-pull-request:
+    runs-on: ubuntu-latest
+    environment: frogbot
+
+    steps:
+      - name: Checkout PR Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Validate Required Secrets
+        run: |
+          missing=()
+          [[ -z "${{ secrets.JF_URL }}" ]] && missing+=("JF_URL")
+          [[ -z "${{ secrets.JF_ACCESS_TOKEN }}" ]] && missing+=("JF_ACCESS_TOKEN")
+          [[ -z "${{ secrets.GITHUB_TOKEN }}" ]] && missing+=("GITHUB_TOKEN")
+          if [ ${#missing[@]} -ne 0 ]; then
+            echo "Missing required secrets: ${missing[*]}"
+            exit 1
+          fi
+
+      - name: Cache JFrog Directory
+        uses: actions/cache@v4
+        with:
+          path: ~/.jfrog
+          key: ${{ runner.os }}-frogbot-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-frogbot-${{ github.ref_name }}-
+            ${{ runner.os }}-frogbot-
+
+      # - name: Install Dependencies (uncomment if needed)
+      #   run: pip install -r requirements.txt
+
+      - name: Frogbot Security Scan
+        uses: jfrog/frogbot@v2.10.0
+        env:
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Handle Frogbot Failures
+        if: failure()
+        run: |
+          echo "Frogbot scan failed. Please check the logs above for details."
+          # Optional: Send notification or open issue
+
+      - name: Upload Frogbot Scan Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frogbot-report
+          path: path/to/report
+
+      # Optional: Notify Maintainers for scheduled scan
+      # - name: Notify Maintainers of Scheduled Scan
+      #   if: github.event_name == 'schedule'
+      #   run: echo "Scheduled scan done. Please review the results."
+
+# Frogbot Docs: https://github.com/jfrog/frogbot#frogbot
+# JFrog Xray Docs: https://jfrog.com/xray/
