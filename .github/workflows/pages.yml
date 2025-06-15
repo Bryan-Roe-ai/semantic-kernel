@@ -1,5 +1,5 @@
 # GitHub Pages Deployment Workflow
-name: Deploy to GitHub Pages
+name: Deploy AI Workspace to GitHub Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -78,7 +78,7 @@ jobs:
           echo "✅ Updated deployment timestamp"
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -95,7 +95,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v3
+        uses: actions/deploy-pages@v4
 
       - name: Output deployment URL
         run: |
