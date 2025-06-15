@@ -70,10 +70,6 @@
     "autogen",
     "partitioner",
     "dapr",
-  "cSpell.words": [
-    "autogen",
-    "partitioner",
-    "dapr",
     "pregel",
     "prompty",
     "skexp",
@@ -82,9 +78,6 @@
     "typeref",
     "uninstantiated"
   ],
-      "source.fixAll": "never"
-    }
-  },
   "emeraldwalk.runonsave": {
     "commands": [
       {
@@ -225,7 +218,4 @@
   ],
   "explorer.compactFolders": false,
   "prettier.enable": true,
-  "editor.formatOnType": true,
-  "editor.formatOnSave": true,
-  "editor.formatOnPaste": true,
 }
