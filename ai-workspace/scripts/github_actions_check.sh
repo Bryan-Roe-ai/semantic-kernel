@@ -20,7 +20,7 @@ check_item() {
     local description="$1"
     local condition="$2"
     total_checks=$((total_checks + 1))
-    
+
     if eval "$condition"; then
         echo -e "  ${GREEN}✅${NC} $description"
         success_count=$((success_count + 1))
@@ -97,13 +97,13 @@ echo "📊 Git Repository Status..."
 if git status > /dev/null 2>&1; then
     current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
     info_item "Current branch: $current_branch"
-    
+
     if [ "$current_branch" = "main" ]; then
         info_item "On main branch (deployment will trigger on push)"
     else
         warning_item "Not on main branch (switch to main for deployment)"
     fi
-    
+
     # Check for uncommitted changes
     if git diff-index --quiet HEAD -- 2>/dev/null; then
         info_item "Working directory is clean"
@@ -120,7 +120,7 @@ echo "🔗 GitHub Remote Configuration..."
 if git remote -v 2>/dev/null | grep -q "github.com"; then
     remote_url=$(git remote get-url origin 2>/dev/null || echo "unknown")
     info_item "GitHub remote detected: $remote_url"
-    
+
     # Extract repository info
     if [[ $remote_url =~ github\.com[:/]([^/]+)/([^/.]+) ]]; then
         username="${BASH_REMATCH[1]}"

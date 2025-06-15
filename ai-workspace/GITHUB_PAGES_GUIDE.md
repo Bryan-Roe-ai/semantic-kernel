@@ -30,6 +30,7 @@ If you want to build and push Docker images, add these secrets:
 ### 3. Trigger Deployment
 
 The deployment workflow triggers automatically when:
+
 - Code is pushed to the `main` branch in the `ai-workspace/` directory
 - A pull request is created targeting the `main` branch
 - Manually triggered via **Actions** tab → **AI Workspace Deployment** → **Run workflow**
@@ -39,17 +40,20 @@ The deployment workflow triggers automatically when:
 The GitHub Actions workflow (`ai-workspace-deploy.yml`) performs these steps:
 
 ### 1. Test Phase
+
 - Sets up Python environment
 - Installs dependencies
 - Runs integration tests
 - Tests API endpoints
 
 ### 2. Build Phase
+
 - Creates static site from source files
 - Bundles documentation and backend code
 - Generates deployment artifacts
 
 ### 3. Deploy Phase
+
 - Deploys static site to GitHub Pages
 - Builds and pushes Docker image (if secrets configured)
 - Provides deployment status notification
@@ -66,6 +70,7 @@ After successful deployment:
 ## Accessing Your Deployed Site
 
 Once deployed, your AI workspace will be available at:
+
 - **Main Page**: `https://{username}.github.io/{repository-name}/`
 - **AI Studio**: `https://{username}.github.io/{repository-name}/custom-llm-studio.html`
 - **Documentation**: `https://{username}.github.io/{repository-name}/README-workspace.md`
@@ -74,12 +79,14 @@ Once deployed, your AI workspace will be available at:
 
 ### Common Issues
 
-1. **Pages not updating**: 
+1. **Pages not updating**:
+
    - Check if GitHub Pages is enabled
    - Verify the workflow completed successfully
    - Pages deployment can take 5-10 minutes
 
 2. **Workflow failing**:
+
    - Check the Actions tab for error details
    - Ensure all required files are present
    - Verify Python dependencies are correct
@@ -94,7 +101,7 @@ Once deployed, your AI workspace will be available at:
 2. Find the latest **AI Workspace Deployment** workflow run
 3. Check the status of each job:
    - ✅ Test: Code tests passed
-   - ✅ Build: Static site built successfully  
+   - ✅ Build: Static site built successfully
    - ✅ Deploy Pages: Site deployed to GitHub Pages
    - ✅/❌ Docker Build: Container image built (optional)
 
@@ -128,6 +135,7 @@ After successful deployment:
 ## Support
 
 If you encounter issues:
+
 1. Check the GitHub Actions workflow logs
 2. Review this documentation
 3. Test the build process locally

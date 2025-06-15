@@ -96,7 +96,7 @@ if [ -x "scripts/build_static.sh" ]; then
     ./scripts/build_static.sh > /dev/null 2>&1
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✅ Build script runs successfully${NC}"
-        
+
         # Check build output
         if [ -f "dist/index.html" ] && [ -f "dist/custom-llm-studio.html" ]; then
             echo -e "${GREEN}✅ Static files built correctly${NC}"
