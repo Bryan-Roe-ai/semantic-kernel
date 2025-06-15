@@ -5,6 +5,7 @@ This document explains how to control the `bryan-roe-ai.github.io` repository fr
 ## 🎯 Overview
 
 The setup allows you to:
+
 - **Edit content** in `semantic-kernel/ai-workspace/`
 - **Automatically sync** changes to `bryan-roe-ai.github.io`
 - **Deploy updates** to the live GitHub Pages site
@@ -23,6 +24,7 @@ cd /workspaces/semantic-kernel
 ```
 
 **Features:**
+
 - ✅ Syncs complete ai-workspace content
 - ✅ Resolves symbolic links automatically
 - ✅ Preserves important GitHub Pages files
@@ -36,28 +38,31 @@ GitHub Actions workflow for automatic syncing on every push.
 **Setup Steps:**
 
 1. **Create Personal Access Token (PAT)**
+
    ```
    GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
-   
+
    Create new token with these scopes:
    ✅ repo (Full control of private repositories)
    ✅ workflow (Update GitHub Action workflows)
    ```
 
 2. **Add Secret to semantic-kernel Repository**
+
    ```
    semantic-kernel repo → Settings → Secrets and variables → Actions
-   
+
    Add new repository secret:
    Name: PAGES_DEPLOY_TOKEN
    Value: [Your PAT from step 1]
    ```
 
 3. **Enable Workflow**
+
    ```
    The workflow file is already created at:
    .github/workflows/sync-to-github-pages.yml
-   
+
    It will automatically trigger on:
    - Push to main branch (when ai-workspace/* files change)
    - Manual workflow dispatch
@@ -94,6 +99,7 @@ GitHub → semantic-kernel repo → Actions → "Sync AI Workspace to GitHub Pag
 ## 📂 What Gets Synced
 
 ### Included:
+
 - ✅ All `ai-workspace/` content
 - ✅ Directory structure (01-notebooks, 02-agents, etc.)
 - ✅ Main interface files (index.html, custom-llm-studio.html)
@@ -102,6 +108,7 @@ GitHub → semantic-kernel repo → Actions → "Sync AI Workspace to GitHub Pag
 - ✅ Configuration files
 
 ### Preserved in Target:
+
 - 🔒 `.git/` directory
 - 🔒 `.github/workflows/` (GitHub Pages deployment)
 - 🔒 `.nojekyll` file
@@ -109,6 +116,7 @@ GitHub → semantic-kernel repo → Actions → "Sync AI Workspace to GitHub Pag
 - 🔒 `.gitmodules` (if exists)
 
 ### Resolved:
+
 - 🔗 Symbolic links → Actual file content
 - 📁 Broken links → Placeholder files
 - 🔄 Absolute paths → Relative or copied content
@@ -132,6 +140,7 @@ curl -I https://bryan-roe-ai.github.io
 ## 📋 Workflow Details
 
 ### Manual Script Process:
+
 1. 💾 Backup important target files
 2. 🧹 Clear target content (except backups)
 3. 📁 Copy complete ai-workspace content
@@ -141,6 +150,7 @@ curl -I https://bryan-roe-ai.github.io
 7. 💬 Interactive commit/push
 
 ### GitHub Actions Process:
+
 1. 🔍 Check if sync needed (commit comparison)
 2. 📥 Checkout both repositories
 3. 🔄 Execute same sync logic as manual script
@@ -152,21 +162,25 @@ curl -I https://bryan-roe-ai.github.io
 ### Common Issues:
 
 **Script Permission Denied:**
+
 ```bash
 chmod +x scripts/sync-ai-workspace.sh
 ```
 
 **PAT Authentication Failed:**
+
 - Verify PAT has correct scopes
 - Check PAT hasn't expired
 - Ensure secret name is exactly: `PAGES_DEPLOY_TOKEN`
 
 **Sync Not Triggering:**
+
 - Check workflow file exists: `.github/workflows/sync-to-github-pages.yml`
 - Verify changes are in `ai-workspace/` directory
 - Check Actions tab for workflow runs
 
 **Broken Symlinks:**
+
 - Script automatically handles most cases
 - Check `.broken` and `.missing` placeholder files
 - Manually copy missing content if needed
@@ -196,6 +210,7 @@ cd /workspaces/semantic-kernel
 ## 📞 Support
 
 For issues:
+
 1. Check the deployment logs
 2. Run `deployment_summary.py` for diagnostics
 3. Review GitHub Actions logs

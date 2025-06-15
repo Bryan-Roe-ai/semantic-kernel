@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       force_sync:
-        description: 'Force complete sync even if no changes detected'
+        description: "Force complete sync even if no changes detected"
         required: false
-        default: 'false'
+        default: "false"
         type: boolean
 
 permissions:
@@ -23,7 +23,7 @@ env:
 jobs:
   sync-to-pages-repo:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout semantic-kernel repository
         uses: actions/checkout@v4
@@ -46,20 +46,20 @@ jobs:
       - name: Sync ai-workspace content
         run: |
           echo "🔄 Starting sync from semantic-kernel/ai-workspace to ${{ env.TARGET_REPO }}"
-          
+
           cd target
-          
+
           # Get current commit hash for comparison
           CURRENT_COMMIT=$(cat .sync-commit 2>/dev/null || echo "none")
           SOURCE_COMMIT=$(cd ../source && git rev-parse HEAD)
-          
+
           echo "Current target commit: $CURRENT_COMMIT"
           echo "Source commit: $SOURCE_COMMIT"
-          
+
           # Check if sync is needed
           if [[ "${{ github.event.inputs.force_sync }}" == "true" || "$CURRENT_COMMIT" != "$SOURCE_COMMIT" ]]; then
             echo "✅ Sync needed - proceeding with update"
-            
+
             # Backup important files that shouldn't be overwritten
             mkdir -p .temp-backup
             cp -r .git .temp-backup/ 2>/dev/null || true
@@ -67,28 +67,28 @@ jobs:
             cp .nojekyll .temp-backup/ 2>/dev/null || true
             cp .gitmodules .temp-backup/ 2>/dev/null || true
             cp README.md .temp-backup/ 2>/dev/null || true
-            
+
             # Clear existing content (except backed up items)
             find . -maxdepth 1 -type f ! -name '.*' -delete
             find . -maxdepth 1 -type d ! -name '.' ! -name '.git' ! -name '.github' ! -name '.temp-backup' -exec rm -rf {} \;
-            
+
             # Copy ai-workspace content
             cp -r ../source/ai-workspace/* .
             cp -r ../source/ai-workspace/.* . 2>/dev/null || true
-            
+
             # Restore backed up files
             cp -r .temp-backup/.git . 2>/dev/null || true
             cp -r .temp-backup/.github . 2>/dev/null || true
             cp .temp-backup/.nojekyll . 2>/dev/null || true
             cp .temp-backup/.gitmodules . 2>/dev/null || true
             cp .temp-backup/README.md . 2>/dev/null || true
-            
+
             # Clean up backup
             rm -rf .temp-backup
-            
+
             # Store the source commit hash
             echo "$SOURCE_COMMIT" > .sync-commit
-            
+
             echo "📝 Content synchronized successfully"
           else
             echo "⏭️  No sync needed - commits match"
@@ -99,7 +99,7 @@ jobs:
         run: |
           cd target
           echo "🔗 Resolving symbolic links..."
-          
+
           # Function to resolve symlinks
           resolve_symlinks() {
             find . -type l | while read -r link; do
@@ -113,7 +113,7 @@ jobs:
                 # Relative path - resolve if possible
                 link_dir=$(dirname "$link")
                 resolved_path="$link_dir/$target_path"
-                
+
                 if [[ -e "$resolved_path" ]]; then
                   echo "✅ Resolving symlink: $link -> $target_path"
                   rm "$link"
@@ -126,7 +126,7 @@ jobs:
               fi
             done
           }
-          
+
           resolve_symlinks
           echo "🔗 Symbolic link resolution completed"
 
@@ -134,43 +134,43 @@ jobs:
         run: |
           cd target
           echo "📊 Updating deployment information..."
-          
+
           # Create deployment info
           cat > deployment-info.md << EOF
           # AI Workspace Deployment Info
-          
+
           - **Deployed**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
           - **Source Commit**: ${{ github.sha }}
           - **Source Branch**: ${{ github.ref_name }}
           - **Source Repository**: ${{ github.repository }}
           - **Workflow Run**: ${{ github.run_id }}
           - **Triggered by**: ${{ github.event_name }}
-          
+
           ## Sync Status
           - ✅ Content synchronized from semantic-kernel/ai-workspace
           - ✅ Symbolic links resolved
           - ✅ Ready for GitHub Pages deployment
           EOF
-          
+
           echo "📊 Deployment info updated"
 
       - name: Commit and push changes
         run: |
           cd target
-          
+
           # Configure git
           git config user.name "AI Workspace Sync Bot"
           git config user.email "action@github.com"
-          
+
           # Add all changes
           git add .
-          
+
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "📝 No changes to commit"
             exit 0
           fi
-          
+
           # Commit changes
           git commit -m "🤖 Auto-sync from semantic-kernel ai-workspace
 
@@ -178,15 +178,15 @@ jobs:
           Triggered by: ${{ github.event_name }}
           Workflow: ${{ github.workflow }}
           Run: ${{ github.run_id }}
-          
+
           - Synchronized complete ai-workspace content
           - Resolved symbolic links to actual files
           - Updated deployment information
           "
-          
+
           # Push changes
           git push origin ${{ env.TARGET_BRANCH }}
-          
+
           echo "✅ Changes pushed to ${{ env.TARGET_REPO }}"
 
       - name: Sync summary

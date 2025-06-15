@@ -5,9 +5,9 @@ on:
   push:
     branches: ["main"]
     paths:
-      - 'ai-workspace/**'
-      - 'docs/**'
-      - '.github/workflows/deploy-ai-workspace-pages.yml'
+      - "ai-workspace/**"
+      - "docs/**"
+      - ".github/workflows/deploy-ai-workspace-pages.yml"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
   # Sync AI workspace content to docs folder and deploy
   deploy:
     runs-on: ubuntu-latest
-    
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -40,7 +40,7 @@ jobs:
       - name: Sync AI workspace to docs folder
         run: |
           echo "� Syncing AI workspace content to docs folder for GitHub Pages..."
-          
+
           # Copy main HTML files
           if [ -f "ai-workspace/05-samples-demos/index.html" ]; then
             cp "ai-workspace/05-samples-demos/index.html" docs/
@@ -49,7 +49,7 @@ jobs:
             echo "❌ ai-workspace/05-samples-demos/index.html not found"
             exit 1
           fi
-          
+
           if [ -f "ai-workspace/05-samples-demos/custom-llm-studio.html" ]; then
             cp "ai-workspace/05-samples-demos/custom-llm-studio.html" docs/
             echo "✅ Synced custom-llm-studio.html"
@@ -57,29 +57,29 @@ jobs:
             echo "❌ ai-workspace/05-samples-demos/custom-llm-studio.html not found"
             exit 1
           fi
-          
+
           # Copy JavaScript files if they exist
           if [ -f "ai-workspace/05-samples-demos/server.js" ]; then
             cp "ai-workspace/05-samples-demos/server.js" docs/
             echo "✅ Synced server.js"
           fi
-          
+
           if [ -f "ai-workspace/05-samples-demos/express-rate.js" ]; then
             cp "ai-workspace/05-samples-demos/express-rate.js" docs/
             echo "✅ Synced express-rate.js"
           fi
-          
+
           # Copy samples directory (resolve symlinks)
           if [ -d "ai-workspace/05-samples-demos/samples" ]; then
             rm -rf docs/samples 2>/dev/null || true
             cp -rL "ai-workspace/05-samples-demos/samples" docs/ 2>/dev/null || echo "Samples copied with potential symlink warnings"
             echo "✅ Synced samples directory"
           fi
-          
+
           # Ensure .nojekyll exists
           touch docs/.nojekyll
           echo "✅ Ensured .nojekyll exists"
-          
+
           # Create deployment timestamp
           echo "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" > docs/last-deployment.txt
           echo "✅ Updated deployment timestamp"
@@ -87,7 +87,7 @@ jobs:
       - name: Validate docs content
         run: |
           echo "🔍 Validating docs content for GitHub Pages..."
-          
+
           # Check required files exist
           required_files=("index.html" "custom-llm-studio.html" ".nojekyll")
           for file in "${required_files[@]}"; do
@@ -98,7 +98,7 @@ jobs:
               exit 1
             fi
           done
-          
+
           # Check HTML files are valid
           if grep -q "<!DOCTYPE html>" docs/index.html; then
             echo "✅ index.html has valid DOCTYPE"
@@ -106,24 +106,24 @@ jobs:
             echo "❌ index.html missing DOCTYPE"
             exit 1
           fi
-          
+
           # Check file sizes
           index_size=$(stat -c%s "docs/index.html")
           studio_size=$(stat -c%s "docs/custom-llm-studio.html")
-          
+
           echo "📊 index.html: $index_size bytes"
           echo "📊 custom-llm-studio.html: $studio_size bytes"
-          
+
           if [ $index_size -lt 100 ]; then
             echo "❌ index.html too small"
             exit 1
           fi
-          
+
           if [ $studio_size -lt 100 ]; then
             echo "❌ custom-llm-studio.html too small"
             exit 1
           fi
-          
+
           echo "✅ Content validation passed"
 
       - name: Setup Pages

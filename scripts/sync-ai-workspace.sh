@@ -98,7 +98,7 @@ resolve_symlinks() {
             # Relative path - resolve if possible
             link_dir=$(dirname "$link")
             resolved_path="$link_dir/$target_path"
-            
+
             if [[ -e "$resolved_path" ]]; then
                 echo "✅ Resolving relative symlink: $link -> $target_path"
                 rm "$link"
@@ -161,9 +161,9 @@ read -r response
 
 if [[ "$response" =~ ^[Yy]$ ]]; then
     echo "📝 Committing changes..."
-    
+
     git add .
-    
+
     if git diff --staged --quiet; then
         echo "📝 No changes to commit"
     else
@@ -172,14 +172,14 @@ if [[ "$response" =~ ^[Yy]$ ]]; then
 Source commit: $SOURCE_COMMIT
 Sync timestamp: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
 
-- Synchronized complete ai-workspace content  
+- Synchronized complete ai-workspace content
 - Resolved symbolic links to actual files
 - Updated deployment information
 "
-        
+
         echo "🚀 Pushing to remote repository..."
         git push origin main
-        
+
         echo "✅ Changes pushed successfully!"
     fi
 else
