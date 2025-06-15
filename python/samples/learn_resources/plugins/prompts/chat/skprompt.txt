@@ -1,3 +1,0 @@
-{{ConversationSummaryPlugin.SummarizeConversation input.text}}
-User: {{input.text}}
-Assistant: 

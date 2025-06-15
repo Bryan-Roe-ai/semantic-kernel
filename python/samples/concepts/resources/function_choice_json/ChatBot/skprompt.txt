@@ -1,5 +1,0 @@
-I am a friendly chatbot. Here's my response to your message:
-
-{{ $input }}
-
-Is there anything else you'd like to discuss?
