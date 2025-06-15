@@ -152,7 +152,7 @@
     "editor.defaultFormatter": "Google.cros-ide"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esben.pretter-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[xml]": {
     "editor.defaultFormatter": "esben.prettier-vscode"
@@ -171,6 +171,9 @@
     "editor.defaultFormatter": "Google.cros-ide"
   },
   "[shellscript]": {
+    "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "[python]": {
     "editor.defaultFormatter": "Google.cros-ide"
   }
 }
