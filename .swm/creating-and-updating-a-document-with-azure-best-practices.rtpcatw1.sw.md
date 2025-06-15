@@ -30,7 +30,6 @@ The "@azure Rule" refers to a guideline for developers working with Azure-relate
 azure_development-get_best_practices
 
 # Follow the prompts
-```
 
 #### Example 2: Code Snippet for Azure Development
 
