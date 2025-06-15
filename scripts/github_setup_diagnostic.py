@@ -3,57 +3,61 @@
 GitHub Pages Repository Setup Error Diagnostic
 =============================================
 
-Based on GitHub's official troubleshooting guide, this script diagnoses
+Based on GitHub's official troubleshooting guides, this script diagnoses
 common repository setup errors that prevent GitHub Pages from working.
 
-Reference: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages#github-repository-setup-errors
+Official References:
+- https://docs.github.com/en/pages/getting-started-with-github-pages/troubleshooting-404-errors-for-github-pages-sites
+- https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages
 """
 
 import subprocess
 import sys
+import urllib.request
+import urllib.error
 from pathlib import Path
 
 
 def check_repository_setup_errors():
-    """Check for common GitHub repository setup errors"""
+    """Check for common GitHub repository setup errors based on official GitHub docs"""
 
     print("🔍 GitHub Pages Repository Setup Error Diagnostic")
     print("=" * 60)
+    print("📚 Based on GitHub's Official Troubleshooting Guides")
     print()
 
     issues_found = []
     recommendations = []
 
-    # 1. Check if we're using GitHub Actions (correct approach)
-    print("📋 1. Deployment Method Check")
-    print("-" * 30)
+    # CRITICAL: Check for CNAME file when using GitHub Actions (Official Guidance)
+    print("🎯 1. CNAME File Check (GitHub Actions Deployment)")
+    print("-" * 55)
+    print("📖 Official GitHub Documentation States:")
+    print("   'If you are publishing from a custom GitHub Actions workflow,")
+    print("    any CNAME file is ignored and is not required.'")
+    print()
+
+    cname_files = []
+    for cname_path in [Path("CNAME"), Path("ai-workspace/CNAME")]:
+        if cname_path.exists():
+            cname_files.append(str(cname_path))
+
+    if cname_files:
+        print(f"✅ CNAME files detected: {', '.join(cname_files)}")
+        print("   ℹ️  These files are IGNORED for GitHub Actions deployment")
+        print("   ℹ️  No action needed - this is normal for your setup")
+    else:
+        print("✅ No CNAME files found (correct for GitHub Actions deployment)")
+    print()
+
+    # Check GitHub Actions workflow configuration
+    print("🎯 2. GitHub Actions Workflow Configuration")
+    print("-" * 45)
 
     workflow_file = Path(".github/workflows/ai-workspace-deploy.yml")
     if workflow_file.exists():
-        print("✅ Using GitHub Actions deployment (CORRECT)")
-        print("✅ CNAME file not required for GitHub Actions deployment")
-        print()
-    else:
-        print("❌ No GitHub Actions workflow found")
-        issues_found.append("Missing GitHub Actions deployment workflow")
-        recommendations.append("Create .github/workflows/ai-workspace-deploy.yml")
-        print()
-
-    # 2. Check repository permissions and settings
-    print("📋 2. Repository Configuration Requirements")
-    print("-" * 40)
-    print("For GitHub Actions deployment to work, verify:")
-    print("   🔧 Repository Settings > Pages > Source = 'GitHub Actions'")
-    print("   🔧 Repository Settings > Pages > Custom domain = EMPTY")
-    print("   🔧 Repository Settings > Actions > Allow all actions")
-    print("   🔧 Repository has 'pages: write' and 'id-token: write' permissions")
-    print()
-
-    # 3. Check workflow configuration
-    print("📋 3. GitHub Actions Workflow Configuration")
-    print("-" * 42)
-
-    if workflow_file.exists():
+        print("✅ GitHub Actions workflow exists")
+        
         try:
             with open(workflow_file, 'r') as f:
                 content = f.read()
@@ -72,112 +76,196 @@ def check_repository_setup_errors():
                 print("❌ Workflow missing deploy-pages action")
                 issues_found.append("Workflow doesn't use actions/deploy-pages")
 
-            # Check for proper environment
-            if 'environment:' in content and 'github-pages' in content:
-                print("✅ Workflow has github-pages environment")
+            # Check for index.html in build output
+            if 'index.html' in content:
+                print("✅ Workflow references index.html file")
             else:
-                print("⚠️  Workflow may be missing github-pages environment")
+                print("⚠️  Workflow should ensure index.html is in build output")
 
         except Exception as e:
             print(f"❌ Error reading workflow file: {e}")
             issues_found.append("Cannot read workflow file")
-    print()
-
-    # 4. Check for common file conflicts
-    print("📋 4. File Conflict Check")
-    print("-" * 25)
-
-    # Check for CNAME file (should NOT exist for default domain)
-    cname_files = []
-    for cname_path in [Path("CNAME"), Path("ai-workspace/CNAME")]:
-        if cname_path.exists():
-            cname_files.append(str(cname_path))
-
-    if cname_files:
-        print(f"⚠️  CNAME files found: {', '.join(cname_files)}")
-        print("   For GitHub Actions + default domain, CNAME files are ignored")
-        print("   Remove them if you're not using a custom domain")
     else:
-        print("✅ No CNAME files (correct for default domain)")
-
-    # Check for Jekyll conflicts
-    if Path("_config.yml").exists():
-        print("⚠️  Jekyll _config.yml found - may conflict with static deployment")
-        recommendations.append("Ensure .nojekyll file is in build output")
-
+        print("❌ No GitHub Actions workflow found")
+        issues_found.append("Missing GitHub Actions deployment workflow")
+        recommendations.append("Create .github/workflows/ai-workspace-deploy.yml")
     print()
 
-    # 5. GitHub Actions specific requirements
-    print("📋 5. GitHub Actions Deployment Requirements")
-    print("-" * 45)
-
-    print("Required manual verification steps:")
-    print("1. 🌐 GitHub Pages Settings:")
-    print("   - Go to: https://github.com/Bryan-Roe-ai/semantic-kernel/settings/pages")
-    print("   - Source: Must be 'GitHub Actions' (NOT 'Deploy from a branch')")
-    print("   - Custom domain: Must be EMPTY")
+    # Check for index.html file (Official GitHub requirement)
+    print("🎯 3. Index.html File Check (GitHub Requirement)")
+    print("-" * 48)
+    print("📖 Official GitHub Documentation States:")
+    print("   'GitHub Pages will look for an index.html file as the entry file'")
+    print("   'Make sure you have an index.html file in the repository'")
     print()
 
-    print("2. 🔐 Repository Permissions:")
-    print("   - Go to: https://github.com/Bryan-Roe-ai/semantic-kernel/settings/actions")
-    print("   - Workflow permissions: 'Read and write permissions'")
-    print("   - OR ensure GITHUB_TOKEN has required permissions")
+    # Check build output
+    dist_index = Path("ai-workspace/dist/index.html")
+    source_index = Path("ai-workspace/05-samples-demos/index.html")
+    
+    if dist_index.exists():
+        print("✅ index.html found in build output (ai-workspace/dist/)")
+        # Check file size
+        size = dist_index.stat().st_size
+        if size > 100:
+            print(f"✅ index.html has content ({size} bytes)")
+        else:
+            print(f"⚠️  index.html is very small ({size} bytes)")
+            issues_found.append("index.html file appears to be empty or minimal")
+    elif source_index.exists():
+        print("✅ index.html found in source (ai-workspace/05-samples-demos/)")
+        print("   ℹ️  Build script should copy this to dist/ directory")
+    else:
+        print("❌ No index.html file found in expected locations")
+        issues_found.append("Missing index.html file")
+        recommendations.append("Create index.html in ai-workspace/05-samples-demos/")
     print()
 
-    print("3. 🚀 Recent Workflow Runs:")
-    print("   - Go to: https://github.com/Bryan-Roe-ai/semantic-kernel/actions")
-    print("   - Check 'AI Workspace Deployment' workflow runs")
-    print("   - Verify 'deploy-pages' job completed successfully")
+    # Check for .nojekyll file (Important for GitHub Actions)
+    print("🎯 4. Jekyll Bypass Check")
+    print("-" * 25)
+    print("📖 GitHub Documentation States:")
+    print("   'Adding a .nojekyll file to the root of your source branch will")
+    print("    bypass the Jekyll build process and deploy the content directly'")
     print()
 
-    # 6. Common solutions based on GitHub documentation
-    print("📋 6. Common Solutions")
-    print("-" * 22)
-
-    print("If site still shows 404 after workflow success:")
-    print("✅ Wait 5-10 minutes for DNS propagation")
-    print("✅ Clear browser cache")
-    print("✅ Try incognito/private browsing mode")
-    print("✅ Check if repository is public (required for GitHub Pages)")
+    nojekyll_dist = Path("ai-workspace/dist/.nojekyll")
+    if nojekyll_dist.exists():
+        print("✅ .nojekyll file present in build output")
+    else:
+        print("⚠️  .nojekyll file missing from build output")
+        print("   ℹ️  Build script should create this file")
+        recommendations.append("Ensure .nojekyll file is created in dist/ directory")
     print()
 
-    print("If workflow is failing:")
-    print("✅ Check Actions tab for specific error messages")
-    print("✅ Ensure repository has GitHub Actions enabled")
-    print("✅ Verify artifact upload/download steps work")
-    print("✅ Check if organization has GitHub Actions restrictions")
+    # 5. Official GitHub Pages Repository Requirements Check
+    print("🎯 5. Repository Requirements (GitHub Official)")
+    print("-" * 50)
+    print("📖 GitHub Documentation: Repository must meet these requirements:")
     print()
 
-    # Summary
-    print("📊 DIAGNOSTIC SUMMARY")
-    print("=" * 25)
+    # Check if we can determine repository info
+    try:
+        # Try to get repository information
+        git_remote = subprocess.run(
+            ["git", "remote", "get-url", "origin"],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if git_remote.returncode == 0:
+            remote_url = git_remote.stdout.strip()
+            print(f"✅ Git repository detected: {remote_url}")
+            
+            # Check if it's a GitHub repository
+            if 'github.com' in remote_url:
+                print("✅ Repository is hosted on GitHub")
+                
+                # Extract repository info for manual verification
+                import re
+                match = re.search(r'github\.com[:/]([^/]+)/([^/.]+)', remote_url)
+                if match:
+                    owner, repo = match.groups()
+                    repo = repo.replace('.git', '')
+                    print(f"   � Repository: {owner}/{repo}")
+                    print(f"   🌐 Expected URL: https://{owner}.github.io/{repo}/")
+                    
+                    print("\n   📋 MANUAL VERIFICATION REQUIRED:")
+                    print(f"   1. Visit: https://github.com/{owner}/{repo}/settings/pages")
+                    print("   2. Verify 'Source' is set to 'GitHub Actions'")
+                    print("   3. Verify 'Custom domain' field is EMPTY")
+                    print(f"   4. Check: https://github.com/{owner}/{repo}/actions")
+                    print("   5. Look for successful 'AI Workspace Deployment' runs")
+            else:
+                print("⚠️  Repository is not hosted on GitHub")
+                issues_found.append("Repository must be hosted on GitHub for GitHub Pages")
+        else:
+            print("⚠️  No git repository detected")
+    except Exception as e:
+        print(f"⚠️  Could not determine repository info: {e}")
+    print()
+
+    # 6. Official GitHub 404 Troubleshooting Steps
+    print("🎯 6. GitHub Official 404 Error Troubleshooting")
+    print("-" * 48)
+    print("📖 Based on: docs.github.com/en/pages/.../troubleshooting-404-errors")
+    print()
+    
+    print("✅ COMPLETED CHECKS:")
+    print("   - ✅ index.html file verification")
+    print("   - ✅ Directory contents check")
+    print("   - ✅ CNAME file handling (for GitHub Actions)")
+    print("   - ✅ Repository structure validation")
+    print()
+    
+    print("🔧 REMAINING MANUAL CHECKS:")
+    print("   1. 🌐 GitHub's Status Page: Visit https://githubstatus.com/")
+    print("   2. 🔄 Browser Cache: Clear cache and try incognito mode")
+    print("   3. ⏰ DNS Propagation: Wait 5-10 minutes after deployment")
+    print("   4. 👁️  Repository Visibility: Ensure repo is PUBLIC")
+    print("   5. 🚀 Recent Deployment: Check if workflow completed successfully")
+    print()
+
+    # Summary with official guidance
+    print("📊 DIAGNOSTIC SUMMARY (Based on GitHub Official Docs)")
+    print("=" * 58)
 
     if issues_found:
-        print(f"❌ Issues found: {len(issues_found)}")
+        print(f"❌ Technical Issues Found: {len(issues_found)}")
         for i, issue in enumerate(issues_found, 1):
             print(f"   {i}. {issue}")
         print()
 
     if recommendations:
-        print(f"💡 Recommendations: {len(recommendations)}")
+        print(f"💡 Technical Recommendations: {len(recommendations)}")
         for i, rec in enumerate(recommendations, 1):
             print(f"   {i}. {rec}")
         print()
 
+    # Final assessment based on GitHub's official troubleshooting
     if not issues_found:
-        print("✅ No technical issues detected in repository setup")
-        print("🎯 Most likely cause: GitHub Pages settings not configured")
-        print("🔧 ACTION REQUIRED: Configure GitHub Pages settings manually")
+        print("✅ TECHNICAL CONFIGURATION: All checks passed")
         print()
-
-    print("🌐 Expected URL: https://bryan-roe-ai.github.io/semantic-kernel/")
-    print("📞 Next step: Configure GitHub Pages settings in repository")
+        print("🎯 MOST LIKELY CAUSE (per GitHub docs):")
+        print("   • GitHub Pages settings not properly configured")
+        print("   • Workflow has not run successfully yet")
+        print("   • DNS propagation still in progress")
+        print()
+        print("🔧 REQUIRED MANUAL ACTION:")
+        print("   1. Configure GitHub Pages in repository settings")
+        print("   2. Set Source to 'GitHub Actions'")
+        print("   3. Ensure Custom domain field is EMPTY")
+        print("   4. Wait for next workflow run to complete")
+    else:
+        print("🚨 TECHNICAL ISSUES DETECTED")
+        print("   Fix the issues above before proceeding")
+    
+    print()
+    print("🌐 Expected Final URL: https://bryan-roe-ai.github.io/semantic-kernel/")
+    print("📞 Next Step: Configure GitHub Pages settings (manual)")
 
     return len(issues_found) == 0
 
 
 def main():
+    """Main function to run the diagnostic"""
+    import sys
+    
+    print("🚀 Starting GitHub Pages Setup Diagnostic...")
+    print("📚 Using GitHub's Official Troubleshooting Guides")
+    print()
+    
     success = check_repository_setup_errors()
+    
+    print()
+    print("🏁 DIAGNOSTIC COMPLETE")
+    print("=" * 25)
+    if success:
+        print("✅ Repository is technically ready for GitHub Pages")
+        print("🔧 Manual GitHub settings configuration required")
+    else:
+        print("❌ Technical issues need to be resolved first")
+        
     sys.exit(0 if success else 1)
 
 
