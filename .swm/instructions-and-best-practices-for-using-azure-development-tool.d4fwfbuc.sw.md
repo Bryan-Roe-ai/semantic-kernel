@@ -9,9 +9,9 @@ This document provides detailed instructions on using the `azure_development-get
 
 ## Detailed Guidelines for Using the `azure_development-get_best_practices` Tool
 
-1. **Installation**: Ensure the `azure_development-get_best_practices` tool is installed on your system.
-2. **Invocation**: Use the tool by running the command `azure_development-get_best_practices` in your terminal.
-3. **Usage**: Follow the prompts and guidelines provided by the tool to ensure your code adheres to Azure best practices.
+1. **Installation**: Install the `azure_development-get_best_practices` tool using your preferred package manager. For example, with pip:
+   ```sh
+   pip install azure_development-get_best_practices
 
 ## Examples
 
