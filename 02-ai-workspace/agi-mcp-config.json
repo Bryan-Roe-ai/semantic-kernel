@@ -1,0 +1,222 @@
+{
+  "name": "AGI Model Context Protocol Server",
+  "version": "1.0.0",
+  "description": "Advanced AGI capabilities through Model Context Protocol",
+  "author": "AI Workspace Team",
+  "license": "MIT",
+
+  "server": {
+    "name": "agi-mcp-server",
+    "executable": "python",
+    "args": ["mcp-agi-server.py"],
+    "working_directory": ".",
+    "environment": {
+      "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+      "PYTHONPATH": "."
+    }
+  },
+
+  "capabilities": {
+    "reasoning": {
+      "types": ["logical", "creative", "analytical", "ethical"],
+      "depth_levels": [1, 2, 3, 4, 5],
+      "description": "Advanced reasoning and problem-solving"
+    },
+    "multimodal": {
+      "content_types": ["text", "image", "audio", "video", "mixed"],
+      "analysis_types": ["comprehensive", "focused", "creative"],
+      "description": "Multimodal content processing and analysis"
+    },
+    "autonomous_tasks": {
+      "priorities": ["low", "normal", "high", "critical"],
+      "planning": true,
+      "execution": true,
+      "monitoring": true,
+      "description": "Autonomous task planning and execution"
+    },
+    "knowledge_synthesis": {
+      "synthesis_types": ["comprehensive", "focused", "creative", "critical"],
+      "source_integration": true,
+      "description": "Knowledge synthesis from multiple sources"
+    },
+    "creative_generation": {
+      "creativity_levels": [
+        "conservative",
+        "balanced",
+        "innovative",
+        "revolutionary"
+      ],
+      "output_formats": ["structured", "narrative", "conceptual", "technical"],
+      "description": "Advanced creative content generation"
+    },
+    "ethical_evaluation": {
+      "frameworks": ["utilitarian", "deontological", "virtue", "comprehensive"],
+      "stakeholder_analysis": true,
+      "description": "Ethical analysis and moral reasoning"
+    },
+    "meta_cognition": {
+      "analysis_depths": ["surface", "standard", "deep", "recursive"],
+      "thinking_analysis": true,
+      "description": "Meta-cognitive analysis of thinking processes"
+    }
+  },
+
+  "tools": [
+    {
+      "name": "reasoning_engine",
+      "description": "Advanced reasoning and problem-solving capabilities",
+      "parameters": {
+        "problem": { "type": "string", "required": true },
+        "reasoning_type": {
+          "type": "string",
+          "enum": ["logical", "creative", "analytical", "ethical"],
+          "default": "logical"
+        },
+        "depth": { "type": "integer", "min": 1, "max": 5, "default": 3 }
+      }
+    },
+    {
+      "name": "multimodal_processor",
+      "description": "Process and analyze multimodal data",
+      "parameters": {
+        "content_type": { "type": "string", "required": true },
+        "content_description": { "type": "string", "required": true },
+        "analysis_type": {
+          "type": "string",
+          "enum": ["comprehensive", "focused", "creative"],
+          "default": "comprehensive"
+        }
+      }
+    },
+    {
+      "name": "autonomous_task_executor",
+      "description": "Autonomous task planning and execution",
+      "parameters": {
+        "task_description": { "type": "string", "required": true },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "normal", "high", "critical"],
+          "default": "normal"
+        },
+        "constraints": { "type": "string", "required": false }
+      }
+    },
+    {
+      "name": "knowledge_synthesizer",
+      "description": "Synthesize knowledge from multiple sources",
+      "parameters": {
+        "sources": { "type": "string", "required": true },
+        "topic": { "type": "string", "required": true },
+        "synthesis_type": {
+          "type": "string",
+          "enum": ["comprehensive", "focused", "creative", "critical"],
+          "default": "comprehensive"
+        }
+      }
+    },
+    {
+      "name": "creative_generator",
+      "description": "Advanced creative content generation",
+      "parameters": {
+        "prompt": { "type": "string", "required": true },
+        "creativity_level": {
+          "type": "string",
+          "enum": ["conservative", "balanced", "innovative", "revolutionary"],
+          "default": "balanced"
+        },
+        "output_format": {
+          "type": "string",
+          "enum": ["structured", "narrative", "conceptual", "technical"],
+          "default": "structured"
+        }
+      }
+    },
+    {
+      "name": "ethical_evaluator",
+      "description": "Ethical analysis and moral reasoning",
+      "parameters": {
+        "scenario": { "type": "string", "required": true },
+        "ethical_framework": {
+          "type": "string",
+          "enum": ["utilitarian", "deontological", "virtue", "comprehensive"],
+          "default": "comprehensive"
+        },
+        "stakeholders": { "type": "string", "required": false }
+      }
+    },
+    {
+      "name": "meta_cognitive_analyzer",
+      "description": "Meta-cognitive analysis of thinking processes",
+      "parameters": {
+        "thinking_process": { "type": "string", "required": true },
+        "analysis_depth": {
+          "type": "string",
+          "enum": ["surface", "standard", "deep", "recursive"],
+          "default": "standard"
+        }
+      }
+    },
+    {
+      "name": "system_status",
+      "description": "Get AGI system status and capabilities",
+      "parameters": {}
+    }
+  ],
+
+  "client_configs": {
+    "claude_desktop": {
+      "mcpServers": {
+        "agi_server": {
+          "command": "python",
+          "args": ["mcp-agi-server.py"],
+          "env": {
+            "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+          }
+        }
+      }
+    },
+    "vscode": {
+      "github.copilot.mcp.servers": {
+        "agi_server": {
+          "command": "python",
+          "args": ["mcp-agi-server.py"],
+          "env": {
+            "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+          }
+        }
+      }
+    },
+    "inspector": {
+      "command": "npx @modelcontextprotocol/inspector python mcp-agi-server.py"
+    }
+  },
+
+  "deployment": {
+    "local": {
+      "type": "stdio",
+      "command": "python mcp-agi-server.py"
+    },
+    "remote": {
+      "type": "sse",
+      "url": "https://your-domain.com/agi-mcp",
+      "auth": "bearer_token"
+    },
+    "docker": {
+      "image": "agi-mcp-server:latest",
+      "ports": ["8080:8080"],
+      "environment": ["OPENAI_API_KEY"]
+    }
+  },
+
+  "requirements": {
+    "python": ">=3.9",
+    "packages": ["semantic-kernel[mcp]", "openai", "asyncio", "pathlib"],
+    "environment_variables": ["OPENAI_API_KEY"]
+  },
+
+  "documentation": {
+    "readme": "AGI_MCP_README.md",
+    "examples": "examples/",
+    "api_reference": "docs/api.md"
+  }
+}

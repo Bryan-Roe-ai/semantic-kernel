@@ -175,5 +175,8 @@
   },
   "[python]": {
     "editor.defaultFormatter": "Google.cros-ide"
+  },
+  "[pip-requirements]": {
+    "editor.defaultFormatter": "Google.cros-ide"
   }
 }

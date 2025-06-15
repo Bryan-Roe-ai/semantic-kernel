@@ -1,0 +1,7 @@
+{
+  "algorithm": "QAOA",
+  "quantum_layers": 4,
+  "classical_optimizer": "COBYLA",
+  "noise_model": "hardware_realistic",
+  "shots": 1024
+}
