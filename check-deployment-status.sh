@@ -15,7 +15,7 @@ command_exists() {
 echo "📊 Repository Status:"
 if git status >/dev/null 2>&1; then
     echo "✅ Git repository detected"
-    
+
     # Check for uncommitted changes
     if git diff-index --quiet HEAD -- 2>/dev/null; then
         echo "✅ No uncommitted changes"
@@ -25,16 +25,16 @@ if git status >/dev/null 2>&1; then
         echo ""
         echo "💡 Run: git add . && git commit -m 'Setup GitHub Pages' && git push"
     fi
-    
+
     # Check current branch
     current_branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
     echo "📍 Current branch: $current_branch"
-    
+
     # Check remote
     if git remote get-url origin >/dev/null 2>&1; then
         remote_url=$(git remote get-url origin)
         echo "🔗 Remote URL: $remote_url"
-        
+
         # Extract username/repo from URL
         if [[ $remote_url == *"github.com"* ]]; then
             repo_path=$(echo $remote_url | sed 's/.*github\.com[:/]\([^.]*\)\.git.*/\1/' | sed 's/.*github\.com[:/]\([^.]*\)$/\1/')
@@ -56,7 +56,7 @@ echo "📁 Files Status:"
 if [ -d "docs" ]; then
     file_count=$(find docs -type f | wc -l)
     echo "✅ docs/ folder exists with $file_count files"
-    
+
     # Check key files
     key_files=("index.html" "custom-llm-studio.html" ".nojekyll")
     for file in "${key_files[@]}"; do
