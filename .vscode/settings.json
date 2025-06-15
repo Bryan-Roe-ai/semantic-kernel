@@ -91,16 +91,14 @@
   "dotnet.defaultSolution": "dotnet\\SK-dotnet.sln",
   "python.testing.pytestArgs": [
     "python/tests"
+  ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
-  "azureFunctions.deploySubpath": "dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function/bin/Release/net8.0/publish",
-  "azureFunctions.projectSubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions",
   "azureFunctions.deploySubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Release/net6.0/publish",
+  "azureFunctions.projectSubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions",
   "azureFunctions.projectLanguage": "C#",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
-  "azureFunctions.deploySubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Release/net6.0/publish",
-  "azureFunctions.projectSubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions",
   "C_Cpp_Runner.debuggerPath": "gdb",
   "C_Cpp_Runner.cStandard": "",
   "C_Cpp_Runner.cppStandard": "",
@@ -156,13 +154,10 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
-  "cmake.sourceDirectory": "/home/broe/Documents/GitHub/semantic-kernel/build",
-  "intelliphp.inlineSuggestionsEnabled": true,
-  "python.analysis.autoImportCompletions": true,
   "netbeans.jdkhome": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
   "netbeans.project.jdkhome": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
   "terminal.integrated.env.windows": {
-    "JAVA_HOME": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
+    "JAVA_HOME": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot"
   },
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
@@ -170,16 +165,7 @@
   "[git-commit]": {
     "editor.defaultFormatter": "Google.cros-ide"
   },
-  "maven.view": "flat",
-  "java.jdt.ls.java.home": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
-    "JAVA_HOME": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
-    "PATH": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23/bin:${env:PATH}"
-  },
-  "maven.terminal.customEnv": [
-    {
-      "environmentVariable": "JAVA_HOME",
-      "value": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23"
-    }
+  "java.jdt.ls.java.home": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23"
   ],
   "notebook.defaultFormatter": "GitHub.copilot",
   "databricks.sensitiveValueStore": "VSCodeSettings",
@@ -211,11 +197,4 @@
   "[shellscript]": {
     "editor.defaultFormatter": "Google.cros-ide"
   }
-}
-  "C_Cpp_Runner.msvcSecureNoWarnings": false
-  "python.analysis.extraPaths": [
-    "./src"
-  ],
-  "explorer.compactFolders": false,
-  "prettier.enable": true,
 }
