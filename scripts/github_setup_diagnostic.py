@@ -57,7 +57,7 @@ def check_repository_setup_errors():
     workflow_file = Path(".github/workflows/ai-workspace-deploy.yml")
     if workflow_file.exists():
         print("✅ GitHub Actions workflow exists")
-        
+
         try:
             with open(workflow_file, 'r') as f:
                 content = f.read()
@@ -102,7 +102,7 @@ def check_repository_setup_errors():
     # Check build output
     dist_index = Path("ai-workspace/dist/index.html")
     source_index = Path("ai-workspace/05-samples-demos/index.html")
-    
+
     if dist_index.exists():
         print("✅ index.html found in build output (ai-workspace/dist/)")
         # Check file size
@@ -156,11 +156,11 @@ def check_repository_setup_errors():
         if git_remote.returncode == 0:
             remote_url = git_remote.stdout.strip()
             print(f"✅ Git repository detected: {remote_url}")
-            
+
             # Check if it's a GitHub repository
             if 'github.com' in remote_url:
                 print("✅ Repository is hosted on GitHub")
-                
+
                 # Extract repository info for manual verification
                 import re
                 match = re.search(r'github\.com[:/]([^/]+)/([^/.]+)', remote_url)
@@ -169,7 +169,7 @@ def check_repository_setup_errors():
                     repo = repo.replace('.git', '')
                     print(f"   � Repository: {owner}/{repo}")
                     print(f"   🌐 Expected URL: https://{owner}.github.io/{repo}/")
-                    
+
                     print("\n   📋 MANUAL VERIFICATION REQUIRED:")
                     print(f"   1. Visit: https://github.com/{owner}/{repo}/settings/pages")
                     print("   2. Verify 'Source' is set to 'GitHub Actions'")
@@ -190,14 +190,14 @@ def check_repository_setup_errors():
     print("-" * 48)
     print("📖 Based on: docs.github.com/en/pages/.../troubleshooting-404-errors")
     print()
-    
+
     print("✅ COMPLETED CHECKS:")
     print("   - ✅ index.html file verification")
     print("   - ✅ Directory contents check")
     print("   - ✅ CNAME file handling (for GitHub Actions)")
     print("   - ✅ Repository structure validation")
     print()
-    
+
     print("🔧 REMAINING MANUAL CHECKS:")
     print("   1. 🌐 GitHub's Status Page: Visit https://githubstatus.com/")
     print("   2. 🔄 Browser Cache: Clear cache and try incognito mode")
@@ -239,7 +239,7 @@ def check_repository_setup_errors():
     else:
         print("🚨 TECHNICAL ISSUES DETECTED")
         print("   Fix the issues above before proceeding")
-    
+
     print()
     print("🌐 Expected Final URL: https://bryan-roe-ai.github.io/semantic-kernel/")
     print("📞 Next Step: Configure GitHub Pages settings (manual)")
@@ -250,13 +250,13 @@ def check_repository_setup_errors():
 def main():
     """Main function to run the diagnostic"""
     import sys
-    
+
     print("🚀 Starting GitHub Pages Setup Diagnostic...")
     print("📚 Using GitHub's Official Troubleshooting Guides")
     print()
-    
+
     success = check_repository_setup_errors()
-    
+
     print()
     print("🏁 DIAGNOSTIC COMPLETE")
     print("=" * 25)
@@ -265,7 +265,7 @@ def main():
         print("🔧 Manual GitHub settings configuration required")
     else:
         print("❌ Technical issues need to be resolved first")
-        
+
     sys.exit(0 if success else 1)
 
 
