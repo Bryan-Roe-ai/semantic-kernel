@@ -1,52 +1,53 @@
-name: Auto-merge dependabot updates
+name: Auto-merge Dependabot Updates
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 permissions:
   pull-requests: write
   contents: write
 
 jobs:
-
   dependabot-merge:
-
     runs-on: ubuntu-latest
 
+    # Ensure this job runs only for Dependabot PRs
     if: ${{ github.actor == 'dependabot[bot]' }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Dependabot metadata
+      - name: Fetch Dependabot Metadata
         id: metadata
         uses: dependabot/fetch-metadata@v3
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run lint
+      - name: Run Code Linting
         run: npm run lint
 
-      - name: Clean up temporary files and directories
+      - name: Cleanup Temporary Files
         run: sudo rm -rf /tmp/*
 
-      - name: Prune Docker system
+      - name: Prune Docker System
         run: docker system prune -f
 
-      - name: Enable auto-merge for Dependabot PRs
-        # Only if version bump is not a major version change
-        if: ${{steps.metadata.outputs.update-type != 'version-update:semver-major'}}
+      - name: Enable Auto-Merge for Dependabot PRs
+        # Enable auto-merge only for non-major version updates
+        if: ${{ steps.metadata.outputs.update-type != 'version-update:semver-major' }}
         run: gh pr merge --auto --merge "$PR_URL"
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fix Errors
+      - name: Fix Errors Script
+        # Execute error fixing script if a failure occurs
         if: failure()
         run: ./fix-errors.sh
 
-      - name: Error handling
+      - name: Error Handling
+        # Log an error message if the process fails
         if: failure()
         run: echo "Error occurred during the auto-merge process"
