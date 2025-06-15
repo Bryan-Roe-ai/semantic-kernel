@@ -15,10 +15,6 @@
       "source.fixAll": "explicit"
     }
   },
-  "python.formatting.provider": "autopep8",
-  "python.formatting.autopep8Args": [
-    "--max-line-length=120"
-  ],
   "notebook.output.textLineLimit": 500,
   "python.analysis.extraPaths": [
     "./python/src"
@@ -74,7 +70,10 @@
     "autogen",
     "partitioner",
     "dapr",
+  "cSpell.words": [
+    "autogen",
     "partitioner",
+    "dapr",
     "pregel",
     "prompty",
     "skexp",
@@ -83,10 +82,6 @@
     "typeref",
     "uninstantiated"
   ],
-  "[java]": {
-    "editor.formatOnSave": false,
-    "editor.tabSize": 4,
-    "editor.codeActionsOnSave": {
       "source.fixAll": "never"
     }
   },
@@ -103,7 +98,6 @@
   "dotnet.defaultSolution": "dotnet\\SK-dotnet.sln",
   "python.testing.pytestArgs": [
     "python/tests"
-  ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "azureFunctions.deploySubpath": "dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function/bin/Release/net8.0/publish",
@@ -112,9 +106,8 @@
   "azureFunctions.projectLanguage": "C#",
   "azureFunctions.projectRuntime": "~4",
   "debug.internalConsoleOptions": "neverOpen",
-  "azureFunctions.preDeployTask": "publish (functions)",
-  "C_Cpp_Runner.cCompilerPath": "gcc",
-  "C_Cpp_Runner.cppCompilerPath": "g++",
+  "azureFunctions.deploySubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Release/net6.0/publish",
+  "azureFunctions.projectSubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions",
   "C_Cpp_Runner.debuggerPath": "gdb",
   "C_Cpp_Runner.cStandard": "",
   "C_Cpp_Runner.cppStandard": "",
@@ -177,9 +170,7 @@
   "netbeans.project.jdkhome": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
   "terminal.integrated.env.windows": {
     "JAVA_HOME": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot",
-    "PATH": "c:\\Program Files\\Eclipse Adoptium\\jdk-21.0.5.11-hotspot\\bin;${env:PATH}"
   },
-  "dbt.dbtIntegration": "cloud",
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
@@ -188,7 +179,6 @@
   },
   "maven.view": "flat",
   "java.jdt.ls.java.home": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
-  "terminal.integrated.env.linux": {
     "JAVA_HOME": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
     "PATH": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23/bin:${env:PATH}"
   },
@@ -238,16 +228,4 @@
   "editor.formatOnType": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "python.formatting.provider": "black",
-  "python.formatting.autopep8Args": [
-    "--max-line-length=160"
-  ],
-  "notebook.output.textLineLimit": 500,
-  "cSpell.words": [
-    "aeiou",
-    "mlflow",
-    "nopep",
-    "OPENAI",
-    "skfunction"
-  ]
 }
