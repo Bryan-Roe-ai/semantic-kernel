@@ -1,7 +1,7 @@
 # AI Development Requirements
 semantic-kernel>=1.0.0
 openai>=1.0.0
-azure-openai
+azure-cognitiveservices-language-textanalytics
 azure-identity
 azure-storage-blob
 numpy>=1.21.0
