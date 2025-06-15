@@ -762,30 +762,30 @@ class NeuralEvolutionAgent:
 
         except Exception as e:
             return {'success': False, 'error': str(e)}
-
+    
     def run_cycle(self) -> Dict[str, Any]:
         """Run a complete neural evolution cycle."""
         cycle_start = time.time()
-
+        
         try:
             # Analyze evolution opportunities
             opportunities = self.analyze_evolution_opportunities()
-
+            
             if opportunities['status'] == 'error':
                 return opportunities
-
+            
             # Evolve solutions
             evolution = self.evolve_solutions(opportunities)
-
+            
             if evolution['status'] == 'error':
                 return evolution
-
+            
             # Implement evolved solutions
             implementations = self.implement_evolved_solutions(evolution)
-
+            
             self.generation += 1
             cycle_time = time.time() - cycle_start
-
+            
             return {
                 'status': 'success',
                 'cycle_time': cycle_time,
@@ -797,7 +797,7 @@ class NeuralEvolutionAgent:
                 'timestamp': datetime.now().isoformat(),
                 'agent': self.agent_name
             }
-
+            
         except Exception as e:
             return {
                 'status': 'error',
@@ -806,6 +806,76 @@ class NeuralEvolutionAgent:
                 'timestamp': datetime.now().isoformat(),
                 'agent': self.agent_name
             }
+
+    async def analyze(self) -> List:
+        """Analyze method required by ImprovementAgent interface."""
+        try:
+            result = self.analyze_evolution_opportunities()
+            metrics = []
+            
+            if result['status'] == 'success':
+                from dataclasses import dataclass
+                
+                @dataclass
+                class ImprovementMetric:
+                    name: str
+                    value: float
+                    target: float
+                    weight: float = 1.0
+                    direction: str = "higher"
+                
+                # Create metrics based on evolution analysis
+                evolution_potential = result.get('evolution_potential', 0.6)
+                metrics.append(ImprovementMetric(
+                    name="evolution_potential",
+                    value=evolution_potential * 100,
+                    target=70.0,
+                    direction="higher"
+                ))
+                
+                opportunities = result.get('opportunities', {})
+                param_spaces = opportunities.get('parameter_optimization', {}).get('total_spaces', 0)
+                metrics.append(ImprovementMetric(
+                    name="parameter_optimization_opportunities",
+                    value=min(param_spaces * 20, 100),
+                    target=60.0,
+                    direction="higher"
+                ))
+            
+            return metrics
+        except Exception as e:
+            return []
+
+    async def optimize(self, metrics) -> List:
+        """Optimize method required by ImprovementAgent interface."""
+        try:
+            result = self.run_cycle()
+            actions = []
+            
+            if result['status'] == 'success':
+                from dataclasses import dataclass
+                
+                @dataclass
+                class ImprovementAction:
+                    name: str
+                    description: str
+                    estimated_impact: float
+                    effort_level: str = "medium"
+                
+                # Extract evolution results as actions
+                evolution_results = result.get('evolution_results', {}).get('evolution_results', [])
+                for evo_result in evolution_results:
+                    if evo_result.get('success', False):
+                        actions.append(ImprovementAction(
+                            name=f"evolve_{evo_result.get('evolution_type', 'parameters')}",
+                            description=f"Neural evolution for {evo_result.get('evolution_type', 'unknown')}",
+                            estimated_impact=0.75,
+                            effort_level="high"
+                        ))
+            
+            return actions
+        except Exception as e:
+            return []
 
 def main():
     """Main function for testing the NeuralEvolutionAgent."""

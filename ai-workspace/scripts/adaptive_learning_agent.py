@@ -454,29 +454,29 @@ class AdaptiveLearningAgent:
             'action': 'generic_improvement_applied',
             'description': 'General learning enhancement applied'
         }
-
+    
     def run_cycle(self) -> Dict[str, Any]:
         """Run a complete adaptive learning cycle."""
         cycle_start = time.time()
-
+        
         try:
             # Analyze current learning patterns
             patterns = self.analyze_learning_patterns()
-
+            
             if patterns['status'] == 'error':
                 return patterns
-
+            
             # Adapt strategies based on patterns
             adaptations = self.adapt_learning_strategy(patterns)
-
+            
             if adaptations['status'] == 'error':
                 return adaptations
-
+            
             # Implement adaptations
             implementation = self.implement_adaptations(adaptations)
-
+            
             cycle_time = time.time() - cycle_start
-
+            
             return {
                 'status': 'success',
                 'cycle_time': cycle_time,
@@ -486,7 +486,7 @@ class AdaptiveLearningAgent:
                 'timestamp': datetime.now().isoformat(),
                 'agent': self.agent_name
             }
-
+            
         except Exception as e:
             return {
                 'status': 'error',
@@ -495,6 +495,76 @@ class AdaptiveLearningAgent:
                 'timestamp': datetime.now().isoformat(),
                 'agent': self.agent_name
             }
+
+    async def analyze(self) -> List:
+        """Analyze method required by ImprovementAgent interface."""
+        try:
+            result = self.analyze_learning_patterns()
+            # Convert to metrics format
+            metrics = []
+            if result['status'] == 'success':
+                patterns = result.get('patterns', {})
+                effectiveness = patterns.get('learning_effectiveness', {})
+                
+                # Create mock metrics for compatibility
+                from dataclasses import dataclass
+                
+                @dataclass
+                class ImprovementMetric:
+                    name: str
+                    value: float
+                    target: float
+                    weight: float = 1.0
+                    direction: str = "higher"
+                
+                metrics.append(ImprovementMetric(
+                    name="learning_effectiveness",
+                    value=effectiveness.get('overall_score', 0.7) * 100,
+                    target=80.0,
+                    direction="higher"
+                ))
+                
+                metrics.append(ImprovementMetric(
+                    name="adaptation_speed",
+                    value=effectiveness.get('adaptation_speed', 0.8) * 100,
+                    target=75.0,
+                    direction="higher"
+                ))
+            
+            return metrics
+        except Exception as e:
+            return []
+
+    async def optimize(self, metrics) -> List:
+        """Optimize method required by ImprovementAgent interface."""
+        try:
+            # Run a complete cycle and extract actions
+            result = self.run_cycle()
+            actions = []
+            
+            if result['status'] == 'success':
+                from dataclasses import dataclass
+                
+                @dataclass
+                class ImprovementAction:
+                    name: str
+                    description: str
+                    estimated_impact: float
+                    effort_level: str = "medium"
+                
+                # Extract adaptations as actions
+                adaptations = result.get('adaptations_planned', {}).get('adaptations', [])
+                for adaptation in adaptations:
+                    actions.append(ImprovementAction(
+                        name=adaptation.get('strategy', 'unknown'),
+                        description=adaptation.get('description', 'Adaptive learning improvement'),
+                        estimated_impact=0.8,
+                        effort_level="medium"
+                    ))
+            
+            return actions
+        except Exception as e:
+            return []
 
 def main():
     """Main function for testing the AdaptiveLearningAgent."""

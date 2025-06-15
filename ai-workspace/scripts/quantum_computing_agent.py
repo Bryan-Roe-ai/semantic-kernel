@@ -593,29 +593,29 @@ class QuantumFramework:
                 'success': False,
                 'error': str(e)
             }
-
+    
     def run_cycle(self) -> Dict[str, Any]:
         """Run a complete quantum computing analysis cycle."""
         cycle_start = time.time()
-
+        
         try:
             # Analyze quantum opportunities
             opportunities = self.analyze_quantum_opportunities()
-
+            
             if opportunities['status'] == 'error':
                 return opportunities
-
+            
             # Design quantum algorithms
             algorithms = self.design_quantum_algorithms(opportunities)
-
+            
             if algorithms['status'] == 'error':
                 return algorithms
-
+            
             # Implement quantum optimizations
             implementations = self.implement_quantum_optimizations(algorithms)
-
+            
             cycle_time = time.time() - cycle_start
-
+            
             return {
                 'status': 'success',
                 'cycle_time': cycle_time,
@@ -626,7 +626,7 @@ class QuantumFramework:
                 'timestamp': datetime.now().isoformat(),
                 'agent': self.agent_name
             }
-
+            
         except Exception as e:
             return {
                 'status': 'error',
@@ -635,6 +635,75 @@ class QuantumFramework:
                 'timestamp': datetime.now().isoformat(),
                 'agent': self.agent_name
             }
+
+    async def analyze(self) -> List:
+        """Analyze method required by ImprovementAgent interface."""
+        try:
+            result = self.analyze_quantum_opportunities()
+            metrics = []
+            
+            if result['status'] == 'success':
+                from dataclasses import dataclass
+                
+                @dataclass
+                class ImprovementMetric:
+                    name: str
+                    value: float
+                    target: float
+                    weight: float = 1.0
+                    direction: str = "higher"
+                
+                # Create metrics based on quantum analysis
+                quantum_score = result.get('quantum_advantage_score', 0.5)
+                metrics.append(ImprovementMetric(
+                    name="quantum_advantage_potential",
+                    value=quantum_score * 100,
+                    target=60.0,
+                    direction="higher"
+                ))
+                
+                opportunities = result.get('opportunities', {})
+                opt_problems = opportunities.get('optimization_problems', {}).get('total_opportunities', 0)
+                metrics.append(ImprovementMetric(
+                    name="quantum_optimization_opportunities",
+                    value=min(opt_problems * 10, 100),
+                    target=50.0,
+                    direction="higher"
+                ))
+            
+            return metrics
+        except Exception as e:
+            return []
+
+    async def optimize(self, metrics) -> List:
+        """Optimize method required by ImprovementAgent interface."""
+        try:
+            result = self.run_cycle()
+            actions = []
+            
+            if result['status'] == 'success':
+                from dataclasses import dataclass
+                
+                @dataclass
+                class ImprovementAction:
+                    name: str
+                    description: str
+                    estimated_impact: float
+                    effort_level: str = "medium"
+                
+                # Extract quantum algorithms as actions
+                algorithms = result.get('algorithms_designed', {}).get('algorithms_designed', [])
+                for algorithm in algorithms:
+                    actions.append(ImprovementAction(
+                        name=f"implement_{algorithm.get('name', 'quantum_algorithm')}",
+                        description=algorithm.get('description', 'Quantum algorithm implementation'),
+                        estimated_impact=0.7,
+                        effort_level="high"
+                    ))
+            
+            return actions
+        except Exception as e:
+            return []
 
 def main():
     """Main function for testing the QuantumComputingAgent."""
