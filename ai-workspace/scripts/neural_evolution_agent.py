@@ -19,7 +19,8 @@ class NeuralEvolutionAgent:
     and evolutionary strategies for workspace optimization.
     """
 
-    def __init__(self, workspace_path: str = "/workspaces/semantic-kernel"):
+    def __init__(self, name: str = "neural_evolution", workspace_path: str = "/workspaces/semantic-kernel"):
+        self.name = name
         self.workspace_path = Path(workspace_path)
         self.agent_name = "NeuralEvolutionAgent"
         self.population = []

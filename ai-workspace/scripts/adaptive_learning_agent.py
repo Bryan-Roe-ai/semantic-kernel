@@ -18,7 +18,8 @@ class AdaptiveLearningAgent:
     user behavior, and system performance.
     """
 
-    def __init__(self, workspace_path: str = "/workspaces/semantic-kernel"):
+    def __init__(self, name: str = "adaptive_learning", workspace_path: str = "/workspaces/semantic-kernel"):
+        self.name = name
         self.workspace_path = Path(workspace_path)
         self.agent_name = "AdaptiveLearningAgent"
         self.learning_history = []
