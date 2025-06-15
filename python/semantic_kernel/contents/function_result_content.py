@@ -32,10 +32,6 @@ TAG_CONTENT_MAP = {
 
 _T = TypeVar("_T", bound="FunctionResultContent")
 
-
-
-
-
 class FunctionResultContent(KernelContent):
     """This class represents function result content."""
 
@@ -145,16 +141,11 @@ content_type: Literal[ContentTypes.FUNCTION_RESULT_CONTENT] = Field(init=False)
         from semantic_kernel.contents.chat_message_content import ChatMessageContent
         from semantic_kernel.functions.function_result import FunctionResult
 
-<<<<<<< HEAD
         metadata.update(function_call_content.metadata or {})
         metadata.update(getattr(result, "metadata", {}))
         if function_call_content.metadata:
             metadata.update(function_call_content.metadata)
-=======
-        metadata = metadata or {}
-        metadata = metadata | (function_call_content.metadata or {})
-        metadata = metadata | getattr(result, "metadata", {})
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         inner_content = result
         if isinstance(result, FunctionResult):
             result = result.value

@@ -25,7 +25,6 @@ from samples.concepts.auto_function_calling.functions_defined_in_json_prompt imp
 from samples.concepts.auto_function_calling.functions_defined_in_yaml_prompt import (
     main as function_defined_in_yaml_prompt,
 )
-<<<<<<< HEAD
 from samples.concepts.chat_completion.azure_chat_gpt_api import (
     main as azure_chat_gpt_api,
 )
@@ -44,9 +43,7 @@ from samples.concepts.filtering.function_invocation_filters import (
 from samples.concepts.filtering.function_invocation_filters_stream import (
     main as function_invocation_filters_stream,
 )
-=======
-from samples.concepts.caching.semantic_caching import main as semantic_caching
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from samples.concepts.chat_completion.simple_chatbot import main as simple_chatbot
 from samples.concepts.chat_completion.simple_chatbot_kernel_function import main as simple_chatbot_kernel_function
 from samples.concepts.chat_completion.simple_chatbot_logit_bias import main as simple_chatbot_logit_bias
@@ -99,7 +96,6 @@ from samples.concepts.prompt_templates.configuring_prompts import (
     main as configuring_prompts,
 )
 from samples.concepts.prompt_templates.load_yaml_prompt import main as load_yaml_prompt
-<<<<<<< HEAD
 from samples.concepts.prompt_templates.template_language import (
     main as template_language,
 )
@@ -154,28 +150,7 @@ concepts = [
     param(simple_chatbot, ["Why is the sky blue in one sentence?", "exit"], id="simple_chatbot"),
     param(simple_chatbot_streaming, ["Why is the sky blue in one sentence?", "exit"], id="simple_chatbot_streaming"),
     param(simple_chatbot_with_image, ["exit"], id="simple_chatbot_with_image"),
-=======
-from samples.concepts.prompt_templates.template_language import main as template_language
-from samples.concepts.rag.rag_with_vector_collection import main as rag_with_text_memory_plugin
-from samples.concepts.service_selector.custom_service_selector import main as custom_service_selector
-from samples.concepts.text_completion.text_completion import main as text_completion
-from samples.getting_started_with_agents.chat_completion.step01_chat_completion_agent_simple import (
-    main as step1_chat_completion_agent_simple,
-)
-from samples.getting_started_with_agents.chat_completion.step03_chat_completion_agent_with_kernel import (
-    main as step2_chat_completion_agent_with_kernel,
-)
-from samples.getting_started_with_agents.chat_completion.step04_chat_completion_agent_plugin_simple import (
-    main as step3_chat_completion_agent_plugin_simple,
-)
-from samples.getting_started_with_agents.chat_completion.step05_chat_completion_agent_plugin_with_kernel import (
-    main as step4_chat_completion_agent_plugin_with_kernel,
-)
-from samples.getting_started_with_agents.chat_completion.step06_chat_completion_agent_group_chat import (
-    main as step5_chat_completion_agent_group_chat,
-)
-from samples.getting_started_with_agents.openai_assistant.step1_assistant import main as step1_openai_assistant
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from tests.utils import retry
 
 # These environment variable names are used to control which samples are run during integration testing.
@@ -420,7 +395,6 @@ concepts = [
     param(bing_search_plugin, [], id="bing_search_plugin"),
     param(azure_chat_image_input, [], id="azure_chat_image_input"),
     param(
-<<<<<<< HEAD
         bing_search_plugin,
         [],
         id="bing_search_plugin",
@@ -428,8 +402,7 @@ concepts = [
     ),
     param(custom_service_selector, [], id="custom_service_selector"),
     param(
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         custom_service_selector,
         [],
         id="custom_service_selector",
@@ -546,28 +519,9 @@ concepts = [
             os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
         ),
     ),
-<<<<<<< HEAD
     param(image_generation, [], id="image_generation"),
-=======
-    param(
-        text_completion,
-        [],
-        id="text_completion",
-        marks=pytest.mark.skipif(
-            os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
-        ),
-    ),
-    param(
-        text_embedding_generation,
-        [],
-        id="text_embedding_generation",
-        marks=pytest.mark.skipif(
-            os.getenv(COMPLETIONS_CONCEPT_SAMPLE, None) is None, reason="Not running completion samples."
-        ),
-    ),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
-]
 
+]
 
 @mark.asyncio
 @mark.parametrize("sample, responses", concepts)

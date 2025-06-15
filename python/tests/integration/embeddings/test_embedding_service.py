@@ -12,7 +12,6 @@ import os
 
 import pytest
 
-<<<<<<< HEAD
 << << << < main
 << << << < main
 == == == =
@@ -24,7 +23,6 @@ try:
         mistral_ai_setup = True
 except KeyError:
     mistral_ai_setup = False
-
 
 pytestmark = pytest.mark.parametrize(
     "embeddings_generator",
@@ -39,9 +37,7 @@ pytestmark = pytest.mark.parametrize(
 << << << < main
 == == == =
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import EmbeddingGeneratorBase
-=======
-from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from tests.integration.embeddings.test_embedding_service_base import (
     EmbeddingServiceTestBase,
@@ -137,7 +133,6 @@ pytestmark= pytest.mark.parametrize(
     ],
 )
 
-
 @ pytest.mark.asyncio(scope="module")
 << << << < main
 << << << < main
@@ -206,7 +201,6 @@ class TestEmbeddingService(EmbeddingServiceTestBase):
     assert result[0].text == "Penguins are birds."
 
 # Copyright (c) Microsoft. All rights reserved.
-
 
 from typing import Any
 
@@ -311,7 +305,6 @@ pytestmark= pytest.mark.parametrize(
         ),
     ],
 )
-
 
 @ pytest.mark.asyncio(scope="module")
 class TestEmbeddingService(EmbeddingServiceTestBase):

@@ -197,14 +197,10 @@ Pros:
 - Can be used as a `BinaryContent` type
 - Can be written and read in both `Data` or `DataUri` formats.
 - Can have a `Uri` dedicated for referenced location.
->>>>>>>+Updated upstrea
 ===
 - Fully serializeable.
->>>>>>> Stashed changes
->>>>>>>+Updated upstrea
 ===
 - Fu- Fully serializeable.
->>>>>>>-Stashed changes
 ta Uri parameters support (serialization included).
 - Data Uri and Base64 validation checks
 - Can be retrieved
@@ -554,15 +550,10 @@ Pros:
 - Can be used as a `BinaryContent` type
 - Can be written and read in both `Data` or `DataUri` formats.
 - Can have a `Uri` dedicated for referenced location.
-<<<<<<<<- Fully serializable.
->>>>>>>+Updated upstrea
 ===
 - Fully serializeable.
->>>>>>> Stashed changes
->>>>>>>+Updated upstrea
 ===
 - Fu- Fully serializeable.
->>>>>>>-Stashed changes
 ta Uri parameters support (serialization included).
 - Fully serializeable.
 - Data Uri parameters support (serialization included).
@@ -676,14 +667,10 @@ Pros:
 - Can be used as a `BinaryContent` type
 - Can be written and read in both `Data` or `DataUri` formats.
 - Can have a `Uri` dedicated for referenced location.
->>>>>>>+Updated upstrea
 ===
 - Fully serializeable.
->>>>>>> Stashed changes
->>>>>>>+Updated upstrea
 ===
 - Fu- Fully serializeable.
->>>>>>>-Stashed changes
 ta Uri parameters support (serialization included).
 - Data Uri and Base64 validation checks
 - Can be retrieved
@@ -1035,15 +1022,10 @@ Pros:
 - Can be used as a `BinaryContent` type
 - Can be written and read in both `Data` or `DataUri` formats.
 - Can have a `Uri` dedicated for referenced location.
-<<<<<<<<- Fully serializable.
->>>>>>>+Updated upstrea
 ===
 - Fully serializeable.
->>>>>>> Stashed changes
->>>>>>>+Updated upstrea
 ===
 - Fu- Fully serializeable.
->>>>>>>-Stashed changes
 ta Uri parameters support (serialization included).
 - Fully serializeable.
 - Data Uri parameters support (serialization included).

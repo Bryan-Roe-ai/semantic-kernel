@@ -7,7 +7,6 @@ import re
 from collections.abc import Mapping, MutableMapping, Sequence
 from typing import Any, TypeVar
 
-<<<<<<< HEAD
 if sys.version < "3.11":
     from typing_extensions import Self  # pragma: no cover
 else:
@@ -15,7 +14,6 @@ else:
 
 from pydantic import Field, ValidationError, field_validator, model_validator
 from pydantic_core import Url, PydanticCustomError
-
 
 class CustomUrl(Url):
     @classmethod
@@ -27,19 +25,12 @@ class CustomUrl(Url):
                 "Invalid URL provided. Please check the format and try again."
             )
 
-=======
-from numpy import ndarray
-from pydantic import Field, ValidationError, field_validator
-from pydantic_core import Url
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
-
 from semantic_kernel.exceptions import ContentInitializationError
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 
 logger = logging.getLogger(__name__)
 
 _T = TypeVar("_T", bound="DataUri")
-
 
 class DataUri(KernelBaseModel, validate_assignment=True):
     """A class to represent a data uri.
@@ -65,7 +56,6 @@ class DataUri(KernelBaseModel, validate_assignment=True):
     parameters: MutableMapping[str, str] = Field(default_factory=dict)
     data_format: str | None = None
 
-<<<<<<< HEAD
     def update_data(self, value: str | bytes) -> None:
         """Update the data, using either a string or bytes."""
         if isinstance(value, str):
@@ -82,21 +72,6 @@ class DataUri(KernelBaseModel, validate_assignment=True):
                 "Either data_bytes or data_str must be provided."
             )
         return values
-=======
-    def __init__(
-        self,
-        data_bytes: bytes | None = None,
-        data_str: str | None = None,
-        data_array: ndarray | None = None,
-        mime_type: str | None = None,
-        parameters: Sequence[str] | Mapping[str, str] | None = None,
-        data_format: str | None = None,
-        **kwargs: Any,
-    ):
-        """Initialize the data uri.
-
-        Make sure to set the data_format to base64 so that it can be decoded properly.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         Args:
             data_bytes: The data as bytes.
@@ -146,17 +121,13 @@ class DataUri(KernelBaseModel, validate_assignment=True):
                 self.data_bytes = value
 
     @field_validator("parameters", mode="before")
-<<<<<<< HEAD
-<<<<<<< main
+
     def _validate_parameters(
         cls, value: list[str] | dict[str, str] | None = None
     ) -> dict[str, str]:
-=======
-    def _parse_parameters(cls, value: list[str] | dict[str, str] | None = None) -> dict[str, str]:
->>>>>>> origin/PR
-=======
+
     def _validate_parameters(cls, value: list[str] | dict[str, str] | None) -> dict[str, str]:
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         if not value:
             return {}
         if isinstance(value, dict):

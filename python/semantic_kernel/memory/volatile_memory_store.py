@@ -433,7 +433,6 @@ class VolatileMemoryStore(VolatileDataStore, MemoryStoreBase):
 
         # Then, take the top N results
         top_results = filtered_results[:limit]
-<<<<<<< HEAD
 
         if not with_embeddings:
             # create copy of results without embeddings

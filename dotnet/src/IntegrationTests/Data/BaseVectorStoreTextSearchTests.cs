@@ -4,18 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-<<<<<<< HEAD
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-=======
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.VectorData;
->>>>>>> main
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using System.Threading;
+
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
@@ -24,11 +19,8 @@ using static Microsoft.SemanticKernel.Data.VectorStoreExtensions;
 namespace SemanticKernel.IntegrationTests.Data;
 
 /// <summary>
-<<<<<<< HEAD
 /// Base class for integration tests for using <see cref="VolatileVectorStore"/> with <see cref="ITextSearch"/>.
-=======
-/// Base class for integration tests for using various vector stores with <see cref="ITextSearch"/>.
->>>>>>> main
+
 /// </summary>
 public abstract class BaseVectorStoreTextSearchTests : BaseTextSearchTests
 {
@@ -107,11 +99,8 @@ public abstract class BaseVectorStoreTextSearchTests : BaseTextSearchTests
         {
             if (result is DataModel dataModel)
             {
-<<<<<<< HEAD
                 return new TextSearchResult(name: dataModel.Key.ToString(), value: dataModel.Text, link: dataModel.Link);
-=======
-                return new TextSearchResult(value: dataModel.Text) { Name = dataModel.Key.ToString(), Link = dataModel.Link };
->>>>>>> main
+
             }
             throw new ArgumentException("Invalid result type.");
         }
@@ -135,13 +124,12 @@ public abstract class BaseVectorStoreTextSearchTests : BaseTextSearchTests
     }
 
     /// <summary>
-<<<<<<< HEAD
     /// Decorator for a <see cref="IVectorizedSearch{TRecord}"/> that generates embeddings for text search queries.
     /// </summary>
     protected sealed class VectorizedSearchWrapper<TRecord>(IVectorizedSearch<TRecord> vectorizedSearch, ITextEmbeddingGenerationService textEmbeddingGeneration) : IVectorizableTextSearch<TRecord>
     {
         /// <inheritdoc/>
-<<<<<<< HEAD
+
         public async IAsyncEnumerable<VectorSearchResult<TRecord>> VectorizableTextSearchAsync(string searchText, VectorSearchOptions? options = null, [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
             var vectorizedQuery = await textEmbeddingGeneration!.GenerateEmbeddingAsync(searchText, cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -150,19 +138,12 @@ public abstract class BaseVectorStoreTextSearchTests : BaseTextSearchTests
             {
                 yield return result;
             }
-=======
-        public async Task<VectorSearchResults<TRecord>> VectorizableTextSearchAsync(string searchText, VectorSearchOptions? options = null, CancellationToken cancellationToken = default)
-        {
-            var vectorizedQuery = await textEmbeddingGeneration!.GenerateEmbeddingAsync(searchText, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            return await vectorizedSearch.VectorizedSearchAsync(vectorizedQuery, options, cancellationToken);
->>>>>>> main
         }
     }
 
     /// <summary>
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// Sample model class that represents a record entry.
     /// </summary>
     /// <remarks>

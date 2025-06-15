@@ -33,9 +33,7 @@ if TYPE_CHECKING:
     from semantic_kernel.functions.types import KERNEL_FUNCTION_TYPE
     from semantic_kernel.kernel import Kernel
 
-
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 @runtime_checkable
 class AddToKernelCallbackProtocol(Protocol):
@@ -48,7 +46,6 @@ class AddToKernelCallbackProtocol(Protocol):
             kernel (Kernel): The kernel instance
         """
         pass
-
 
 class KernelFunctionExtension(KernelBaseModel, ABC):
     """Kernel function extension."""
@@ -111,15 +108,10 @@ class KernelFunctionExtension(KernelBaseModel, ABC):
             self.plugins[plugin.name] = plugin
             return self.plugins[plugin.name]
         if not plugin_name:
-<<<<<<< HEAD
             raise ValueError(
                 "plugin_name must be provided if a plugin is not supplied."
             )
-=======
-            plugin_name = getattr(plugin, "name", plugin.__class__.__name__)
-        if not isinstance(plugin_name, str):
-            raise TypeError("plugin_name must be a string.")
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         if plugin:
             self.plugins[plugin_name] = KernelPlugin.from_object(
                 plugin_name=plugin_name, plugin_instance=plugin, description=description
@@ -137,13 +129,10 @@ class KernelFunctionExtension(KernelBaseModel, ABC):
             return self.plugins[plugin_name]
         raise ValueError("plugin or parent_directory must be provided.")
 
-<<<<<<< HEAD
     def add_plugins(
         self, plugins: list[KernelPlugin] | dict[str, KernelPlugin | object]
     ) -> None:
-=======
-    def add_plugins(self, plugins: list[KernelPlugin | object] | dict[str, KernelPlugin | object]) -> None:
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         """Adds a list of plugins to the kernel's collection of plugins.
 
         Args:

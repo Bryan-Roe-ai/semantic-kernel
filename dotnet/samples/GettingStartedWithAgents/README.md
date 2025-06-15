@@ -2,21 +2,13 @@
 
 This project contains a step by step guide to get started with  _Semantic Kernel Agents_.
 
-<<<<<<< HEAD
 #### NuGet:
-=======
-## NuGet
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 - [Microsoft.SemanticKernel.Agents.Abstractions](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.Abstractions)
 - [Microsoft.SemanticKernel.Agents.Core](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.Core)
 - [Microsoft.SemanticKernel.Agents.OpenAI](https://www.nuget.org/packages/Microsoft.SemanticKernel.Agents.OpenAI)
 
-<<<<<<< HEAD
 #### Source
-=======
-## Source
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 - [Semantic Kernel Agent Framework](https://github.com/microsoft/semantic-kernel/tree/main/dotnet/src/Agents)
 
@@ -146,20 +138,12 @@ dotnet user-secrets set "OpenAI:ApiKey" "..."
 
 5. Or Azure OpenAI:
 
-<<<<<<< HEAD
 ```sh {"id":"01J6KPX0GQCZXPP6FDQ290W7XP"}
 dotnet user-secrets set "AzureOpenAI:DeploymentName" "..."
 dotnet user-secrets set "AzureOpenAI:ChatDeploymentName" "..."
 dotnet user-secrets set "AzureOpenAI:Endpoint" "https://... .openai.azure.com/"
 dotnet user-secrets set "AzureOpenAI:ApiKey" "..."
 ```
-=======
-    ```
-    dotnet user-secrets set "AzureOpenAI:ChatDeploymentName" "gpt-4o"
-    dotnet user-secrets set "AzureOpenAI:Endpoint" "https://... .openai.azure.com/"
-    dotnet user-secrets set "AzureOpenAI:ApiKey" "..."
-    ```
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 6. Or Azure AI:
 

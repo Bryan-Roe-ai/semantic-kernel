@@ -7,97 +7,39 @@ from unittest.mock import Mock
 
 import pytest
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
 from semantic_kernel.connectors.utils.structured_output_schema import generate_structured_output_response_format_schema
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
 from semantic_kernel.connectors.utils.structured_output_schema import generate_structured_output_response_format_schema
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
+
 from semantic_kernel.connectors.utils.structured_output_schema import generate_structured_output_response_format_schema
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
+
 from semantic_kernel.connectors.utils.structured_output_schema import generate_structured_output_response_format_schema
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.schema.kernel_json_schema_builder import KernelJsonSchemaBuilder
-
 
 class ExampleModel(KernelBaseModel):
     name: str
     age: int
 
-
 class AnotherModel:
     title: str
     score: float
-
 
 class MockClass:
     name: str = None
     age: int = None
 
-
 class ModelWithOptionalAttributes:
     name: str | None = None
 
-
 class ModelWithUnionPrimitives:
     item: int | str
-
 
 class EnumTest(Enum):
     OPTION_A = "OptionA"
     OPTION_B = "OptionB"
     OPTION_C = "OptionC"
-
 
 class MockModel:
     __annotations__ = {
@@ -125,97 +67,22 @@ class MockModel:
         "coordinates": Mock(description="The coordinates of the model"),
     }
 
-
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
 class PydanticStep(KernelBaseModel):
     explanation: str
     output: str
-
 
 class PydanticReasoning(KernelBaseModel):
     steps: list[PydanticStep]
     final_answer: str
 
-
 class NonPydanticStep:
     explanation: str
     output: str
-
 
 class NonPydanticReasoning:
     steps: list[NonPydanticStep]
     final_answer: str
 
-
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 def test_build_with_kernel_base_model():
     expected_schema = {
         "type": "object",
@@ -225,7 +92,6 @@ def test_build_with_kernel_base_model():
     result = KernelJsonSchemaBuilder.build(ExampleModel)
     assert result == expected_schema
 
-
 def test_build_with_model_with_optional_attributes():
     expected_schema = {
         "type": "object",
@@ -233,7 +99,6 @@ def test_build_with_model_with_optional_attributes():
     }
     result = KernelJsonSchemaBuilder.build(ModelWithOptionalAttributes)
     assert result == expected_schema
-
 
 def test_build_with_model_with_union_attributes():
     expected_schema = {
@@ -244,7 +109,6 @@ def test_build_with_model_with_union_attributes():
     result = KernelJsonSchemaBuilder.build(ModelWithUnionPrimitives)
     assert result == expected_schema
 
-
 def test_build_with_model_with_annotations():
     expected_schema = {
         "type": "object",
@@ -253,7 +117,6 @@ def test_build_with_model_with_annotations():
     }
     result = KernelJsonSchemaBuilder.build(AnotherModel)
     assert result == expected_schema
-
 
 def test_build_with_primitive_type():
     expected_schema = {"type": "string"}
@@ -268,12 +131,10 @@ def test_build_with_primitive_type():
     result = KernelJsonSchemaBuilder.build("int")
     assert result == expected_schema
 
-
 def test_build_with_primitive_type_and_description():
     expected_schema = {"type": "string", "description": "A simple string"}
     result = KernelJsonSchemaBuilder.build(str, description="A simple string")
     assert result == expected_schema
-
 
 def test_build_model_schema():
     expected_schema = {
@@ -287,14 +148,12 @@ def test_build_model_schema():
     )
     assert result == expected_schema
 
-
 def test_build_from_type_name():
     expected_schema = {"type": "string", "description": "A simple string"}
     result = KernelJsonSchemaBuilder.build_from_type_name(
         "str", description="A simple string"
     )
     assert result == expected_schema
-
 
 def test_build_from_type_name_with_union():
     expected_schema = {
@@ -308,7 +167,6 @@ def test_build_from_type_name_with_union():
     )
     assert result == expected_schema
 
-
 def test_get_json_schema():
     expected_schema = {"type": "string"}
     result = KernelJsonSchemaBuilder.get_json_schema(str)
@@ -318,11 +176,9 @@ def test_get_json_schema():
     result = KernelJsonSchemaBuilder.get_json_schema(int)
     assert result == expected_schema
 
-
 def test_build_list():
     schema = KernelJsonSchemaBuilder.build(list[str])
     assert schema == {"type": "array", "items": {"type": "string"}}
-
 
 def test_build_list_complex_type():
     schema = KernelJsonSchemaBuilder.build(list[MockClass])
@@ -335,16 +191,13 @@ def test_build_list_complex_type():
         },
     }
 
-
 def test_build_dict():
     schema = KernelJsonSchemaBuilder.build(dict[str, int])
     assert schema == {"type": "object", "additionalProperties": {"type": "integer"}}
 
-
 def test_build_set():
     schema = KernelJsonSchemaBuilder.build(set[int])
     assert schema == {"type": "array", "items": {"type": "integer"}}
-
 
 def test_build_tuple():
     schema = KernelJsonSchemaBuilder.build(tuple[int, str])
@@ -353,16 +206,13 @@ def test_build_tuple():
         "items": [{"type": "integer"}, {"type": "string"}],
     }
 
-
 def test_build_union():
     schema = KernelJsonSchemaBuilder.build(Union[int, str])
     assert schema == {"anyOf": [{"type": "integer"}, {"type": "string"}]}
 
-
 def test_build_optional():
     schema = KernelJsonSchemaBuilder.build(Optional[int])
     assert schema == {"type": ["integer", "null"]}
-
 
 def test_build_model_schema_for_many_types():
     schema = KernelJsonSchemaBuilder.build(MockModel)
@@ -464,7 +314,6 @@ def test_build_model_schema_for_many_types():
     expected_schema = json.loads(expected)
     assert schema == expected_schema
 
-
 @pytest.mark.parametrize(
     "type_name, expected",
     [
@@ -481,7 +330,6 @@ def test_build_model_schema_for_many_types():
 def test_build_from_many_type_names(type_name, expected):
     assert KernelJsonSchemaBuilder.build_from_type_name(type_name) == expected
 
-
 @pytest.mark.parametrize(
     "type_obj, expected",
     [
@@ -494,16 +342,13 @@ def test_build_from_many_type_names(type_name, expected):
 def test_get_json_schema_multiple(type_obj, expected):
     assert KernelJsonSchemaBuilder.get_json_schema(type_obj) == expected
 
-
 class Items(KernelBaseModel):
     title: Annotated[str, "Description of the item"]
     resource: Annotated[int, "Number of turns required for the item"]
 
-
 def test_build_complex_type_list():
     schema = KernelJsonSchemaBuilder.build(list[Items])
     assert schema is not None
-
 
 def test_enum_schema():
     schema = KernelJsonSchemaBuilder.build(EnumTest, "Test Enum Description")
@@ -514,54 +359,15 @@ def test_enum_schema():
     }
     assert schema == expected_schema
 
-
 def test_enum_schema_without_description():
     schema = KernelJsonSchemaBuilder.build(EnumTest)
     expected_schema = {"type": "string", "enum": ["OptionA", "OptionB", "OptionC"]}
     assert schema == expected_schema
 
-
 def test_handle_complex_type():
     schema = KernelJsonSchemaBuilder.handle_complex_type(str, "Description")
     expected_schema = {"type": "string", "description": "Description"}
     assert schema == expected_schema
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-
 
 def test_build_schema_with_pydantic_structured_output():
     schema = KernelJsonSchemaBuilder.build(parameter_type=PydanticReasoning, structured_output=True)
@@ -593,7 +399,6 @@ def test_build_schema_with_pydantic_structured_output():
     }
 
     assert structured_output_schema == expected_schema
-
 
 def test_build_schema_with_nonpydantic_structured_output():
     schema = KernelJsonSchemaBuilder.build(parameter_type=NonPydanticReasoning, structured_output=True)
@@ -627,37 +432,4 @@ def test_build_schema_with_nonpydantic_structured_output():
     }
 
     assert structured_output_schema == expected_schema
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+

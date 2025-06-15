@@ -11,48 +11,36 @@ from urllib.parse import urlparse, urlunparse
 import httpx
 from openapi_core import Spec
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import (
     RestApiOperation,
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_expected_response import (
     RestApiOperationExpectedResponse,
 )
-<<<<<<< main
+
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload import (
     RestApiOperationPayload,
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_run_options import (
     RestApiOperationRunOptions,
 )
-=======
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload import RestApiOperationPayload
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_run_options import RestApiOperationRunOptions
-from semantic_kernel.connectors.telemetry import APP_INFO, prepend_semantic_kernel_to_user_agent
->>>>>>> origin/PR
-=======
+
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_expected_response import (
     RestApiExpectedResponse,
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import RestApiOperation
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload import RestApiPayload
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_run_options import RestApiRunOptions
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 from semantic_kernel.exceptions.function_exceptions import FunctionExecutionException
 from semantic_kernel.functions.kernel_arguments import KernelArguments
-<<<<<<< HEAD
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.telemetry.user_agent import (
     APP_INFO,
     prepend_semantic_kernel_to_user_agent,
 )
-=======
-from semantic_kernel.utils.feature_stage_decorator import experimental
-from semantic_kernel.utils.telemetry.user_agent import APP_INFO, prepend_semantic_kernel_to_user_agent
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 @experimental
 class OpenApiRunner:

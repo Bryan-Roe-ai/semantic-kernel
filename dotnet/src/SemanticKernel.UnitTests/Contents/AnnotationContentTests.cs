@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 ﻿// Copyright (c) Microsoft. All rights reserved.
-=======
-// Copyright (c) Microsoft. All rights reserved.
-using System;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 using Microsoft.SemanticKernel.Agents;
 using Xunit;
 

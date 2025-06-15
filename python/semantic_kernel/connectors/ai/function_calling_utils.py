@@ -19,22 +19,16 @@ if TYPE_CHECKING:
     from semantic_kernel.functions.kernel_function_metadata import (
         KernelFunctionMetadata,
     )
->>>>>>>+main
+
 ionChoic        FunctionChoiceType,
     )
     from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
     from semantic_kernel.contents.chat_message_content import ChatMessageContent
     from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
     from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
-<<<<<<< HEAD
->>>>>>>+upstream/main
+
 nfiguration(
-=======
-    from semantic_kernel.kernel import Kernel
 
-
-def update_settings_from_function_call_configuration(
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     function_choice_configuration: "FunctionCallChoiceConfiguration",
     settings: "PromptExecutionSettings",
     type: "FunctionChoiceType",
@@ -63,7 +57,6 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-
 def update_settings_from_function_call_configuration(
     function_choice_configuration: "FunctionCallChoiceConfiguration",
     settings: "OpenAIChatPromptExecutionSettings",
@@ -77,7 +70,6 @@ def update_settings_from_function_call_configuration(
             for f in function_choice_configuration.available_functions
         ]
 
-
 def kernel_function_metadata_to_function_call_format(
     metadata: "KernelFunctionMetadata",
 ) -> dict[str, Any]:
@@ -89,139 +81,28 @@ def kernel_function_metadata_to_function_call_format(
             "description": metadata.description or "",
             "parameters": {
                 "type": "object",
-<<<<<<< HEAD
-<<<<<<< main
+
                 "properties": {
                     param.name: param.schema_data for param in metadata.parameters
                 },
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
                 "properties": {param.name: param.schema_data for param in metadata.parameters},
                 "properties": {param.name: param.schema_data for param in metadata.parameters if param.is_required},
->>>>>>> origin/PR
+
                 "required": [p.name for p in metadata.parameters if p.is_required],
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< div
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
                 "properties": {param.name: param.schema_data for param in metadata.parameters},
                 "properties": {param.name: param.schema_data for param in metadata.parameters if param.is_required},
                 "required": [p.name for p in metadata.parameters if p.is_required],
-=======
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
                 "properties": {
                     param.name: param.schema_data for param in metadata.parameters if param.include_in_function_choices
                 },
                 "required": [p.name for p in metadata.parameters if p.is_required and p.include_in_function_choices],
-<<<<<<< HEAD
->>>>>>> ms/feature-python-search
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
             },
         },
     }
-
 
 def kernel_function_metadata_to_response_function_call_format(
     metadata: "KernelFunctionMetadata",
@@ -239,7 +120,6 @@ def kernel_function_metadata_to_response_function_call_format(
             "required": [p.name for p in metadata.parameters if p.is_required and p.include_in_function_choices],
         },
     }
-
 
 def _combine_filter_dicts(*dicts: dict[str, list[str]]) -> dict:
     """Combine multiple filter dictionaries with list values into one dictionary.
@@ -265,7 +145,6 @@ def _combine_filter_dicts(*dicts: dict[str, list[str]]) -> dict:
 
     return combined_filters
 
-
 def merge_function_results(
     messages: list["ChatMessageContent"],
 ) -> list["ChatMessageContent"]:
@@ -286,7 +165,6 @@ def merge_function_results(
             items=items,
         )
     ]
-
 
 def merge_streaming_function_results(
     messages: list["ChatMessageContent | StreamingChatMessageContent"],
@@ -322,7 +200,6 @@ def merge_streaming_function_results(
             function_invoke_attempt=function_invoke_attempt,
         )
     ]
-
 
 @experimental
 def prepare_settings_for_function_calling(

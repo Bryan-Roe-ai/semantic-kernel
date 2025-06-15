@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
-<<<<<<< HEAD
-=======
 using System;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -11,10 +9,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel.Agents.Extensions;
-<<<<<<< HEAD
 using Microsoft.SemanticKernel.Agents.History;
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 using Microsoft.SemanticKernel.Agents.Serialization;
 using Microsoft.SemanticKernel.ChatCompletion;
 
@@ -23,14 +19,11 @@ namespace Microsoft.SemanticKernel.Agents;
 /// <summary>
 /// Represents an <see cref="AgentChannel"/> specialization that acts upon a <see cref="ChatHistoryAgent"/>.
 /// </summary>
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 public sealed class ChatHistoryChannel : AgentChannel
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-=======
+
 [Experimental("SKEXP0110")]
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 internal sealed class ChatHistoryChannel : AgentChannel
 {
     // Supported content types for <see cref="ReceiveAsync"/> when
@@ -173,7 +166,6 @@ internal sealed class ChatHistoryChannel : AgentChannel
     /// </summary>
     public ChatHistoryChannel(ChatHistory? history = null)
     {
-<<<<<<< HEAD
         this._history = [];
     public ChatHistoryChannel(ChatHistory? history = null)
     {
@@ -183,8 +175,7 @@ internal sealed class ChatHistoryChannel : AgentChannel
         this._history = history ?? [];
     public ChatHistoryChannel(ChatHistory? history = null)
     {
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
         this._history = history ?? [];
     }
 }

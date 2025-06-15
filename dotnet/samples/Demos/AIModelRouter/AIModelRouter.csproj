@@ -17,21 +17,14 @@
   </ItemGroup>
 
   <ItemGroup>
-<<<<<<< main
     <ProjectReference Include="..\..\..\src\Connectors\Connectors.Ollama\Connectors.Ollama.csproj" />
     <ProjectReference Include="..\..\..\src\Connectors\Connectors.Anthropic\Connectors.Anthropic.csproj" />
     <ProjectReference Include="..\..\..\src\Connectors\Connectors.AzureAIInference\Connectors.AzureAIInference.csproj" />
     <ProjectReference Include="..\..\..\src\Connectors\Connectors.AzureOpenAI\Connectors.AzureOpenAI.csproj" />
     <ProjectReference Include="..\..\..\src\Connectors\Connectors.Ollama\Connectors.Ollama.csproj" />
     <ProjectReference Include="..\..\..\src\Connectors\Connectors.Onnx\Connectors.Onnx.csproj" />
-<<<<<<< main
     <ProjectReference Include="..\..\..\src\Connectors\Connectors.Ollama\Connectors.Ollama.csproj" />
-=======
-    <ProjectReference Include="..\..\..\src\Connectors\Connectors.Ollama\Connectors.Ollama.csproj" />
->>>>>>> Stashed changes
     <ProjectReference Include="..\..\..\src\Connectors\Connectors.OpenAI\Connectors.OpenAI.csproj" />
-=======
->>>>>>> microsoft/main
   </ItemGroup>
 
 </Project>

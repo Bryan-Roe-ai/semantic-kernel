@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 
 _T = TypeVar("_T", bound="ImageContent")
 
-
 @experimental
 class ImageContent(BinaryContent):
     """Image Content class.
@@ -91,17 +90,13 @@ class ImageContent(BinaryContent):
     @deprecated("The `from_image_path` method is deprecated; use `from_image_file` instead.", category=None)
     def from_image_path(cls: type[_T], image_path: str) -> _T:
         """Create an instance from an image file."""
-<<<<<<< HEAD
         mime_type = mimetypes.guess_type(image_path)[0]
         with open(image_path, "rb") as image_file:
-<<<<<<< main
+
             return cls(
                 data=image_file.read(), data_format="base64", mime_type=mime_type
             )
-=======
-            return cls(data=image_file.read(), data_format="base64", mime_type=mime_type, uri=image_path)
->>>>>>> upstream/main
-=======
+
         return cls.from_image_file(image_path)
 
     @classmethod
@@ -110,7 +105,6 @@ class ImageContent(BinaryContent):
         mime_type = mimetypes.guess_type(path)[0]
         with open(path, "rb") as image_file:
             return cls(data=image_file.read(), data_format="base64", mime_type=mime_type, uri=path)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     def to_dict(self) -> dict[str, Any]:
         """Convert the instance to a dictionary."""

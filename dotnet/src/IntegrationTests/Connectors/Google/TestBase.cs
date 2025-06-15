@@ -10,7 +10,6 @@ using Xunit.Abstractions;
 
 namespace SemanticKernel.IntegrationTests.Connectors.Google;
 
-<<<<<<< HEAD:dotnet/src/IntegrationTests/Connectors/Google/TestBase.cs
 public abstract class TestBase(ITestOutputHelper output)
 {
     private readonly IConfigurationRoot _configuration = new ConfigurationBuilder()
@@ -19,14 +18,6 @@ public abstract class TestBase(ITestOutputHelper output)
         .AddUserSecrets<TestBase>()
         .AddEnvironmentVariables()
         .Build();
-=======
-public abstract class TestsBase
-{
-    private readonly IConfigurationRoot _configuration;
-    protected ITestOutputHelper Output { get; }
-    private readonly GoogleAIConfig _googleAI;
-    private readonly VertexAIConfig _vertexAI;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/IntegrationTests/Connectors/Google/TestsBase.cs
 
     protected GoogleAIConfig GoogleAI => this._googleAI;
     protected VertexAIConfig VertexAI => this._vertexAI;

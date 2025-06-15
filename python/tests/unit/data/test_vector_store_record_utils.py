@@ -15,17 +15,11 @@ from semantic_kernel.data import (
     VectorStoreRecordKeyField,
     VectorStoreRecordVectorField,
 )
-<<<<<<< HEAD
 from semantic_kernel.data.vector_store_record_utils import VectorStoreRecordUtils
 from semantic_kernel.exceptions.memory_connector_exceptions import (
     VectorStoreModelException,
 )
 from semantic_kernel.kernel import Kernel
-=======
-from semantic_kernel.data.vector_search import add_vector_to_records
-from semantic_kernel.exceptions import VectorStoreModelException
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-
 
 async def test_add_vector_to_records(data_model_definition):
     kernel = MagicMock(spec=Kernel)
@@ -33,7 +27,6 @@ async def test_add_vector_to_records(data_model_definition):
     record = {"id": "test_id", "content": "content"}
     await add_vector_to_records(kernel, record, None, data_model_definition)
     kernel.add_embedding_to_object.assert_called_once()
-
 
 async def test_add_vector_wrong_fields():
     data_model = VectorStoreRecordDefinition(
@@ -50,7 +43,6 @@ async def test_add_vector_wrong_fields():
     record = {"id": "test_id", "content": "content"}
     with raises(VectorStoreModelException, match="Embedding field"):
         await add_vector_to_records(kernel, record, None, data_model)
-
 
 async def test_fail():
     kernel = MagicMock(spec=Kernel)

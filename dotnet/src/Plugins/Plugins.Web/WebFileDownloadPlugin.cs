@@ -24,12 +24,9 @@ public sealed class WebFileDownloadPlugin
     /// </summary>
     public const string FilePathParamName = "filePath";
 
-<<<<<<< HEAD
     private readonly ILogger _logger;
     private static readonly HttpClient _httpClient = HttpClientProvider.GetHttpClient();
 
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <summary>
     /// Initializes a new instance of the <see cref="WebFileDownloadPlugin"/> class.
     /// </summary>

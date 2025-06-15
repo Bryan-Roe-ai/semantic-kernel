@@ -1212,7 +1212,6 @@ TModel = TypeVar("TModel")
 
 @experimental_class
 class AzureAISearchCollection(
-<<<<<<< HEAD
     VectorStoreRecordCollection[str, TModel], Generic[TModel]
 ):
 class AzureAISearchCollection(VectorSearch[str, TModel], Generic[TModel]):

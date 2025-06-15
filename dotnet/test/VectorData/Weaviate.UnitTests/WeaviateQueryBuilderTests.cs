@@ -3,14 +3,11 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-<<<<<<< HEAD
+using Microsoft.Extensions.VectorData.ProviderServices;
+using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.Weaviate;
 using Microsoft.SemanticKernel.Data;
-=======
-using Microsoft.Extensions.VectorData;
-using Microsoft.Extensions.VectorData.ProviderServices;
-using Microsoft.SemanticKernel.Connectors.Weaviate;
->>>>>>> main
+
 using Xunit;
 
 namespace SemanticKernel.Connectors.Weaviate.UnitTests;

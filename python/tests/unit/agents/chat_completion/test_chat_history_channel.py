@@ -5,22 +5,17 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-<<<<<<< HEAD:python/tests/unit/agents/test_chat_history_channel.py
 from semantic_kernel.agents.chat_history_channel import (
     ChatHistoryAgentProtocol,
     ChatHistoryChannel,
 )
 from semantic_kernel.agents.channels.chat_history_channel import ChatHistoryAgentProtocol, ChatHistoryChannel
-=======
-from semantic_kernel.agents.agent import AgentResponseItem
-from semantic_kernel.agents.channels.chat_history_channel import ChatHistoryChannel
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/tests/unit/agents/chat_completion/test_chat_history_channel.py
+
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.file_reference_content import FileReferenceContent
 from semantic_kernel.contents.function_result_content import FunctionResultContent
 from semantic_kernel.contents.streaming_file_reference_content import StreamingFileReferenceContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
-
 
 @pytest.fixture
 def chat_history_channel() -> ChatHistoryChannel:
@@ -31,7 +26,6 @@ def chat_history_channel() -> ChatHistoryChannel:
     thread = ChatHistoryAgentThread()
 
     return ChatHistoryChannel(thread=thread)
-
 
 class MockChatHistoryHandler:
     """Mock agent to test chat history handling"""
@@ -51,12 +45,10 @@ class MockChatHistoryHandler:
     async def reduce_history(self, history: list[ChatMessageContent]) -> list[ChatMessageContent]:
         return history
 
-
 class MockNonChatHistoryHandler:
     """Mock agent to test incorrect instance handling."""
 
     id: str = "mock_non_chat_history_handler"
-
 
 class AsyncIterableMock:
     def __init__(self, async_gen):
@@ -65,21 +57,15 @@ class AsyncIterableMock:
     def __aiter__(self):
         return self.async_gen()
 
-
 async def test_invoke(chat_history_channel):
     channel = chat_history_channel
     agent = AsyncMock(spec=MockChatHistoryHandler)
 
     async def mock_invoke(history: list[ChatMessageContent]):
         for message in history:
-<<<<<<< HEAD:python/tests/unit/agents/test_chat_history_channel.py
             yield ChatMessageContent(
                 role=AuthorRole.SYSTEM, content=f"Processed: {message.content}"
-=======
-            yield AgentResponseItem(
-                message=ChatMessageContent(role=AuthorRole.SYSTEM, content=f"Processed: {message.content}"),
-                thread=channel.thread,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/tests/unit/agents/chat_completion/test_chat_history_channel.py
+
             )
 
     agent.invoke.return_value = AsyncIterableMock(
@@ -101,15 +87,10 @@ async def test_invoke(chat_history_channel):
     assert len(received_messages) == 1
     assert "Processed: Initial message" in received_messages[0].content
 
-
-<<<<<<< HEAD:python/tests/unit/agents/test_chat_history_channel.py
 @pytest.mark.asyncio
 async def test_invoke_stream():
     channel = ChatHistoryChannel()
-=======
-async def test_invoke_stream(chat_history_channel):
-    channel = chat_history_channel
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/tests/unit/agents/chat_completion/test_chat_history_channel.py
+
     agent = AsyncMock(spec=MockChatHistoryHandler)
 
     async def mock_invoke(history: list[ChatMessageContent]):
@@ -135,20 +116,14 @@ async def test_invoke_stream(chat_history_channel):
     assert len(received_messages) == 1
     assert "Processed: Initial message" in received_messages[0].content
 
-
-<<<<<<< HEAD:python/tests/unit/agents/test_chat_history_channel.py
 @pytest.mark.asyncio
 async def test_invoke_leftover_in_queue():
     channel = ChatHistoryChannel()
-=======
-async def test_invoke_leftover_in_queue(chat_history_channel):
-    channel = chat_history_channel
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/tests/unit/agents/chat_completion/test_chat_history_channel.py
+
     agent = AsyncMock(spec=MockChatHistoryHandler)
 
     async def mock_invoke(history: list[ChatMessageContent]):
         for message in history:
-<<<<<<< HEAD:python/tests/unit/agents/test_chat_history_channel.py
             yield ChatMessageContent(
                 role=AuthorRole.SYSTEM, content=f"Processed: {message.content}"
             )
@@ -156,19 +131,7 @@ async def test_invoke_leftover_in_queue(chat_history_channel):
             role=AuthorRole.SYSTEM,
             content="Final message",
             items=[FunctionResultContent(id="test_id", result="test")],
-=======
-            yield AgentResponseItem(
-                message=ChatMessageContent(role=AuthorRole.SYSTEM, content=f"Processed: {message.content}"),
-                thread=channel.thread,
-            )
-        yield AgentResponseItem(
-            message=ChatMessageContent(
-                role=AuthorRole.SYSTEM,
-                content="Final message",
-                items=[FunctionResultContent(id="test_id", result="test")],
-            ),
-            thread=channel.thread,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/tests/unit/agents/chat_completion/test_chat_history_channel.py
+
         )
 
     agent.invoke.return_value = AsyncIterableMock(
@@ -198,8 +161,6 @@ async def test_invoke_leftover_in_queue(chat_history_channel):
     assert "Final message" in received_messages[2].content
     assert received_messages[2].items[0].id == "test_id"
 
-
-<<<<<<< HEAD:python/tests/unit/agents/test_chat_history_channel.py
 async def test_invoke_incorrect_instance_throws():
     channel = ChatHistoryChannel()
     agent = MockNonChatHistoryHandler()
@@ -207,7 +168,6 @@ async def test_invoke_incorrect_instance_throws():
     with pytest.raises(ServiceInvalidTypeError):
         async for _ in channel.invoke(agent):
             pass
-
 
 @pytest.mark.asyncio
 async def test_invoke_stream_incorrect_instance_throws():
@@ -218,14 +178,10 @@ async def test_invoke_stream_incorrect_instance_throws():
         async for _ in channel.invoke_stream(agent, []):
             pass
 
-
 @pytest.mark.asyncio
 async def test_receive():
     channel = ChatHistoryChannel()
-=======
-async def test_receive(chat_history_channel):
-    channel = chat_history_channel
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/tests/unit/agents/chat_completion/test_chat_history_channel.py
+
     history = [
         ChatMessageContent(role=AuthorRole.SYSTEM, content="test message 1"),
         ChatMessageContent(role=AuthorRole.USER, content="test message 2"),
@@ -238,7 +194,6 @@ async def test_receive(chat_history_channel):
     assert channel.messages[0].role == AuthorRole.SYSTEM
     assert channel.messages[1].content == "test message 2"
     assert channel.messages[1].role == AuthorRole.USER
-
 
 async def test_get_history(chat_history_channel):
     channel = chat_history_channel
@@ -255,7 +210,6 @@ async def test_get_history(chat_history_channel):
     assert messages[0].role == AuthorRole.USER
     assert messages[1].content == "test message 1"
     assert messages[1].role == AuthorRole.SYSTEM
-
 
 async def test_reset_history(chat_history_channel):
     channel = chat_history_channel
@@ -276,7 +230,6 @@ async def test_reset_history(chat_history_channel):
     await channel.reset()
 
     assert len(channel.messages) == 0
-
 
 async def test_receive_skips_file_references(chat_history_channel):
     channel = chat_history_channel

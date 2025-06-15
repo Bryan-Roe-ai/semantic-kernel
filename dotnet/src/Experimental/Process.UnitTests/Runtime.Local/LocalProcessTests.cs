@@ -582,18 +582,11 @@ public class LocalProcessTests
     /// </summary>
     [Fact]
     public void ProcessWithSubprocessAndInvalidTargetThrows()
-<<<<<<< HEAD
     public async Task ProcessWithSubprocessAndInvalidTargetThrowsAsync()
     {
         // Arrange
         ProcessBuilder process = new(nameof(ProcessWithSubprocessAndInvalidTargetThrows));
         ProcessBuilder process = new(nameof(ProcessWithSubprocessAndInvalidTargetThrowsAsync));
-=======
-    public void ProcessWithSubprocessAndInvalidTargetThrows()
-    {
-        // Arrange
-        ProcessBuilder process = new(nameof(ProcessWithSubprocessAndInvalidTargetThrows));
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         ProcessBuilder subProcess = new("SubProcess");
         ProcessStepBuilder innerStep = subProcess.AddStepFromType<TestStep>("InnerStep");
@@ -611,7 +604,6 @@ public class LocalProcessTests
 
         KernelProcess processInstance = process.Build();
         Kernel kernel = new();
-<<<<<<< HEAD
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(
@@ -622,8 +614,7 @@ public class LocalProcessTests
                     {
                         Id = "Start"
                     }));
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     }
 
     /// <summary>

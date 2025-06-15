@@ -11,16 +11,12 @@ namespace Microsoft.SemanticKernel.Data;
 /// - Value associated with the search result
 /// - Link reference associated with the search result
 /// </remarks>
-<<<<<<< HEAD
 /// <param name="name">The text search result name.</param>
 /// <param name="value">The text search result value.</param>
 /// <param name="link">The link reference associated with the text search result.</param>
 [Experimental("SKEXP0001")]
 public sealed class TextSearchResult(string? name = null, string? value = null, string? link = null)
-=======
-/// <param name="value">The text search result value.</param>
-public sealed class TextSearchResult(string value)
->>>>>>> main
+
 {
     /// <summary>
     /// The text search result name.
@@ -29,11 +25,7 @@ public sealed class TextSearchResult(string value)
     /// This represents the name associated with the result.
     /// If the text search was for a web search engine this would typically be the name of the web page associated with the search result.
     /// </remarks>
-<<<<<<< HEAD
     public string? Name { get; init; } = name;
-=======
-    public string? Name { get; init; }
->>>>>>> main
 
     /// <summary>
     /// The link reference associated with the text search result.
@@ -42,11 +34,7 @@ public sealed class TextSearchResult(string value)
     /// This represents a possible link associated with the result.
     /// If the text search was for a web search engine this would typically be the URL of the web page associated with the search result.
     /// </remarks>
-<<<<<<< HEAD
     public string? Link { get; init; } = link;
-=======
-    public string? Link { get; init; }
->>>>>>> main
 
     /// <summary>
     /// The text search result value.
@@ -55,9 +43,6 @@ public sealed class TextSearchResult(string value)
     /// This represents the text value associated with the result.
     /// If the text search was for a web search engine this would typically be the snippet describing the web page associated with the search result.
     /// </remarks>
-<<<<<<< HEAD
     public string? Value { get; init; } = value;
-=======
-    public string Value { get; init; } = value;
->>>>>>> main
+
 }

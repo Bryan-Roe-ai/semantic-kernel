@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-
 import tempfile
 from pathlib import Path
 
@@ -42,7 +41,6 @@ test_cases = [
     ),
 ]
 
-
 def test_create_empty():
     binary = BinaryContent()
     assert binary.uri is None
@@ -50,35 +48,29 @@ def test_create_empty():
     assert binary.mime_type == "text/plain"
     assert binary.metadata == {}
 
-
 def test_create_uri():
     binary = BinaryContent(uri="http://test_uri")
     if str(binary.uri) != "http://test_uri/": raise AssertionError("URI does not match expected value")
-
 
 def test_create_data():
     binary = BinaryContent(data=b"test_data", mime_type="application/json")
     assert binary.mime_type == "application/json"
     assert binary.data == b"test_data"
 
-
 def test_create_data_uri():
     binary = BinaryContent(data_uri="data:application/json;base64,dGVzdF9kYXRh")
     assert binary.mime_type == "application/json"
     assert binary.data.decode() == "test_data"
 
-
 def test_create_data_uri_with_params():
     binary = BinaryContent(data_uri="data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh")
     assert binary.metadata == {"foo": "bar"}
-
 
 def test_create_data_uri_with_params_and_metadata():
     binary = BinaryContent(
         data_uri="data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh", metadata={"bar": "baz"}
     )
     assert binary.metadata == {"foo": "bar", "bar": "baz"}
-
 
 def test_update_data():
     binary = BinaryContent()
@@ -87,7 +79,6 @@ def test_update_data():
     assert binary.mime_type == "application/json"
     assert binary.data == b"test_data"
 
-
 def test_update_data_str():
     binary = BinaryContent()
     binary.data = "test_data"
@@ -95,21 +86,15 @@ def test_update_data_str():
     assert binary.mime_type == "application/json"
     assert binary.data == b"test_data"
 
-
 def test_update_existing_data():
-<<<<<<< HEAD
     binary = BinaryContent(
         data_uri="data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh", metadata={"bar": "baz"}
     )
-=======
-    binary = BinaryContent(data_uri="data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh", metadata={"bar": "baz"})
-    assert binary._data_uri is not None
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     binary._data_uri.data_format = None
     binary.data = "test_data"
     binary.data = b"test_data"
     assert binary.data == b"test_data"
-
 
 def test_update_data_uri():
     binary = BinaryContent()
@@ -118,11 +103,9 @@ def test_update_data_uri():
     assert binary.data.decode() == "test_data"
     assert binary.metadata == {"foo": "bar"}
 
-
 def test_to_str_uri():
     binary = BinaryContent(uri="http://test_uri")
     assert str(binary) == "http://test_uri/"
-
 
 def test_to_str_data():
     binary = BinaryContent(
@@ -130,36 +113,30 @@ def test_to_str_data():
     )
     assert str(binary) == "data:image/jpeg;base64,dGVzdF9kYXRh"
 
-
 @pytest.mark.parametrize("binary", test_cases)
 def test_element_roundtrip(binary):
     element = binary.to_element()
     new_image = BinaryContent.from_element(element)
     assert new_image == binary
 
-
 @pytest.mark.parametrize("binary", test_cases)
 def test_to_dict(binary):
     assert binary.to_dict() == {"type": "binary", "binary": {"uri": str(binary)}}
-
 
 def test_can_read_with_data():
     """Test can_read property returns True when data is available."""
     binary = BinaryContent(data=b"test_data", mime_type="application/pdf")
     assert binary.can_read is True
 
-
 def test_can_read_without_data():
     """Test can_read property returns False when no data is available."""
     binary = BinaryContent(uri="http://example.com/file.pdf")
     assert binary.can_read is False
 
-
 def test_can_read_empty():
     """Test can_read property returns False for empty BinaryContent."""
     binary = BinaryContent()
     assert binary.can_read is False
-
 
 def test_from_file_success():
     """Test from_file class method successfully creates BinaryContent from a file."""
@@ -179,7 +156,6 @@ def test_from_file_success():
     finally:
         Path(temp_file_path).unlink()
 
-
 def test_from_file_with_path_object():
     """Test from_file class method works with Path objects."""
     test_data = b"Path object test content"
@@ -196,7 +172,6 @@ def test_from_file_with_path_object():
         assert binary.data_string == "UGF0aCBvYmplY3QgdGVzdCBjb250ZW50"
     finally:
         temp_path.unlink()
-
 
 def test_from_file_binary_data():
     """Test from_file handles binary data correctly without encoding errors."""
@@ -218,12 +193,10 @@ def test_from_file_binary_data():
     finally:
         Path(temp_file_path).unlink()
 
-
 def test_from_file_nonexistent():
     """Test from_file raises FileNotFoundError for nonexistent files."""
     with pytest.raises(FileNotFoundError, match="File not found"):
         BinaryContent.from_file("/nonexistent/file.pdf")
-
 
 def test_from_file_directory():
     """Test from_file raises ContentInitializationError for directories."""

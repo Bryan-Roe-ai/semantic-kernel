@@ -29,14 +29,12 @@ from semantic_kernel.connectors.memory.redis.const import (
     TYPE_MAPPER_VECTOR,
     RedisCollectionTypes,
 )
-<<<<<<< HEAD
 from semantic_kernel.data.filter_clauses.any_tags_equal_to_filter_clause import AnyTagsEqualTo
 from semantic_kernel.data.filter_clauses.equal_to_filter_clause import EqualTo
+from semantic_kernel.data.record_definition import (
 from semantic_kernel.data.record_definition.vector_store_model_definition import VectorStoreRecordDefinition
 from semantic_kernel.data.record_definition.vector_store_record_fields import (
-=======
-from semantic_kernel.data.record_definition import (
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     VectorStoreRecordDataField,
     VectorStoreRecordDefinition,
     VectorStoreRecordKeyField,
@@ -46,7 +44,6 @@ from semantic_kernel.data.text_search import AnyTagsEqualTo, EqualTo
 from semantic_kernel.data.vector_search import VectorSearchFilter
 from semantic_kernel.exceptions import VectorSearchOptionsException
 from semantic_kernel.memory.memory_record import MemoryRecord
-
 
 def get_redis_key(collection_name: str, record_id: str) -> str:  # pragma: no cover
     """Returns the Redis key for an element called record_id within collection_name.
@@ -60,7 +57,6 @@ def get_redis_key(collection_name: str, record_id: str) -> str:  # pragma: no co
     """
     return f"{collection_name}:{record_id}"
 
-
 def split_redis_key(redis_key: str) -> tuple[str, str]:  # pragma: no cover
     """Split a Redis key into its collection name and record ID.
 
@@ -72,7 +68,6 @@ def split_redis_key(redis_key: str) -> tuple[str, str]:  # pragma: no cover
     """
     collection, record_id = redis_key.split(":")
     return collection, record_id
-
 
 def serialize_record_to_redis(
     record: MemoryRecord, vector_type: np.dtype
@@ -97,7 +92,6 @@ def serialize_record_to_redis(
             else ""
         ),
     }
-
 
 def deserialize_redis_to_record(
     fields: dict[str, Any], vector_type: np.dtype, with_embedding: bool
@@ -124,7 +118,6 @@ def deserialize_redis_to_record(
         ).astype(float)
 
     return record
-
 
 def deserialize_document_to_record(
     database: Redis, doc: Document, vector_type: np.dtype, with_embedding: bool
@@ -155,7 +148,6 @@ def deserialize_document_to_record(
 
     return record
 
-
 class RedisWrapper(Redis):
     """Wrapper to make sure the connection is closed when the object is deleted."""
 
@@ -163,7 +155,6 @@ class RedisWrapper(Redis):
         """Close connection, done when the object is deleted, used when SK creates a client."""
         with contextlib.suppress(Exception):
             asyncio.get_running_loop().create_task(self.aclose())
-
 
 def data_model_definition_to_redis_fields(
     data_model_definition: VectorStoreRecordDefinition,
@@ -179,7 +170,6 @@ def data_model_definition_to_redis_fields(
         elif collection_type == RedisCollectionTypes.JSON:
             fields.append(_field_to_redis_field_json(name, field))
     return fields
-
 
 def _field_to_redis_field_hashset(
     name: str, field: VectorStoreRecordVectorField | VectorStoreRecordDataField
@@ -202,7 +192,6 @@ def _field_to_redis_field_hashset(
         return TextField(name=name)
     return TagField(name=name)
 
-
 def _field_to_redis_field_json(
     name: str, field: VectorStoreRecordVectorField | VectorStoreRecordDataField
 ) -> RedisField:
@@ -224,7 +213,6 @@ def _field_to_redis_field_json(
     if field.is_full_text_searchable:
         return TextField(name=f"$.{name}", as_name=name)
     return TagField(name=f"$.{name}", as_name=name)
-
 
 def _filters_to_redis_filters(
     filters: VectorSearchFilter, data_model_definition: VectorStoreRecordDefinition

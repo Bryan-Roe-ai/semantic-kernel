@@ -46,7 +46,6 @@ from semantic_kernel.connectors.ai.anthropic.services.utils import (
 )
 from semantic_kernel.connectors.ai.anthropic.settings.anthropic_settings import AnthropicSettings
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ITEM_TYPES, ChatMessageContent
@@ -54,19 +53,16 @@ from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecut
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ITEM_TYPES, ChatMessageContent
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import CMC_ITEM_TYPES, ChatMessageContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
-<<<<<<< HEAD
 from semantic_kernel.contents.function_result_content import FunctionResultContent
 from semantic_kernel.contents.streaming_chat_message_content import ITEM_TYPES as STREAMING_ITEM_TYPES
-=======
 from semantic_kernel.contents.streaming_chat_message_content import STREAMING_CMC_ITEM_TYPES as STREAMING_ITEM_TYPES
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
 from semantic_kernel.contents.streaming_text_content import StreamingTextContent
 from semantic_kernel.contents.text_content import TextContent
@@ -82,18 +78,12 @@ from semantic_kernel.exceptions.service_exceptions import (
     ServiceInvalidResponseError,
     ServiceResponseException,
 )
-<<<<<<< HEAD
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.utils.telemetry.model_diagnostics.decorators import trace_chat_completion
 from semantic_kernel.exceptions.service_exceptions import (
     ServiceInitializationError,
     ServiceResponseException,
-=======
-from semantic_kernel.utils.feature_stage_decorator import experimental
-from semantic_kernel.utils.telemetry.model_diagnostics.decorators import (
-    trace_chat_completion,
-    trace_streaming_chat_completion,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 )
 from semantic_kernel.utils.experimental_decorator import experimental_class
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError, ServiceResponseException
@@ -117,7 +107,6 @@ ANTHROPIC_TO_SEMANTIC_KERNEL_FINISH_REASON_MAP = {
 }
 
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 @experimental
 class AnthropicChatCompletion(ChatCompletionClientBase):
@@ -587,7 +576,6 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
             text_content = stream_event.delta.text
 
         items: list[STREAMING_ITEM_TYPES] = [StreamingTextContent(choice_index=content_block_idx, text=text_content)]
-        
 
         """Create a streaming chat message content object from a content block."""
         items: list[STREAMING_ITEM_TYPES] = []
@@ -631,7 +619,6 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
     def get_prompt_execution_settings_class(self) -> "type[AnthropicChatPromptExecutionSettings]":
         """Create a request settings object."""
         return AnthropicChatPromptExecutionSettings
-    
 
     async def _send_chat_request(self, settings: AnthropicChatPromptExecutionSettings) -> list["ChatMessageContent"]:
         """Send the chat request."""

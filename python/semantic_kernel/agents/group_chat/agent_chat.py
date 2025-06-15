@@ -3,75 +3,20 @@
 import asyncio
 import logging
 import threading
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 from abc import abstractmethod
 from collections.abc import AsyncGenerator, AsyncIterable
 from typing import Protocol, runtime_checkable
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 from abc import abstractmethod
 from collections.abc import AsyncGenerator, AsyncIterable
 from typing import Protocol, runtime_checkable
-=======
+
 from collections.abc import AsyncGenerator, AsyncIterable
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
 from collections.abc import AsyncGenerator, AsyncIterable
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
 from collections.abc import AsyncIterable
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 from pydantic import Field, PrivateAttr
 
@@ -88,43 +33,8 @@ from semantic_kernel.utils.feature_stage_decorator import experimental
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-
-<<<<<<< HEAD
 @experimental_class
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 @runtime_checkable
 class AgentChatProtocol(Protocol):
     """A protocol for agent chat."""
@@ -134,56 +44,10 @@ class AgentChatProtocol(Protocol):
         """Invoke an agent asynchronously."""
         ...
 
-
 @experimental_class
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-<<<<<<< div
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
-=======
+
 @experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 class AgentChat(KernelBaseModel):
     """A base class chat interface for agents."""
 
@@ -321,42 +185,6 @@ class AgentChat(KernelBaseModel):
         finally:
             self.clear_activity_signal()
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
     async def invoke_agent_stream(self, agent: Agent) -> AsyncIterable[ChatMessageContent]:
         """Invoke an agent stream asynchronously."""
         self.set_activity_or_throw()
@@ -380,40 +208,6 @@ class AgentChat(KernelBaseModel):
         finally:
             self.clear_activity_signal()
 
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
     async def reset(self) -> None:
         """Reset the agent chat."""
         self.set_activity_or_throw()

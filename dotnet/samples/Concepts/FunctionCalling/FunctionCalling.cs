@@ -461,7 +461,7 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
         ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(
-            "Good morning! What’s the current time and latest news headlines?",
+            "Good morning! Whats the current time and latest news headlines?",
             settings,
             kernel);
 
@@ -488,7 +488,7 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
         ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(
-            "Good morning! What’s the current time and latest news headlines?",
+            "Good morning! Whats the current time and latest news headlines?",
             settings,
             kernel);
 
@@ -516,7 +516,7 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         IChatCompletionService chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
 
         ChatMessageContent result = await chatCompletionService.GetChatMessageContentAsync(
-            "Good morning! What’s the current time and latest news headlines?",
+            "Good morning! Whats the current time and latest news headlines?",
             settings,
             kernel);
 
@@ -550,14 +550,8 @@ public class FunctionCalling(ITestOutputHelper output) : BaseTest(output)
         // Add a plugin with some helper functions we want to allow the model to call.
         kernel.ImportPluginFromFunctions("HelperFunctions",
         [
-<<<<<<< HEAD
             kernel.CreateFunctionFromMethod(() => DateTime.UtcNow.ToString("R"), "GetCurrentUtcDateTime", "Retrieves the current date time in UTC."),
             kernel.CreateFunctionFromMethod((string cityName, string currentDateTime) =>
-=======
-            kernel.CreateFunctionFromMethod(() => new List<string> { "Squirrel Steals Show", "Dog Wins Lottery" }, "GetLatestNewsTitles", "Retrieves latest news titles."),
-            kernel.CreateFunctionFromMethod(() => DateTime.UtcNow.ToString("R"), "GetCurrentDateTimeInUtc", "Retrieves the current date time in UTC."),
-            kernel.CreateFunctionFromMethod((string cityName, string currentDateTimeInUtc) =>
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
                 cityName switch
                 {
                     "Boston" => "61 and rainy",

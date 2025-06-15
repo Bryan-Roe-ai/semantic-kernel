@@ -147,7 +147,6 @@ internal static class ChatHistoryReducerExtensions
         // No user message found, fallback to the earliest non-function related message
         return targetIndex;
     }
-<<<<<<< HEAD:dotnet/src/Agents/Core/History/ChatHistoryReducerExtensions.cs
 
     /// <summary>
     /// Process history reduction and mutate the provided history.
@@ -181,42 +180,6 @@ internal static class ChatHistoryReducerExtensions
 
         return true;
     }
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
 
     /// <summary>
     /// Reduce the history using the provided reducer without mutating the source history.
@@ -234,40 +197,5 @@ internal static class ChatHistoryReducerExtensions
 
         return history;
     }
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/SemanticKernel.Core/AI/ChatCompletion/ChatHistoryReducerExtensions.cs
+
 }

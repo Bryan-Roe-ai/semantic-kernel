@@ -83,7 +83,6 @@ internal sealed class OpenAIAssistantChannel(AssistantClient client, string thre
                     // Retrieve the message
                     ThreadMessage? message = await this.RetrieveMessageAsync(messageCreationDetails, cancellationToken).ConfigureAwait(false);
 
-
                     // Retrieve the message
                     ThreadMessage? message = await this.RetrieveMessageAsync(messageCreationDetails, cancellationToken).ConfigureAwait(false);
 
@@ -115,8 +114,6 @@ internal sealed class OpenAIAssistantChannel(AssistantClient client, string thre
                         }
                     }
                 }
-
-
 
                     // Retrieve the message
                     ThreadMessage? message = await this.RetrieveMessageAsync(messageCreationDetails, cancellationToken).ConfigureAwait(false);
@@ -526,9 +523,7 @@ internal sealed class OpenAIAssistantChannel(AssistantClient client, string thre
     protected override Task ResetAsync(CancellationToken cancellationToken = default) =>
         this._client.DeleteThreadAsync(this._threadId, cancellationToken);
 
-<<<<<<< HEAD
-=======
     /// <inheritdoc/>
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     protected override string Serialize() => this._threadId;
 }

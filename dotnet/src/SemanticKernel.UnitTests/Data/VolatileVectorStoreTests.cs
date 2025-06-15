@@ -63,50 +63,14 @@ public class VolatileVectorStoreTests
         Assert.Equal(new[] { "collection1", "collection2" }, collectionNamesList);
     }
 
-<<<<<<< main
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
     public sealed class SinglePropsModel<TKey>
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
+
     public sealed class SinglePropsModel<TKey>
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
+
     public sealed class SinglePropsModel<TKey>
-=======
->>>>>>> Stashed changes
-=======
+
     public sealed class SinglePropsModel<TKey>
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< HEAD
-=======
->>>>>>> upstream/main
+
     [Fact]
     public async Task GetCollectionDoesNotAllowADifferentDataTypeThanPreviouslyUsedAsync()
     {
@@ -122,49 +86,8 @@ public class VolatileVectorStoreTests
 
 #pragma warning disable CA1812 // Classes are used as generic arguments
     private sealed class SinglePropsModel<TKey>
-<<<<<<< main
-=======
     public sealed class SinglePropsModel<TKey>
->>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
-<<<<<<< main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> head
->>>>>>> div
+
     {
         [VectorStoreRecordKey]
         public required TKey Key { get; set; }
@@ -177,46 +100,6 @@ public class VolatileVectorStoreTests
 
         public string? NotAnnotated { get; set; }
     }
-<<<<<<< main
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< HEAD
-=======
->>>>>>> upstream/main
 
     private sealed class SecondModel
     {
@@ -227,46 +110,5 @@ public class VolatileVectorStoreTests
         public string Data { get; set; } = string.Empty;
     }
 #pragma warning restore CA1812
-<<<<<<< main
-=======
->>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
-<<<<<<< main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> head
->>>>>>> div
+
 }

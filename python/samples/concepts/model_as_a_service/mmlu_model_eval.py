@@ -12,22 +12,17 @@ from samples.concepts.model_as_a_service.helpers import (
     formatted_question,
     formatted_system_message,
 )
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.azure_ai_inference.services.azure_ai_inference_chat_completion import (
     AzureAIInferenceChatCompletion,
 )
 from semantic_kernel.connectors.ai.chat_completion_client_base import (
     ChatCompletionClientBase,
 )
-=======
-from semantic_kernel.connectors.ai.azure_ai_inference import AzureAIInferenceChatCompletion
-from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
 from semantic_kernel.kernel import Kernel
-
 
 def setup_kernel():
     """Set up the kernel with AI services."""
@@ -61,7 +56,6 @@ def setup_kernel():
 
     return kernel
 
-
 def load_mmlu_dataset(subjects: list[str]) -> dict[str, Dataset]:
     """Load the MMLU dataset for given subjects.
 
@@ -90,7 +84,6 @@ def load_mmlu_dataset(subjects: list[str]) -> dict[str, Dataset]:
     )
 
     return datasets
-
 
 class MMLUPlugin:
     """A plugin for evaluating the MMLU dataset."""
@@ -145,7 +138,6 @@ class MMLUPlugin:
 
         # Compare the AI response with the correct answer
         return response.content.strip() == correct_answer
-
 
 async def main():
     # Load the MMLU dataset for specified subjects
@@ -205,7 +197,6 @@ async def main():
         print(
             f"Overall Accuracy of {ai_service}: {total_corrects[ai_service] / totals * 100:.2f}%."
         )
-
 
 if __name__ == "__main__":
     asyncio.run(main())

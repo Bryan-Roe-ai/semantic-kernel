@@ -23,7 +23,6 @@ try:
 except ImportError:
     usearch_installed = False
 
-
 pytestmark = [
     pytest.mark.skipif(not usearch_installed, reason="`USearch` is not installed"),
     pytest.mark.skipif(
@@ -32,7 +31,6 @@ pytestmark = [
     ),
     pytest.mark.skip(reason="Flaky tests: USearch package produces memory access violation error"),
 ]
-
 
 @pytest.fixture
 def memory_record1():
@@ -47,7 +45,6 @@ def memory_record1():
         timestamp=datetime.now(),
     )
 
-
 @pytest.fixture
 def memory_record1_with_collision():
     return MemoryRecord(
@@ -60,7 +57,6 @@ def memory_record1_with_collision():
         external_source_name="external source",
         timestamp=datetime.now(),
     )
-
 
 @pytest.fixture
 def memory_record2():
@@ -75,7 +71,6 @@ def memory_record2():
         timestamp=datetime.now(),
     )
 
-
 @pytest.fixture
 def memory_record3():
     return MemoryRecord(
@@ -88,7 +83,6 @@ def memory_record3():
         external_source_name="external source",
         timestamp=datetime.now(),
     )
-
 
 def gen_memory_records(
     count: int, ndim: int, start_index: int = 0
@@ -107,12 +101,10 @@ def gen_memory_records(
         for index in range(count)
     ]
 
-
 def compare_memory_records(
     record1: MemoryRecord, record2: MemoryRecord, with_embedding: bool
 ):
     """Compare two MemoryRecord instances and assert they are the same."""
-<<<<<<< HEAD:python/tests/integration/connectors/memory/test_usearch.py
     assert (
         record1._key == record2._key
     ), f"_key mismatch: {record1._key} != {record2._key}"
@@ -135,31 +127,11 @@ def compare_memory_records(
     assert (
         record1._additional_metadata == record2._additional_metadata
     ), f"_additional_metadata mismatch: {record1._additional_metadata} != {record2._additional_metadata}"
-=======
-    assert record1._key == record2._key, f"_key mismatch: {record1._key} != {record2._key}"
-    assert record1._timestamp == record2._timestamp, (
-        f"_timestamp mismatch: {record1._timestamp} != {record2._timestamp}"
-    )
-    assert record1._is_reference == record2._is_reference, (
-        f"_is_reference mismatch: {record1._is_reference} != {record2._is_reference}"
-    )
-    assert record1._external_source_name == record2._external_source_name, (
-        f"_external_source_name mismatch: {record1._external_source_name} != {record2._external_source_name}"
-    )
-    assert record1._id == record2._id, f"_id mismatch: {record1._id} != {record2._id}"
-    assert record1._description == record2._description, (
-        f"_description mismatch: {record1._description} != {record2._description}"
-    )
-    assert record1._text == record2._text, f"_text mismatch: {record1._text} != {record2._text}"
-    assert record1._additional_metadata == record2._additional_metadata, (
-        f"_additional_metadata mismatch: {record1._additional_metadata} != {record2._additional_metadata}"
-    )
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/tests/integration/memory/memory_stores/test_usearch_memory_store.py
+
     if with_embedding is True:
         assert record1._embedding == pytest.approx(
             record2._embedding, abs=1e-2
         ), "_embedding arrays are not equal"
-
 
 @pytest.mark.asyncio
 async def test_create_and_get_collection():
@@ -172,7 +144,6 @@ async def test_create_and_get_collection():
 
     assert len(result) == 3
     assert result == ["test_collection1", "test_collection2", "test_collection3"]
-
 
 @pytest.mark.asyncio
 async def test_delete_collection():
@@ -188,7 +159,6 @@ async def test_delete_collection():
     result = await memory.get_collections()
     assert len(result) == 0
 
-
 @pytest.mark.asyncio
 async def test_does_collection_exist():
     memory = USearchMemoryStore()
@@ -199,7 +169,6 @@ async def test_does_collection_exist():
     result = await memory.does_collection_exist("TEST_COLLECTION")
     assert result is True
 
-
 @pytest.mark.asyncio
 async def test_upsert_and_get_with_no_embedding(memory_record1: MemoryRecord):
     memory = USearchMemoryStore()
@@ -209,7 +178,6 @@ async def test_upsert_and_get_with_no_embedding(memory_record1: MemoryRecord):
     result = await memory.get("test_collection", "test_id1", False)
     compare_memory_records(result, memory_record1, False)
 
-
 @pytest.mark.asyncio
 async def test_upsert_and_get_with_embedding(memory_record1: MemoryRecord):
     memory = USearchMemoryStore()
@@ -218,7 +186,6 @@ async def test_upsert_and_get_with_embedding(memory_record1: MemoryRecord):
 
     result = await memory.get("test_collection", "test_id1", True)
     compare_memory_records(result, memory_record1, True)
-
 
 @pytest.mark.asyncio
 async def test_upsert_and_get_batch(
@@ -237,7 +204,6 @@ async def test_upsert_and_get_batch(
     compare_memory_records(result[0], memory_record1, True)
     compare_memory_records(result[1], memory_record2, True)
 
-
 @pytest.mark.asyncio
 async def test_remove(memory_record1):
     memory = USearchMemoryStore()
@@ -252,7 +218,6 @@ async def test_remove(memory_record1):
     with pytest.raises(ServiceResourceNotFoundError):
         await memory.get("test_collection", "test_id1", True)
 
-
 @pytest.mark.asyncio
 async def test_remove_batch(memory_record1: MemoryRecord, memory_record2: MemoryRecord):
     memory = USearchMemoryStore()
@@ -265,7 +230,6 @@ async def test_remove_batch(memory_record1: MemoryRecord, memory_record2: Memory
 
     result = await memory.get_batch("test_collection", ["test_id1", "test_id2"], True)
     assert len(result) == 0
-
 
 @pytest.mark.asyncio
 async def test_get_nearest_match(
@@ -288,7 +252,6 @@ async def test_get_nearest_match(
     assert isinstance(result[0], MemoryRecord)
     assert result[1] == pytest.approx(1, abs=1e-2)
 
-
 @pytest.mark.asyncio
 async def test_get_nearest_matches(
     memory_record1: MemoryRecord, memory_record2: MemoryRecord
@@ -310,7 +273,6 @@ async def test_get_nearest_matches(
     assert isinstance(results[0][0], MemoryRecord)
     assert results[0][1] == pytest.approx(1, abs=1e-2)
     assert results[1][1] == pytest.approx(0.90450, abs=1e-2)
-
 
 @pytest.mark.asyncio
 async def test_create_and_save_collection(
@@ -352,7 +314,6 @@ async def test_create_and_save_collection(
     result = await memory.get_collections()
     assert len(result) == 0
 
-
 @pytest.mark.asyncio
 async def test_upsert_and_get_with_embedding_with_persist(
     tmpdir, memory_record1: MemoryRecord, memory_record1_with_collision: MemoryRecord
@@ -377,7 +338,6 @@ async def test_upsert_and_get_with_embedding_with_persist(
     assert len(await memory.get_collections()) == 1
     result = await memory.get("test_collection", "test_id1", True)
     compare_memory_records(result, memory_record1_with_collision, True)
-
 
 @pytest.mark.asyncio
 async def test_remove_get(memory_record1: MemoryRecord, memory_record2: MemoryRecord):

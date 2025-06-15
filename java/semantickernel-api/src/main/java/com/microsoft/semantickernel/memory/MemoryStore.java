@@ -122,31 +122,17 @@ public interface MemoryStore extends Buildable {
      * @param minRelevanceScore The minimum relevance threshold for returned results.
      * @param withEmbeddings If true, the embeddings will be returned in the memory records.
      * @return A collection of tuples where item1 is a {@link MemoryRecord} and item2 is its
-<<<<<<< AI
      *     similarity score as a {@code Float}.
      *     similarity score as a {@code double}.
-=======
-<<<<<<< HEAD
      *     similarity score as a {@code Float}.
-=======
-     *     similarity score as a {@code double}.
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
      */
     Mono<Collection<Tuple2<MemoryRecord, Float>>> getNearestMatchesAsync(
             @Nonnull String collectionName,
             @Nonnull Embedding embedding,
             int limit,
-<<<<<<< AI
             float minRelevanceScore,
             double minRelevanceScore,
-=======
-<<<<<<< HEAD
             float minRelevanceScore,
-=======
-            double minRelevanceScore,
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
             boolean withEmbeddings);
 
     /**
@@ -163,10 +149,6 @@ public interface MemoryStore extends Buildable {
     Mono<Tuple2<MemoryRecord, Float>> getNearestMatchAsync(
             @Nonnull String collectionName,
             @Nonnull Embedding embedding,
-<<<<<<< AI
-=======
-<<<<<<< HEAD
->>>>>>> main
             float minRelevanceScore,
             boolean withEmbedding);
 
@@ -175,10 +157,6 @@ public interface MemoryStore extends Buildable {
     }
 
     interface Builder<T extends MemoryStore> extends SemanticKernelBuilder<T> {}
-<<<<<<< AI
-=======
-=======
->>>>>>> main
             double minRelevanceScore,
             boolean withEmbedding);
 
@@ -187,8 +165,4 @@ public interface MemoryStore extends Buildable {
     }
 
     interface Builder extends SemanticKernelBuilder<MemoryStore> {}
-<<<<<<< AI
-=======
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
 }

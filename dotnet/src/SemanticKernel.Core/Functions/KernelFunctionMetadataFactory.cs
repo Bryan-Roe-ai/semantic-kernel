@@ -47,8 +47,6 @@ public static class KernelFunctionMetadataFactory
 
         return functionMetadata;
     }
-<<<<<<< HEAD
-=======
 
     /// <summary>
     /// Creates a <see cref="KernelFunctionMetadata"/> enumeration for a method, specified via an <see cref="MethodInfo"/> instance.
@@ -84,5 +82,5 @@ public static class KernelFunctionMetadataFactory
 
         return functionMetadata;
     }
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 }

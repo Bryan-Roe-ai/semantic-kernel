@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-
 import numpy as np
 import pytest
 
@@ -14,13 +13,9 @@ try:
 except ImportError:
     milvus_installed = False
 
-<<<<<<< HEAD:python/tests/integration/connectors/memory/test_milvus.py
 pytestmark = pytest.mark.skipif(
     not milvus_installed, reason="local milvus is not installed"
 )
-=======
-# pytestmark = pytest.mark.skipif(not milvus_installed, reason="local milvus is not installed")
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/tests/integration/memory/memory_stores/test_milvus_memory_store.py
 
 # pytestmark = pytest.mark.skipif(
 #     platform.system() == "Windows",
@@ -29,7 +24,6 @@ pytestmark = pytest.mark.skipif(
 pytestmark = pytest.mark.skip(
     reason="milvus SDK and local server seem to be out of step, will fix with new integration.",
 )
-
 
 @pytest.fixture(scope="module")
 def setup_milvus():
@@ -41,7 +35,6 @@ def setup_milvus():
     default_server.stop()
     default_server.cleanup()
 
-
 @pytest.mark.asyncio
 async def test_create_and_get_collection(setup_milvus):
     URI, TOKEN = setup_milvus
@@ -50,7 +43,6 @@ async def test_create_and_get_collection(setup_milvus):
     await memory.create_collection("test_collection", 2)
     result = await memory.get_collections()
     assert result == ["test_collection"]
-
 
 @pytest.mark.asyncio
 async def test_get_collections(setup_milvus):
@@ -62,7 +54,6 @@ async def test_get_collections(setup_milvus):
     await memory.create_collection("test_collection3", 2)
     result = await memory.get_collections()
     assert len(result) == 3
-
 
 @pytest.mark.asyncio
 async def test_delete_collection(setup_milvus):
@@ -79,7 +70,6 @@ async def test_delete_collection(setup_milvus):
     result = await memory.get_collections()
     assert len(result) == 0
 
-
 @pytest.mark.asyncio
 async def test_does_collection_exist(setup_milvus):
     URI, TOKEN = setup_milvus
@@ -91,7 +81,6 @@ async def test_does_collection_exist(setup_milvus):
 
     result = await memory.does_collection_exist("TEST_COLLECTION")
     assert result is False
-
 
 @pytest.mark.asyncio
 async def test_upsert_and_get(memory_record1, setup_milvus):
@@ -111,7 +100,6 @@ async def test_upsert_and_get(memory_record1, setup_milvus):
     assert result._external_source_name == "external source"
     assert result._additional_metadata == "additional metadata"
 
-
 @pytest.mark.asyncio
 async def test_upsert_and_get_with_no_embedding(memory_record1, setup_milvus):
     URI, TOKEN = setup_milvus
@@ -129,7 +117,6 @@ async def test_upsert_and_get_with_no_embedding(memory_record1, setup_milvus):
     assert result._description == "description"
     assert result._external_source_name == "external source"
     assert result._additional_metadata == "additional metadata"
-
 
 @pytest.mark.asyncio
 async def test_upsert_and_get_batch(memory_record1, memory_record2, setup_milvus):
@@ -150,7 +137,6 @@ async def test_upsert_and_get_batch(memory_record1, memory_record2, setup_milvus
     assert result[0]._external_source_name == "external source"
     assert result[0]._additional_metadata == "additional metadata"
 
-
 @pytest.mark.asyncio
 async def test_remove(memory_record1, setup_milvus):
     URI, TOKEN = setup_milvus
@@ -165,7 +151,6 @@ async def test_remove(memory_record1, setup_milvus):
     with pytest.raises(Exception):
         await memory.get("test_collection", "test_id1", True)
 
-
 @pytest.mark.asyncio
 async def test_remove_batch(memory_record1, memory_record2, setup_milvus):
     URI, TOKEN = setup_milvus
@@ -178,7 +163,6 @@ async def test_remove_batch(memory_record1, memory_record2, setup_milvus):
 
     result = await memory.get_batch("test_collection", ["test_id1", "test_id2"], True)
     assert result == []
-
 
 @pytest.mark.asyncio
 async def test_get_nearest_matches(memory_record1, memory_record2, setup_milvus):
@@ -193,7 +177,6 @@ async def test_get_nearest_matches(memory_record1, memory_record2, setup_milvus)
     assert len(results) == 2
     assert isinstance(results[0][0], MemoryRecord)
     assert results[0][1] == pytest.approx(0.5, abs=1e-5)
-
 
 @pytest.mark.asyncio
 async def test_get_nearest_match(memory_record1, memory_record2, setup_milvus):

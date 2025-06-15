@@ -20,82 +20,15 @@ public sealed class KernelJsonSchema
     /// <param name="jsonSchema">The JSON Schema as a string.</param>
     /// <returns>A parsed <see cref="KernelJsonSchema"/>, or null if <paramref name="jsonSchema"/> is null or empty.</returns>
     internal static KernelJsonSchema? ParseOrNull(string? jsonSchema) =>
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
         !string.IsNullOrEmpty(jsonSchema) ? new(JsonSerializer.Deserialize<JsonElement>(jsonSchema!, s_jsonSerializerOptions)) :
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
+
         !string.IsNullOrEmpty(jsonSchema) ? new(JsonSerializer.Deserialize<JsonElement>(jsonSchema!, s_jsonSerializerOptions)) :
-=======
+
         !string.IsNullOrEmpty(jsonSchema) ? new(JsonSerializer.Deserialize<JsonElement>(jsonSchema!, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement)) :
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
         !string.IsNullOrEmpty(jsonSchema) ? new(JsonSerializer.Deserialize<JsonElement>(jsonSchema!, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement)) :
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-=======
-        !string.IsNullOrEmpty(jsonSchema) ? new(JsonSerializer.Deserialize<JsonElement>(jsonSchema!, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement)) :
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
+
         null;
 
     /// <summary>Parses a JSON Schema for a parameter type.</summary>
@@ -104,246 +37,44 @@ public sealed class KernelJsonSchema
     /// <exception cref="ArgumentException"><paramref name="jsonSchema"/> is null.</exception>
     /// <exception cref="JsonException">The JSON is invalid.</exception>
     public static KernelJsonSchema Parse(string jsonSchema) =>
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
         new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, s_jsonSerializerOptions));
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
+
         new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, s_jsonSerializerOptions));
-=======
+
         new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement));
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
         new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement));
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-=======
-        new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement));
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
 
     /// <summary>Parses a JSON Schema for a parameter type.</summary>
     /// <param name="jsonSchema">The JSON Schema as a sequence of UTF16 chars.</param>
     /// <returns>A parsed <see cref="KernelJsonSchema"/>.</returns>
     /// <exception cref="JsonException">The JSON is invalid.</exception>
     public static KernelJsonSchema Parse(ReadOnlySpan<char> jsonSchema) =>
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
         new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, s_jsonSerializerOptions));
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
+
         new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, s_jsonSerializerOptions));
-=======
+
         new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement));
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
         new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement));
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
         new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement));
->>>>>>> main
-=======
->>>>>>> head
-<<<<<<< main
-=======
-        new(JsonSerializer.Deserialize<JsonElement>(jsonSchema, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement));
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
 
     /// <summary>Parses a JSON Schema for a parameter type.</summary>
     /// <param name="utf8JsonSchema">The JSON Schema as a sequence of UTF8 bytes.</param>
     /// <returns>A parsed <see cref="KernelJsonSchema"/>.</returns>
     /// <exception cref="JsonException">The JSON is invalid.</exception>
     public static KernelJsonSchema Parse(ReadOnlySpan<byte> utf8JsonSchema) =>
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
         new(JsonSerializer.Deserialize<JsonElement>(utf8JsonSchema, s_jsonSerializerOptions));
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
+
         new(JsonSerializer.Deserialize<JsonElement>(utf8JsonSchema, s_jsonSerializerOptions));
-=======
+
         new(JsonSerializer.Deserialize<JsonElement>(utf8JsonSchema, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement));
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
         new(JsonSerializer.Deserialize<JsonElement>(utf8JsonSchema, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement));
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-=======
-        new(JsonSerializer.Deserialize<JsonElement>(utf8JsonSchema, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement));
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
 
     /// <summary>Initializes a new instance from the specified <see cref="JsonElement"/>.</summary>
     /// <param name="jsonSchema">The schema to be stored.</param>
@@ -358,62 +89,24 @@ public sealed class KernelJsonSchema
     public JsonElement RootElement { get; }
 
     /// <summary>Gets the JSON Schema as a string.</summary>
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
     public override string ToString() => this._schemaAsString ??= JsonSerializer.Serialize(this.RootElement, JsonOptionsCache.WriteIndented);
-=======
+
     public override string ToString() => this._schemaAsString ??= JsonSerializer.Serialize(this.RootElement, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement);
->>>>>>> Stashed changes
-=======
+
     public override string ToString() => this._schemaAsString ??= JsonSerializer.Serialize(this.RootElement, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement);
->>>>>>> Stashed changes
-=======
+
     public override string ToString() => this._schemaAsString ??= JsonSerializer.Serialize(this.RootElement, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement);
->>>>>>> Stashed changes
-=======
+
     public override string ToString() => this._schemaAsString ??= JsonSerializer.Serialize(this.RootElement, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement);
->>>>>>> Stashed changes
-=======
+
     public override string ToString() => this._schemaAsString ??= JsonSerializer.Serialize(this.RootElement, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement);
->>>>>>> Stashed changes
-=======
+
     public override string ToString() => this._schemaAsString ??= JsonSerializer.Serialize(this.RootElement, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement);
-<<<<<<< Updated upstream
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
+
     public override string ToString() => this._schemaAsString ??= JsonSerializer.Serialize(this.RootElement, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement);
->>>>>>> Stashed changes
-=======
+
     public override string ToString() => this._schemaAsString ??= JsonSerializer.Serialize(this.RootElement, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement);
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-    public override string ToString() => this._schemaAsString ??= JsonSerializer.Serialize(this.RootElement, JsonElementJsonSerializerContext.MaxDepth_128.JsonElement);
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
 
     /// <summary>Converter for reading/writing the schema.</summary>
     public sealed class JsonConverter : JsonConverter<KernelJsonSchema>

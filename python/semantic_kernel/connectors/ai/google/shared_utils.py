@@ -5,7 +5,6 @@ import logging
 from collections.abc import Callable
 from typing import TYPE_CHECKING
 
-<<<<<<< main
 from semantic_kernel.connectors.ai.function_choice_behavior import (
     FunctionChoiceBehavior,
     FunctionChoiceType,
@@ -26,16 +25,8 @@ if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.google.vertex_ai.vertex_ai_prompt_execution_settings import (
         VertexAIChatPromptExecutionSettings,
     )
-=======
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-from semantic_kernel.const import DEFAULT_FULLY_QUALIFIED_NAME_SEPARATOR
-from semantic_kernel.contents.chat_history import ChatHistory
-from semantic_kernel.contents.utils.author_role import AuthorRole
-from semantic_kernel.exceptions.service_exceptions import ServiceInvalidRequestError
->>>>>>> upstream/main
 
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 def filter_system_message(chat_history: ChatHistory) -> str | None:
     """Filter the first system message from the chat history.
@@ -56,7 +47,6 @@ def filter_system_message(chat_history: ChatHistory) -> str | None:
             return message.content
 
     return None
-
 
 async def invoke_function_calls(
     function_calls: list[FunctionCallContent],
@@ -84,7 +74,6 @@ async def invoke_function_calls(
         ],
     )
 
-
 FUNCTION_CHOICE_TYPE_TO_GOOGLE_FUNCTION_CALLING_MODE = {
     FunctionChoiceType.AUTO: "AUTO",
     FunctionChoiceType.NONE: "NONE",
@@ -98,8 +87,6 @@ FUNCTION_CHOICE_TYPE_TO_GOOGLE_FUNCTION_CALLING_MODE = {
 # For example, we may incorrect split a function name with a single score when the function doesn't have a plugin name.
 GEMINI_FUNCTION_NAME_SEPARATOR = "__"
 
-
-<<<<<<< main
 def format_function_result_content_name_to_gemini_function_name(
     function_result_content: FunctionResultContent,
 ) -> str:
@@ -109,7 +96,6 @@ def format_function_result_content_name_to_gemini_function_name(
         if function_result_content.plugin_name
         else function_result_content.function_name
     )
-
 
 def format_kernel_function_fully_qualified_name_to_gemini_function_name(
     metadata: KernelFunctionMetadata,
@@ -121,7 +107,6 @@ def format_kernel_function_fully_qualified_name_to_gemini_function_name(
         else metadata.name
     )
 
-
 def format_gemini_function_name_to_kernel_function_fully_qualified_name(
     gemini_function_name: str,
 ) -> str:
@@ -131,17 +116,9 @@ def format_gemini_function_name_to_kernel_function_fully_qualified_name(
             GEMINI_FUNCTION_NAME_SEPARATOR, 1
         )
         return f"{plugin_name}-{function_name}"
-=======
-def format_gemini_function_name_to_kernel_function_fully_qualified_name(gemini_function_name: str) -> str:
-    """Format the Gemini function name to the kernel function fully qualified name."""
-    if GEMINI_FUNCTION_NAME_SEPARATOR in gemini_function_name:
-        plugin_name, function_name = gemini_function_name.split(GEMINI_FUNCTION_NAME_SEPARATOR, 1)
-        return f"{plugin_name}{DEFAULT_FULLY_QUALIFIED_NAME_SEPARATOR}{function_name}"
->>>>>>> upstream/main
+
     return gemini_function_name
 
-
-<<<<<<< HEAD
 def configure_function_choice_behavior(
     settings: "GoogleAIChatPromptExecutionSettings | VertexAIChatPromptExecutionSettings",
     kernel: Kernel,
@@ -152,16 +129,13 @@ def configure_function_choice_behavior(
         raise ServiceInvalidExecutionSettingsError(
             "Function choice behavior is required for tool calls."
         )
-<<<<<<< Updated upstream
+
         return
-=======
-        return
->>>>>>> Stashed changes
 
     settings.function_choice_behavior.configure(
         kernel=kernel, update_settings_callback=callback, settings=settings
     )
-=======
+
 def collapse_function_call_results_in_chat_history(chat_history: ChatHistory):
     """The Gemini API expects the results of parallel function calls to be contained in a single message to be returned.
 
@@ -184,4 +158,4 @@ def collapse_function_call_results_in_chat_history(chat_history: ChatHistory):
             chat_history.remove_message(current_message)
         else:
             current_idx += 1
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+

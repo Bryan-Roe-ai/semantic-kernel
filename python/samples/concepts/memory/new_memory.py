@@ -10,7 +10,6 @@ from uuid import uuid4
 import numpy as np
 
 from semantic_kernel import Kernel
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_prompt_execution_settings import (
     OpenAIEmbeddingPromptExecutionSettings,
 )
@@ -33,17 +32,7 @@ from semantic_kernel.data.vector_store_record_collection import (
     VectorStoreRecordCollection,
 )
 from semantic_kernel.data.vector_store_record_fields import (
-<<<<<<< Updated upstream
-=======
-from semantic_kernel.connectors.ai.open_ai import OpenAIEmbeddingPromptExecutionSettings, OpenAITextEmbedding
-from semantic_kernel.connectors.ai.open_ai.services.azure_text_embedding import AzureTextEmbedding
-=======
-from semantic_kernel.connectors.ai.open_ai import (
-    AzureTextEmbedding,
-    OpenAIEmbeddingPromptExecutionSettings,
-    OpenAITextEmbedding,
-)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 from semantic_kernel.connectors.memory.azure_ai_search import AzureAISearchCollection
 from semantic_kernel.connectors.memory.azure_cosmos_db import AzureCosmosDBNoSQLCollection
 from semantic_kernel.connectors.memory.in_memory import InMemoryVectorCollection
@@ -60,7 +49,7 @@ from semantic_kernel.data import (
     VectorSearchOptions,
     VectorSearchResult,
     VectorStoreRecordCollection,
->>>>>>> Stashed changes
+
     VectorStoreRecordDataField,
     VectorStoreRecordKeyField,
     VectorStoreRecordUtils,
@@ -69,8 +58,6 @@ from semantic_kernel.data import (
     vectorstoremodel,
 )
 
-
-<<<<<<< HEAD
 @vectorstoremodel
 @dataclass
 class MyDataModelArray:
@@ -99,7 +86,6 @@ class MyDataModelArray:
         ),
     ] = "content1"
 
-
 @vectorstoremodel
 @dataclass
 class MyDataModelList:
@@ -125,69 +111,6 @@ class MyDataModelList:
             has_embedding=True, embedding_property_name="vector", property_type="str"
         ),
     ] = "content1"
-=======
-def get_data_model_array(index_kind: IndexKind, distance_function: DistanceFunction) -> type:
-    @vectorstoremodel
-    @dataclass
-    class DataModelArray:
-        vector: Annotated[
-            np.ndarray | None,
-            VectorStoreRecordVectorField(
-                embedding_settings={"embedding": OpenAIEmbeddingPromptExecutionSettings(dimensions=1536)},
-                index_kind=index_kind,
-                dimensions=1536,
-                distance_function=distance_function,
-                property_type="float",
-                serialize_function=np.ndarray.tolist,
-                deserialize_function=np.array,
-            ),
-        ] = None
-        id: Annotated[str, VectorStoreRecordKeyField()] = field(default_factory=lambda: str(uuid4()))
-        content: Annotated[
-            str,
-            VectorStoreRecordDataField(
-                has_embedding=True,
-                embedding_property_name="vector",
-                property_type="str",
-                is_full_text_searchable=True,
-            ),
-        ] = "content1"
-        title: Annotated[str, VectorStoreRecordDataField(property_type="str", is_full_text_searchable=True)] = "title"
-        tag: Annotated[str, VectorStoreRecordDataField(property_type="str", is_filterable=True)] = "tag"
-
-    return DataModelArray
-
-
-def get_data_model_list(index_kind: IndexKind, distance_function: DistanceFunction) -> type:
-    @vectorstoremodel
-    @dataclass
-    class DataModelList:
-        vector: Annotated[
-            list[float] | None,
-            VectorStoreRecordVectorField(
-                embedding_settings={"embedding": OpenAIEmbeddingPromptExecutionSettings(dimensions=1536)},
-                index_kind=index_kind,
-                dimensions=1536,
-                distance_function=distance_function,
-                property_type="float",
-            ),
-        ] = None
-        id: Annotated[str, VectorStoreRecordKeyField()] = field(default_factory=lambda: str(uuid4()))
-        content: Annotated[
-            str,
-            VectorStoreRecordDataField(
-                has_embedding=True,
-                embedding_property_name="vector",
-                property_type="str",
-                is_full_text_searchable=True,
-            ),
-        ] = "content1"
-        title: Annotated[str, VectorStoreRecordDataField(property_type="str", is_full_text_searchable=True)] = "title"
-        tag: Annotated[str, VectorStoreRecordDataField(property_type="str", is_filterable=True)] = "tag"
-
-    return DataModelList
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-
 
 collection_name = "test"
 # Depending on the vector database, the index kind and distance function may need to be adjusted,
@@ -233,21 +156,16 @@ collections: dict[str, Callable[[], VectorStoreRecordCollection]] = {
         collection_name=collection_name,
         prefix_collection_name_to_key_names=True,
     ),
-<<<<<<< HEAD
-<<<<<<< main
+
     "qdrant": QdrantCollection[MyDataModel](
         data_model_type=MyDataModel,
         collection_name=collection_name,
         prefer_grpc=True,
         named_vectors=False,
-=======
-    "qdrant": lambda: QdrantCollection[MyDataModel](
-        data_model_type=MyDataModel, collection_name=collection_name, prefer_grpc=True, named_vectors=False
->>>>>>> upstream/main
-=======
+
     "qdrant": lambda: QdrantCollection[DataModel](
         data_model_type=DataModel, collection_name=collection_name, prefer_grpc=True, named_vectors=False
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     ),
     "in_memory": lambda: InMemoryVectorCollection[DataModel](
         data_model_type=DataModel,
@@ -264,7 +182,6 @@ collections: dict[str, Callable[[], VectorStoreRecordCollection]] = {
     ),
 }
 
-
 def print_record(result: VectorSearchResult | None = None, record: DataModel | None = None):
     if result:
         record = result.record
@@ -273,25 +190,16 @@ def print_record(result: VectorSearchResult | None = None, record: DataModel | N
     if record.vector is not None:
         print(f"    Vector (first five): {record.vector[:5]}")
 
-
 async def main(collection: str, use_azure_openai: bool, embedding_model: str):
     print("-" * 30)
     kernel = Kernel()
     service_id = "embedding"
-<<<<<<< main
     ai_model_id = "text-embedding-3-small"
     kernel.add_service(
         OpenAITextEmbedding(service_id=service_id, ai_model_id=ai_model_id)
     )
     async with stores[store] as record_store:
-=======
-    if use_azure_openai:
-        embedder = AzureTextEmbedding(service_id=service_id, deployment_name=embedding_model)
-    else:
-<<<<<<< HEAD
-        kernel.add_service(OpenAITextEmbedding(service_id=service_id, ai_model_id=embedding_model))
-    async with stores[store]() as record_store:
->>>>>>> upstream/main
+
         await record_store.create_collection_if_not_exists()
 
         record1 = MyDataModel(
@@ -303,7 +211,7 @@ async def main(collection: str, use_azure_openai: bool, embedding_model: str):
 
         records = await VectorStoreRecordUtils(kernel).add_vector_to_records(
             [record1, record2], data_model_type=MyDataModel
-=======
+
         embedder = OpenAITextEmbedding(service_id=service_id, ai_model_id=embedding_model)
     kernel.add_service(embedder)
     async with collections[collection]() as record_collection:
@@ -322,7 +230,7 @@ async def main(collection: str, use_azure_openai: bool, embedding_model: str):
             id="09caec77-f7e1-466a-bcec-f1d51c5b15be",
             title="Semantic Kernel Languages",
             tag="general",
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
         )
 
         print("Adding records!")
@@ -386,7 +294,6 @@ async def main(collection: str, use_azure_openai: bool, embedding_model: str):
         print("Deleting collection!")
         await record_collection.delete_collection()
         print("Done!")
-
 
 if __name__ == "__main__":
     argparse.ArgumentParser()

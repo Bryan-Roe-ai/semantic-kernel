@@ -1,62 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-<<<<<<< HEAD
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< HEAD
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
+
 # Copyright (c) Microsoft. All rights reserved.
 
 from typing import TYPE_CHECKING
@@ -75,43 +18,7 @@ if TYPE_CHECKING:
     from semantic_kernel.services.kernel_services_extension import (
         KernelServicesExtension,
     )
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
 from typing import TYPE_CHECKING, Tuple, Union
 
 from semantic_kernel.connectors.ai.ai_exception import AIException
@@ -125,42 +32,6 @@ ALL_COMPLETION_SERVICE_TYPES = Union[TextCompletionClientBase, ChatCompletionCli
 if TYPE_CHECKING:
     from semantic_kernel.functions.kernel_function import KernelFunction
     from semantic_kernel.kernel import Kernel
->>>>>>> f40c1f2075e2443c31c57c34f5f66c2711a8db75
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-
 
 class AIServiceSelector:
     """Default service selector, can be subclassed and overridden.
@@ -170,68 +41,10 @@ class AIServiceSelector:
     """
 
     def select_ai_service(
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< HEAD
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-<<<<<<< HEAD
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< HEAD
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
         self,
         kernel: "KernelServicesExtension",
-<<<<<<< HEAD
+
         function: "KernelFunction",
         arguments: "KernelArguments",
         type_: (
@@ -239,11 +52,7 @@ class AIServiceSelector:
             | tuple[type[AI_SERVICE_CLIENT_TYPE], ...]
             | None
         ) = None,
-=======
-        function: "KernelFunction | None" = None,
-        arguments: "KernelArguments | None" = None,
-        type_: type[AI_SERVICE_CLIENT_TYPE] | tuple[type[AI_SERVICE_CLIENT_TYPE], ...] | None = None,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     ) -> tuple["AIServiceClientBase", "PromptExecutionSettings"]:
         """Select an AI Service on a first come, first served basis.
 
@@ -258,19 +67,12 @@ class AIServiceSelector:
             type_: The type of service to select. (optional)
         """
         if type_ is None:
-<<<<<<< HEAD
             from semantic_kernel.connectors.ai.chat_completion_client_base import (
                 ChatCompletionClientBase,
             )
             from semantic_kernel.connectors.ai.text_completion_client_base import (
                 TextCompletionClientBase,
             )
-=======
-            from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
-            from semantic_kernel.connectors.ai.text_completion_client_base import TextCompletionClientBase
-            from semantic_kernel.connectors.ai.text_to_audio_client_base import TextToAudioClientBase
-            from semantic_kernel.connectors.ai.text_to_image_client_base import TextToImageClientBase
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
             type_ = (TextCompletionClientBase, ChatCompletionClientBase, TextToAudioClientBase, TextToImageClientBase)  # type: ignore
 
@@ -297,43 +99,7 @@ class AIServiceSelector:
             except KernelServiceNotFoundError:
                 continue
         raise KernelServiceNotFoundError("No service found.")
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
         self, kernel: "Kernel", function: "KernelFunction", arguments: KernelArguments
     ) -> Tuple[ALL_COMPLETION_SERVICE_TYPES, PromptExecutionSettings]:
         """Select a AI Service on a first come, first served basis,
@@ -351,38 +117,4 @@ class AIServiceSelector:
                 service_settings = service.get_prompt_execution_settings_from_settings(settings)
                 return service, service_settings
         raise AIException(AIException.ErrorCodes.NoServiceFound, "No service found.")
->>>>>>> f40c1f2075e2443c31c57c34f5f66c2711a8db75
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+

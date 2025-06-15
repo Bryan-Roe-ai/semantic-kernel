@@ -44,7 +44,6 @@ if TYPE_CHECKING:
         PromptExecutionSettings,
     )
 
-
 class GoogleAITextCompletion(GoogleAIBase, TextCompletionClientBase):
     """Google AI Text Completion Client."""
 
@@ -99,145 +98,17 @@ class GoogleAITextCompletion(GoogleAIBase, TextCompletionClientBase):
 
     # Override from AIServiceClientBase
     @override
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< main
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
     def get_prompt_execution_settings_class(self) -> type["PromptExecutionSettings"]:
         return GoogleAITextPromptExecutionSettings
 
     @override
     @trace_text_completion(GoogleAIBase.MODEL_PROVIDER_NAME)
     async def _inner_get_text_contents(
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
     @trace_text_completion(GoogleAIBase.MODEL_PROVIDER_NAME)
     async def get_text_contents(
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
         self,
         prompt: str,
         settings: "PromptExecutionSettings",
@@ -246,15 +117,13 @@ class GoogleAITextCompletion(GoogleAIBase, TextCompletionClientBase):
             settings = self.get_prompt_execution_settings_from_settings(settings)
         assert isinstance(settings, GoogleAITextPromptExecutionSettings)  # nosec
 
-<<<<<<< main
         return await self._send_request(prompt, settings)
 
     async def _send_request(
         self, prompt: str, settings: GoogleAITextPromptExecutionSettings
     ) -> list[TextContent]:
         """Send a text generation request to the Google AI service."""
-=======
->>>>>>> upstream/main
+
         genai.configure(api_key=self.service_settings.api_key.get_secret_value())
         if not self.service_settings.gemini_model_id:
             raise ServiceInitializationError("The Google AI Gemini model ID is required.")
@@ -272,7 +141,6 @@ class GoogleAITextCompletion(GoogleAIBase, TextCompletionClientBase):
             for candidate in response.candidates
         ]
 
-<<<<<<< main
     def _create_text_content(
         self, response: AsyncGenerateContentResponse, candidate: Candidate
     ) -> TextContent:
@@ -298,8 +166,7 @@ class GoogleAITextCompletion(GoogleAIBase, TextCompletionClientBase):
     # endregion
 
     # region Streaming
-=======
->>>>>>> upstream/main
+
     @override
     async def _inner_get_streaming_text_contents(
         self,

@@ -11,10 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-<<<<<<< HEAD
-=======
 using Microsoft.Extensions.VectorData;
->>>>>>> main
+
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Http;
 
@@ -283,11 +281,8 @@ public sealed class BingTextSearch : ITextSearch
                 throw new ArgumentException("Result must be a BingWebPage", nameof(result));
             }
 
-<<<<<<< HEAD
             return new TextSearchResult(webPage.Name, webPage.Snippet, webPage.Url);
-=======
-            return new TextSearchResult(webPage.Snippet ?? string.Empty) { Name = webPage.Name, Link = webPage.Url };
->>>>>>> main
+
         }
     }
 

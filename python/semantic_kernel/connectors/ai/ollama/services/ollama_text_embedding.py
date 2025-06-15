@@ -26,107 +26,29 @@ else:
 
 from numpy import array, ndarray
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
     EmbeddingGeneratorBase,
 )
 from semantic_kernel.utils.experimental_decorator import experimental_class
-=======
-from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
-from semantic_kernel.utils.feature_stage_decorator import experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 logger: logging.Logger = logging.getLogger(__name__)
 
+@experimental_class
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-@experimental_class
-=======
-@experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 class OllamaTextEmbedding(OllamaBase, EmbeddingGeneratorBase):
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
+
 @experimental_class
 class OllamaTextEmbedding(OllamaBase, EmbeddingGeneratorBase):
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
+
 @experimental_class
 class OllamaTextEmbedding(OllamaBase, EmbeddingGeneratorBase):
-=======
->>>>>>> Stashed changes
-=======
+
 @experimental_class
 class OllamaTextEmbedding(OllamaBase, EmbeddingGeneratorBase):
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
+
 @experimental_class
 class OllamaTextEmbedding(OllamaBase, EmbeddingGeneratorBase):
-=======
-class OllamaTextEmbedding(EmbeddingGeneratorBase):
->>>>>>> ms/small_fixes
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
     """Ollama embeddings client.
 
     Make sure to have the ollama service running either locally or remotely.
@@ -153,13 +75,9 @@ class OllamaTextEmbedding(EmbeddingGeneratorBase):
             env_file_encoding (str | None): The encoding of the environment settings file, defaults to 'utf-8'.
         """
         try:
-<<<<<<< HEAD
             ollama_settings = OllamaSettings.create(
                 model=ai_model_id,
-=======
-            ollama_settings = OllamaSettings(
-                embedding_model_id=ai_model_id,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                 host=host,
                 env_file_path=env_file_path,
                 env_file_encoding=env_file_encoding,

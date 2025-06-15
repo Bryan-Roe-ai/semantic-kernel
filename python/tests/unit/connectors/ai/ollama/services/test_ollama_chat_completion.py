@@ -7,7 +7,6 @@ import httpx
 import pytest
 from ollama import AsyncClient
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import (
     OllamaChatPromptExecutionSettings,
     OllamaTextPromptExecutionSettings,
@@ -22,10 +21,7 @@ from semantic_kernel.exceptions.service_exceptions import (
 _kernel.connectors.ai.ollama.ollama_prompt_execution_settings import OllamaChatPromptExecutionSettings
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import OllamaChatPromptExecutionSettings
-=======
-import semantic_kernel.connectors.ai.ollama.services.ollama_chat_completion as occ_module
-from semantic_kernel.connectors.ai.completion_usage import CompletionUsage
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
 from semantic_kernel.connectors.ai.ollama.ollama_prompt_execution_settings import OllamaChatPromptExecutionSettings
 from semantic_kernel.connectors.ai.ollama.services.ollama_chat_completion import OllamaChatCompletion
@@ -40,13 +36,11 @@ from semantic_kernel.exceptions.service_exceptions import (
     ServiceInvalidResponseError,
 )
 
-
 def test_settings(model_id):
     """Test that the settings class is correct."""
     ollama = OllamaChatCompletion(ai_model_id=model_id)
     .contents.chat_history import ChatHistory
 from tests.unit.connectors.ollama.utils import MockResponse
-
 
 def test_settings():
     ollama = OllamaChatCompletion(ai_model_id="test_model")
@@ -68,7 +62,6 @@ def test_init_empty_string_ai_model_id():
     with pytest.raises(ServiceInitializationError):
         _ = OllamaChatCompletion(ai_model_id="")
 
-
 def test_custom_client(model_id, custom_client):
     """Test that the service initializes correctly with a custom client."""
     ollama = OllamaChatCompletion(ai_model_id=model_id, client=custom_client)
@@ -83,14 +76,12 @@ def test_invalid_ollama_settings():
     with pytest.raises(ServiceInitializationError):
         _ = OllamaChatCompletion(ai_model_id=123)
 
-
 @pytest.mark.parametrize("exclude_list", [["OLLAMA_CHAT_MODEL_ID"]], indirect=True)
 def test_init_empty_model_id_in_env(ollama_unit_test_env):
 def test_init_empty_model_id_in_env(ollama_unit_test_env):
     """Test that the service initializes incorrectly with an empty model id."""
     with pytest.raises(ServiceInitializationError):
         _ = OllamaChatCompletion(env_file_path="fake_env_file_path.env")
-
 
 def test_function_choice_settings(ollama_unit_test_env):
     """Test that REQUIRED and NONE function choice settings are unsupported."""
@@ -105,12 +96,10 @@ def test_function_choice_settings(ollama_unit_test_env):
             OllamaChatPromptExecutionSettings(function_choice_behavior=FunctionChoiceBehavior.NoneInvoke())
         )
 
-
 def test_service_url(ollama_unit_test_env):
     """Test that the service URL is correct."""
     ollama = OllamaChatCompletion()
     assert ollama.service_url() == ollama_unit_test_env["OLLAMA_HOST"]
-
 
 @patch("ollama.AsyncClient.__init__", return_value=None)  # mock_client
 @patch("ollama.AsyncClient.chat")  # mock_chat_client
@@ -150,7 +139,6 @@ async def test_custom_host(
     assert mock_chat_client.call_count == 1
     assert len(chat_responses) == 1
     assert chat_responses[0].content == "test_response"
-
 
 @patch("ollama.AsyncClient.__init__", return_value=None)  # mock_client
 @patch("ollama.AsyncClient.chat")  # mock_chat_client
@@ -194,7 +182,6 @@ async def test_custom_host_streaming(
     mock_client.assert_called_with(host=host)
     # Check that the chat client was called once
     assert mock_chat_client.call_count == 1
-
 
 @patch("ollama.AsyncClient.chat")
 async def test_chat_completion(
@@ -240,7 +227,6 @@ async def test_complete_chat(mock_post):
         },
     )
 
-
 @patch("ollama.AsyncClient.chat")
 async def test_chat_completion_wrong_return_type(
     mock_chat_client,
@@ -263,7 +249,6 @@ async def test_chat_completion_wrong_return_type(
                 service_id=service_id, options=default_options
             ),
         )
-
 
 @pytest.mark.asyncio
 @patch("ollama.AsyncClient.chat")
@@ -289,7 +274,6 @@ async def test_text_completion(
         stream=False,
     )
 
-
 @pytest.mark.asyncio
 @patch("ollama.AsyncClient.chat")
 async def test_text_completion_wrong_return_type(
@@ -313,7 +297,6 @@ async def test_text_completion_wrong_return_type(
                 service_id=service_id, options=default_options
             ),
         )
-
 
 @patch("ollama.AsyncClient.chat")
 async def test_streaming_chat_completion(
@@ -349,7 +332,6 @@ async def test_streaming_chat_completion(
         stream=True,
     )
 
-
 @pytest.mark.asyncio
 @patch("aiohttp.ClientSession.post")
 async def test_complete(mock_post):
@@ -360,7 +342,6 @@ async def test_complete(mock_post):
         OllamaChatPromptExecutionSettings(service_id="test_model", ai_model_id="test_model", options={"test": "test"}),
     )
     assert response[0].text == "test_response"
-
 
 @pytest.mark.asyncio
 @patch("aiohttp.ClientSession.post")
@@ -386,7 +367,6 @@ async def test_complete_chat_stream(mock_post):
         },
     )
 
-
 @pytest.mark.asyncio
 @patch("ollama.AsyncClient.chat")
 async def test_streaming_chat_completion_wrong_return_type(
@@ -410,7 +390,6 @@ async def test_streaming_chat_completion_wrong_return_type(
             ),
         ):
             pass
-
 
 @pytest.mark.asyncio
 @patch("ollama.AsyncClient.chat")
@@ -446,7 +425,6 @@ async def test_streaming_text_completion(
         options=default_options,
         stream=True,
     )
-
 
 @pytest.mark.asyncio
 @patch("ollama.AsyncClient.chat")
@@ -504,7 +482,6 @@ async def test_complete_stream(mock_post):
         ):
             pass
 
-
 @pytest.fixture
 async def setup_ollama_chat_completion():
     async_client_mock = AsyncMock(spec=AsyncClient)
@@ -513,7 +490,6 @@ async def setup_ollama_chat_completion():
         service_id="test_service", ai_model_id="test_model_id", client=async_client_mock
     )
     return ollama_chat_completion, async_client_mock
-
 
 async def test_service_url_new(setup_ollama_chat_completion):
     ollama_chat_completion, async_client_mock = setup_ollama_chat_completion
@@ -524,7 +500,6 @@ async def test_service_url_new(setup_ollama_chat_completion):
     service_url = ollama_chat_completion.service_url()
     assert service_url == "http://mocked_base_url"
 
-
 async def test_prepare_chat_history_for_request(setup_ollama_chat_completion):
     ollama_chat_completion, _ = setup_ollama_chat_completion
     chat_history = MagicMock(spec=ChatHistory)
@@ -532,7 +507,6 @@ async def test_prepare_chat_history_for_request(setup_ollama_chat_completion):
 
     prepared_history = ollama_chat_completion._prepare_chat_history_for_request(chat_history)
     assert prepared_history == []
-
 
 async def test_service_url_with_httpx_client(model_id: str) -> None:
     """
@@ -546,7 +520,6 @@ async def test_service_url_with_httpx_client(model_id: str) -> None:
     ollama = OllamaChatCompletion(ai_model_id=model_id, client=client)
     # service_url should reflect the base_url of the httpx client
     assert ollama.service_url() == "http://example.com:8000"
-
 
 @patch("ollama.AsyncClient.chat", new_callable=AsyncMock)
 async def test_chat_response_branch(
@@ -630,7 +603,6 @@ async def test_chat_response_branch(
     usage = msg.metadata["usage"]
     assert isinstance(usage, CompletionUsage)
     assert usage.prompt_tokens == 2 and usage.completion_tokens == 3
-
 
 @patch("ollama.AsyncClient.chat", new_callable=AsyncMock)
 async def test_streaming_chat_response_branch(

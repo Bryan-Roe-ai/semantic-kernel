@@ -47,19 +47,14 @@ if TYPE_CHECKING:
     from semantic_kernel.connectors.openapi_plugin.openapi_function_execution_parameters import (
         OpenAPIFunctionExecutionParameters,
     )
-<<<<<<< HEAD
     from semantic_kernel.functions.kernel_function_metadata import (
         KernelFunctionMetadata,
     )
     from semantic_kernel.data.text_search import TextSearch
-=======
-    from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 logger = logging.getLogger(__name__)
 
 _T = TypeVar("_T", bound="KernelPlugin")
-
 
 class KernelPlugin(KernelBaseModel):
     """Represents a Kernel Plugin with functions.
@@ -85,7 +80,6 @@ from semantic_kernel.kernel_pydantic import KernelBaseModel
 if TYPE_CHECKING:
     from semantic_kernel.functions.kernel_function import KernelFunction
     from semantic_kernel.functions.kernel_function_metadata import KernelFunctionMetadata
-
 
 class KernelPlugin(KernelBaseModel):
     """

@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-<<<<<<< HEAD
 /**
  * Using Sequential Planner to take the input as a question and answer it finding any information needed.
  * <p>
@@ -25,8 +24,6 @@ import java.nio.charset.StandardCharsets;
  * "https://github.com/microsoft/semantic-kernel/blob/experimental-java/java/samples/sample-code/README.md">
  * README</a> for configuring your environment to run the examples.
  */
-=======
->>>>>>> main
 public class SequentialPlanner_AnswerQuestion {
 
     public static class InformationFinder {

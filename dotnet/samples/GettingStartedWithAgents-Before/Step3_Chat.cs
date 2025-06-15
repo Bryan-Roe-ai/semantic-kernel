@@ -1,38 +1,21 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< main
-=======
-<<<<<<< Updated upstream
->>>>>>> origin/main
+
+
 // Copyright (c) Microsoft. All rights reserved.
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
->>>>>>> origin/main
+
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.Agents.Chat;

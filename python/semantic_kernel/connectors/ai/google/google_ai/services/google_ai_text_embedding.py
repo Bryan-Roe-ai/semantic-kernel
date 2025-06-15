@@ -8,13 +8,10 @@ from google.generativeai.types.text_types import BatchEmbeddingDict
 from numpy import array, ndarray
 from pydantic import ValidationError
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
     EmbeddingGeneratorBase,
 )
-=======
-from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.google.google_ai.google_ai_prompt_execution_settings import (
     GoogleAIEmbeddingPromptExecutionSettings,
 )
@@ -33,7 +30,6 @@ if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
 else:
     from typing_extensions import override  # pragma: no cover
-
 
 class GoogleAITextEmbedding(GoogleAIBase, EmbeddingGeneratorBase):
     """Google AI Text Embedding Service."""

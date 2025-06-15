@@ -51,14 +51,10 @@ if TYPE_CHECKING:
         KernelFunctionFromPrompt,
     )
     from semantic_kernel.kernel import Kernel
-<<<<<<< HEAD
     from semantic_kernel.prompt_template.prompt_template_base import PromptTemplateBase
     from semantic_kernel.prompt_template.prompt_template_config import (
         PromptTemplateConfig,
     )
-=======
-    from semantic_kernel.prompt_template.prompt_template_config import PromptTemplateConfig
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 # Logger, tracer and meter for observability
 logger: logging.Logger = logging.getLogger(__name__)
@@ -72,7 +68,6 @@ TEMPLATE_FORMAT_MAP: dict[TEMPLATE_FORMAT_TYPES, type[PromptTemplateBase]] = {
     JINJA2_TEMPLATE_FORMAT_NAME: Jinja2PromptTemplate,
 }
 
-
 def _create_function_duration_histogram():
     return meter.create_histogram(
         "semantic_kernel.function.invocation.duration",
@@ -80,14 +75,12 @@ def _create_function_duration_histogram():
         description="Measures the duration of a function's execution",
     )
 
-
 def _create_function_streaming_duration_histogram():
     return meter.create_histogram(
         "semantic_kernel.function.streaming.duration",
         unit="s",
         description="Measures the duration of a function's streaming execution",
     )
-
 
 class KernelFunction(KernelBaseModel):
     """Semantic Kernel function.
@@ -134,7 +127,6 @@ if platform.system() == "Windows" and sys.version_info >= (3, 8, 0):
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 class KernelFunction(KernelBaseModel):
     """
@@ -796,7 +788,6 @@ class KernelFunction(KernelBaseModel):
             arguments = KernelArguments(**kwargs)
         _rebuild_function_invocation_context()
         function_context = FunctionInvocationContext(
-<<<<<<< HEAD
             function=self, kernel=kernel, arguments=arguments
         )
         function_context = FunctionInvocationContext(
@@ -806,10 +797,6 @@ class KernelFunction(KernelBaseModel):
             function=self, kernel=kernel, arguments=arguments
         )
         function_context = FunctionInvocationContext(function=self, kernel=kernel, arguments=arguments)
-=======
-            function=self, kernel=kernel, arguments=arguments, is_streaming=True
-        )
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         with function_tracer.start_as_current_span(tracer, self, metadata) as current_span:
             KernelFunctionLogMessages.log_function_streaming_invoking(logger, self.fully_qualified_name)

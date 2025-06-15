@@ -35,11 +35,9 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-
 _T = TypeVar("_T", bound="FunctionCallContent")
 
 EMPTY_VALUES: Final[list[str | None]] = ["", "{}", None]
-
 
 class FunctionCallContent(KernelContent):
     """Class to hold a function call response."""
@@ -280,7 +278,6 @@ class FunctionCallContent(KernelContent):
 
     def __hash__(self) -> int:
         """Return the hash of the function call content."""
-<<<<<<< HEAD
         return hash(
             (
                 self.tag,
@@ -292,16 +289,4 @@ class FunctionCallContent(KernelContent):
                 self.arguments,
             )
         )
-=======
-        args_hashable = frozenset(self.arguments.items()) if isinstance(self.arguments, Mapping) else None
-        return hash((
-            self.tag,
-            self.id,
-            self.call_id,
-            self.index,
-            self.name,
-            self.function_name,
-            self.plugin_name,
-            args_hashable,
-        ))
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+

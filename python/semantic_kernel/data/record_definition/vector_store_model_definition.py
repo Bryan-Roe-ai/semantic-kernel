@@ -15,19 +15,10 @@ from semantic_kernel.data.record_definition.vector_store_record_fields import (
     VectorStoreRecordKeyField,
     VectorStoreRecordVectorField,
 )
-<<<<<<< HEAD:python/semantic_kernel/data/vector_store_model_definition.py
 from semantic_kernel.exceptions.memory_connector_exceptions import (
     VectorStoreModelException,
 )
 from semantic_kernel.exceptions.memory_connector_exceptions import VectorStoreModelException
-=======
-from semantic_kernel.exceptions import VectorStoreModelException
-from semantic_kernel.utils.experimental_decorator import experimental_class
-
-VectorStoreRecordFields = TypeVar("VectorStoreRecordFields", bound=VectorStoreRecordField)
-FieldsType = dict[str, VectorStoreRecordFields]
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/semantic_kernel/data/record_definition/vector_store_model_definition.py
-
 
 @experimental_class
 @dataclass

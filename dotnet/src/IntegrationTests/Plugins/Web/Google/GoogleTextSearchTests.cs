@@ -14,22 +14,6 @@ namespace SemanticKernel.IntegrationTests.Plugins.Web.Google;
 /// </summary>
 public class GoogleTextSearchTests : BaseTextSearchTests
 {
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< main
-<<<<<<< HEAD
-=======
-    // If null, all tests will be enabled
-    private const string SkipReason = "Failing in integration test pipeline so disabling while investigating a fix (issue 9168)";
-<<<<<<< main
-=======
-    // If null, all tests will be enabled
-    private const string SkipReason = "Failing in integration test pipeline because daily quota exceeded";
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
 
     [Fact(Skip = SkipReason)]
     public override async Task CanSearchAsync()
@@ -73,18 +57,6 @@ public class GoogleTextSearchTests : BaseTextSearchTests
         await base.FunctionCallingUsingGetTextSearchResultsAsync();
     }
 
-<<<<<<< main
-<<<<<<< main
->>>>>>> main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> main
-=======
->>>>>>> upstream/main
->>>>>>> origin/main
     /// <inheritdoc/>
     public override Task<ITextSearch> CreateTextSearchAsync()
     {

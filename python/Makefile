@@ -296,7 +296,6 @@ install-pre-commit:
 
 
 .ONESHELL:
-<<<<<<< Updated upstream
 install-sk:
 	echo "Creating and activating venv for python $(PYTHON_VERSION)"
 	uv venv --python $(PYTHON_VERSION)

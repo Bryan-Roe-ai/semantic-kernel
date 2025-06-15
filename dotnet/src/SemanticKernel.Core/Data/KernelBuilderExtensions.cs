@@ -2,101 +2,20 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-<<<<<<< main
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
 using Microsoft.Extensions.VectorData;
->>>>>>> upstream/main
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
+
 using Microsoft.SemanticKernel.Data;
 
 namespace Microsoft.SemanticKernel;
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
+
 using Microsoft.SemanticKernel.Data;
 
 namespace Microsoft.SemanticKernel;
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< HEAD
+
 using Microsoft.SemanticKernel.Data;
 
 namespace Microsoft.SemanticKernel;
-=======
-
-namespace Microsoft.SemanticKernel.Data;
->>>>>>> 46c3c89f5c5dbc355794ac231b509e142f4fb770
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
 /// <summary>
 /// Extension methods to register Data services on the <see cref="IKernelBuilder"/>.
@@ -116,48 +35,6 @@ public static class KernelBuilderExtensions
         builder.Services.AddVolatileVectorStore(serviceId);
         return builder;
     }
-<<<<<<< main
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> head
->>>>>>> div
 
     /// <summary>
     /// Register a <see cref="VectorStoreTextSearch{TRecord}"/> instance with the specified service ID.
@@ -168,10 +45,8 @@ public static class KernelBuilderExtensions
     /// <param name="resultMapper"><see cref="ITextSearchResultMapper" /> instance that can map a TRecord to a <see cref="TextSearchResult"/></param>
     /// <param name="options">Options used to construct an instance of <see cref="VectorStoreTextSearch{TRecord}"/></param>
     /// <param name="serviceId">An optional service id to use as the service key.</param>
-<<<<<<< main
-=======
     [Obsolete("This has been replaced by the Microsoft.SemanticKernel.Connectors.InMemory nuget package.")]
->>>>>>> upstream/main
+
     public static IKernelBuilder AddVolatileVectorStoreTextSearch<TKey, TRecord>(
         this IKernelBuilder builder,
         string collectionName,
@@ -194,10 +69,8 @@ public static class KernelBuilderExtensions
     /// <param name="resultMapper"><see cref="MapFromResultToTextSearchResult" /> delegate that can map a TRecord to a <see cref="TextSearchResult"/></param>
     /// <param name="options">Options used to construct an instance of <see cref="VectorStoreTextSearch{TRecord}"/></param>
     /// <param name="serviceId">An optional service id to use as the service key.</param>
-<<<<<<< main
-=======
     [Obsolete("This has been replaced by the Microsoft.SemanticKernel.Connectors.InMemory nuget package.")]
->>>>>>> upstream/main
+
     public static IKernelBuilder AddVolatileVectorStoreTextSearch<TKey, TRecord>(
         this IKernelBuilder builder,
         string collectionName,
@@ -215,47 +88,5 @@ public static class KernelBuilderExtensions
             serviceId);
         return builder;
     }
-<<<<<<< main
-<<<<<<< main
-=======
-<<<<<<< div
-=======
->>>>>>> div
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
-<<<<<<< main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> head
->>>>>>> div
+
 }

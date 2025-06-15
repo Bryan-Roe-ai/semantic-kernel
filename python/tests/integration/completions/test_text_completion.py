@@ -112,7 +112,6 @@ if sys.version_info >= (3, 12):
 else:
     from typing_extensions import override  # pragma: no cover
 
-
 def setup(
     kernel: Kernel,
     service: str,
@@ -128,7 +127,6 @@ def setup(
         prompt_execution_settings=services[service][1](
             **execution_settings_kwargs),
     )
-
 
 @pytest.fixture(scope="module")
 def services() -> (
@@ -171,8 +169,6 @@ from tests.integration.completions.test_utils import is_service_setup_for_testin
 
 from tests.utils import is_service_setup_for_testing, is_test_running_on_supported_platforms, retry
 
-<<<<<<< HEAD
-
 ollama_setup: bool = False
 try:
     if os.environ["OLLAMA_MODEL"]:
@@ -184,11 +180,7 @@ google_ai_setup: bool = is_service_setup_for_testing("GOOGLE_AI_API_KEY")
 vertex_ai_setup: bool = is_service_setup_for_testing("VERTEX_AI_PROJECT_ID")
 onnx_setup: bool = is_service_setup_for_testing("ONNX_GEN_AI_TEXT_MODEL_FOLDER")
 ollama_setup: bool = is_service_setup_for_testing(["OLLAMA_TEXT_MODEL_ID"])
-=======
-hugging_face_setup = util.find_spec("torch") is not None
 
-
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 azure_openai_setup = True
 ollama_setup: bool = is_service_setup_for_testing(["OLLAMA_TEXT_MODEL_ID"]) and is_test_running_on_supported_platforms([
     "Linux"
@@ -353,7 +345,6 @@ pytestmark = pytest.mark.parametrize(
     ],
 )
 
-
 @pytest.mark.asyncio(scope="module")
 async def test_text_completion(
     kernel: Kernel,
@@ -375,7 +366,6 @@ async def test_text_completion(
             ),
             retries=5,
         )
-
 
 class TestTextCompletion(CompletionTestBase):
     """Test class for text completion"""
@@ -416,7 +406,6 @@ async def test_streaming_text_completion(
             ),
             retries=5,
         )
-
 
 async def execute_invoke(kernel: Kernel, input: str, output: str, stream: bool) -> None:
     if stream:
@@ -605,12 +594,10 @@ async def execute_invoke(kernel: Kernel, input: str, output: str, stream: bool) 
 
 # Copyright (c) Microsoft. All rights reserved.
 
-
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
 else:
     from typing_extensions import override  # pragma: no cover
-
 
 ollama_setup: bool = is_service_setup_for_testing(["OLLAMA_TEXT_MODEL_ID"]) and is_test_running_on_supported_platforms([
     "Linux"
@@ -624,7 +611,6 @@ onnx_setup: bool = is_service_setup_for_testing(
 skip_on_mac_available = platform.system() == "Darwin"
 if not skip_on_mac_available:
     from semantic_kernel.connectors.ai.onnx import OnnxGenAIPromptExecutionSettings, OnnxGenAITextCompletion
-
 
 pytestmark = pytest.mark.parametrize(
     "service_id, execution_settings_kwargs, inputs, kwargs",
@@ -768,7 +754,6 @@ pytestmark = pytest.mark.parametrize(
     ],
 )
 
-
 class TestTextCompletion(CompletionTestBase):
     """Test class for text completion"""
 
@@ -839,13 +824,10 @@ class TestTextCompletion(CompletionTestBase):
             # Amazon Bedrock supports models from multiple providers but requests to and responses from the models are
             # inconsistent. So we need to test each model separately.
             "bedrock_amazon_titan": (
-<<<<<<< HEAD
                 BedrockTextCompletion(
                     model_id="amazon.titan-text-premier-v1:0"),
                 BedrockTextCompletion(model_id="amazon.titan-text-premier-v1:0") if bedrock_setup else None,
-=======
-                self._try_create_bedrock_text_completion_client("amazon.titan-text-premier-v1:0"),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                 BedrockTextPromptExecutionSettings,
             ),
             "bedrock_anthropic_claude": (
@@ -861,7 +843,6 @@ class TestTextCompletion(CompletionTestBase):
                 BedrockTextPromptExecutionSettings,
             ),
             "bedrock_meta_llama": (
-<<<<<<< HEAD
                 BedrockTextCompletion(
                     model_id="meta.llama3-70b-instruct-v1:0"),
                 BedrockTextPromptExecutionSettings,
@@ -870,9 +851,7 @@ class TestTextCompletion(CompletionTestBase):
                 BedrockTextCompletion(
                     model_id="mistral.mistral-7b-instruct-v0:2"),
                 BedrockTextCompletion(model_id="meta.llama3-70b-instruct-v1:0") if bedrock_setup else None,
-=======
-                self._try_create_bedrock_text_completion_client("meta.llama3-70b-instruct-v1:0"),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                 BedrockTextPromptExecutionSettings,
             ),
             "bedrock_mistralai": (

@@ -8,17 +8,13 @@ from numpy import array, ndarray
 from pydantic import ValidationError
 from vertexai.language_models import TextEmbedding, TextEmbeddingModel
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
     EmbeddingGeneratorBase,
 )
 from semantic_kernel.connectors.ai.google.vertex_ai.services.vertex_ai_base import (
     VertexAIBase,
 )
-=======
-from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
-from semantic_kernel.connectors.ai.google.vertex_ai.services.vertex_ai_base import VertexAIBase
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.google.vertex_ai.vertex_ai_prompt_execution_settings import (
     VertexAIEmbeddingPromptExecutionSettings,
 )
@@ -34,7 +30,6 @@ if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
 else:
     from typing_extensions import override  # pragma: no cover
-
 
 class VertexAITextEmbedding(VertexAIBase, EmbeddingGeneratorBase):
     """Vertex AI Text Embedding Service."""

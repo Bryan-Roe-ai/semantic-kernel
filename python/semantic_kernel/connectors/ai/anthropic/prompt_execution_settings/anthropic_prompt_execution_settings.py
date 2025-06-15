@@ -5,27 +5,20 @@ from typing import Annotated, Any
 
 from pydantic import Field, model_validator
 
-<<<<<<< HEAD
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
+from semantic_kernel.connectors.ai.function_choice_type import FunctionChoiceType
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.exceptions import ServiceInvalidExecutionSettingsError
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-=======
-from semantic_kernel.connectors.ai.function_choice_type import FunctionChoiceType
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.exceptions import ServiceInvalidExecutionSettingsError
 
 logger = logging.getLogger(__name__)
 
-
 class AnthropicPromptExecutionSettings(PromptExecutionSettings):
     """Common request settings for Anthropic services."""
 
     ai_model_id: Annotated[str | None, Field(serialization_alias="model")] = None
-
 
 class AnthropicChatPromptExecutionSettings(AnthropicPromptExecutionSettings):
     """Specific settings for the Chat Completion endpoint."""
@@ -76,8 +69,7 @@ class AnthropicChatPromptExecutionSettings(AnthropicPromptExecutionSettings):
         """Check if the user is requesting function call behavior."""
         if self.function_choice_behavior is not None:
             raise NotImplementedError("Anthropic does not support function call behavior.")
-            
-            
+
     def validate_tool_choice(self) -> "AnthropicChatPromptExecutionSettings":
         """Validate tool choice. Anthropic doesn't support NONE tool choice."""
         tool_choice = self.tool_choice

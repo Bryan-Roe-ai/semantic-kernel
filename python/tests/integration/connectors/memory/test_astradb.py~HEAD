@@ -8,10 +8,7 @@ from pydantic import ValidationError
 
 from semantic_kernel.connectors.memory.astradb import AstraDBMemoryStore
 from semantic_kernel.connectors.memory.astradb.astradb_settings import AstraDBSettings
-<<<<<<< HEAD:python/tests/integration/connectors/memory/test_astradb.py~HEAD
-=======
 from tests.integration.utils import retry
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/tests/integration/memory/memory_stores/test_astradb_memory_store.py
 
 astradb_installed: bool
 try:

@@ -29,7 +29,6 @@ from semantic_kernel.utils.telemetry.user_agent import APP_INFO, prepend_semanti
 if TYPE_CHECKING:
     from semantic_kernel.kernel_pydantic import KernelBaseSettings
 
-
 if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
 else:
@@ -45,10 +44,7 @@ if sys.version_info >= (3, 13):
 else:
     from typing_extensions import deprecated
 
-
-
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 @experimental_class
 class AzureAssistantAgent(OpenAIAssistantBase):
@@ -682,8 +678,6 @@ class AzureAssistantAgent(OpenAIAssistantAgent):
 
     # endregion
         return client, azure_openai_settings.chat_deployment_name
-<<<<<<< main
-=======
 
     @staticmethod
     def create_client(
@@ -828,4 +822,4 @@ class AzureAssistantAgent(OpenAIAssistantAgent):
             )
 
         return result
->>>>>>> upstream/main
+

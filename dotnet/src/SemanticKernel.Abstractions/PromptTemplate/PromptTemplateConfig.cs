@@ -5,82 +5,15 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 using Microsoft.SemanticKernel.Text;
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
+
 using Microsoft.SemanticKernel.Text;
-=======
 using System.Text.Json.Serialization.Metadata;
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
 using System.Text.Json.Serialization.Metadata;
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-=======
+
 using System.Text.Json.Serialization.Metadata;
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
 
 namespace Microsoft.SemanticKernel;
 
@@ -109,49 +42,6 @@ public sealed class PromptTemplateConfig
     /// <summary>Lazily-initialized execution settings. The key is the service ID, or <see cref="PromptExecutionSettings.DefaultServiceId"/> for the default execution settings.</summary>
     private Dictionary<string, PromptExecutionSettings>? _executionSettings;
 
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
     /// <summary>
     /// Initializes a new instance of the <see cref="PromptTemplateConfig"/> class.
     /// </summary>
@@ -159,17 +49,6 @@ public sealed class PromptTemplateConfig
     {
     }
 
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
     /// <summary>
     /// Initializes a new instance of the <see cref="PromptTemplateConfig"/> class using the specified prompt template string.
     /// </summary>
@@ -236,12 +115,7 @@ public sealed class PromptTemplateConfig
     /// <summary>
     /// Gets or sets the function name to use by default when creating prompt functions using this configuration.
     /// </summary>
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-=======
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PromptTemplateConfig"/> class using the specified prompt template string.
     /// </summary>
@@ -284,15 +158,7 @@ public sealed class PromptTemplateConfig
     /// <summary>
     /// Gets or sets the function name to use by default when creating prompt functions using this configuration.
     /// </summary>
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
     /// <remarks>
     /// If the name is null or empty, a random name will be generated dynamically when creating a function.
     /// </remarks>
@@ -389,17 +255,6 @@ public sealed class PromptTemplateConfig
             this._executionSettings = value;
         }
     }
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
 
     /// <summary>
     /// Gets or sets a value indicating whether to allow potentially dangerous content to be inserted into the prompt from functions.
@@ -441,19 +296,6 @@ public sealed class PromptTemplateConfig
         }
 
         var key = serviceId ?? settings.ServiceId ?? PromptExecutionSettings.DefaultServiceId;
-<<<<<<< div
-=======
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
 
         if (this.ExecutionSettings.ContainsKey(key))
         {
@@ -487,26 +329,7 @@ public sealed class PromptTemplateConfig
         }
 
         return result;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
     /// <summary>
     /// Gets or sets a value indicating whether to allow potentially dangerous content to be inserted into the prompt from functions.
     /// </summary>
@@ -521,14 +344,7 @@ public sealed class PromptTemplateConfig
     public bool AllowDangerouslySetContent { get; set; } = false;
 
     /// <summary>
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< head
-=======
-=======
->>>>>>> Stashed changes
-=======
+
     /// <summary>
     /// Initializes a new instance of the <see cref="PromptTemplateConfig"/> class.
     /// </summary>
@@ -537,22 +353,13 @@ public sealed class PromptTemplateConfig
     }
 
     /// <summary>
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
     /// Initializes a new instance of the <see cref="PromptTemplateConfig"/> class using the specified prompt template string.
     /// </summary>
     /// <param name="template">The prompt template string that defines the prompt.</param>
     /// <exception cref="ArgumentNullException"><paramref name="template"/> is null.</exception>
     public PromptTemplateConfig(string template)
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-=======
+
     /// Gets the default execution settings from <see cref="ExecutionSettings"/>.
     /// </summary>
     /// <remarks>
@@ -570,11 +377,7 @@ public sealed class PromptTemplateConfig
     /// <param name="settings">The <see cref="PromptExecutionSettings"/> to add to the dictionary.</param>
     /// <param name="serviceId">The service ID with which to associated <paramref name="settings"/>, or null if this should be the default settings.</param>
     public void AddExecutionSettings(PromptExecutionSettings settings, string? serviceId = null)
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
->>>>>>> head
+
     {
         Verify.NotNull(settings);
 
@@ -594,23 +397,13 @@ public sealed class PromptTemplateConfig
     }
 
     /// <summary>
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< head
-=======
-=======
->>>>>>> Stashed changes
+
     {
         this.Template = template;
     }
 
     /// <summary>
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
     /// Creates a <see cref="PromptTemplateConfig"/> from the specified JSON.
     /// </summary>
     /// <param name="json">A string containing a JSON representation of the <see cref="PromptTemplateConfig"/>.</param>
@@ -846,16 +639,7 @@ public sealed class PromptTemplateConfig
     /// <summary>
     /// Converts any <see cref="OutputVariable"/> into a <see cref="KernelReturnParameterMetadata"/>.
     /// </summary>
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-=======
+
     /// Converts the <see cref="InputVariable"/> collection into a collection of <see cref="KernelParameterMetadata"/>.
     /// </summary>
     /// <param name="jsonSerializerOptions">The <see cref="JsonSerializerOptions"/> for schema generation.</param>
@@ -913,15 +697,7 @@ public sealed class PromptTemplateConfig
     /// <summary>
     /// Converts any <see cref="OutputVariable"/> into a <see cref="KernelReturnParameterMetadata"/>.
     /// </summary>
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
     [RequiresUnreferencedCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
     internal KernelReturnParameterMetadata? GetKernelReturnParameterMetadata() =>
@@ -1009,52 +785,15 @@ public sealed class PromptTemplateConfig
         return
             config ??
             throw new ArgumentException($"Unable to deserialize {nameof(PromptTemplateConfig)} from the specified JSON.", nameof(json), innerException);
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
+
     }
 
     /// <summary>
     /// Converts any <see cref="OutputVariable"/> into a <see cref="KernelReturnParameterMetadata"/>.
     /// </summary>
-<<<<<<< main
-=======
     [RequiresUnreferencedCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
     [RequiresDynamicCode("Uses reflection to generate JSON schema, making it incompatible with AOT scenarios.")]
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
+
     internal KernelReturnParameterMetadata? GetKernelReturnParameterMetadata() =>
         this.OutputVariable is OutputVariable outputVariable ?
             new KernelReturnParameterMetadata

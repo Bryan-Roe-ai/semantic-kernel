@@ -11,7 +11,6 @@ import com.microsoft.semantickernel.skilldefinition.annotations.SKFunctionInputA
 import com.microsoft.semantickernel.skilldefinition.annotations.SKFunctionParameters;
 import com.microsoft.semantickernel.textcompletion.TextCompletion;
 
-<<<<<<< HEAD
 /**
  * Example of a planner which uses native functions.
  * <p>
@@ -19,8 +18,6 @@ import com.microsoft.semantickernel.textcompletion.TextCompletion;
  * "https://github.com/microsoft/semantic-kernel/blob/experimental-java/java/samples/sample-code/README.md">
  * README</a> for configuring your environment to run the examples.
  */
-=======
->>>>>>> main
 public class Example_PlanWithNativeFunctions {
 
     public static void main(String[] args) throws ConfigurationException {

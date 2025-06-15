@@ -1,5 +1,4 @@
 <Project>
-<<<<<<< HEAD
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <LangVersion>latest</LangVersion>
@@ -21,9 +20,4 @@
     <Product>InternalUtilities</Product>
     <Copyright>Copyright © $([System.DateTime]::Now.Year)</Copyright>
   </PropertyGroup>
-=======
-  <ItemGroup>
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/**/*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 </Project>

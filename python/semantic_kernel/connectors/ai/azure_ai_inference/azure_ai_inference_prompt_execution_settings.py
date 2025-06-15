@@ -6,17 +6,10 @@ from typing import Annotated, Any, Literal
 
 from pydantic import BaseModel, Field, model_validator
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
 )
 from semantic_kernel.utils.experimental_decorator import experimental_class
-=======
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
-from semantic_kernel.exceptions.service_exceptions import ServiceInvalidExecutionSettingsError
-from semantic_kernel.utils.feature_stage_decorator import experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
-
 
 @experimental
 class AzureAIInferencePromptExecutionSettings(PromptExecutionSettings):
@@ -36,16 +29,11 @@ class AzureAIInferencePromptExecutionSettings(PromptExecutionSettings):
     extra_parameters: dict[str, Any] | None = None
     extra_parameters: dict[str, str] | None = None
 
-
-<<<<<<< HEAD
 @experimental_class
 class AzureAIInferenceChatPromptExecutionSettings(
     AzureAIInferencePromptExecutionSettings
 ):
-=======
-@experimental
-class AzureAIInferenceChatPromptExecutionSettings(AzureAIInferencePromptExecutionSettings):
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     """Azure AI Inference Chat Prompt Execution Settings."""
 
     response_format: (
@@ -101,7 +89,6 @@ class AzureAIInferenceChatPromptExecutionSettings(AzureAIInferencePromptExecutio
             )
 
         return values
-
 
 @experimental
 class AzureAIInferenceEmbeddingPromptExecutionSettings(PromptExecutionSettings):

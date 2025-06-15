@@ -535,7 +535,6 @@ _site
 .yarnrc.yml
 
 # Python Environments
->>>>>>> upstream/main
 .env
 .venv
 .venv*

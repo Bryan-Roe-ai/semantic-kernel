@@ -20,15 +20,10 @@ namespace Memory;
 /// For other databases, see the following classes:
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_AzureAISearch"/></para>
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_Qdrant"/></para>
-<<<<<<< HEAD
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_Volatile"/></para>
-=======
-/// <para><see cref="VectorStore_VectorSearch_MultiStore_InMemory"/></para>
-<<<<<<< HEAD
->>>>>>> main
-=======
+
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_Postgres"/></para>
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 ///
 /// Redis supports two record storage types: Json and HashSet.
 /// Note the use of the <see cref="RedisStorageType"/> enum to specify the preferred storage type.
@@ -40,11 +35,8 @@ public class VectorStore_VectorSearch_MultiStore_Redis(ITestOutputHelper output,
     [Theory]
     [InlineData(RedisStorageType.Json)]
     [InlineData(RedisStorageType.HashSet)]
-<<<<<<< HEAD
     public async Task ExampleWitDIAsync(RedisStorageType redisStorageType)
-=======
-    public async Task ExampleWithDIAsync(RedisStorageType redisStorageType)
->>>>>>> main
+
     {
         // Use the kernel for DI purposes.
         var kernelBuilder = Kernel

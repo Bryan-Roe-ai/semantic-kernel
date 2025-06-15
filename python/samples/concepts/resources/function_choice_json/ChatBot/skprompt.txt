@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 I am a friendly chatbot. Here's my response to your message:
 
 {{ $input }}
 
 Is there anything else you'd like to discuss?
-=======
-{{$chat_history}}{{$user_input}}
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

@@ -101,72 +101,8 @@ public class KernelPluginFactoryTests
     [Fact]
     public async Task ItCanCreateFromTypeUsingGenericsAsync()
     {
-<<<<<<< main
         // Arrange
         var kernel = new Kernel();
         var args = new KernelArguments { { "param1", "value1" } };
-=======
-        // Assert plugin properties
-        Assert.Equal("MyKernelFunctions", plugin.Name);
-        Assert.Equal(2, plugin.FunctionCount);
 
-        // Assert Function1
-        KernelFunction function1 = plugin["Function1"];
-
-        Assert.NotEmpty(function1.Metadata.Parameters);
-        Assert.NotNull(function1.Metadata.Parameters[0].Schema);
-        Assert.Equal("""{"description":"Description for parameter 1","type":"string"}""", function1.Metadata.Parameters[0].Schema!.ToString());
-
-        Assert.NotNull(function1.Metadata.ReturnParameter);
-        Assert.NotNull(function1.Metadata.ReturnParameter.Schema);
-        Assert.Equal("""{"type":"string"}""", function1.Metadata.ReturnParameter.Schema!.ToString());
-
-        // Act
-        var plugin = KernelPluginFactory.CreateFromType<MyKernelFunctions>();
-        FunctionResult result = await plugin["Function1"].InvokeAsync(kernel, args);
-
-        // Assert
-        Assert.NotNull(plugin);
-        Assert.Equal(3, plugin.FunctionCount);
-        Assert.Equal("Function1: value1", result.Value);
-    }
-
-    [Fact]
-    public async Task ItCanCreateFromTypeAsync()
-    {
-        // Arrange
-        var kernel = new Kernel();
-        var args = new KernelArguments { { "param1", "value1" } };
-        var instanceType = typeof(MyKernelFunctions);
-        Assert.NotEmpty(function2.Metadata.Parameters);
-        Assert.NotNull(function2.Metadata.Parameters[0].Schema);
-        Assert.Equal("""{"description":"Description for parameter 1","type":"object","properties":{"Value":{"type":["string","null"]}}}""", function2.Metadata.Parameters[0].Schema!.ToString());
-
-        // Act
-        var plugin = KernelPluginFactory.CreateFromType(instanceType);
-        FunctionResult result = await plugin["Function1"].InvokeAsync(kernel, args);
-
-        // Assert
-        Assert.NotNull(plugin);
-        Assert.Equal(3, plugin.FunctionCount);
-        Assert.Equal("Function1: value1", result.Value);
-    }
-
-    #region private
-    private sealed class MyKernelFunctions
-    {
-        [KernelFunction("Function1")]
-        [Description("Description for function 1.")]
-        public string Function1([Description("Description for parameter 1")] string param1) => $"Function1: {param1}";
-
-        [KernelFunction("Function2")]
-        [Description("Description for function 2.")]
-        public string Function2([Description("Description for parameter 1")] string param1) => $"Function2: {param1}";
-
-        [KernelFunction("Function3")]
-        [Description("Description for function 3.")]
-        public string Function3([Description("Description for parameter 1")] string param1) => $"Function3: {param1}";
-    }
-    #endregion
->>>>>>> main
 }

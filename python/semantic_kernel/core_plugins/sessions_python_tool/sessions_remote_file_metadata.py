@@ -4,7 +4,6 @@ from typing import Any
 
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 
-
 class SessionsRemoteFileMetadata(KernelBaseModel):
     """Metadata for a file in the session."""
 
@@ -31,10 +30,7 @@ class SessionsRemoteFileMetadata(KernelBaseModel):
         Returns:
             SessionsRemoteFileMetadata: The metadata for the file.
         """
-<<<<<<< HEAD
         return SessionsRemoteFileMetadata(
             filename=data["filename"], size_in_bytes=data["size"]
         )
-=======
-        return SessionsRemoteFileMetadata(filename=data["filename"], size_in_bytes=data["size"])
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+

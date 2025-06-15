@@ -10,12 +10,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>disable</ImplicitUsings>
     <IsPackable>false</IsPackable>
-<<<<<<< HEAD:dotnet/src/Connectors/Connectors.AssemblyAI.UnitTests/Connectors.AssemblyAI.UnitTests.csproj
     <NoWarn>SKEXP0001;SKEXP0070;CS1591</NoWarn>
-=======
-    <NoWarn>$(NoWarn);SKEXP0001,VSTHRD111,CA2007,CS1591</NoWarn>
-    <NoWarn>$(NoWarn);MEVD9001</NoWarn> <!-- Experimental MEVD connector-facing APIs -->
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/Connectors/Connectors.MongoDB.UnitTests/Connectors.MongoDB.UnitTests.csproj
   </PropertyGroup>
 
   <ItemGroup>

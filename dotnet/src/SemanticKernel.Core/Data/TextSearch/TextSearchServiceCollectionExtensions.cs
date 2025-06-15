@@ -3,10 +3,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
-<<<<<<< HEAD
-=======
 using Microsoft.Extensions.VectorData;
->>>>>>> main
+
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 
@@ -106,12 +104,8 @@ public static class TextSearchServiceCollectionExtensions
     /// <param name="resultMapper"><see cref="ITextSearchResultMapper" /> instance that can map a TRecord to a <see cref="TextSearchResult"/></param>
     /// <param name="options">Options used to construct an instance of <see cref="VectorStoreTextSearch{TRecord}"/></param>
     /// <param name="serviceId">An optional service id to use as the service key.</param>
-<<<<<<< HEAD
     public static IServiceCollection AddVectorStoreTextSearch<TRecord>(
-=======
-    [Obsolete("Use the overload which doesn't accept a textEmbeddingGenerationServiceId, and configure an IEmbeddingGenerator instead with the collection represented by vectorSearchServiceId.")]
-    public static IServiceCollection AddVectorStoreTextSearch<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] TRecord>(
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         this IServiceCollection services,
         string vectorSearchServiceId,
         string textEmbeddingGenerationServiceId,

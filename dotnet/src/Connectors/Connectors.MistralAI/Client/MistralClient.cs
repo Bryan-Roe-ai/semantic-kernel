@@ -806,7 +806,6 @@ internal sealed class MistralClient
                     continue;
                 }
 
-<<<<<<< HEAD
         var endpoint = this.GetEndpoint(executionSettings, path: "chat/completions");
         using var httpRequestMessage = this.CreatePost(chatRequest, endpoint, this._apiKey, stream: true);
         using var response = await this.SendStreamingRequestAsync(httpRequestMessage, cancellationToken).ConfigureAwait(false);
@@ -814,28 +813,7 @@ internal sealed class MistralClient
         await foreach (var streamingChatContent in this.ProcessChatResponseStreamAsync(responseStream, modelId, cancellationToken).ConfigureAwait(false))
         {
             yield return streamingChatContent;
-=======
-                var arguments = JsonSerializer.Serialize(callRequest.Arguments);
-                var toolCall = new MistralToolCall()
-                {
-                    Id = callRequest.Id,
-                    Function = new MistralFunction(
-                        callRequest.FunctionName,
-                        callRequest.PluginName)
-                    {
-                        Arguments = arguments
-                    }
-                };
-                toolCalls.Add(callRequest.Id, toolCall);
-            }
 
-            if (toolCalls.Count > 0)
-            {
-                message.ToolCalls = [.. toolCalls.Values];
-            }
-
-            return [message];
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         }
     }
 
@@ -877,12 +855,10 @@ internal sealed class MistralClient
                     ToolCallId = resultContent.CallId
                 });
             }
-<<<<<<< HEAD
-=======
 
             return messages
                 ?? throw new NotSupportedException("No function result provided in the tool message.");
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         }
         finally
         {

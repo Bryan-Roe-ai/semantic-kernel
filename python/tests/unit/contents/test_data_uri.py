@@ -8,7 +8,6 @@ import pytest
 from semantic_kernel.contents.utils.data_uri import DataUri
 from semantic_kernel.exceptions.content_exceptions import ContentInitializationError
 
-
 @pytest.mark.parametrize(
     "uri, data_bytes, data_str, mime_type, parameters, data_format",
     [
@@ -23,11 +22,8 @@ from semantic_kernel.exceptions.content_exceptions import ContentInitializationE
         ),
         pytest.param(
             "data:text/plain;,test_data",
-<<<<<<< HEAD
             None,
-=======
-            b"test_data",
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
             "test_data",
             "text/plain",
             {},
@@ -87,14 +83,12 @@ def test_data_uri_from_data_uri_str(
     assert data_uri.data_format == data_format
     assert data_uri._data_str() == data_str
 
-
 @pytest.mark.parametrize(
     "uri, exception",
     [
         pytest.param("", ContentInitializationError, id="empty"),
         pytest.param("data", ContentInitializationError, id="missing_colon"),
         pytest.param("data:", ContentInitializationError, id="missing_comma"),
-<<<<<<< HEAD
         pytest.param(
             "data:something,",
             ContentInitializationError,
@@ -128,12 +122,7 @@ def test_data_uri_from_data_uri_str(
         pytest.param(
             "data:text/plain;test_data", ContentInitializationError, id="missing_comma"
         ),
-=======
-        pytest.param("data:something,", ContentInitializationError, id="mime_type_without_subtype"),
-        pytest.param("data:something;else,data", ContentInitializationError, id="mime_type_without_subtype2"),
-        pytest.param("data:image/jpeg;base64,dGVzdF9kYXRh;foo=bar", ContentInitializationError, id="wrong_order"),
-        pytest.param("data:text/plain;test_data", ContentInitializationError, id="missing_comma"),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         pytest.param(
             "data:text/plain;base64,something!",
             ContentInitializationError,
@@ -150,7 +139,6 @@ def test_data_uri_from_data_uri_fail(uri: str, exception: type[Exception]):
     with pytest.raises(exception):
         DataUri.from_data_uri(uri)
 
-
 def test_data_uri_to_string_with_extra_metadata():
     uri = DataUri.from_data_uri("data:image/jpeg;base64,dGVzdF9kYXRh")
     assert (
@@ -158,13 +146,11 @@ def test_data_uri_to_string_with_extra_metadata():
         == "data:image/jpeg;foo=bar;base64,dGVzdF9kYXRh"
     )
 
-
 def test_default_mime_type():
     uri = DataUri.from_data_uri(
         "data:;base64,dGVzdF9kYXRh", default_mime_type="image/jpeg"
     )
     assert uri.mime_type == "image/jpeg"
-
 
 @pytest.mark.parametrize(
     "fields, uri",
@@ -256,7 +242,6 @@ def test_data_uri_from_fields(fields: dict[str, Any], uri: str):
     data_uri = DataUri(**fields)
     assert data_uri.to_string() == uri
 
-
 @pytest.mark.parametrize(
     "fields",
     [
@@ -283,14 +268,12 @@ def test_data_uri_from_fields_fail(fields: dict[str, Any]):
     with pytest.raises(ContentInitializationError):
         DataUri(**fields)
 
-
 def test_eq():
     data_uri1 = DataUri.from_data_uri("data:image/jpeg;base64,dGVzdF9kYXRh")
     data_uri2 = DataUri.from_data_uri("data:image/jpeg;base64,dGVzdF9kYXRh")
     assert data_uri1 == data_uri2
     assert data_uri1 != "data:image/jpeg;base64,dGVzdF9kYXRh"
     assert data_uri1 != DataUri.from_data_uri("data:image/jpeg;base64,dGVzdF9kYXRi")
-
 
 def test_array():
     arr = np.array([[1, 2], [3, 4]], dtype=np.uint8)
@@ -299,7 +282,6 @@ def test_array():
     assert data_uri.data_array is not None
     assert "data:application/octet-stream;base64," in encoded
     assert data_uri.data_array.tobytes() == b"\x01\x02\x03\x04"
-
 
 @pytest.mark.parametrize(
     "data_bytes, data_str, data_array, data_format, expected_output",

@@ -5,20 +5,15 @@ from unittest.mock import AsyncMock, MagicMock, Mock
 
 import pytest
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import (
     RestApiOperation,
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload import (
     RestApiOperationPayload,
 )
-=======
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import RestApiOperation
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload import RestApiPayload
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 from semantic_kernel.connectors.openapi_plugin.openapi_manager import OpenApiRunner
 from semantic_kernel.exceptions import FunctionExecutionException
-
 
 def test_build_full_url():
     runner = OpenApiRunner({})
@@ -26,7 +21,6 @@ def test_build_full_url():
     query_string = "param1=value1&param2=value2"
     expected_url = "http://example.com?param1=value1&param2=value2"
     assert runner.build_full_url(base_url, query_string) == expected_url
-
 
 def test_build_operation_url():
     runner = OpenApiRunner({})
@@ -36,7 +30,6 @@ def test_build_operation_url():
     arguments = {}
     expected_url = "http://example.com?param1=value1"
     assert runner.build_operation_url(operation, arguments) == expected_url
-
 
 def test_build_json_payload_dynamic_payload():
     runner = OpenApiRunner({}, enable_dynamic_payload=True)
@@ -79,7 +72,6 @@ def test_build_json_payload_dynamic_payload():
     assert content == '{"property1": "value1", "property2": "value2"}'
     assert media_type == "application/json"
 
-
 def test_build_json_payload_no_metadata():
     runner = OpenApiRunner({}, enable_dynamic_payload=True)
     arguments = {}
@@ -90,7 +82,6 @@ def test_build_json_payload_no_metadata():
     ):
         runner.build_json_payload(None, arguments)
 
-
 def test_build_json_payload_static_payload():
     runner = OpenApiRunner({}, enable_dynamic_payload=False)
     arguments = {runner.payload_argument_name: '{"key": "value"}'}
@@ -99,7 +90,6 @@ def test_build_json_payload_static_payload():
 
     assert content == '{"key": "value"}'
     assert media_type == '{"key": "value"}'
-
 
 def test_build_json_payload_no_payload():
     runner = OpenApiRunner({}, enable_dynamic_payload=False)
@@ -111,7 +101,6 @@ def test_build_json_payload_no_payload():
     ):
         runner.build_json_payload(None, arguments)
 
-
 def test_build_json_object():
     runner = OpenApiRunner({})
     properties = [MagicMock()]
@@ -122,7 +111,6 @@ def test_build_json_object():
     arguments = {"prop1": "value1"}
     result = runner.build_json_object(properties, arguments)
     assert result == {"prop1": "value1"}
-
 
 def test_build_json_object_missing_required_argument():
     runner = OpenApiRunner({})
@@ -137,7 +125,6 @@ def test_build_json_object_missing_required_argument():
         match="No argument is found for the 'prop1' payload property.",
     ):
         runner.build_json_object(properties, arguments)
-
 
 def test_build_json_object_recursive():
     runner = OpenApiRunner({})
@@ -185,7 +172,6 @@ def test_build_json_object_recursive():
 
     assert result == expected_result
 
-
 def test_build_json_object_recursive_missing_required_argument():
     runner = OpenApiRunner({})
 
@@ -225,7 +211,6 @@ def test_build_json_object_recursive_missing_required_argument():
     ):
         runner.build_json_object(properties, arguments)
 
-
 def test_build_operation_payload_no_request_body():
     runner = OpenApiRunner({})
     operation = MagicMock()
@@ -233,18 +218,15 @@ def test_build_operation_payload_no_request_body():
     arguments = {}
     assert runner.build_operation_payload(operation, arguments) == (None, None)
 
-
 def test_get_argument_name_for_payload_no_namespacing():
     runner = OpenApiRunner({}, enable_payload_namespacing=False)
     assert runner.get_argument_name_for_payload("prop1") == "prop1"
-
 
 def test_get_argument_name_for_payload_with_namespacing():
     runner = OpenApiRunner({}, enable_payload_namespacing=True)
     assert (
         runner.get_argument_name_for_payload("prop1", "namespace") == "namespace.prop1"
     )
-
 
 def test_build_operation_payload_with_request_body():
     runner = OpenApiRunner({})
@@ -273,7 +255,6 @@ def test_build_operation_payload_with_request_body():
     assert payload == '{"property1": "value1", "property2": "value2"}'
     assert media_type == "application/json"
 
-
 def test_build_operation_payload_without_request_body():
     runner = OpenApiRunner({})
 
@@ -292,7 +273,6 @@ def test_build_operation_payload_without_request_body():
     assert payload is None
     assert media_type is None
 
-
 def test_build_operation_payload_no_request_body_no_payload_argument():
     runner = OpenApiRunner({})
 
@@ -306,7 +286,6 @@ def test_build_operation_payload_no_request_body_no_payload_argument():
     assert payload is None
     assert media_type is None
 
-
 def test_get_first_response_media_type():
     runner = OpenApiRunner({})
     responses = OrderedDict()
@@ -315,7 +294,6 @@ def test_get_first_response_media_type():
     responses["200"] = response
     assert runner._get_first_response_media_type(responses) == "application/xml"
 
-
 def test_get_first_response_media_type_default():
     runner = OpenApiRunner({})
     responses = OrderedDict()
@@ -323,7 +301,6 @@ def test_get_first_response_media_type_default():
         runner._get_first_response_media_type(responses)
         == runner.media_type_application_json
     )
-
 
 async def test_run_operation():
     runner = OpenApiRunner({})

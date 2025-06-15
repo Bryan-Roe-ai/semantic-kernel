@@ -1,92 +1,19 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
-=======
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
-<<<<<<< main
-<<<<<<< main
-=======
-<<<<<<< div
-=======
->>>>>>> div
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
-<<<<<<< main
-=======
+
 using Microsoft.Extensions.VectorData;
->>>>>>> upstream/main
-=======
->>>>>>> head
->>>>>>> div
 
 namespace Microsoft.SemanticKernel.Connectors.AzureCosmosDBMongoDB;
 
@@ -106,44 +33,6 @@ internal static class AzureCosmosDBMongoDBConstants
 
     /// <summary>Reserved key property name in data model.</summary>
     internal const string DataModelReservedKeyPropertyName = "Id";
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-=======
 
     /// <summary>A <see cref="HashSet{Type}"/> containing the supported key types.</summary>
     internal static readonly HashSet<Type> SupportedKeyTypes =
@@ -179,42 +68,7 @@ internal static class AzureCosmosDBMongoDBConstants
         typeof(ReadOnlyMemory<double>),
         typeof(ReadOnlyMemory<double>?)
     ];
->>>>>>> ms/main
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
 
 namespace Microsoft.SemanticKernel.Connectors.CosmosMongoDB;
@@ -222,5 +76,5 @@ namespace Microsoft.SemanticKernel.Connectors.CosmosMongoDB;
 internal static class CosmosMongoConstants
 {
     public const string VectorStoreSystemName = "azure.cosmosdbmongodb";
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 }

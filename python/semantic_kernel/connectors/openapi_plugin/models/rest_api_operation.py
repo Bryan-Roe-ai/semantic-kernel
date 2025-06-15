@@ -7,38 +7,27 @@ from urllib.parse import ParseResult, ParseResultBytes, urlencode, urljoin, urlp
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_expected_response import (
     RestApiExpectedResponse,
 )
-<<<<<<< HEAD
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_parameter import (
     RestApiOperationParameter,
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_parameter_location import (
     RestApiOperationParameterLocation,
-=======
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter import RestApiParameter
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter_location import (
-    RestApiParameterLocation,
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter_style import (
     RestApiParameterStyle,
 )
-<<<<<<< HEAD
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload import (
     RestApiOperationPayload,
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload_property import (
     RestApiOperationPayloadProperty,
-=======
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload import RestApiPayload
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload_property import (
-    RestApiPayloadProperty,
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_security_requirement import RestApiSecurityRequirement
 from semantic_kernel.exceptions.function_exceptions import FunctionExecutionException
 from semantic_kernel.functions.kernel_parameter_metadata import KernelParameterMetadata
 from semantic_kernel.utils.feature_stage_decorator import experimental
-
 
 @experimental
 class RestApiOperation:
@@ -78,7 +67,6 @@ class RestApiOperation:
         security_requirements: list[RestApiSecurityRequirement] | None = None,
     ):
         """Initialize the RestApiOperation."""
-<<<<<<< HEAD
         self.id = id
         self.method = method.upper()
         self.server_url = (
@@ -90,136 +78,6 @@ class RestApiOperation:
         self.parameters = params if params else []
         self.request_body = request_body
         self.responses = responses
-=======
-        self._id = id
-        self._method = method.upper()
-        self._servers = servers
-        self._path = path
-        self._summary = summary
-        self._description = description
-        self._parameters = params if params else []
-        self._request_body = request_body
-        self._responses = responses
-        self._security_requirements = security_requirements
-        self._is_frozen = False
-
-    def freeze(self):
-        """Make the instance and its components immutable."""
-        self._is_frozen = True
-
-        if self.request_body:
-            self.request_body.freeze()
-
-        for param in self.parameters:
-            param.freeze()
-
-    def _throw_if_frozen(self):
-        """Raise an exception if the object is frozen."""
-        if self._is_frozen:
-            raise FunctionExecutionException(
-                f"The `RestApiOperation` instance with id {self.id} is frozen and cannot be modified."
-            )
-
-    @property
-    def id(self):
-        """Get the ID of the operation."""
-        return self._id
-
-    @id.setter
-    def id(self, value: str):
-        self._throw_if_frozen()
-        self._id = value
-
-    @property
-    def method(self):
-        """Get the method of the operation."""
-        return self._method
-
-    @method.setter
-    def method(self, value: str):
-        self._throw_if_frozen()
-        self._method = value
-
-    @property
-    def servers(self):
-        """Get the servers of the operation."""
-        return self._servers
-
-    @servers.setter
-    def servers(self, value: list[dict[str, Any]]):
-        self._throw_if_frozen()
-        self._servers = value
-
-    @property
-    def path(self):
-        """Get the path of the operation."""
-        return self._path
-
-    @path.setter
-    def path(self, value: str):
-        self._throw_if_frozen()
-        self._path = value
-
-    @property
-    def summary(self):
-        """Get the summary of the operation."""
-        return self._summary
-
-    @summary.setter
-    def summary(self, value: str | None):
-        self._throw_if_frozen()
-        self._summary = value
-
-    @property
-    def description(self):
-        """Get the description of the operation."""
-        return self._description
-
-    @description.setter
-    def description(self, value: str | None):
-        self._throw_if_frozen()
-        self._description = value
-
-    @property
-    def parameters(self):
-        """Get the parameters of the operation."""
-        return self._parameters
-
-    @parameters.setter
-    def parameters(self, value: list["RestApiParameter"]):
-        self._throw_if_frozen()
-        self._parameters = value
-
-    @property
-    def request_body(self):
-        """Get the request body of the operation."""
-        return self._request_body
-
-    @request_body.setter
-    def request_body(self, value: "RestApiPayload | None"):
-        self._throw_if_frozen()
-        self._request_body = value
-
-    @property
-    def responses(self):
-        """Get the responses of the operation."""
-        return self._responses
-
-    @responses.setter
-    def responses(self, value: dict[str, "RestApiExpectedResponse"] | None):
-        self._throw_if_frozen()
-        self._responses = value
-
-    @property
-    def security_requirements(self):
-        """Get the security requirements of the operation."""
-        return self._security_requirements
-
-    @security_requirements.setter
-    def security_requirements(self, value: list[RestApiSecurityRequirement] | None):
-        self._throw_if_frozen()
-        self._security_requirements = value
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     def url_join(self, base_url: str, path: str):
         """Join a base URL and a path, correcting for any missing slashes."""
@@ -236,15 +94,11 @@ class RestApiOperation:
         """Build the headers for the operation."""
         headers = {}
 
-<<<<<<< HEAD
         parameters = [
             p
             for p in self.parameters
             if p.location == RestApiOperationParameterLocation.HEADER
         ]
-=======
-        parameters = [p for p in self.parameters if p.location == RestApiParameterLocation.HEADER]
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         for parameter in parameters:
             argument = arguments.get(parameter.name)
@@ -274,7 +128,6 @@ class RestApiOperation:
 
     def get_server_url(self, server_url_override=None, api_host_url=None, arguments=None):
         """Get the server URL for the operation."""
-<<<<<<< HEAD
         if server_url_override is not None and server_url_override.geturl() != b"":
             server_url_string = server_url_override.geturl()
         else:
@@ -287,10 +140,6 @@ class RestApiOperation:
                     else self._raise_invalid_operation_exception()
                 )
             )
-=======
-        if arguments is None:
-            arguments = {}
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         # Prioritize server_url_override
         if (
@@ -337,15 +186,12 @@ class RestApiOperation:
 
     def build_path(self, path_template: str, arguments: dict[str, Any]) -> str:
         """Build the path for the operation."""
-<<<<<<< HEAD
         parameters = [
             p
             for p in self.parameters
             if p.location == RestApiOperationParameterLocation.PATH
         ]
-=======
-        parameters = [p for p in self.parameters if p.location == RestApiParameterLocation.PATH]
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
         for parameter in parameters:
             argument = arguments.get(parameter.name)
             if argument is None:
@@ -363,15 +209,12 @@ class RestApiOperation:
     def build_query_string(self, arguments: dict[str, Any]) -> str:
         """Build the query string for the operation."""
         segments = []
-<<<<<<< HEAD
         parameters = [
             p
             for p in self.parameters
             if p.location == RestApiOperationParameterLocation.QUERY
         ]
-=======
-        parameters = [p for p in self.parameters if p.location == RestApiParameterLocation.QUERY]
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
         for parameter in parameters:
             argument = arguments.get(parameter.name)
             if argument is None:
@@ -410,13 +253,10 @@ class RestApiOperation:
 
         return params
 
-<<<<<<< HEAD
     def create_payload_artificial_parameter(
         self, operation: "RestApiOperation"
     ) -> "RestApiOperationParameter":
-=======
-    def create_payload_artificial_parameter(self, operation: "RestApiOperation") -> "RestApiParameter":
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
         """Create an artificial parameter for the REST API request body."""
         return RestApiParameter(
             name=self.PAYLOAD_ARGUMENT_NAME,
@@ -428,7 +268,6 @@ class RestApiOperation:
                 else "object"
             ),
             is_required=True,
-<<<<<<< HEAD
             location=RestApiOperationParameterLocation.BODY,
             style=RestApiOperationParameterStyle.SIMPLE,
             description=(
@@ -436,11 +275,7 @@ class RestApiOperation:
                 if operation.request_body
                 else "REST API request body."
             ),
-=======
-            location=RestApiParameterLocation.BODY,
-            style=RestApiParameterStyle.SIMPLE,
-            description=operation.request_body.description if operation.request_body else "REST API request body.",
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
             schema=operation.request_body.schema if operation.request_body else None,
         )
 
@@ -455,16 +290,13 @@ class RestApiOperation:
             description="Content type of REST API request body.",
         )
 
-<<<<<<< HEAD
     def _get_property_name(
         self,
         property: RestApiOperationPayloadProperty,
         root_property_name: bool,
         enable_namespacing: bool,
     ):
-=======
-    def _get_property_name(self, property: RestApiPayloadProperty, root_property_name: bool, enable_namespacing: bool):
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
         if enable_namespacing and root_property_name:
             return f"{root_property_name}.{property.name}"
         return property.name
@@ -535,15 +367,11 @@ class RestApiOperation:
         ]
 
     def get_default_response(
-<<<<<<< HEAD
         self,
         responses: dict[str, RestApiOperationExpectedResponse],
         preferred_responses: list[str],
     ) -> RestApiOperationExpectedResponse | None:
-=======
-        self, responses: dict[str, RestApiExpectedResponse], preferred_responses: list[str]
-    ) -> RestApiExpectedResponse | None:
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
         """Get the default response for the operation.
 
         If no appropriate response is found, returns None.

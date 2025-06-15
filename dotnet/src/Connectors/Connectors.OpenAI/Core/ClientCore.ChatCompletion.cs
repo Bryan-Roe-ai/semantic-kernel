@@ -1,8 +1,5 @@
 // Copyright (c) Microsoft. All rights reserved.
-<<<<<<< HEAD
-=======
 
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
@@ -33,7 +30,6 @@ namespace Microsoft.SemanticKernel.Connectors.OpenAI;
 /// </summary>
 internal partial class ClientCore
 {
-<<<<<<< HEAD
     /// <summary>
     /// <see cref="JsonSchemaMapperConfiguration"/> for JSON schema format for structured outputs.
     /// </summary>
@@ -44,14 +40,6 @@ internal partial class ClientCore
         TreatNullObliviousAsNonNullable = true,
         TransformSchemaNode = OpenAIJsonSchemaTransformer.Transform
     };
-=======
-#if NET
-    [GeneratedRegex("[^a-zA-Z0-9_-]")]
-    private static partial Regex DisallowedFunctionNameCharactersRegex();
-#else
-    private static Regex DisallowedFunctionNameCharactersRegex() => new("[^a-zA-Z0-9_-]", RegexOptions.Compiled);
-#endif
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     protected const string ModelProvider = "openai";
     protected record ToolCallingConfig(IList<ChatTool>? Tools, ChatToolChoice? Choice, bool AutoInvoke, bool AllowAnyRequestedKernelFunction, FunctionChoiceBehaviorOptions? Options);
@@ -182,22 +170,18 @@ internal partial class ClientCore
     {
         Verify.NotNull(chatHistory);
 
-
         Verify.NotNull(chat);
         Verify.NotNull(chat);
         Verify.NotNull(chat);
         if (this.Logger!.IsEnabled(LogLevel.Trace))
         {
             this.Logger.LogTrace("ChatHistory: {ChatHistory}, Settings: {Settings}",
-<<<<<<< HEAD
                 JsonSerializer.Serialize(chatHistory),
                 JsonSerializer.Serialize(chat),
                 JsonSerializer.Serialize(chat),
                 JsonSerializer.Serialize(chat),
                 JsonSerializer.Serialize(chat),
-=======
-                JsonSerializer.Serialize(chatHistory, JsonOptionsCache.ChatHistory),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                 JsonSerializer.Serialize(executionSettings));
         }
 
@@ -242,7 +226,6 @@ internal partial class ClientCore
                         // Capture available metadata even if the operation failed.
                         activity
                             .SetResponseId(chatCompletion.Id)
-<<<<<<< HEAD
                             .SetPromptTokenUsage(chatCompletion.Usage.InputTokens)
                             .SetCompletionTokenUsage(chatCompletion.Usage.OutputTokens);
                     }
@@ -255,24 +238,18 @@ internal partial class ClientCore
 
                             .SetPromptTokenUsage(chatCompletion.Usage.InputTokenCount)
                             .SetCompletionTokenUsage(chatCompletion.Usage.OutputTokenCount);
-=======
-                            .SetInputTokensUsage(chatCompletion.Usage.InputTokenCount)
-                            .SetOutputTokensUsage(chatCompletion.Usage.OutputTokenCount);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                     }
 
                     throw;
                 }
 
-<<<<<<< HEAD
                 chatMessageContent = this.CreateChatMessageContent(chatCompletion, targetModel);
                 activity?.SetCompletionResponse([chatMessageContent], chatCompletion.Usage.InputTokens, chatCompletion.Usage.OutputTokens);
                 activity?.SetCompletionResponse([chatMessageContent], chatCompletion.Usage.InputTokens, chatCompletion.Usage.OutputTokens);
                 activity?.SetCompletionResponse([chatMessageContent], chatCompletion.Usage.InputTokenCount, chatCompletion.Usage.OutputTokenCount);
                 activity?.SetCompletionResponse([chatMessageContent], chatCompletion.Usage.InputTokenCount, chatCompletion.Usage.OutputTokenCount);
-=======
-                chatMessageContent = this.CreateChatMessageContent(chatCompletion, targetModel, functionCallingConfig.Options?.RetainArgumentTypes ?? false, chatOptions);
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                 activity?.SetCompletionResponse([chatMessageContent], chatCompletion.Usage.InputTokenCount, chatCompletion.Usage.OutputTokenCount);
             }
 
@@ -459,16 +436,13 @@ internal partial class ClientCore
         if (this.Logger!.IsEnabled(LogLevel.Trace))
         {
             this.Logger.LogTrace("ChatHistory: {ChatHistory}, Settings: {Settings}",
-<<<<<<< HEAD
                 JsonSerializer.Serialize(chatHistory),
                 JsonSerializer.Serialize(chat),
                 JsonSerializer.Serialize(chat),
                 JsonSerializer.Serialize(chat),
                 JsonSerializer.Serialize(chat),
                 JsonSerializer.Serialize(chat),
-=======
-                JsonSerializer.Serialize(chatHistory, JsonOptionsCache.ChatHistory),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                 JsonSerializer.Serialize(executionSettings));
         }
 
@@ -593,16 +567,9 @@ internal partial class ClientCore
                                 openAIStreamingChatMessageContent.Items.Add(new StreamingFunctionCallUpdateContent(
                                     callId: functionCallUpdate.ToolCallId,
                                     name: functionCallUpdate.FunctionName,
-<<<<<<< HEAD
                                     arguments: functionCallUpdate.FunctionArgumentsUpdate?.ToString(),
                                     functionCallIndex: functionCallUpdate.Index));
-=======
-                                    arguments: streamingArguments,
-                                    functionCallIndex: functionCallUpdate.Index)
-                                {
-                                    RequestIndex = requestIndex,
-                                });
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                             }
                         }
                         foreach (var functionCallUpdate in chatCompletionUpdate.ToolCallUpdates)
@@ -852,7 +819,6 @@ internal partial class ClientCore
     {
         var options = new ChatCompletionOptions
         {
-<<<<<<< HEAD
             MaxTokens = executionSettings.MaxTokens,
             MaxTokens = executionSettings.MaxTokens,
             MaxOutputTokenCount = executionSettings.MaxTokens,
@@ -976,7 +942,6 @@ internal partial class ClientCore
                             return ChatResponseFormat.CreateTextFormat();
                     }
                 }
-
 
                 break;
             case Type formatObjectType:
@@ -1854,7 +1819,6 @@ internal partial class ClientCore
     {
         Verify.NotNull(chatHistory);
 
-
         Verify.NotNull(chat);
         Verify.NotNull(chat);
         Verify.NotNull(chat);
@@ -2508,9 +2472,7 @@ internal partial class ClientCore
             MaxOutputTokenCount = executionSettings.MaxTokens,
             MaxOutputTokenCount = executionSettings.MaxTokens,
             MaxOutputTokenCount = executionSettings.MaxTokens,
-=======
-            WebSearchOptions = GetWebSearchOptions(executionSettings),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
             MaxOutputTokenCount = executionSettings.MaxTokens,
             Temperature = (float?)executionSettings.Temperature,
             TopP = (float?)executionSettings.TopP,
@@ -2708,7 +2670,6 @@ internal partial class ClientCore
                             return ChatResponseFormat.CreateTextFormat();
                     }
                 }
-
 
                 break;
                 return ChatResponseFormat.CreateJsonSchemaFormat(
@@ -3016,15 +2977,11 @@ internal partial class ClientCore
                 return [new AssistantChatMessage(message.Content ?? string.Empty) { ParticipantName = message.AuthorName }];
             }
 
-<<<<<<< HEAD
             return [new AssistantChatMessage(toolCalls, message.Content) { ParticipantName = message.AuthorName }];
             return [new AssistantChatMessage(toolCalls, message.Content) { ParticipantName = message.AuthorName }];
             return [new AssistantChatMessage(toolCalls, message.Content) { ParticipantName = message.AuthorName }];
             return [new AssistantChatMessage(toolCalls, message.Content) { ParticipantName = message.AuthorName }];
             var assistantMessage = new AssistantChatMessage(toolCalls) { ParticipantName = message.AuthorName };
-=======
-            var assistantMessage = new AssistantChatMessage(SanitizeFunctionNames(toolCalls)) { ParticipantName = message.AuthorName };
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
             // If message content is null, adding it as empty string,
             // because chat message content must be string.

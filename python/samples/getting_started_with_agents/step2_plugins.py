@@ -7,13 +7,9 @@ from semantic_kernel.agents.chat_completion_agent import ChatCompletionAgent
 from semantic_kernel.connectors.ai.function_choice_behavior import (
     FunctionChoiceBehavior,
 )
-<<<<<<< Updated upstream
 from semantic_kernel.agents import ChatCompletionAgent
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
-=======
-from semantic_kernel.agents import ChatCompletionAgent
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
->>>>>>> Stashed changes
+
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.utils.author_role import AuthorRole
@@ -33,7 +29,6 @@ streaming = True
 HOST_NAME = "Host"
 HOST_INSTRUCTIONS = "Answer questions about the menu."
 
-
 # Define a sample plugin for the sample
 class MenuPlugin:
     """A sample Menu Plugin used for the concept sample."""
@@ -51,7 +46,6 @@ class MenuPlugin:
         self, menu_item: Annotated[str, "The name of the menu item."]
     ) -> Annotated[str, "Returns the price of the menu item."]:
         return "$9.99"
-
 
 # A helper method to invoke the agent with the user input
 async def invoke_agent(
@@ -75,7 +69,6 @@ async def invoke_agent(
         async for content in agent.invoke(chat):
             print(f"# {content.role} - {content.name or '*'}: '{content.content}'")
         chat.add_message(content)
-
 
 async def main():
     # Create the instance of the Kernel
@@ -109,7 +102,6 @@ async def main():
     await invoke_agent(agent, "What is the special soup?", chat)
     await invoke_agent(agent, "What is the special drink?", chat)
     await invoke_agent(agent, "Thank you", chat)
-
 
 if __name__ == "__main__":
     asyncio.run(main())

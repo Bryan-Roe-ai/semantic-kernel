@@ -1,71 +1,15 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-<<<<<<< main
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
 using System;
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
 using System;
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
+
 using System;
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
+
 using System;
->>>>>>> main
->>>>>>> Stashed changes
-<<<<<<< main
-=======
+
 using System;
->>>>>>> upstream/main
-=======
->>>>>>> head
->>>>>>> div
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
@@ -99,48 +43,9 @@ public class KernelBuilderExtensionsTests
         Assert.NotNull(vectorStore);
         Assert.IsType<VolatileVectorStore>(vectorStore);
     }
-<<<<<<< main
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-
-=======
 
     [Obsolete("The VolatileVectorStore is obsolete so this test is as well.")]
->>>>>>> upstream/main
+
     [Fact]
     public void AddVolatileVectorStoreTextSearchRegistersClass()
     {
@@ -161,10 +66,8 @@ public class KernelBuilderExtensionsTests
         Assert.IsType<VectorStoreTextSearch<DataModel>>(vectorStoreTextSearch);
     }
 
-<<<<<<< main
-=======
     [Obsolete("The VolatileVectorStore is obsolete so this test is as well.")]
->>>>>>> upstream/main
+
     [Fact]
     public void AddVolatileVectorStoreTextSearchWithDelegatesRegistersClass()
     {
@@ -176,11 +79,7 @@ public class KernelBuilderExtensionsTests
         this._kernelBuilder.AddVolatileVectorStoreTextSearch<Guid, DataModel>(
             "records",
             obj => ((DataModel)obj).Text,
-<<<<<<< main
             obj => new TextSearchResult(name: ((DataModel)obj).Key.ToString(), value: ((DataModel)obj).Text));
-=======
-            obj => new TextSearchResult(value: ((DataModel)obj).Text) { Name = ((DataModel)obj).Key.ToString() });
->>>>>>> upstream/main
 
         // Assert.
         var kernel = this._kernelBuilder.Build();
@@ -215,11 +114,8 @@ public class KernelBuilderExtensionsTests
         {
             if (result is DataModel dataModel)
             {
-<<<<<<< main
                 return new TextSearchResult(name: dataModel.Key.ToString(), value: dataModel.Text);
-=======
-                return new TextSearchResult(value: dataModel.Text) { Name = dataModel.Key.ToString() };
->>>>>>> upstream/main
+
             }
             throw new ArgumentException("Invalid result type.");
         }
@@ -238,47 +134,5 @@ public class KernelBuilderExtensionsTests
         [VectorStoreRecordVector(1536)]
         public ReadOnlyMemory<float> Embedding { get; init; }
     }
-<<<<<<< main
-<<<<<<< main
-=======
-<<<<<<< div
-=======
->>>>>>> div
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
-<<<<<<< main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> head
->>>>>>> div
+
 }

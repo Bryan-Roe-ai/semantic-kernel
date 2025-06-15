@@ -8,7 +8,6 @@ from collections.abc import AsyncGenerator, Callable
 from functools import reduce
 from typing import TYPE_CHECKING, Any, ClassVar
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
 from semantic_kernel.connectors.ai.function_calling_utils import (
@@ -16,13 +15,7 @@ from semantic_kernel.connectors.ai.function_calling_utils import (
     merge_streaming_function_results,
 )
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior, FunctionChoiceType
-=======
-from opentelemetry.trace import Span, Tracer, get_tracer, use_span
-from pydantic import Field
 
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-from semantic_kernel.const import AUTO_FUNCTION_INVOCATION_SPAN_NAME
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.contents.annotation_content import AnnotationContent
 from semantic_kernel.contents.file_reference_content import FileReferenceContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
@@ -30,14 +23,10 @@ from semantic_kernel.exceptions.service_exceptions import ServiceInvalidExecutio
 from semantic_kernel.services.ai_service_client_base import AIServiceClientBase
 
 if TYPE_CHECKING:
-<<<<<<< HEAD
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
         PromptExecutionSettings,
     )
-=======
-    from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
-    from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     from semantic_kernel.contents.chat_history import ChatHistory
     from semantic_kernel.contents.chat_message_content import ChatMessageContent
     from semantic_kernel.contents.streaming_chat_message_content import (
@@ -45,7 +34,6 @@ if TYPE_CHECKING:
     )
 
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 class ChatCompletionClientBase(AIServiceClientBase, ABC):
     """Base class for chat completion AI services."""
@@ -56,7 +44,6 @@ class ChatCompletionClientBase(AIServiceClientBase, ABC):
 
     # region Internal methods to be implemented by the derived classes
 
-
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
         PromptExecutionSettings,
@@ -68,7 +55,6 @@ if TYPE_CHECKING:
     )
 
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 class ChatCompletionClientBase(AIServiceClientBase, ABC):
     """Base class for chat completion AI services."""

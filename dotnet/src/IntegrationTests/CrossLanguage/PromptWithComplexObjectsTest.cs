@@ -1,13 +1,10 @@
 // Copyright (c) Microsoft. All rights reserved.
-<<<<<<< HEAD
 
 using Microsoft.SemanticKernel;
 using System.IO;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 // Copyright (c) Microsoft. All rights reserved.
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System.IO;
 using System.Text.Json.Nodes;

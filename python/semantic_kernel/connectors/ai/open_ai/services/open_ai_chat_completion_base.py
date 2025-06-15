@@ -21,7 +21,6 @@ from openai.types.chat.chat_completion_message import FunctionCall
 from openai.types.chat.chat_completion_message_tool_call import ChatCompletionMessageToolCall
 from typing_extensions import deprecated
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.chat_completion_client_base import (
     ChatCompletionClientBase,
 )
@@ -38,10 +37,7 @@ from semantic_kernel.connectors.ai.function_calling_utils import (
     update_settings_from_function_call_configuration,
 )
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
-=======
-from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
-from semantic_kernel.connectors.ai.completion_usage import CompletionUsage
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.function_calling_utils import update_settings_from_function_call_configuration
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior, FunctionChoiceType
 from semantic_kernel.connectors.ai.function_calling_utils import update_settings_from_function_call_configuration
@@ -147,19 +143,14 @@ from semantic_kernel.contents.chat_role import ChatRole
 from semantic_kernel.contents.finish_reason import FinishReason
 
 if TYPE_CHECKING:
-<<<<<<< HEAD
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
         PromptExecutionSettings,
     )
-=======
-    from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
-    from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     from semantic_kernel.functions.kernel_arguments import KernelArguments
     from semantic_kernel.kernel import Kernel
 
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 class InvokeTermination(Exception):
     """Exception for termination of function invocation."""
@@ -221,7 +212,6 @@ class OpenAIChatCompletionBase(OpenAIHandler, ChatCompletionClientBase):
         if not isinstance(settings, OpenAIChatPromptExecutionSettings):
             settings = self.get_prompt_execution_settings_from_settings(settings)
         assert isinstance(settings, OpenAIChatPromptExecutionSettings)  # nosec
-
 
     @override
     @trace_chat_completion(MODEL_PROVIDER_NAME)
@@ -298,7 +288,6 @@ class OpenAIChatCompletionBase(OpenAIHandler, ChatCompletionClientBase):
                     "OpenAIChatPromptExecutions.number_of_responses of 1."
                 )
 
-
         kernel = kwargs.get("kernel", None)
         arguments = kwargs.get("arguments", None)
         if settings.function_choice_behavior is not None:
@@ -313,7 +302,6 @@ class OpenAIChatCompletionBase(OpenAIHandler, ChatCompletionClientBase):
                     "Auto-invocation of tool calls may only be used with a "
                     "OpenAIChatPromptExecutions.number_of_responses of 1."
                 )
-
 
         kernel = kwargs.get("kernel", None)
         arguments = kwargs.get("arguments", None)
@@ -432,7 +420,6 @@ class OpenAIChatCompletionBase(OpenAIHandler, ChatCompletionClientBase):
             settings = self.get_prompt_execution_settings_from_settings(settings)
         assert isinstance(settings, OpenAIChatPromptExecutionSettings)  # nosec
 
-        
     ) -> AsyncGenerator[list[StreamingChatMessageContent | None], Any]:
         """Executes a streaming chat completion request and returns the result.
 
@@ -441,7 +428,6 @@ class OpenAIChatCompletionBase(OpenAIHandler, ChatCompletionClientBase):
             settings (OpenAIChatPromptExecutionSettings | AzureChatPromptExecutionSettings): The settings to use
                 for the chat completion request.
             kwargs (Dict[str, Any]): The optional arguments.
-
 
     ) -> AsyncGenerator[list[StreamingChatMessageContent | None], Any]:
         """Executes a streaming chat completion request and returns the result.
@@ -1132,7 +1118,6 @@ class OpenAIChatCompletionBase(OpenAIHandler, ChatCompletionClientBase):
         function_call_behavior: FunctionChoiceBehavior,
     ) -> "AutoFunctionInvocationContext | None":
         """Processes the tool calls in the result and update the chat history."""
-<<<<<<< HEAD
         # deprecated and might not even be used anymore, hard to trigger directly
         if isinstance(function_call_behavior, FunctionCallBehavior):  # pragma: no cover
         if isinstance(function_call_behavior, FunctionCallBehavior):
@@ -1142,8 +1127,6 @@ class OpenAIChatCompletionBase(OpenAIHandler, ChatCompletionClientBase):
                 function_call_behavior
             )
 
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         return await kernel.invoke_function_call(
             function_call=function_call,
             chat_history=chat_history,

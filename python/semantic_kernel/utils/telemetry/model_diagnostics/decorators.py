@@ -2,15 +2,12 @@
 
 import functools
 import json
-<<<<<<< HEAD
-from collections.abc import Callable
-from typing import Any
-=======
-import logging
 from collections.abc import AsyncGenerator, Callable
+from collections.abc import Callable
 from functools import reduce
+from typing import Any
 from typing import TYPE_CHECKING, Any, ClassVar
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+import logging
 
 from opentelemetry.trace import Span, StatusCode, get_tracer, use_span
 
@@ -19,12 +16,10 @@ from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecut
 from semantic_kernel.connectors.ai.text_completion_client_base import TextCompletionClientBase
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
-<<<<<<< HEAD
-=======
 from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
 from semantic_kernel.contents.streaming_content_mixin import StreamingContentMixin
 from semantic_kernel.contents.streaming_text_content import StreamingTextContent
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.contents.text_content import TextContent
 from semantic_kernel.utils.feature_stage_decorator import experimental
 from semantic_kernel.utils.telemetry.model_diagnostics import gen_ai_attributes
@@ -40,72 +35,18 @@ MODEL_DIAGNOSTICS_SETTINGS = ModelDiagnosticSettings()
 
 # Operation names
 CHAT_COMPLETION_OPERATION = "chat.completions"
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-TEXT_COMPLETION_OPERATION = "text.completions"
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-TEXT_COMPLETION_OPERATION = "text.completions"
-=======
-CHAT_STREAMING_COMPLETION_OPERATION = "chat.streaming_completions"
-TEXT_COMPLETION_OPERATION = "text.completions"
-TEXT_STREAMING_COMPLETION_OPERATION = "text.streaming_completions"
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-CHAT_STREAMING_COMPLETION_OPERATION = "chat.streaming_completions"
-TEXT_COMPLETION_OPERATION = "text.completions"
-TEXT_STREAMING_COMPLETION_OPERATION = "text.streaming_completions"
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
 
+TEXT_COMPLETION_OPERATION = "text.completions"
+
+TEXT_COMPLETION_OPERATION = "text.completions"
+
+CHAT_STREAMING_COMPLETION_OPERATION = "chat.streaming_completions"
+TEXT_COMPLETION_OPERATION = "text.completions"
+TEXT_STREAMING_COMPLETION_OPERATION = "text.streaming_completions"
+
+CHAT_STREAMING_COMPLETION_OPERATION = "chat.streaming_completions"
+TEXT_COMPLETION_OPERATION = "text.completions"
+TEXT_STREAMING_COMPLETION_OPERATION = "text.streaming_completions"
 
 # We're recording multiple events for the chat history, some of them are emitted within (hundreds of)
 # nanoseconds of each other. The default timestamp resolution is not high enough to guarantee unique
@@ -129,13 +70,11 @@ class ChatHistoryMessageTimestampFilter(logging.Filter):
             record.created += idx * 1e-6
         return True
 
-
 # Creates a tracer from the global tracer provider
 tracer = get_tracer(__name__)
 
 logger = logging.getLogger(__name__)
 logger.addFilter(ChatHistoryMessageTimestampFilter())
-
 
 @experimental
 def are_model_diagnostics_enabled() -> bool:
@@ -148,7 +87,6 @@ def are_model_diagnostics_enabled() -> bool:
         or MODEL_DIAGNOSTICS_SETTINGS.enable_otel_diagnostics_sensitive
     )
 
-
 @experimental
 def are_sensitive_events_enabled() -> bool:
     """Check if sensitive events are enabled.
@@ -156,7 +94,6 @@ def are_sensitive_events_enabled() -> bool:
     Sensitive events are enabled if the diagnostic with sensitive events is enabled.
     """
     return MODEL_DIAGNOSTICS_SETTINGS.enable_otel_diagnostics_sensitive
-
 
 @experimental
 def trace_chat_completion(model_provider: str) -> Callable:
@@ -178,7 +115,6 @@ def trace_chat_completion(model_provider: str) -> Callable:
                 # If model diagnostics are not enabled, just return the completion
                 return await completion_func(*args, **kwargs)
 
-<<<<<<< HEAD
             completion_service: ChatCompletionClientBase = args[0]
             chat_history: ChatHistory = (
                 kwargs.get("chat_history") if kwargs.get("chat_history") is not None else args[1]
@@ -186,87 +122,27 @@ def trace_chat_completion(model_provider: str) -> Callable:
             settings: PromptExecutionSettings = (
                 kwargs.get("settings") if kwargs.get("settings") is not None else args[2]
             )
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
             chat_history: ChatHistory = kwargs["chat_history"]
             settings: PromptExecutionSettings = kwargs["settings"]
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
             chat_history: ChatHistory = kwargs["chat_history"]
             settings: PromptExecutionSettings = kwargs["settings"]
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
             chat_history: ChatHistory = kwargs["chat_history"]
             settings: PromptExecutionSettings = kwargs["settings"]
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
-=======
+
             completion_service: "ChatCompletionClientBase" = args[0]
             chat_history: ChatHistory = kwargs.get("chat_history") or args[1]  # type: ignore
             settings: "PromptExecutionSettings" = kwargs.get("settings") or args[2]  # type: ignore
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
             with use_span(
                 _get_completion_span(
                     CHAT_COMPLETION_OPERATION,
                     completion_service.ai_model_id,
                     model_provider,
-<<<<<<< HEAD
                     chat_history,
-=======
-                    completion_service.service_url(),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                     settings,
                 ),
                 end_on_exit=True,
@@ -284,48 +160,10 @@ def trace_chat_completion(model_provider: str) -> Callable:
 
     return inner_trace_chat_completion
 
-
-<<<<<<< HEAD
 @experimental_function
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
 @experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 def trace_streaming_chat_completion(model_provider: str) -> Callable:
     """Decorator to trace streaming chat completion activities.
 
@@ -389,46 +227,10 @@ def trace_streaming_chat_completion(model_provider: str) -> Callable:
 
     return inner_trace_streaming_chat_completion
 
-
-<<<<<<< HEAD
 @experimental_function
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
 @experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 def trace_text_completion(model_provider: str) -> Callable:
     """Decorator to trace text completion activities."""
 
@@ -439,93 +241,30 @@ def trace_text_completion(model_provider: str) -> Callable:
                 # If model diagnostics are not enabled, just return the completion
                 return await completion_func(*args, **kwargs)
 
-<<<<<<< HEAD
             completion_service: TextCompletionClientBase = args[0]
             prompt: str = kwargs.get("prompt") if kwargs.get("prompt") is not None else args[1]
             settings: PromptExecutionSettings = kwargs["settings"] if kwargs.get("settings") is not None else args[2]
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
             prompt: str = kwargs["prompt"]
             settings: PromptExecutionSettings = kwargs["settings"]
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
             prompt: str = kwargs["prompt"]
             settings: PromptExecutionSettings = kwargs["settings"]
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
             prompt: str = kwargs["prompt"]
             settings: PromptExecutionSettings = kwargs["settings"]
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
-=======
+
             completion_service: "TextCompletionClientBase" = args[0]
             prompt: str = kwargs.get("prompt") if kwargs.get("prompt") is not None else args[1]  # type: ignore
             settings: "PromptExecutionSettings" = kwargs["settings"] if kwargs.get("settings") is not None else args[2]
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
             with use_span(
                 _get_completion_span(
                     TEXT_COMPLETION_OPERATION,
                     completion_service.ai_model_id,
                     model_provider,
-<<<<<<< HEAD
                     prompt,
-=======
-                    completion_service.service_url(),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                     settings,
                 ),
                 end_on_exit=True,
@@ -543,48 +282,10 @@ def trace_text_completion(model_provider: str) -> Callable:
 
     return inner_trace_text_completion
 
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
 @experimental_function
-=======
+
 @experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 def trace_streaming_text_completion(model_provider: str) -> Callable:
     """Decorator to trace streaming text completion activities.
 
@@ -646,56 +347,20 @@ def trace_streaming_text_completion(model_provider: str) -> Callable:
 
     return inner_trace_streaming_text_completion
 
-
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 def _start_completion_activity(
     operation_name: str,
     model_name: str,
     model_provider: str,
     prompt: str | ChatHistory,
     execution_settings: PromptExecutionSettings | None,
-=======
+
 def _get_completion_span(
     operation_name: str,
     model_name: str,
     model_provider: str,
     service_url: str | None,
     execution_settings: "PromptExecutionSettings | None",
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 ) -> Span:
     """Start a text or chat completion span for a given model.
 
@@ -731,7 +396,6 @@ def _get_completion_span(
 
     return span
 
-
 def _set_completion_input(
     model_provider: str,
     prompt: str | ChatHistory,
@@ -762,18 +426,10 @@ def _set_completion_input(
                 },
             )
 
-
 def _set_completion_response(
     current_span: Span,
-<<<<<<< HEAD
     completions: list[ChatMessageContent] | list[TextContent],
-=======
-    completions: list[ChatMessageContent]
-    | list[TextContent]
-    | list[StreamingChatMessageContent]
-    | list[StreamingTextContent],
-    model_provider: str,
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 ) -> None:
     """Set the a text or chat completion response for a given span."""
     first_completion = completions[0]
@@ -792,7 +448,6 @@ def _set_completion_response(
 
     # Set usage attributes
     usage = first_completion.metadata.get("usage", None)
-<<<<<<< HEAD
 
     prompt_tokens = getattr(usage, "prompt_tokens", None)
     if prompt_tokens:
@@ -801,13 +456,6 @@ def _set_completion_response(
     completion_tokens = getattr(usage, "completion_tokens", None)
     if completion_tokens:
         current_span.set_attribute(gen_ai_attributes.COMPLETION_TOKENS, completion_tokens)
-=======
-    if isinstance(usage, CompletionUsage):
-        if usage.prompt_tokens:
-            current_span.set_attribute(gen_ai_attributes.INPUT_TOKENS, usage.prompt_tokens)
-        if usage.completion_tokens:
-            current_span.set_attribute(gen_ai_attributes.OUTPUT_TOKENS, usage.completion_tokens)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     # Set the completion event
     if are_sensitive_events_enabled():
@@ -829,13 +477,10 @@ def _set_completion_response(
                 },
             )
 
-
 def _set_completion_error(span: Span, error: Exception) -> None:
     """Set an error for a text or chat completion ."""
     span.set_attribute(gen_ai_attributes.ERROR_TYPE, str(type(error)))
     span.set_status(StatusCode.ERROR, repr(error))
-<<<<<<< HEAD
-
 
 def _messages_to_openai_format(messages: list[ChatMessageContent] | list[TextContent]) -> str:
     """Convert a list of ChatMessageContent to a string in the OpenAI format.
@@ -844,5 +489,4 @@ def _messages_to_openai_format(messages: list[ChatMessageContent] | list[TextCon
     regardless of the actual model being used.
     """
     return json.dumps([message.to_dict() for message in messages])
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+

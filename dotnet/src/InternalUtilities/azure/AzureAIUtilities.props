@@ -2,8 +2,4 @@
   <ItemGroup>
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/azure/**/*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
-<<<<<<< HEAD
 </Project>
-=======
-</Project>
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

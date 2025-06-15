@@ -1,8 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
-<<<<<<< HEAD
-=======
 using System;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;

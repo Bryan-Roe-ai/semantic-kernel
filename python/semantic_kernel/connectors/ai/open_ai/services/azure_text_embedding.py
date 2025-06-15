@@ -1,94 +1,16 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 import logging
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 from collections.abc import Mapping
 from typing import Any
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
+
 from collections.abc import Mapping
 from typing import Any
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
+
 from collections.abc import Mapping
 from typing import Any
-=======
 from typing import Dict, Mapping, Optional, overload
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
 
 from openai import AsyncAzureOpenAI
 from openai.lib.azure import AsyncAzureADTokenProvider
@@ -107,170 +29,26 @@ from semantic_kernel.connectors.ai.open_ai.settings.azure_open_ai_settings impor
     AzureOpenAISettings,
 )
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError
-<<<<<<< HEAD
 from semantic_kernel.utils.experimental_decorator import experimental_class
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-from semantic_kernel.utils.feature_stage_decorator import experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-=======
-
-<<<<<<< HEAD
 logger: logging.Logger = logging.getLogger(__name__)
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
->>>>>>> head
-
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< head
-=======
-<<<<<<< main
-=======
-
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-
->>>>>>> Stashed changes
->>>>>>> head
-logger: logging.Logger = logging.getLogger(__name__)
->>>>>>> origin/main
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-<<<<<<< main
+logger: logging.Logger = logging.getLogger(__name__)
 
-=======
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
 @experimental_class
-=======
+
 @experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
     """Azure Text Embedding class."""
 
     def __init__(
         self,
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
->>>>>>> Stashed changes
->>>>>>> head
+
         service_id: str | None = None,
         api_key: str | None = None,
         deployment_name: str | None = None,
@@ -283,42 +61,7 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
         default_headers: Mapping[str, str] | None = None,
         async_client: AsyncAzureOpenAI | None = None,
         env_file_path: str | None = None,
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
+
     ) -> None:
         """Initialize an AzureTextEmbedding service.
 
@@ -360,7 +103,6 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
                 "The Azure OpenAI embedding deployment name is required."
             )
 
-<<<<<<< HEAD
         # If the api_key is none, and the ad_token is none, and the ad_token_provider is none,
         # then we will attempt to get the ad_token using the default endpoint specified in the Azure OpenAI settings.
         if api_key is None and ad_token_provider is None and azure_openai_settings.token_endpoint and ad_token is None:
@@ -379,35 +121,14 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
                 if azure_openai_settings.api_key
                 else None
             ),
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
+
         deployment_name: str,
         async_client: AsyncAzureOpenAI,
         service_id: Optional[str] = None,
->>>>>>> ms/small_fixes
+
     ) -> None:
         """Initialize an AzureTextEmbedding service.
 
-<<<<<<< main
         service_id: The service ID. (Optional)
         api_key  {str | None}: The optional api key. If provided, will override the value in the
                 env vars or .env file.
@@ -427,35 +148,14 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
         async_client (Optional[AsyncAzureOpenAI]): An existing client to use. (Optional)
         env_file_path (str | None): Use the environment settings file as a fallback to
             environment variables. (Optional)
-=======
-        Arguments:
-            deployment_name: The name of the Azure deployment. This value
-                will correspond to the custom name you chose for your deployment
-                when you deployed a model. This value can be found under
-                Resource Management > Deployments in the Azure portal or, alternatively,
-                under Management > Deployments in Azure OpenAI Studio.
-            async_client {AsyncAzureOpenAI} -- An existing client to use.
-        """
 
-    def __init__(
-        self,
-        deployment_name: str,
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
         deployment_name: str,
         async_client: AsyncAzureOpenAI,
         service_id: Optional[str] = None,
->>>>>>> ms/small_fixes
+
     ) -> None:
         """Initialize an AzureTextEmbedding service.
 
-<<<<<<< main
         service_id: The service ID. (Optional)
         api_key  {str | None}: The optional api key. If provided, will override the value in the
                 env vars or .env file.
@@ -475,30 +175,10 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
         async_client (Optional[AsyncAzureOpenAI]): An existing client to use. (Optional)
         env_file_path (str | None): Use the environment settings file as a fallback to
             environment variables. (Optional)
-=======
-        Arguments:
-            deployment_name: The name of the Azure deployment. This value
-                will correspond to the custom name you chose for your deployment
-                when you deployed a model. This value can be found under
-                Resource Management > Deployments in the Azure portal or, alternatively,
-                under Management > Deployments in Azure OpenAI Studio.
-            async_client {AsyncAzureOpenAI} -- An existing client to use.
-        """
 
-    def __init__(
-        self,
-        deployment_name: str,
-<<<<<<< div
-=======
-=======
-        deployment_name: str,
-        async_client: AsyncAzureOpenAI,
-        service_id: Optional[str] = None,
->>>>>>> ms/small_fixes
     ) -> None:
         """Initialize an AzureTextEmbedding service.
 
-<<<<<<< main
         service_id: The service ID. (Optional)
         api_key  {str | None}: The optional api key. If provided, will override the value in the
                 env vars or .env file.
@@ -518,29 +198,7 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
         async_client (Optional[AsyncAzureOpenAI]): An existing client to use. (Optional)
         env_file_path (str | None): Use the environment settings file as a fallback to
             environment variables. (Optional)
-=======
-        Arguments:
-            deployment_name: The name of the Azure deployment. This value
-                will correspond to the custom name you chose for your deployment
-                when you deployed a model. This value can be found under
-                Resource Management > Deployments in the Azure portal or, alternatively,
-                under Management > Deployments in Azure OpenAI Studio.
-            async_client {AsyncAzureOpenAI} -- An existing client to use.
-        """
 
-    def __init__(
-        self,
-        deployment_name: str,
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
         endpoint: Optional[str] = None,
         api_version: str = DEFAULT_AZURE_API_VERSION,
         service_id: Optional[str] = None,
@@ -550,7 +208,7 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
         default_headers: Optional[Mapping[str, str]] = None,
         async_client: Optional[AsyncAzureOpenAI] = None,
     ) -> None:
->>>>>>> ms/small_fixes
+
         """
         try:
             azure_openai_settings = AzureOpenAISettings.create(
@@ -568,7 +226,6 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
                 "The Azure OpenAI embedding deployment name is required."
             )
 
-<<<<<<< main
         # If the api_key is none, and the ad_token is none, and the ad_token_provider is none,
         # then we will attempt to get the ad_token using the default endpoint specified in the Azure OpenAI settings.
         if (
@@ -587,8 +244,6 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
                 "Please provide either api_key, ad_token, ad_token_provider, or a custom client"
             )
 
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         super().__init__(
             deployment_name=azure_openai_settings.embedding_deployment_name,
             endpoint=azure_openai_settings.endpoint,
@@ -600,7 +255,7 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
                 if azure_openai_settings.api_key
                 else None
             ),
-=======
+
         :param deployment_name: The name of the Azure deployment. This value
             will correspond to the custom name you chose for your deployment
             when you deployed a model. This value can be found under
@@ -628,41 +283,7 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
             api_version=api_version,
             service_id=service_id,
             api_key=api_key,
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
+
             ad_token=ad_token,
             ad_token_provider=ad_token_provider,
             token_endpoint=azure_openai_settings.token_endpoint,
@@ -681,160 +302,20 @@ class AzureTextEmbedding(AzureOpenAIConfigBase, OpenAITextEmbeddingBase):
                 and optionally: api_version, ad_auth
         """
         return AzureTextEmbedding(
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
->>>>>>> Stashed changes
->>>>>>> head
+
             service_id=settings.get("service_id"),
             api_key=settings.get("api_key"),
             deployment_name=settings.get("deployment_name"),
             endpoint=settings.get("endpoint"),
             base_url=settings.get("base_url"),
             api_version=settings.get("api_version"),
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
-=======
->>>>>>> origin/main
-=======
-=======
-<<<<<<< main
-=======
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
-=======
->>>>>>> Stashed changes
+
             deployment_name=settings["deployment_name"],
             endpoint=settings["endpoint"],
             api_key=settings["api_key"],
             api_version=settings.get("api_version", DEFAULT_AZURE_API_VERSION),
             service_id=settings.get("service_id"),
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
+
             ad_token=settings.get("ad_token"),
             ad_token_provider=settings.get("ad_token_provider"),
             default_headers=settings.get("default_headers"),

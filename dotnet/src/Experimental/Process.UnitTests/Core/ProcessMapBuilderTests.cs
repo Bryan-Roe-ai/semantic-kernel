@@ -22,11 +22,7 @@ public class ProcessMapBuilderTests
 
         // Act
         ProcessMapBuilder map = new(step);
-<<<<<<< HEAD
         ProcessMapBuilder map = new(new ProcessFunctionTargetBuilder(step));
-=======
-        ProcessMapBuilder map = new(step);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert
         Assert.NotNull(map.StepId);
@@ -34,14 +30,10 @@ public class ProcessMapBuilderTests
         Assert.Contains(nameof(SimpleTestStep), map.StepId);
         Assert.NotNull(map.MapOperation);
         Assert.Equal(step, map.MapOperation);
-<<<<<<< HEAD
         Assert.NotNull(map._mapTarget);
         Assert.Equal(nameof(SimpleTestStep.TestFunction), map._mapTarget.FunctionName);
         Assert.Equal("value", map._mapTarget.ParameterName);
-=======
-        Assert.NotNull(map.MapOperation);
-        Assert.Equal(step, map.MapOperation);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     }
 
     /// <summary>
@@ -54,13 +46,8 @@ public class ProcessMapBuilderTests
         ProcessStepBuilder<SimpleTestStep> step = new($"One{nameof(SimpleTestStep)}", null);
         ProcessMapBuilder map1 = new(step);
         ProcessMapBuilder map2 = new(step);
-<<<<<<< HEAD
         ProcessMapBuilder map1 = new(new ProcessFunctionTargetBuilder(step));
         ProcessMapBuilder map2 = new(new ProcessFunctionTargetBuilder(step));
-=======
-        ProcessMapBuilder map1 = new(step);
-        ProcessMapBuilder map2 = new(step);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => map1.OnEvent("any").SendEventTo(new ProcessFunctionTargetBuilder(map2)));
@@ -79,11 +66,7 @@ public class ProcessMapBuilderTests
 
         // Act
         ProcessMapBuilder map = new(process);
-<<<<<<< HEAD
         ProcessMapBuilder map = new(process.WhereInputEventIs("ComputeMapValue"));
-=======
-        ProcessMapBuilder map = new(process);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert
         Assert.NotNull(map.StepId);
@@ -91,14 +74,10 @@ public class ProcessMapBuilderTests
         Assert.Contains(process.StepId, map.StepId);
         Assert.NotNull(map.MapOperation);
         Assert.Equal(process, map.MapOperation);
-<<<<<<< HEAD
         Assert.NotNull(map._mapTarget);
         Assert.Equal(nameof(SimpleTestStep.TestFunction), map._mapTarget.FunctionName);
         Assert.Equal("value", map._mapTarget.ParameterName);
-=======
-        Assert.NotNull(map.MapOperation);
-        Assert.Equal(process, map.MapOperation);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     }
 
     /// <summary>
@@ -110,11 +89,7 @@ public class ProcessMapBuilderTests
         // Arrange
         ProcessStepBuilder<SimpleTestStep> step = new($"One{nameof(SimpleTestStep)}", null);
         ProcessMapBuilder map = new(step);
-<<<<<<< HEAD
         ProcessMapBuilder map = new(new ProcessFunctionTargetBuilder(step));
-=======
-        ProcessMapBuilder map = new(step);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Act
         ProcessStepBuilder<SimpleTestStep> step2 = new($"Two{nameof(SimpleTestStep)}", null);
@@ -145,11 +120,7 @@ public class ProcessMapBuilderTests
         // Arrange
         ProcessStepBuilder<SimpleTestStep> step = new($"One{nameof(SimpleTestStep)}", null);
         ProcessMapBuilder map = new(step);
-<<<<<<< HEAD
         ProcessMapBuilder map = new(new ProcessFunctionTargetBuilder(step));
-=======
-        ProcessMapBuilder map = new(step);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Act
         Assert.Throws<NotImplementedException>(() => map.GetFunctionMetadataMap());
@@ -165,11 +136,7 @@ public class ProcessMapBuilderTests
         // Arrange
         ProcessStepBuilder<SimpleTestStep> step = new($"One{nameof(SimpleTestStep)}", null);
         ProcessMapBuilder map = new(step);
-<<<<<<< HEAD
         ProcessMapBuilder map = new(new ProcessFunctionTargetBuilder(step));
-=======
-        ProcessMapBuilder map = new(step);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Act
         KernelProcessStepInfo processMap = map.BuildStep(new ProcessBuilder("Test", null));
@@ -208,8 +175,6 @@ public class ProcessMapBuilderTests
     /// underlying state contracts do permit this permutation.
     /// </summary>
     [Fact]
-<<<<<<< HEAD
-=======
     public void ProcessMapBuilderFailsBuildForMapTarget()
     {
         // Arrange
@@ -229,13 +194,12 @@ public class ProcessMapBuilderTests
     /// underlying state contracts do permit this permutation.
     /// </summary>
     [Fact]
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     public void ProcessMapBuilderFailsBuildForInvalidTarget()
     {
         // Arrange
         ProcessBuilder process = new(nameof(InvalidTestStep), null);
         ProcessStepBuilder step = process.AddStepFromType<SimpleTestStep>();
-<<<<<<< HEAD
         process.OnInputEvent("Start").SendEventTo(new ProcessFunctionTargetBuilder(step));
         ProcessFunctionTargetBuilder stepTarget = new(step, nameof(SimpleTestStep.TestFunction));
         ProcessFunctionTargetBuilder invalidTarget = stepTarget with { Step = process };
@@ -243,11 +207,7 @@ public class ProcessMapBuilderTests
         // Act & Assert
         Assert.Throws<KernelException>(() => step.OnEvent("Test").SendEventTo(new ProcessFunctionTargetBuilder(new ProcessMapBuilder(step), "missing")));
         Assert.Throws<InvalidOperationException>(() => new ProcessMapBuilder(invalidTarget));
-=======
 
-        // Act & Assert
-        Assert.Throws<KernelException>(() => step.OnEvent("Test").SendEventTo(new ProcessFunctionTargetBuilder(new ProcessMapBuilder(step), "missing")));
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     }
 
     private sealed class SimpleTestStep : KernelProcessStep<TestState>

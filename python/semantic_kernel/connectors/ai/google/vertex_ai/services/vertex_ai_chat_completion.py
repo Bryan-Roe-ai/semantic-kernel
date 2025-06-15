@@ -14,102 +14,21 @@ from google.cloud.aiplatform_v1beta1.types.content import Content
 from pydantic import ValidationError
 from vertexai.generative_models import Candidate, GenerationResponse, GenerativeModel
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
-<<<<<<< HEAD
+
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
-=======
-from semantic_kernel.connectors.ai.completion_usage import CompletionUsage
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
+
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-=======
-<<<<<<< div
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
+
 from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-=======
 from semantic_kernel.connectors.ai.function_calling_utils import merge_function_results
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
+
 from semantic_kernel.connectors.ai.google.shared_utils import (
     collapse_function_call_results_in_chat_history,
     filter_system_message,
@@ -128,30 +47,23 @@ from semantic_kernel.connectors.ai.google.vertex_ai.services.vertex_ai_base impo
 from semantic_kernel.connectors.ai.google.vertex_ai.vertex_ai_prompt_execution_settings import (
     VertexAIChatPromptExecutionSettings,
 )
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.google.vertex_ai.vertex_ai_settings import (
     VertexAISettings,
 )
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
 )
-=======
-from semantic_kernel.connectors.ai.google.vertex_ai.vertex_ai_settings import VertexAISettings
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.contents.chat_message_content import CMC_ITEM_TYPES, ChatMessageContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
-<<<<<<< HEAD
 from semantic_kernel.contents.streaming_chat_message_content import (
     ITEM_TYPES as STREAMING_ITEM_TYPES,
 )
 from semantic_kernel.contents.streaming_chat_message_content import (
     StreamingChatMessageContent,
 )
-=======
-from semantic_kernel.contents.streaming_chat_message_content import STREAMING_CMC_ITEM_TYPES as STREAMING_ITEM_TYPES
-from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.contents.streaming_text_content import StreamingTextContent
 from semantic_kernel.contents.text_content import TextContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
@@ -160,94 +72,19 @@ from semantic_kernel.exceptions.service_exceptions import (
     ServiceInitializationError,
     ServiceInvalidExecutionSettingsError,
 )
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-=======
+
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.kernel import Kernel
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
 from semantic_kernel.utils.telemetry.model_diagnostics.decorators import trace_chat_completion
 
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
     from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 
-<<<<<<< main
 from semantic_kernel.connectors.ai.chat_completion_client_base import (
     ChatCompletionClientBase,
 )
-
-=======
->>>>>>> upstream/main
 
 class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
     """Google Vertex AI Chat Completion Service."""
@@ -311,85 +148,17 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
 
     @override
     @trace_chat_completion(VertexAIBase.MODEL_PROVIDER_NAME)
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
     async def _inner_get_chat_message_contents(
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
+
     async def _inner_get_chat_message_contents(
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
+
     async def _inner_get_chat_message_contents(
-=======
->>>>>>> Stashed changes
-=======
+
     async def _inner_get_chat_message_contents(
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
+
     async def _inner_get_chat_message_contents(
-=======
-    async def get_chat_message_contents(
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
         self,
         chat_history: "ChatHistory",
         settings: "PromptExecutionSettings",
@@ -398,7 +167,6 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
             settings = self.get_prompt_execution_settings_from_settings(settings)
         assert isinstance(settings, VertexAIChatPromptExecutionSettings)  # nosec
 
-<<<<<<< main
         kernel = kwargs.get("kernel")
         if settings.function_choice_behavior is not None and (not kernel or not isinstance(kernel, Kernel)):
             raise ServiceInvalidExecutionSettingsError("Kernel is required for auto invoking functions.")
@@ -426,148 +194,24 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
             settings.function_choice_behavior.maximum_auto_invoke_attempts
         ):
             completions = await self._send_chat_request(chat_history, settings)
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< main
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
             chat_history.add_message(message=completions[0])
             function_calls = [
                 item
                 for item in chat_history.messages[-1].items
                 if isinstance(item, FunctionCallContent)
             ]
-<<<<<<< Updated upstream
+
         for request_index in range(settings.function_choice_behavior.maximum_auto_invoke_attempts):
             completions = await self._send_chat_request(chat_history, settings)
             function_calls = [item for item in completions[0].items if isinstance(item, FunctionCallContent)]
-=======
-        for request_index in range(settings.function_choice_behavior.maximum_auto_invoke_attempts):
-            completions = await self._send_chat_request(chat_history, settings)
+
             function_calls = [item for item in completions[0].items if isinstance(item, FunctionCallContent)]
->>>>>>> Stashed changes
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
+
             function_calls = [item for item in completions[0].items if isinstance(item, FunctionCallContent)]
->>>>>>> ms/features/bugbash-prep
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
+
             function_calls = [item for item in completions[0].items if isinstance(item, FunctionCallContent)]
->>>>>>> ms/features/bugbash-prep
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
-=======
-            function_calls = [item for item in completions[0].items if isinstance(item, FunctionCallContent)]
->>>>>>> ms/features/bugbash-prep
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
+
             if (fc_count := len(function_calls)) == 0:
                 return completions
 
@@ -597,9 +241,9 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
             project=self.service_settings.project_id,
             location=self.service_settings.region,
         )
-=======
+
         vertexai.init(project=self.service_settings.project_id, location=self.service_settings.region)
->>>>>>> upstream/main
+
         model = GenerativeModel(
             self.service_settings.gemini_model_id,
             system_instruction=filter_system_message(chat_history),
@@ -619,96 +263,10 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
             for candidate in response.candidates
         ]
 
-<<<<<<< main
     def _create_chat_message_content(
         self, response: GenerationResponse, candidate: Candidate
     ) -> ChatMessageContent:
-=======
-    @override
-    async def _inner_get_streaming_chat_message_contents(
-        self,
-        chat_history: "ChatHistory",
-        settings: "PromptExecutionSettings",
-        function_invoke_attempt: int = 0,
-    ) -> AsyncGenerator[list["StreamingChatMessageContent"], Any]:
-        if not isinstance(settings, VertexAIChatPromptExecutionSettings):
-            settings = self.get_prompt_execution_settings_from_settings(settings)
-        assert isinstance(settings, VertexAIChatPromptExecutionSettings)  # nosec
 
-        vertexai.init(project=self.service_settings.project_id, location=self.service_settings.region)
-        model = GenerativeModel(
-            self.service_settings.gemini_model_id,
-            system_instruction=filter_system_message(chat_history),
-        )
-
-        collapse_function_call_results_in_chat_history(chat_history)
-
-        response: AsyncIterable[GenerationResponse] = await model.generate_content_async(
-            contents=self._prepare_chat_history_for_request(chat_history),
-            generation_config=settings.prepare_settings_dict(),
-            tools=settings.tools,
-            tool_config=settings.tool_config,
-            stream=True,
-        )
-
-        async for chunk in response:
-            yield [
-                self._create_streaming_chat_message_content(chunk, candidate, function_invoke_attempt)
-                for candidate in chunk.candidates
-            ]
-
-    @override
-    def _verify_function_choice_settings(self, settings: "PromptExecutionSettings") -> None:
-        if not isinstance(settings, VertexAIChatPromptExecutionSettings):
-            raise ServiceInvalidExecutionSettingsError("The settings must be an VertexAIChatPromptExecutionSettings.")
-        if settings.candidate_count is not None and settings.candidate_count > 1:
-            raise ServiceInvalidExecutionSettingsError(
-                "Auto-invocation of tool calls may only be used with a "
-                "VertexAIChatPromptExecutionSettings.candidate_count of 1."
-            )
-
-    @override
-    def _update_function_choice_settings_callback(
-        self,
-    ) -> Callable[["FunctionCallChoiceConfiguration", "PromptExecutionSettings", FunctionChoiceType], None]:
-        return update_settings_from_function_choice_configuration
-
-    @override
-    def _reset_function_choice_settings(self, settings: "PromptExecutionSettings") -> None:
-        if hasattr(settings, "tool_config"):
-            settings.tool_config = None
-        if hasattr(settings, "tools"):
-            settings.tools = None
-
-    @override
-    def _prepare_chat_history_for_request(
-        self,
-        chat_history: ChatHistory,
-        role_key: str = "role",
-        content_key: str = "content",
-    ) -> list[Content]:
-        chat_request_messages: list[Content] = []
-
-        for message in chat_history.messages:
-            if message.role == AuthorRole.SYSTEM:
-                # Skip system messages since they are not part of the chat request.
-                # System message will be provided as system_instruction in the model.
-                continue
-            if message.role == AuthorRole.USER:
-                chat_request_messages.append(Content(role="user", parts=format_user_message(message)))
-            elif message.role == AuthorRole.ASSISTANT:
-                chat_request_messages.append(Content(role="model", parts=format_assistant_message(message)))
-            elif message.role == AuthorRole.TOOL:
-                chat_request_messages.append(Content(role="function", parts=format_tool_message(message)))
-
-        return chat_request_messages
-
-    # endregion
-
-    # region Non-streaming
-
-    def _create_chat_message_content(self, response: GenerationResponse, candidate: Candidate) -> ChatMessageContent:
->>>>>>> upstream/main
         """Create a chat message content object.
 
         Args:
@@ -759,7 +317,6 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
     # endregion
 
     # region Streaming
-<<<<<<< main
     @override
     async def get_streaming_chat_message_contents(
         self,
@@ -787,13 +344,7 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
             # Auto invoke is required.
             async_generator = self._get_streaming_chat_message_contents_auto_invoke(
                 chat_history, settings, **kwargs
-<<<<<<< Updated upstream
-=======
-                kernel,  # type: ignore
-                kwargs.get("arguments"),
-                chat_history,
-                settings,
->>>>>>> Stashed changes
+
             )
 
         async for messages in async_generator:
@@ -824,11 +375,8 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
         for request_index in range(
             settings.function_choice_behavior.maximum_auto_invoke_attempts
         ):
-<<<<<<< Updated upstream
         for request_index in range(settings.function_choice_behavior.maximum_auto_invoke_attempts):
-=======
-        for request_index in range(settings.function_choice_behavior.maximum_auto_invoke_attempts):
->>>>>>> Stashed changes
+
             all_messages: list[StreamingChatMessageContent] = []
             function_call_returned = False
             async for messages in self._send_chat_streaming_request(
@@ -902,8 +450,6 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
                 self._create_streaming_chat_message_content(chunk, candidate)
                 for candidate in chunk.candidates
             ]
-=======
->>>>>>> upstream/main
 
     def _create_streaming_chat_message_content(
         self,
@@ -964,7 +510,6 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
 
     # endregion
 
-<<<<<<< main
     @override
     def _prepare_chat_history_for_request(
         self,
@@ -997,9 +542,7 @@ class VertexAIChatCompletion(VertexAIBase, ChatCompletionClientBase):
     def _get_metadata_from_response(
         self, response: GenerationResponse
     ) -> dict[str, Any]:
-=======
-    def _get_metadata_from_response(self, response: GenerationResponse) -> dict[str, Any]:
->>>>>>> upstream/main
+
         """Get metadata from the response.
 
         Args:

@@ -464,7 +464,6 @@ public sealed partial class ProcessBuilder : ProcessStepBuilder
     }
 
     /// <summary>
-<<<<<<< HEAD
     /// Adds a map operation to the process that accepts an enumerable input parameter and
     /// processes each individual parameter value by the specified map operation (TStep).
     /// Results are coalesced into a result set of the same dimension as the input set.
@@ -488,66 +487,7 @@ public sealed partial class ProcessBuilder : ProcessStepBuilder
     /// <param name="eventId">The Id of the external event.</param>
     /// <returns>An instance of <see cref="ProcessStepEdgeBuilder"/></returns>
     public ProcessEdgeBuilder OnExternalEvent(string eventId)
-=======
-    /// Adds proxy step to the process that allows emitting events externally. For making use of it, there should be an implementation
-    /// of <see cref="IExternalKernelProcessMessageChannel"/> passed.
-    /// For now, the current implementation only allows for 1 implementation of <see cref="IExternalKernelProcessMessageChannel"/> at the time.
-    /// </summary>
-    /// <param name="id">The unique Id of the proxy step.</param>
-    /// <param name="externalTopics">topic names to be used externally.</param>
-    /// <param name="aliases">Aliases that have been used by previous versions of the step, used for supporting backward compatibility when reading old version Process States</param>
-    /// <returns>An instance of <see cref="ProcessProxyBuilder"/></returns>
-    public ProcessProxyBuilder AddProxyStep(string id, IReadOnlyList<string> externalTopics, IReadOnlyList<string>? aliases = null)
-    {
-        ProcessProxyBuilder proxyBuilder = new(externalTopics, id ?? nameof(KernelProxyStep), this);
 
-        return this.AddStep(proxyBuilder, aliases);
-    }
-
-    /// <summary>
-    /// Adds a thread to the process.
-    /// </summary>
-    /// <typeparam name="T">The concrete type of the <see cref="AgentThread"/></typeparam>
-    /// <param name="threadName">The name of the thread.</param>
-    /// <param name="threadPolicy">The policy that determines the lifetime of the <see cref="AgentThread"/></param>
-    /// <param name="threadId">The Id of an existing thread that should be used.</param>
-    public ProcessBuilder AddThread<T>(string threadName, KernelProcessThreadLifetime threadPolicy, string? threadId = null) where T : AgentThread
-    {
-        Verify.NotNullOrWhiteSpace(threadName, nameof(threadName));
-
-        var threadType = typeof(T) switch
-        {
-            Type t when t == typeof(AzureAIAgentThread) => KernelProcessThreadType.AzureAI,
-            _ => throw new ArgumentException($"Unsupported thread type: {typeof(T).Name}")
-        };
-
-        var processThread = new KernelProcessAgentThread() { ThreadName = threadName, ThreadId = threadId, ThreadType = threadType };
-        this._threads[threadName] = processThread;
-        return this;
-    }
-
-    /// <summary>
-    /// Adds a thread to the process.
-    /// </summary>
-    /// <param name="threadName">The name of the thread.</param>
-    /// <param name="threadPolicy">The policy that determines the lifetime of the <see cref="AgentThread"/></param>
-    public ProcessBuilder AddThread(string threadName, KernelProcessThreadLifetime threadPolicy)
-    {
-        Verify.NotNullOrWhiteSpace(threadName, nameof(threadName));
-        Verify.NotNull(threadPolicy, nameof(threadPolicy));
-
-        var processThread = new KernelProcessAgentThread() { ThreadName = threadName, ThreadPolicy = threadPolicy };
-        this._threads[threadName] = processThread;
-        return this;
-    }
-
-    /// <summary>
-    /// Provides an instance of <see cref="ProcessEdgeBuilder"/> for defining an input edge to a process.
-    /// </summary>
-    /// <param name="eventId">The Id of the external event.</param>
-    /// <returns>An instance of <see cref="ProcessEdgeBuilder"/></returns>
-    public ProcessEdgeBuilder OnInputEvent(string eventId)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     {
         return new ProcessEdgeBuilder(this, eventId);
     }

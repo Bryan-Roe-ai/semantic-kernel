@@ -17,10 +17,7 @@ import com.microsoft.semantickernel.textcompletion.TextCompletion;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-<<<<<<< HEAD
 import java.util.UUID;
-=======
->>>>>>> main
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
@@ -106,11 +103,7 @@ public class DefaultKernelTest {
                         + "NO SEXISM, RACISM OR OTHER BIAS/BIGOTRY\n"
                         + "\n"
                         + "BE CREATIVE AND FUNNY. I WANT TO LAUGH.\n"
-<<<<<<< HEAD
-                        + "Incorporate the style suggestion, if provided: \n"
-=======
                         + "\n"
->>>>>>> main
                         + "+++++\n"
                         + "\n"
                         + "time travel to dinosaur age\n"
@@ -190,17 +183,10 @@ public class DefaultKernelTest {
         OpenAIAsyncClient openAIAsyncClient = Mockito.mock(OpenAIAsyncClient.class);
 
         for (Tuple3<ArgumentMatcher<String>, String, Consumer<String>> response : responses) {
-<<<<<<< HEAD
-            mockChatCompletionResponse(openAIAsyncClient, response);
-            mockChatCompletionResponseStreaming(openAIAsyncClient, response);
-            mockTextCompletionResponse(openAIAsyncClient, response);
-            mockTextCompletionResponseStreaming(openAIAsyncClient, response);
-=======
 
             mockChatCompletionResponse(openAIAsyncClient, response);
             mockChatCompletionResponseStreaming(openAIAsyncClient, response);
             mockTextCompletionResponse(openAIAsyncClient, response);
->>>>>>> main
         }
         return openAIAsyncClient;
     }
@@ -212,10 +198,7 @@ public class DefaultKernelTest {
         Mockito.when(choice.getText()).thenReturn(response.getT2());
         Completions completions = Mockito.mock(Completions.class);
         Mockito.when(completions.getChoices()).thenReturn(Collections.singletonList(choice));
-<<<<<<< HEAD
         Mockito.when(completions.getId()).thenReturn(UUID.randomUUID().toString());
-=======
->>>>>>> main
 
         Mockito.when(
                         openAIAsyncClient.getCompletions(
@@ -249,7 +232,6 @@ public class DefaultKernelTest {
                 .thenReturn(Mono.just(completions));
     }
 
-<<<<<<< HEAD
     private static void mockTextCompletionResponseStreaming(
             OpenAIAsyncClient openAIAsyncClient,
             Tuple3<ArgumentMatcher<String>, String, Consumer<String>> response) {
@@ -299,8 +281,6 @@ public class DefaultKernelTest {
                 .thenReturn(Flux.just(completions));
     }
 
-=======
->>>>>>> main
     private static void mockChatCompletionResponse(
             OpenAIAsyncClient openAIAsyncClient,
             Tuple3<ArgumentMatcher<String>, String, Consumer<String>> response) {
@@ -312,10 +292,7 @@ public class DefaultKernelTest {
 
         Mockito.when(chatCompletions.getChoices())
                 .thenReturn(Collections.singletonList(chatChoice));
-<<<<<<< HEAD
         Mockito.when(chatCompletions.getId()).thenReturn(UUID.randomUUID().toString());
-=======
->>>>>>> main
 
         ArgumentMatcher<ChatCompletionsOptions> completionMatcher =
                 chatCompletionsOptions ->
@@ -358,10 +335,7 @@ public class DefaultKernelTest {
 
         ChatCompletions chatCompletions = Mockito.mock(ChatCompletions.class);
         Mockito.when(chatCompletions.getChoices()).thenReturn(choices);
-<<<<<<< HEAD
         Mockito.when(chatCompletions.getId()).thenReturn(UUID.randomUUID().toString());
-=======
->>>>>>> main
 
         ArgumentMatcher<ChatCompletionsOptions> completionMatcher =
                 chatCompletionsOptions ->
@@ -418,15 +392,9 @@ public class DefaultKernelTest {
             OpenAIAsyncClient openAIAsyncClient, String model, String expected) {
 
         Mockito.verify(openAIAsyncClient, Mockito.times(1))
-<<<<<<< HEAD
-                .getCompletionsStream(
-                        Mockito.matches(model),
-                        Mockito.argThat(
-=======
                 .getCompletions(
                         Mockito.matches(model),
                         Mockito.<CompletionsOptions>argThat(
->>>>>>> main
                                 completionsOptions ->
                                         completionsOptions.getPrompt().size() == 1
                                                 && completionsOptions

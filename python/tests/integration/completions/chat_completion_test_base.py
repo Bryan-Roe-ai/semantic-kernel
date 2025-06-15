@@ -99,7 +99,6 @@ from semantic_kernel.kernel import Kernel
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.utils.authentication.entra_id_authentication import get_entra_auth_token
 from tests.integration.completions.completion_test_base import CompletionTestBase, ServiceType
-<<<<<<< main
 from tests.integration.utils import is_service_setup_for_testing
 from tests.integration.completions.completion_test_base import CompletionTestBase, ServiceType
 from tests.integration.completions.test_utils import is_service_setup_for_testing
@@ -204,13 +203,11 @@ if not skip_on_mac_available:
     from semantic_kernel.connectors.ai.onnx import OnnxGenAIChatCompletion, OnnxGenAIPromptExecutionSettings
     from semantic_kernel.connectors.ai.onnx.utils import ONNXTemplate
 
-
 # A mock plugin that contains a function that returns a complex object.
 class PersonDetails(KernelBaseModel):
     id: str
     name: str
     age: int
-
 
 class PersonSearchPlugin:
     @kernel_function(name="SearchPerson", description="Search details of a person given their id.")
@@ -218,7 +215,6 @@ class PersonSearchPlugin:
         self, person_id: Annotated[str, "The person ID to search"]
     ) -> Annotated[PersonDetails, "The details of the person"]:
         return PersonDetails(id=person_id, name="John Doe", age=42)
-
 
 class ChatCompletionTestBase(CompletionTestBase):
     """Base class for testing completion services."""
@@ -384,13 +380,11 @@ onnx_setup: bool = is_service_setup_for_testing(
 )  # Tests are optional for ONNX
 anthropic_setup: bool = is_service_setup_for_testing(["ANTHROPIC_API_KEY", "ANTHROPIC_CHAT_MODEL_ID"])
 
-
 # A mock plugin that contains a function that returns a complex object.
 class PersonDetails(KernelBaseModel):
     id: str
     name: str
     age: int
-
 
 class PersonSearchPlugin:
     @kernel_function(name="SearchPerson", description="Search details of a person given their id.")
@@ -398,7 +392,6 @@ class PersonSearchPlugin:
         self, person_id: Annotated[str, "The person ID to search"]
     ) -> Annotated[PersonDetails, "The details of the person"]:
         return PersonDetails(id=person_id, name="John Doe", age=42)
-
 
 class ChatCompletionTestBase(CompletionTestBase):
     """Base class for testing completion services."""
@@ -507,13 +500,11 @@ class ChatCompletionTestBase(CompletionTestBase):
                 BedrockChatPromptExecutionSettings,
             ),
             "bedrock_anthropic_claude": (
-<<<<<<< HEAD
+
                 BedrockChatCompletion(
                     model_id="anthropic.claude-3-5-sonnet-20240620-v1:0"),
                 BedrockChatCompletion(model_id="anthropic.claude-3-5-sonnet-20240620-v1:0") if bedrock_setup else None,
-=======
-                self._try_create_bedrock_chat_completion_client("anthropic.claude-3-sonnet-20240229-v1:0"),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                 BedrockChatPromptExecutionSettings,
             ),
             "bedrock_cohere_command": (
@@ -521,8 +512,7 @@ class ChatCompletionTestBase(CompletionTestBase):
                 BedrockChatPromptExecutionSettings,
             ),
             "bedrock_meta_llama": (
-<<<<<<< HEAD
-<<<<<<< main
+
                 BedrockChatCompletion(
                     model_id="meta.llama3-70b-instruct-v1:0"),
                 BedrockChatPromptExecutionSettings,
@@ -531,9 +521,7 @@ class ChatCompletionTestBase(CompletionTestBase):
                 BedrockChatCompletion(
                     model_id="mistral.mistral-small-2402-v1:0"),
                 BedrockChatCompletion(model_id="meta.llama3-70b-instruct-v1:0") if bedrock_setup else None,
-=======
-                self._try_create_bedrock_chat_completion_client("meta.llama3-70b-instruct-v1:0"),
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
                 BedrockChatPromptExecutionSettings,
             ),
             "bedrock_mistralai": (

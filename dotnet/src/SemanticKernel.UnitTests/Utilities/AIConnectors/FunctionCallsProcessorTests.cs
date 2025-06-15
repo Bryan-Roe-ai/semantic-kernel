@@ -19,18 +19,12 @@ using Xunit;
 namespace SemanticKernel.UnitTests.Utilities.AIConnectors;
 public class FunctionCallsProcessorTests
 {
-<<<<<<< HEAD
     private readonly FunctionCallsProcessor _sut;
 
     public FunctionCallsProcessorTests()
     {
         this._sut = new FunctionCallsProcessor();
     }
-=======
-    private readonly FunctionCallsProcessor _sut = new();
-    private readonly FunctionChoiceBehaviorOptions _functionChoiceBehaviorOptions = new();
-    private readonly PromptExecutionSettings _promptExecutionSettings = new();
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     [Fact]
     public void ItShouldReturnNoConfigurationIfNoBehaviorProvided()

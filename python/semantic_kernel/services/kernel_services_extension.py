@@ -27,7 +27,6 @@ AI_SERVICE_CLIENT_TYPE = TypeVar("AI_SERVICE_CLIENT_TYPE", bound=AIServiceClient
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-
 class KernelServicesExtension(KernelBaseModel, ABC):
     """Kernel services extension.
 
@@ -79,17 +78,13 @@ class KernelServicesExtension(KernelBaseModel, ABC):
     def get_service(
         self,
         service_id: str | None = None,
-<<<<<<< HEAD
         type: (
             type[AI_SERVICE_CLIENT_TYPE]
             | tuple[type[AI_SERVICE_CLIENT_TYPE], ...]
             | None
         ) = None,
     ) -> AIServiceClientBase:
-=======
-        type: type[AI_SERVICE_CLIENT_TYPE] | tuple[type[AI_SERVICE_CLIENT_TYPE], ...] | None = None,
-    ) -> AI_SERVICE_CLIENT_TYPE:
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         """Get a service by service_id and type.
 
         Type is optional and when not supplied, no checks are done.
@@ -129,7 +124,6 @@ class KernelServicesExtension(KernelBaseModel, ABC):
         return services[service_id]
 
     def get_services_by_type(
-<<<<<<< HEAD
         self,
         type: (
             type[AI_SERVICE_CLIENT_TYPE]
@@ -145,14 +139,6 @@ class KernelServicesExtension(KernelBaseModel, ABC):
             for service in self.services.values()
             if isinstance(service, type)
         }
-=======
-        self, type: type[AI_SERVICE_CLIENT_TYPE] | tuple[type[AI_SERVICE_CLIENT_TYPE], ...] | None
-    ) -> Mapping[str, AI_SERVICE_CLIENT_TYPE]:
-        """Get all services of a specific type."""
-        if type is None:
-            return self.services  # type: ignore
-        return {service.service_id: service for service in self.services.values() if isinstance(service, type)}  # type: ignore
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     def get_prompt_execution_settings_from_service_id(
         self, service_id: str, type: type[AI_SERVICE_CLIENT_TYPE] | None = None

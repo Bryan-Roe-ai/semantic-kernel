@@ -410,72 +410,17 @@ public class PineconeVectorStoreRecordCollectionTests(PineconeVectorStoreFixture
             "Whatever"));
 
         Assert.Equal(
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
             $"No vector property found on type {typeof(PineconeRecordNoEmbedding).FullName}.",
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
             $"No vector property found on type {typeof(PineconeRecordNoEmbedding).FullName}.",
-=======
+
             $"No vector property found on type {nameof(PineconeRecordNoEmbedding)} or the provided VectorStoreRecordDefinition while at least one is required.",
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
             $"No vector property found on type {nameof(PineconeRecordNoEmbedding)} or the provided VectorStoreRecordDefinition while at least one is required.",
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
             $"No vector property found on type {nameof(PineconeRecordNoEmbedding)} or the provided VectorStoreRecordDefinition while at least one is required.",
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
+
             exception.Message);
     }
 
@@ -499,72 +444,17 @@ public class PineconeVectorStoreRecordCollectionTests(PineconeVectorStoreFixture
             "Whatever"));
 
         Assert.Equal(
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
             $"Multiple vector properties found on type {typeof(PineconeRecordMultipleEmbeddings).FullName} while only one is supported.",
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
             $"Multiple vector properties found on type {typeof(PineconeRecordMultipleEmbeddings).FullName} while only one is supported.",
-=======
+
             $"Multiple vector properties found on type {nameof(PineconeRecordMultipleEmbeddings)} or the provided VectorStoreRecordDefinition while only one is supported.",
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
             $"Multiple vector properties found on type {nameof(PineconeRecordMultipleEmbeddings)} or the provided VectorStoreRecordDefinition while only one is supported.",
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
             $"Multiple vector properties found on type {nameof(PineconeRecordMultipleEmbeddings)} or the provided VectorStoreRecordDefinition while only one is supported.",
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
+
             exception.Message);
     }
 

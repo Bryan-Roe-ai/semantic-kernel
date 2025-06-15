@@ -13,10 +13,7 @@ from semantic_kernel.connectors.memory.pinecone.pinecone_settings import (
 )
 from semantic_kernel.exceptions.service_exceptions import ServiceResourceNotFoundError
 from semantic_kernel.memory.memory_record import MemoryRecord
-<<<<<<< HEAD:python/tests/integration/connectors/memory/test_pinecone.py~HEAD
-=======
 from tests.integration.utils import retry
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/tests/integration/memory/memory_stores/test_pinecone_memory_store.py
 
 try:
     import pinecone

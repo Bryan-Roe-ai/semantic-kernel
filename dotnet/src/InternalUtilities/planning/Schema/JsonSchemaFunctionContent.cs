@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 // Copyright (c) Microsoft. All rights reserved.
 
 using System.Text.Json.Serialization;
@@ -17,4 +15,4 @@ internal sealed class JsonSchemaFunctionContent
     [JsonPropertyName("application/json")]
     public JsonSchemaResponse JsonResponse { get; } = new JsonSchemaResponse();
 }
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+

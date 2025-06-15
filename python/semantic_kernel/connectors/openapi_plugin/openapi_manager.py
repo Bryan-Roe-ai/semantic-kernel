@@ -3,7 +3,6 @@
 import logging
 from typing import TYPE_CHECKING, Any
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import (
     RestApiOperation,
 )
@@ -13,13 +12,7 @@ from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_paramet
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_run_options import (
     RestApiOperationRunOptions,
 )
-=======
-from semantic_kernel.connectors.openapi_plugin.const import OperationExtensions
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import RestApiOperation
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter import RestApiParameter
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_run_options import RestApiRunOptions
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_security_requirement import RestApiSecurityRequirement
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_uri import Uri
 from semantic_kernel.connectors.openapi_plugin.openapi_parser import OpenApiParser
 from semantic_kernel.connectors.openapi_plugin.openapi_runner import OpenApiRunner
@@ -39,7 +32,6 @@ if TYPE_CHECKING:
     )
 
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 @experimental
 def create_functions_from_openapi(
@@ -75,7 +67,6 @@ def create_functions_from_openapi(
             raise FunctionExecutionException(f"Error parsing OpenAPI document: {openapi_document_path}")
 
     parser = OpenApiParser()
-<<<<<<< HEAD
     if (parsed_doc := parser.parse(openapi_document_path)) is None:
         raise FunctionExecutionException(
             f"Error parsing OpenAPI document: {openapi_document_path}"
@@ -83,9 +74,6 @@ def create_functions_from_openapi(
     operations = parser.create_rest_api_operations(
         parsed_doc, execution_settings=execution_settings
     )
-=======
-    operations = parser.create_rest_api_operations(parsed_doc, execution_settings=execution_settings)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     global_security_requirements = parsed_doc.get("security", [])
 
@@ -107,7 +95,6 @@ def create_functions_from_openapi(
         ),
     )
 
-<<<<<<< HEAD
     return [
         _create_function_from_operation(
             openapi_runner,
@@ -117,27 +104,6 @@ def create_functions_from_openapi(
         )
         for operation in operations.values()
     ]
-=======
-    functions = []
-    for operation in operations.values():
-        try:
-            kernel_function = _create_function_from_operation(
-                openapi_runner,
-                operation,
-                plugin_name,
-                execution_parameters=execution_settings,
-                security=global_security_requirements,
-            )
-            functions.append(kernel_function)
-            operation.freeze()
-        except Exception as ex:
-            error_msg = f"Error while registering Rest function {plugin_name}.{operation.id}: {ex}"
-            logger.error(error_msg)
-            raise FunctionExecutionException(error_msg) from ex
-
-    return functions
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-
 
 @experimental
 def _create_function_from_operation(
@@ -191,7 +157,6 @@ def _create_function_from_operation(
 
             options = RestApiRunOptions(
                 server_url_override=(
-<<<<<<< main
                     urlparse(execution_parameters.server_url_override)
                     if execution_parameters
                     else None
@@ -201,16 +166,7 @@ def _create_function_from_operation(
                     if document_uri is not None
                     else None
                 ),
-=======
-                    execution_parameters.server_url_override
-                    if execution_parameters and execution_parameters.server_url_override is not None
-                    else None
-                ),
-                api_host_url=Uri(document_uri).get_left_part() if document_uri is not None else None,
-                timeout=execution_parameters.timeout
-                if execution_parameters and execution_parameters.timeout is not None
-                else None,
->>>>>>> upstream/main
+
             )
 
             return await runner.run_operation(operation, kernel_arguments, options)

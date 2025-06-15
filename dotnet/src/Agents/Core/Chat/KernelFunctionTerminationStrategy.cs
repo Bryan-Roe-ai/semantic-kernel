@@ -1,8 +1,5 @@
 // Copyright (c) Microsoft. All rights reserved.
-<<<<<<< HEAD
-=======
 
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -51,16 +48,13 @@ public class KernelFunctionTerminationStrategy(KernelFunction function, Kernel k
     public KernelArguments? Arguments { get; init; }
 
     /// <summary>
-<<<<<<< HEAD
     /// The <see cref="KernelFunction"/> invoked as termination criteria.
     /// </summary>
     public KernelFunction Function { get; } = function;
 
     /// <summary>
     /// The <see cref="Microsoft.SemanticKernel.Kernel"/> used when invoking <see cref="KernelFunctionTerminationStrategy.Function"/>.
-=======
-    /// Gets the <see cref="Microsoft.SemanticKernel.Kernel"/> used when invoking <see cref="KernelFunctionTerminationStrategy.Function"/>.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// </summary>
     public Kernel Kernel => kernel;
 

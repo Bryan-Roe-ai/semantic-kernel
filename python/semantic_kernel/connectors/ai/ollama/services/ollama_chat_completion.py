@@ -53,19 +53,13 @@ from ollama._types import Message
 from pydantic import ValidationError
 
 if TYPE_CHECKING:
-<<<<<<< HEAD
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
         PromptExecutionSettings,
     )
-=======
-    from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
-    from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 CMC_TYPE = TypeVar("CMC_TYPE", bound=ChatMessageContent)
 
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 class OllamaChatCompletion(OllamaBase, ChatCompletionClientBase):
     """Initializes a new instance of the OllamaChatCompletion class.

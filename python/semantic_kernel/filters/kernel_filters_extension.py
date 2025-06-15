@@ -14,11 +14,8 @@ from semantic_kernel.kernel_pydantic import KernelBaseModel
 
 FILTER_CONTEXT_TYPE = TypeVar("FILTER_CONTEXT_TYPE", bound=FilterContextBase)
 CALLABLE_FILTER_TYPE = Callable[
-<<<<<<< HEAD
     [FILTER_CONTEXT_TYPE, Callable[[FILTER_CONTEXT_TYPE], None]], None
-=======
-    [FILTER_CONTEXT_TYPE, Callable[[FILTER_CONTEXT_TYPE], Awaitable[None]]], Awaitable[None]
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 ]
 
 ALLOWED_FILTERS_LITERAL = Literal[
@@ -31,7 +28,6 @@ FILTER_MAPPING = {
     FilterTypes.PROMPT_RENDERING: "prompt_rendering_filters",
     FilterTypes.AUTO_FUNCTION_INVOCATION: "auto_function_invocation_filters",
 }
-
 
 class KernelFilterExtension(KernelBaseModel, ABC):
     """KernelFilterExtension."""
@@ -138,7 +134,6 @@ class KernelFilterExtension(KernelBaseModel, ABC):
             stack.insert(0, filter_with_next)
         return stack[0]
 
-
 def _rebuild_auto_function_invocation_context() -> None:
     from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings  # noqa: F401
     from semantic_kernel.contents import FunctionCallContent  # noqa: F401
@@ -153,7 +148,6 @@ def _rebuild_auto_function_invocation_context() -> None:
 
     AutoFunctionInvocationContext.model_rebuild()
 
-
 def _rebuild_function_invocation_context() -> None:
     from semantic_kernel.filters.functions.function_invocation_context import (
         FunctionInvocationContext,
@@ -164,7 +158,6 @@ def _rebuild_function_invocation_context() -> None:
     from semantic_kernel.kernel import Kernel  # noqa: F401
 
     FunctionInvocationContext.model_rebuild()
-
 
 def _rebuild_prompt_render_context() -> None:
     from semantic_kernel.filters.prompts.prompt_render_context import (

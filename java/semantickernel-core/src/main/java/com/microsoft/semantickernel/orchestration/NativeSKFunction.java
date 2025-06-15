@@ -5,10 +5,7 @@ import static com.microsoft.semantickernel.skilldefinition.annotations.SKFunctio
 
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.ai.AIException;
-<<<<<<< HEAD
 import com.microsoft.semantickernel.ai.AIException.ErrorCodes;
-=======
->>>>>>> main
 import com.microsoft.semantickernel.skilldefinition.FunctionView;
 import com.microsoft.semantickernel.skilldefinition.KernelSkillsSupplier;
 import com.microsoft.semantickernel.skilldefinition.ParameterView;
@@ -21,10 +18,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
-<<<<<<< HEAD
 import java.util.Collections;
-=======
->>>>>>> main
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -46,11 +40,7 @@ import reactor.core.scheduler.Schedulers;
 // cref="Action"/>,
 /// with additional methods required by the kernel.
 /// </summary>
-<<<<<<< main
 public class NativeSKFunction extends AbstractSkFunction<Void> {
-=======
-public class NativeSKFunction extends AbstractSkFunction {
->>>>>>> origin/dsgrieve/java-v1-api
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NativeSKFunction.class);
 
@@ -62,14 +52,8 @@ public class NativeSKFunction extends AbstractSkFunction {
             String skillName,
             String functionName,
             String description,
-<<<<<<< HEAD
-            List<ParameterView> returnParameter,
-            KernelSkillsSupplier skillCollection) {
-        super(parameters, skillName, functionName, description, returnParameter, skillCollection);
-=======
             KernelSkillsSupplier skillCollection) {
         super(parameters, skillName, functionName, description, skillCollection);
->>>>>>> main
         // TODO
         // Verify.NotNull(delegateFunction, "The function delegate is empty");
         // Verify.ValidSkillName(skillName);
@@ -102,39 +86,26 @@ public class NativeSKFunction extends AbstractSkFunction {
 
     private static class MethodDetails {
 
-<<<<<<< HEAD
 
-=======
->>>>>>> main
         public final boolean hasSkFunctionAttribute;
         public final SKNativeTask<SKContext> function;
         public final List<ParameterView> parameters;
         public final String name;
         public final String description;
-<<<<<<< HEAD
         private final String returnType;
         private final String returnDescription;
-=======
->>>>>>> main
 
         private MethodDetails(
                 boolean hasSkFunctionAttribute,
                 SKNativeTask<SKContext> function,
                 List<ParameterView> parameters,
                 String name,
-<<<<<<< HEAD
-                String description,
-                String returnType,
-                String returnDescription) {
-=======
                 String description) {
->>>>>>> main
             this.hasSkFunctionAttribute = hasSkFunctionAttribute;
             this.function = function;
             this.parameters = parameters;
             this.name = name;
             this.description = description;
-<<<<<<< HEAD
             this.returnType = returnType;
             this.returnDescription = returnDescription;
         }
@@ -145,8 +116,6 @@ public class NativeSKFunction extends AbstractSkFunction {
 
         public String getReturnDescription() {
             return returnDescription;
-=======
->>>>>>> main
         }
     }
 
@@ -166,22 +135,16 @@ public class NativeSKFunction extends AbstractSkFunction {
             throw new RuntimeException("Not a valid function");
         }
 
-<<<<<<< HEAD
         ParameterView returnParam =
                 new ParameterView("return", methodDetails.getReturnDescription(), "");
 
-=======
->>>>>>> main
         return new NativeSKFunction(
                 methodDetails.function,
                 methodDetails.parameters,
                 skillName,
                 methodDetails.name,
                 methodDetails.description,
-<<<<<<< HEAD
                 Collections.singletonList(returnParam),
-=======
->>>>>>> main
                 kernelSkillsSupplier);
     }
 
@@ -218,22 +181,7 @@ public class NativeSKFunction extends AbstractSkFunction {
 
         List<ParameterView> parameters = getParameters(methodSignature);
 
-<<<<<<< HEAD
-        String returnType = methodSignature.getAnnotation(DefineSKFunction.class).returnType();
-        String returnDescription =
-                methodSignature.getAnnotation(DefineSKFunction.class).returnDescription();
-
-        return new MethodDetails(
-                hasSkFunctionAttribute,
-                function,
-                parameters,
-                name,
-                description,
-                returnType,
-                returnDescription);
-=======
         return new MethodDetails(hasSkFunctionAttribute, function, parameters, name, description);
->>>>>>> main
     }
 
     private static List<ParameterView> getParameters(Method method) {
@@ -331,28 +279,6 @@ public class NativeSKFunction extends AbstractSkFunction {
                         Mono.fromCallable(
                                         () -> {
                                             try {
-<<<<<<< HEAD
-                                                if (method.getReturnType().getName().equals("void")
-                                                        || method.getReturnType()
-                                                                .equals(Void.class)) {
-                                                    method.invoke(instance, args.toArray());
-                                                    return null;
-                                                } else {
-                                                    return method.invoke(instance, args.toArray());
-                                                }
-                                            } catch (InvocationTargetException e) {
-                                                throw new AIException(
-                                                        ErrorCodes.INVALID_REQUEST,
-                                                        "Function threw an exception: "
-                                                                + method.getName(),
-                                                        e.getCause());
-                                            } catch (IllegalAccessException e) {
-                                                throw new AIException(
-                                                        ErrorCodes.INVALID_REQUEST,
-                                                        "Unable to access function "
-                                                                + method.getName(),
-                                                        e);
-=======
                                                 Object result =
                                                         method.invoke(instance, args.toArray());
 
@@ -360,7 +286,6 @@ public class NativeSKFunction extends AbstractSkFunction {
                                             } catch (IllegalAccessException
                                                     | InvocationTargetException e) {
                                                 throw new RuntimeException(e.getCause());
->>>>>>> main
                                             }
                                         })
                                 .subscribeOn(Schedulers.boundedElastic()));

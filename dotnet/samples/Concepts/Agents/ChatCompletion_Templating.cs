@@ -1,14 +1,6 @@
-<<<<<<< HEAD
-<<<<<<<+HEAD
+
 // Copyright (c) Microsoft. All rights reserved.
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>>+main
-ing Microsoft.SemanticKernel;
-=======
-// Copyright (c) Microsoft. All rights reserved.
-using Microsoft.SemanticKernel;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 using Microsoft.SemanticKernel.Agents;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;

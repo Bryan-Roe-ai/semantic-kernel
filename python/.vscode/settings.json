@@ -34,7 +34,6 @@
         "${workspaceFolder}/samples/learn_resources"
     ],
 }
-<<<<<<< HEAD
         "editor.defaultFormatter": "GitHub.copilot",
     },
     "notebook.formatOnSave.enabled": true,
@@ -55,5 +54,4 @@
         "skfunction"
     ],
 }
-=======
->>>>>>> 626da41b3eb7fe27ea08bdb86fd21c20978bcd2d
+

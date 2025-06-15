@@ -15,18 +15,10 @@ try:
 except Exception:
     chromadb_installed = False
 
-<<<<<<< HEAD:python/tests/integration/connectors/memory/test_chroma.py
 pytestmark = pytest.mark.skipif(
     not chromadb_installed, reason="chromadb is not installed"
-=======
-# pytestmark = pytest.mark.skipif(not chromadb_installed, reason="chromadb is not installed")
 
-pytestmark = pytest.skip(
-    reason="chromadb has a bug with a newer version of protobuf: https://github.com/chroma-core/chroma/issues/2571",
-    allow_module_level=True,
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/tests/integration/memory/memory_stores/test_chroma_memory_store.py
 )
-
 
 @pytest.fixture
 def setup_chroma():
@@ -36,7 +28,6 @@ def setup_chroma():
     collections = asyncio.run(memory.get_collections())
     for collection in collections:
         asyncio.run(memory.delete_collection(collection))
-
 
 @pytest.fixture
 def memory_record1():
@@ -51,7 +42,6 @@ def memory_record1():
         timestamp="timestamp",
     )
 
-
 @pytest.fixture
 def memory_record2():
     return MemoryRecord(
@@ -65,11 +55,9 @@ def memory_record2():
         timestamp="timestamp",
     )
 
-
 def test_constructor(setup_chroma):
     memory = setup_chroma
     assert memory._client is not None
-
 
 @pytest.mark.asyncio
 async def test_create_and_get_collection(setup_chroma):
@@ -78,7 +66,6 @@ async def test_create_and_get_collection(setup_chroma):
     await memory.create_collection("test_collection")
     result = await memory.get_collection("test_collection")
     assert result.name == "test_collection"
-
 
 @pytest.mark.asyncio
 async def test_get_collections(setup_chroma):
@@ -91,7 +78,6 @@ async def test_get_collections(setup_chroma):
 
     assert len(result) == 3
 
-
 @pytest.mark.asyncio
 async def test_delete_collection(setup_chroma):
     memory = setup_chroma
@@ -101,14 +87,12 @@ async def test_delete_collection(setup_chroma):
     result = await memory.get_collections()
     assert len(result) == 0
 
-
 @pytest.mark.asyncio
 async def test_does_collection_exist(setup_chroma):
     memory = setup_chroma
     await memory.create_collection("test_collection")
     result = await memory.does_collection_exist("test_collection")
     assert result is True
-
 
 @pytest.mark.asyncio
 async def test_upsert_and_get(setup_chroma, memory_record1):
@@ -128,7 +112,6 @@ async def test_upsert_and_get(setup_chroma, memory_record1):
     assert result._additional_metadata == "additional metadata"
     assert result._timestamp == "timestamp"
 
-
 @pytest.mark.asyncio
 async def test_upsert_and_get_with_no_embedding(setup_chroma, memory_record1):
     memory = setup_chroma
@@ -146,7 +129,6 @@ async def test_upsert_and_get_with_no_embedding(setup_chroma, memory_record1):
     assert result._external_source_name == "external source"
     assert result._additional_metadata == "additional metadata"
     assert result._timestamp == "timestamp"
-
 
 @pytest.mark.asyncio
 async def test_upsert_and_get_batch(setup_chroma, memory_record1, memory_record2):
@@ -167,7 +149,6 @@ async def test_upsert_and_get_batch(setup_chroma, memory_record1, memory_record2
     assert result[0]._additional_metadata == "additional metadata"
     assert result[0]._timestamp == "timestamp"
 
-
 @pytest.mark.asyncio
 async def test_remove(setup_chroma, memory_record1):
     memory = setup_chroma
@@ -181,7 +162,6 @@ async def test_remove(setup_chroma, memory_record1):
     with pytest.raises(Exception):
         await memory.get(collection.name, "test_id1", True)
 
-
 @pytest.mark.asyncio
 async def test_remove_batch(setup_chroma, memory_record1, memory_record2):
     memory = setup_chroma
@@ -193,7 +173,6 @@ async def test_remove_batch(setup_chroma, memory_record1, memory_record2):
 
     result = await memory.get_batch("test_collection", ["test_id1", "test_id2"], True)
     assert result == []
-
 
 @pytest.mark.asyncio
 async def test_get_nearest_matches(setup_chroma, memory_record1, memory_record2):
@@ -210,7 +189,6 @@ async def test_get_nearest_matches(setup_chroma, memory_record1, memory_record2)
     assert len(results) == 2
     assert isinstance(results[0][0], MemoryRecord)
     assert results[0][1] == pytest.approx(1, abs=1e-5)
-
 
 @pytest.mark.asyncio
 async def test_get_nearest_match(setup_chroma, memory_record1, memory_record2):

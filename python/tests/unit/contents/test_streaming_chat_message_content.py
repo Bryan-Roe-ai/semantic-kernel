@@ -7,20 +7,15 @@ from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.file_reference_content import FileReferenceContent
 from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.contents.function_result_content import FunctionResultContent
-<<<<<<< HEAD
 from semantic_kernel.contents.streaming_chat_message_content import (
     StreamingChatMessageContent,
 )
-=======
-from semantic_kernel.contents.image_content import ImageContent
-from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.contents.streaming_text_content import StreamingTextContent
 from semantic_kernel.contents.text_content import TextContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.contents.utils.finish_reason import FinishReason
 from semantic_kernel.exceptions.content_exceptions import ContentAdditionException
-
 
 def test_scmc():
     message = StreamingChatMessageContent(
@@ -30,13 +25,11 @@ def test_scmc():
     assert message.content == "Hello, world!"
     assert len(message.items) == 1
 
-
 def test_scmc_str():
     message = StreamingChatMessageContent(
         choice_index=0, role="user", content="Hello, world!"
     )
     assert str(message) == "Hello, world!"
-
 
 def test_scmc_full():
     message = StreamingChatMessageContent(
@@ -56,7 +49,6 @@ def test_scmc_full():
     assert message.finish_reason == FinishReason.STOP
     assert len(message.items) == 1
 
-
 def test_scmc_items():
     message = StreamingChatMessageContent(
         choice_index=0, role=AuthorRole.USER, items=[TextContent(text="Hello, world!")]
@@ -64,7 +56,6 @@ def test_scmc_items():
     assert message.role == AuthorRole.USER
     assert message.content == "Hello, world!"
     assert len(message.items) == 1
-
 
 def test_scmc_items_and_content():
     message = StreamingChatMessageContent(
@@ -79,7 +70,6 @@ def test_scmc_items_and_content():
     assert message.items[1].text == "text"
     assert len(message.items) == 2
 
-
 def test_scmc_multiple_items():
     message = StreamingChatMessageContent(
         choice_index=0,
@@ -93,7 +83,6 @@ def test_scmc_multiple_items():
     assert message.content == "Hello, world!"
     assert len(message.items) == 2
 
-
 def test_scmc_content_set():
     message = StreamingChatMessageContent(
         choice_index=0, role=AuthorRole.USER, content="Hello, world!"
@@ -106,7 +95,6 @@ def test_scmc_content_set():
     message.content = ""
     assert message.items[0].text == "Hello, world to you too!"
 
-
 def test_scmc_content_set_empty():
     message = StreamingChatMessageContent(
         choice_index=0, role=AuthorRole.USER, content="Hello, world!"
@@ -117,7 +105,6 @@ def test_scmc_content_set_empty():
     message.content = "Hello, world to you too!"
     assert len(message.items) == 1
     assert message.items[0].text == "Hello, world to you too!"
-
 
 def test_scmc_to_element():
     message = StreamingChatMessageContent(
@@ -131,7 +118,6 @@ def test_scmc_to_element():
         assert child.tag == "text"
         assert child.text == "Hello, world!"
 
-
 def test_scmc_to_prompt():
     message = StreamingChatMessageContent(
         choice_index=0, role=AuthorRole.USER, content="Hello, world!"
@@ -140,7 +126,6 @@ def test_scmc_to_prompt():
     assert "<text>Hello, world!</text>" in prompt
     assert 'choice_index="0"' in prompt
     assert 'role="user"' in prompt
-
 
 def test_scmc_from_element():
     element = StreamingChatMessageContent(
@@ -151,7 +136,6 @@ def test_scmc_from_element():
     assert message.content == "Hello, world!"
     assert len(message.items) == 1
 
-
 def test_scmc_from_element_content():
     xml_content = '<message role="user" choice_index="0">Hello, world!</message>'
     element = XML(text=xml_content)
@@ -160,13 +144,11 @@ def test_scmc_from_element_content():
     assert message.content == "Hello, world!"
     assert len(message.items) == 1
 
-
 def test_scmc_from_element_content_missing_choice_index():
     xml_content = '<message role="user">Hello, world!</message>'
     element = XML(text=xml_content)
     with pytest.raises(TypeError):
         StreamingChatMessageContent.from_element(element)
-
 
 @pytest.mark.parametrize(
     "xml_content, user, text_content, length",
@@ -231,7 +213,6 @@ def test_scmc_from_element_content_parse(xml_content, user, text_content, length
     assert str(message) == text_content
     assert len(message.items) == length
 
-
 def test_scmc_serialize():
     message = StreamingChatMessageContent(
         choice_index=0, role=AuthorRole.USER, content="Hello, world!"
@@ -239,7 +220,6 @@ def test_scmc_serialize():
     dumped = message.model_dump()
     assert dumped["role"] == AuthorRole.USER
     assert dumped["items"][0]["text"] == "Hello, world!"
-
 
 def test_scmc_to_dict():
     message = StreamingChatMessageContent(
@@ -250,7 +230,6 @@ def test_scmc_to_dict():
         "content": "Hello, world!",
     }
 
-
 def test_scmc_to_dict_keys():
     message = StreamingChatMessageContent(
         choice_index=0, role=AuthorRole.USER, content="Hello, world!"
@@ -259,7 +238,6 @@ def test_scmc_to_dict_keys():
         "author": "user",
         "text": "Hello, world!",
     }
-
 
 @pytest.mark.parametrize(
     "input_args, expected_dict",
@@ -333,7 +311,6 @@ def test_scmc_to_dict_items(input_args, expected_dict):
     message = StreamingChatMessageContent(choice_index=0, **input_args)
     assert message.to_dict() == expected_dict
 
-
 def test_scmc_add():
     message1 = StreamingChatMessageContent(
         choice_index=0, role=AuthorRole.USER, content="Hello, ", inner_content="source1"
@@ -347,80 +324,9 @@ def test_scmc_add():
     assert len(combined.items) == 1
     assert len(combined.inner_content) == 2
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
     # Make sure the original inner content is preserved
     assert message1.inner_content == "source1"
     assert message2.inner_content == "source2"
-
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
 def test_scmc_add_three():
     message1 = StreamingChatMessageContent(
@@ -437,7 +343,6 @@ def test_scmc_add_three():
     assert combined.content == "Hello, world!"
     assert len(combined.items) == 1
     assert len(combined.inner_content) == 3
-
 
 @pytest.mark.parametrize(
     "message1, message2",
@@ -533,80 +438,9 @@ def test_scmc_add_different_items_same_type(message1, message2):
     combined = message1 + message2
     assert len(combined.items) == 2
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
     # Make sure the original items are preserved
     assert len(message1.items) == 1
     assert len(message2.items) == 1
-
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
 @pytest.mark.parametrize(
     "message1, message2",
@@ -674,14 +508,12 @@ def test_smsc_add_exception(message1, message2):
     with pytest.raises(ContentAdditionException):
         message1 + message2
 
-
 def test_scmc_bytes():
     message = StreamingChatMessageContent(
         choice_index=0, role=AuthorRole.USER, content="Hello, world!"
     )
     assert bytes(message) == b"Hello, world!"
     assert bytes(message.items[0]) == b"Hello, world!"
-
 
 def test_scmc_with_unhashable_types_can_hash():
     user_messages = [

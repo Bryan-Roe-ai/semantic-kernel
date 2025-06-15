@@ -151,16 +151,9 @@ public class CompletionRequestSettings {
                 config.getMaxTokens(),
                 config.getBestOf(),
                 config.getUser(),
-<<<<<<< AI
                 config.getStopSequences());
                 new ArrayList<>());
-=======
-<<<<<<< HEAD
                 config.getStopSequences());
-=======
-                new ArrayList<>());
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
     }
 
     /**

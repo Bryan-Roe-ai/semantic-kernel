@@ -3,7 +3,6 @@ package com.microsoft.semantickernel.samples.syntaxexamples;
 import java.util.Arrays;
 import java.util.List;
 
-<<<<<<< HEAD
 /**
  * Run all the syntax examples.
  * <p>
@@ -11,8 +10,6 @@ import java.util.List;
  * "https://github.com/microsoft/semantic-kernel/blob/experimental-java/java/samples/sample-code/README.md">
  * README</a> for configuring your environment to run the examples.
  */
-=======
->>>>>>> main
 public class RunAll {
     public interface MainMethod {
         void run(String[] args) throws Exception;
@@ -36,12 +33,7 @@ public class RunAll {
                 Example25_ReadOnlyMemoryStore::main,
                 Example28_ActionPlanner::main,
                 Example29_Tokenizer::main,
-<<<<<<< HEAD
-                Example33_StreamingChat::main,
-                Example51_StepwisePlanner::main
-=======
                 Example33_StreamingChat::main
->>>>>>> main
         );
 
         mains.forEach(mainMethod -> {

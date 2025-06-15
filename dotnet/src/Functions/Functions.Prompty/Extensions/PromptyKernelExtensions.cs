@@ -66,8 +66,6 @@ public static class PromptyKernelExtensions
             promptTemplateFactory ?? KernelFunctionPrompty.s_defaultTemplateFactory,
             kernel.LoggerFactory);
     }
-<<<<<<< HEAD
-=======
 
     /// <summary>
     /// Create a <see cref="KernelFunction"/> from a prompty template file.
@@ -123,5 +121,5 @@ public static class PromptyKernelExtensions
         var promptyTemplate = reader.ReadToEnd();
         return kernel.CreateFunctionFromPrompty(promptyTemplate, promptTemplateFactory, fileInfo.PhysicalPath);
     }
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 }

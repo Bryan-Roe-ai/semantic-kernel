@@ -274,26 +274,15 @@ public sealed class OpenApiKernelExtensionsTests : IDisposable
         // Assert Metadata Keys and Values
         Assert.True(plugin.TryGetFunction("OpenApiExtensions", out var function));
         var additionalProperties = function.Metadata.AdditionalProperties;
-<<<<<<< HEAD
         Assert.Equal(2, additionalProperties.Count);
 
         Assert.Contains("method", additionalProperties.Keys);
-=======
-        Assert.Equal(6, additionalProperties.Count);
 
-        Assert.Contains("method", additionalProperties.Keys);
-        Assert.Contains("operation", additionalProperties.Keys);
-        Assert.Contains("info", additionalProperties.Keys);
-        Assert.Contains("security", additionalProperties.Keys);
-        Assert.Contains("server-urls", additionalProperties.Keys);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         Assert.Contains("operation-extensions", additionalProperties.Keys);
 
         var operation = additionalProperties["operation"] as RestApiOperation;
         Assert.NotNull(operation);
         Assert.Equal("GET", additionalProperties["method"]);
-<<<<<<< HEAD
-=======
         Assert.Equal("/api-with-open-api-extensions", operation.Path);
         Assert.Equal("Get API with open-api specification extensions", operation.Summary);
         var serverUrls = additionalProperties["server-urls"] as string[];
@@ -303,7 +292,6 @@ public sealed class OpenApiKernelExtensionsTests : IDisposable
         Assert.NotNull(info);
         var security = additionalProperties["security"] as List<RestApiSecurityRequirement>;
         Assert.NotNull(security);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Assert Operation Extension keys
         var operationExtensions = additionalProperties["operation-extensions"] as Dictionary<string, object?>;

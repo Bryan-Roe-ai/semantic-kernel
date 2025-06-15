@@ -15,18 +15,12 @@ from semantic_kernel.agents import Agent, DeclarativeSpecMixin, register_agent_t
 from semantic_kernel.data.vector import VectorStoreCollectionDefinition, VectorStoreField, vectorstoremodel
 
 if TYPE_CHECKING:
-<<<<<<< HEAD
     from semantic_kernel.contents.chat_history import ChatHistory
     from semantic_kernel.filters.functions.function_invocation_context import (
         FunctionInvocationContext,
     )
     from semantic_kernel.kernel import Kernel
-=======
-    from semantic_kernel import Kernel
-    from semantic_kernel.contents import ChatHistory
-    from semantic_kernel.filters import FunctionInvocationContext
-    from semantic_kernel.functions import KernelFunction
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     from semantic_kernel.services.ai_service_client_base import AIServiceClientBase
 
 def pytest_configure(config):
@@ -37,13 +31,8 @@ def pytest_configure(config):
     logging.getLogger("httpcore").setLevel(logging.WARNING)
     logging.getLogger("semantic_kernel").setLevel(logging.INFO)
 
-<<<<<<< HEAD
-=======
-
 # region: Kernel fixtures
 
-
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 @fixture(scope="function")
 def kernel() -> "Kernel":
     from semantic_kernel import Kernel
@@ -219,7 +208,6 @@ def auto_function_invocation_filter() -> Callable:
 
     return auto_function_invocation_filter
 
-
 @fixture(scope="session")
 def create_mock_function() -> Callable:
     from semantic_kernel.contents.streaming_text_content import StreamingTextContent
@@ -284,20 +272,16 @@ def get_tool_call_mock():
 
     return tool_call_mock
 
-
 @fixture(scope="function")
 def chat_history() -> "ChatHistory":
     from semantic_kernel.contents.chat_history import ChatHistory
 
     return ChatHistory()
 
-
 @fixture(scope="function")
 def prompt() -> str:
     return "test prompt"
 
-
-<<<<<<< HEAD
 # @fixture(autouse=True)
 # def enable_debug_mode():
 #     """Set `autouse=True` to enable easy debugging for tests.
@@ -335,9 +319,6 @@ def prompt() -> str:
 #     builtins.ss = snoop.snoop(depth=4).__enter__
 #     builtins.pr = snoop.pp
 
-=======
-# region: Connector Settings fixtures
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 @fixture
 def exclude_list(request):
     """Fixture that returns a list of environment variables to exclude."""
@@ -348,11 +329,8 @@ def override_env_param_dict(request):
     """Fixture that returns a dict of environment variables to override."""
     return request.param if hasattr(request, "param") else {}
 
-<<<<<<< HEAD
-=======
-
 # These two fixtures are used for multiple things, also non-connector tests
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 @fixture()
 def azure_openai_unit_test_env(monkeypatch, exclude_list, override_env_param_dict):
     """Fixture to set environment variables for AzureOpenAISettings."""
@@ -419,7 +397,6 @@ def openai_unit_test_env(monkeypatch, exclude_list, override_env_param_dict):
 
     return env_vars
 
-<<<<<<< HEAD
 @fixture()
 def mistralai_unit_test_env(monkeypatch, exclude_list, override_env_param_dict):
     """Fixture to set environment variables for MistralAISettings."""
@@ -644,18 +621,11 @@ def get_gp_config():
 
     return env_vars
 
-
-=======
-
-# region: Data Model Fixtures
-# some of these fixtures are used in both unit and integration tests
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 @fixture
 def index_kind(request) -> str:
     if hasattr(request, "param"):
         return request.param
     return "hnsw"
-
 
 @fixture
 def distance_function(request) -> str:
@@ -663,20 +633,17 @@ def distance_function(request) -> str:
         return request.param
     return "cosine_similarity"
 
-
 @fixture
 def vector_property_type(request) -> str:
     if hasattr(request, "param"):
         return request.param
     return "float"
 
-
 @fixture
 def dimensions(request) -> int:
     if hasattr(request, "param"):
         return request.param
     return 5
-
 
 @fixture
 def dataclass_vector_data_model(
@@ -700,7 +667,6 @@ def dataclass_vector_data_model(
 
     return MyDataModel
 
-
 @fixture
 def definition(
     index_kind: str, distance_function: str, vector_property_type: str, dimensions: int
@@ -719,7 +685,6 @@ def definition(
             ),
         ]
     )
-
 
 @fixture
 def definition_pandas(index_kind: str, distance_function: str, vector_property_type: str, dimensions: int) -> object:
@@ -740,7 +705,6 @@ def definition_pandas(index_kind: str, distance_function: str, vector_property_t
         to_dict=lambda x: x.to_dict(orient="records"),
         from_dict=lambda x, **_: pd.DataFrame(x),
     )
-
 
 @fixture
 def record_type(index_kind: str, distance_function: str, vector_property_type: str, dimensions: int) -> object:
@@ -765,7 +729,6 @@ def record_type(index_kind: str, distance_function: str, vector_property_type: s
 
     return DataModelClass
 
-
 @fixture
 def record_type_with_key_as_key_field(
     index_kind: str, distance_function: str, vector_property_type: str, dimensions: int
@@ -789,9 +752,7 @@ def record_type_with_key_as_key_field(
 
     return DataModelClass
 
-
 # region Declarative Spec
-
 
 @register_agent_type("test_agent")
 class TestAgent(DeclarativeSpecMixin, Agent):
@@ -817,10 +778,8 @@ class TestAgent(DeclarativeSpecMixin, Agent):
     async def invoke_stream(self, messages, **kwargs):
         yield "stream result"
 
-
 @fixture(scope="session")
 def test_agent_cls():
     return TestAgent
-
 
 # endregion

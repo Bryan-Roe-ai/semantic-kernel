@@ -17,26 +17,18 @@ public class KernelProcessMapTests
     {
         // Arrange
         KernelProcessState processState = new("Operation", "vTest");
-<<<<<<< HEAD
         KernelProcessState processState = new("Operation");
         KernelProcess process = new(processState, [], []);
         KernelProcessMapState state = new(nameof(KernelProcessMapStateInitialization), "vTest", Guid.NewGuid().ToString());
         KernelProcessMapState state = new(nameof(KernelProcessMapStateInitialization), Guid.NewGuid().ToString());
-=======
-        KernelProcessState processState = new("Operation", "vTest");
-        KernelProcess process = new(processState, [], []);
-        KernelProcessMapState state = new(nameof(KernelProcessMapStateInitialization), "vTest", Guid.NewGuid().ToString());
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Act
         KernelProcessMap map = new(state, process, []);
 
         // Assert
         Assert.Equal(state, map.State);
-<<<<<<< HEAD
         //Assert.Equal("values", map.InputParameterName);
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
         Assert.Equivalent(process, map.Operation);
         Assert.Empty(map.Edges);
     }
@@ -46,7 +38,6 @@ public class KernelProcessMapTests
     /// </summary>
     [Fact]
     public void KernelProcessMapStateRequiredProperties()
-<<<<<<< HEAD
     public void KernelProcessMapStateRequiresNameAndId()
     {
         // Act & Assert
@@ -55,13 +46,6 @@ public class KernelProcessMapTests
         Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState("testname", "vTest", null!));
         Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState(name: null!, "testid"));
         Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState("testname", null!));
-=======
-    public void KernelProcessMapStateRequiredProperties()
-    {
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState(name: null!, "vTest", "testid"));
-        Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState(name: "testname", null!, "testid"));
-        Assert.Throws<ArgumentNullException>(() => new KernelProcessMapState("testname", "vTest", null!));
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     }
 }

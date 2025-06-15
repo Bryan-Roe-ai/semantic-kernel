@@ -2,13 +2,10 @@
 
 using System;
 using System.Collections.Generic;
-<<<<<<< HEAD
-using Microsoft.SemanticKernel.Connectors.AzureAISearch;
-using Microsoft.SemanticKernel.Data;
-=======
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
->>>>>>> main
+using Microsoft.SemanticKernel.Data;
+
 using Xunit;
 
 namespace SemanticKernel.Connectors.AzureAISearch.UnitTests;

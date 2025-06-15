@@ -23,7 +23,6 @@ if TYPE_CHECKING:
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-
 class Jinja2PromptTemplate(PromptTemplateBase):
     """Creates and renders Jinja2 prompt templates to text.
 
@@ -73,13 +72,10 @@ class Jinja2PromptTemplate(PromptTemplateBase):
             loader=BaseLoader(), enable_async=True
         )
 
-<<<<<<< HEAD
     async def render(
         self, kernel: "Kernel", arguments: Optional["KernelArguments"] = None
     ) -> str:
-=======
-    async def render(self, kernel: "Kernel", arguments: "KernelArguments | None" = None) -> str:
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         """Render the prompt template.
 
         Using the prompt template, replace the variables with their values
@@ -103,7 +99,6 @@ class Jinja2PromptTemplate(PromptTemplateBase):
         helpers: dict[str, Callable[..., Any]] = {}
         helpers.update(JINJA2_SYSTEM_HELPERS)
         for plugin in kernel.plugins.values():
-<<<<<<< HEAD
             helpers.update(
                 {
                     function.fully_qualified_name.replace(
@@ -119,19 +114,7 @@ class Jinja2PromptTemplate(PromptTemplateBase):
                     for function in plugin
                 }
             )
-=======
-            helpers.update({
-                function.fully_qualified_name.replace("-", "_"): create_template_helper_from_function(
-                    function,
-                    kernel,
-                    arguments,
-                    self.prompt_template_config.template_format,
-                    allow_unsafe_function_output,
-                    enable_async=True,
-                )
-                for function in plugin
-            })
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
         if self.prompt_template_config.template is None:
             raise Jinja2TemplateRenderException(
                 "Error rendering template, template is None"

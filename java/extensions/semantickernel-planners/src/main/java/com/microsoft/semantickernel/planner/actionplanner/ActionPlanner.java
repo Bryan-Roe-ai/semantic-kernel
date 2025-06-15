@@ -1,41 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 package com.microsoft.semantickernel.planner.actionplanner;
 
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -47,40 +12,6 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
->>>>>>> main
-=======
->>>>>>> head
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.SKBuilders;
@@ -94,19 +25,6 @@ import com.microsoft.semantickernel.skilldefinition.annotations.DefineSKFunction
 import com.microsoft.semantickernel.skilldefinition.annotations.SKFunctionParameters;
 import com.microsoft.semantickernel.textcompletion.CompletionRequestSettings;
 import com.microsoft.semantickernel.textcompletion.CompletionSKFunction;
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -115,38 +33,13 @@ import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-=======
 
->>>>>>> Stashed changes
-=======
 
->>>>>>> Stashed changes
-=======
 
->>>>>>> Stashed changes
-=======
 
->>>>>>> Stashed changes
-=======
 
->>>>>>> Stashed changes
-=======
 
-<<<<<<< Updated upstream
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
 
->>>>>>> Stashed changes
-=======
-
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 import reactor.core.publisher.Mono;
 
 /// <summary>
@@ -178,67 +71,8 @@ public class ActionPlanner {
     // means that the code needs to be modified to enable the injection of a skill store, likely for
     // dependency injection or other design considerations.
     TODO: allow to inject skill store
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
->>>>>>> head
     // TODO: allow to inject skill store
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
     // TODO: allow to inject skill store
->>>>>>> origin/main
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
     /**
      * Initialize a new instance of the ActionPlanner class
@@ -303,70 +137,30 @@ public class ActionPlanner {
     private Plan parsePlan(String goal, SKContext result) {
         ActionPlanResponse planData;
         // Clean up the plan, removing any prompt and the stop sequence
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         Matcher matcher = CLEAN_PLAN.matcher(result.getResult());
 
         String plan = result.getResult();
-=======
         Matcher matcher = CLEAN_PLAN.matcher((String)result.getResult());
 
         String plan = (String)result.getResult();
->>>>>>> Stashed changes
-=======
         Matcher matcher = CLEAN_PLAN.matcher((String)result.getResult());
 
         String plan = (String)result.getResult();
->>>>>>> Stashed changes
-=======
         Matcher matcher = CLEAN_PLAN.matcher((String)result.getResult());
 
         String plan = (String)result.getResult();
->>>>>>> Stashed changes
-=======
         Matcher matcher = CLEAN_PLAN.matcher((String)result.getResult());
 
         String plan = (String)result.getResult();
->>>>>>> Stashed changes
-=======
         Matcher matcher = CLEAN_PLAN.matcher((String)result.getResult());
 
         String plan = (String)result.getResult();
->>>>>>> Stashed changes
-=======
         Matcher matcher = CLEAN_PLAN.matcher((String)result.getResult());
 
         String plan = (String)result.getResult();
-<<<<<<< Updated upstream
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
         Matcher matcher = CLEAN_PLAN.matcher((String)result.getResult());
 
         String plan = (String)result.getResult();
->>>>>>> Stashed changes
-=======
-        Matcher matcher = CLEAN_PLAN.matcher((String)result.getResult());
-
-        String plan = (String)result.getResult();
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
         if (matcher.matches()) {
             plan = matcher.group(1);
         }

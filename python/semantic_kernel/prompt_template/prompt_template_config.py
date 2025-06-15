@@ -38,7 +38,6 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 _T = TypeVar("_T", bound="PromptTemplateConfig")
 
-
 class PromptTemplateConfig(KernelBaseModel):
     """Configuration for a prompt template.
 
@@ -82,7 +81,6 @@ class PromptTemplateConfig(KernelBaseModel):
     @field_validator("execution_settings", mode="before")
     @classmethod
     def rewrite_execution_settings(
-<<<<<<< HEAD
         cls,
         settings: None | (
             PromptExecutionSettings
@@ -95,9 +93,7 @@ class PromptTemplateConfig(KernelBaseModel):
             Union[PromptExecutionSettings, List[PromptExecutionSettings], Dict[str, PromptExecutionSettings]]
         ],
     ) -> Dict[str, PromptExecutionSettings]:
-=======
-        cls: type[_T],
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         settings: PromptExecutionSettings
         | Sequence[PromptExecutionSettings]
         | MutableMapping[str, PromptExecutionSettings]
@@ -198,14 +194,11 @@ class PromptTemplateConfig(KernelBaseModel):
         input_variables: MutableSequence[InputVariable] | None = None,
         execution_settings: MutableMapping[str, PromptExecutionSettings] | None = None,
         allow_dangerously_set_content: bool = False,
-<<<<<<< HEAD
         template_format: Literal["semantic-kernel"] = "semantic-kernel",
         input_variables: List[InputVariable] = [],
         execution_settings: Dict[str, PromptExecutionSettings] = {},
     ) -> "PromptTemplateConfig":
-=======
-    ) -> _T:
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         """Restore a PromptTemplateConfig instance from the specified parameters.
 
         Args:

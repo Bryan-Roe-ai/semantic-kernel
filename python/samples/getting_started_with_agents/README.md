@@ -7,69 +7,16 @@ This project contains a step by step guide to get started with _Semantic Kernel 
 - For the use of Chat Completion agents, the minimum allowed Semantic Kernel pypi version is 1.3.0.
 - For the use of OpenAI Assistant agents, the minimum allowed Semantic Kernel pypi version is 1.4.0.
 - For the use of Agent Group Chat, the minimum allowed Semantic kernel pypi version is 1.6.0.
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
+
 - For the use of Streaming OpenAI Assistant agents, the minimum allowed Semantic Kernel pypi version is 1.11.0
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
 - For the use of Streaming OpenAI Assistant agents, the minimum allowed Semantic Kernel pypi version is 1.11.0
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
+
 - For the use of Streaming OpenAI Assistant agents, the minimum allowed Semantic Kernel pypi version is 1.11.0
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
+
 - For the use of Streaming OpenAI Assistant agents, the minimum allowed Semantic Kernel pypi version is 1.11.0
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
 - For the use of OpenAI Responses agents, the minimum allowed Semantic Kernel pypi version is 1.27.0.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 #### Source
 
@@ -109,7 +56,6 @@ Example|Description
 [step8_azure_ai_agent_declarative](../getting_started_with_agents/azure_ai_agent/step8_azure_ai_agent_declarative.py)|How to create an Azure AI Agent from a declarative spec.
 
 _Note: For details on configuring an Azure AI Agent, please see [here](../getting_started_with_agents/azure_ai_agent/README.md)._
-
 
 ## OpenAI Assistant Agent
 

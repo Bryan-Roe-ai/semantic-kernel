@@ -13,11 +13,8 @@ namespace Microsoft.SemanticKernel.Agents.Serialization;
 /// <param name="message">The referenced message</param>
 [Experimental("SKEXP0110")]
 public sealed class ChatMessageReference(ChatMessageContent message)
-<<<<<<< HEAD
 public sealed class ChatMessageReference(ChatMessageContent message) // %%% SCOPE
-=======
-public sealed class ChatMessageReference(ChatMessageContent message)
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 {
     /// <summary>
     /// Gets the referenced <see cref="ChatMessageContent.AuthorName"/> property.

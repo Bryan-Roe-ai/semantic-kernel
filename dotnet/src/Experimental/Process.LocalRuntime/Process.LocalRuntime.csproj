@@ -49,11 +49,8 @@
     <PackageReference Include="System.Threading.Channels" />
   </ItemGroup>
 
-<<<<<<< HEAD
-=======
   <ItemGroup>
     <PackageReference Include="Azure.Identity" />
   </ItemGroup>
 
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 </Project>

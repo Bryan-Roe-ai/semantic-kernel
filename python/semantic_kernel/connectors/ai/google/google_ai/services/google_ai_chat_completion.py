@@ -20,95 +20,23 @@ from google.generativeai.types import (
 )
 from pydantic import ValidationError
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
-=======
-from semantic_kernel.connectors.ai.chat_completion_client_base import ChatCompletionClientBase
-from semantic_kernel.connectors.ai.completion_usage import CompletionUsage
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
+
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
+
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-=======
->>>>>>> Stashed changes
-=======
+
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
 from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
+
 from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
-=======
 from semantic_kernel.connectors.ai.function_calling_utils import merge_function_results
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceType
+
 from semantic_kernel.connectors.ai.google.google_ai.google_ai_prompt_execution_settings import (
     GoogleAIChatPromptExecutionSettings,
 )
@@ -127,7 +55,6 @@ from semantic_kernel.connectors.ai.google.shared_utils import (
     filter_system_message,
     format_gemini_function_name_to_kernel_function_fully_qualified_name,
 )
-<<<<<<< HEAD
 from semantic_kernel.contents.function_call_content import FunctionCallContent
 from semantic_kernel.contents.streaming_chat_message_content import (
     ITEM_TYPES as STREAMING_ITEM_TYPES,
@@ -135,93 +62,15 @@ from semantic_kernel.contents.streaming_chat_message_content import (
 from semantic_kernel.contents.streaming_chat_message_content import (
     StreamingChatMessageContent,
 )
-=======
-from semantic_kernel.contents.chat_history import ChatHistory
-from semantic_kernel.contents.chat_message_content import CMC_ITEM_TYPES, ChatMessageContent
-from semantic_kernel.contents.function_call_content import FunctionCallContent
-from semantic_kernel.contents.streaming_chat_message_content import STREAMING_CMC_ITEM_TYPES as STREAMING_ITEM_TYPES
-from semantic_kernel.contents.streaming_chat_message_content import StreamingChatMessageContent
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.contents.streaming_text_content import StreamingTextContent
 from semantic_kernel.contents.text_content import TextContent
 from semantic_kernel.contents.utils.author_role import AuthorRole
 from semantic_kernel.contents.utils.finish_reason import FinishReason
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
-=======
+
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.kernel import Kernel
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
 from semantic_kernel.utils.telemetry.model_diagnostics.decorators import trace_chat_completion
 
 if sys.version_info >= (3, 12):
@@ -247,7 +96,6 @@ if TYPE_CHECKING:
         PromptExecutionSettings,
     )
 
-=======
 from semantic_kernel.exceptions.service_exceptions import (
     ServiceInitializationError,
     ServiceInvalidExecutionSettingsError,
@@ -261,9 +109,7 @@ if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.function_call_choice_configuration import FunctionCallChoiceConfiguration
     from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 logger: logging.Logger = logging.getLogger(__name__)
-
 
 class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
     """Google AI Chat Completion Client."""
@@ -321,146 +167,20 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
 
     # Override from AIServiceClientBase
     @override
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< main
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
     def get_prompt_execution_settings_class(self) -> type["PromptExecutionSettings"]:
         return GoogleAIChatPromptExecutionSettings
 
     @override
     @trace_chat_completion(GoogleAIBase.MODEL_PROVIDER_NAME)
     async def _inner_get_chat_message_contents(
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
     @trace_chat_completion(GoogleAIBase.MODEL_PROVIDER_NAME)
     async def get_chat_message_contents(
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-=======
+
     @trace_chat_completion(GoogleAIBase.MODEL_PROVIDER_NAME)
     async def get_chat_message_contents(
->>>>>>> ms/features/bugbash-prep
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
         self,
         chat_history: "ChatHistory",
         settings: "PromptExecutionSettings",
@@ -469,7 +189,6 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
             settings = self.get_prompt_execution_settings_from_settings(settings)
         assert isinstance(settings, GoogleAIChatPromptExecutionSettings)  # nosec
 
-<<<<<<< main
         kernel = kwargs.get("kernel")
         if settings.function_choice_behavior is not None and (not kernel or not isinstance(kernel, Kernel)):
             raise ServiceInvalidExecutionSettingsError("Kernel is required for auto invoking functions.")
@@ -497,143 +216,22 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
             settings.function_choice_behavior.maximum_auto_invoke_attempts
         ):
             completions = await self._send_chat_request(chat_history, settings)
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< main
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
             chat_history.add_message(message=completions[0])
             function_calls = [
                 item
                 for item in chat_history.messages[-1].items
                 if isinstance(item, FunctionCallContent)
             ]
-<<<<<<< Updated upstream
+
         for request_index in range(settings.function_choice_behavior.maximum_auto_invoke_attempts):
             completions = await self._send_chat_request(chat_history, settings)
             function_calls = [item for item in completions[0].items if isinstance(item, FunctionCallContent)]
-=======
-        for request_index in range(settings.function_choice_behavior.maximum_auto_invoke_attempts):
-            completions = await self._send_chat_request(chat_history, settings)
+
             function_calls = [item for item in completions[0].items if isinstance(item, FunctionCallContent)]
->>>>>>> Stashed changes
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
+
             function_calls = [item for item in completions[0].items if isinstance(item, FunctionCallContent)]
->>>>>>> ms/features/bugbash-prep
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
-            function_calls = [item for item in completions[0].items if isinstance(item, FunctionCallContent)]
->>>>>>> ms/features/bugbash-prep
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
             if (fc_count := len(function_calls)) == 0:
                 return completions
 
@@ -648,7 +246,7 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
                 request_index=request_index,
                 function_behavior=settings.function_choice_behavior,
             )
-=======
+
         genai.configure(api_key=self.service_settings.api_key.get_secret_value())
         if not self.service_settings.gemini_model_id:
             raise ServiceInitializationError("The Google AI Gemini model ID is required.")
@@ -657,77 +255,12 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
             system_instruction=filter_system_message(chat_history),
         )
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< main
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
-        collapse_function_call_results_in_chat_history(chat_history)
-
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         response: AsyncGenerateContentResponse = await model.generate_content_async(
             contents=self._prepare_chat_history_for_request(chat_history),
             generation_config=GenerationConfig(**settings.prepare_settings_dict()),
             tools=settings.tools,
             tool_config=settings.tool_config,  # type: ignore
         )
->>>>>>> upstream/main
 
         return [self._create_chat_message_content(response, candidate) for candidate in response.candidates]
 
@@ -741,86 +274,12 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
         if not isinstance(settings, GoogleAIChatPromptExecutionSettings):
             settings = self.get_prompt_execution_settings_from_settings(settings)
         assert isinstance(settings, GoogleAIChatPromptExecutionSettings)  # nosec
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< div
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> head
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
-=======
-=======
->>>>>>> Stashed changes
+
             if any(result.terminate for result in results if result is not None):
                 return merge_function_results(chat_history.messages[-len(results) :])
         else:
             # do a final call without auto function calling
             return await self._send_chat_request(chat_history, settings)
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
 
         genai.configure(api_key=self.service_settings.api_key.get_secret_value())
         if not self.service_settings.gemini_model_id:
@@ -840,68 +299,10 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
             stream=True,
         )
 
-<<<<<<< main
         return [
             self._create_chat_message_content(response, candidate)
             for candidate in response.candidates
         ]
-=======
-        async for chunk in response:
-            yield [
-                self._create_streaming_chat_message_content(chunk, candidate, function_invoke_attempt)
-                for candidate in chunk.candidates
-            ]
-
-    @override
-    def _verify_function_choice_settings(self, settings: "PromptExecutionSettings") -> None:
-        if not isinstance(settings, GoogleAIChatPromptExecutionSettings):
-            raise ServiceInvalidExecutionSettingsError("The settings must be an GoogleAIChatPromptExecutionSettings.")
-        if settings.candidate_count is not None and settings.candidate_count > 1:
-            raise ServiceInvalidExecutionSettingsError(
-                "Auto-invocation of tool calls may only be used with a "
-                "GoogleAIChatPromptExecutionSettings.candidate_count of 1."
-            )
-
-    @override
-    def _update_function_choice_settings_callback(
-        self,
-    ) -> Callable[["FunctionCallChoiceConfiguration", "PromptExecutionSettings", FunctionChoiceType], None]:
-        return update_settings_from_function_choice_configuration
-
-    @override
-    def _reset_function_choice_settings(self, settings: "PromptExecutionSettings") -> None:
-        if hasattr(settings, "tool_config"):
-            settings.tool_config = None
-        if hasattr(settings, "tools"):
-            settings.tools = None
-
-    @override
-    def _prepare_chat_history_for_request(
-        self,
-        chat_history: ChatHistory,
-        role_key: str = "role",
-        content_key: str = "content",
-    ) -> list[Content]:
-        chat_request_messages: list[Content] = []
-
-        for message in chat_history.messages:
-            if message.role == AuthorRole.SYSTEM:
-                # Skip system messages since they are not part of the chat request.
-                # System message will be provided as system_instruction in the model.
-                continue
-            if message.role == AuthorRole.USER:
-                chat_request_messages.append(Content(role="user", parts=format_user_message(message)))
-            elif message.role == AuthorRole.ASSISTANT:
-                chat_request_messages.append(Content(role="model", parts=format_assistant_message(message)))
-            elif message.role == AuthorRole.TOOL:
-                chat_request_messages.append(Content(role="function", parts=format_tool_message(message)))
-
-        return chat_request_messages
-
-    # endregion
-
-    # region Non-streaming
->>>>>>> upstream/main
 
     def _create_chat_message_content(
         self, response: AsyncGenerateContentResponse, candidate: Candidate
@@ -955,7 +356,6 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
     # endregion
 
     # region Streaming
-<<<<<<< main
     @override
     async def get_streaming_chat_message_contents(
         self,
@@ -983,13 +383,7 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
             # Auto invoke is required.
             async_generator = self._get_streaming_chat_message_contents_auto_invoke(
                 chat_history, settings, **kwargs
-<<<<<<< Updated upstream
-=======
-                kernel,  # type: ignore
-                kwargs.get("arguments"),
-                chat_history,
-                settings,
->>>>>>> Stashed changes
+
             )
 
         async for messages in async_generator:
@@ -1020,11 +414,8 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
         for request_index in range(
             settings.function_choice_behavior.maximum_auto_invoke_attempts
         ):
-<<<<<<< Updated upstream
         for request_index in range(settings.function_choice_behavior.maximum_auto_invoke_attempts):
-=======
-        for request_index in range(settings.function_choice_behavior.maximum_auto_invoke_attempts):
->>>>>>> Stashed changes
+
             all_messages: list[StreamingChatMessageContent] = []
             function_call_returned = False
             async for messages in self._send_chat_streaming_request(
@@ -1093,8 +484,6 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
                 self._create_streaming_chat_message_content(chunk, candidate)
                 for candidate in chunk.candidates
             ]
-=======
->>>>>>> upstream/main
 
     def _create_streaming_chat_message_content(
         self,
@@ -1154,7 +543,6 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
 
     # endregion
 
-<<<<<<< main
     @override
     def _prepare_chat_history_for_request(
         self,
@@ -1184,8 +572,6 @@ class GoogleAIChatCompletion(GoogleAIBase, ChatCompletionClientBase):
 
         return chat_request_messages
 
-=======
->>>>>>> upstream/main
     def _get_metadata_from_response(
         self, response: AsyncGenerateContentResponse | GenerateContentResponse
     ) -> dict[str, Any]:

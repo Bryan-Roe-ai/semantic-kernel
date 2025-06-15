@@ -33,15 +33,9 @@ public sealed class OnnxRuntimeGenAIPromptExecutionSettings : PromptExecutionSet
             return settings;
         }
 
-<<<<<<< main
-<<<<<<< main
         var json = JsonSerializer.Serialize<object>(executionSettings);
-=======
-        var json = JsonSerializer.Serialize(executionSettings, executionSettings.GetType());
->>>>>>> upstream/main
-=======
+
         var json = JsonSerializer.Serialize<object>(executionSettings);
->>>>>>> origin/main
 
         return JsonSerializer.Deserialize<OnnxRuntimeGenAIPromptExecutionSettings>(json, JsonOptionsCache.ReadPermissive)!;
     }

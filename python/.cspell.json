@@ -24,24 +24,18 @@
     ],
     "words": [
         "aeiou",
-<<<<<<< HEAD
-=======
         "aiplatform",
         "autogen",
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         "azuredocindex",
         "azuredocs",
         "boto",
         "contentvector",
-<<<<<<< HEAD
-=======
         "contoso",
         "datamodel",
         "desync",
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         "dotenv",
-<<<<<<< main
-=======
         "endregion",
         "entra",
         "faiss",
@@ -52,15 +46,13 @@
         "huggingface",
         "Instrumentor",
         "kernelfunction",
->>>>>>> upstream/main
+
         "logit",
         "logprobs",
-<<<<<<< HEAD
-=======
         "lowlevel",
         "Magentic",
         "mistralai",
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         "mongocluster",
         "nd",
         "ndarray",
@@ -72,19 +64,13 @@
         "OPENAI",
         "pydantic",
         "retrywrites",
-<<<<<<< HEAD
         "kernelfunction",
-=======
-        "scmc",
-        "SEMANTICKERNEL",
-        "serde",
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         "skprompt",
         "templating",
         "uninstrument",
         "vectordb",
-<<<<<<< HEAD
-<<<<<<< main
+
         "generativeai",
         "genai",
         "protos",
@@ -100,116 +86,33 @@
         "contoso",
         "opentelemetry",
         "SEMANTICKERNEL",
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
         "OTEL",
         "mistralai"
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
+
         "OTEL",
         "mistralai"
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
+
         "OTEL",
         "mistralai"
-=======
->>>>>>> Stashed changes
-=======
+
         "OTEL",
         "mistralai"
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
+
         "OTEL",
         "mistralai"
         "vectorizable"
-=======
-        "OTEL"
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
         "vectorizer",
         "vectorstoremodel",
         "vertexai",
-<<<<<<< HEAD
         "Weaviate"
->>>>>>> upstream/main
-=======
-        "Weaviate",
-        "qdrant",
-        "huggingface",
-        "pytestmark",
-        "contoso",
-        "opentelemetry",
-        "SEMANTICKERNEL",
-        "OTEL",
-        "vectorizable",
-        "desync"
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-=======
+
         "vectorizable",
         "vectorizer",
         "vectorstoremodel",
         "vertexai",
         "Weaviate"
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     ]
 }

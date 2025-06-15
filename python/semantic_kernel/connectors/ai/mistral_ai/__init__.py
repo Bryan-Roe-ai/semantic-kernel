@@ -15,9 +15,7 @@ from semantic_kernel.connectors.ai.mistral_ai.services.mistral_ai_chat_completio
 __all__ = [
     "MistralAIChatCompletion",
     "MistralAIChatPromptExecutionSettings",
-<<<<<<< HEAD
-=======
     "MistralAIPromptExecutionSettings",
     "MistralAITextEmbedding",
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 ]

@@ -3,7 +3,6 @@
 import logging
 from typing import Annotated, Any, Literal
 
-<<<<<<< HEAD
 if sys.version_info >= (3, 11):
     from typing import Self  # pragma: no cover
 else:
@@ -18,15 +17,10 @@ from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBeh
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
 )
-=======
-from pydantic import BaseModel, Field, field_validator, model_validator
 
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 from semantic_kernel.exceptions import ServiceInvalidExecutionSettingsError
 
 logger = logging.getLogger(__name__)
-
 
 class OpenAIPromptExecutionSettings(PromptExecutionSettings):
     """Common request settings for (Azure) OpenAI services."""
@@ -45,7 +39,6 @@ class OpenAIPromptExecutionSettings(PromptExecutionSettings):
     user: str | None = None
     store: bool | None = None
     metadata: dict[str, str] | None = None
-
 
 class OpenAITextPromptExecutionSettings(OpenAIPromptExecutionSettings):
     """Specific settings for the completions endpoint."""
@@ -76,7 +69,6 @@ class OpenAITextPromptExecutionSettings(OpenAIPromptExecutionSettings):
             )
 
         return self
-
 
 class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
     """Specific settings for the Chat Completion endpoint."""
@@ -192,7 +184,6 @@ class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
 
         return values
 
-<<<<<<< HEAD
     @model_validator(mode="before")
     @classmethod
     def validate_function_calling_behaviors(cls, data) -> Any:
@@ -230,9 +221,6 @@ class OpenAIChatPromptExecutionSettings(OpenAIPromptExecutionSettings):
                 "The `function_call_behavior` parameter is deprecated. Please use the `function_choice_behavior` parameter instead."  # noqa: E501
             )
         return v
-
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 class OpenAIEmbeddingPromptExecutionSettings(PromptExecutionSettings):
     """Specific settings for the text embedding endpoint."""

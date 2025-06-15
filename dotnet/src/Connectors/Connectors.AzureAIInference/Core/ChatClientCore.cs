@@ -160,7 +160,6 @@ internal sealed class ChatClientCore
         }
     }
 
-<<<<<<< HEAD
     /// <summary>Gets options to use for an Azure AI InferenceClient</summary>
     /// <param name="httpClient">Custom <see cref="HttpClient"/> for HTTP requests.</param>
     /// <param name="serviceVersion">Optional API version.</param>
@@ -361,8 +360,6 @@ internal sealed class ChatClientCore
         }
     }
 
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     #region Private
 
     /// <summary>
@@ -402,7 +399,6 @@ internal sealed class ChatClientCore
                             Metadata = metadata,
                         };
 
-<<<<<<< HEAD
                     streamedContents?.Add(streamingChatMessageContent);
                     yield return streamingChatMessageContent;
                 }
@@ -634,7 +630,5 @@ internal sealed class ChatClientCore
             { nameof(completions.FinishReason), completions.FinishReason?.ToString() },
         };
     }
-=======
-    #endregion
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 }

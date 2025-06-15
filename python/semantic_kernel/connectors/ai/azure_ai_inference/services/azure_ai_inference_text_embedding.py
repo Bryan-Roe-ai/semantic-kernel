@@ -16,7 +16,6 @@ from numpy import array, ndarray
 from semantic_kernel.connectors.ai.azure_ai_inference.azure_ai_inference_prompt_execution_settings import (
     AzureAIInferenceEmbeddingPromptExecutionSettings,
 )
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.azure_ai_inference.azure_ai_inference_settings import (
     AzureAIInferenceSettings,
 )
@@ -28,25 +27,17 @@ from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import (
 )
 from semantic_kernel.connectors.ai.azure_ai_inference.azure_ai_inference_settings import AzureAIInferenceSettings
 from semantic_kernel.connectors.ai.azure_ai_inference.services.azure_ai_inference_base import AzureAIInferenceBase
-=======
-from semantic_kernel.connectors.ai.azure_ai_inference.services.azure_ai_inference_base import (
-    AzureAIInferenceBase,
-    AzureAIInferenceClientType,
-)
-<<<<<<< HEAD
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 from semantic_kernel.connectors.ai.embeddings.embedding_generator_base import EmbeddingGeneratorBase
 from semantic_kernel.utils.experimental_decorator import experimental_class
-=======
+
 from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
 from semantic_kernel.utils.feature_stage_decorator import experimental
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
         PromptExecutionSettings,
     )
-
 
 @experimental
 class AzureAIInferenceTextEmbedding(EmbeddingGeneratorBase, AzureAIInferenceBase):
@@ -81,7 +72,6 @@ class AzureAIInferenceTextEmbedding(EmbeddingGeneratorBase, AzureAIInferenceBase
         Raises:
             ServiceInitializationError: If an error occurs during initialization.
         """
-<<<<<<< HEAD
         if not client:
             try:
                 azure_ai_inference_settings = AzureAIInferenceSettings.create(
@@ -121,8 +111,6 @@ class AzureAIInferenceTextEmbedding(EmbeddingGeneratorBase, AzureAIInferenceBase
                     user_agent=SEMANTIC_KERNEL_USER_AGENT,
                 )
 
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         super().__init__(
             ai_model_id=ai_model_id,
             service_id=service_id or ai_model_id,

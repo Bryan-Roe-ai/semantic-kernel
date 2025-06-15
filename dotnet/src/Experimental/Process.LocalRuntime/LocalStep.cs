@@ -367,55 +367,11 @@ internal class LocalStep : IKernelProcessMessageChannel
         }
 
         // Initialize the input channels
-<<<<<<< HEAD
         this._initialInputs = this.FindInputChannels();
         if (this._stepInfo is KernelProcessAgentStep agentStep)
         string key = this._stepInfo.State.Name;
         string id = this._stepInfo.State.Id!;
 
-=======
-        if (this.StorageManager != null)
-        {
-            var storedEdgesData = await this.StorageManager.GetStepEdgeDataAsync(storageKeyValues.Item1, storageKeyValues.Item2).ConfigureAwait(false);
-            if (this._edgeGroupProcessors != null && storedEdgesData.Item1 && storedEdgesData.Item2 != null)
-            {
-                foreach (var edgeGroup in this._edgeGroupProcessors)
-                {
-                    if (storedEdgesData.Item2.TryGetValue(edgeGroup.Key, out Dictionary<string, KernelProcessEventData?>? edgeGroupData) && edgeGroupData != null)
-                    {
-                        edgeGroup.Value.RehydrateMessageData(edgeGroupData.ToDictionary(edgeGroupData => edgeGroupData.Key, edgeGroupData => edgeGroupData.Value?.ToObject()));
-                    }
-                }
-            }
-            // it is not an edge group, it is regular edge
-            else if (!storedEdgesData.Item1 && storedEdgesData.Item2 != null)
-            {
-                Dictionary<string, Dictionary<string, object?>?> inputValuesDictionary = [];
-                foreach (var function in this._initialInputs)
-                {
-                    if (storedEdgesData.Item2.TryGetValue(function.Key, out Dictionary<string, KernelProcessEventData?>? functionParameters) && functionParameters != null)
-                    {
-                        inputValuesDictionary[function.Key] = [];
-                        foreach (var parameter in function.Value ?? [])
-                        {
-                            if (functionParameters != null && functionParameters.TryGetValue(parameter.Key, out KernelProcessEventData? data) && data != null)
-                            {
-                                // If the parameter is a KernelProcessEventData, we need to convert it to the original type
-                                inputValuesDictionary[function.Key]![parameter.Key] = data.ToObject();
-                            }
-                            else
-                            {
-                                inputValuesDictionary[function.Key]![parameter.Key] = parameter.Value;
-                            }
-                        }
-                    }
-                }
-
-                return inputValuesDictionary;
-            }
-        }
-
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         this._inputs = this._initialInputs.ToDictionary(kvp => kvp.Key, kvp => kvp.Value?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
 
         // Activate the step with user-defined state if needed

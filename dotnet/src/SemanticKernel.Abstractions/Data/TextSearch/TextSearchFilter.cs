@@ -2,10 +2,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-<<<<<<< HEAD
-=======
 using Microsoft.Extensions.VectorData;
->>>>>>> main
 
 namespace Microsoft.SemanticKernel.Data;
 

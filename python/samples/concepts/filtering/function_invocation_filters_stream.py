@@ -25,7 +25,6 @@ from semantic_kernel.functions import FunctionResult
 
 logger = logging.getLogger(__name__)
 
-
 kernel = Kernel()
 kernel.add_service(OpenAIChatCompletion(service_id="chat-gpt"))
 kernel.add_plugin(
@@ -34,7 +33,6 @@ kernel.add_plugin(
     ),
     plugin_name="chat",
 )
-
 
 # A filter is a piece of custom code that runs at certain points in the process
 # this sample has a filter that is called during Function Invocation for streaming function.
@@ -51,7 +49,6 @@ async def streaming_exception_handling(
 ):
     await next(context)
 
-<<<<<<< HEAD
     async def override_stream(stream):
         try:
             async for partial in stream:
@@ -68,24 +65,6 @@ async def streaming_exception_handling(
     context.result = FunctionResult(
         function=context.result.function, value=override_stream(stream)
     )
-=======
-    if context.is_streaming:
-
-        async def override_stream(stream):
-            try:
-                async for partial in stream:
-                    yield partial
-            except Exception as e:
-                yield [
-                    StreamingChatMessageContent(
-                        role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}", choice_index=0
-                    )
-                ]
-
-        stream = context.result.value
-        context.result = FunctionResult(function=context.result.function, value=override_stream(stream))
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
-
 
 async def chat(chat_history: ChatHistory) -> bool:
     try:
@@ -116,16 +95,12 @@ async def chat(chat_history: ChatHistory) -> bool:
     print("")
     chat_history.add_user_message(user_input)
     if streamed_chunks:
-<<<<<<< HEAD
         streaming_chat_message = reduce(
             lambda first, second: first + second, streamed_chunks
         )
-=======
-        streaming_chat_message = sum(streamed_chunks[1:], streamed_chunks[0])
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
         chat_history.add_message(streaming_chat_message)
     return True
-
 
 async def main() -> None:
     history = ChatHistory()
@@ -133,7 +108,6 @@ async def main() -> None:
     chatting = True
     while chatting:
         chatting = await chat(history)
-
 
 if __name__ == "__main__":
     asyncio.run(main())

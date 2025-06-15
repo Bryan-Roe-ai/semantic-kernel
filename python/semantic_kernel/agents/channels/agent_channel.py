@@ -10,7 +10,6 @@ if TYPE_CHECKING:
     from semantic_kernel.agents.agent import Agent
     from semantic_kernel.contents.chat_message_content import ChatMessageContent
 
-
 @experimental
 class AgentChannel(ABC):
     """Defines the communication protocol for a particular Agent type.
@@ -63,46 +62,15 @@ class AgentChannel(ABC):
             kwargs: The keyword arguments.
 
         Returns:
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
             A async iterable of a bool, ChatMessageContent.
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
+
             A async iterable of a bool, ChatMessageContent.
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
+
             A async iterable of a bool, ChatMessageContent.
-=======
->>>>>>> Stashed changes
-=======
+
             A async iterable of a bool, ChatMessageContent.
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
             An async iterable of a bool, ChatMessageContent.
         """
         ...
@@ -123,40 +91,7 @@ class AgentChannel(ABC):
 
         Returns:
             An async iterable ChatMessageContent.
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
         """
         ...
 
@@ -175,5 +110,4 @@ class AgentChannel(ABC):
     async def reset(self) -> None:
         """Reset any persistent state associated with the channel."""
         ...
-
 

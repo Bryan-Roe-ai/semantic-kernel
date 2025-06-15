@@ -1,123 +1,31 @@
-<<<<<<< HEAD
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
-<<<<<<< Updated upstream
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
->>>>>>> head
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
-// Copyright (c) Microsoft. All rights reserved.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.TemplateEngine;
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
 using Microsoft.SemanticKernel.Diagnostics;
 using Microsoft.SemanticKernel.Orchestration;
 using Microsoft.SemanticKernel.TemplateEngine.Blocks;
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 using Xunit;
 
 namespace SemanticKernel.UnitTests.TemplateEngine;
@@ -230,57 +138,28 @@ public class VarBlockTests
 
         // Act + Assert
         Assert.Throws<KernelException>(() => target.Render(arguments));
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
+
         Assert.Throws<SKException>(() => target.Render(variables));
         Assert.Throws<SKException>(() => target.Render(variables));
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
         Assert.Throws<SKException>(() => target.Render(variables));
         Assert.Throws<SKException>(() => target.Render(variables));
->>>>>>> Stashed changes
-=======
+
         Assert.Throws<SKException>(() => target.Render(variables));
         Assert.Throws<SKException>(() => target.Render(variables));
->>>>>>> Stashed changes
-=======
+
         Assert.Throws<SKException>(() => target.Render(variables));
         Assert.Throws<SKException>(() => target.Render(variables));
->>>>>>> Stashed changes
-=======
+
         Assert.Throws<SKException>(() => target.Render(variables));
         Assert.Throws<SKException>(() => target.Render(variables));
->>>>>>> Stashed changes
-=======
+
         Assert.Throws<SKException>(() => target.Render(variables));
         Assert.Throws<SKException>(() => target.Render(variables));
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
+
         Assert.Throws<SKException>(() => target.Render(variables));
         Assert.Throws<SKException>(() => target.Render(variables));
->>>>>>> Stashed changes
-=======
-        Assert.Throws<SKException>(() => target.Render(variables));
-        Assert.Throws<SKException>(() => target.Render(variables));
->>>>>>> Stashed changes
->>>>>>> head
+
     }
 
     [Theory]

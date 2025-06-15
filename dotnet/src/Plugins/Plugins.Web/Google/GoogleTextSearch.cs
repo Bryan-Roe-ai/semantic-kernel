@@ -9,10 +9,8 @@ using Google.Apis.CustomSearchAPI.v1;
 using Google.Apis.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-<<<<<<< HEAD
-=======
 using Microsoft.Extensions.VectorData;
->>>>>>> main
+
 using Microsoft.SemanticKernel.Data;
 
 namespace Microsoft.SemanticKernel.Plugins.Web.Google;
@@ -339,11 +337,8 @@ public sealed class GoogleTextSearch : ITextSearch, IDisposable
                 throw new ArgumentException("Result must be a Google Result", nameof(result));
             }
 
-<<<<<<< HEAD
             return new TextSearchResult(googleResult.Title, googleResult.Snippet, googleResult.Link);
-=======
-            return new TextSearchResult(googleResult.Snippet) { Name = googleResult.Title, Link = googleResult.Link };
->>>>>>> main
+
         }
     }
     #endregion

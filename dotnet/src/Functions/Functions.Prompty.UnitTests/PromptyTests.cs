@@ -122,8 +122,6 @@ public sealed class PromptyTests
     }
 
     [Fact]
-<<<<<<< HEAD:dotnet/src/Functions/Functions.Prompty.UnitTests/PromptyTest.cs
-=======
     public void ItShouldCreateFunctionFromPromptYamlWithEmbeddedFileProvider()
     {
         // Arrange
@@ -187,7 +185,7 @@ public sealed class PromptyTests
     }
 
     [Fact]
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:dotnet/src/Functions/Functions.Prompty.UnitTests/PromptyTests.cs
+
     public void ItFailsToParseAnEmptyHeader()
     {
         Kernel kernel = new();
@@ -207,8 +205,6 @@ public sealed class PromptyTests
 
         Assert.Throws<ArgumentException>(() => kernel.CreateFunctionFromPrompty("""
             ---
-
-
 
             ---
             Hello

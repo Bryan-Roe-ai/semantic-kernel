@@ -22,8 +22,4 @@ A: N.A.F.T.A: North American Free Trade Agreement.
 Q: Organization to protect the freedom and security of its member countries in North America and Europe.
 A: N.A.T.O: North Atlantic Treaty Organization.  
 
-<<<<<<< HEAD
 Q:$input
-=======
-Q:{{$input}}
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e

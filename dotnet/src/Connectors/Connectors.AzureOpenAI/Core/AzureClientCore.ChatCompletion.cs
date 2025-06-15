@@ -1,12 +1,9 @@
 // Copyright (c) Microsoft. All rights reserved.
-<<<<<<< HEAD
-using System.Diagnostics;
 using Azure.AI.OpenAI;
-=======
-
-using System;
 using System.ClientModel.Primitives;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+using System.Diagnostics;
+using System;
+
 using System.Diagnostics;
 using Azure.AI.OpenAI.Chat;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -42,7 +39,6 @@ internal partial class AzureClientCore
         {
             return base.CreateChatCompletionOptions(executionSettings, chatHistory, toolCallingConfig, kernel);
         }
-<<<<<<< HEAD
 
         var options = new ChatCompletionOptions
         {
@@ -61,38 +57,6 @@ internal partial class AzureClientCore
             IncludeLogProbabilities = executionSettings.Logprobs,
             StoredOutputEnabled = executionSettings.Store,
         };
-=======
-        ChatCompletionOptions options = ModelReaderWriter.Read<ChatCompletionOptions>(BinaryData.FromString("{\"stream_options\":{\"include_usage\":true}}")!)!;
-        options.MaxOutputTokenCount = executionSettings.MaxTokens;
-        options.Temperature = (float?)executionSettings.Temperature;
-        options.TopP = (float?)executionSettings.TopP;
-        options.FrequencyPenalty = (float?)executionSettings.FrequencyPenalty;
-        options.PresencePenalty = (float?)executionSettings.PresencePenalty;
-#pragma warning disable OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-
-        options.Seed = executionSettings.Seed;
-#pragma warning restore OPENAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-        options.EndUserId = executionSettings.User;
-        options.TopLogProbabilityCount = executionSettings.TopLogprobs;
-        options.IncludeLogProbabilities = executionSettings.Logprobs;
-        options.StoredOutputEnabled = executionSettings.Store;
-        options.ReasoningEffortLevel = GetEffortLevel(executionSettings);
-        options.ResponseModalities = ChatResponseModalities.Default;
-
-        if (azureSettings.SetNewMaxCompletionTokensEnabled)
-        {
-#pragma warning disable AOAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-            options.SetNewMaxCompletionTokensPropertyEnabled(true);
-#pragma warning restore AOAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-        }
-
-        if (azureSettings.UserSecurityContext is not null)
-        {
-#pragma warning disable AOAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-            options.SetUserSecurityContext(azureSettings.UserSecurityContext);
-#pragma warning restore AOAI001 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-        }
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         var responseFormat = GetResponseFormat(executionSettings);
         if (responseFormat is not null)

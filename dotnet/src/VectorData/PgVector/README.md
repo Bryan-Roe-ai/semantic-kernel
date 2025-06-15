@@ -41,7 +41,6 @@ See [this sample](../../../samples/Concepts/Memory/VectorStore_VectorSearch_Mult
 
 For more information on using Postgres as a vector store, see the [PostgresVectorStore](https://learn.microsoft.com/semantic-kernel/concepts/vector-store-connectors/out-of-the-box-connectors/postgres-connector) documentation.
 
-<<<<<<< HEAD
 > See [Example 14](../../../samples/Concepts/Memory/SemanticTextMemory_Building.cs) and [Example 15](../../../samples/Concepts/Memory/TextMemoryPlugin_MultipleMemoryStore.cs) for more memory usage examples with the kernel.
 
 ```csharp {"id":"01J6KNEBBQ8G1WSGWE0SVP3MH4"}
@@ -159,6 +158,4 @@ END $$;
 -- Drop old table (After ensuring successful execution, you can remove the following comments to remove sk_memory_table.)
 -- DROP TABLE IF EXISTS sk_memory_table;
 ```
-=======
-Use the [getting started instructions](https://learn.microsoft.com/semantic-kernel/concepts/vector-store-connectors/?pivots=programming-language-csharp#getting-started-with-vector-store-connectors) on the Microsoft Leearn site to learn more about using the vector store.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+

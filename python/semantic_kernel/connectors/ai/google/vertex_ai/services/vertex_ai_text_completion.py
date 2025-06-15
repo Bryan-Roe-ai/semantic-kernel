@@ -1,6 +1,5 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-
 import sys
 from collections.abc import AsyncGenerator, AsyncIterable
 from typing import Any
@@ -33,7 +32,6 @@ if sys.version_info >= (3, 12):
     from typing import override  # pragma: no cover
 else:
     from typing_extensions import override  # pragma: no cover
-
 
 class VertexAITextCompletion(VertexAIBase, TextCompletionClientBase):
     """Vertex AI Text Completion Client."""
@@ -89,145 +87,17 @@ class VertexAITextCompletion(VertexAIBase, TextCompletionClientBase):
 
     # Override from AIServiceClientBase
     @override
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-<<<<<<< main
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< main
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
     def get_prompt_execution_settings_class(self) -> type["PromptExecutionSettings"]:
         return VertexAITextPromptExecutionSettings
 
     @override
     @trace_text_completion(VertexAIBase.MODEL_PROVIDER_NAME)
     async def _inner_get_text_contents(
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
     @trace_text_completion(VertexAIBase.MODEL_PROVIDER_NAME)
     async def get_text_contents(
->>>>>>> ms/features/bugbash-prep
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
         self,
         prompt: str,
         settings: "PromptExecutionSettings",
@@ -236,7 +106,6 @@ class VertexAITextCompletion(VertexAIBase, TextCompletionClientBase):
             settings = self.get_prompt_execution_settings_from_settings(settings)
         assert isinstance(settings, VertexAITextPromptExecutionSettings)  # nosec
 
-<<<<<<< main
         return await self._send_request(prompt, settings)
 
     async def _send_request(
@@ -247,9 +116,7 @@ class VertexAITextCompletion(VertexAIBase, TextCompletionClientBase):
             project=self.service_settings.project_id,
             location=self.service_settings.region,
         )
-=======
-        vertexai.init(project=self.service_settings.project_id, location=self.service_settings.region)
->>>>>>> upstream/main
+
         model = GenerativeModel(self.service_settings.gemini_model_id)
 
         response: GenerationResponse = await model.generate_content_async(
@@ -262,37 +129,10 @@ class VertexAITextCompletion(VertexAIBase, TextCompletionClientBase):
             for candidate in response.candidates
         ]
 
-<<<<<<< main
     def _create_text_content(
         self, response: GenerationResponse, candidate: Candidate
     ) -> TextContent:
-=======
-    @override
-    async def _inner_get_streaming_text_contents(
-        self,
-        prompt: str,
-        settings: "PromptExecutionSettings",
-    ) -> AsyncGenerator[list[StreamingTextContent], Any]:
-        if not isinstance(settings, VertexAITextPromptExecutionSettings):
-            settings = self.get_prompt_execution_settings_from_settings(settings)
-        assert isinstance(settings, VertexAITextPromptExecutionSettings)  # nosec
 
-        vertexai.init(project=self.service_settings.project_id, location=self.service_settings.region)
-        model = GenerativeModel(self.service_settings.gemini_model_id)
-
-        response: AsyncIterable[GenerationResponse] = await model.generate_content_async(
-            contents=prompt,
-            generation_config=settings.prepare_settings_dict(),
-            stream=True,
-        )
-
-        async for chunk in response:
-            yield [self._create_streaming_text_content(chunk, candidate) for candidate in chunk.candidates]
-
-    # endregion
-
-    def _create_text_content(self, response: GenerationResponse, candidate: Candidate) -> TextContent:
->>>>>>> upstream/main
         """Create a text content object.
 
         Args:
@@ -312,7 +152,6 @@ class VertexAITextCompletion(VertexAIBase, TextCompletionClientBase):
             metadata=response_metadata,
         )
 
-<<<<<<< main
     # endregion
 
     # region Streaming
@@ -357,9 +196,7 @@ class VertexAITextCompletion(VertexAIBase, TextCompletionClientBase):
     def _create_streaming_text_content(
         self, chunk: GenerationResponse, candidate: Candidate
     ) -> StreamingTextContent:
-=======
-    def _create_streaming_text_content(self, chunk: GenerationResponse, candidate: Candidate) -> StreamingTextContent:
->>>>>>> upstream/main
+
         """Create a streaming text content object.
 
         Args:
@@ -380,15 +217,12 @@ class VertexAITextCompletion(VertexAIBase, TextCompletionClientBase):
             metadata=response_metadata,
         )
 
-<<<<<<< main
     # endregion
 
     def _get_metadata_from_response(
         self, response: GenerationResponse
     ) -> dict[str, Any]:
-=======
-    def _get_metadata_from_response(self, response: GenerationResponse) -> dict[str, Any]:
->>>>>>> upstream/main
+
         """Get metadata from the response.
 
         Args:

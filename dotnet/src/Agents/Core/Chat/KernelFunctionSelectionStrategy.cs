@@ -1,8 +1,5 @@
 // Copyright (c) Microsoft. All rights reserved.
-<<<<<<< HEAD
-=======
 
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -63,7 +60,6 @@ public class KernelFunctionSelectionStrategy(KernelFunction function, Kernel ker
     public KernelFunction Function { get; } = function;
 
     /// <summary>
-<<<<<<< HEAD
     /// When set, will use <see cref="SelectionStrategy.InitialAgent"/> in the event of a failure to select an agent.
     /// </summary>
     public bool UseInitialAgentAsFallback { get; init; }
@@ -73,9 +69,7 @@ public class KernelFunctionSelectionStrategy(KernelFunction function, Kernel ker
     /// </summary>
     public Kernel Kernel => kernel;
     /// Only include agent name in history when invoking <see cref="KernelFunctionTerminationStrategy.Function"/>.
-=======
-    /// Gets a value that indicates whether only the agent name is included in the history when invoking <see cref="KernelFunctionTerminationStrategy.Function"/>.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     /// </summary>
     public bool EvaluateNameOnly { get; init; }
 

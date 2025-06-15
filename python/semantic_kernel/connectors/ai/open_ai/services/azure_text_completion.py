@@ -24,73 +24,12 @@ from semantic_kernel.exceptions.service_exceptions import ServiceInitializationE
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-
 class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
     """Azure Text Completion class."""
 
     def __init__(
         self,
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-<<<<<<< main
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
         service_id: str | None = None,
         api_key: str | None = None,
         deployment_name: str | None = None,
@@ -103,42 +42,7 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
         default_headers: Mapping[str, str] | None = None,
         async_client: AsyncAzureOpenAI | None = None,
         env_file_path: str | None = None,
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
-=======
-<<<<<<< main
->>>>>>> Stashed changes
+
     ) -> None:
         """Initialize an AzureTextCompletion service.
 
@@ -162,41 +66,7 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
             async_client (Optional[AsyncAzureOpenAI]): An existing client to use. (Optional)
             env_file_path (str | None): Use the environment settings file as a fallback to
                 environment variables. (Optional)
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> origin/main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
         base_url: str,
         api_version: str = DEFAULT_AZURE_API_VERSION,
         service_id: Optional[str] = None,
@@ -204,7 +74,7 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
         ad_token: Optional[str] = None,
         ad_token_provider: Optional[AsyncAzureADTokenProvider] = None,
         default_headers: Optional[Mapping[str, str]] = None,
->>>>>>> ms/small_fixes
+
     ) -> None:
         """Initialize an AzureTextCompletion service.
 
@@ -224,60 +94,10 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
             ad_token_provider: The Azure Active Directory token provider. (Optional)
             default_headers: The default headers mapping of string keys to
                 string values for HTTP requests. (Optional)
-<<<<<<< main
             async_client (Optional[AsyncAzureOpenAI]): An existing client to use. (Optional)
             env_file_path (str | None): Use the environment settings file as a fallback to
                 environment variables. (Optional)
-=======
-        """
 
-    @overload
-    def __init__(
-        self,
-        deployment_name: str,
-        endpoint: str,
-        api_version: str = DEFAULT_AZURE_API_VERSION,
-        service_id: Optional[str] = None,
-        api_key: Optional[str] = None,
-        ad_token: Optional[str] = None,
-        ad_token_provider: Optional[AsyncAzureADTokenProvider] = None,
-        default_headers: Optional[Mapping[str, str]] = None,
-        log: Optional[Any] = None,
-    ) -> None:
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
         """
         try:
             azure_openai_settings = AzureOpenAISettings(
@@ -296,46 +116,9 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
                 "The Azure Text deployment name is required."
             )
 
-<<<<<<< HEAD
         # If the api_key is none, and the ad_token is none, and the ad_token_provider is none,
         # then we will attempt to get the ad_token using the default endpoint specified in the Azure OpenAI settings.
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
->>>>>>> head
-=======
->>>>>>> Stashed changes
+
         if (
             azure_openai_settings.api_key is None
             and ad_token_provider is None
@@ -352,9 +135,6 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
                 "Please provide either api_key, ad_token, ad_token_provider, or a custom client."
             )
 
-<<<<<<< main
-=======
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
         super().__init__(
             deployment_name=azure_openai_settings.text_deployment_name,
             endpoint=azure_openai_settings.endpoint,
@@ -366,7 +146,7 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
                 if azure_openai_settings.api_key
                 else None
             ),
-=======
+
         Arguments:
             deployment_name: The name of the Azure deployment. This value
                 will correspond to the custom name you chose for your deployment
@@ -385,23 +165,7 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
                 The default value is False.
             default_headers: The default headers mapping of string keys to
                 string values for HTTP requests. (Optional)
-<<<<<<< div
-<<<<<<< div
->>>>>>> origin/main
-=======
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> origin/main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
+
         """
         try:
             azure_openai_settings = AzureOpenAISettings.create(
@@ -419,31 +183,9 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
                 "The Azure Text deployment name is required."
             )
 
-<<<<<<< main
         # If the api_key is none, and the ad_token is none, and the ad_token_provider is none,
         # then we will attempt to get the ad_token using the default endpoint specified in the Azure OpenAI settings.
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
         if api_key is None and ad_token_provider is None and azure_openai_settings.token_endpoint and ad_token is None:
             ad_token = azure_openai_settings.get_azure_openai_auth_token(
                 token_endpoint=azure_openai_settings.token_endpoint
@@ -463,33 +205,7 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
                 if azure_openai_settings.api_key
                 else None
             ),
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
     @overload
     def __init__(
         self,
@@ -552,41 +268,7 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
             api_version=api_version,
             service_id=service_id,
             api_key=api_key,
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
+
             ad_token=ad_token,
             ad_token_provider=ad_token_provider,
             token_endpoint=azure_openai_settings.token_endpoint,
@@ -610,91 +292,17 @@ class AzureTextCompletion(AzureOpenAIConfigBase, OpenAITextCompletionBase):
             deployment_name=settings.get("deployment_name"),
             endpoint=settings.get("endpoint"),
             base_url=settings.get("base_url"),
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
             api_version=settings.get("api_version"),
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
+
             api_version=settings.get("api_version"),
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
+
             api_version=settings.get("api_version"),
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
+
             api_version=settings.get("api_version"),
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< main
+
             api_version=settings.get("api_version"),
-=======
-            api_version=settings.get("api_version", DEFAULT_AZURE_API_VERSION),
-            service_id=settings.get("service_id"),
-            api_key=settings["api_key"],
->>>>>>> ms/small_fixes
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
+
             ad_token=settings.get("ad_token"),
             ad_token_provider=settings.get("ad_token_provider"),
             default_headers=settings.get("default_headers"),

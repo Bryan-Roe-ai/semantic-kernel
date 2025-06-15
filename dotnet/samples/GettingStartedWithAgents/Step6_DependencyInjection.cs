@@ -1,38 +1,21 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< main
-=======
-<<<<<<< Updated upstream
->>>>>>> origin/main
+
+
 // Copyright (c) Microsoft. All rights reserved.
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
->>>>>>> origin/main
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;

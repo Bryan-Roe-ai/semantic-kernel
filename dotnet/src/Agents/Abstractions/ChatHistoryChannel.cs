@@ -35,10 +35,8 @@ public class ChatHistoryChannel : AgentChannel
 
         ChatMessageContent? yieldMessage = null;
         await foreach (ChatMessageContent responseMessage in historyHandler.InvokeAsync(this._history, cancellationToken).ConfigureAwait(false))
->>>>>>>+Updated upstrea
 ====
            await foreach (var message in historyHandler.InvokeAsync(this._history, cancellationToken).ConfigureAwait(false))
->>>>>>>+Stashed changes
      {
             // Capture all messages that have been included in the mutated the history.
             for (int messageIndex = messageCount; messageIndex < this._history.Count; messageIndex++)

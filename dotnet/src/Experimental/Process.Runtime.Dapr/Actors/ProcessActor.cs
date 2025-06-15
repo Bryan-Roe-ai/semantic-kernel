@@ -507,23 +507,12 @@ internal sealed class ProcessActor : StepActor, IProcess, IDisposable
             {
                 foreach (KernelProcessEdge edge in edges)
                 {
-<<<<<<< HEAD
                     DaprMessage message = DaprMessageFactory.CreateFromEdge(edge, externalEvent.Data);
                     var messageQueue = this.ProxyFactory.CreateActorProxy<IMessageBuffer>(new ActorId(edge.OutputTarget.StepId), nameof(MessageBufferActor));
                     await messageQueue.EnqueueAsync(message).ConfigureAwait(false);
                     ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, externalEvent.Data);
                     var scopedMessageBufferId = this.ScopedActorId(new ActorId(edge.OutputTarget.StepId));
-=======
-                    if (edge.OutputTarget is not KernelProcessFunctionTarget functionTarget)
-                    {
-                        throw new KernelException("The target for the edge is not a function target.").Log(this._logger);
-                    }
 
-                    ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, externalEvent.Id, externalEvent.Data);
-                    var scopedMessageBufferId = this.ScopedActorId(new ActorId(functionTarget.StepId));
-                    var messageQueue = this.ProxyFactory.CreateActorProxy<IMessageBuffer>(scopedMessageBufferId, nameof(MessageBufferActor));
-                    await messageQueue.EnqueueAsync(message.ToJson()).ConfigureAwait(false);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
                 }
             }
         }

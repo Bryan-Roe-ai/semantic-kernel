@@ -166,7 +166,6 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
             this.EventProxyStepId = new ActorId(eventProxyStepId);
         }
 
-
         if (!string.IsNullOrWhiteSpace(eventProxyStepId))
         {
             this.EventProxyStepId = new ActorId(eventProxyStepId);
@@ -535,7 +534,6 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
             (ValueTask?)methodInfo.Invoke(stepInstance, [stateObject]) ??
             throw new KernelException("The ActivateAsync method failed to complete.").Log(this._logger);
 
-
         ValueTask activateTask =
             (ValueTask?)methodInfo.Invoke(stepInstance, [stateObject]) ??
             throw new KernelException("The ActivateAsync method failed to complete.").Log(this._logger);
@@ -659,22 +657,12 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
         foreach (KernelProcessEdge edge in this.GetEdgeForEvent(daprEvent.QualifiedId))
         foreach (KernelProcessEdge edge in this.GetEdgeForEvent(daprEvent.QualifiedId))
         {
-<<<<<<< HEAD
             DaprMessage message = DaprMessageFactory.CreateFromEdge(edge, daprEvent.Data);
             var targetStep = this.ProxyFactory.CreateActorProxy<IMessageBuffer>(new ActorId(edge.OutputTarget.StepId), nameof(MessageBufferActor));
             await targetStep.EnqueueAsync(message).ConfigureAwait(false);
             ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, daprEvent.Data);
             ActorId scopedStepId = this.ScopedActorId(new ActorId(edge.OutputTarget.StepId));
-=======
-            if (edge.OutputTarget is not KernelProcessFunctionTarget functionTarget)
-            {
-                throw new KernelException("The target for the edge is not a function target.").Log(this._logger);
-            }
-            ProcessMessage message = ProcessMessageFactory.CreateFromEdge(edge, daprEvent.SourceId, daprEvent.Data);
-            ActorId scopedStepId = this.ScopedActorId(new ActorId(functionTarget.StepId));
-            IMessageBuffer targetStep = this.ProxyFactory.CreateActorProxy<IMessageBuffer>(scopedStepId, nameof(MessageBufferActor));
-            await targetStep.EnqueueAsync(message.ToJson()).ConfigureAwait(false);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
             foundEdge = true;
         }
 
@@ -689,7 +677,6 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
     /// <summary>
     /// Generates a scoped event for the step.
     /// </summary>
-<<<<<<< HEAD
     /// <param name="daprEvent">The event.</param>
     /// <returns>A <see cref="DaprEvent"/> with the correctly scoped namespace.</returns>
     internal DaprEvent ScopedEvent(DaprEvent daprEvent)
@@ -705,9 +692,7 @@ internal class StepActor : Actor, IStep, IKernelProcessMessageChannel
 
     /// <summary>
     /// Generates a scoped event for the step.
-=======
-    /// Scopes the Id of a step within the process to the process.
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     /// </summary>
     /// <param name="processEvent">The event.</param>
     /// <returns>A <see cref="DaprEvent"/> with the correctly scoped namespace.</returns>

@@ -22,9 +22,7 @@ from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_pro
     OpenAIPromptExecutionSettings,
     OpenAITextPromptExecutionSettings,
 )
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< main
+
 from semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion import (
     AzureChatCompletion,
 )
@@ -43,16 +41,7 @@ from semantic_kernel.connectors.ai.open_ai.services.open_ai_text_completion impo
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_text_embedding import (
     OpenAITextEmbedding,
 )
-=======
-=======
-=======
-from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_realtime_execution_settings import (
-    AzureRealtimeExecutionSettings,
-    InputAudioTranscription,
-    OpenAIRealtimeExecutionSettings,
-    TurnDetection,
-)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_text_to_audio_execution_settings import (
     OpenAITextToAudioExecutionSettings,
 )
@@ -61,7 +50,7 @@ from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_tex
 )
 from semantic_kernel.connectors.ai.open_ai.services._open_ai_realtime import ListenEvents, SendEvents
 from semantic_kernel.connectors.ai.open_ai.services.azure_audio_to_text import AzureAudioToText
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 from semantic_kernel.connectors.ai.open_ai.services.azure_chat_completion import AzureChatCompletion
 from semantic_kernel.connectors.ai.open_ai.services.azure_realtime import AzureRealtimeWebRTC, AzureRealtimeWebsocket
 from semantic_kernel.connectors.ai.open_ai.services.azure_text_completion import AzureTextCompletion
@@ -78,12 +67,6 @@ from semantic_kernel.connectors.ai.open_ai.services.open_ai_text_completion impo
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_text_embedding import OpenAITextEmbedding
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_text_to_audio import OpenAITextToAudio
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_text_to_image import OpenAITextToImage
-<<<<<<< HEAD
->>>>>>> upstream/main
-=======
-from semantic_kernel.connectors.ai.open_ai.settings.azure_open_ai_settings import AzureOpenAISettings
-from semantic_kernel.connectors.ai.open_ai.settings.open_ai_settings import OpenAISettings
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
 __all__ = [
     "ApiKeyAuthentication",

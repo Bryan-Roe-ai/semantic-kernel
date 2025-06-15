@@ -39,9 +39,7 @@ _T = TypeVar("_T", bound="Agent")
 TMessage = TypeVar("TMessage", bound=ChatMessageContent)
 TThreadType = TypeVar("TThreadType", bound="AgentThread")
 
-
 # region Declarative Spec Definitions
-
 
 class InputSpec(KernelBaseModel):
     """Class representing an input specification."""
@@ -50,13 +48,11 @@ class InputSpec(KernelBaseModel):
     required: bool = False
     default: Any = None
 
-
 class OutputSpec(KernelBaseModel):
     """Class representing an output specification."""
 
     description: str | None = None
     type: str | None = None
-
 
 class ModelConnection(KernelBaseModel):
     """Class representing a model connection."""
@@ -64,7 +60,6 @@ class ModelConnection(KernelBaseModel):
     type: str | None = None
     service_id: str | None = None
     extras: dict[str, Any] = Field(default_factory=dict)
-
 
 class ModelSpec(KernelBaseModel):
     """Class representing a model specification."""
@@ -74,7 +69,6 @@ class ModelSpec(KernelBaseModel):
     options: dict[str, Any] = Field(default_factory=dict)
     connection: ModelConnection | None = None
 
-
 class ToolSpec(KernelBaseModel):
     """Class representing a tool specification."""
 
@@ -83,7 +77,6 @@ class ToolSpec(KernelBaseModel):
     description: str | None = None
     options: dict[str, Any] = Field(default_factory=dict)
     extras: dict[str, Any] = Field(default_factory=dict)
-
 
 class AgentSpec(KernelBaseModel):
     """Class representing an agent specification."""
@@ -100,12 +93,9 @@ class AgentSpec(KernelBaseModel):
     inputs: dict[str, InputSpec] = Field(default_factory=dict)
     outputs: dict[str, OutputSpec] = Field(default_factory=dict)
 
-
 # endregion
 
-
 # region AgentThread
-
 
 class AgentThread(ABC):
     """Base class for agent threads."""
@@ -181,11 +171,9 @@ class AgentThread(ABC):
         """Invoked when a new message has been contributed to the chat by any participant."""
         raise NotImplementedError
 
-
 # endregion
 
 # region AgentResponseItem
-
 
 class AgentResponseItem(KernelBaseModel, Generic[TMessage]):
     """Class representing a response item from an agent.
@@ -235,12 +223,9 @@ class AgentResponseItem(KernelBaseModel, Generic[TMessage]):
         """Get the hash of the response item."""
         return hash((self.message, self.thread))
 
-
 # endregion
 
-
 # region Agent Base Class
-
 
 class Agent(KernelBaseModel, ABC):
     """Base abstraction for all Semantic Kernel agents.
@@ -422,15 +407,10 @@ class Agent(KernelBaseModel, ABC):
             A list of channel keys.
         """
         if not self.channel_type:
-<<<<<<< HEAD
             raise NotImplementedError(
                 "Unable to get channel keys. Channel type not configured."
             )
         return [self.channel_type.__name__]
-=======
-            raise NotImplementedError("Unable to get channel keys. Channel type not configured.")
-        yield self.channel_type.__name__
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     async def create_channel(self) -> AgentChannel:
         """Create a channel.
@@ -588,9 +568,7 @@ class Agent(KernelBaseModel, ABC):
             lifespan=lifespan,
         )
 
-
 # region Declarative Spec Handling
-
 
 @runtime_checkable
 class DeclarativeSpecProtocol(Protocol):
@@ -633,15 +611,12 @@ class DeclarativeSpecProtocol(Protocol):
         """Create an agent from a dictionary."""
         ...
 
-
 # region Agent Type Registry
-
 
 _TAgent = TypeVar("_TAgent", bound=Agent)
 
 # Global agent type registry
 AGENT_TYPE_REGISTRY: dict[str, type[Agent]] = {}
-
 
 def register_agent_type(agent_type: str):
     """Decorator to register an agent type with the registry.
@@ -658,7 +633,6 @@ def register_agent_type(agent_type: str):
 
     return decorator
 
-
 _BUILTIN_AGENTS_LOADED = False
 _BUILTIN_AGENTS_LOCK = threading.Lock()
 
@@ -672,7 +646,6 @@ _BUILTIN_AGENT_MODULES = [
     "semantic_kernel.agents.open_ai.openai_responses_agent",
     "semantic_kernel.agents.open_ai.azure_responses_agent",
 ]
-
 
 def _preload_builtin_agents() -> None:
     """Make sure all built-in agent modules are imported at least once, so their decorators register agent types."""
@@ -698,7 +671,6 @@ def _preload_builtin_agents() -> None:
             raise RuntimeError(f"Failed to preload the following built-in agent modules:\n{error_msgs}")
 
         _BUILTIN_AGENTS_LOADED = True
-
 
 class AgentRegistry:
     """Responsible for creating agents from YAML, dicts, or files."""
@@ -878,14 +850,11 @@ class AgentRegistry:
             **kwargs,
         )
 
-
 # endregion
-
 
 # region DeclarativeSpecMixin
 
 _D = TypeVar("_D", bound="DeclarativeSpecMixin")
-
 
 class DeclarativeSpecMixin(ABC):
     """Mixin class for declarative agent methods."""
@@ -1055,6 +1024,5 @@ class DeclarativeSpecMixin(ABC):
 
             if function_name not in plugin.functions:
                 raise AgentInitializationException(f"Function '{function_name}' not found in plugin '{plugin_name}'.")
-
 
 # endregion

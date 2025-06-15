@@ -20,26 +20,18 @@ namespace Memory;
 /// For other databases, see the following classes:
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_AzureAISearch"/></para>
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_Redis"/></para>
-<<<<<<< HEAD
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_Volatile"/></para>
-=======
-/// <para><see cref="VectorStore_VectorSearch_MultiStore_InMemory"/></para>
-<<<<<<< HEAD
->>>>>>> main
-=======
+
 /// <para><see cref="VectorStore_VectorSearch_MultiStore_Postgres"/></para>
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 ///
 /// To run this sample, you need a local instance of Docker running, since the associated fixture will try and start a Qdrant container in the local docker instance.
 /// </summary>
 public class VectorStore_VectorSearch_MultiStore_Qdrant(ITestOutputHelper output, VectorStoreQdrantContainerFixture qdrantFixture) : BaseTest(output), IClassFixture<VectorStoreQdrantContainerFixture>
 {
     [Fact]
-<<<<<<< HEAD
     public async Task ExampleWitDIAsync()
-=======
-    public async Task ExampleWithDIAsync()
->>>>>>> main
+
     {
         // Use the kernel for DI purposes.
         var kernelBuilder = Kernel

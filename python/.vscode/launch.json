@@ -6,33 +6,8 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
-<<<<<<< HEAD
             "console": "integratedTerminal"
-=======
-            "console": "integratedTerminal",
-            "justMyCode": false,
-            "purpose": ["debug-in-terminal"]
-        },
-        {
-            "name": "Python FastAPI app with Dapr",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/samples/demos/process_with_dapr/fastapi_app.py",
-            "console": "integratedTerminal",
-            "preLaunchTask": "daprd-debug-python",
-            "postDebugTask": "daprd-down-python",
-            "justMyCode": false
-        },
-        {
-            "name": "Python Flask API app with Dapr",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/samples/demos/process_with_dapr/flask_app.py",
-            "console": "integratedTerminal",
-            "preLaunchTask": "daprd-debug-python",
-            "postDebugTask": "daprd-down-python",
-            "justMyCode": false
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
         }
     ]
 }

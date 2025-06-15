@@ -13,7 +13,6 @@ from msgraph.generated.models.location import Location
 
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
 
-
 class BookingsPlugin:
     """A plugin for booking tables at a restaurant."""
 
@@ -123,7 +122,6 @@ class BookingsPlugin:
     @kernel_function(name="list_revervations", description="List all reservations")
     async def list_reservations(self) -> Annotated[str, "The list of reservations"]:
         """List the reservations for the booking business."""
-<<<<<<< HEAD
         appointments = (
             await self.graph_client.solutions.booking_businesses.by_booking_business_id(
                 self.booking_business_id
@@ -135,15 +133,6 @@ class BookingsPlugin:
                 for appointment in appointments.value
             ]
         )
-=======
-        appointments = await self.graph_client.solutions.booking_businesses.by_booking_business_id(
-            self.booking_business_id
-        ).appointments.get()
-        return "\n".join([
-            f"{appointment.service_location.display_name} on {appointment.start_date_time.date_time} with id: {appointment.id}"  # noqa: E501
-            for appointment in appointments.value
-        ])
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
     @kernel_function(name="cancel_reservation", description="Cancel a reservation")
     async def cancel_reservation(

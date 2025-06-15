@@ -1175,7 +1175,6 @@ class Kernel(KernelBase, KernelExtensions):
         return args
 
     # endregion
->>>>>>> ms/small_fixes
         if function_config.has_chat_prompt:
             backend = self._config.get_ai_backend(
                 ChatCompletionClientBase,

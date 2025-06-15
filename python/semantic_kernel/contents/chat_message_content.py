@@ -68,9 +68,7 @@ CMC_ITEM_TYPES = Annotated[
     Field(discriminator=DISCRIMINATOR_FIELD),
 ]
 
-
 logger = logging.getLogger(__name__)
-
 
 class ChatMessageContent(KernelContent):
     """This is the class for chat message response content.
@@ -82,7 +80,6 @@ from xml.etree.ElementTree import Element
 
 from semantic_kernel.contents.chat_role import ChatRole
 from semantic_kernel.contents.kernel_content import KernelContent
-
 
 class ChatMessageContent(KernelContent):
     """This is the base class for chat message response content.
@@ -108,15 +105,12 @@ class ChatMessageContent(KernelContent):
     tag: ClassVar[str] = CHAT_MESSAGE_CONTENT_TAG
     role: AuthorRole
     name: str | None = None
-<<<<<<< HEAD
     items: list[ITEM_TYPES] = Field(
         default_factory=list, discriminator=DISCRIMINATOR_FIELD
     )
     items: list[Annotated[ITEM_TYPES, Field(..., discriminator=DISCRIMINATOR_FIELD)]] = Field(default_factory=list)
     items: list[Annotated[ITEM_TYPES, Field(discriminator=DISCRIMINATOR_FIELD)]] = Field(default_factory=list)
-=======
-    items: list[CMC_ITEM_TYPES] = Field(default_factory=list)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     encoding: str | None = None
     finish_reason: FinishReason | None = None
     status: Status | None = None
@@ -387,7 +381,6 @@ class ChatMessageContent(KernelContent):
 
     def __hash__(self) -> int:
         """Return the hash of the chat message content."""
-<<<<<<< HEAD
         return hash(
             (
                 self.tag,
@@ -416,7 +409,4 @@ class ChatMessageContent(KernelContent):
         """
         args = {"role": element.get("role", ChatRole.USER.value), "content": element.text}
         return cls(**args)
-=======
-        hashable_items = [make_hashable(item) for item in self.items] if self.items else []
-        return hash((self.tag, self.role, self.content, self.encoding, self.finish_reason, *hashable_items))
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+

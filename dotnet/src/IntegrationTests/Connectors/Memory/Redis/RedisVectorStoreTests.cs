@@ -17,7 +17,6 @@ public class RedisVectorStoreTests(RedisVectorStoreFixture fixture)
     : BaseVectorStoreTests<string, RedisHotel>(new RedisVectorStore(fixture.Database))
 #pragma warning restore CA2000 // Dispose objects before losing scope
 {
-<<<<<<< HEAD
     // If null, all tests will be enabled
     private const string SkipReason = "This test is for manual verification";
 
@@ -28,6 +27,5 @@ public class RedisVectorStoreTests(RedisVectorStoreFixture fixture)
     {
         await base.ItCanGetAListOfExistingCollectionNamesAsync();
     }
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 }

@@ -1,14 +1,8 @@
 // Copyright (c) Microsoft. All rights reserved.
 package com.microsoft.semantickernel.extensions;
 
-<<<<<<< AI
 import com.fasterxml.jackson.databind.JsonMappingException;
-=======
-<<<<<<< HEAD
 import com.fasterxml.jackson.databind.JsonMappingException;
-=======
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.semantickernel.KernelException;
 import com.microsoft.semantickernel.KernelException.ErrorCodes;
@@ -17,52 +11,28 @@ import com.microsoft.semantickernel.semanticfunctions.PromptTemplate;
 import com.microsoft.semantickernel.semanticfunctions.PromptTemplateConfig;
 import com.microsoft.semantickernel.semanticfunctions.SemanticFunctionConfig;
 import com.microsoft.semantickernel.templateengine.PromptTemplateEngine;
-<<<<<<< AI
-=======
-<<<<<<< HEAD
->>>>>>> main
 import com.microsoft.semantickernel.util.EmbeddedResourceLoader;
 import com.microsoft.semantickernel.util.EmbeddedResourceLoader.ResourceLocation;
 import java.io.File;
 import java.io.IOException;
-<<<<<<< AI
-=======
-=======
->>>>>>> main
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-<<<<<<< AI
-=======
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-<<<<<<< AI
 import java.util.stream.Collectors;
-=======
-<<<<<<< HEAD
-=======
 import java.util.stream.Collectors;
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
 import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class KernelExtensions {
-<<<<<<< AI
 
-=======
-<<<<<<< HEAD
 
-=======
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
     private static final Logger LOGGER = LoggerFactory.getLogger(KernelExtensions.class);
     private static final String CONFIG_FILE = "config.json";
     private static final String PROMPT_FILE = "skprompt.txt";
@@ -136,16 +106,9 @@ public class KernelExtensions {
             String pluginName,
             String functionName,
             @Nullable Class clazz,
-<<<<<<< AI
             PromptTemplateEngine promptTemplateEngine) throws KernelException {
             PromptTemplateEngine promptTemplateEngine) {
-=======
-<<<<<<< HEAD
             PromptTemplateEngine promptTemplateEngine) throws KernelException {
-=======
-            PromptTemplateEngine promptTemplateEngine) {
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
 
         PromptTemplateConfig config =
                 getPromptTemplateConfig(pluginDirectory, pluginName, functionName, clazz);
@@ -181,10 +144,6 @@ public class KernelExtensions {
                         + File.separator
                         + PROMPT_FILE;
 
-<<<<<<< AI
-=======
-<<<<<<< HEAD
->>>>>>> main
         try {
             return EmbeddedResourceLoader.readFile(
                     promptFileName,
@@ -192,10 +151,6 @@ public class KernelExtensions {
                     ResourceLocation.CLASSPATH_ROOT,
                     ResourceLocation.CLASSPATH,
                     ResourceLocation.FILESYSTEM);
-<<<<<<< AI
-=======
-=======
->>>>>>> main
         InputStream promptFileStream;
         if (clazz == null) {
             promptFileStream =
@@ -210,10 +165,6 @@ public class KernelExtensions {
                 new BufferedReader(
                         new InputStreamReader(promptFileStream, Charset.defaultCharset()))) {
             template = promptFile.lines().collect(Collectors.joining("\n"));
-<<<<<<< AI
-=======
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
         } catch (IOException e) {
             LOGGER.error("Failed to read file " + promptFileName, e);
 
@@ -221,27 +172,15 @@ public class KernelExtensions {
                     ErrorCodes.FUNCTION_NOT_AVAILABLE,
                     "No Skills found in directory " + promptFileName);
         }
-<<<<<<< AI
-=======
-<<<<<<< HEAD
->>>>>>> main
     }
 
     private static PromptTemplateConfig getPromptTemplateConfig(
             String pluginDirectory, String pluginName, String functionName, @Nullable Class clazz) throws KernelException {
-<<<<<<< AI
-=======
-=======
->>>>>>> main
         return template;
     }
 
     private static PromptTemplateConfig getPromptTemplateConfig(
             String pluginDirectory, String pluginName, String functionName, @Nullable Class clazz) {
-<<<<<<< AI
-=======
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
         String configFileName =
                 pluginDirectory
                         + File.separator
@@ -251,10 +190,6 @@ public class KernelExtensions {
                         + File.separator
                         + CONFIG_FILE;
 
-<<<<<<< AI
-=======
-<<<<<<< HEAD
->>>>>>> main
         try {
             String config =
                     EmbeddedResourceLoader.readFile(
@@ -276,10 +211,6 @@ public class KernelExtensions {
             LOGGER.debug("No config for " + functionName + " in " + pluginName);
           }
           return null;
-<<<<<<< AI
-=======
-=======
->>>>>>> main
         InputStream configFileStream;
         if (clazz == null) {
             configFileStream =
@@ -297,10 +228,6 @@ public class KernelExtensions {
         } catch (IOException e) {
             LOGGER.debug("No config for " + functionName + " in " + pluginName);
             return null;
-<<<<<<< AI
-=======
->>>>>>> beeed7b7a795d8c989165740de6ddb21aeacbb6f
->>>>>>> main
         }
     }
 }

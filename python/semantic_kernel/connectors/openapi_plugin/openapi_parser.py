@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING, Any, Final
 
 from prance import ResolvingParser
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import (
     RestApiOperation,
 )
@@ -25,19 +24,7 @@ from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation_payload_property import (
     RestApiOperationPayloadProperty,
-=======
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_expected_response import (
-    RestApiExpectedResponse,
-)
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_operation import RestApiOperation
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter import RestApiParameter
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_parameter_location import (
-    RestApiParameterLocation,
-)
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload import RestApiPayload
-from semantic_kernel.connectors.openapi_plugin.models.rest_api_payload_property import (
-    RestApiPayloadProperty,
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 )
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_security_requirement import RestApiSecurityRequirement
 from semantic_kernel.connectors.openapi_plugin.models.rest_api_security_scheme import RestApiSecurityScheme
@@ -50,7 +37,6 @@ if TYPE_CHECKING:
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-
 class OpenApiParser:
     """NOTE: SK Python only supports the OpenAPI Spec >=3.0.
 
@@ -61,7 +47,6 @@ class OpenApiParser:
 
     Returns:
         The parsed OpenAPI file
-
 
     :param openapi_file: The path to the OpenAPI file which can be local or a URL.
     :return: The parsed OpenAPI file

@@ -1,65 +1,15 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
+
 using System.Collections.Generic;
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
 using System.Collections.Generic;
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
+
 using System.Collections.Generic;
->>>>>>> main
->>>>>>> Stashed changes
-=======
-=======
+
 using System.Collections.Generic;
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -165,52 +115,13 @@ public sealed class OllamaChatCompletionTests : IDisposable
         Assert.Null(requestPayload.Options.TopP);
 
         Assert.NotNull(message.ModelId);
-<<<<<<< HEAD
         Assert.Equal("phi3", message.ModelId);
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
         Assert.Equal(expectedModel, message.ModelId);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         // Ollama Sharp always perform streaming even for non-streaming calls,
         // The inner content in this case is the full list of chunks returned by the Ollama Client.
         Assert.NotNull(message.InnerContent);
-<<<<<<< HEAD
         Assert.IsType<List<ChatResponseStream>>(message.InnerContent);
         var innerContentList = message.InnerContent as List<ChatResponseStream>;
         Assert.NotNull(innerContentList);
@@ -220,46 +131,12 @@ public sealed class OllamaChatCompletionTests : IDisposable
         Assert.NotNull(doneMessageChunk);
         Assert.True(doneMessageChunk.Done);
         Assert.Equal("stop", doneMessageChunk.DoneReason);
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
         Assert.IsType<ChatDoneResponseStream>(message.InnerContent);
         var doneStream = message.InnerContent as ChatDoneResponseStream;
         Assert.NotNull(doneStream);
         Assert.True(doneStream.Done);
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     }
 
     [Fact]
@@ -303,42 +180,7 @@ public sealed class OllamaChatCompletionTests : IDisposable
     }
 
     [Fact]
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
     public async Task GetStreamingChatMessageContentsShouldHaveDoneReasonAsync()
     {
         //Arrange
@@ -366,40 +208,7 @@ public sealed class OllamaChatCompletionTests : IDisposable
     }
 
     [Fact]
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
     public async Task GetStreamingChatMessageContentsExecutionSettingsMustBeSentAsync()
     {
         //Arrange

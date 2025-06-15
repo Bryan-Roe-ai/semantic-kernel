@@ -7,17 +7,10 @@ from typing import Any
 from pydantic import Field
 from pydantic.dataclasses import dataclass
 
-<<<<<<< HEAD:python/semantic_kernel/data/vector_store_record_fields.py
 from semantic_kernel.connectors.ai.prompt_execution_settings import (
     PromptExecutionSettings,
 )
 from semantic_kernel.data.const import DistanceFunction, IndexKind
-=======
-from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
-from semantic_kernel.data import DistanceFunction, IndexKind
-from semantic_kernel.utils.experimental_decorator import experimental_class
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/semantic_kernel/data/record_definition/vector_store_record_fields.py
-
 
 @experimental_class
 @dataclass
@@ -27,12 +20,10 @@ class VectorStoreRecordField(ABC):
     name: str = ""
     property_type: str | None = None
 
-
 @experimental_class
 @dataclass
 class VectorStoreRecordKeyField(VectorStoreRecordField):
     """Memory record key field."""
-
 
 @experimental_class
 @dataclass
@@ -43,7 +34,6 @@ class VectorStoreRecordDataField(VectorStoreRecordField):
     embedding_property_name: str | None = None
     is_filterable: bool | None = None
     is_full_text_searchable: bool | None = None
-
 
 @experimental_class
 @dataclass
@@ -84,7 +74,6 @@ class VectorStoreRecordVectorField(VectorStoreRecordField):
     embedding_settings: dict[str, PromptExecutionSettings] = Field(default_factory=dict)
     serialize_function: Callable[[Any], list[float | int]] | None = None
     deserialize_function: Callable[[list[float | int]], Any] | None = None
-
 
 __all__ = [
     "VectorStoreRecordDataField",

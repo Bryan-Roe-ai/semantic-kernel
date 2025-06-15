@@ -487,7 +487,6 @@ The provided options are not mutually exclusive; each can be used depending on t
 
 ## 5. Streaming
 
-<<<<<<< HEAD
 The design of a service-agnostic function calling model for connectors' streaming API should be similar to the non-streaming one described above.
 
 The streaming API differs from a non-streaming one in that the content is returned in chunks rather than all at once. For instance, OpenAI connectors currently return function calls in two chunks: the function id and name come in the first chunk, while the function arguments are sent in subsequent chunks. Furthermore, LLM may stream function calls for more than one function in the same response. For example, the first chunk streamed by a connector may have the id and name of the first function, and the following chunk will have the id and name of the second function.
@@ -515,6 +514,4 @@ The following workflows have been updated to include specific steps for SSRF det
 - `.github/workflows/codeql-analysis.yml`
 - `.github/workflows/fortify.yml`
 - `.github/workflows/codeql.yml`
-=======
-This will require slight deviations in the design of the function-calling model for the streaming API to more naturally accommodate the streaming specifics. In the case of a significant deviation, a separate ADR will be created to outline the details.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+

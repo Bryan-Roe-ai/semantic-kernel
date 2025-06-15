@@ -12,14 +12,11 @@ from openai.types.chat.chat_completion_chunk import Choice as ChunkChoice
 from openai.types.chat.chat_completion_chunk import ChoiceDelta as ChunkChoiceDelta
 from openai.types.chat.chat_completion_message import ChatCompletionMessage
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.function_call_behavior import FunctionCallBehavior
 from semantic_kernel.connectors.ai.function_choice_behavior import (
     FunctionChoiceBehavior,
 )
-=======
-from semantic_kernel.connectors.ai.function_choice_behavior import FunctionChoiceBehavior
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_prompt_execution_settings import (
     OpenAIChatPromptExecutionSettings,
 )
@@ -45,13 +42,11 @@ from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
 from semantic_kernel.kernel import Kernel
 
-
 async def mock_async_process_chat_stream_response(
     arg1, response, tool_call_behavior, chat_history, kernel, arguments
 ):
     mock_content = MagicMock(spec=StreamingChatMessageContent)
     yield [mock_content], None
-
 
 @pytest.fixture
 def mock_chat_completion_response() -> ChatCompletion:
@@ -68,7 +63,6 @@ def mock_chat_completion_response() -> ChatCompletion:
         model="test",
         object="chat.completion",
     )
-
 
 @pytest.fixture
 def mock_streaming_chat_completion_response() -> AsyncStream[ChatCompletionChunk]:
@@ -89,9 +83,7 @@ def mock_streaming_chat_completion_response() -> AsyncStream[ChatCompletionChunk
     stream.__aiter__.return_value = [content]
     return stream
 
-
 # region Chat Message Content
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc(
@@ -164,7 +156,6 @@ async def test_cmc_singular(
         messages=openai_chat_completion._prepare_chat_history_for_request(chat_history),
     )
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_singular_with_developer_instruction_propagates(
     mock_create,
@@ -187,7 +178,6 @@ async def test_cmc_singular_with_developer_instruction_propagates(
         messages=openai_chat_completion._prepare_chat_history_for_request(chat_history),
     )
     assert openai_chat_completion.instruction_role == "developer"
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_prompt_execution_settings(
@@ -226,7 +216,6 @@ async def test_complete_chat_function_call_behavior(tool_call, kernel: Kernel):
         role=AuthorRole.ASSISTANT, items=[mock_function_call] if tool_call else [mock_text]
     )
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_function_call_behavior(
     mock_create,
@@ -259,12 +248,9 @@ async def test_cmc_function_call_behavior(
     chat_history.add_user_message("hello world")
     orig_chat_history = deepcopy(chat_history)
     complete_prompt_execution_settings = OpenAIChatPromptExecutionSettings(
-<<<<<<< HEAD
         service_id="test_service_id",
         function_call_behavior=FunctionCallBehavior.AutoInvokeKernelFunctions(),
-=======
-        service_id="test_service_id", function_choice_behavior=FunctionChoiceBehavior.Auto()
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     )
     with patch(
         "semantic_kernel.kernel.Kernel.invoke_function_call",
@@ -285,7 +271,6 @@ async def test_cmc_function_call_behavior(
             ),
         )
         mock_process_function_call.assert_awaited()
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_function_choice_behavior(
@@ -366,7 +351,6 @@ async def test_cmc_function_choice_behavior(
         )
         mock_process_function_call.assert_awaited()
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_fcb_parallel_func_calling_disabled(
     mock_create,
@@ -442,7 +426,6 @@ async def test_cmc_fcb_parallel_func_calling_disabled(
         )
         mock_process_function_call.assert_awaited()
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_function_choice_behavior_missing_kwargs(
     mock_create,
@@ -493,7 +476,6 @@ async def test_cmc_function_choice_behavior_missing_kwargs(
             arguments=KernelArguments(),
         )
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_no_fcc_in_response(
     mock_create,
@@ -524,7 +506,6 @@ async def test_cmc_no_fcc_in_response(
         ),
     )
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_structured_output_no_fcc(
     mock_create,
@@ -548,7 +529,6 @@ async def test_cmc_structured_output_no_fcc(
         chat_history=chat_history, settings=complete_prompt_execution_settings, kernel=kernel
     )
     mock_create.assert_awaited_once()
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_cmc_run_out_of_auto_invoke_loop(
@@ -596,7 +576,6 @@ async def test_cmc_run_out_of_auto_invoke_loop(
     # when there has not been a answer.
     mock_create.call_count == 6
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_prompt_execution_settings(
     mock_create,
@@ -628,7 +607,6 @@ async def test_scmc_prompt_execution_settings(
         messages=openai_chat_completion._prepare_chat_history_for_request(chat_history),
     )
 
-
 @pytest.mark.asyncio
 @patch.object(
     AsyncChatCompletions, "create", new_callable=AsyncMock, side_effect=Exception
@@ -655,9 +633,7 @@ async def test_cmc_general_exception(
             kernel=kernel,
         )
 
-
 # region Streaming
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc(
@@ -721,11 +697,6 @@ async def test_scmc(
         else:
             mock_process_function_call.assert_not_awaited()
 
-
-
-
-
-
 @pytest.mark.parametrize("tool_call", [False, True])
 @pytest.mark.asyncio
 async def test_complete_chat_function_choice_behavior(tool_call, kernel: Kernel):
@@ -778,7 +749,6 @@ async def test_complete_chat_function_choice_behavior(tool_call, kernel: Kernel)
         else:
             mock_process_function_call.assert_not_awaited()
 
-
 @pytest.mark.asyncio
 async def test_process_tool_calls():
     tool_call_mock = MagicMock(spec=FunctionCallContent)
@@ -825,7 +795,6 @@ async def test_process_tool_calls():
             0,
             FunctionCallBehavior.AutoInvokeKernelFunctions(),
         )
-
 
 @pytest.mark.asyncio
 async def test_process_tool_calls_with_continuation_on_malformed_arguments():
@@ -887,7 +856,6 @@ async def test_process_tool_calls_with_continuation_on_malformed_arguments():
         messages=openai_chat_completion._prepare_chat_history_for_request(orig_chat_history),
     )
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_singular(
     mock_create,
@@ -946,7 +914,6 @@ async def test_scmc_singular(
         messages=openai_chat_completion._prepare_chat_history_for_request(orig_chat_history),
     )
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_structured_output_no_fcc(
     mock_create,
@@ -989,7 +956,6 @@ async def test_scmc_structured_output_no_fcc(
         assert isinstance(msg, StreamingChatMessageContent)
     mock_create.assert_awaited_once()
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_function_call_behavior(
     mock_create,
@@ -1002,12 +968,9 @@ async def test_scmc_function_call_behavior(
     chat_history.add_user_message("hello world")
     orig_chat_history = deepcopy(chat_history)
     complete_prompt_execution_settings = OpenAIChatPromptExecutionSettings(
-<<<<<<< HEAD
         service_id="test_service_id",
         function_call_behavior=FunctionCallBehavior.AutoInvokeKernelFunctions(),
-=======
-        service_id="test_service_id", function_choice_behavior=FunctionChoiceBehavior.Auto()
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
     )
     with patch(
         "semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion_base.OpenAIChatCompletionBase._process_function_call",
@@ -1035,7 +998,6 @@ async def test_scmc_function_call_behavior(
             stream_options={"include_usage": True},
             messages=openai_chat_completion._prepare_chat_history_for_request(orig_chat_history),
         )
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_function_choice_behavior(
@@ -1094,7 +1056,6 @@ async def test_scmc_function_choice_behavior(
             stream_options={"include_usage": True},
             messages=openai_chat_completion._prepare_chat_history_for_request(orig_chat_history),
         )
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_fcb_parallel_tool_call_disabled(
@@ -1163,7 +1124,6 @@ async def test_scmc_fcb_parallel_tool_call_disabled(
             messages=openai_chat_completion._prepare_chat_history_for_request(orig_chat_history),
         )
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_function_choice_behavior_missing_kwargs(
     mock_create,
@@ -1199,7 +1159,6 @@ async def test_scmc_function_choice_behavior_missing_kwargs(
                 arguments=KernelArguments(),
             )
         ]
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_no_fcc_in_response(
@@ -1239,7 +1198,6 @@ async def test_scmc_no_fcc_in_response(
         stream_options={"include_usage": True},
         messages=openai_chat_completion._prepare_chat_history_for_request(orig_chat_history),
     )
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_run_out_of_auto_invoke_loop(
@@ -1297,7 +1255,6 @@ async def test_scmc_run_out_of_auto_invoke_loop(
     # when there has not been a answer.
     mock_create.call_count == 6
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_no_stream(
     mock_create,
@@ -1324,9 +1281,7 @@ async def test_scmc_no_stream(
             )
         ]
 
-
 # region TextContent
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_tc(
@@ -1352,7 +1307,6 @@ async def test_tc(
         messages=[{"role": "user", "content": "test"}],
     )
 
-
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_stc(
     mock_create,
@@ -1374,7 +1328,6 @@ async def test_stc(
         stream=True,
         messages=[{"role": "user", "content": "test"}],
     )
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_stc_with_msgs(
@@ -1402,9 +1355,7 @@ async def test_stc_with_msgs(
         ],
     )
 
-
 # region Autoinvoke
-
 
 @patch.object(AsyncChatCompletions, "create", new_callable=AsyncMock)
 async def test_scmc_terminate_through_filter(

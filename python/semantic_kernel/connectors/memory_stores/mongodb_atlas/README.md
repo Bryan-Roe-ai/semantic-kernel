@@ -50,8 +50,5 @@ kernel.register_memory_store(memory_store=MongoDBAtlasMemoryStore(
 
 In this version, vector search index management is outside of `MongoDBAtlasMemoryStore` scope.
 Creation and maintenance of the indexes have to be done by the user. Please note that deleting a collection
-<<<<<<< HEAD
 (`memory_store.delete_collection_async`) will delete the index as well.
-=======
-(```memory_store.delete_collection_async```) will delete the index as well.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+

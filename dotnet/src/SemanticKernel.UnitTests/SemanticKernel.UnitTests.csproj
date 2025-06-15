@@ -6,11 +6,7 @@
     <TargetFrameworks>net8.0</TargetFrameworks>
     <IsTestProject>true</IsTestProject>
     <IsPackable>false</IsPackable>
-<<<<<<< HEAD
     <NoWarn>$(NoWarn);CA2007,CA1861,IDE1006,VSTHRD111,SKEXP0001,SKEXP0010,SKEXP0020,SKEXP0050,SKEXP0110,SKEXP0120,MEVD9000</NoWarn>
-=======
-    <NoWarn>$(NoWarn);CA2007,CA1861,IDE1006,VSTHRD111,SKEXP0001,SKEXP0010,SKEXP0050,SKEXP0110,SKEXP0120,SKEXP0130,MEVD9000</NoWarn>
->>>>>>> 9ada3aa70 (.Net: Add AIContextProvider support to Semantic Kernel (#11689))
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,33 +36,6 @@
   <Import Project="$(RepoRoot)/dotnet/src/InternalUtilities/connectors/AI/FunctionCalling/FunctionCallingUtilities.props" />
 
   <ItemGroup>
-<<<<<<< main
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/test/AssertExtensions.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/StreamJsonParser.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Data/VectorStoreRecordMapping.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Type/TypeExtensions.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Http/**/*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/openai/**/*.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/SseData.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/SseJsonParser.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/SseLine.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-    <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/SseReader.cs" Link="%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="TestData\skills\TestSkill\WithDefaultSettings\config.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestData\skills\TestSkill\WithDefaultSettings\skprompt.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestData\skills\TestSkill\WithServices\config.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="TestData\skills\TestSkill\WithServices\skprompt.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-=======
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/test/AssertExtensions.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Type/TypeExtensions.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Http/**/*.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
@@ -76,7 +45,6 @@
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/SseLine.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/SseReader.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
     <Compile Include="$(RepoRoot)/dotnet/src/InternalUtilities/src/Text/StreamJsonParser.cs" Link="%(RecursiveDir)Utilities/%(Filename)%(Extension)" />
->>>>>>> upstream/main
   </ItemGroup>
 
   <ItemGroup>

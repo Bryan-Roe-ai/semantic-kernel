@@ -66,10 +66,7 @@ public record KernelProcessStepState
     {
         Verify.NotNullOrWhiteSpace(name, nameof(name));
         Verify.NotNullOrWhiteSpace(version, nameof(version));
-<<<<<<< HEAD
-=======
         Verify.NotNullOrWhiteSpace(version, nameof(version));
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 
         this.RunId = id;
         this.StepId = name;

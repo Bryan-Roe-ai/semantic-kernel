@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 // Copyright (c) Microsoft. All rights reserved.
 
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 using System;
 
 namespace Microsoft.SemanticKernel;
@@ -12,7 +9,6 @@ namespace Microsoft.SemanticKernel;
 /// </summary>
 public sealed class ProcessEdgeBuilder : ProcessStepEdgeBuilder
 {
-<<<<<<< HEAD
     private readonly ProcessBuilder _source;
     private readonly string _eventId;
     internal ProcessFunctionTargetBuilder? Target { get; set; }
@@ -22,8 +18,6 @@ public sealed class ProcessEdgeBuilder : ProcessStepEdgeBuilder
     /// </summary>
     internal string EventId { get; }
 
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     /// <summary>
     /// The source step of the edge.
     /// </summary>
@@ -36,14 +30,11 @@ public sealed class ProcessEdgeBuilder : ProcessStepEdgeBuilder
     /// <param name="eventId">The Id of the event.</param>
     internal ProcessEdgeBuilder(ProcessBuilder source, string eventId) : base(source, eventId, eventId)
     {
-<<<<<<< HEAD
         this._source = source;
         this._eventId = eventId;
         Verify.NotNull(source, nameof(source));
         Verify.NotNullOrWhiteSpace(eventId, nameof(eventId));
 
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
         this.Source = source;
     }
 

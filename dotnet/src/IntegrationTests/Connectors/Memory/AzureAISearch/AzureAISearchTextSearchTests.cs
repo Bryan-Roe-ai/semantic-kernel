@@ -2,24 +2,17 @@
 
 using System;
 using System.Threading.Tasks;
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
-=======
-=======
-using Azure.AI.OpenAI;
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 using Azure.Identity;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
-<<<<<<< HEAD
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
->>>>>>> main
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
+
 using Microsoft.SemanticKernel.Data;
 using SemanticKernel.IntegrationTests.Data;
 using SemanticKernel.IntegrationTests.TestSettings;
@@ -83,25 +76,11 @@ public class AzureAISearchTextSearchTests(AzureAISearchVectorStoreFixture fixtur
     {
         if (this.VectorStore is null)
         {
-<<<<<<< HEAD
             OpenAIConfiguration? openAIConfiguration = this.Configuration.GetSection("OpenAIEmbeddings").Get<OpenAIConfiguration>();
             Assert.NotNull(openAIConfiguration);
             Assert.NotEmpty(openAIConfiguration.ModelId);
             Assert.NotEmpty(openAIConfiguration.ApiKey);
             this.EmbeddingGenerator = new OpenAITextEmbeddingGenerationService(openAIConfiguration.ModelId, openAIConfiguration.ApiKey);
-=======
-            AzureOpenAIConfiguration? azureOpenAIConfiguration = this.Configuration.GetSection("AzureOpenAIEmbeddings").Get<AzureOpenAIConfiguration>();
-            Assert.NotNull(azureOpenAIConfiguration);
-            Assert.NotEmpty(azureOpenAIConfiguration.DeploymentName);
-            Assert.NotEmpty(azureOpenAIConfiguration.Endpoint);
-<<<<<<< HEAD
-            this.EmbeddingGenerator = new AzureOpenAITextEmbeddingGenerationService(
-                azureOpenAIConfiguration.DeploymentName,
-                azureOpenAIConfiguration.Endpoint,
-                new AzureCliCredential());
->>>>>>> main
-=======
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
             this.EmbeddingGenerator = new AzureOpenAIClient(new Uri(azureOpenAIConfiguration.Endpoint), new AzureCliCredential())
                 .GetEmbeddingClient(azureOpenAIConfiguration.DeploymentName)
@@ -167,11 +146,8 @@ public class AzureAISearchTextSearchTests(AzureAISearchVectorStoreFixture fixtur
         {
             if (result is AzureAISearchHotel hotel)
             {
-<<<<<<< HEAD
                 return new TextSearchResult(name: hotel.HotelName, value: hotel.Description, link: $"id://{hotel.HotelId}");
-=======
-                return new TextSearchResult(value: hotel.Description) { Name = hotel.HotelName, Link = $"id://{hotel.HotelId}" };
->>>>>>> main
+
             }
             throw new ArgumentException("Invalid result type.");
         }

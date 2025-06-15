@@ -4,48 +4,14 @@ import logging
 from abc import ABC
 from typing import Any, Union
 
-<<<<<<< HEAD
 from openai import AsyncOpenAI, AsyncStream, BadRequestError
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 from openai.types import Completion, CreateEmbeddingResponse
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
 
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
 from openai.types import Completion, CreateEmbeddingResponse
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
 
-=======
-=======
-from openai import AsyncOpenAI, AsyncStream, BadRequestError, _legacy_response
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
 from openai.lib._parsing._completions import type_to_response_format_param
 from openai.types import Completion, CreateEmbeddingResponse
 from openai.types.audio import Transcription
@@ -53,180 +19,51 @@ from openai.types.chat import ChatCompletion, ChatCompletionChunk
 from openai.types.images_response import ImagesResponse
 from pydantic import BaseModel
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.ai_exception import AIException
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
 from openai.lib._parsing._completions import type_to_response_format_param
 from openai.types import Completion, CreateEmbeddingResponse
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
 from pydantic import BaseModel
 
 from semantic_kernel.connectors.ai.ai_exception import AIException
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< div
-=======
+
 from openai.lib._parsing._completions import type_to_response_format_param
 from openai.types import Completion, CreateEmbeddingResponse
 from openai.types.chat import ChatCompletion, ChatCompletionChunk
 from pydantic import BaseModel
 
 from semantic_kernel.connectors.ai.ai_exception import AIException
->>>>>>> main
-=======
->>>>>>> head
+
 from semantic_kernel.connectors.ai.open_ai.exceptions.content_filter_ai_exception import (
     ContentFilterAIException,
 )
 from semantic_kernel.connectors.ai.open_ai.prompt_execution_settings.open_ai_prompt_execution_settings import (
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
+
 from semantic_kernel.connectors.ai.open_ai import (
     OpenAIAudioToTextExecutionSettings,
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     OpenAIChatPromptExecutionSettings,
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
     OpenAIChatPromptExecutionSettings,
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
     OpenAIEmbeddingPromptExecutionSettings,
     OpenAIPromptExecutionSettings,
     OpenAITextToAudioExecutionSettings,
     OpenAITextToImageExecutionSettings,
 )
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_model_types import (
     OpenAIModelTypes,
 )
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 from semantic_kernel.exceptions import ServiceResponseException
 from semantic_kernel.kernel_pydantic import KernelBaseModel
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
+
 from semantic_kernel.exceptions import ServiceResponseException
 from semantic_kernel.kernel_pydantic import KernelBaseModel
-=======
-<<<<<<< div
-=======
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
+
 from semantic_kernel.connectors.ai.open_ai.exceptions.content_filter_ai_exception import ContentFilterAIException
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_model_types import OpenAIModelTypes
 from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.connectors.utils.structured_output_schema import generate_structured_output_response_format_schema
@@ -234,78 +71,13 @@ from semantic_kernel.exceptions import ServiceResponseException
 from semantic_kernel.exceptions.service_exceptions import ServiceInvalidRequestError
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.schema.kernel_json_schema_builder import KernelJsonSchemaBuilder
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-
-logger: logging.Logger = logging.getLogger(__name__)
-<<<<<<< div
->>>>>>> main
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-RESPONSE_TYPE = Union[
-    ChatCompletion,
-    Completion,
-    AsyncStream[ChatCompletionChunk],
-    AsyncStream[Completion],
-    list[Any],
-    ImagesResponse,
-    Transcription,
-    _legacy_response.HttpxBinaryResponseContent,
-]
-
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
-
-=======
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
+logger: logging.Logger = logging.getLogger(__name__)
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-
-=======
->>>>>>> origin/main
-=======
-
->>>>>>> Stashed changes
-=======
-
->>>>>>> Stashed changes
->>>>>>> head
 class OpenAIHandler(KernelBaseModel, ABC):
     """Internal class for calls to OpenAI API's."""
 
@@ -337,7 +109,6 @@ class OpenAIHandler(KernelBaseModel, ABC):
 
     async def _send_completion_request(
         self,
-<<<<<<< HEAD
         request_settings: OpenAIPromptExecutionSettings,
     ) -> (
         ChatCompletion
@@ -347,67 +118,11 @@ class OpenAIHandler(KernelBaseModel, ABC):
     ):
         """Execute the appropriate call to OpenAI models."""
         try:
-<<<<<<< div
-<<<<<<< div
-=======
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
+
             settings = request_settings.prepare_settings_dict()
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
+
             settings = request_settings.prepare_settings_dict()
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
             if self.ai_model_type == OpenAIModelTypes.CHAT:
                 response = await self.client.chat.completions.create(
                     **request_settings.prepare_settings_dict()
@@ -416,46 +131,7 @@ class OpenAIHandler(KernelBaseModel, ABC):
                 response = await self.client.completions.create(
                     **request_settings.prepare_settings_dict()
                 )
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
                 assert isinstance(request_settings, OpenAIChatPromptExecutionSettings)  # nosec
                 self._handle_structured_output(request_settings, settings)
                 if request_settings.tools is None:
@@ -463,41 +139,7 @@ class OpenAIHandler(KernelBaseModel, ABC):
                 response = await self.client.chat.completions.create(**settings)
             else:
                 response = await self.client.completions.create(**settings)
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
-=======
+
         settings: OpenAIPromptExecutionSettings,
     ) -> ChatCompletion | Completion | AsyncStream[ChatCompletionChunk] | AsyncStream[Completion]:
         """Execute the appropriate call to OpenAI models."""
@@ -512,7 +154,6 @@ class OpenAIHandler(KernelBaseModel, ABC):
             else:
                 response = await self.client.completions.create(**settings_dict)
 
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             self.store_usage(response)
             return response
         except BadRequestError as ex:
@@ -531,7 +172,6 @@ class OpenAIHandler(KernelBaseModel, ABC):
                 ex,
             ) from ex
 
-<<<<<<< HEAD
     async def _send_embedding_request(
         self, settings: OpenAIEmbeddingPromptExecutionSettings
     ) -> list[Any]:
@@ -539,13 +179,7 @@ class OpenAIHandler(KernelBaseModel, ABC):
             response = await self.client.embeddings.create(
                 **settings.prepare_settings_dict()
             )
-=======
-    async def _send_embedding_request(self, settings: OpenAIEmbeddingPromptExecutionSettings) -> list[Any]:
-        """Send a request to the OpenAI embeddings endpoint."""
-        try:
-            response = await self.client.embeddings.create(**settings.prepare_settings_dict())
 
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
             self.store_usage(response)
             return [x.embedding for x in response.data]
         except Exception as ex:
@@ -554,48 +188,6 @@ class OpenAIHandler(KernelBaseModel, ABC):
                 ex,
             ) from ex
 
-<<<<<<< HEAD
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
-=======
->>>>>>> Stashed changes
->>>>>>> head
-=======
     async def _send_text_to_image_request(self, settings: OpenAITextToImageExecutionSettings) -> ImagesResponse:
         """Send a request to the OpenAI text to image endpoint."""
         try:
@@ -639,7 +231,6 @@ class OpenAIHandler(KernelBaseModel, ABC):
                 ex,
             ) from ex
 
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
     def _handle_structured_output(
         self, request_settings: OpenAIChatPromptExecutionSettings, settings: dict[str, Any]
     ) -> None:
@@ -659,40 +250,6 @@ class OpenAIHandler(KernelBaseModel, ABC):
             elif isinstance(response_format, dict):
                 settings["response_format"] = response_format
 
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
     def store_usage(
         self,
         response: (

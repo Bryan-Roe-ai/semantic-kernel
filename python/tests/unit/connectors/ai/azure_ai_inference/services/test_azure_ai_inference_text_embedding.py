@@ -17,7 +17,6 @@ from semantic_kernel.exceptions.service_exceptions import ServiceInitializationE
 from semantic_kernel.utils.telemetry.user_agent import SEMANTIC_KERNEL_USER_AGENT
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError
 
-
 def test_azure_ai_inference_text_embedding_init(
     azure_ai_inference_unit_test_env, model_id
 ) -> None:
@@ -27,7 +26,6 @@ def test_azure_ai_inference_text_embedding_init(
     assert azure_ai_inference.ai_model_id == model_id
     assert azure_ai_inference.service_id == model_id
     if not isinstance(azure_ai_inference.client, EmbeddingsClient): raise TypeError("Expected azure_ai_inference.client to be an instance of EmbeddingsClient")
-
 
 @patch("azure.ai.inference.aio.EmbeddingsClient.__init__", return_value=None)
 def test_azure_ai_inference_text_embedding_client_init(
@@ -50,7 +48,6 @@ def test_azure_ai_inference_text_embedding_client_init(
     )
     assert mock_client.call_args.kwargs["user_agent"] == SEMANTIC_KERNEL_USER_AGENT
 
-
 def test_azure_ai_inference_text_embedding_init_with_service_id(
     azure_ai_inference_unit_test_env, model_id, service_id
 ) -> None:
@@ -60,7 +57,6 @@ def test_azure_ai_inference_text_embedding_init_with_service_id(
     assert azure_ai_inference.ai_model_id == model_id
     if azure_ai_inference.service_id != service_id: raise ValueError("Service ID does not match the expected value")
     assert isinstance(azure_ai_inference.client, EmbeddingsClient)
-
 
 @pytest.mark.parametrize(
     "azure_ai_inference_client",
@@ -78,8 +74,6 @@ def test_azure_ai_inference_chat_completion_init_with_custom_client(
     assert azure_ai_inference.service_id == model_id
     assert azure_ai_inference.client == client
 
-
-<<<<<<< HEAD
 @pytest.mark.parametrize(
     "exclude_list", [["AZURE_AI_INFERENCE_API_KEY"]], indirect=True
 )
@@ -90,21 +84,16 @@ def test_azure_ai_inference_text_embedding_init_with_empty_api_key(
     with pytest.raises(ServiceInitializationError):
         AzureAIInferenceTextEmbedding(model_id)
 
-
 @pytest.mark.parametrize(
     "exclude_list", [["AZURE_AI_INFERENCE_ENDPOINT"]], indirect=True
 )
 def test_azure_ai_inference_text_embedding_init_with_empty_endpoint(
     azure_ai_inference_unit_test_env, model_id
 ) -> None:
-=======
-@pytest.mark.parametrize("exclude_list", [["AZURE_AI_INFERENCE_ENDPOINT"]], indirect=True)
-def test_azure_ai_inference_text_embedding_init_with_empty_endpoint(azure_ai_inference_unit_test_env, model_id) -> None:
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
     """Test initialization of AzureAIInferenceTextEmbedding with empty endpoint"""
     with pytest.raises(ServiceInitializationError):
         AzureAIInferenceTextEmbedding(model_id, env_file_path="fake_path")
-
 
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
@@ -130,7 +119,6 @@ async def test_azure_ai_inference_text_embedding(
         input_type=None,
         kwargs={},
     )
-
 
 @pytest.mark.parametrize(
     "azure_ai_inference_service",
@@ -160,7 +148,6 @@ async def test_azure_ai_inference_text_embedding_with_standard_settings(
         input_type=settings.input_type,
         kwargs={"settings": settings},
     )
-
 
 @pytest.mark.parametrize(
     "azure_ai_inference_service",

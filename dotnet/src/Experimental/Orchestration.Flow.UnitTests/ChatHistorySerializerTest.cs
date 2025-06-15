@@ -1,88 +1,16 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 using Microsoft.SemanticKernel.ChatCompletion;
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
+
 using Microsoft.SemanticKernel.ChatCompletion;
-=======
-=======
-<<<<<<< div
->>>>>>> main
-=======
->>>>>>> origin/main
-=======
-<<<<<<< main
+
 using Microsoft.SemanticKernel.ChatCompletion;
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< main
+
 using Microsoft.SemanticKernel.ChatCompletion;
-=======
->>>>>>> Stashed changes
->>>>>>> head
-<<<<<<< HEAD
-using Microsoft.SemanticKernel.ChatCompletion;
-=======
+
 using Microsoft.SemanticKernel.AI.ChatCompletion;
->>>>>>> 9cfcc609b1cbe6e1d6975df1d665fa0b064c5624
-<<<<<<< div
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< head
->>>>>>> head
->>>>>>> origin/main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< div
->>>>>>> main
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> origin/main
->>>>>>> head
+using Microsoft.SemanticKernel.ChatCompletion;
+
 using Microsoft.SemanticKernel.Experimental.Orchestration.Execution;
 using Xunit;
 

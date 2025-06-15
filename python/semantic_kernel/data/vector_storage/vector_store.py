@@ -1,39 +1,28 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-
 from abc import abstractmethod
 from collections.abc import Sequence
 from typing import Any
 
 from pydantic import Field
 
-<<<<<<< HEAD:python/semantic_kernel/data/vector_store.py
 from semantic_kernel.data.vector_store_model_definition import (
     VectorStoreRecordDefinition,
 )
 from semantic_kernel.data.vector_store_record_collection import (
     VectorStoreRecordCollection,
 )
-=======
-from semantic_kernel.data.record_definition.vector_store_model_definition import VectorStoreRecordDefinition
-from semantic_kernel.data.vector_storage.vector_store_record_collection import VectorStoreRecordCollection
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/semantic_kernel/data/vector_storage/vector_store.py
+
 from semantic_kernel.kernel_pydantic import KernelBaseModel
 from semantic_kernel.utils.experimental_decorator import experimental_class
-
 
 @experimental_class
 class VectorStore(KernelBaseModel):
     """Base class for vector stores."""
 
-<<<<<<< HEAD:python/semantic_kernel/data/vector_store.py
     vector_record_collections: dict[str, VectorStoreRecordCollection] = Field(
         default_factory=dict
     )
-=======
-    vector_record_collections: dict[str, VectorStoreRecordCollection] = Field(default_factory=dict)
-    managed_client: bool = True
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377:python/semantic_kernel/data/vector_storage/vector_store.py
 
     @abstractmethod
     def get_collection(

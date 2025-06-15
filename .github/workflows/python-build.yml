@@ -13,15 +13,11 @@ jobs:
     if: github.event_name == 'release' && startsWith(github.event.release.tag_name, 'python-')
     name: Python Build Assets and add to Release
     runs-on: ubuntu-latest
-<<<<<<< HEAD
     strategy:
       matrix:
         python-version: [3.8, 3.9, 3.10]
     permissions:
       contents: write
-=======
-    environment: "integration"
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
     env:
       UV_PYTHON: ${{ matrix.python-version }}
     steps:
@@ -32,7 +28,6 @@ jobs:
           version: "0.5.x"
           enable-cache: true
           cache-suffix: ${{ runner.os }}-${{ matrix.python-version }}
-<<<<<<< HEAD
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
@@ -52,9 +47,6 @@ jobs:
         run: |
           cd python
           rm -rf build dist *.egg-info
-=======
-          cache-dependency-glob: "**/uv.lock"
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       - name: Check version
         run: |
           echo "Building and uploading Python package version: ${{ github.event.release.tag_name }}"

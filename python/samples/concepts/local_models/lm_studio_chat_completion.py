@@ -1,17 +1,13 @@
 # Copyright (c) Microsoft. All rights reserved.
 
-
 import asyncio
 
 from openai import AsyncOpenAI
 
-<<<<<<< HEAD
 from semantic_kernel.connectors.ai.open_ai.services.open_ai_chat_completion import (
     OpenAIChatCompletion,
 )
-=======
-from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
->>>>>>> 5ae74d7dd619c0f30c1db7a041ecac0f679f9377
+
 from semantic_kernel.contents.chat_history import ChatHistory
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.kernel import Kernel
@@ -63,7 +59,6 @@ chat_history.add_assistant_message(
     "I am Mosscap, a chat bot. I'm trying to figure out what people need"
 )
 
-
 async def chat() -> bool:
     try:
         user_input = input("User:> ")
@@ -86,12 +81,10 @@ async def chat() -> bool:
     print(f"Mosscap:> {answer}")
     return True
 
-
 async def main() -> None:
     chatting = True
     while chatting:
         chatting = await chat()
-
 
 if __name__ == "__main__":
     asyncio.run(main())

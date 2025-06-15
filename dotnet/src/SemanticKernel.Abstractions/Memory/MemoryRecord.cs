@@ -1,79 +1,41 @@
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-// Copyright (c) Microsoft. All rights reserved.
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
+
 ﻿// Copyright (c) Microsoft. All rights reserved.
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
+
 // Copyright (c) Microsoft. All rights reserved.
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.SemanticKernel.Text;
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
+
 using Microsoft.SemanticKernel.AI.Embeddings;
 using Microsoft.SemanticKernel.Diagnostics;
->>>>>>> Stashed changes
-=======
+
 using Microsoft.SemanticKernel.AI.Embeddings;
 using Microsoft.SemanticKernel.Diagnostics;
->>>>>>> Stashed changes
-=======
+
 using Microsoft.SemanticKernel.AI.Embeddings;
 using Microsoft.SemanticKernel.Diagnostics;
->>>>>>> Stashed changes
-=======
+
 using Microsoft.SemanticKernel.AI.Embeddings;
 using Microsoft.SemanticKernel.Diagnostics;
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
 using Microsoft.SemanticKernel.AI.Embeddings;
 using Microsoft.SemanticKernel.Diagnostics;
-<<<<<<< main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
 
 namespace Microsoft.SemanticKernel.Memory;
 
@@ -87,29 +49,8 @@ public class MemoryRecord : DataEntryBase
     /// Source content embeddings.
     /// </summary>
     [JsonPropertyName("embedding")]
-<<<<<<< Updated upstream
     [JsonConverter(typeof(ReadOnlyMemoryConverter))]
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    [JsonConverter(typeof(ReadOnlyMemoryConverter))]
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
     public ReadOnlyMemory<float> Embedding { get; }
 
     /// <summary>
@@ -215,32 +156,19 @@ public class MemoryRecord : DataEntryBase
     /// <param name="timestamp">optional timestamp.</param>
     /// <returns>Memory record</returns>
     /// <exception cref="KernelException"></exception>
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
+
     /// <exception cref="SKException"></exception>
     /// <exception cref="SKException"></exception>
->>>>>>> Stashed changes
-=======
+
     /// <exception cref="SKException"></exception>
     /// <exception cref="SKException"></exception>
->>>>>>> Stashed changes
-=======
+
     /// <exception cref="SKException"></exception>
     /// <exception cref="SKException"></exception>
->>>>>>> Stashed changes
-=======
+
     /// <exception cref="SKException"></exception>
     /// <exception cref="SKException"></exception>
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
     /// <exception cref="SKException"></exception>
     /// <exception cref="SKException"></exception>
 
@@ -250,39 +178,12 @@ public class MemoryRecord : DataEntryBase
         string? key = null,
         DateTimeOffset? timestamp = null)
     {
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
+
         var metadata = JsonSerializer.Deserialize<MemoryRecordMetadata>(json);
-<<<<<<< Updated upstream
         return metadata is not null
             ? new MemoryRecord(metadata, embedding, key, timestamp)
             : throw new KernelException("Unable to create memory record from serialized metadata");
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        return metadata is not null
-            ? new MemoryRecord(metadata, embedding, key, timestamp)
-            : throw new KernelException("Unable to create memory record from serialized metadata");
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< main
-=======
->>>>>>> Stashed changes
+
         var metadata = JsonSerializer.Deserialize<MemoryRecordMetadata>(json, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
         return metadata is not null
             ? new MemoryRecord(metadata, embedding, key, timestamp)
@@ -290,7 +191,6 @@ public class MemoryRecord : DataEntryBase
         return metadata != null
             ? new MemoryRecord(metadata, embedding ?? Embedding<float>.Empty, key, timestamp)
             : throw new SKException("Unable to create memory record from serialized metadata");
-<<<<<<< Updated upstream
         var metadata = JsonSerializer.Deserialize<MemoryRecordMetadata>(json, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
         return metadata is not null
             ? new MemoryRecord(metadata, embedding, key, timestamp)
@@ -298,11 +198,7 @@ public class MemoryRecord : DataEntryBase
         return metadata != null
             ? new MemoryRecord(metadata, embedding ?? Embedding<float>.Empty, key, timestamp)
             : throw new SKException("Unable to create memory record from serialized metadata");
-<<<<<<< main
-=======
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
+
         var metadata = JsonSerializer.Deserialize<MemoryRecordMetadata>(json, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
         return metadata is not null
             ? new MemoryRecord(metadata, embedding, key, timestamp)
@@ -310,25 +206,7 @@ public class MemoryRecord : DataEntryBase
         return metadata != null
             ? new MemoryRecord(metadata, embedding ?? Embedding<float>.Empty, key, timestamp)
             : throw new SKException("Unable to create memory record from serialized metadata");
->>>>>>> main
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-=======
->>>>>>> head
+
     }
 
     /// <summary>
@@ -354,44 +232,20 @@ public class MemoryRecord : DataEntryBase
     /// <returns>The memory record's metadata serialized to a json string.</returns>
     public string GetSerializedMetadata()
     {
-<<<<<<< main
-<<<<<<< main
-=======
->>>>>>> origin/main
-<<<<<<< Updated upstream
+
         return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        return JsonSerializer.Serialize(this.Metadata);
-=======
+
         return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
->>>>>>> Stashed changes
-=======
+
         return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
->>>>>>> Stashed changes
-=======
+
         return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
->>>>>>> Stashed changes
-=======
+
         return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
->>>>>>> Stashed changes
-=======
+
         return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
->>>>>>> Stashed changes
-=======
+
         return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
->>>>>>> Stashed changes
->>>>>>> Stashed changes
-<<<<<<< main
-=======
-        return JsonSerializer.Serialize(this.Metadata, MemoryRecordMetadataJsonSerializerContext.Default.MemoryRecordMetadata);
->>>>>>> upstream/main
-=======
->>>>>>> origin/main
+
     }
 }

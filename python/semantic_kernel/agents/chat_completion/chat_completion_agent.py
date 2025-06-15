@@ -46,7 +46,6 @@ else:
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-
 class ChatHistoryAgentThread(AgentThread):
     """Chat History Agent Thread class."""
 
@@ -110,7 +109,6 @@ class ChatHistoryAgentThread(AgentThread):
         if not isinstance(self._chat_history, ChatHistoryReducer):
             return None
         return await self._chat_history.reduce()
-
 
 @register_agent_type("chat_completion_agent")
 class ChatCompletionAgent(DeclarativeSpecMixin, Agent):
@@ -440,104 +438,26 @@ class ChatCompletionAgent(DeclarativeSpecMixin, Agent):
             f"with message count: {message_count_before_completion}."
         )
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
         async for message_list in messages:
             for message in message_list:
                 message.name = self.name
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
->>>>>>> Stashed changes
+
         async for message_list in messages:
             for message in message_list:
                 message.name = self.name
-=======
-<<<<<<< div
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
->>>>>>> head
+
         role = None
-<<<<<<< HEAD
         message_builder: list[str] = []
         async for message_list in messages:
             for message in message_list:
                 role = message.role
                 message.name = self.name
                 message_builder.append(message.content)
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
+
                 yield message
-=======
+
         response_builder: list[str] = []
         start_idx = len(agent_chat_history)
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
         async for response_list in responses:
             for response in response_list:
@@ -568,42 +488,6 @@ class ChatCompletionAgent(DeclarativeSpecMixin, Agent):
                 for message in new_messages:
                     await on_intermediate_message(message)
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-<<<<<<< HEAD
-=======
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
-=======
->>>>>>> Stashed changes
-=======
-=======
->>>>>>> Stashed changes
->>>>>>> head
         if role != AuthorRole.TOOL:
             # Tool messages will be automatically added to the chat history by the auto function invocation loop
             # if it's the response (i.e. terminated by a filter), thus we need to avoid notifying the thread about
@@ -614,47 +498,11 @@ class ChatCompletionAgent(DeclarativeSpecMixin, Agent):
                 )
             )
 
-<<<<<<< HEAD
-<<<<<<< div
-=======
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> head
-<<<<<<< HEAD
->>>>>>> main
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> eab985c52d058dc92abc75034bc790079131ce75
-<<<<<<< div
-=======
-=======
->>>>>>> main
->>>>>>> Stashed changes
-=======
->>>>>>> main
->>>>>>> Stashed changes
->>>>>>> head
     def _setup_agent_chat_history(self, history: ChatHistory) -> ChatHistory:
         """Setup the agent chat history."""
         chat = []
-=======
+
     # endregion
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
 
     # region Helper Methods
 

@@ -31,7 +31,6 @@ from semantic_kernel.exceptions.agent_exceptions import AgentChatException
 from semantic_kernel.functions.kernel_arguments import KernelArguments
 from semantic_kernel.kernel import Kernel
 
-
 @pytest.fixture
 def mock_thread_messages():
     class MockMessage:
@@ -77,7 +76,6 @@ def mock_thread_messages():
         ),
     ]
 
-
 @pytest.fixture
 def mock_assistant():
     return Assistant(
@@ -106,7 +104,6 @@ def mock_assistant():
         ),
     )
 
-
 async def test_receive_messages():
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
 
@@ -120,7 +117,6 @@ async def test_receive_messages():
 
     with patch("semantic_kernel.agents.open_ai.assistant_content_generation.create_chat_message"):
         await channel.receive(history)  # type: ignore
-
 
 async def test_invoke_agent():
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
@@ -157,7 +153,6 @@ async def test_invoke_agent():
         assert is_visible is True
         assert isinstance(message, ChatMessageContent)
 
-
 @pytest.mark.asyncio
 async def test_invoke_agent_invalid_instance_throws():
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
@@ -171,7 +166,6 @@ async def test_invoke_agent_invalid_instance_throws():
     with pytest.raises(AgentChatException, match=f"Agent is not of the expected type {type(OpenAIAssistantAgent)}."):
         async for _, _ in channel.invoke(agent):
             pass
-
 
 async def test_invoke_streaming_agent():
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
@@ -210,7 +204,6 @@ async def test_invoke_streaming_agent():
     for message in results:
         assert isinstance(message, ChatMessageContent)
 
-
 async def test_invoke_streaming_agent_invalid_instance_throws():
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
 
@@ -220,11 +213,9 @@ async def test_invoke_streaming_agent_invalid_instance_throws():
     agent._is_deleted = False
     channel = OpenAIAssistantChannel(client=client, thread_id=thread_id)
 
-<<<<<<< HEAD:python/tests/unit/agents/test_open_ai_assistant_channel.py
     with pytest.raises(AgentChatException, match=f"Agent is not of the expected type {type(OpenAIAssistantBase)}."):
         async for _ in channel.invoke_stream(agent, []):
             pass
-
 
 @pytest.mark.asyncio
 async def test_invoke_agent_deleted():
@@ -240,7 +231,6 @@ async def test_invoke_agent_deleted():
         async for _ in channel.invoke(agent):
             pass
 
-
 @pytest.mark.asyncio
 async def test_invoke_streaming_agent_deleted():
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
@@ -252,12 +242,9 @@ async def test_invoke_streaming_agent_deleted():
     channel = OpenAIAssistantChannel(client=client, thread_id=thread_id)
 
     with pytest.raises(AgentChatException, match="Agent is deleted"):
-=======
-    with pytest.raises(AgentChatException, match=f"Agent is not of the expected type {type(OpenAIAssistantAgent)}."):
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e:python/tests/unit/agents/openai_assistant/test_open_ai_assistant_channel.py
+
         async for _ in channel.invoke_stream(agent, []):
             pass
-
 
 @pytest.mark.asyncio
 async def test_invoke_agent_wrong_type():
@@ -271,7 +258,6 @@ async def test_invoke_agent_wrong_type():
     with pytest.raises(AgentChatException, match="Agent is not of the expected type"):
         async for _ in channel.invoke(agent):
             pass
-
 
 async def test_get_history(mock_thread_messages, mock_assistant, openai_unit_test_env):
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
@@ -299,7 +285,6 @@ async def test_get_history(mock_thread_messages, mock_assistant, openai_unit_tes
 
     assert len(results) == 2
     mock_client.beta.threads.messages.list.assert_awaited_once_with(thread_id=thread_id, limit=100, order="desc")
-
 
 async def test_reset_channel(mock_thread_messages, mock_assistant, openai_unit_test_env):
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
@@ -333,7 +318,6 @@ async def test_reset_channel(mock_thread_messages, mock_assistant, openai_unit_t
 
     assert channel.thread_id is not None
 
-
 async def test_reset_channel_error_throws_exception(mock_thread_messages, mock_assistant, openai_unit_test_env):
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
 
@@ -364,7 +348,6 @@ async def test_reset_channel_error_throws_exception(mock_thread_messages, mock_a
 
     with pytest.raises(Exception, match="Test error"):
         await channel.reset()
-
 
 async def test_channel_receive_fcc_skipped(openai_unit_test_env):
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel

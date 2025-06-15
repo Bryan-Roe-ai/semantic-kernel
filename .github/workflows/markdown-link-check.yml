@@ -13,13 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-<<<<<<< HEAD
       
-=======
-        with:
-          persist-credentials: false
-
->>>>>>> 6829cc1483570aacfbb75d1065c9f2de96c1d77e
       # Checks the status of hyperlinks in all files
       - name: Run linkspector
         uses: umbrelladocs/action-linkspector@v1
