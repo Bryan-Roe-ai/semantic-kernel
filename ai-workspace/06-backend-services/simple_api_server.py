@@ -20,6 +20,12 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 import uvicorn
 
+# Import MCP client
+try:
+    from mcp_client import MCPClient, initialize_mcp_for_api
+except ImportError:
+    MCPClient = None
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -69,6 +75,9 @@ app.add_middleware(
 models_db = {}
 training_jobs = {}
 chat_sessions = {}
+
+# Global MCP client
+mcp_client = None
 
 # Mount static files
 static_path = Path(__file__).parent.parent / "05-samples-demos"
@@ -337,6 +346,78 @@ async def get_system_status():
             "/api/generate", "/api/training", "/docs", "/web"
         ]
     }
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize services on startup"""
+    await setup_mcp()
+    logger.info("🚀 AI Workspace API Server started successfully")
+
+async def setup_mcp():
+    """Setup MCP integration"""
+    global mcp_client
+    if MCPClient:
+        try:
+            workspace_root = Path(__file__).parent.parent
+            mcp_client = await initialize_mcp_for_api(workspace_root)
+            logger.info("MCP client initialized successfully")
+        except Exception as e:
+            logger.warning(f"Failed to initialize MCP client: {e}")
+
+# Add MCP endpoints
+@app.get("/api/mcp/status")
+async def get_mcp_status():
+    """Get MCP integration status"""
+    if not mcp_client:
+        return {"status": "unavailable", "message": "MCP client not initialized"}
+    
+    try:
+        health = await mcp_client.health_check()
+        return {"status": "available", "health": health}
+    except Exception as e:
+        return {"status": "error", "error": str(e)}
+
+@app.get("/api/mcp/tools")
+async def get_mcp_tools():
+    """Get available MCP tools"""
+    if not mcp_client:
+        return {"tools": {}, "message": "MCP client not available"}
+    
+    try:
+        tools = await mcp_client.get_available_tools()
+        return tools
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+@app.post("/api/mcp/github/execute")
+async def execute_github_tool(request: dict):
+    """Execute a GitHub MCP tool"""
+    if not mcp_client:
+        return {"error": "MCP client not available", "status": "error"}
+    
+    tool_name = request.get("tool")
+    parameters = request.get("parameters", {})
+    
+    if not tool_name:
+        return {"error": "Tool name required", "status": "error"}
+    
+    try:
+        result = await mcp_client.execute_github_tool(tool_name, parameters)
+        return result
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
+
+@app.get("/api/mcp/claude-config")
+async def get_claude_config():
+    """Get Claude Desktop MCP configuration"""
+    if not mcp_client:
+        return {"error": "MCP client not available", "status": "error"}
+    
+    try:
+        config = await mcp_client.create_mcp_config_for_claude()
+        return config
+    except Exception as e:
+        return {"error": str(e), "status": "error"}
 
 if __name__ == "__main__":
     import argparse
