@@ -1,7 +1,0 @@
-{
-  "learning_rate": 0.021822485449441972,
-  "batch_size": 16,
-  "hidden_size": 136,
-  "dropout_rate": 0.22513184788677348,
-  "fitness": 0.8265024008000006
-}

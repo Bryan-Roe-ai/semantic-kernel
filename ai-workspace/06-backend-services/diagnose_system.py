@@ -1,1 +1,0 @@
-/workspaces/semantic-kernel/./src/diagnose_system.py
