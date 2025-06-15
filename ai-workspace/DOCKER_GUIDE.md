@@ -24,6 +24,19 @@ docker-compose up -d
 
 ## 📁 Docker Structure
 
+ai-workspace/
+├── Dockerfile # Multi-stage production build
+├── docker-compose.yml # Full orchestration
+├── docker-compose.dev.yml # Development overrides
+├── .dockerignore # Build optimization
+├── docker/
+│ ├── entrypoint.sh # Container initialization
+│ ├── supervisord.conf # Service management
+│ └── nginx.conf # Reverse proxy config
+└── scripts/
+├── cleanup_and_automate.sh # Workspace automation
+└── docker_manager.sh # Docker operations
+
 ```
 ai-workspace/
 ├── Dockerfile                 # Multi-stage production build
@@ -43,17 +56,17 @@ ai-workspace/
 
 ### Core AI Workspace
 
-- **Main Portal**: http://localhost (Nginx reverse proxy)
-- **Jupyter Lab**: http://localhost:8888 (or http://localhost/jupyter)
-- **Backend API**: http://localhost:8000 (or http://localhost/api)
-- **Web Interface**: http://localhost:3000
+- **Main Portal**: <http://localhost> (Nginx reverse proxy)
+- **Jupyter Lab**: <http://localhost:8888> (or <http://localhost/jupyter>)
+- **Backend API**: <http://localhost:8000> (or <http://localhost/api>)
+- **Web Interface**: <http://localhost:3000>
 
 ### Supporting Services
 
 - **Redis Cache**: localhost:6379
-- **ChromaDB**: http://localhost:8001
-- **Prometheus**: http://localhost:9090
-- **Grafana**: http://localhost:3001
+- **ChromaDB**: <http://localhost:8001>
+- **Prometheus**: <http://localhost:9090>
+- **Grafana**: <http://localhost:3001>
 
 ## 🔧 Management Commands
 
@@ -118,6 +131,7 @@ ai-workspace/
    ```
 
 3. **Build and Test**
+
    ```bash
    ./scripts/docker_manager.sh build
    ./scripts/docker_manager.sh health
@@ -256,6 +270,7 @@ This will:
    ```
 
 4. **Service Not Starting**
+
    ```bash
    # Check logs
    ./scripts/docker_manager.sh logs [service]
@@ -325,7 +340,7 @@ docker run --rm -v ai_data:/data -v $(pwd):/backup alpine tar czf /backup/ai_dat
 
 1. **Configure Environment**: Set up your API keys in `.env`
 2. **Deploy Services**: Run `./scripts/docker_manager.sh deploy`
-3. **Access Services**: Open http://localhost in your browser
+3. **Access Services**: Open <http://localhost> in your browser
 4. **Monitor Health**: Use `./scripts/docker_manager.sh health`
 5. **Scale as Needed**: Adjust docker-compose.yml for your requirements
 

@@ -5,7 +5,6 @@ Simple API Server for Custom LLM Studio
 A basic FastAPI backend for chat and model management without heavy dependencies.
 """
 
-import json
 import logging
 import os
 import uuid
@@ -208,6 +207,11 @@ async def mock_training_process(job_id: str):
             training_jobs[job_id]["status"] = "failed"
             training_jobs[job_id]["error"] = str(e)
 
+@app.get("/api/training/status")
+async def get_all_training_status():
+    """Get all training job statuses."""
+    return await list_training_jobs()
+
 @app.get("/api/training/{job_id}")
 async def get_training_status(job_id: str):
     """Get training job status."""
@@ -271,6 +275,51 @@ async def generate_text(request: ChatMessage):
     """Generate text endpoint (alias for chat)."""
     return await chat_completion(request)
 
+@app.post("/api/train")
+async def start_training_short(request: TrainingRequest, background_tasks: BackgroundTasks):
+    """Start model training (short endpoint alias)."""
+    return await start_training(request, background_tasks)
+
+@app.post("/api/models/{model_id}/load")
+async def load_model(model_id: str):
+    """Load a specific model."""
+    if model_id in models_db:
+        return {
+            "status": "loaded",
+            "model": models_db[model_id],
+            "message": f"Model {model_id} loaded successfully"
+        }
+    else:
+        raise HTTPException(status_code=404, detail="Model not found")
+
+@app.get("/api/models/{model_id}")
+async def get_model_info(model_id: str):
+    """Get specific model information."""
+    if model_id in models_db:
+        return models_db[model_id]
+    else:
+        # Check default models
+        default_models = {
+            "gpt2": {
+                "name": "gpt2",
+                "type": "causal_lm",
+                "status": "available",
+                "size": "124M",
+                "created": "2024-01-01T00:00:00"
+            },
+            "distilgpt2": {
+                "name": "distilgpt2",
+                "type": "causal_lm",
+                "status": "available",
+                "size": "82M",
+                "created": "2024-01-01T00:00:00"
+            }
+        }
+        if model_id in default_models:
+            return default_models[model_id]
+        else:
+            raise HTTPException(status_code=404, detail="Model not found")
+
 @app.get("/api/status")
 async def get_system_status():
     """Get detailed system status."""
@@ -284,7 +333,7 @@ async def get_system_status():
             "chat_sessions": len(chat_sessions)
         },
         "endpoints": [
-            "/health", "/api/health", "/api/models", "/api/chat", 
+            "/health", "/api/health", "/api/models", "/api/chat",
             "/api/generate", "/api/training", "/docs", "/web"
         ]
     }
