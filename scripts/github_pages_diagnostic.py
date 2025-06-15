@@ -266,14 +266,14 @@ class GitHubPagesDiagnostic:
     def check_cname_file(self) -> bool:
         """Check CNAME file configuration for custom domains"""
         print("\n🌐 Checking CNAME file configuration...")
-        
+
         # Check for CNAME file in repository root
         cname_root = self.repo_path / "CNAME"
         cname_workspace = self.ai_workspace_path / "CNAME"
-        
+
         cname_found = False
         cname_path = None
-        
+
         if cname_root.exists():
             cname_found = True
             cname_path = cname_root
@@ -285,56 +285,56 @@ class GitHubPagesDiagnostic:
         else:
             self.log_success("No CNAME file found - using default GitHub Pages domain")
             return True
-            
+
         if cname_found and cname_path:
             try:
                 # Read and validate CNAME file
                 with open(cname_path, 'r') as f:
                     content = f.read().strip()
-                    
+
                 # Check if filename is uppercase
                 if cname_path.name != "CNAME":
                     self.log_issue(f"CNAME filename should be uppercase, found: {cname_path.name}", "CRITICAL")
                     return False
-                    
+
                 # Check if content is valid
                 if not content:
                     self.log_issue("CNAME file is empty", "CRITICAL")
                     return False
-                    
+
                 lines = content.split('\n')
                 if len(lines) > 1:
                     self.log_issue("CNAME file should contain only one domain", "CRITICAL")
                     return False
-                    
+
                 domain = lines[0].strip()
-                
+
                 # Basic domain validation
                 if not domain or ' ' in domain:
                     self.log_issue(f"Invalid domain in CNAME file: '{domain}'", "CRITICAL")
                     return False
-                    
+
                 # Check for protocol prefix (should not be there)
                 if domain.startswith(('http://', 'https://')):
                     self.log_issue("CNAME file should contain domain only, not full URL", "CRITICAL")
                     return False
-                    
+
                 # Check for path (should not be there)
                 if '/' in domain:
                     self.log_issue("CNAME file should contain domain only, not path", "CRITICAL")
                     return False
-                    
+
                 self.log_success(f"CNAME file properly configured for domain: {domain}")
-                
+
                 # Add recommendation about DNS configuration
                 self.log_recommendation(f"Ensure DNS for {domain} points to your GitHub Pages site")
-                
+
                 return True
-                
+
             except Exception as e:
                 self.log_issue(f"Error reading CNAME file: {str(e)}", "CRITICAL")
                 return False
-                
+
         return True
 
     def generate_test_deployment(self):
