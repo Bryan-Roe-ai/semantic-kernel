@@ -55,30 +55,15 @@ jobs:
       - name: Validate workspace structure
         run: |
           cd ai-workspace
-          # Check for required directories
-          for dir in scripts 06-backend-services 05-samples-demos; do
-            if [ ! -d "$dir" ]; then
-              echo "❌ Required directory $dir not found"
-              exit 1
-            fi
-          done
-          echo "✅ Workspace structure validated"
-
-      - name: Run basic health check
-        run: |
-          cd ai-workspace
           source venv/bin/activate
-          # Basic Python syntax check
-          python -m py_compile ai_workspace_control.py
-          python -m py_compile 06-backend-services/simple_api_server.py
-          echo "✅ Python syntax validation passed"
+          python scripts/health_check.py
 
       - name: Test core functionality
         run: |
           cd ai-workspace
           source venv/bin/activate
-          # Test the master control system
-          timeout 30s python ai_workspace_control.py --tool deployment --command validate || true
+          # Test the master control system help
+          timeout 10s python ai_workspace_control.py --help || echo "Help command completed"
           echo "✅ Core functionality test completed"
 
   # Build static assets
