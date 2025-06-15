@@ -183,3 +183,35 @@ python ai_workspace_manager.py --setup
 - `finetune_gpt2_custom.py` - GPT-2 fine-tuning
 - `collect_llm_training_data.py` - Training data collection
 - `simple_llm_demo.py` - LLM demonstration
+
+## 🐳 Docker Deployment
+
+### Quick Start with Docker
+
+```bash
+# One-command deployment
+./scripts/docker_manager.sh deploy
+
+# Or step by step
+./scripts/cleanup_and_automate.sh --all  # Cleanup and prepare
+./scripts/docker_manager.sh build        # Build image
+./scripts/docker_manager.sh compose      # Start services
+```
+
+### Docker Services
+
+- **Main Portal**: http://localhost (Nginx reverse proxy)
+- **Jupyter Lab**: http://localhost:8888
+- **Backend API**: http://localhost:8000
+- **Web Interface**: http://localhost:3000
+- **ChromaDB**: http://localhost:8001
+- **Monitoring**: http://localhost:9090 (Prometheus)
+
+### Management Commands
+
+```bash
+./scripts/docker_manager.sh [command]
+# Commands: build, compose, stop, logs, exec, health, cleanup, dev, deploy
+```
+
+For detailed Docker deployment instructions, see [DOCKER_GUIDE.md](DOCKER_GUIDE.md).

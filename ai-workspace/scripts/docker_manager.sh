@@ -35,27 +35,27 @@ log_error() {
 
 build_image() {
     log "🏗️  Building Docker image..."
-    
+
     cd "$WORKSPACE_ROOT"
-    
+
     # Run cleanup first
     ./scripts/cleanup_and_automate.sh --docker
-    
+
     # Build the image
     docker build -t "$IMAGE_NAME:latest" -t "$IMAGE_NAME:$(date +%Y%m%d)" .
-    
+
     # Show image info
     docker images "$IMAGE_NAME"
-    
+
     log "✅ Docker image built successfully"
 }
 
 run_container() {
     log "🚀 Starting Docker container..."
-    
+
     # Stop existing container if running
     stop_container 2>/dev/null || true
-    
+
     # Run new container
     docker run -d \
         --name "$CONTAINER_NAME" \
@@ -69,61 +69,61 @@ run_container() {
         --env-file .env \
         --restart unless-stopped \
         "$IMAGE_NAME:latest"
-    
+
     log "✅ Container started successfully"
     show_container_info
 }
 
 run_with_compose() {
     log "🐳 Starting with Docker Compose..."
-    
+
     cd "$WORKSPACE_ROOT"
-    
+
     # Stop any existing services
     docker-compose down 2>/dev/null || true
-    
+
     # Start services
     docker-compose up -d
-    
+
     log "✅ Docker Compose services started"
     show_compose_status
 }
 
 stop_container() {
     log "🛑 Stopping Docker container..."
-    
+
     docker stop "$CONTAINER_NAME" 2>/dev/null || true
     docker rm "$CONTAINER_NAME" 2>/dev/null || true
-    
+
     log "✅ Container stopped"
 }
 
 stop_compose() {
     log "🛑 Stopping Docker Compose services..."
-    
+
     cd "$WORKSPACE_ROOT"
     docker-compose down
-    
+
     log "✅ Docker Compose services stopped"
 }
 
 cleanup_docker() {
     log "🧹 Cleaning up Docker resources..."
-    
+
     # Stop and remove containers
     stop_container 2>/dev/null || true
     stop_compose 2>/dev/null || true
-    
+
     # Remove unused images
     docker image prune -f
-    
+
     # Remove unused volumes (be careful with this)
     read -p "Remove unused Docker volumes? [y/N]: " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         docker volume prune -f
     fi
-    
+
     log "✅ Docker cleanup completed"
 }
 
@@ -163,9 +163,9 @@ show_compose_status() {
 
 show_logs() {
     local service="${1:-$CONTAINER_NAME}"
-    
+
     log "📝 Showing logs for: $service"
-    
+
     if docker-compose ps "$service" &>/dev/null; then
         cd "$WORKSPACE_ROOT"
         docker-compose logs -f "$service"
@@ -176,9 +176,9 @@ show_logs() {
 
 exec_into_container() {
     local service="${1:-$CONTAINER_NAME}"
-    
+
     log "🔧 Executing into container: $service"
-    
+
     if docker-compose ps "$service" &>/dev/null; then
         cd "$WORKSPACE_ROOT"
         docker-compose exec "$service" /bin/bash
@@ -189,11 +189,11 @@ exec_into_container() {
 
 health_check() {
     log "🔍 Running health checks..."
-    
+
     # Check if services are running
     if docker ps -f "name=$CONTAINER_NAME" --format "table {{.Names}}" | grep -q "$CONTAINER_NAME"; then
         log "✅ Container is running"
-        
+
         # Check service endpoints
         curl -s http://localhost/health >/dev/null && log "✅ Main portal is responding" || log_warn "❌ Main portal not responding"
         curl -s http://localhost:8000/health >/dev/null && log "✅ Backend API is responding" || log_warn "❌ Backend API not responding"
@@ -210,32 +210,32 @@ health_check() {
 
 dev_mode() {
     log "🛠️  Starting in development mode..."
-    
+
     cd "$WORKSPACE_ROOT"
-    
+
     # Stop production containers
     docker-compose down 2>/dev/null || true
-    
+
     # Start with development overrides
     docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-    
+
     log "✅ Development mode started"
     show_compose_status
 }
 
 production_deploy() {
     log "🚀 Deploying to production..."
-    
+
     # Build optimized image
     build_image
-    
+
     # Start production services
     run_with_compose
-    
+
     # Run health checks
     sleep 10
     health_check
-    
+
     log "✅ Production deployment completed"
 }
 

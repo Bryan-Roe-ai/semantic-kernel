@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 # Development overrides for Docker Compose
 # Use with: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
@@ -27,7 +27,7 @@ services:
       - ai_uploads:/app/uploads
       - ai_logs:/app/logs
     command: ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
-    
+
   # Development database for testing
   postgres:
     image: postgres:15-alpine

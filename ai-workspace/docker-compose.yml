@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # =============================================================================
@@ -11,10 +11,10 @@ services:
       target: runtime
     container_name: semantic-kernel-ai-workspace
     ports:
-      - "8000:8000"   # Backend API
-      - "8888:8888"   # Jupyter Lab
-      - "3000:3000"   # Web Interface
-      - "80:80"       # Main Portal (Nginx)
+      - "8000:8000" # Backend API
+      - "8888:8888" # Jupyter Lab
+      - "3000:3000" # Web Interface
+      - "80:80" # Main Portal (Nginx)
     volumes:
       # Persistent data
       - ai_data:/app/data
@@ -93,11 +93,11 @@ services:
       - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/etc/prometheus/console_libraries'
-      - '--web.console.templates=/etc/prometheus/consoles'
-      - '--web.enable-lifecycle'
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--web.enable-lifecycle"
     networks:
       - ai-network
     restart: unless-stopped
