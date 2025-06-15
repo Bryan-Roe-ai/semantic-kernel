@@ -19,10 +19,15 @@ jobs:
       run: |
         echo "Resolving issues by applying predefined solutions..."
         issues=$(gh issue list --state open --label "bug" --json number,title)
-        
+
+        if [ -z "$issues" ]; then
+          echo "No issues to resolve."
+          exit 0
+        fi
+
         for issue in $(echo "${issues}" | jq -r '.[] | @base64'); do
           _jq() {
-            echo ${issue} | base64 --decode | jq -r ${1}
+            echo "${issue}" | base64 --decode | jq -r "${1}"
           }
           issue_number=$(_jq '.number')
           issue_title=$(_jq '.title')
@@ -30,15 +35,15 @@ jobs:
           echo "Resolving issue #${issue_number}: ${issue_title}"
           
           # Add your predefined solution logic here
-          gh issue comment ${issue_number} --body "Issue resolved by applying predefined solution."
-          gh issue close ${issue_number}
+          gh issue comment "${issue_number}" --body "Issue resolved by applying predefined solution."
+          gh issue close "${issue_number}"
           
           if [ $? -ne 0 ]; then
             echo "Failed to resolve issue #${issue_number}"
             exit 1
           fi
         done
-      continue-on-error: false
+      shell: bash
 
     - name: Fix Errors
       run: ./fix-errors.sh
@@ -57,10 +62,15 @@ jobs:
       run: |
         echo "Ensuring resolved issues adhere to best practices..."
         issues=$(gh issue list --state closed --label "bug" --json number,title)
-        
+
+        if [ -z "$issues" ]; then
+          echo "No closed issues to verify."
+          exit 0
+        fi
+
         for issue in $(echo "${issues}" | jq -r '.[] | @base64'); do
           _jq() {
-            echo ${issue} | base64 --decode | jq -r ${1}
+            echo "${issue}" | base64 --decode | jq -r "${1}"
           }
           issue_number=$(_jq '.number')
           issue_title=$(_jq '.title')
@@ -68,19 +78,23 @@ jobs:
           echo "Checking best practices adherence for issue #${issue_number}: ${issue_title}"
           
           # Add your best practices adherence logic here
-          # Notify trusted people for approval
-          gh issue comment ${issue_number} --body "Issue adherence to best practices verified."
+          gh issue comment "${issue_number}" --body "Issue adherence to best practices verified."
         done
-      continue-on-error: false
+      shell: bash
 
     - name: Notify trusted people for approval
       run: |
         echo "Notifying trusted people for approval..."
         issues=$(gh issue list --state closed --label "bug" --json number,title)
-        
+
+        if [ -z "$issues" ]; then
+          echo "No issues to notify for approval."
+          exit 0
+        fi
+
         for issue in $(echo "${issues}" | jq -r '.[] | @base64'); do
           _jq() {
-            echo ${issue} | base64 --decode | jq -r ${1}
+            echo "${issue}" | base64 --decode | jq -r "${1}"
           }
           issue_number=$(_jq '.number')
           issue_title=$(_jq '.title')
@@ -88,9 +102,6 @@ jobs:
           echo "Notifying trusted people for issue #${issue_number}: ${issue_title}"
           
           # Add your notification logic here
-          gh issue comment ${issue_number} --body "Trusted people notified for approval."
+          gh issue comment "${issue_number}" --body "Trusted people notified for approval."
         done
-      continue-on-error: false
-
-    - name: Run fix-errors.sh
-      run: ./fix-errors.sh
+      shell: bash

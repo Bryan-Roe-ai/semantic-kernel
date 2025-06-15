@@ -1,0 +1,21 @@
+{
+  "model": {
+    "provider": "ONNX",
+    "name": "phi-4"
+  },
+  "history": {
+    "storage": "file",        // or "database", "memory", etc.
+    "location": "./history/", // directory or DB connection string
+    "max_entries": 200,        // how many previous exchanges to keep
+    "retention": "14d"        // how long (days) to keep history, optional
+  },
+  "copilot": {
+    "enabled": true,
+    "use_history": true,      // enables using conversation history for completions
+    "history_context_window": 100 // how many past exchanges to inject for context
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 8000
+  }
+}
