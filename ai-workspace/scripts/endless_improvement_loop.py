@@ -655,6 +655,16 @@ class EndlessImprovementLoop:
             self.agents.append(MetaLearningAgent("meta_learning", self.workspace_root))
         except ImportError:
             logger.info("Meta-learning agent not available")
+        
+        try:
+            from multi_agent_coordinator import MultiAgentCoordinator
+            coordinator = MultiAgentCoordinator("coordinator", self.workspace_root)
+            # Register all agents with the coordinator
+            for agent in self.agents:
+                coordinator.register_agent(agent)
+            self.agents.append(coordinator)
+        except ImportError:
+            logger.info("Multi-agent coordinator not available")
     
     async def start_endless_loop(self, cycle_interval: int = 300):  # 5 minutes default
         """Start the endless improvement loop."""

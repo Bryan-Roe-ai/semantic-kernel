@@ -84,10 +84,10 @@ echo "======================"
 
 if [ -d "docs" ]; then
     print_status "success" "docs/ directory exists"
-    
+
     doc_files=$(find docs -type f | wc -l)
     print_status "info" "Contains $doc_files files"
-    
+
     # List key files
     for file in docs/*.html docs/*.js; do
         if [ -f "$file" ]; then
@@ -107,14 +107,14 @@ echo "=========================="
 # Check GitHub Actions workflow
 if [ -f ".github/workflows/pages.yml" ]; then
     print_status "success" "GitHub Pages workflow exists"
-    
+
     # Check workflow syntax
     if grep -q "Deploy AI Workspace to GitHub Pages" ".github/workflows/pages.yml"; then
         print_status "success" "Workflow has correct name"
     else
         print_status "warning" "Workflow name might be incorrect"
     fi
-    
+
     if grep -q "actions/configure-pages@v5" ".github/workflows/pages.yml"; then
         print_status "success" "Uses correct Pages action version"
     elif grep -q "actions/configure-pages" ".github/workflows/pages.yml"; then
