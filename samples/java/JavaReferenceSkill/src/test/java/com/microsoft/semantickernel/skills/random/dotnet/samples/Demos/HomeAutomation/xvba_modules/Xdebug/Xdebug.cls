@@ -101,7 +101,7 @@ End Function
 'Write Debug ino on File
 '
 '
-'*/  
+'*/
 Private Function writeDebugFileContent(messageText,messageType)
 
      Dim filePath As String
@@ -129,7 +129,7 @@ Private Function writeDebugFileContent(messageText,messageType)
           debugMessage= PREFIX & "Info:" & messageText
      End Select
 
-     Print #FileNum,debugMessage 
+     Print #FileNum,debugMessage
 
      Close #FileNum
 
@@ -146,47 +146,47 @@ Private  Function createOutputMessage(inputValue) As String
      Dim typeOfVar As Integer
      Dim response As String
 
-     typeOfVar = VarType(inputValue) 
+     typeOfVar = VarType(inputValue)
 
 
-     'Set Error Source Macro/Function name 
+     'Set Error Source Macro/Function name
      Err.Source="createOutputMessage"
-     Select Case typeOfVar 
-      Case STRING_TYPE 
+     Select Case typeOfVar
+      Case STRING_TYPE
           response = "String: " &  inputValue
-      Case INTEGER_TYPE 
+      Case INTEGER_TYPE
           response = "Integer: " & CStr(inputValue)
       Case LONG_TYPE
           response = "Long: " & CStr(inputValue)
-      Case SINGLE_TYPE 
+      Case SINGLE_TYPE
           response = "Single: " & CStr(inputValue)
-      Case DOUBLE_TYPE 
+      Case DOUBLE_TYPE
           response = "Double: " & CStr(inputValue)
-      Case CURRENCY_TYPE 
+      Case CURRENCY_TYPE
           response = "Currenty: " & CStr(inputValue)
-      Case DATE_TYPE 
+      Case DATE_TYPE
           response = "Date: " & CStr(inputValue)
-      Case DECIMAL_TYPE 
+      Case DECIMAL_TYPE
           response = "Decimal: " & CStr(inputValue)
-      Case LONG_LONG_TYPE 
+      Case LONG_LONG_TYPE
           response = "LongLong: " & CStr(inputValue)
-      Case BOOLEAN_TYPE 
+      Case BOOLEAN_TYPE
           response = "Boolean: " & CStr(inputValue)
-      Case ARRAY_TYPE 
+      Case ARRAY_TYPE
           response = makeArrayTypeMessage(inputValue)
-      Case EMPTY_TYPE 
+      Case EMPTY_TYPE
           response = "Empty: "
       Case OBJECT_TYPE
           response = "Object: "  & TypeName(inputValue)
-      Case NULL_TYPE 
+      Case NULL_TYPE
           response = "Null: "
-      Case ERROR_TYPE 
+      Case ERROR_TYPE
           response = "Error: "
       Case VARIANT_TYPE
           response = "Variant: "
-      Case DATA_OBJECT_TYPE 
+      Case DATA_OBJECT_TYPE
           response = "Data Object: " & TypeName(inputValue)
-      Case Else 
+      Case Else
           response = "Type Not Supported yet please inform xvba developer "
           Debug.Print typeOfVar
           Debug.Print inputValue
@@ -206,8 +206,8 @@ Private  Function makeArrayTypeMessage(inputValue)As String
 
      For Each nextItem In inputValue
           message =  createOutputMessage(nextItem)
-          response = response & "                              [ " & message & " ]" & vbCrLf 
-     Next nextItem 
+          response = response & "                              [ " & message & " ]" & vbCrLf
+     Next nextItem
      makeArrayTypeMessage =    "Array: " & vbCrLf  & response
 End Function
 
@@ -226,11 +226,11 @@ Private  Function ErrorHanddler() As String
 
 
      Select Case Err.Number
-      Case 11 
+      Case 11
           numberDescription = vbCrLf  & MESSAGE_SPACE & "Error Number: " & Err.Number
           lineError = vbCrLf  & MESSAGE_SPACE & "Error Line: " & Erl
           errorDescription =  vbCrLf & MESSAGE_SPACE & "Error Description: " & Err.Description
-      Case Else 
+      Case Else
           numberDescription = vbCrLf  & MESSAGE_SPACE & "Error Number: " & Err.Number
           errorDescription =  vbCrLf & MESSAGE_SPACE & "Error Description: " & Err.Description
      End Select

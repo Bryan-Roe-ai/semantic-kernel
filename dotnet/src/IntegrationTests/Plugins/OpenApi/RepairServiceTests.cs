@@ -22,7 +22,6 @@ public class RepairServiceTests
         // Arrange
         var kernel = new Kernel();
         using var stream = System.IO.File.OpenRead("Plugins/OpenApi/repair-service.json");
-        using var stream = System.IO.File.OpenRead("Plugins/repair-service.json");
         using HttpClient httpClient = new();
 
         var plugin = await kernel.ImportPluginFromOpenApiAsync(
@@ -136,7 +135,6 @@ public class RepairServiceTests
         // Arrange
         var kernel = new Kernel();
         using var stream = System.IO.File.OpenRead("Plugins/OpenApi/repair-service.json");
-        using var stream = System.IO.File.OpenRead("Plugins/repair-service.json");
         using HttpClient httpClient = new();
 
         var plugin = await kernel.ImportPluginFromOpenApiAsync(
@@ -215,8 +213,6 @@ public class RepairServiceTests
         // Arrange
         var kernel = new Kernel();
         using var stream = System.IO.File.OpenRead("Plugins/OpenApi/repair-service.json");
-        using var stream = System.IO.File.OpenRead("Plugins/repair-service.json");
-
         using var httpHandler = new HttpClientHandler();
         using var customHandler = new CustomHandler(httpHandler);
         using HttpClient httpClient = new(customHandler);
