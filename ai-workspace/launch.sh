@@ -49,6 +49,8 @@ show_menu() {
     echo "7. 📁 Open workspace in VS Code"
     echo "8. 🌐 Launch web interface"
     echo "9. ⚙️  Environment configuration"
+    echo "10. 🐳 Docker management"
+    echo "11. 🧹 Cleanup workspace"
     echo "0. ❌ Exit"
     echo ""
 }
@@ -205,11 +207,130 @@ configure_env() {
     echo "- HUGGINGFACE_API_KEY"
 }
 
+# Function to manage Docker
+manage_docker() {
+    echo -e "${GREEN}🐳 Docker Management${NC}"
+    echo "1. 🏗️  Build Docker image"
+    echo "2. 🚀 Start with Docker Compose"
+    echo "3. 🛑 Stop Docker services"
+    echo "4. 📊 Show Docker status"
+    echo "5. 📝 Show Docker logs"
+    echo "6. 🧹 Clean up Docker resources"
+    echo "7. 🛠️  Development mode"
+    echo "8. 🚀 Production deploy"
+    echo "0. ↩️  Back to main menu"
+    echo ""
+
+    read -p "Select Docker action (0-8): " docker_choice
+
+    case $docker_choice in
+        1)
+            echo -e "${GREEN}🏗️  Building Docker image...${NC}"
+            ./scripts/docker_manager.sh build
+            ;;
+        2)
+            echo -e "${GREEN}🚀 Starting with Docker Compose...${NC}"
+            ./scripts/docker_manager.sh compose
+            ;;
+        3)
+            echo -e "${GREEN}🛑 Stopping Docker services...${NC}"
+            ./scripts/docker_manager.sh stop
+            ;;
+        4)
+            echo -e "${GREEN}📊 Docker Status...${NC}"
+            ./scripts/docker_manager.sh status
+            ;;
+        5)
+            echo -e "${GREEN}📝 Docker Logs...${NC}"
+            read -p "Service name (or press Enter for main): " service_name
+            ./scripts/docker_manager.sh logs "${service_name:-ai-workspace}"
+            ;;
+        6)
+            echo -e "${GREEN}🧹 Cleaning up Docker resources...${NC}"
+            ./scripts/docker_manager.sh cleanup
+            ;;
+        7)
+            echo -e "${GREEN}🛠️  Starting development mode...${NC}"
+            ./scripts/docker_manager.sh dev
+            ;;
+        8)
+            echo -e "${GREEN}🚀 Production deployment...${NC}"
+            ./scripts/docker_manager.sh deploy
+            ;;
+        0)
+            return
+            ;;
+        *)
+            echo -e "${RED}❌ Invalid option${NC}"
+            ;;
+    esac
+}
+
+# Function to cleanup workspace
+cleanup_workspace() {
+    echo -e "${GREEN}🧹 Workspace Cleanup${NC}"
+    echo "1. 🐍 Clean Python cache"
+    echo "2. 📝 Clean logs"
+    echo "3. 🗑️  Clean temporary files"
+    echo "4. 🔗 Fix broken links"
+    echo "5. 🏗️  Optimize structure"
+    echo "6. 📦 Update dependencies"
+    echo "7. 💾 Backup configuration"
+    echo "8. 🔍 Run health checks"
+    echo "9. 🐳 Prepare for Docker"
+    echo "10. 🎯 Run all cleanup tasks"
+    echo "0. ↩️  Back to main menu"
+    echo ""
+
+    read -p "Select cleanup action (0-10): " cleanup_choice
+
+    case $cleanup_choice in
+        1)
+            ./scripts/cleanup_and_automate.sh --cleanup
+            ;;
+        2)
+            find logs/ -name "*.log" -mtime +7 -delete 2>/dev/null || true
+            echo "✅ Logs cleaned"
+            ;;
+        3)
+            ./scripts/cleanup_and_automate.sh --cleanup
+            ;;
+        4)
+            find . -type l -! -exec test -e {} \; -delete 2>/dev/null || true
+            echo "✅ Broken links fixed"
+            ;;
+        5)
+            ./scripts/cleanup_and_automate.sh --optimize
+            ;;
+        6)
+            ./scripts/cleanup_and_automate.sh --update
+            ;;
+        7)
+            ./scripts/cleanup_and_automate.sh --backup
+            ;;
+        8)
+            ./scripts/cleanup_and_automate.sh --health
+            ;;
+        9)
+            ./scripts/cleanup_and_automate.sh --docker
+            ;;
+        10)
+            ./scripts/cleanup_and_automate.sh --all
+            ;;
+        0)
+            return
+            ;;
+        *)
+            echo -e "${RED}❌ Invalid option${NC}"
+            ;;
+    esac
+}
+
 # Main loop
 while true; do
     echo ""
     show_menu
-    read -p "Enter your choice (0-9): " choice
+    read -p "Enter your choice (0-11): " choice
 
     case $choice in
         1) show_status ;;
@@ -221,6 +342,8 @@ while true; do
         7) open_vscode ;;
         8) launch_web ;;
         9) configure_env ;;
+        10) manage_docker ;;
+        11) cleanup_workspace ;;
         0) echo -e "${GREEN}👋 Goodbye!${NC}"; exit 0 ;;
         *) echo -e "${RED}❌ Invalid option. Please try again.${NC}" ;;
     esac
