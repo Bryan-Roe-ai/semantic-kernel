@@ -5,12 +5,11 @@ updates:
   - package-ecosystem: "nuget"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "daily"
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name      # <-- Update with your team if desired
+      - Bryan-Roe
     ignore:
       - dependency-name: "System.*"
         update-types: ["version-update:semver-major"]
@@ -29,17 +28,19 @@ updates:
       dotnet-dependencies:
         patterns:
           - "*"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "[Dependabot]"
 
   # JavaScript/Node (npm) for sample apps
   - package-ecosystem: "npm"
     directory: "/samples/apps"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "daily"
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name
+      - Bryan-Roe
     labels:
       - "npm"
       - "dependencies"
@@ -48,17 +49,19 @@ updates:
       npm-dependencies:
         patterns:
           - "*"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "[Dependabot]"
 
   # Python (pip)
   - package-ecosystem: "pip"
     directory: "/python/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "daily"
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name
+      - Bryan-Roe
     labels:
       - "python"
       - "dependencies"
@@ -67,17 +70,19 @@ updates:
       python-dependencies:
         patterns:
           - "*"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "[Dependabot]"
 
   # Java (Maven)
   - package-ecosystem: "maven"
     directory: "/samples/java/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "daily"
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name
+      - Bryan-Roe
     labels:
       - "java"
       - "dependencies"
@@ -86,17 +91,19 @@ updates:
       java-dependencies:
         patterns:
           - "*"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "[Dependabot]"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "daily"
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name
+      - Bryan-Roe
     labels:
       - "github-actions"
       - "dependencies"
@@ -105,17 +112,19 @@ updates:
       actions-dependencies:
         patterns:
           - "*"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "[Dependabot]"
 
   # Devcontainers
   - package-ecosystem: "devcontainers"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: "daily"
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name
+      - Bryan-Roe
     labels:
       - "devcontainers"
       - "dependencies"
@@ -124,21 +133,18 @@ updates:
       devcontainers-dependencies:
         patterns:
           - "*"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "[Dependabot]"
 
-# General options
-open-pull-requests-limit: 10
-
-# Enable security updates for all package ecosystems (explicit, even though default)
-# See: https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/enabling-and-disabling-version-updates
+# Enable security updates for all package ecosystems (explicit)
+enable-beta-ecosystems: true
 
 # Uncomment and configure below for private registries if needed
 # registries:
 #   - type: npm-registry
 #     url: https://registry.example.com
 #     token: ${{ secrets.NPM_TOKEN }}
-
-# Target branch for updates (uncomment if not using 'main')
-# target-branch: main
 
 # Automerge (uncomment if desired and safe for your workflow)
 # automerge: true
