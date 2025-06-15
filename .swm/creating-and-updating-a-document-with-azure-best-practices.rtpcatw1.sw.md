@@ -9,7 +9,9 @@ This document provides guidelines for using the `azure_development-get_best_prac
 
 ## Azure Best Practices
 
-### @azure Rule
+### "@azure Rule" Explained
+
+The "@azure Rule" refers to a guideline for developers working with Azure-related code or operations. It emphasizes the importance of following Azure best practices by leveraging the `azure_development-get_best_practices` tool whenever applicable.
 
 - **Use Azure Best Practices**: When generating code for Azure, running terminal commands for Azure, or performing operations related to Azure, invoke your `azure_development-get_best_practices` tool if available.
 
