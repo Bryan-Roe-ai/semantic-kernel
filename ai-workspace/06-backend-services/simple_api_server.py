@@ -261,6 +261,34 @@ async def serve_web_interface():
     else:
         return {"message": "Web interface not found", "expected_path": str(web_file)}
 
+@app.get("/api/health")
+async def api_health_check():
+    """Health check endpoint for API consistency."""
+    return await health_check()
+
+@app.post("/api/generate")
+async def generate_text(request: ChatMessage):
+    """Generate text endpoint (alias for chat)."""
+    return await chat_completion(request)
+
+@app.get("/api/status")
+async def get_system_status():
+    """Get detailed system status."""
+    return {
+        "status": "operational",
+        "timestamp": datetime.now().isoformat(),
+        "services": {
+            "api": "running",
+            "models": len(models_db),
+            "training_jobs": len(training_jobs),
+            "chat_sessions": len(chat_sessions)
+        },
+        "endpoints": [
+            "/health", "/api/health", "/api/models", "/api/chat", 
+            "/api/generate", "/api/training", "/docs", "/web"
+        ]
+    }
+
 if __name__ == "__main__":
     import argparse
 
