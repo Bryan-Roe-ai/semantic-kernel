@@ -57,7 +57,7 @@ var client = new BlobServiceClient(new Uri("https://<your-storage-account>.blob.
 #### Solutions
 
 1. **Reinstall the Tool**: If the tool is not found, try reinstalling it using the appropriate package manager.
-2. **Update Credentials**: If you encounter authentication errors, update your Azure credentials and try again.
+2. **Update Credentials and Permissions**: If you encounter authentication errors, update your Azure credentials and try again. Additionally, verify that your account has the necessary permissions to perform the required actions in Azure. You can check your role assignments in the Azure Portal or contact your administrator if you are unsure.
 3. **Check Network**: If you experience network issues, check your network settings and ensure you have a stable connection.
 
 ## GitHub Copilot Instructions
