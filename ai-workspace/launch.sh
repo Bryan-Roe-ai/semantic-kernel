@@ -14,12 +14,12 @@ NC='\033[0m' # No Color
 # Banner
 echo -e "${BLUE}"
 cat << "EOF"
-     _    ___   __        __         _                            
-    / \  |_ _|  \ \      / /__  _ __| | _____ _ __   __ _  ___ ___ 
+     _    ___   __        __         _
+    / \  |_ _|  \ \      / /__  _ __| | _____ _ __   __ _  ___ ___
    / _ \  | |    \ \ /\ / / _ \| '__| |/ / __| '_ \ / _` |/ __/ _ \
   / ___ \ | |     \ V  V / (_) | |  |   <\__ \ |_) | (_| | (_|  __/
  /_/   \_\___|     \_/\_/ \___/|_|  |_|\_\___/ .__/ \__,_|\___\___|
-                                            |_|                   
+                                            |_|
 EOF
 echo -e "${NC}"
 
@@ -65,13 +65,13 @@ show_status() {
 launch_jupyter() {
     echo -e "${GREEN}🚀 Launching Jupyter Lab...${NC}"
     cd "$WORKSPACE_DIR/01-notebooks"
-    
+
     # Check if jupyter is installed
     if ! command -v jupyter &> /dev/null; then
         echo -e "${YELLOW}Installing Jupyter Lab...${NC}"
         pip install jupyterlab
     fi
-    
+
     echo -e "${BLUE}Starting Jupyter Lab on port 8888...${NC}"
     jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root
 }
@@ -80,7 +80,7 @@ launch_jupyter() {
 start_backend() {
     echo -e "${GREEN}🚀 Starting Backend Services...${NC}"
     cd "$WORKSPACE_DIR/06-backend-services"
-    
+
     if [ -f "start_backend.py" ]; then
         python start_backend.py
     elif [ -f "app.py" ]; then
@@ -97,26 +97,26 @@ start_backend() {
 setup_dev_env() {
     echo -e "${GREEN}🔧 Setting up development environment...${NC}"
     cd "$WORKSPACE_DIR"
-    
+
     # Install requirements
     if [ -f "requirements.txt" ]; then
         echo -e "${BLUE}Installing Python dependencies...${NC}"
         pip install -r requirements.txt
     fi
-    
+
     # Setup pre-commit hooks if available
     if [ -f ".pre-commit-config.yaml" ]; then
         echo -e "${BLUE}Setting up pre-commit hooks...${NC}"
         pre-commit install
     fi
-    
+
     # Create .env file if it doesn't exist
     if [ ! -f ".env" ] && [ -f ".env.template" ]; then
         echo -e "${BLUE}Creating .env file from template...${NC}"
         cp .env.template .env
         echo -e "${YELLOW}Please edit .env file to add your API keys${NC}"
     fi
-    
+
     echo -e "${GREEN}✅ Development environment setup complete!${NC}"
 }
 
@@ -124,7 +124,7 @@ setup_dev_env() {
 open_docs() {
     echo -e "${GREEN}📖 Opening documentation...${NC}"
     cd "$WORKSPACE_DIR/08-documentation"
-    
+
     if command -v code &> /dev/null; then
         code README.md
     else
@@ -137,7 +137,7 @@ open_docs() {
 run_tests() {
     echo -e "${GREEN}🧪 Running tests...${NC}"
     cd "$ROOT_DIR"
-    
+
     # Try different test runners
     if [ -d "tests" ]; then
         if command -v pytest &> /dev/null; then
@@ -166,7 +166,7 @@ open_vscode() {
 launch_web() {
     echo -e "${GREEN}🌐 Launching web interface...${NC}"
     cd "$WORKSPACE_DIR/06-backend-services"
-    
+
     # Try to find and run a web server
     if [ -f "server.js" ]; then
         if command -v node &> /dev/null; then
@@ -189,15 +189,15 @@ launch_web() {
 configure_env() {
     echo -e "${GREEN}⚙️  Environment Configuration${NC}"
     cd "$WORKSPACE_DIR"
-    
+
     echo -e "${BLUE}Current environment files:${NC}"
     ls -la .env* 2>/dev/null || echo "No environment files found"
-    
+
     if [ -f ".env.template" ]; then
         echo -e "${YELLOW}Template file available: .env.template${NC}"
         echo "Copy this to .env and configure your API keys"
     fi
-    
+
     echo -e "${BLUE}Key environment variables to set:${NC}"
     echo "- OPENAI_API_KEY"
     echo "- AZURE_OPENAI_API_KEY"
@@ -210,7 +210,7 @@ while true; do
     echo ""
     show_menu
     read -p "Enter your choice (0-9): " choice
-    
+
     case $choice in
         1) show_status ;;
         2) launch_jupyter ;;
