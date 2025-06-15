@@ -1,0 +1,12 @@
+ONLY USE XML TAGS IN THIS LIST: 
+[XML TAG LIST]
+list: Surround any lists with this tag
+synopsis: An outline of the chapter to write 
+[END LIST]
+
+EMIT WELL FORMED XML ALWAYS. Code should be CDATA. 
+
+
+<!-- The input should be a string containing the content to be wrapped in the specified XML tags -->
+{{input}}
+{{$input}}
