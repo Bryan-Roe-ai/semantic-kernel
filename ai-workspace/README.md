@@ -1,8 +1,8 @@
 # 🤖 Semantic Kernel AI Workspace
 
-**Organized for Maximum AI Development Productivity**
+**Advanced AI Development Platform with Comprehensive Automation**
 
-Welcome to your fully organized AI development workspace! This structure has been designed to streamline AI development workflows using Microsoft Semantic Kernel and related technologies.
+Welcome to your fully organized AI development workspace! This structure has been designed to streamline AI development workflows using Microsoft Semantic Kernel, advanced automation tools, and comprehensive management systems.
 
 ## 🚀 Quick Start
 
@@ -10,11 +10,44 @@ Welcome to your fully organized AI development workspace! This structure has bee
 # Navigate to the AI workspace
 cd /workspaces/semantic-kernel/ai-workspace
 
-# Launch the interactive workspace manager
-./launch.sh
+# Interactive Master Control (Recommended)
+python ai_workspace_control.py --interactive
 
-# Or setup the environment directly
-python ai_workspace_manager.py --setup
+# Quick automated setup
+python ai_workspace_control.py --batch batches/quick-setup.batch
+
+# Traditional setup
+./launch.sh
+```
+
+## 🎛️ Master Control System
+
+The workspace includes a comprehensive **Master Control System** for managing all operations:
+
+- **🔧 Workspace Optimizer**: Performance optimization and cleanup
+- **📊 Real-time Monitor**: System monitoring with alerts
+- **🚀 Deployment Automator**: Multi-environment deployment automation
+- **🤖 AI Model Manager**: Complete model lifecycle management
+- **🔗 MCP Integration**: Model Context Protocol for advanced tool interoperability
+- **⚡ Batch Operations**: Automated workflow execution
+
+### Interactive Dashboard
+
+```bash
+python ai_workspace_control.py --interactive
+```
+
+### Command Line Interface
+
+```bash
+# Optimize workspace
+python ai_workspace_control.py --tool optimizer --command optimize
+
+# Deploy to staging
+python ai_workspace_control.py --tool deployment --command deploy --args --environment staging
+
+# Manage models
+python ai_workspace_control.py --tool model-manager --command list-models
 ```
 
 ## 📁 Organized Directory Structure
@@ -110,7 +143,111 @@ python ai_workspace_manager.py --setup
 - Package dependencies
 - Development settings
 
-## 🛠️ Development Environment
+## � Advanced Features
+
+### 🤖 AI Model Manager
+
+Complete lifecycle management for AI models:
+
+```bash
+# Download models from Hugging Face, URLs, or local files
+python scripts/ai_model_manager.py download --source "microsoft/DialoGPT-medium"
+
+# Optimize models (quantization, pruning, distillation)
+python scripts/ai_model_manager.py optimize --model-id my_model --optimization quantization
+
+# Benchmark performance
+python scripts/ai_model_manager.py benchmark --model-id my_model
+
+# Export/import models
+python scripts/ai_model_manager.py export --model-id my_model --path model.zip
+```
+
+### 📊 Real-time Monitoring
+
+Comprehensive system monitoring with alerting:
+
+```bash
+# Start real-time monitoring
+python scripts/ai_workspace_monitor.py
+
+# Generate reports
+python scripts/ai_workspace_monitor.py --report 24
+```
+
+**Monitors**:
+- System resources (CPU, Memory, Disk, GPU)
+- API endpoint health
+- Service availability
+- Error rates and performance
+
+### 🚀 Deployment Automation
+
+Multi-environment deployment with rollback support:
+
+```bash
+# Deploy to production
+python scripts/deployment_automator.py deploy --environment production --mode docker
+
+# Deploy to Kubernetes
+python scripts/deployment_automator.py deploy --environment staging --mode kubernetes
+
+# Validate deployment
+python scripts/deployment_automator.py validate
+```
+
+**Supported Platforms**:
+- Docker & Docker Compose
+- Kubernetes
+- Azure (Container Instances, App Service)
+- AWS (ECS, Lambda)
+
+### 🔧 Workspace Optimizer
+
+Automated optimization and cleanup:
+
+```bash
+# Full optimization
+python scripts/ai_workspace_optimizer.py
+
+# Quick cleanup
+python scripts/ai_workspace_optimizer.py --quick
+```
+
+**Features**:
+- Cleanup temporary files
+- Disk usage analysis
+- Cache optimization
+- Model organization
+- Performance reporting
+
+### 🎯 Batch Operations
+
+Automate complex workflows:
+
+```bash
+# Quick setup and validation
+python ai_workspace_control.py --batch batches/quick-setup.batch
+
+# Full deployment workflow
+python ai_workspace_control.py --batch batches/full-deployment.batch
+
+# Regular maintenance
+python ai_workspace_control.py --batch batches/maintenance.batch
+```
+
+### 🔗 MCP Integration
+
+Advanced tool interoperability with Model Context Protocol:
+
+- GitHub repository integration
+- Tool discovery and execution
+- Multi-agent coordination
+- Real-time context sharing
+
+**See**: [MCP_INTEGRATION_GUIDE.md](MCP_INTEGRATION_GUIDE.md) for detailed setup
+
+## �🛠️ Development Environment
 
 ### Prerequisites
 

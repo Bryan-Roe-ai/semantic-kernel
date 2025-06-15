@@ -1,0 +1,18 @@
+# AI Workspace Maintenance Batch
+# Regular maintenance tasks
+
+# 1. Clean up temporary files
+run optimizer optimize
+
+# 2. Clean up old models (30+ days)
+run model-manager cleanup --days 30
+
+# 3. Generate system report
+run monitor report
+
+# 4. Validate all systems
+run deployment validate
+
+# 5. Test core functionality
+run api-test test-api
+run mcp-test test-mcp
