@@ -45,7 +45,7 @@ fi
 # Remove duplicate and conflicting GitHub Pages files
 duplicate_pages_files=(
     "GITHUB_PAGES_DEPLOYMENT_COMPLETE.md"
-    "GITHUB_PAGES_FINAL_ANALYSIS.md" 
+    "GITHUB_PAGES_FINAL_ANALYSIS.md"
     "SEMANTIC_KERNEL_PAGES_READY.md"
     "GITHUB_PAGES_COMPLETE.md"
     "FINAL_GITHUB_PAGES_SOLUTION.md"
@@ -150,13 +150,13 @@ print_status "action" "Optimizing AI workspace structure..."
 
 if [ -d "ai-workspace" ]; then
     cd ai-workspace
-    
+
     # Clean up AI workspace cache and temp files
     rm -rf cache/* 2>/dev/null || true
     rm -rf logs/* 2>/dev/null || true
     rm -rf uploads/* 2>/dev/null || true
     rm -rf venv 2>/dev/null || true
-    
+
     # Organize scripts
     if [ -d "scripts" ] && [ ! -f "scripts/README.md" ]; then
         cat > scripts/README.md << 'EOF'
@@ -171,7 +171,7 @@ This directory contains utility scripts for the AI workspace.
 - `development/` - Development and testing tools
 EOF
     fi
-    
+
     cd ..
     print_status "success" "Optimized AI workspace structure"
 fi
@@ -189,7 +189,7 @@ This workspace contains the Semantic Kernel project with AI workspace enhancemen
 ### Key Directories
 
 - `ai-workspace/` - AI development tools and samples
-- `docs/` - GitHub Pages site and documentation  
+- `docs/` - GitHub Pages site and documentation
 - `scripts/` - Deployment and maintenance scripts
 - `samples/` - Code examples and demonstrations
 
@@ -204,7 +204,7 @@ https://Bryan-Roe-ai.github.io/semantic-kernel/
 - `scripts/deployment/setup-github-pages.sh` - Initial GitHub Pages setup
 - `scripts/deployment/check-pages-deployment.sh` - Deployment status checker
 
-#### Maintenance  
+#### Maintenance
 - `cleanup-workspace.sh` - Workspace cleanup and optimization
 
 ## 🚀 Getting Started
@@ -277,7 +277,7 @@ Generated on: $(date)
 #### Duplicates
 $(ls .cleanup/duplicates/ 2>/dev/null | wc -l) files moved to .cleanup/duplicates/
 
-#### Outdated  
+#### Outdated
 $(ls .cleanup/outdated/ 2>/dev/null | wc -l) files moved to .cleanup/outdated/
 
 ### Directory Structure
