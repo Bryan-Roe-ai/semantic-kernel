@@ -99,17 +99,17 @@ websocket_connections: List[WebSocket] = []
 
 class ModelManager:
     """Manage loaded models and their lifecycle."""
-    
+
     def __init__(self):
         self.models = {}
         self.tokenizers = {}
         self.model_configs = {}
-        
+
     def load_model(self, model_name: str, model_path: Optional[str] = None) -> bool:
         """Load a model for inference."""
         try:
             from transformers import AutoTokenizer, AutoModelForCausalLM
-            
+
             if model_path and Path(model_path).exists():
                 tokenizer = AutoTokenizer.from_pretrained(model_path)
                 model = AutoModelForCausalLM.from_pretrained(model_path)
@@ -117,20 +117,20 @@ class ModelManager:
                 # Load from Hugging Face Hub
                 tokenizer = AutoTokenizer.from_pretrained(model_name)
                 model = AutoModelForCausalLM.from_pretrained(model_name)
-                
+
             if tokenizer.pad_token is None:
                 tokenizer.pad_token = tokenizer.eos_token
-                
+
             self.models[model_name] = model
             self.tokenizers[model_name] = tokenizer
-            
+
             logger.info(f"Model {model_name} loaded successfully")
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to load model {model_name}: {str(e)}")
             return False
-    
+
     def unload_model(self, model_name: str) -> bool:
         """Unload a model to free memory."""
         try:
@@ -140,34 +140,34 @@ class ModelManager:
                 del self.tokenizers[model_name]
             if model_name in self.model_configs:
                 del self.model_configs[model_name]
-            
+
             # Force garbage collection
             import gc
             gc.collect()
             if hasattr(torch, 'cuda') and torch.cuda.is_available():
                 torch.cuda.empty_cache()
-                
+
             logger.info(f"Model {model_name} unloaded successfully")
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to unload model {model_name}: {str(e)}")
             return False
-    
+
     def generate_text(self, model_name: str, prompt: str, **kwargs) -> str:
         """Generate text using a loaded model."""
         if model_name not in self.models:
             raise HTTPException(status_code=404, detail=f"Model {model_name} not loaded")
-        
+
         try:
             import torch
-            
+
             model = self.models[model_name]
             tokenizer = self.tokenizers[model_name]
-            
+
             # Tokenize input
             inputs = tokenizer.encode(prompt, return_tensors="pt")
-            
+
             # Generate
             with torch.no_grad():
                 outputs = model.generate(
@@ -178,11 +178,11 @@ class ModelManager:
                     pad_token_id=tokenizer.eos_token_id,
                     attention_mask=torch.ones_like(inputs)
                 )
-            
+
             # Decode only the new tokens
             generated_text = tokenizer.decode(outputs[0][len(inputs[0]):], skip_special_tokens=True)
             return generated_text
-            
+
         except Exception as e:
             logger.error(f"Generation failed for model {model_name}: {str(e)}")
             raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
@@ -192,20 +192,20 @@ model_manager = ModelManager()
 
 class TrainingManager:
     """Manage training jobs and their lifecycle."""
-    
+
     def __init__(self):
         self.active_jobs = {}
-        
+
     async def start_training(self, job_id: str, request: TrainingRequest) -> None:
         """Start a training job in the background."""
         try:
             # Update job status
             training_jobs[job_id].status = "running"
             training_jobs[job_id].start_time = datetime.now().isoformat()
-            
+
             # Notify WebSocket clients
             await self.broadcast_training_update(job_id)
-            
+
             # Create model and data configs
             model_config = ModelConfig(
                 model_name=request.model_name,
@@ -217,18 +217,18 @@ class TrainingManager:
                 lora_alpha=request.lora_alpha,
                 max_length=request.max_length
             )
-            
+
             data_config = DataConfig()
             if request.dataset_path:
                 data_config.data_path = request.dataset_path
-            
+
             # Initialize trainer
             trainer = AdvancedLLMTrainer(model_config, data_config)
-            
+
             # Create training data if provided
             if request.training_data:
                 await self.prepare_training_data(request.training_data, data_config.data_path)
-            
+
             # Start training with progress callback
             def progress_callback(epoch: int, total_epochs: int, loss: float, metrics: Dict):
                 training_jobs[job_id].current_epoch = epoch
@@ -236,50 +236,50 @@ class TrainingManager:
                 training_jobs[job_id].loss = loss
                 training_jobs[job_id].metrics = metrics
                 training_jobs[job_id].progress = (epoch / total_epochs) * 100
-                
+
                 # Create async task to broadcast update
                 asyncio.create_task(self.broadcast_training_update(job_id))
-            
+
             # Train the model
             model_path = trainer.train_model(progress_callback=progress_callback)
-            
+
             # Update final status
             training_jobs[job_id].status = "completed"
             training_jobs[job_id].end_time = datetime.now().isoformat()
             training_jobs[job_id].progress = 100
-            
+
             await self.broadcast_training_update(job_id)
-            
+
             logger.info(f"Training job {job_id} completed successfully")
-            
+
         except Exception as e:
             logger.error(f"Training job {job_id} failed: {str(e)}")
             training_jobs[job_id].status = "failed"
             training_jobs[job_id].end_time = datetime.now().isoformat()
             training_jobs[job_id].logs.append(f"Error: {str(e)}")
-            
+
             await self.broadcast_training_update(job_id)
-    
+
     async def prepare_training_data(self, training_data: List[Dict], data_path: str):
         """Prepare training data from provided samples."""
         import json
-        
+
         os.makedirs(data_path, exist_ok=True)
-        
+
         # Split data into train/eval
         train_size = int(0.8 * len(training_data))
         train_data = training_data[:train_size]
         eval_data = training_data[train_size:]
-        
+
         # Save as JSONL files
         with open(f"{data_path}/train.jsonl", "w") as f:
             for item in train_data:
                 f.write(json.dumps(item) + "\n")
-                
+
         with open(f"{data_path}/eval.jsonl", "w") as f:
             for item in eval_data:
                 f.write(json.dumps(item) + "\n")
-    
+
     async def broadcast_training_update(self, job_id: str):
         """Broadcast training updates to all connected WebSocket clients."""
         if job_id in training_jobs:
@@ -288,7 +288,7 @@ class TrainingManager:
                 "job_id": job_id,
                 "status": training_jobs[job_id].dict()
             }
-            
+
             # Send to all connected WebSocket clients
             disconnected = []
             for websocket in websocket_connections:
@@ -296,7 +296,7 @@ class TrainingManager:
                     await websocket.send_text(json.dumps(message))
                 except:
                     disconnected.append(websocket)
-            
+
             # Remove disconnected clients
             for ws in disconnected:
                 websocket_connections.remove(ws)
@@ -333,25 +333,25 @@ async def chat(request: ChatMessage):
             success = model_manager.load_model(request.model)
             if not success:
                 raise HTTPException(status_code=500, detail=f"Failed to load model {request.model}")
-        
+
         # Generate response
         prompt = request.message
         if request.system:
             prompt = f"System: {request.system}\nUser: {request.message}\nAssistant:"
-        
+
         response = model_manager.generate_text(
             request.model,
             prompt,
             max_tokens=request.max_tokens,
             temperature=request.temperature
         )
-        
+
         return {
             "response": response,
             "model": request.model,
             "timestamp": datetime.now().isoformat()
         }
-        
+
     except Exception as e:
         logger.error(f"Chat error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -385,7 +385,7 @@ async def list_models():
     """List all available models."""
     try:
         models = []
-        
+
         # Get loaded models
         for name in model_manager.models.keys():
             models.append(ModelInfo(
@@ -395,7 +395,7 @@ async def list_models():
                 status="active",
                 created=datetime.now().isoformat()
             ))
-        
+
         # Get saved models from filesystem
         models_dir = Path("/workspaces/semantic-kernel/ai-workspace/models")
         if models_dir.exists():
@@ -408,9 +408,9 @@ async def list_models():
                         status="available",
                         created=datetime.fromtimestamp(model_dir.stat().st_ctime).isoformat()
                     ))
-        
+
         return {"models": models}
-        
+
     except Exception as e:
         logger.error(f"Error listing models: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -421,7 +421,7 @@ async def start_training(request: TrainingRequest, background_tasks: BackgroundT
     try:
         # Generate unique job ID
         job_id = str(uuid.uuid4())
-        
+
         # Create training status
         training_jobs[job_id] = TrainingStatus(
             job_id=job_id,
@@ -430,12 +430,12 @@ async def start_training(request: TrainingRequest, background_tasks: BackgroundT
             current_epoch=0,
             total_epochs=request.epochs
         )
-        
+
         # Start training in background
         background_tasks.add_task(training_manager.start_training, job_id, request)
-        
+
         return {"job_id": job_id, "status": "Training job started"}
-        
+
     except Exception as e:
         logger.error(f"Error starting training: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -445,7 +445,7 @@ async def get_training_status(job_id: str):
     """Get the status of a training job."""
     if job_id not in training_jobs:
         raise HTTPException(status_code=404, detail="Training job not found")
-    
+
     return training_jobs[job_id]
 
 @app.get("/api/train")
@@ -458,11 +458,11 @@ async def cancel_training(job_id: str):
     """Cancel a training job."""
     if job_id not in training_jobs:
         raise HTTPException(status_code=404, detail="Training job not found")
-    
+
     # TODO: Implement actual job cancellation
     training_jobs[job_id].status = "cancelled"
     training_jobs[job_id].end_time = datetime.now().isoformat()
-    
+
     return {"status": "Training job cancelled"}
 
 @app.post("/api/upload")
@@ -471,20 +471,20 @@ async def upload_file(file: UploadFile = File(...)):
     try:
         upload_dir = Path("/workspaces/semantic-kernel/ai-workspace/uploads")
         upload_dir.mkdir(exist_ok=True)
-        
+
         file_path = upload_dir / file.filename
-        
+
         with open(file_path, "wb") as buffer:
             content = await file.read()
             buffer.write(content)
-        
+
         return {
             "filename": file.filename,
             "path": str(file_path),
             "size": len(content),
             "status": "uploaded"
         }
-        
+
     except Exception as e:
         logger.error(f"Upload error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -495,15 +495,15 @@ async def websocket_endpoint(websocket: WebSocket):
     """WebSocket endpoint for real-time updates."""
     await websocket.accept()
     websocket_connections.append(websocket)
-    
+
     try:
         while True:
             # Keep connection alive
             data = await websocket.receive_text()
-            
+
             # Echo back for testing
             await websocket.send_text(f"Echo: {data}")
-            
+
     except WebSocketDisconnect:
         websocket_connections.remove(websocket)
 
@@ -516,7 +516,7 @@ if __name__ == "__main__":
             logger.info(f"CUDA available with {torch.cuda.device_count()} device(s)")
     except ImportError:
         logger.warning("PyTorch not available - some features may be limited")
-    
+
     # Start the server
     uvicorn.run(
         "api_server:app",
