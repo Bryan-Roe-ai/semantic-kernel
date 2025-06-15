@@ -1,8 +1,6 @@
 {
   "prettier.enable": true,
-  "css.lint.validProperties": [
-    "composes"
-  ],
+  "css.lint.validProperties": ["composes"],
   "editor.formatOnType": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
@@ -16,9 +14,7 @@
     }
   },
   "notebook.output.textLineLimit": 500,
-  "python.analysis.extraPaths": [
-    "./python/src"
-  ],
+  "python.analysis.extraPaths": ["./python/src"],
   "javascript.updateImportsOnFileMove.enabled": "always",
   "search.exclude": {
     "**/node_modules": true,
@@ -66,18 +62,7 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true
   },
-  "cSpell.words": [
-    "autogen",
-    "partitioner",
-    "dapr",
-    "pregel",
-    "prompty",
-    "skexp",
-    "superstep",
-    "supersteps",
-    "typeref",
-    "uninstantiated"
-  ],
+  // "cSpell.words" moved or removed due to unknown configuration setting
   "emeraldwalk.runonsave": {
     "commands": [
       {
@@ -89,9 +74,7 @@
   "java.debug.settings.onBuildFailureProceed": true,
   "java.compile.nullAnalysis.mode": "disabled",
   "dotnet.defaultSolution": "dotnet\\SK-dotnet.sln",
-  "python.testing.pytestArgs": [
-    "python/tests"
-  ],
+  "python.testing.pytestArgs": ["python/tests"],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "azureFunctions.deploySubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Release/net6.0/publish",
@@ -136,10 +119,7 @@
   "C_Cpp_Runner.compilerArgs": [],
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp_Runner.includePaths": [],
-  "C_Cpp_Runner.includeSearch": [
-    "*",
-    "**/*"
-  ],
+  "C_Cpp_Runner.includeSearch": ["*", "**/*"],
   "C_Cpp_Runner.excludeSearch": [
     "**/build",
     "**/build/**",
@@ -165,21 +145,17 @@
   "[git-commit]": {
     "editor.defaultFormatter": "Google.cros-ide"
   },
-  "java.jdt.ls.java.home": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23"
-  ],
+  "java.jdt.ls.java.home": "/home/broe/semantic-kernel/.devcontainer/OpenJDK-23",
   "notebook.defaultFormatter": "GitHub.copilot",
   "databricks.sensitiveValueStore": "VSCodeSettings",
   "[code-text-binary]": {
     "editor.defaultFormatter": "Google.cros-ide"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esben.pretter-vscode"
   },
   "[xml]": {
-    "editor.defaultFormatter": "Google.cros-ide"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "esben.prettier-vscode"
   },
   "editor.acceptSuggestionOnEnter": "on",
   "[toml]": {
