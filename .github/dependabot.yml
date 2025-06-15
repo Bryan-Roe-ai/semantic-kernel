@@ -10,7 +10,7 @@ updates:
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name      # <-- Update with your team if desired
+      - Bryan-Roe       # Updated to an actual reviewer
     ignore:
       - dependency-name: "System.*"
         update-types: ["version-update:semver-major"]
@@ -39,7 +39,7 @@ updates:
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name
+      - Bryan-Roe       # Updated to an actual reviewer
     labels:
       - "npm"
       - "dependencies"
@@ -58,7 +58,7 @@ updates:
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name
+      - Bryan-Roe       # Updated to an actual reviewer
     labels:
       - "python"
       - "dependencies"
@@ -77,7 +77,7 @@ updates:
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name
+      - Bryan-Roe       # Updated to an actual reviewer
     labels:
       - "java"
       - "dependencies"
@@ -96,7 +96,7 @@ updates:
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name
+      - Bryan-Roe       # Updated to an actual reviewer
     labels:
       - "github-actions"
       - "dependencies"
@@ -115,7 +115,7 @@ updates:
     assignees:
       - Bryan-Roe
     reviewers:
-      - your-team-name
+      - Bryan-Roe       # Updated to an actual reviewer
     labels:
       - "devcontainers"
       - "dependencies"
