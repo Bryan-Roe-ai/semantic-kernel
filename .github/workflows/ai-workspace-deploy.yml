@@ -97,36 +97,19 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements-minimal.txt
         
-    - name: Prepare deployment artifacts
+    - name: Build static site
       run: |
         cd ai-workspace
+        chmod +x scripts/build_static.sh
+        ./scripts/build_static.sh
         
-        # Create deployment directory
-        mkdir -p dist
-        
-        # Copy static files
-        cp -r 05-samples-demos/* dist/
-        
-        # Copy backend services
-        cp -r 06-backend-services dist/backend
-        
-        # Copy requirements
-        cp requirements-minimal.txt dist/
-        
-        # Copy Docker files
-        cp Dockerfile dist/
-        cp docker-compose.yml dist/
-        cp docker-compose.dev.yml dist/
-        
-        # Copy documentation
-        cp README.md dist/
-        cp SUCCESS_SUMMARY.md dist/
-        cp ISSUE_RESOLUTION.md dist/
-        
-        # Create a simple deployment info file
-        echo "AI Workspace Deployment - $(date)" > dist/deployment-info.txt
+        # Add GitHub-specific deployment info
+        echo "" >> dist/deployment-info.txt
+        echo "GitHub Deployment Info:" >> dist/deployment-info.txt
         echo "Commit: ${{ github.sha }}" >> dist/deployment-info.txt
         echo "Branch: ${{ github.ref_name }}" >> dist/deployment-info.txt
+        echo "Repository: ${{ github.repository }}" >> dist/deployment-info.txt
+        echo "Run ID: ${{ github.run_id }}" >> dist/deployment-info.txt
         
     - name: Upload deployment artifacts
       uses: actions/upload-artifact@v4
