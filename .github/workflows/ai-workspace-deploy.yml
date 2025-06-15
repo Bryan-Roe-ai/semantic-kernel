@@ -207,7 +207,7 @@ jobs:
           echo "Pages Deploy: ${{ needs.deploy-pages.result || 'skipped' }}"
           echo "Docker Build: ${{ needs.docker-build.result || 'skipped' }}"
           echo ""
-          
+
           # Check if core tests passed
           if [[ "${{ needs.test.result }}" == "success" && "${{ needs.build.result }}" == "success" ]]; then
             echo "✅ Core deployment completed successfully!"
@@ -217,7 +217,7 @@ jobs:
             echo "Test result: ${{ needs.test.result }}"
             echo "Build result: ${{ needs.build.result }}"
           fi
-          
+
           echo ""
           echo "📋 Summary:"
           echo "- Core functionality: ${{ needs.test.result == 'success' && '✅ PASSED' || '❌ FAILED' }}"

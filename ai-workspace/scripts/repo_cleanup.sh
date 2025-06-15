@@ -53,10 +53,10 @@ if command -v git &> /dev/null; then
     echo ""
     echo "📊 Git status:"
     git status --porcelain | head -10
-    
+
     untracked_count=$(git status --porcelain | grep "^??" | wc -l)
     modified_count=$(git status --porcelain | grep "^ M" | wc -l)
-    
+
     echo ""
     echo "Summary: $untracked_count untracked, $modified_count modified files"
 fi

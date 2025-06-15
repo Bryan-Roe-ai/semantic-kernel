@@ -11,15 +11,15 @@ from pathlib import Path
 def validate_github_actions():
     """Validate GitHub Actions workflows."""
     print("🔍 Validating GitHub Actions...")
-    
+
     workflow_dir = Path(".github/workflows")
     if not workflow_dir.exists():
         print("❌ No .github/workflows directory found")
         return False
-    
+
     valid_workflows = 0
     total_workflows = 0
-    
+
     for workflow_file in workflow_dir.glob("*.yml"):
         total_workflows += 1
         try:
@@ -31,19 +31,19 @@ def validate_github_actions():
             print(f"❌ {workflow_file.name}: {e}")
         except Exception as e:
             print(f"⚠️  {workflow_file.name}: {e}")
-    
+
     print(f"📊 {valid_workflows}/{total_workflows} workflows valid")
     return valid_workflows == total_workflows
 
 def validate_ai_workspace():
     """Validate AI workspace structure."""
     print("\n🤖 Validating AI Workspace...")
-    
+
     ai_workspace = Path("ai-workspace")
     if not ai_workspace.exists():
         print("❌ ai-workspace directory not found")
         return False
-    
+
     # Check required structure
     required_items = {
         "directories": [
@@ -52,13 +52,13 @@ def validate_ai_workspace():
             "07-data-resources", "08-documentation", "09-deployment", "10-config"
         ],
         "files": [
-            "README.md", "Dockerfile", "docker-compose.yml", 
+            "README.md", "Dockerfile", "docker-compose.yml",
             "ai_workspace_control.py", "requirements-ci.txt"
         ]
     }
-    
+
     missing_items = []
-    
+
     for directory in required_items["directories"]:
         dir_path = ai_workspace / directory
         if dir_path.exists():
@@ -66,7 +66,7 @@ def validate_ai_workspace():
         else:
             print(f"❌ {directory}/ (missing)")
             missing_items.append(f"directory: {directory}")
-    
+
     for file_name in required_items["files"]:
         file_path = ai_workspace / file_name
         if file_path.exists():
@@ -74,17 +74,17 @@ def validate_ai_workspace():
         else:
             print(f"❌ {file_name} (missing)")
             missing_items.append(f"file: {file_name}")
-    
+
     # Check critical scripts
     print("\n🔧 Validating critical scripts...")
     critical_scripts = [
         "scripts/health_check.py",
-        "scripts/ai_workspace_optimizer.py", 
+        "scripts/ai_workspace_optimizer.py",
         "scripts/ai_workspace_monitor.py",
         "scripts/deployment_automator.py",
         "scripts/ai_model_manager.py"
     ]
-    
+
     for script in critical_scripts:
         script_path = ai_workspace / script
         if script_path.exists():
@@ -96,29 +96,29 @@ def validate_ai_workspace():
         else:
             print(f"❌ {script} (missing)")
             missing_items.append(f"script: {script}")
-    
+
     if missing_items:
         print(f"\n❌ {len(missing_items)} missing items:")
         for item in missing_items:
             print(f"  - {item}")
         return False
-    
+
     print("✅ AI Workspace structure validated")
     return True
 
 def validate_python_syntax():
     """Validate Python syntax in key files."""
     print("\n🐍 Validating Python syntax...")
-    
+
     ai_workspace = Path("ai-workspace")
     python_files = [
         "ai_workspace_control.py",
         "06-backend-services/simple_api_server.py",
         "scripts/health_check.py"
     ]
-    
+
     syntax_errors = []
-    
+
     for py_file in python_files:
         file_path = ai_workspace / py_file
         if file_path.exists():
@@ -130,23 +130,23 @@ def validate_python_syntax():
                 syntax_errors.append(py_file)
         else:
             print(f"⚠️  {py_file} (not found)")
-    
+
     if syntax_errors:
         print(f"\n❌ {len(syntax_errors)} syntax errors found")
         return False
-    
+
     print("✅ Python syntax validated")
     return True
 
 def validate_docker_files():
     """Validate Docker configuration."""
     print("\n🐳 Validating Docker files...")
-    
+
     ai_workspace = Path("ai-workspace")
     docker_files = ["Dockerfile", "docker-compose.yml"]
-    
+
     valid_docker = True
-    
+
     for docker_file in docker_files:
         file_path = ai_workspace / docker_file
         if file_path.exists():
@@ -159,27 +159,27 @@ def validate_docker_files():
         else:
             print(f"❌ {docker_file} (missing)")
             valid_docker = False
-    
+
     if valid_docker:
         print("✅ Docker files validated")
-    
+
     return valid_docker
 
 def main():
     """Main validation function."""
     print("🔍 AI Workspace Repository Validation")
     print("=" * 50)
-    
+
     validations = [
         ("GitHub Actions", validate_github_actions),
         ("AI Workspace Structure", validate_ai_workspace),
         ("Python Syntax", validate_python_syntax),
         ("Docker Files", validate_docker_files)
     ]
-    
+
     passed = 0
     total = len(validations)
-    
+
     for name, validator in validations:
         try:
             if validator():
@@ -188,11 +188,11 @@ def main():
                 print(f"❌ {name} validation failed")
         except Exception as e:
             print(f"❌ {name} validation error: {e}")
-    
+
     print(f"\n📊 Validation Summary")
     print("=" * 30)
     print(f"Passed: {passed}/{total}")
-    
+
     if passed == total:
         print("✅ All validations passed!")
         print("🚀 Repository is ready for deployment")

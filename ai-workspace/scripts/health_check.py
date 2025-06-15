@@ -10,19 +10,19 @@ from pathlib import Path
 def check_workspace_health():
     """Check basic workspace health for CI/CD."""
     workspace_root = Path(".")
-    
+
     print("🔍 AI Workspace Health Check")
     print("=" * 40)
-    
+
     # Check required directories
     required_dirs = [
         "scripts",
-        "06-backend-services", 
+        "06-backend-services",
         "05-samples-demos",
         "03-models-training",
         "04-plugins"
     ]
-    
+
     missing_dirs = []
     for dir_name in required_dirs:
         dir_path = workspace_root / dir_name
@@ -31,7 +31,7 @@ def check_workspace_health():
         else:
             print(f"❌ {dir_name}/ (missing)")
             missing_dirs.append(dir_name)
-    
+
     # Check required files
     required_files = [
         "ai_workspace_control.py",
@@ -39,7 +39,7 @@ def check_workspace_health():
         "Dockerfile",
         "requirements-ci.txt"
     ]
-    
+
     missing_files = []
     for file_name in required_files:
         file_path = workspace_root / file_name
@@ -48,13 +48,13 @@ def check_workspace_health():
         else:
             print(f"❌ {file_name} (missing)")
             missing_files.append(file_name)
-    
+
     # Check Python syntax of main files
     python_files = [
         "ai_workspace_control.py",
         "06-backend-services/simple_api_server.py"
     ]
-    
+
     syntax_errors = []
     for py_file in python_files:
         file_path = workspace_root / py_file
@@ -67,13 +67,13 @@ def check_workspace_health():
                 syntax_errors.append(py_file)
         else:
             print(f"⚠️  {py_file} (not found)")
-    
+
     # Summary
     print("\n📊 Health Check Summary")
     print("-" * 30)
-    
+
     total_errors = len(missing_dirs) + len(missing_files) + len(syntax_errors)
-    
+
     if total_errors == 0:
         print("✅ All checks passed!")
         print("🚀 Workspace is ready for deployment")
