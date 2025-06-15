@@ -5,18 +5,21 @@ A self-evolving system that continuously improves your AI workspace through inte
 ## 🚀 Quick Start
 
 ### Demo Mode (Recommended for first try)
+
 ```bash
 cd /workspaces/semantic-kernel/ai-workspace
 python scripts/launch_improvement.py --mode demo
 ```
+
 This runs 3 improvement cycles with 1-minute intervals - perfect for seeing the system in action!
 
 ### Other Modes
+
 ```bash
 # Test single cycle
 python scripts/launch_improvement.py --mode test
 
-# Continuous improvement (production)  
+# Continuous improvement (production)
 python scripts/launch_improvement.py --mode continuous
 
 # Fast cycles (1-minute intervals)
@@ -31,7 +34,7 @@ python scripts/launch_improvement.py --mode custom --cycles 5 --interval 120
 The system consists of three intelligent agents that work together:
 
 1. **🔧 Performance Agent** - Optimizes system resources, cleans up files, manages memory
-2. **📝 Code Quality Agent** - Improves code coverage, adds documentation, refactors complex code  
+2. **📝 Code Quality Agent** - Improves code coverage, adds documentation, refactors complex code
 3. **🧠 Learning Agent** - Learns from past actions and continuously evolves improvement strategies
 
 ## 📊 Example Output
@@ -41,7 +44,7 @@ The system consists of three intelligent agents that work together:
 📊 Phase 1: Analysis
    🔍 performance agent analyzing...
    📈 performance score: 0.85
-   🔍 code_quality agent analyzing...  
+   🔍 code_quality agent analyzing...
    📈 code_quality score: 0.78
 
 💡 Phase 2: Action Proposal
@@ -70,6 +73,7 @@ The system consists of three intelligent agents that work together:
 ## 📁 Files Created
 
 The system creates logs and reports in:
+
 ```
 logs/
 ├── improvement_cycle_0001.json    # Individual cycle reports

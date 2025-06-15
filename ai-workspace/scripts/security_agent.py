@@ -23,12 +23,12 @@ logger = logging.getLogger(__name__)
 
 class SecurityAgent(ImprovementAgent):
     """Agent focused on security analysis and improvements."""
-    
+
     def __init__(self, name: str, workspace_root: Path):
         super().__init__(name, workspace_root)
         self.security_patterns = self._load_security_patterns()
         self.vulnerability_history = []
-    
+
     def _load_security_patterns(self) -> Dict[str, List[str]]:
         """Load security patterns to check for."""
         return {
@@ -58,15 +58,15 @@ class SecurityAgent(ImprovementAgent):
                 r"random\.choice\s*\("
             ]
         }
-    
+
     async def analyze(self) -> List[ImprovementMetric]:
         """Analyze security metrics."""
         metrics = []
-        
+
         # Security vulnerability count
         vulnerabilities = await self._scan_for_vulnerabilities()
         vulnerability_score = max(100 - len(vulnerabilities) * 10, 0)
-        
+
         metrics.append(ImprovementMetric(
             name="security_vulnerability_score",
             value=vulnerability_score,
@@ -74,7 +74,7 @@ class SecurityAgent(ImprovementAgent):
             direction="higher",
             weight=2.0
         ))
-        
+
         # File permission security
         permission_score = await self._check_file_permissions()
         metrics.append(ImprovementMetric(
@@ -83,7 +83,7 @@ class SecurityAgent(ImprovementAgent):
             target=80.0,
             direction="higher"
         ))
-        
+
         # Dependency security (simulated)
         dependency_score = await self._check_dependency_security()
         metrics.append(ImprovementMetric(
@@ -93,7 +93,7 @@ class SecurityAgent(ImprovementAgent):
             direction="higher",
             weight=1.5
         ))
-        
+
         # Configuration security
         config_score = await self._check_configuration_security()
         metrics.append(ImprovementMetric(
@@ -102,20 +102,20 @@ class SecurityAgent(ImprovementAgent):
             target=80.0,
             direction="higher"
         ))
-        
+
         return metrics
-    
+
     async def _scan_for_vulnerabilities(self) -> List[Dict[str, Any]]:
         """Scan for security vulnerabilities in code."""
         vulnerabilities = []
-        
+
         python_files = list(self.workspace_root.rglob("*.py"))
-        
+
         for file_path in python_files[:20]:  # Limit to first 20 files for performance
             try:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
-                
+
                 for category, patterns in self.security_patterns.items():
                     for pattern in patterns:
                         matches = re.finditer(pattern, content, re.IGNORECASE)
@@ -130,24 +130,24 @@ class SecurityAgent(ImprovementAgent):
                             })
             except Exception as e:
                 logger.warning(f"Error scanning {file_path}: {e}")
-        
+
         self.vulnerability_history.append({
             "timestamp": datetime.now().isoformat(),
             "count": len(vulnerabilities),
             "vulnerabilities": vulnerabilities
         })
-        
+
         return vulnerabilities
-    
+
     async def _check_file_permissions(self) -> float:
         """Check file permissions for security issues."""
         sensitive_files = [
             ".env", "config.py", "settings.py", "*.key", "*.pem"
         ]
-        
+
         secure_files = 0
         total_files = 0
-        
+
         for pattern in sensitive_files:
             files = list(self.workspace_root.rglob(pattern))
             for file_path in files:
@@ -159,28 +159,28 @@ class SecurityAgent(ImprovementAgent):
                         secure_files += 1
                 except:
                     pass
-        
+
         if total_files == 0:
             return 100.0  # No sensitive files found
-        
+
         return (secure_files / total_files) * 100
-    
+
     async def _check_dependency_security(self) -> float:
         """Check dependency security (simulated analysis)."""
         requirements_files = list(self.workspace_root.rglob("requirements*.txt"))
-        
+
         if not requirements_files:
             return 90.0  # No requirements file, assume secure
-        
+
         # Simulate dependency analysis
         total_deps = 0
         secure_deps = 0
-        
+
         for req_file in requirements_files:
             try:
                 with open(req_file, 'r') as f:
                     lines = f.readlines()
-                    
+
                 for line in lines:
                     line = line.strip()
                     if line and not line.startswith('#'):
@@ -190,12 +190,12 @@ class SecurityAgent(ImprovementAgent):
                             secure_deps += 1
             except:
                 pass
-        
+
         if total_deps == 0:
             return 90.0
-        
+
         return (secure_deps / total_deps) * 100
-    
+
     async def _check_configuration_security(self) -> float:
         """Check configuration security."""
         config_files = (
@@ -204,46 +204,46 @@ class SecurityAgent(ImprovementAgent):
             list(self.workspace_root.rglob("*.json")) +
             list(self.workspace_root.rglob(".env*"))
         )
-        
+
         secure_configs = 0
         total_configs = len(config_files)
-        
+
         for config_file in config_files:
             try:
                 with open(config_file, 'r', encoding='utf-8') as f:
                     content = f.read()
-                
+
                 # Check for security issues in config
                 has_issues = False
-                
+
                 # Check for hardcoded secrets
                 for pattern in self.security_patterns["hardcoded_secrets"]:
                     if re.search(pattern, content, re.IGNORECASE):
                         has_issues = True
                         break
-                
+
                 # Check for debug mode in production configs
                 if re.search(r"debug\s*[:=]\s*true", content, re.IGNORECASE):
                     has_issues = True
-                
+
                 if not has_issues:
                     secure_configs += 1
-                    
+
             except:
                 pass
-        
+
         if total_configs == 0:
             return 100.0
-        
+
         return (secure_configs / total_configs) * 100
-    
+
     async def propose_actions(self, metrics: List[ImprovementMetric]) -> List[ImprovementAction]:
         """Propose security improvement actions."""
         actions = []
-        
+
         for metric in metrics:
             if metric.score() < 0.7:  # Security issue threshold
-                
+
                 if metric.name == "security_vulnerability_score":
                     actions.append(ImprovementAction(
                         id="fix_vulnerabilities",
@@ -253,7 +253,7 @@ class SecurityAgent(ImprovementAgent):
                         args=["scripts/security_fixes.py"],
                         priority=10  # Highest priority
                     ))
-                
+
                 elif metric.name == "file_permission_security":
                     actions.append(ImprovementAction(
                         id="secure_file_permissions",
@@ -263,7 +263,7 @@ class SecurityAgent(ImprovementAgent):
                         args=["scripts/fix_permissions.py"],
                         priority=8
                     ))
-                
+
                 elif metric.name == "dependency_security":
                     actions.append(ImprovementAction(
                         id="update_dependencies",
@@ -273,7 +273,7 @@ class SecurityAgent(ImprovementAgent):
                         args=["scripts/update_dependencies.py"],
                         priority=9
                     ))
-                
+
                 elif metric.name == "configuration_security":
                     actions.append(ImprovementAction(
                         id="secure_configurations",
@@ -283,7 +283,7 @@ class SecurityAgent(ImprovementAgent):
                         args=["scripts/secure_configs.py"],
                         priority=9
                     ))
-        
+
         # Always propose security monitoring
         actions.append(ImprovementAction(
             id="security_monitoring",
@@ -293,9 +293,9 @@ class SecurityAgent(ImprovementAgent):
             args=["scripts/security_monitor.py"],
             priority=6
         ))
-        
+
         return actions
-    
+
     async def execute_action(self, action: ImprovementAction) -> Dict[str, Any]:
         """Execute a security action."""
         try:
@@ -312,19 +312,19 @@ class SecurityAgent(ImprovementAgent):
             else:
                 # Generic security action
                 return await self._generic_security_action(action)
-                
+
         except Exception as e:
             return {
                 "success": False,
                 "error": str(e),
                 "execution_time": datetime.now().isoformat()
             }
-    
+
     async def _fix_vulnerabilities(self) -> Dict[str, Any]:
         """Fix identified security vulnerabilities."""
         vulnerabilities = await self._scan_for_vulnerabilities()
         fixed_count = 0
-        
+
         # Simulate fixing vulnerabilities
         for vuln in vulnerabilities[:5]:  # Fix first 5 vulnerabilities
             if vuln["category"] == "hardcoded_secrets":
@@ -333,21 +333,21 @@ class SecurityAgent(ImprovementAgent):
             elif vuln["category"] == "dangerous_functions":
                 # Simulate replacing dangerous functions with safer alternatives
                 fixed_count += 1
-        
+
         return {
             "success": True,
             "fixed_vulnerabilities": fixed_count,
             "total_vulnerabilities": len(vulnerabilities),
             "execution_time": datetime.now().isoformat()
         }
-    
+
     async def _secure_file_permissions(self) -> Dict[str, Any]:
         """Secure file permissions."""
         secured_files = 0
-        
+
         # Find sensitive files and secure them
         sensitive_patterns = [".env", "*.key", "*.pem", "config.*"]
-        
+
         for pattern in sensitive_patterns:
             files = list(self.workspace_root.rglob(pattern))
             for file_path in files:
@@ -357,77 +357,77 @@ class SecurityAgent(ImprovementAgent):
                     secured_files += 1
                 except:
                     pass
-        
+
         return {
             "success": True,
             "secured_files": secured_files,
             "execution_time": datetime.now().isoformat()
         }
-    
+
     async def _update_dependencies(self) -> Dict[str, Any]:
         """Update insecure dependencies."""
         # Simulate dependency updates
         updated_deps = 0
-        
+
         requirements_files = list(self.workspace_root.rglob("requirements*.txt"))
         for req_file in requirements_files:
             # Simulate updating 2-3 dependencies per file
             updated_deps += 3
-        
+
         return {
             "success": True,
             "updated_dependencies": updated_deps,
             "execution_time": datetime.now().isoformat()
         }
-    
+
     async def _secure_configurations(self) -> Dict[str, Any]:
         """Secure configuration files."""
         secured_configs = 0
-        
+
         config_files = list(self.workspace_root.rglob("*.yml")) + list(self.workspace_root.rglob("*.yaml"))
-        
+
         for config_file in config_files[:5]:  # Limit to first 5 files
             try:
                 with open(config_file, 'r') as f:
                     content = f.read()
-                
+
                 # Simulate removing debug flags and securing configs
                 if "debug: true" in content.lower():
                     secured_configs += 1
-                    
+
             except:
                 pass
-        
+
         return {
             "success": True,
             "secured_configurations": secured_configs,
             "execution_time": datetime.now().isoformat()
         }
-    
+
     async def _run_security_monitoring(self) -> Dict[str, Any]:
         """Run security monitoring."""
         # Simulate security monitoring
         alerts_generated = 0
-        
+
         # Check for new vulnerabilities
         current_vulns = await self._scan_for_vulnerabilities()
-        
+
         if len(current_vulns) > 0:
             alerts_generated = len(current_vulns)
-        
+
         return {
             "success": True,
             "alerts_generated": alerts_generated,
             "vulnerabilities_found": len(current_vulns),
             "execution_time": datetime.now().isoformat()
         }
-    
+
     async def _generic_security_action(self, action: ImprovementAction) -> Dict[str, Any]:
         """Execute a generic security action."""
         # Simulate executing the action
         import asyncio
         await asyncio.sleep(0.5)  # Simulate work
-        
+
         return {
             "success": True,
             "action_executed": action.name,
@@ -437,32 +437,32 @@ class SecurityAgent(ImprovementAgent):
 def main():
     """Test the security agent."""
     import asyncio
-    
+
     async def test_agent():
         workspace_root = Path("/workspaces/semantic-kernel/ai-workspace")
         agent = SecurityAgent("security", workspace_root)
-        
+
         print("🔒 Testing Security Agent")
         print("=" * 30)
-        
+
         # Test analysis
         metrics = await agent.analyze()
         print(f"📊 Analyzed {len(metrics)} security metrics:")
         for metric in metrics:
             print(f"   • {metric.name}: {metric.value:.1f} (target: {metric.target})")
-        
+
         # Test action proposal
         actions = await agent.propose_actions(metrics)
         print(f"\n💡 Proposed {len(actions)} security actions:")
         for action in actions:
             print(f"   • {action.name} (priority: {action.priority})")
-        
+
         # Test action execution
         if actions:
             result = await agent.execute_action(actions[0])
             print(f"\n⚡ Executed action: {actions[0].name}")
             print(f"   Result: {result}")
-    
+
     asyncio.run(test_agent())
 
 if __name__ == "__main__":

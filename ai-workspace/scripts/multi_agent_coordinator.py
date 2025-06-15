@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 class MultiAgentCoordinator(ImprovementAgent):
     """Coordinator that manages and optimizes interactions between multiple agents."""
-    
+
     def __init__(self, name: str, workspace_root: Path):
         super().__init__(name, workspace_root)
         self.agent_registry = {}
@@ -34,7 +34,7 @@ class MultiAgentCoordinator(ImprovementAgent):
         self.agent_performance_tracking = {}
         self.conflict_resolution_strategies = self._initialize_conflict_resolution()
         self.synergy_opportunities = {}
-    
+
     def _initialize_collaboration_patterns(self) -> Dict[str, Any]:
         """Initialize collaboration patterns between agents."""
         return {
@@ -69,7 +69,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 "applicable_scenarios": ["solution_diversity", "performance_improvement"]
             }
         }
-    
+
     def _initialize_conflict_resolution(self) -> Dict[str, Any]:
         """Initialize conflict resolution strategies."""
         return {
@@ -98,7 +98,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 "success_rate": 0.90
             }
         }
-    
+
     def register_agent(self, agent: ImprovementAgent):
         """Register an agent for coordination."""
         self.agent_registry[agent.name] = {
@@ -109,7 +109,7 @@ class MultiAgentCoordinator(ImprovementAgent):
             "resource_requirements": {}
         }
         logger.info(f"Registered agent: {agent.name}")
-    
+
     def _analyze_agent_capabilities(self, agent: ImprovementAgent) -> Dict[str, Any]:
         """Analyze agent capabilities for coordination."""
         return {
@@ -119,7 +119,7 @@ class MultiAgentCoordinator(ImprovementAgent):
             "collaboration_compatibility": 0.8,  # Default compatibility
             "response_time": "fast"
         }
-    
+
     def _infer_optimization_areas(self, agent: ImprovementAgent) -> List[str]:
         """Infer optimization areas based on agent type."""
         area_mappings = {
@@ -132,13 +132,13 @@ class MultiAgentCoordinator(ImprovementAgent):
             "autonomous_optimization": ["self_tuning", "parameter_optimization", "convergence"],
             "meta_learning": ["learning_efficiency", "knowledge_transfer", "adaptation"]
         }
-        
+
         return area_mappings.get(agent.name, ["general_improvement"])
-    
+
     async def analyze(self) -> List[ImprovementMetric]:
         """Analyze multi-agent coordination effectiveness."""
         metrics = []
-        
+
         try:
             # Coordination efficiency
             coordination_efficiency = await self._assess_coordination_efficiency()
@@ -149,7 +149,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 weight=1.4,
                 direction="higher"
             ))
-            
+
             # Agent synergy
             agent_synergy = await self._assess_agent_synergy()
             metrics.append(ImprovementMetric(
@@ -159,7 +159,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 weight=1.3,
                 direction="higher"
             ))
-            
+
             # Conflict resolution effectiveness
             conflict_resolution = await self._assess_conflict_resolution()
             metrics.append(ImprovementMetric(
@@ -169,7 +169,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 weight=1.2,
                 direction="higher"
             ))
-            
+
             # Resource utilization optimization
             resource_optimization = await self._assess_resource_optimization()
             metrics.append(ImprovementMetric(
@@ -179,7 +179,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 weight=1.1,
                 direction="higher"
             ))
-            
+
             # Communication effectiveness
             communication_effectiveness = await self._assess_communication_effectiveness()
             metrics.append(ImprovementMetric(
@@ -189,7 +189,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 weight=1.0,
                 direction="higher"
             ))
-            
+
             # Collective intelligence
             collective_intelligence = await self._assess_collective_intelligence()
             metrics.append(ImprovementMetric(
@@ -199,7 +199,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 weight=1.2,
                 direction="higher"
             ))
-            
+
         except Exception as e:
             logger.error(f"Error in multi-agent coordination analysis: {e}")
             # Fallback metrics
@@ -208,41 +208,41 @@ class MultiAgentCoordinator(ImprovementAgent):
                 ImprovementMetric("agent_synergy", random.uniform(65, 80), 80.0, 1.3, "higher"),
                 ImprovementMetric("conflict_resolution_effectiveness", random.uniform(75, 90), 90.0, 1.2, "higher")
             ])
-        
+
         return metrics
-    
+
     async def _assess_coordination_efficiency(self) -> float:
         """Assess efficiency of agent coordination."""
         if not self.coordination_history:
             return random.uniform(70, 85)
-        
+
         recent_coordinations = self.coordination_history[-15:]
-        
+
         efficiency_scores = []
         for coord in recent_coordinations:
             coordination_overhead = coord.get('coordination_overhead', 0.2)
             performance_gain = coord.get('performance_gain', 0.5)
-            
+
             # Efficiency = (Performance Gain) / (1 + Coordination Overhead)
             efficiency = performance_gain / (1 + coordination_overhead)
             efficiency_scores.append(efficiency * 100)
-        
+
         return statistics.mean(efficiency_scores) if efficiency_scores else 75.0
-    
+
     async def _assess_agent_synergy(self) -> float:
         """Assess synergy between agents."""
         if len(self.agent_registry) < 2:
             return random.uniform(65, 80)
-        
+
         synergy_factors = {
             "complementary_capabilities": random.uniform(0.7, 0.9),
             "resource_sharing_efficiency": random.uniform(0.6, 0.85),
             "knowledge_exchange_quality": random.uniform(0.65, 0.8),
             "collaborative_improvement": random.uniform(0.7, 0.88)
         }
-        
+
         return statistics.mean(synergy_factors.values()) * 100
-    
+
     async def _assess_conflict_resolution(self) -> float:
         """Assess effectiveness of conflict resolution."""
         resolution_metrics = {
@@ -251,9 +251,9 @@ class MultiAgentCoordinator(ImprovementAgent):
             "solution_satisfaction": random.uniform(0.7, 0.88),
             "prevention_effectiveness": random.uniform(0.85, 0.95)
         }
-        
+
         return statistics.mean(resolution_metrics.values()) * 100
-    
+
     async def _assess_resource_optimization(self) -> float:
         """Assess resource utilization optimization across agents."""
         optimization_factors = {
@@ -262,9 +262,9 @@ class MultiAgentCoordinator(ImprovementAgent):
             "resource_waste_minimization": random.uniform(0.8, 0.92),
             "capacity_utilization": random.uniform(0.65, 0.85)
         }
-        
+
         return statistics.mean(optimization_factors.values()) * 100
-    
+
     async def _assess_communication_effectiveness(self) -> float:
         """Assess communication effectiveness between agents."""
         communication_factors = {
@@ -273,9 +273,9 @@ class MultiAgentCoordinator(ImprovementAgent):
             "response_timeliness": random.uniform(0.75, 0.88),
             "bandwidth_efficiency": random.uniform(0.6, 0.85)
         }
-        
+
         return statistics.mean(communication_factors.values()) * 100
-    
+
     async def _assess_collective_intelligence(self) -> float:
         """Assess collective intelligence emerging from agent interactions."""
         intelligence_factors = {
@@ -284,16 +284,16 @@ class MultiAgentCoordinator(ImprovementAgent):
             "adaptive_coordination": random.uniform(0.7, 0.88),
             "collective_learning_rate": random.uniform(0.55, 0.75)
         }
-        
+
         return statistics.mean(intelligence_factors.values()) * 100
-    
+
     async def propose_actions(self, metrics: List[ImprovementMetric]) -> List[ImprovementAction]:
         """Propose multi-agent coordination improvement actions."""
         actions = []
-        
+
         for metric in metrics:
             if metric.score() < 0.7:  # Coordination improvement threshold
-                
+
                 if metric.name == "coordination_efficiency":
                     actions.append(ImprovementAction(
                         id="optimize_coordination_protocols",
@@ -303,7 +303,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                         args=["scripts/coordination_protocol_optimizer.py"],
                         priority=9
                     ))
-                
+
                 elif metric.name == "agent_synergy":
                     actions.append(ImprovementAction(
                         id="enhance_agent_synergy",
@@ -313,7 +313,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                         args=["scripts/agent_synergy_enhancer.py"],
                         priority=8
                     ))
-                
+
                 elif metric.name == "conflict_resolution_effectiveness":
                     actions.append(ImprovementAction(
                         id="improve_conflict_resolution",
@@ -323,7 +323,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                         args=["scripts/conflict_resolution_improver.py"],
                         priority=8
                     ))
-                
+
                 elif metric.name == "resource_utilization_optimization":
                     actions.append(ImprovementAction(
                         id="optimize_resource_allocation",
@@ -333,7 +333,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                         args=["scripts/multi_agent_resource_optimizer.py"],
                         priority=7
                     ))
-                
+
                 elif metric.name == "communication_effectiveness":
                     actions.append(ImprovementAction(
                         id="enhance_agent_communication",
@@ -343,7 +343,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                         args=["scripts/agent_communication_enhancer.py"],
                         priority=7
                     ))
-                
+
                 elif metric.name == "collective_intelligence":
                     actions.append(ImprovementAction(
                         id="boost_collective_intelligence",
@@ -353,7 +353,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                         args=["scripts/collective_intelligence_booster.py"],
                         priority=8
                     ))
-        
+
         # Core coordination actions
         actions.extend([
             ImprovementAction(
@@ -389,13 +389,13 @@ class MultiAgentCoordinator(ImprovementAgent):
                 priority=5
             )
         ])
-        
+
         return actions
-    
+
     async def execute_action(self, action: ImprovementAction) -> Dict[str, Any]:
         """Execute a multi-agent coordination action."""
         start_time = datetime.now()
-        
+
         try:
             # Execute specific coordination actions
             if action.id == "optimize_coordination_protocols":
@@ -420,7 +420,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 result = await self._monitor_agent_ecosystem()
             else:
                 result = {"status": "unknown_action", "improvements": ["general_coordination_enhancement"]}
-            
+
             # Record coordination event
             coordination_record = {
                 "action_id": action.id,
@@ -430,11 +430,11 @@ class MultiAgentCoordinator(ImprovementAgent):
                 "agents_involved": len(self.agent_registry)
             }
             self.coordination_history.append(coordination_record)
-            
+
             # Keep history manageable
             if len(self.coordination_history) > 40:
                 self.coordination_history = self.coordination_history[-25:]
-            
+
             return {
                 "success": True,
                 "action": action.name,
@@ -443,7 +443,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 "execution_time": (datetime.now() - start_time).total_seconds(),
                 "coordination_efficiency_gain": coordination_record["performance_gain"]
             }
-            
+
         except Exception as e:
             logger.error(f"Error executing coordination action {action.id}: {e}")
             return {
@@ -452,7 +452,7 @@ class MultiAgentCoordinator(ImprovementAgent):
                 "error": str(e),
                 "execution_time": (datetime.now() - start_time).total_seconds()
             }
-    
+
     async def _optimize_coordination_protocols(self) -> Dict[str, Any]:
         """Optimize coordination protocols between agents."""
         optimizations = [
@@ -461,16 +461,16 @@ class MultiAgentCoordinator(ImprovementAgent):
             "synchronization_improvement",
             "conflict_prevention_mechanisms"
         ]
-        
+
         await asyncio.sleep(0.2)
-        
+
         return {
             "status": "coordination_protocols_optimized",
             "optimizations": random.sample(optimizations, k=random.randint(2, 4)),
             "efficiency_improvement": random.uniform(15, 35),
             "overhead_reduction": random.uniform(20, 45)
         }
-    
+
     async def _enhance_agent_synergy(self) -> Dict[str, Any]:
         """Enhance synergy between agents."""
         enhancements = [
@@ -479,16 +479,16 @@ class MultiAgentCoordinator(ImprovementAgent):
             "collaborative_task_design",
             "synergistic_workflow_creation"
         ]
-        
+
         await asyncio.sleep(0.18)
-        
+
         return {
             "status": "agent_synergy_enhanced",
             "enhancements": random.sample(enhancements, k=random.randint(2, 3)),
             "synergy_score_improvement": random.uniform(18, 40),
             "collaborative_effectiveness_gain": random.uniform(15, 32)
         }
-    
+
     async def _improve_conflict_resolution(self) -> Dict[str, Any]:
         """Improve conflict resolution mechanisms."""
         improvements = [
@@ -497,16 +497,16 @@ class MultiAgentCoordinator(ImprovementAgent):
             "consensus_building_algorithms",
             "compromise_optimization_strategies"
         ]
-        
+
         await asyncio.sleep(0.15)
-        
+
         return {
             "status": "conflict_resolution_improved",
             "improvements": random.sample(improvements, k=random.randint(2, 4)),
             "resolution_speed_improvement": random.uniform(25, 50),
             "satisfaction_rate_increase": random.uniform(12, 28)
         }
-    
+
     async def _optimize_resource_allocation(self) -> Dict[str, Any]:
         """Optimize resource allocation across agents."""
         optimizations = [
@@ -515,16 +515,16 @@ class MultiAgentCoordinator(ImprovementAgent):
             "priority_based_allocation",
             "resource_sharing_optimization"
         ]
-        
+
         await asyncio.sleep(0.12)
-        
+
         return {
             "status": "resource_allocation_optimized",
             "optimizations": random.sample(optimizations, k=random.randint(2, 4)),
             "utilization_efficiency_gain": random.uniform(20, 40),
             "resource_waste_reduction": random.uniform(15, 35)
         }
-    
+
     async def _enhance_agent_communication(self) -> Dict[str, Any]:
         """Enhance communication between agents."""
         enhancements = [
@@ -533,16 +533,16 @@ class MultiAgentCoordinator(ImprovementAgent):
             "reliability_mechanism_enhancement",
             "latency_reduction_strategies"
         ]
-        
+
         await asyncio.sleep(0.10)
-        
+
         return {
             "status": "agent_communication_enhanced",
             "enhancements": random.sample(enhancements, k=random.randint(2, 3)),
             "communication_speed_improvement": random.uniform(20, 45),
             "reliability_increase": random.uniform(8, 18)
         }
-    
+
     async def _boost_collective_intelligence(self) -> Dict[str, Any]:
         """Boost collective intelligence emergence."""
         boosting_strategies = [
@@ -551,23 +551,23 @@ class MultiAgentCoordinator(ImprovementAgent):
             "swarm_intelligence_algorithms",
             "collective_learning_mechanisms"
         ]
-        
+
         await asyncio.sleep(0.20)
-        
+
         return {
             "status": "collective_intelligence_boosted",
             "strategies": random.sample(boosting_strategies, k=random.randint(2, 4)),
             "intelligence_emergence_rate": random.uniform(22, 48),
             "problem_solving_capability_gain": random.uniform(18, 38)
         }
-    
+
     async def _orchestrate_agent_collaboration(self) -> Dict[str, Any]:
         """Orchestrate collaborative efforts between agents."""
         collaboration_patterns = list(self.collaboration_patterns.keys())
         selected_patterns = random.sample(collaboration_patterns, k=random.randint(2, 3))
-        
+
         await asyncio.sleep(0.15)
-        
+
         return {
             "status": "agent_collaboration_orchestrated",
             "collaboration_patterns": selected_patterns,
@@ -575,7 +575,7 @@ class MultiAgentCoordinator(ImprovementAgent):
             "collaboration_effectiveness": random.uniform(25, 50),
             "task_completion_improvement": random.uniform(20, 40)
         }
-    
+
     async def _optimize_workflow_distribution(self) -> Dict[str, Any]:
         """Optimize distribution of workflows across agents."""
         optimization_strategies = [
@@ -584,16 +584,16 @@ class MultiAgentCoordinator(ImprovementAgent):
             "dependency_aware_scheduling",
             "parallel_execution_maximization"
         ]
-        
+
         await asyncio.sleep(0.12)
-        
+
         return {
             "status": "workflow_distribution_optimized",
             "strategies": random.sample(optimization_strategies, k=random.randint(2, 3)),
             "throughput_improvement": random.uniform(25, 55),
             "resource_utilization_gain": random.uniform(18, 35)
         }
-    
+
     async def _synchronize_agent_activities(self) -> Dict[str, Any]:
         """Improve synchronization of agent activities."""
         synchronization_methods = [
@@ -602,16 +602,16 @@ class MultiAgentCoordinator(ImprovementAgent):
             "distributed_consensus_algorithms",
             "real_time_coordination_protocols"
         ]
-        
+
         await asyncio.sleep(0.08)
-        
+
         return {
             "status": "agent_activities_synchronized",
             "methods": random.sample(synchronization_methods, k=random.randint(2, 3)),
             "synchronization_accuracy_improvement": random.uniform(15, 35),
             "coordination_latency_reduction": random.uniform(30, 60)
         }
-    
+
     async def _monitor_agent_ecosystem(self) -> Dict[str, Any]:
         """Monitor health and performance of agent ecosystem."""
         monitoring_aspects = [
@@ -620,9 +620,9 @@ class MultiAgentCoordinator(ImprovementAgent):
             "interaction_pattern_monitoring",
             "ecosystem_stability_assessment"
         ]
-        
+
         await asyncio.sleep(0.06)
-        
+
         return {
             "status": "agent_ecosystem_monitored",
             "monitoring_aspects": monitoring_aspects,
@@ -634,34 +634,34 @@ class MultiAgentCoordinator(ImprovementAgent):
 def main():
     """Test the multi-agent coordinator."""
     import asyncio
-    
+
     async def test_coordinator():
         workspace_root = Path("/workspaces/semantic-kernel/ai-workspace")
         coordinator = MultiAgentCoordinator("coordinator", workspace_root)
-        
+
         print("🤝 Testing Multi-Agent Coordinator")
         print("=" * 45)
-        
+
         # Test analysis
         print("📊 Running coordination analysis...")
         metrics = await coordinator.analyze()
-        
+
         for metric in metrics:
             print(f"   {metric.name}: {metric.value:.1f} (target: {metric.target}, score: {metric.score():.2f})")
-        
+
         # Test action proposal
         print("\n💡 Proposing coordination actions...")
         actions = await coordinator.propose_actions(metrics)
-        
+
         for action in actions[:3]:  # Show first 3 actions
             print(f"   🎯 {action.name} (priority: {action.priority})")
-        
+
         # Test action execution
         if actions:
             print(f"\n⚡ Executing action: {actions[0].name}")
             result = await coordinator.execute_action(actions[0])
             print(f"   ✅ Result: {result.get('status', 'completed')}")
-    
+
     asyncio.run(test_coordinator())
 
 if __name__ == "__main__":
