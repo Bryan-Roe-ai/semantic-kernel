@@ -33,6 +33,9 @@ cp README.md $DIST_DIR/README-workspace.md
 cp SUCCESS_SUMMARY.md $DIST_DIR/ 2>/dev/null || true
 cp ISSUE_RESOLUTION.md $DIST_DIR/ 2>/dev/null || true
 
+# Disable Jekyll processing
+touch $DIST_DIR/.nojekyll
+
 # Create deployment info
 echo "ℹ️ Creating deployment info..."
 cat > $DIST_DIR/deployment-info.txt << EOF
