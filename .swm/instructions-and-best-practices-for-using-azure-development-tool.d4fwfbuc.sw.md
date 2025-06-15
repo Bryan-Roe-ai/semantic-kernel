@@ -1,7 +1,7 @@
 ---
-title: GitHub Copilot Instructions for Azure Best Practices
+title: Instructions for Using the `azure_development-get_best_practices` Tool
 ---
-# GitHub Copilot Instructions for Azure Best Practices
+# Instructions for Using the `azure_development-get_best_practices` Tool
 
 ## Intro
 
