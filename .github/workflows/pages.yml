@@ -36,43 +36,43 @@ jobs:
       - name: Sync AI Workspace content to docs
         run: |
           echo "🔄 Syncing AI workspace content to docs folder..."
-          
+
           # Ensure docs directory exists
           mkdir -p docs
-          
+
           # Copy main HTML files from ai-workspace
           if [ -f "ai-workspace/05-samples-demos/index.html" ]; then
             cp "ai-workspace/05-samples-demos/index.html" docs/
             echo "✅ Copied index.html"
           fi
-          
+
           if [ -f "ai-workspace/05-samples-demos/custom-llm-studio.html" ]; then
             cp "ai-workspace/05-samples-demos/custom-llm-studio.html" docs/
             echo "✅ Copied custom-llm-studio.html"
           fi
-          
+
           # Copy JavaScript files
           if [ -f "ai-workspace/05-samples-demos/server.js" ]; then
             cp "ai-workspace/05-samples-demos/server.js" docs/
             echo "✅ Copied server.js"
           fi
-          
+
           if [ -f "ai-workspace/05-samples-demos/express-rate.js" ]; then
             cp "ai-workspace/05-samples-demos/express-rate.js" docs/
             echo "✅ Copied express-rate.js"
           fi
-          
+
           # Copy samples directory (resolve symlinks)
           if [ -d "ai-workspace/05-samples-demos/samples" ]; then
             rm -rf docs/samples 2>/dev/null || true
             cp -rL "ai-workspace/05-samples-demos/samples" docs/ 2>/dev/null || cp -r "ai-workspace/05-samples-demos/samples" docs/
             echo "✅ Copied samples directory"
           fi
-          
+
           # Ensure .nojekyll file exists to disable Jekyll processing
           touch docs/.nojekyll
           echo "✅ Created .nojekyll file"
-          
+
           # Create deployment timestamp
           echo "Last updated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" > docs/last-deployment.txt
           echo "✅ Updated deployment timestamp"
@@ -83,7 +83,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './docs'
+          path: "./docs"
 
   # Deployment job
   deploy:

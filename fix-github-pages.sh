@@ -28,20 +28,20 @@ echo "📁 Setting up docs folder..."
 # Sync content from ai-workspace
 if [ -d "ai-workspace/05-samples-demos" ]; then
     echo "🔄 Syncing content from ai-workspace..."
-    
+
     # Copy main files
     cp "ai-workspace/05-samples-demos/index.html" docs/ 2>/dev/null || echo "⚠️  Could not copy index.html"
     cp "ai-workspace/05-samples-demos/custom-llm-studio.html" docs/ 2>/dev/null || echo "⚠️  Could not copy custom-llm-studio.html"
     cp "ai-workspace/05-samples-demos/server.js" docs/ 2>/dev/null || echo "⚠️  Could not copy server.js"
     cp "ai-workspace/05-samples-demos/express-rate.js" docs/ 2>/dev/null || echo "⚠️  Could not copy express-rate.js"
-    
+
     # Copy samples with symlink resolution
     if [ -d "ai-workspace/05-samples-demos/samples" ]; then
         rm -rf docs/samples 2>/dev/null || true
         cp -rL "ai-workspace/05-samples-demos/samples" docs/ 2>/dev/null || cp -r "ai-workspace/05-samples-demos/samples" docs/
         echo "✅ Synced samples directory"
     fi
-    
+
     echo "✅ Content sync completed"
 else
     echo "⚠️  ai-workspace/05-samples-demos not found"
@@ -61,7 +61,7 @@ echo "⚙️  Validating GitHub Actions workflows..."
 
 if [ -f ".github/workflows/pages.yml" ]; then
     echo "✅ Main deployment workflow exists"
-    
+
     # Check for syntax issues
     if grep -q "actions/configure-pages@v5" .github/workflows/pages.yml; then
         echo "✅ Using latest Pages action version"
@@ -98,7 +98,7 @@ for file in "${required_files[@]}"; do
     if [ -f "$file" ]; then
         size=$(stat -c%s "$file" 2>/dev/null || echo "0")
         echo "✅ $file ($size bytes)"
-        
+
         # Validate HTML files
         if [[ "$file" == *.html ]]; then
             if grep -q "<!DOCTYPE html>" "$file"; then
@@ -133,12 +133,12 @@ echo "📂 Repository Information:"
 if git remote get-url origin >/dev/null 2>&1; then
     remote_url=$(git remote get-url origin)
     echo "🔗 Remote: $remote_url"
-    
+
     if [[ $remote_url == *"github.com"* ]]; then
         repo_path=$(echo $remote_url | sed 's/.*github\.com[:/]\([^.]*\)\.git.*/\1/' | sed 's/.*github\.com[:/]\([^.]*\)$/\1/')
         username=$(echo $repo_path | cut -d'/' -f1)
         repo_name=$(echo $repo_path | cut -d'/' -f2)
-        
+
         echo "👤 Username: $username"
         echo "📁 Repository: $repo_name"
         echo "🌐 Pages URL: https://$username.github.io/$repo_name/"
