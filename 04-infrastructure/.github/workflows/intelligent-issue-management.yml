@@ -1,0 +1,260 @@
+name: Intelligent Issue Management
+
+on:
+  issues:
+    types: [opened, edited]
+  schedule:
+    # Run every 4 hours
+    - cron: "0 */4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  auto-label-issues:
+    name: Auto-label new issues
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issues'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Auto-label based on content
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title.toLowerCase();
+            const body = issue.body ? issue.body.toLowerCase() : '';
+            const labels = [];
+
+            // Bug detection
+            if (title.includes('bug') || title.includes('error') || title.includes('issue') ||
+                body.includes('error') || body.includes('exception') || body.includes('bug')) {
+              labels.push('bug');
+            }
+
+            // Enhancement detection
+            if (title.includes('feature') || title.includes('enhancement') || title.includes('improve') ||
+                body.includes('feature request') || body.includes('enhancement')) {
+              labels.push('enhancement');
+            }
+
+            // Documentation detection
+            if (title.includes('docs') || title.includes('documentation') || title.includes('readme') ||
+                body.includes('documentation') || body.includes('docs')) {
+              labels.push('documentation');
+            }
+
+            // Security detection
+            if (title.includes('security') || title.includes('vulnerability') || title.includes('cve') ||
+                body.includes('security') || body.includes('vulnerability')) {
+              labels.push('security');
+            }
+
+            // Performance detection
+            if (title.includes('performance') || title.includes('slow') || title.includes('optimization') ||
+                body.includes('performance') || body.includes('slow') || body.includes('optimization')) {
+              labels.push('performance');
+            }
+
+            // Language-specific labels
+            if (body.includes('python') || title.includes('python')) labels.push('python');
+            if (body.includes('c#') || body.includes('csharp') || title.includes('c#')) labels.push('dotnet');
+            if (body.includes('java') || title.includes('java')) labels.push('java');
+            if (body.includes('javascript') || body.includes('typescript') || title.includes('js') || title.includes('ts')) labels.push('typescript');
+
+            // Priority detection
+            if (title.includes('urgent') || title.includes('critical') || body.includes('urgent') || body.includes('critical')) {
+              labels.push('priority:high');
+            }
+
+            // Apply labels
+            if (labels.length > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: labels
+              });
+            }
+
+  triage-issues:
+    name: Triage and manage issues
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Close stale issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'stale'
+            });
+
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+            for (const issue of issues) {
+              const updatedAt = new Date(issue.updated_at);
+              if (updatedAt < thirtyDaysAgo) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: 'This issue has been automatically closed due to inactivity. If you believe this issue is still relevant, please reopen it with additional information.'
+                });
+
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+              }
+            }
+
+      - name: Mark inactive issues as stale
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              sort: 'updated',
+              direction: 'asc'
+            });
+
+            const fourteenDaysAgo = new Date();
+            fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+
+            for (const issue of issues) {
+              const updatedAt = new Date(issue.updated_at);
+              const hasStaleLabel = issue.labels.some(label => label.name === 'stale');
+
+              if (updatedAt < fourteenDaysAgo && !hasStaleLabel) {
+                await github.rest.issues.addLabels({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  labels: ['stale']
+                });
+
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: 'This issue has been marked as stale due to inactivity. It will be automatically closed in 30 days if no further activity occurs.'
+                });
+              }
+            }
+
+      - name: Create weekly summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              since: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+            });
+
+            const openIssues = issues.filter(issue => issue.state === 'open').length;
+            const closedIssues = issues.filter(issue => issue.state === 'closed').length;
+            const bugIssues = issues.filter(issue =>
+              issue.labels.some(label => label.name === 'bug')).length;
+            const enhancementIssues = issues.filter(issue =>
+              issue.labels.some(label => label.name === 'enhancement')).length;
+
+            const summary = `# Weekly Issue Summary
+
+            **Period**: ${new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toDateString()} - ${new Date().toDateString()}
+
+            ## Statistics
+            - 📊 Total issues this week: ${issues.length}
+            - 🔓 Open issues: ${openIssues}
+            - ✅ Closed issues: ${closedIssues}
+            - 🐛 Bug reports: ${bugIssues}
+            - ✨ Enhancement requests: ${enhancementIssues}
+
+            ## Top Issues by Activity
+            ${issues.slice(0, 5).map(issue =>
+              `- [#${issue.number}](${issue.html_url}) ${issue.title}`
+            ).join('\n')}
+            `;
+
+            // Only create summary issue on Mondays
+            const today = new Date();
+            if (today.getDay() === 1) { // Monday
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `Weekly Issue Summary - ${today.toDateString()}`,
+                body: summary,
+                labels: ['summary', 'automated']
+              });
+            }
+
+  auto-assign-reviewers:
+    name: Auto-assign reviewers to PRs
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Auto-assign reviewers
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const files = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number
+            });
+
+            const reviewers = new Set();
+
+            // Add reviewers based on files changed
+            for (const file of files.data) {
+              if (file.filename.includes('python/')) {
+                reviewers.add('python-team'); // Replace with actual team/user
+              }
+              if (file.filename.includes('dotnet/')) {
+                reviewers.add('dotnet-team'); // Replace with actual team/user
+              }
+              if (file.filename.includes('java/')) {
+                reviewers.add('java-team'); // Replace with actual team/user
+              }
+              if (file.filename.includes('typescript/')) {
+                reviewers.add('typescript-team'); // Replace with actual team/user
+              }
+              if (file.filename.includes('.github/workflows/')) {
+                reviewers.add('devops-team'); // Replace with actual team/user
+              }
+            }
+
+            // Convert to array and remove author
+            const reviewerList = Array.from(reviewers).filter(reviewer => reviewer !== pr.user.login);
+
+            if (reviewerList.length > 0) {
+              try {
+                await github.rest.pulls.requestReviewers({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  pull_number: pr.number,
+                  reviewers: reviewerList.slice(0, 3) // Limit to 3 reviewers
+                });
+              } catch (error) {
+                console.log('Could not assign reviewers:', error.message);
+              }
+            }

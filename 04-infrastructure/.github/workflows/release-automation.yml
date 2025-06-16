@@ -1,0 +1,409 @@
+name: Release Automation
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.0.0)'
+        required: true
+        type: string
+      pre_release:
+        description: 'Is this a pre-release?'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  packages: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  validate-release:
+    name: Validate Release Readiness
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      is_prerelease: ${{ steps.version.outputs.is_prerelease }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+            IS_PRERELEASE="${{ github.event.inputs.pre_release }}"
+          else
+            VERSION=${GITHUB_REF#refs/tags/v}
+            if [[ $VERSION == *"alpha"* ]] || [[ $VERSION == *"beta"* ]] || [[ $VERSION == *"rc"* ]]; then
+              IS_PRERELEASE=true
+            else
+              IS_PRERELEASE=false
+            fi
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "is_prerelease=$IS_PRERELEASE" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION (pre-release: $IS_PRERELEASE)"
+
+      - name: Validate version format
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-](alpha|beta|rc)[0-9]*)?$ ]]; then
+            echo "Invalid version format: $VERSION"
+            echo "Expected format: X.Y.Z or X.Y.Z-alpha/beta/rc[N]"
+            exit 1
+          fi
+
+      - name: Check for unreleased changes
+        run: |
+          if [ -f "CHANGELOG.md" ]; then
+            if ! grep -q "Unreleased\|${{ steps.version.outputs.version }}" CHANGELOG.md; then
+              echo "Warning: CHANGELOG.md may not be updated for this release"
+            fi
+          else
+            echo "Warning: No CHANGELOG.md found"
+          fi
+
+      - name: Run tests before release
+        run: |
+          echo "Running pre-release tests..."
+
+          # Run Python tests if available
+          if find . -name "test_*.py" -o -name "*_test.py" | head -1 > /dev/null; then
+            pip install pytest
+            pip install -r requirements.txt || echo "No requirements.txt"
+            pytest || exit 1
+          fi
+
+          # Run .NET tests if available
+          if find . -name "*.csproj" -path "*/test*" | head -1 > /dev/null; then
+            dotnet test || exit 1
+          fi
+
+          # Run Node.js tests if available
+          if [ -f "package.json" ]; then
+            npm ci
+            npm test || exit 1
+          fi
+
+  build-artifacts:
+    name: Build Release Artifacts
+    runs-on: ubuntu-latest
+    needs: validate-release
+    strategy:
+      matrix:
+        platform: [python, dotnet, java, typescript]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        if: matrix.platform == 'python'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build Python package
+        if: matrix.platform == 'python'
+        run: |
+          if [ -f "setup.py" ] || [ -f "pyproject.toml" ]; then
+            pip install build
+            python -m build
+            echo "Python package built successfully"
+          else
+            echo "No Python package configuration found"
+          fi
+
+      - name: Setup .NET
+        if: matrix.platform == 'dotnet'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build .NET packages
+        if: matrix.platform == 'dotnet'
+        run: |
+          find . -name "*.csproj" -not -path "*/test*" -not -path "*/*Test*" | while read proj; do
+            echo "Building $proj"
+            dotnet build "$proj" --configuration Release
+            dotnet pack "$proj" --configuration Release --output ./packages
+          done
+
+      - name: Setup Java
+        if: matrix.platform == 'java'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Build Java packages
+        if: matrix.platform == 'java'
+        run: |
+          if [ -f "pom.xml" ]; then
+            mvn clean package -DskipTests
+            echo "Java package built successfully"
+          elif [ -f "build.gradle" ]; then
+            ./gradlew build -x test
+            echo "Java (Gradle) package built successfully"
+          else
+            echo "No Java build configuration found"
+          fi
+
+      - name: Setup Node.js
+        if: matrix.platform == 'typescript'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Build TypeScript/JavaScript packages
+        if: matrix.platform == 'typescript'
+        run: |
+          if [ -f "package.json" ]; then
+            npm ci
+            npm run build || echo "No build script found"
+            npm pack
+            echo "TypeScript/JavaScript package built successfully"
+          else
+            echo "No package.json found"
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-${{ matrix.platform }}
+          path: |
+            dist/
+            packages/
+            target/
+            build/
+            *.tgz
+            *.jar
+          retention-days: 30
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [validate-release, build-artifacts]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+
+      - name: Generate release notes
+        id: release_notes
+        run: |
+          VERSION="${{ needs.validate-release.outputs.version }}"
+
+          # Generate release notes
+          cat > release_notes.md << EOF
+          # Release $VERSION
+
+          Released on: $(date '+%Y-%m-%d')
+
+          ## What's Changed
+
+          EOF
+
+          # Get commits since last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$LAST_TAG" ]; then
+            echo "### Commits since $LAST_TAG:" >> release_notes.md
+            git log --oneline $LAST_TAG..HEAD >> release_notes.md
+          else
+            echo "### Recent commits:" >> release_notes.md
+            git log --oneline -10 >> release_notes.md
+          fi
+
+          echo "" >> release_notes.md
+          echo "## Artifacts" >> release_notes.md
+          echo "This release includes the following artifacts:" >> release_notes.md
+
+          # List artifacts
+          find ./artifacts -type f \( -name "*.whl" -o -name "*.tar.gz" -o -name "*.nupkg" -o -name "*.jar" -o -name "*.tgz" \) | while read file; do
+            basename "$file" | sed 's/^/- /' >> release_notes.md
+          done
+
+          echo "Generated release notes"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ needs.validate-release.outputs.version }}
+          name: Release ${{ needs.validate-release.outputs.version }}
+          body_path: release_notes.md
+          prerelease: ${{ needs.validate-release.outputs.is_prerelease }}
+          files: |
+            artifacts/**/*.whl
+            artifacts/**/*.tar.gz
+            artifacts/**/*.nupkg
+            artifacts/**/*.jar
+            artifacts/**/*.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-packages:
+    name: Publish Packages
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release]
+    if: ${{ !needs.validate-release.outputs.is_prerelease }}
+    strategy:
+      matrix:
+        platform: [python, dotnet, npm]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts-${{ matrix.platform }}
+          path: ./artifacts
+
+      - name: Setup Python and publish to PyPI
+        if: matrix.platform == 'python'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Publish Python package
+        if: matrix.platform == 'python'
+        run: |
+          if ls ./artifacts/*.whl ./artifacts/*.tar.gz 1> /dev/null 2>&1; then
+            pip install twine
+            echo "Would publish to PyPI (configure PYPI_API_TOKEN secret)"
+            # twine upload --repository pypi ./artifacts/*
+          else
+            echo "No Python packages to publish"
+          fi
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Setup .NET and publish to NuGet
+        if: matrix.platform == 'dotnet'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish .NET packages
+        if: matrix.platform == 'dotnet'
+        run: |
+          if ls ./artifacts/*.nupkg 1> /dev/null 2>&1; then
+            echo "Would publish to NuGet (configure NUGET_API_KEY secret)"
+            # dotnet nuget push "./artifacts/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+          else
+            echo "No .NET packages to publish"
+          fi
+
+      - name: Setup Node.js and publish to npm
+        if: matrix.platform == 'npm'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Publish npm packages
+        if: matrix.platform == 'npm'
+        run: |
+          if ls ./artifacts/*.tgz 1> /dev/null 2>&1; then
+            echo "Would publish to npm (configure NODE_AUTH_TOKEN secret)"
+            # npm publish ./artifacts/*.tgz
+          else
+            echo "No npm packages to publish"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  post-release:
+    name: Post-Release Tasks
+    runs-on: ubuntu-latest
+    needs: [validate-release, create-release]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update version files
+        run: |
+          VERSION="${{ needs.validate-release.outputs.version }}"
+
+          # Update version in Python files
+          find . -name "__init__.py" -exec sed -i "s/__version__ = .*/__version__ = \"$VERSION\"/" {} \;
+
+          # Update version in package.json files
+          find . -name "package.json" -exec sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" {} \;
+
+          # Update version in .csproj files
+          find . -name "*.csproj" -exec sed -i "s/<Version>.*<\/Version>/<Version>$VERSION<\/Version>/" {} \;
+
+      - name: Create post-release issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ needs.validate-release.outputs.version }}';
+            const issueBody = `# Post-Release Tasks for v${version}
+
+            Release v${version} has been successfully created. Please complete the following tasks:
+
+            ## Documentation
+            - [ ] Update documentation with new features
+            - [ ] Update API documentation if needed
+            - [ ] Update getting started guides
+
+            ## Communication
+            - [ ] Announce release on appropriate channels
+            - [ ] Update project website if applicable
+            - [ ] Update social media
+
+            ## Monitoring
+            - [ ] Monitor for issues in the first 48 hours
+            - [ ] Check download/usage metrics
+            - [ ] Monitor user feedback
+
+            ## Next Steps
+            - [ ] Plan next release milestones
+            - [ ] Update project roadmap
+            - [ ] Address any immediate feedback
+
+            **Release Date**: ${new Date().toISOString()}
+            **Is Pre-release**: ${{ needs.validate-release.outputs.is_prerelease }}
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚀 Post-Release Tasks for v${version}`,
+              body: issueBody,
+              labels: ['release', 'post-release', 'task-list'],
+              assignees: [] // Add default assignees if needed
+            });
+
+      - name: Commit version updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No version updates to commit"
+          else
+            git add .
+            git commit -m "chore: update version files after release v${{ needs.validate-release.outputs.version }} [skip ci]"
+            git push
+          fi

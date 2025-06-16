@@ -1,0 +1,403 @@
+name: Deployment Automation
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      force_deploy:
+        description: 'Force deployment even if tests fail'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  deployments: write
+  packages: read
+
+jobs:
+  prepare-deployment:
+    name: Prepare Deployment
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.env.outputs.environment }}
+      deploy_url: ${{ steps.env.outputs.deploy_url }}
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+    steps:
+      - name: Determine environment
+        id: env
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ENV="${{ github.event.inputs.environment }}"
+          elif [ "${{ github.event_name }}" = "release" ]; then
+            if [[ "${{ github.event.release.prerelease }}" == "true" ]]; then
+              ENV="staging"
+            else
+              ENV="production"
+            fi
+          else
+            ENV="development"
+          fi
+
+          case $ENV in
+            development)
+              DEPLOY_URL="https://dev.example.com"
+              ;;
+            staging)
+              DEPLOY_URL="https://staging.example.com"
+              ;;
+            production)
+              DEPLOY_URL="https://example.com"
+              ;;
+          esac
+
+          echo "environment=$ENV" >> $GITHUB_OUTPUT
+          echo "deploy_url=$DEPLOY_URL" >> $GITHUB_OUTPUT
+          echo "Deploying to: $ENV ($DEPLOY_URL)"
+
+      - name: Check deployment readiness
+        id: check
+        run: |
+          SHOULD_DEPLOY="true"
+
+          # Check if this is a production deployment
+          if [ "${{ steps.env.outputs.environment }}" = "production" ]; then
+            # For production, ensure it's a release or forced
+            if [ "${{ github.event_name }}" != "release" ] && [ "${{ github.event.inputs.force_deploy }}" != "true" ]; then
+              echo "Production deployments require a release or force flag"
+              SHOULD_DEPLOY="false"
+            fi
+          fi
+
+          echo "should_deploy=$SHOULD_DEPLOY" >> $GITHUB_OUTPUT
+
+  run-tests:
+    name: Run Deployment Tests
+    runs-on: ubuntu-latest
+    needs: prepare-deployment
+    if: needs.prepare-deployment.outputs.should_deploy == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies and run tests
+        run: |
+          echo "Running comprehensive tests before deployment..."
+
+          # Python tests
+          if [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+            if find . -name "test_*.py" -o -name "*_test.py" | head -1 > /dev/null; then
+              pip install pytest
+              pytest -v || exit 1
+            fi
+          fi
+
+          # .NET tests
+          find . -name "*.csproj" -path "*/test*" -o -path "*/*Test*" | while read proj; do
+            dotnet test "$proj" --verbosity normal || exit 1
+          done
+
+          # Node.js tests
+          if [ -f "package.json" ]; then
+            npm ci
+            npm test || exit 1
+          fi
+
+      - name: Run integration tests
+        run: |
+          echo "Running integration tests for ${{ needs.prepare-deployment.outputs.environment }}..."
+
+          # Add integration test commands here
+          # Example: pytest tests/integration/ --env=${{ needs.prepare-deployment.outputs.environment }}
+
+  build-deployment-artifacts:
+    name: Build Deployment Artifacts
+    runs-on: ubuntu-latest
+    needs: [prepare-deployment, run-tests]
+    if: needs.prepare-deployment.outputs.should_deploy == 'true' && (success() || github.event.inputs.force_deploy == 'true')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Container Registry
+        if: needs.prepare-deployment.outputs.environment != 'development'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker images
+        run: |
+          ENV="${{ needs.prepare-deployment.outputs.environment }}"
+
+          # Build main application image
+          if [ -f "Dockerfile" ]; then
+            IMAGE_NAME="ghcr.io/${{ github.repository }}"
+            TAG="${ENV}-$(git rev-parse --short HEAD)"
+
+            docker build \
+              --build-arg ENVIRONMENT=$ENV \
+              --tag ${IMAGE_NAME}:${TAG} \
+              --tag ${IMAGE_NAME}:${ENV}-latest \
+              .
+
+            if [ "$ENV" != "development" ]; then
+              docker push ${IMAGE_NAME}:${TAG}
+              docker push ${IMAGE_NAME}:${ENV}-latest
+            fi
+
+            echo "Built image: ${IMAGE_NAME}:${TAG}"
+          fi
+
+      - name: Build Python packages
+        run: |
+          if [ -f "setup.py" ] || [ -f "pyproject.toml" ]; then
+            pip install build
+            python -m build
+          fi
+
+      - name: Upload deployment artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deployment-artifacts-${{ needs.prepare-deployment.outputs.environment }}
+          path: |
+            dist/
+            docker-compose*.yml
+            k8s/
+            deployment/
+          retention-days: 30
+
+  deploy-to-azure:
+    name: Deploy to Azure
+    runs-on: ubuntu-latest
+    needs: [prepare-deployment, build-deployment-artifacts]
+    if: needs.prepare-deployment.outputs.should_deploy == 'true'
+    environment: ${{ needs.prepare-deployment.outputs.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download deployment artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: deployment-artifacts-${{ needs.prepare-deployment.outputs.environment }}
+          path: ./artifacts
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure App Service
+        if: contains(github.repository, 'web-app')
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: semantic-kernel-${{ needs.prepare-deployment.outputs.environment }}
+          package: ./artifacts
+
+      - name: Deploy to Azure Container Instances
+        if: contains(github.repository, 'container')
+        run: |
+          az container create \
+            --resource-group semantic-kernel-rg \
+            --name semantic-kernel-${{ needs.prepare-deployment.outputs.environment }} \
+            --image ghcr.io/${{ github.repository }}:${{ needs.prepare-deployment.outputs.environment }}-latest \
+            --dns-name-label semantic-kernel-${{ needs.prepare-deployment.outputs.environment }} \
+            --ports 80
+
+      - name: Deploy to Azure Functions
+        if: contains(github.repository, 'functions')
+        run: |
+          if [ -d "azure-functions" ]; then
+            cd azure-functions
+            func azure functionapp publish semantic-kernel-functions-${{ needs.prepare-deployment.outputs.environment }}
+          fi
+
+  deploy-to-kubernetes:
+    name: Deploy to Kubernetes
+    runs-on: ubuntu-latest
+    needs: [prepare-deployment, build-deployment-artifacts]
+    if: needs.prepare-deployment.outputs.should_deploy == 'true' && needs.prepare-deployment.outputs.environment != 'development'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: 'latest'
+
+      - name: Deploy with Helm
+        run: |
+          ENV="${{ needs.prepare-deployment.outputs.environment }}"
+
+          if [ -d "helm" ] || [ -d "charts" ]; then
+            CHART_DIR=$(find . -name "Chart.yaml" -type f | head -1 | xargs dirname)
+
+            if [ -n "$CHART_DIR" ]; then
+              helm upgrade --install \
+                semantic-kernel-$ENV \
+                $CHART_DIR \
+                --namespace semantic-kernel-$ENV \
+                --create-namespace \
+                --set environment=$ENV \
+                --set image.tag=$ENV-$(git rev-parse --short HEAD)
+            fi
+          fi
+
+      - name: Deploy with kubectl
+        run: |
+          ENV="${{ needs.prepare-deployment.outputs.environment }}"
+
+          if [ -d "k8s" ]; then
+            # Apply namespace
+            cat > namespace.yaml << EOF
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: semantic-kernel-$ENV
+          EOF
+            kubectl apply -f namespace.yaml
+
+            # Apply configurations
+            find k8s -name "*.yaml" -o -name "*.yml" | while read file; do
+              envsubst < "$file" | kubectl apply -n semantic-kernel-$ENV -f -
+            done
+          fi
+        env:
+          ENVIRONMENT: ${{ needs.prepare-deployment.outputs.environment }}
+          IMAGE_TAG: ${{ needs.prepare-deployment.outputs.environment }}-${{ github.sha }}
+
+  post-deployment:
+    name: Post-Deployment Tasks
+    runs-on: ubuntu-latest
+    needs: [prepare-deployment, deploy-to-azure, deploy-to-kubernetes]
+    if: always() && needs.prepare-deployment.outputs.should_deploy == 'true'
+    steps:
+      - name: Run health checks
+        run: |
+          URL="${{ needs.prepare-deployment.outputs.deploy_url }}"
+
+          echo "Running health checks for $URL..."
+
+          # Wait for deployment to be ready
+          sleep 30
+
+          # Check if service is responding
+          for i in {1..10}; do
+            if curl -f -s "$URL/health" > /dev/null 2>&1; then
+              echo "Health check passed"
+              break
+            elif curl -f -s "$URL" > /dev/null 2>&1; then
+              echo "Service is responding"
+              break
+            else
+              echo "Attempt $i: Service not ready yet"
+              sleep 10
+            fi
+          done
+
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests..."
+          URL="${{ needs.prepare-deployment.outputs.deploy_url }}"
+
+          # Basic connectivity test
+          curl -f "$URL" || echo "Basic connectivity test failed"
+
+          # API endpoint tests (if applicable)
+          curl -f "$URL/api/health" || echo "API health check not available"
+
+      - name: Notify deployment status
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const env = '${{ needs.prepare-deployment.outputs.environment }}';
+            const url = '${{ needs.prepare-deployment.outputs.deploy_url }}';
+            const success = '${{ job.status }}' === 'success';
+
+            const status = success ? '✅ Success' : '❌ Failed';
+            const color = success ? 'green' : 'red';
+
+            // Create deployment status issue
+            const issueBody = `# Deployment Status: ${status}
+
+            **Environment**: ${env}
+            **URL**: ${url}
+            **Commit**: ${context.sha}
+            **Triggered by**: ${context.actor}
+            **Workflow**: [${context.workflow}](${context.payload.repository.html_url}/actions/runs/${context.runId})
+
+            ## Deployment Details
+            - **Date**: ${new Date().toISOString()}
+            - **Branch**: ${context.ref}
+            - **Event**: ${context.eventName}
+
+            ${success ?
+              '## ✅ Deployment completed successfully!' :
+              '## ❌ Deployment failed. Please check the workflow logs for details.'
+            }
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `${status} Deployment to ${env} - ${new Date().toDateString()}`,
+              body: issueBody,
+              labels: ['deployment', env, success ? 'success' : 'failure']
+            });
+
+      - name: Update deployment tracking
+        run: |
+          echo "Updating deployment tracking..."
+
+          # Log deployment info
+          cat > deployment-log.json << EOF
+          {
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "environment": "${{ needs.prepare-deployment.outputs.environment }}",
+            "commit": "${{ github.sha }}",
+            "url": "${{ needs.prepare-deployment.outputs.deploy_url }}",
+            "status": "${{ job.status }}",
+            "triggered_by": "${{ github.actor }}"
+          }
+          EOF
+
+          # In a real scenario, you might send this to a monitoring system
+          echo "Deployment logged: $(cat deployment-log.json)"

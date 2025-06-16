@@ -1,0 +1,319 @@
+name: Code Quality Automation
+
+on:
+  push:
+    branches: [main, develop, 'feature/*']
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run quality checks weekly on Sundays at 3 AM UTC
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  checks: write
+
+jobs:
+  code-quality-analysis:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language: [python, csharp, javascript, java]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        if: matrix.language == 'python'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup .NET
+        if: matrix.language == 'csharp'
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Setup Node.js
+        if: matrix.language == 'javascript'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup Java
+        if: matrix.language == 'java'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Install Python quality tools
+        if: matrix.language == 'python'
+        run: |
+          pip install flake8 black isort mypy pylint bandit safety
+          pip install -r requirements.txt || echo "No requirements.txt found"
+
+      - name: Run Python code quality checks
+        if: matrix.language == 'python'
+        run: |
+          echo "Running Python code quality checks..."
+
+          # Create reports directory
+          mkdir -p reports/python
+
+          # Run flake8
+          flake8 . --max-line-length=100 --statistics --tee --output-file=reports/python/flake8-report.txt || true
+
+          # Run pylint
+          find . -name "*.py" -type f | head -10 | xargs pylint --output-format=json > reports/python/pylint-report.json || true
+
+          # Check imports with isort
+          isort . --check-only --diff > reports/python/isort-report.txt || true
+
+          # Run mypy type checking
+          mypy . --ignore-missing-imports --json-report reports/python/mypy || true
+
+      - name: Run C# code quality checks
+        if: matrix.language == 'csharp'
+        run: |
+          echo "Running C# code quality checks..."
+
+          # Create reports directory
+          mkdir -p reports/csharp
+
+          # Find C# projects and run analysis
+          find . -name "*.csproj" -type f | while read proj; do
+            echo "Analyzing project: $proj"
+            dotnet build "$proj" --verbosity normal > reports/csharp/build-output.txt || true
+
+            # Run code analysis if available
+            dotnet run --project "$proj" --verbosity normal 2>&1 | tee -a reports/csharp/analysis.txt || true
+          done
+
+      - name: Run JavaScript/TypeScript quality checks
+        if: matrix.language == 'javascript'
+        run: |
+          echo "Running JavaScript/TypeScript code quality checks..."
+
+          # Create reports directory
+          mkdir -p reports/javascript
+
+          # Install dependencies if package.json exists
+          if [ -f "package.json" ]; then
+            npm install
+
+            # Run ESLint if configured
+            if [ -f ".eslintrc.js" ] || [ -f ".eslintrc.json" ] || [ -f "eslint.config.js" ]; then
+              npx eslint . --ext .js,.ts,.tsx --format json > reports/javascript/eslint-report.json || true
+            fi
+
+            # Run Prettier check
+            npx prettier --check . > reports/javascript/prettier-report.txt 2>&1 || true
+
+            # Run TypeScript check if tsconfig.json exists
+            if [ -f "tsconfig.json" ]; then
+              npx tsc --noEmit > reports/javascript/typescript-report.txt 2>&1 || true
+            fi
+          fi
+
+      - name: Run Java code quality checks
+        if: matrix.language == 'java'
+        run: |
+          echo "Running Java code quality checks..."
+
+          # Create reports directory
+          mkdir -p reports/java
+
+          # Find Java files and run basic checks
+          find . -name "*.java" -type f | wc -l > reports/java/file-count.txt
+
+          # Check for common patterns
+          grep -r "System.out.println" --include="*.java" . > reports/java/debug-statements.txt || true
+          grep -r "printStackTrace" --include="*.java" . > reports/java/stack-traces.txt || true
+
+      - name: Upload quality reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-quality-reports-${{ matrix.language }}
+          path: reports/
+          retention-days: 30
+
+  test-coverage:
+    name: Test Coverage Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python test dependencies
+        run: |
+          pip install pytest pytest-cov coverage
+          pip install -r requirements.txt || echo "No requirements.txt found"
+
+      - name: Run Python tests with coverage
+        run: |
+          if find . -name "test_*.py" -o -name "*_test.py" | head -1 > /dev/null; then
+            pytest --cov=. --cov-report=xml --cov-report=html --cov-report=term
+            coverage report --format=markdown > coverage-report.md
+          else
+            echo "No Python tests found"
+          fi
+
+      - name: Setup .NET for C# tests
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Run C# tests with coverage
+        run: |
+          find . -name "*.csproj" -path "*/test*" -o -path "*/*Test*" | while read proj; do
+            echo "Running tests for: $proj"
+            dotnet test "$proj" --collect:"XPlat Code Coverage" --logger:trx || true
+          done
+
+      - name: Generate coverage summary
+        run: |
+          echo "# Test Coverage Summary" > test-coverage-summary.md
+          echo "Generated on: $(date)" >> test-coverage-summary.md
+          echo "" >> test-coverage-summary.md
+
+          if [ -f "coverage-report.md" ]; then
+            echo "## Python Coverage" >> test-coverage-summary.md
+            cat coverage-report.md >> test-coverage-summary.md
+          fi
+
+          echo "" >> test-coverage-summary.md
+          echo "## Test Files Found" >> test-coverage-summary.md
+          find . -name "*test*.py" -o -name "*Test*.cs" -o -name "*.test.js" -o -name "*.spec.js" | wc -l | sed 's/^/Total test files: /' >> test-coverage-summary.md
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: |
+            htmlcov/
+            coverage.xml
+            test-coverage-summary.md
+          retention-days: 30
+
+  code-metrics:
+    name: Code Metrics and Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Calculate code metrics
+        run: |
+          echo "# Code Metrics Report" > code-metrics.md
+          echo "Generated on: $(date)" >> code-metrics.md
+          echo "" >> code-metrics.md
+
+          echo "## Repository Statistics" >> code-metrics.md
+          echo "- Total commits: $(git rev-list --count HEAD)" >> code-metrics.md
+          echo "- Total contributors: $(git log --format='%aN' | sort -u | wc -l)" >> code-metrics.md
+          echo "- Repository size: $(du -sh . | cut -f1)" >> code-metrics.md
+          echo "" >> code-metrics.md
+
+          echo "## Language Distribution" >> code-metrics.md
+          echo "\`\`\`" >> code-metrics.md
+          find . -type f -name "*.py" | wc -l | sed 's/^/Python files: /' >> code-metrics.md
+          find . -type f -name "*.cs" | wc -l | sed 's/^/C# files: /' >> code-metrics.md
+          find . -type f -name "*.java" | wc -l | sed 's/^/Java files: /' >> code-metrics.md
+          find . -type f \( -name "*.js" -o -name "*.ts" \) | wc -l | sed 's/^/JavaScript/TypeScript files: /' >> code-metrics.md
+          find . -type f -name "*.md" | wc -l | sed 's/^/Markdown files: /' >> code-metrics.md
+          echo "\`\`\`" >> code-metrics.md
+          echo "" >> code-metrics.md
+
+          echo "## Code Quality Indicators" >> code-metrics.md
+          echo "- TODO comments: $(grep -r "TODO\|FIXME\|HACK" --include="*.py" --include="*.cs" --include="*.java" --include="*.js" --include="*.ts" . | wc -l)" >> code-metrics.md
+          echo "- Large files (>1000 lines): $(find . -name "*.py" -o -name "*.cs" -o -name "*.java" -o -name "*.js" -o -name "*.ts" | xargs wc -l | awk '$1 > 1000 {count++} END {print count+0}')" >> code-metrics.md
+          echo "" >> code-metrics.md
+
+          echo "## Recent Activity" >> code-metrics.md
+          echo "### Top 10 Most Recently Modified Files" >> code-metrics.md
+          git log --pretty=format: --name-only --since="1 week ago" | sort | uniq -c | sort -rn | head -10 | while read count file; do
+            if [ -n "$file" ]; then
+              echo "- $file ($count changes)" >> code-metrics.md
+            fi
+          done
+
+      - name: Check for code smells
+        run: |
+          echo "" >> code-metrics.md
+          echo "## Potential Code Smells" >> code-metrics.md
+
+          # Check for long functions (Python)
+          echo "### Long Python Functions (>50 lines)" >> code-metrics.md
+          find . -name "*.py" -exec awk '/^def / {func=$0; start=NR} /^[[:space:]]*$/ && func {if(NR-start>50) print FILENAME":"start":"func; func=""} /^[^[:space:]]/ && !/^def / {func=""}' {} \; | head -10 >> code-metrics.md || echo "None found" >> code-metrics.md
+
+          # Check for duplicate code patterns
+          echo "" >> code-metrics.md
+          echo "### Potential Duplicate Code" >> code-metrics.md
+          find . -name "*.py" -exec grep -l "class.*:" {} \; | while read file; do
+            grep "class.*:" "$file" | head -3
+          done | sort | uniq -d | head -5 >> code-metrics.md || echo "None detected" >> code-metrics.md
+
+      - name: Upload metrics report
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-metrics
+          path: code-metrics.md
+          retention-days: 30
+
+      - name: Create quality issue if needed
+        if: github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+
+            try {
+              const metricsContent = fs.readFileSync('code-metrics.md', 'utf8');
+
+              // Extract TODO count
+              const todoMatch = metricsContent.match(/TODO comments: (\d+)/);
+              const todoCount = todoMatch ? parseInt(todoMatch[1]) : 0;
+
+              // Extract large files count
+              const largeFilesMatch = metricsContent.match(/Large files.*: (\d+)/);
+              const largeFilesCount = largeFilesMatch ? parseInt(largeFilesMatch[1]) : 0;
+
+              if (todoCount > 50 || largeFilesCount > 10) {
+                const issueBody = `# Weekly Code Quality Report
+
+                This is an automated report highlighting potential code quality issues:
+
+                - **TODO/FIXME comments**: ${todoCount}
+                - **Large files (>1000 lines)**: ${largeFilesCount}
+
+                Consider addressing these items to improve code maintainability.
+
+                **Generated**: ${new Date().toISOString()}
+                `;
+
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: `📊 Weekly Code Quality Report - ${new Date().toDateString()}`,
+                  body: issueBody,
+                  labels: ['code-quality', 'automated', 'maintenance']
+                });
+              }
+            } catch (error) {
+              console.log('Could not process metrics:', error.message);
+            }

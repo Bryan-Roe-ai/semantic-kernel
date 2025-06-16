@@ -5,6 +5,7 @@ This enhanced AutoMode system provides robust, self-healing capabilities for run
 ## Features
 
 ### 🔄 **Auto-Recovery & Self-Healing**
+
 - Automatic process restart on failure
 - Memory leak detection and mitigation
 - Resource usage monitoring with automatic cleanup
@@ -12,6 +13,7 @@ This enhanced AutoMode system provides robust, self-healing capabilities for run
 - Graceful degradation under stress
 
 ### 📊 **Comprehensive Monitoring**
+
 - Real-time system and application metrics
 - Health checks with configurable thresholds
 - Prometheus metrics export for dashboards
@@ -19,12 +21,14 @@ This enhanced AutoMode system provides robust, self-healing capabilities for run
 - Performance tracking and alerting
 
 ### 💾 **State Persistence**
+
 - Automatic state backup and recovery
 - Process restart counting and limits
 - Configuration persistence across restarts
 - Crash recovery with state restoration
 
 ### ⚙️ **Advanced Configuration**
+
 - JSON-based configuration management
 - Runtime parameter adjustment
 - Environment-specific settings
@@ -33,6 +37,7 @@ This enhanced AutoMode system provides robust, self-healing capabilities for run
 ## Quick Start
 
 ### 1. Basic Setup
+
 ```bash
 # Install with enhanced features
 python setup.py --enhanced
@@ -42,7 +47,9 @@ pip install psutil watchdog prometheus-client
 ```
 
 ### 2. Configuration
+
 Create or modify `auto_mode_config.json`:
+
 ```json
 {
   "check_interval": 30,
@@ -55,6 +62,7 @@ Create or modify `auto_mode_config.json`:
 ```
 
 ### 3. Run Enhanced AutoMode
+
 ```bash
 # Start with enhanced features
 python start_enhanced.py
@@ -69,16 +77,19 @@ python startup_enhanced.py --check-only
 ## Configuration Options
 
 ### Core Settings
+
 - `check_interval`: Seconds between health checks (default: 30)
 - `max_retries`: Maximum restart attempts (default: 5)
 - `retry_delay`: Seconds between restart attempts (default: 10)
 
 ### Resource Limits
+
 - `max_memory_percent`: Memory usage threshold for restart (default: 85%)
 - `max_cpu_percent`: CPU usage warning threshold (default: 90%)
 - `max_disk_percent`: Disk usage critical threshold (default: 95%)
 
 ### Feature Toggles
+
 - `enable_persistence`: Save/restore state across restarts
 - `enable_auto_restart`: Automatically restart failed processes
 - `enable_monitoring`: Enable comprehensive monitoring
@@ -87,6 +98,7 @@ python startup_enhanced.py --check-only
 - `enable_circuit_breaker`: Protect against cascading failures
 
 ### Monitoring & Alerting
+
 - `log_level`: Logging verbosity (DEBUG, INFO, WARNING, ERROR)
 - `metrics_retention_days`: Days to keep metrics files
 - `backup_retention_days`: Days to keep state backups
@@ -97,28 +109,36 @@ python startup_enhanced.py --check-only
 ### Core Components
 
 #### 1. **EnhancedAutoMode**
+
 Main orchestrator that manages all long-running operations:
+
 - Process lifecycle management
 - Health monitoring coordination
 - State persistence
 - Signal handling for graceful shutdown
 
 #### 2. **HealthMonitor**
+
 Comprehensive monitoring system:
+
 - System resource tracking (CPU, memory, disk, network)
 - Application-specific metrics
 - Error rate monitoring
 - Service availability checks
 
 #### 3. **PersistenceManager**
+
 State management and recovery:
+
 - JSON-based state storage
 - Automatic backup creation
 - Recovery from multiple backup levels
 - Old file cleanup
 
 #### 4. **CircuitBreaker**
+
 Fault tolerance for external services:
+
 - Automatic failure detection
 - Service isolation during outages
 - Gradual recovery testing
@@ -147,13 +167,16 @@ Fault tolerance for external services:
 ## Monitoring & Metrics
 
 ### Built-in Metrics
+
 - **System**: CPU, memory, disk, network usage
 - **Process**: Per-process resource consumption
 - **Application**: Uptime, restart count, error rate
 - **Custom**: Response times, queue sizes, throughput
 
 ### Prometheus Integration
+
 Start the metrics exporter:
+
 ```bash
 python metrics_exporter.py --port 8001
 ```
@@ -161,6 +184,7 @@ python metrics_exporter.py --port 8001
 Access metrics at: `http://localhost:8001/metrics`
 
 ### Example Prometheus Queries
+
 ```promql
 # High memory usage alert
 system_memory_percent > 90
@@ -175,6 +199,7 @@ histogram_quantile(0.95, backend_response_time_seconds)
 ## Advanced Usage
 
 ### Custom Process Management
+
 ```python
 from auto_mode_enhanced import EnhancedAutoMode, AutoModeConfig
 
@@ -197,6 +222,7 @@ await automode.run()
 ```
 
 ### Health Check Integration
+
 ```python
 # Custom health check function
 async def custom_health_check():
@@ -212,27 +238,32 @@ automode.health_monitor.add_custom_check(custom_health_check)
 ### Common Issues
 
 **1. High Memory Usage**
+
 - Check `max_memory_percent` setting
 - Review application for memory leaks
 - Enable automatic restart: `"enable_auto_restart": true`
 
 **2. Frequent Restarts**
+
 - Increase `retry_delay` for slower recovery
 - Check external service dependencies
 - Review logs for root cause
 
 **3. Process Won't Start**
+
 - Verify dependencies with `--check-only`
 - Check file permissions and paths
 - Review startup logs in `logs/startup.log`
 
 ### Log Locations
+
 - Main log: `logs/automode_YYYYMMDD.log`
 - Error log: `logs/errors.log`
 - Startup log: `logs/startup.log`
 - Metrics log: `logs/metrics.log`
 
 ### State Files
+
 - Current state: `.automode_state/automode_state.json`
 - Backups: `.automode_state/backups/`
 - Configuration: `auto_mode_config.json`
@@ -240,26 +271,31 @@ automode.health_monitor.add_custom_check(custom_health_check)
 ## Best Practices
 
 ### 1. **Resource Monitoring**
+
 - Set conservative memory limits (80-85%)
 - Monitor disk space regularly
 - Use external monitoring tools for alerts
 
 ### 2. **Configuration Management**
+
 - Keep configuration in version control
 - Use environment-specific configs
 - Test configuration changes in staging
 
 ### 3. **Logging Strategy**
+
 - Use appropriate log levels
 - Implement log rotation
 - Monitor error rates and patterns
 
 ### 4. **Disaster Recovery**
+
 - Regular state backups
 - Test recovery procedures
 - Document escalation procedures
 
 ### 5. **Performance Optimization**
+
 - Adjust check intervals based on load
 - Use circuit breakers for external calls
 - Enable graceful degradation for peak loads
@@ -267,6 +303,7 @@ automode.health_monitor.add_custom_check(custom_health_check)
 ## Integration Examples
 
 ### Docker Deployment
+
 ```dockerfile
 FROM python:3.10-slim
 
@@ -284,6 +321,7 @@ CMD ["python", "start_enhanced.py"]
 ```
 
 ### Kubernetes Deployment
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -300,33 +338,34 @@ spec:
         app: ai-chat-app
     spec:
       containers:
-      - name: ai-chat-app
-        image: ai-chat-app:latest
-        ports:
-        - containerPort: 8000
-        - containerPort: 8001  # Metrics
-        resources:
-          limits:
-            memory: "2Gi"
-            cpu: "1000m"
-          requests:
-            memory: "1Gi"
-            cpu: "500m"
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 60
-          periodSeconds: 30
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 10
-          periodSeconds: 5
+        - name: ai-chat-app
+          image: ai-chat-app:latest
+          ports:
+            - containerPort: 8000
+            - containerPort: 8001 # Metrics
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
 ```
 
 ### Systemd Service
+
 ```ini
 [Unit]
 Description=AI Chat Application with Enhanced AutoMode
@@ -356,6 +395,7 @@ WantedBy=multi-user.target
 ## Support
 
 For issues and questions:
+
 1. Check the troubleshooting section
 2. Review log files for errors
 3. Verify configuration settings

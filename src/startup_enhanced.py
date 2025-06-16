@@ -27,12 +27,12 @@ except ImportError:
 
 class ApplicationManager:
     """Manages the complete AI application lifecycle"""
-    
+
     def __init__(self, base_dir: Path = None):
         self.base_dir = base_dir or Path(__file__).parent
         self.automode = None
         self.config = None
-        
+
     def setup_environment(self) -> bool:
         """Setup the environment for long-running operation"""
         try:
@@ -44,10 +44,10 @@ class ApplicationManager:
                 self.base_dir / "plugins",
                 self.base_dir / ".automode_state"
             ]
-            
+
             for dir_path in required_dirs:
                 dir_path.mkdir(exist_ok=True)
-            
+
             # Create default config if not exists
             config_file = self.base_dir / "auto_mode_config.json"
             if not config_file.exists():
@@ -55,7 +55,7 @@ class ApplicationManager:
                 with open(config_file, 'w') as f:
                     json.dump(default_config.__dict__, f, indent=2)
                 print(f"Created default config at {config_file}")
-            
+
             # Setup basic logging
             log_file = self.base_dir / "logs" / "startup.log"
             logging.basicConfig(
@@ -66,14 +66,14 @@ class ApplicationManager:
                     logging.StreamHandler()
                 ]
             )
-            
+
             logging.info("Environment setup completed")
             return True
-            
+
         except Exception as e:
             print(f"Failed to setup environment: {e}")
             return False
-    
+
     def check_dependencies(self) -> bool:
         """Check if all required dependencies are available"""
         try:
@@ -81,22 +81,22 @@ class ApplicationManager:
             if sys.version_info < (3, 8):
                 logging.error("Python 3.8+ is required")
                 return False
-            
+
             # Check for required Python packages
             required_packages = [
                 'psutil', 'requests', 'fastapi', 'uvicorn'
             ]
-            
+
             missing_packages = []
             for package in required_packages:
                 try:
                     __import__(package)
                 except ImportError:
                     missing_packages.append(package)
-            
+
             if missing_packages:
                 logging.warning(f"Missing packages: {missing_packages}")
-                
+
                 # Try to install missing packages
                 for package in missing_packages:
                     try:
@@ -107,32 +107,32 @@ class ApplicationManager:
                     except subprocess.CalledProcessError:
                         logging.error(f"Failed to install {package}")
                         return False
-            
+
             # Check for optional dependencies
             optional_packages = {
                 'watchdog': 'for file watching',
                 'redis': 'for advanced caching',
                 'prometheus_client': 'for metrics export'
             }
-            
+
             for package, purpose in optional_packages.items():
                 try:
                     __import__(package)
                     logging.info(f"Optional package {package} available")
                 except ImportError:
                     logging.info(f"Optional package {package} not available ({purpose})")
-            
+
             logging.info("Dependency check completed")
             return True
-            
+
         except Exception as e:
             logging.error(f"Error checking dependencies: {e}")
             return False
-    
+
     def check_services(self) -> Dict[str, bool]:
         """Check the status of external services"""
         services = {}
-        
+
         # Check LM Studio
         try:
             import socket
@@ -142,7 +142,7 @@ class ApplicationManager:
         except:
             services['lm_studio'] = False
             logging.warning("LM Studio API is not available")
-        
+
         # Check Redis if available
         try:
             import redis
@@ -153,7 +153,7 @@ class ApplicationManager:
         except:
             services['redis'] = False
             logging.info("Redis is not available (optional)")
-        
+
         # Check if backend is already running
         try:
             import requests
@@ -166,18 +166,18 @@ class ApplicationManager:
         except:
             services['backend'] = False
             logging.info("Backend is not running")
-        
+
         return services
-    
+
     async def start_application(self, config_file: Path = None) -> bool:
         """Start the application with enhanced AutoMode"""
         try:
             # Load configuration
             self.config = create_automode_config(config_file)
-            
+
             # Create enhanced AutoMode instance
             self.automode = EnhancedAutoMode(self.config, self.base_dir)
-            
+
             # Start backend if not already running
             services = self.check_services()
             if not services.get('backend', False):
@@ -195,17 +195,17 @@ class ApplicationManager:
                         return False
                 else:
                     logging.warning("No backend.py found")
-            
+
             # Start additional services
             await self._start_additional_services()
-            
+
             logging.info("Application startup completed")
             return True
-            
+
         except Exception as e:
             logging.error(f"Failed to start application: {e}")
             return False
-    
+
     async def _start_additional_services(self) -> None:
         """Start additional services and monitoring"""
         try:
@@ -221,7 +221,7 @@ class ApplicationManager:
                     logging.info("File watcher started")
             except ImportError:
                 logging.info("Watchdog not available, skipping file watcher")
-            
+
             # Start metrics exporter if prometheus_client is available
             try:
                 import prometheus_client
@@ -234,18 +234,18 @@ class ApplicationManager:
                     logging.info("Metrics exporter started")
             except ImportError:
                 logging.info("Prometheus client not available, skipping metrics exporter")
-            
+
         except Exception as e:
             logging.error(f"Error starting additional services: {e}")
-    
+
     async def run_forever(self) -> None:
         """Run the application indefinitely with AutoMode"""
         if not self.automode:
             raise RuntimeError("Application not started")
-        
+
         logging.info("Starting long-running mode...")
         await self.automode.run()
-    
+
     async def shutdown(self) -> None:
         """Gracefully shutdown the application"""
         if self.automode:
@@ -268,25 +268,25 @@ from startup_enhanced import ApplicationManager
 
 async def main():
     manager = ApplicationManager()
-    
+
     # Setup environment
     if not manager.setup_environment():
         print("Failed to setup environment")
         return 1
-    
+
     # Check dependencies
     if not manager.check_dependencies():
         print("Dependency check failed")
         return 1
-    
+
     # Start application
     if not await manager.start_application():
         print("Failed to start application")
         return 1
-    
+
     # Run forever
     await manager.run_forever()
-    
+
     return 0
 
 if __name__ == "__main__":
@@ -299,18 +299,18 @@ if __name__ == "__main__":
         print(f"Unexpected error: {e}")
         sys.exit(1)
 '''
-    
+
     launcher_file = Path(__file__).parent / "start_enhanced.py"
     with open(launcher_file, 'w') as f:
         f.write(launcher_content)
-    
+
     # Make executable on Unix-like systems
     try:
         import stat
         launcher_file.chmod(launcher_file.stat().st_mode | stat.S_IEXEC)
     except:
         pass
-    
+
     print(f"Created launcher at {launcher_file}")
 
 
@@ -318,54 +318,54 @@ def main():
     """Main entry point"""
     parser = argparse.ArgumentParser(description="Enhanced Application Startup")
     parser.add_argument("--config", type=Path, help="Configuration file")
-    parser.add_argument("--base-dir", type=Path, help="Base directory", 
+    parser.add_argument("--base-dir", type=Path, help="Base directory",
                        default=Path(__file__).parent)
-    parser.add_argument("--create-launcher", action="store_true", 
+    parser.add_argument("--create-launcher", action="store_true",
                        help="Create a simple launcher script")
-    parser.add_argument("--check-only", action="store_true", 
+    parser.add_argument("--check-only", action="store_true",
                        help="Only check dependencies and services")
-    
+
     args = parser.parse_args()
-    
+
     if args.create_launcher:
         create_startup_launcher()
         return
-    
+
     # Create application manager
     manager = ApplicationManager(args.base_dir)
-    
+
     # Setup environment
     if not manager.setup_environment():
         print("Failed to setup environment")
         sys.exit(1)
-    
+
     # Check dependencies
     if not manager.check_dependencies():
         print("Dependency check failed")
         sys.exit(1)
-    
+
     # Check services
     services = manager.check_services()
     print("Service Status:")
     for service, status in services.items():
         status_str = "✓ Available" if status else "✗ Not Available"
         print(f"  {service}: {status_str}")
-    
+
     if args.check_only:
         return
-    
+
     # Start application
     async def run_app():
         if not await manager.start_application(args.config):
             print("Failed to start application")
             return 1
-        
+
         print("Application started successfully. Running in long-running mode...")
         print("Press Ctrl+C to shutdown gracefully")
-        
+
         await manager.run_forever()
         return 0
-    
+
     try:
         exit_code = asyncio.run(run_app())
         sys.exit(exit_code)

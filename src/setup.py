@@ -37,14 +37,14 @@ def main():
     print(f"{Colors.BOLD}  AI Chat Application Setup Helper  {Colors.END}")
     print(f"{Colors.BOLD}===================================={Colors.END}")
     print()
-    
-    # Get the base directory 
+
+    # Get the base directory
     base_dir = Path(__file__).parent.absolute()
-    
+
     # --- Automation: Run all setup steps without user input if --auto or /auto is passed ---
     auto_mode = any(arg.lower() in ('--auto', '/auto', '-y', '/y', '--enhanced') for arg in sys.argv)
     enhanced_mode = any(arg.lower() in ('--enhanced', '--enhanced-auto') for arg in sys.argv)
-    
+
     def auto_input(prompt):
         if auto_mode:
             print(f"[AUTO] {prompt} -> Y")
@@ -60,7 +60,7 @@ def main():
         print("Please install Python 3.8 or higher from https://www.python.org/downloads/")
         auto_input("Press Enter to exit...")
         return False
-    
+
     # Check for pip
     print(f"\n{Colors.BLUE}[2/5] Checking for pip...{Colors.END}")
     try:
@@ -73,11 +73,11 @@ def main():
         print("Visit https://pip.pypa.io/en/stable/installation/ for installation instructions.")
         auto_input("Press Enter to exit...")
         return False
-        
+
     # Install dependencies
     print(f"\n{Colors.BLUE}[3/5] Installing dependencies...{Colors.END}")
     requirements_file = base_dir / "requirements.txt"
-    
+
     if not requirements_file.exists():
         print(f"{Colors.YELLOW}! requirements.txt not found, creating default...{Colors.END}")
         with open(requirements_file, 'w') as f:
@@ -87,30 +87,30 @@ def main():
             f.write("requests>=2.31.0\n")
             f.write("python-multipart>=0.0.9\n")
             f.write("Pillow>=10.2.0  # Optional: for image analysis\n")
-    
+
     print("Installing required packages...")
     try:
-        subprocess.run([sys.executable, "-m", "pip", "install", "-r", str(requirements_file)], 
+        subprocess.run([sys.executable, "-m", "pip", "install", "-r", str(requirements_file)],
                       check=True, stdout=subprocess.PIPE)
         print(f"{Colors.GREEN}✓ Dependencies installed successfully{Colors.END}")
     except subprocess.CalledProcessError as e:
         print(f"{Colors.RED}✗ Error installing dependencies: {str(e)}{Colors.END}")
         print("You may need administrator privileges to install packages.")
-        
+
         if platform.system() == "Windows":
             print("\nTry running the command below in an Administrator PowerShell or Command Prompt:")
             print(f"python -m pip install -r \"{requirements_file}\"")
         else:
             print("\nTry running the command below with sudo:")
             print(f"sudo python3 -m pip install -r \"{requirements_file}\"")
-            
+
         auto_input("Press Enter to continue anyway (some features may not work)...")
-    
+
     # Create uploads directory
     print(f"\n{Colors.BLUE}[4/5] Creating required directories...{Colors.END}")
     uploads_dir = base_dir / "uploads"
     plugins_dir = base_dir / "plugins"
-    
+
     try:
         os.makedirs(uploads_dir, exist_ok=True)
         os.makedirs(plugins_dir, exist_ok=True)
@@ -119,11 +119,11 @@ def main():
         print(f"{Colors.RED}✗ Error creating directories: {str(e)}{Colors.END}")
         print("Make sure you have write permissions in this folder.")
         auto_input("Press Enter to continue anyway...")
-    
+
     # Create .env file if it doesn't exist
     print(f"\n{Colors.BLUE}[5/5] Checking configuration...{Colors.END}")
     env_file = base_dir / ".env"
-    
+
     if not env_file.exists():
         print("Creating default .env configuration file...")
         with open(env_file, 'w') as f:
@@ -131,7 +131,7 @@ def main():
         print(f"{Colors.GREEN}✓ Created default .env configuration{Colors.END}")
     else:
         print(f"{Colors.GREEN}✓ Configuration file exists{Colors.END}")
-    
+
     # --- Automation: Health checks and auto-update ---
     print(f"\n{Colors.BLUE}Performing health checks...{Colors.END}")
     # Check Python version again
@@ -215,7 +215,7 @@ def main():
             print(f"{Colors.RED}Failed to install {pip_pkg}: {e}{Colors.END}")
         if sys_dep:
             print(f"{Colors.YELLOW}Note: You may need to install {sys_dep} separately. See: {sys_url}{Colors.END}")
-    
+
     # Advanced: Offer to install and configure Redis for chat memory (optional)
     print(f"\n{Colors.BLUE}Optional: Enable Redis for advanced chat memory?{Colors.END}")
     choice = auto_input("Enable Redis support? (Y/n): ")
@@ -316,30 +316,30 @@ def main():
     # --- Enhanced AutoMode Setup ---
     if enhanced_mode or auto_mode:
         print(f"\n{Colors.BLUE}Setting up Enhanced AutoMode for long-running operations...{Colors.END}")
-        
+
         # Install additional packages for enhanced mode
         enhanced_packages = [
             "psutil",
-            "watchdog", 
+            "watchdog",
             "prometheus-client"
         ]
-        
+
         for package in enhanced_packages:
             try:
-                subprocess.run([sys.executable, "-m", "pip", "install", package], 
+                subprocess.run([sys.executable, "-m", "pip", "install", package],
                               check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 print(f"{Colors.GREEN}✓ {package} installed{Colors.END}")
             except subprocess.CalledProcessError:
                 print(f"{Colors.YELLOW}! Failed to install {package} (optional){Colors.END}")
-        
+
         # Create enhanced AutoMode files if they don't exist
         enhanced_files = [
             "auto_mode_enhanced.py",
-            "startup_enhanced.py", 
+            "startup_enhanced.py",
             "metrics_exporter.py",
             "auto_mode_config.json"
         ]
-        
+
         files_created = []
         for filename in enhanced_files:
             filepath = base_dir / filename
@@ -348,10 +348,10 @@ def main():
                 print(f"  Please ensure enhanced AutoMode files are in the directory")
             else:
                 files_created.append(filename)
-        
+
         if files_created:
             print(f"{Colors.GREEN}✓ Enhanced AutoMode files available: {', '.join(files_created)}{Colors.END}")
-            
+
             # Create startup script
             startup_script = base_dir / "start_enhanced.py"
             if not startup_script.exists():
@@ -368,16 +368,16 @@ from startup_enhanced import ApplicationManager
 
 async def main():
     manager = ApplicationManager()
-    
+
     if not manager.setup_environment():
         return 1
-    
+
     if not manager.check_dependencies():
         return 1
-    
+
     if not await manager.start_application():
         return 1
-    
+
     await manager.run_forever()
     return 0
 
@@ -392,7 +392,7 @@ if __name__ == "__main__":
         sys.exit(1)
 ''')
                 print(f"{Colors.GREEN}✓ Created enhanced startup script{Colors.END}")
-        
+
         if enhanced_mode:
             print(f"\n{Colors.GREEN}{Colors.BOLD}Enhanced AutoMode setup completed!{Colors.END}")
             print("You can now run with long-running capabilities:")
@@ -424,33 +424,33 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, 
+logging.basicConfig(level=logging.INFO,
                    format='%(asctime)s - %(levelname)s - %(message)s',
                    handlers=[logging.FileHandler("plugin_hotreload.log"),
                              logging.StreamHandler()])
 
 class PluginReloader(FileSystemEventHandler):
     """Watches plugin directory and reloads plugins on change"""
-    
+
     def __init__(self, plugins_dir):
         self.plugins_dir = plugins_dir
         self.last_reload = {}
         self.lock = threading.Lock()
-        
+
     def on_modified(self, event):
         if event.is_directory or not event.src_path.endswith('.py'):
             return
-            
+
         path = Path(event.src_path)
         plugin_name = path.stem
-        
+
         # Avoid reloading too frequently (debounce)
         with self.lock:
             now = time.time()
             if plugin_name in self.last_reload and now - self.last_reload[plugin_name] < 2:
                 return
             self.last_reload[plugin_name] = now
-        
+
         try:
             # Try to reload the module if it's loaded
             if plugin_name in sys.modules:
@@ -468,7 +468,7 @@ def start_watching(plugins_dir):
     observer.schedule(event_handler, plugins_dir, recursive=True)
     observer.start()
     logging.info(f"Watching for changes in: {plugins_dir}")
-    
+
     try:
         while True:
             time.sleep(1)
@@ -485,7 +485,7 @@ if __name__ == "__main__":
             print(f"{Colors.RED}Failed to create plugin hot-reload script: {e}{Colors.END}")
     else:
         print(f"{Colors.GREEN}✓ Plugin hot-reload system already exists{Colors.END}")
-        
+
     # Install watchdog if needed for hot-reload
     try:
         subprocess.run([sys.executable, "-m", "pip", "install", "watchdog"], check=True)
@@ -509,21 +509,21 @@ import logging
 import subprocess
 from pathlib import Path
 
-logging.basicConfig(level=logging.INFO, 
+logging.basicConfig(level=logging.INFO,
                    format='%(asctime)s - %(levelname)s - %(message)s',
                    handlers=[logging.FileHandler("self_heal.log"),
                              logging.StreamHandler()])
 
 class SelfHealer:
     """Monitors and restarts critical services when they fail"""
-    
+
     def __init__(self, base_dir):
         self.base_dir = Path(base_dir)
         self.backend_script = self.base_dir / "backend.py"
         self.backend_process = None
         self.max_memory_percent = 90  # Restart if memory usage > 90%
         self.max_failures = 0
-        
+
     def check_backend(self):
         """Check if backend is running, start if not"""
         if self.backend_process is None or not psutil.pid_exists(self.backend_process.pid):
@@ -552,7 +552,7 @@ class SelfHealer:
                     self.backend_process = None
             except Exception as e:
                 logging.error(f"Error monitoring backend: {e}")
-    
+
     def run_forever(self, check_interval=30):
         """Run continuous monitoring"""
         logging.info("Self-healer started...")
@@ -580,7 +580,7 @@ if __name__ == "__main__":
             print(f"{Colors.RED}Failed to create self-healing script: {e}{Colors.END}")
     else:
         print(f"{Colors.GREEN}✓ Self-healing system already exists{Colors.END}")
-        
+
     # Install psutil if needed for self-healing
     try:
         subprocess.run([sys.executable, "-m", "pip", "install", "psutil"], check=True)
@@ -603,7 +603,7 @@ if __name__ == "__main__":
                 print(f"{Colors.GREEN}✓ Azure Functions Core Tools installed{Colors.END}")
             else:
                 print(f"{Colors.GREEN}✓ Azure Functions Core Tools detected: {result.stdout.decode().strip()}{Colors.END}")
-                
+
             # Check for existing Azure Functions project
             azure_func_dir = base_dir / "AzureFunctions"
             if not azure_func_dir.exists():
@@ -636,18 +636,18 @@ from pathlib import Path
 
 class MetricsLogger:
     """Logs system and application metrics"""
-    
+
     def __init__(self, base_dir):
         self.base_dir = Path(base_dir)
         self.metrics_dir = self.base_dir / "metrics"
         os.makedirs(self.metrics_dir, exist_ok=True)
-        
-        logging.basicConfig(level=logging.INFO, 
+
+        logging.basicConfig(level=logging.INFO,
                          format='%(asctime)s - %(levelname)s - %(message)s',
                          handlers=[logging.FileHandler(self.metrics_dir / "metrics.log"),
                                    logging.StreamHandler()])
         self.stop_event = threading.Event()
-        
+
     def collect_system_metrics(self):
         """Collect system-level metrics"""
         metrics = {
@@ -661,14 +661,14 @@ class MetricsLogger:
             }
         }
         return metrics
-    
+
     def collect_process_metrics(self):
         """Collect process-specific metrics"""
         metrics = {
             "timestamp": datetime.now().isoformat(),
             "processes": []
         }
-        
+
         # Look for Python processes related to our app
         for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
             if 'python' in proc.info['name'].lower():
@@ -685,39 +685,39 @@ class MetricsLogger:
                         metrics['processes'].append(proc_info)
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     pass
-        
+
         return metrics
-    
+
     def log_metrics(self):
         """Log system and process metrics to file"""
         sys_metrics = self.collect_system_metrics()
         proc_metrics = self.collect_process_metrics()
-        
+
         # Log to JSON files with timestamp in filename
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        
+
         with open(self.metrics_dir / f"system_metrics_{timestamp}.json", 'w') as f:
             json.dump(sys_metrics, f, indent=2)
-        
+
         with open(self.metrics_dir / f"process_metrics_{timestamp}.json", 'w') as f:
             json.dump(proc_metrics, f, indent=2)
-            
+
         # Also log summary to console/log file
         logging.info(f"System: CPU {sys_metrics['cpu_percent']}%, Memory {sys_metrics['memory_percent']}%")
         logging.info(f"Monitored {len(proc_metrics['processes'])} AI Chat processes")
-        
+
         # Clean up old metrics (keep last 100)
         self._cleanup_old_metrics()
-        
+
     def _cleanup_old_metrics(self):
         """Delete old metric files to prevent disk fill"""
         all_files = []
         for pattern in ["system_metrics_*.json", "process_metrics_*.json"]:
             all_files.extend(list(self.metrics_dir.glob(pattern)))
-        
+
         # Sort by modification time (oldest first)
         all_files.sort(key=lambda x: x.stat().st_mtime)
-        
+
         # Keep only the last 100 files
         if len(all_files) > 100:
             for old_file in all_files[:-100]:
@@ -725,7 +725,7 @@ class MetricsLogger:
                     old_file.unlink()
                 except:
                     pass
-    
+
     def run_periodic_logging(self, interval=300):
         """Run metrics logging at regular intervals"""
         logging.info(f"Metrics logger started, interval: {interval} seconds")
@@ -736,14 +736,14 @@ class MetricsLogger:
                 logging.error(f"Error logging metrics: {e}")
             # Wait for interval or until stop event
             self.stop_event.wait(interval)
-    
+
     def start(self, interval=300):
         """Start metrics logging in a background thread"""
         thread = threading.Thread(target=self.run_periodic_logging, args=(interval,))
         thread.daemon = True
         thread.start()
         return thread
-    
+
     def stop(self):
         """Stop the metrics logging"""
         self.stop_event.set()
@@ -751,7 +751,7 @@ class MetricsLogger:
 if __name__ == "__main__":
     base_dir = Path(__file__).parent
     logger = MetricsLogger(base_dir)
-    
+
     try:
         logging_thread = logger.start(interval=60)  # Log every minute
         logging_thread.join()
@@ -764,7 +764,7 @@ if __name__ == "__main__":
             print(f"{Colors.RED}Failed to create metrics logger: {e}{Colors.END}")
     else:
         print(f"{Colors.GREEN}✓ Advanced metrics logger already exists{Colors.END}")
-        
+
     # --- Advanced Features: Cloud deployment automation ---
     print(f"\n{Colors.BLUE}Setting up cloud deployment automation...{Colors.END}")
     if auto_mode or auto_input("Set up cloud deployment automation? (Y/n): ").lower() != 'n':
@@ -789,12 +789,12 @@ logging.basicConfig(level=logging.INFO,
 
 class CloudDeployer:
     """Handles deployment to various cloud platforms"""
-    
+
     def __init__(self, base_dir):
         self.base_dir = Path(base_dir)
         self.config_path = self.base_dir / "cloud_deploy_config.json"
         self.load_config()
-    
+
     def load_config(self):
         """Load deployment configuration"""
         if self.config_path.exists():
@@ -826,7 +826,7 @@ class CloudDeployer:
             }
             # Save default config
             self.save_config()
-    
+
     def save_config(self):
         """Save current configuration to file"""
         try:
@@ -835,7 +835,7 @@ class CloudDeployer:
             logging.info(f"Configuration saved to {self.config_path}")
         except Exception as e:
             logging.error(f"Error saving configuration: {e}")
-    
+
     def create_dockerfile(self):
         """Create Dockerfile for containerization"""
         docker_path = self.base_dir / "Dockerfile"
@@ -865,15 +865,15 @@ CMD ["python", "backend.py"]
                 logging.error(f"Error creating Dockerfile: {e}")
                 return False
         return True
-    
+
     def build_docker_image(self):
         """Build Docker image from Dockerfile"""
         if not self.create_dockerfile():
             return False
-            
+
         image_name = f"{self.config['docker']['image_name']}:{self.config['docker']['tag']}"
         logging.info(f"Building Docker image: {image_name}")
-        
+
         try:
             result = subprocess.run(
                 ["docker", "build", "-t", image_name, "."],
@@ -890,30 +890,30 @@ CMD ["python", "backend.py"]
         except Exception as e:
             logging.error(f"Error building Docker image: {e}")
             return False
-    
+
     def deploy_to_azure(self):
         """Deploy application to Azure App Service"""
         logging.info("Starting deployment to Azure")
-        
+
         # Check Azure CLI is installed
         try:
             subprocess.run(["az", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except:
             logging.error("Azure CLI not installed. Please install it first.")
             return False
-        
+
         # Login to Azure (if needed)
         try:
             subprocess.run(["az", "account", "show"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except:
             logging.info("Please log in to Azure...")
             subprocess.run(["az", "login"], check=True)
-        
+
         rg = self.config["azure"]["resource_group"]
         app_name = self.config["azure"]["app_name"]
         location = self.config["azure"]["location"]
         sku = self.config["azure"]["sku"]
-        
+
         # Create resource group if it doesn't exist
         try:
             subprocess.run(
@@ -925,7 +925,7 @@ CMD ["python", "backend.py"]
         except Exception as e:
             logging.error(f"Failed to create resource group: {e}")
             return False
-        
+
         # Deploy as App Service
         try:
             # Create App Service plan
@@ -955,21 +955,21 @@ CMD ["python", "backend.py"]
         except Exception as e:
             logging.error(f"Azure deployment failed: {e}")
             return False
-    
+
     def deploy_to_aws(self):
         """Deploy application to AWS (basic S3 static hosting)"""
         logging.info("Starting deployment to AWS")
-        
+
         # Check AWS CLI is installed
         try:
             subprocess.run(["aws", "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         except:
             logging.error("AWS CLI not installed. Please install it first.")
             return False
-        
+
         bucket = self.config["aws"]["s3_bucket"]
         region = self.config["aws"]["region"]
-        
+
         # Create bucket if it doesn't exist
         try:
             subprocess.run(
@@ -979,7 +979,7 @@ CMD ["python", "backend.py"]
             )
         except:
             logging.info(f"Bucket {bucket} might already exist")
-        
+
         # Enable website hosting
         try:
             subprocess.run(
@@ -992,7 +992,7 @@ CMD ["python", "backend.py"]
         except Exception as e:
             logging.error(f"Failed to enable website hosting: {e}")
             return False
-        
+
         # Sync files
         try:
             # Upload HTML files
@@ -1011,17 +1011,17 @@ CMD ["python", "backend.py"]
 
 def main():
     parser = argparse.ArgumentParser(description="Cloud Deployment Tool")
-    parser.add_argument("--target", choices=["azure", "aws", "docker"], 
+    parser.add_argument("--target", choices=["azure", "aws", "docker"],
                       help="Deployment target")
     args = parser.parse_args()
-    
+
     base_dir = Path(__file__).parent
     deployer = CloudDeployer(base_dir)
-    
+
     if not args.target:
         print("Please specify a deployment target: azure, aws, or docker")
         return
-    
+
     if args.target == "azure":
         deployer.deploy_to_azure()
     elif args.target == "aws":
@@ -1042,7 +1042,7 @@ if __name__ == "__main__":
     for name in enabled:
         print(f"  - {name}")
     print(f"  - Plugins: {', '.join(found_plugins) if found_plugins else 'None'}")
-    
+
     # Print success message
     print(f"\n{Colors.GREEN}{Colors.BOLD}Setup completed successfully!{Colors.END}")
     print("You can now run the AI Chat Application with:")
@@ -1050,7 +1050,7 @@ if __name__ == "__main__":
     print("Or for Windows users, double-click on:")
     print(f"  {Colors.BOLD}start_ai_chat.bat{Colors.END}")
     print("\nMake sure LM Studio is running with the API server started.")
-    
+
     # Ask if the user wants to start the application now
     choice = auto_input("\nStart the AI Chat Application now? (Y/n): ")
     if choice.lower() != 'n':
@@ -1060,7 +1060,7 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"{Colors.RED}Error starting application: {str(e)}{Colors.END}")
             auto_input("Press Enter to exit...")
-    
+
     return True
 
 if __name__ == "__main__":

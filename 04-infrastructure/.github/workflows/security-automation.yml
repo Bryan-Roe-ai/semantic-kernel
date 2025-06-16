@@ -1,0 +1,276 @@
+name: Security Automation
+
+on:
+  schedule:
+    # Run security checks daily at 1 AM UTC
+    - cron: "0 1 * * *"
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  dependency-scan:
+    name: Dependency Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Setup Python for security analysis
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install security tools
+        run: |
+          pip install safety bandit semgrep
+
+      - name: Run Safety check for Python dependencies
+        run: |
+          if [ -f "requirements.txt" ]; then
+            safety check -r requirements.txt --json > safety-report.json || true
+            if [ -s safety-report.json ]; then
+              echo "Security vulnerabilities found in Python dependencies"
+              cat safety-report.json
+            fi
+          fi
+
+      - name: Run Bandit security linter
+        run: |
+          find . -name "*.py" -type f | head -1 > /dev/null && {
+            bandit -r . -f json -o bandit-report.json || true
+            if [ -s bandit-report.json ]; then
+              echo "Security issues found by Bandit"
+              cat bandit-report.json
+            fi
+          } || echo "No Python files found for Bandit scan"
+
+      - name: Run Semgrep security scan
+        run: |
+          semgrep --config=auto --json --output=semgrep-report.json . || true
+          if [ -s semgrep-report.json ]; then
+            echo "Security issues found by Semgrep"
+            cat semgrep-report.json
+          fi
+
+      - name: Create security issue if vulnerabilities found
+        if: github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let securityIssues = [];
+
+            // Check Safety report
+            try {
+              const safetyReport = JSON.parse(fs.readFileSync('safety-report.json', 'utf8'));
+              if (safetyReport.length > 0) {
+                securityIssues.push('Python dependency vulnerabilities detected by Safety');
+              }
+            } catch (e) {}
+
+            // Check Bandit report
+            try {
+              const banditReport = JSON.parse(fs.readFileSync('bandit-report.json', 'utf8'));
+              if (banditReport.results && banditReport.results.length > 0) {
+                securityIssues.push('Python security issues detected by Bandit');
+              }
+            } catch (e) {}
+
+            // Check Semgrep report
+            try {
+              const semgrepReport = JSON.parse(fs.readFileSync('semgrep-report.json', 'utf8'));
+              if (semgrepReport.results && semgrepReport.results.length > 0) {
+                securityIssues.push('Security issues detected by Semgrep');
+              }
+            } catch (e) {}
+
+            if (securityIssues.length > 0) {
+              const issueBody = `# Automated Security Scan Results
+
+              The following security issues were detected:
+
+              ${securityIssues.map(issue => `- ${issue}`).join('\n')}
+
+              Please review the security scan artifacts and address these issues promptly.
+
+              **Scan Date**: ${new Date().toISOString()}
+              **Triggered by**: Automated security scan
+              `;
+
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🔒 Security Vulnerabilities Detected - ${new Date().toDateString()}`,
+                body: issueBody,
+                labels: ['security', 'automated', 'priority:high']
+              });
+            }
+
+  secrets-scan:
+    name: Secrets Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
+
+      - name: Run GitLeaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  license-compliance:
+    name: License Compliance Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install license checker
+        run: |
+          pip install pip-licenses licensecheck
+
+      - name: Check Python licenses
+        run: |
+          if [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+            pip-licenses --format=json --output-file=python-licenses.json
+
+            # Check for problematic licenses
+            pip-licenses --format=plain-vertical | grep -E "(GPL|AGPL|SSPL)" > problematic-licenses.txt || true
+
+            if [ -s problematic-licenses.txt ]; then
+              echo "Problematic licenses found:"
+              cat problematic-licenses.txt
+
+              # Create issue for license compliance
+              gh issue create \
+                --title "🔍 License Compliance: Problematic licenses detected" \
+                --body "The following packages have licenses that may require review: $(cat problematic-licenses.txt)" \
+                --label "compliance,licenses" || true
+            fi
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js for license checking
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Check JavaScript/TypeScript licenses
+        run: |
+          if [ -f "package.json" ]; then
+            npm install -g license-checker
+            license-checker --onlyAllow 'MIT;Apache-2.0;BSD-2-Clause;BSD-3-Clause;ISC;Unlicense' --production --json > js-licenses.json || {
+              echo "Problematic JavaScript/TypeScript licenses found"
+              license-checker --production --json > all-js-licenses.json
+
+              gh issue create \
+                --title "🔍 License Compliance: JavaScript/TypeScript license issues" \
+                --body "Some JavaScript/TypeScript dependencies have licenses that require review. Check the workflow logs for details." \
+                --label "compliance,licenses" || true
+            }
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  security-policy-check:
+    name: Security Policy Validation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for security policy
+        run: |
+          if [ ! -f "SECURITY.md" ] && [ ! -f ".github/SECURITY.md" ]; then
+            echo "No security policy found"
+
+            # Create basic security policy
+            cat > SECURITY.md << 'EOF'
+          # Security Policy
+
+          ## Supported Versions
+
+          | Version | Supported          |
+          | ------- | ------------------ |
+          | latest  | :white_check_mark: |
+
+          ## Reporting a Vulnerability
+
+          Please report security vulnerabilities by creating a private security advisory
+          or by emailing the maintainers directly.
+
+          Do not report security vulnerabilities through public GitHub issues.
+          EOF
+
+            gh issue create \
+              --title "📋 Security Policy Missing" \
+              --body "A security policy has been automatically created. Please review and customize it according to your project's needs." \
+              --label "security,documentation" || true
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate branch protection
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              const { data: branch } = await github.rest.repos.getBranch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                branch: 'main'
+              });
+
+              const protection = branch.protection;
+              if (!protection || !protection.enabled) {
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: '🛡️ Branch Protection Not Enabled',
+                  body: 'The main branch does not have protection rules enabled. Consider enabling branch protection for better security.',
+                  labels: ['security', 'configuration']
+                });
+              }
+            } catch (error) {
+              console.log('Could not check branch protection:', error.message);
+            }

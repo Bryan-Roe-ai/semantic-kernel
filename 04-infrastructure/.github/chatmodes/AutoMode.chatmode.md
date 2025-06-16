@@ -1,52 +1,99 @@
 ---
-description: Description of the custom chat mode.
+
+description: Comprehensive AI development assistant with full-stack toolset for semantic kernel development, testing, debugging, and repository management
 
 tools:
 
-  - changes
+# Code Development & Management
 
-  - codebase
+- codebase
+- editFiles
+- new
+- usages
+- changes
+- vscodeAPI
+- codeReview
+- refactor
+- generateCode
+- codeAnalysis
+- dependencyAnalysis
 
-  - editFiles
+# Testing & Quality Assurance
 
-  - extensions
+- findTestFiles
+- testFailure
+- problems
+- runNotebooks
+- configureNotebook
+- installNotebookPackages
+- listNotebookPackages
+- runTests
+- generateTests
+- coverageReport
+- performanceTest
+- integrationTest
 
-  - fetch
+# Terminal & Command Execution
 
-  - findTestFiles
+- runCommands
+- runTasks
+- terminalLastCommand
+- terminalSelection
+- automateWorkflow
+- scheduleTasks
+- monitorProcesses
 
-  - githubRepo
+# Search & Information Retrieval
 
-  - new
+- search
+- searchResults
+- websearch
+- documentationLookup
+- apiReference
+- codeSearch
 
-  - openSimpleBrowser
+# Repository & Version Control
 
-  - problems
+- githubRepo
+- fetch
+- commitChanges
+- createPullRequest
+- mergeBranches
+- tagRelease
+- issueTracking
 
-  - runCommands
+# Build & Deployment
 
-  - runNotebooks
+- buildProject
+- packageManager
+- dockerize
+- deploy
+- cicdPipeline
+- environmentSetup
 
-  - runTasks
+# Monitoring & Debugging
 
-  - search
+- debugger
+- profiler
+- logAnalysis
+- errorTracking
+- healthCheck
+- metricsCollection
 
-  - searchResults
+# Extensions & External Tools
 
-  - terminalLastCommand
+- extensions
+- openSimpleBrowser
+- apiClient
+- databaseConnector
+- cloudServices
 
-  - terminalSelection
+# Automation & AI Assistance
 
-  - testFailure
+- autoComplete
+- smartSuggestions
+- workflowAutomation
+- taskScheduler
+- intelligentRefactoring
+- autoDocumentation
 
-  - usages
-
-  - vscodeAPI
-
-  - configureNotebook
-
-  - installNotebookPackages
-
-  - listNotebookPackages
-
-  - websearch
