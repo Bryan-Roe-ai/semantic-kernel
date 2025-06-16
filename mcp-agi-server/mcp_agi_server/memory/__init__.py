@@ -14,6 +14,6 @@ from .episodic_memory import EpisodicMemory
 
 __all__ = [
     "KnowledgeGraph",
-    "VectorStore", 
+    "VectorStore",
     "EpisodicMemory"
 ]
