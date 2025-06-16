@@ -42,7 +42,9 @@ def main():
     base_dir = Path(__file__).parent.absolute()
     
     # --- Automation: Run all setup steps without user input if --auto or /auto is passed ---
-    auto_mode = any(arg.lower() in ('--auto', '/auto', '-y', '/y') for arg in sys.argv)
+    auto_mode = any(arg.lower() in ('--auto', '/auto', '-y', '/y', '--enhanced') for arg in sys.argv)
+    enhanced_mode = any(arg.lower() in ('--enhanced', '--enhanced-auto') for arg in sys.argv)
+    
     def auto_input(prompt):
         if auto_mode:
             print(f"[AUTO] {prompt} -> Y")
@@ -310,6 +312,98 @@ def main():
                     print(f"{Colors.RED}Error launching LM Studio: {str(e)}{Colors.END}")
         else:
             print(f"{Colors.YELLOW}LM Studio not found at {lmstudio_path}{Colors.END}")
+
+    # --- Enhanced AutoMode Setup ---
+    if enhanced_mode or auto_mode:
+        print(f"\n{Colors.BLUE}Setting up Enhanced AutoMode for long-running operations...{Colors.END}")
+        
+        # Install additional packages for enhanced mode
+        enhanced_packages = [
+            "psutil",
+            "watchdog", 
+            "prometheus-client"
+        ]
+        
+        for package in enhanced_packages:
+            try:
+                subprocess.run([sys.executable, "-m", "pip", "install", package], 
+                              check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                print(f"{Colors.GREEN}✓ {package} installed{Colors.END}")
+            except subprocess.CalledProcessError:
+                print(f"{Colors.YELLOW}! Failed to install {package} (optional){Colors.END}")
+        
+        # Create enhanced AutoMode files if they don't exist
+        enhanced_files = [
+            "auto_mode_enhanced.py",
+            "startup_enhanced.py", 
+            "metrics_exporter.py",
+            "auto_mode_config.json"
+        ]
+        
+        files_created = []
+        for filename in enhanced_files:
+            filepath = base_dir / filename
+            if not filepath.exists():
+                print(f"{Colors.YELLOW}! Enhanced file {filename} not found{Colors.END}")
+                print(f"  Please ensure enhanced AutoMode files are in the directory")
+            else:
+                files_created.append(filename)
+        
+        if files_created:
+            print(f"{Colors.GREEN}✓ Enhanced AutoMode files available: {', '.join(files_created)}{Colors.END}")
+            
+            # Create startup script
+            startup_script = base_dir / "start_enhanced.py"
+            if not startup_script.exists():
+                with open(startup_script, 'w') as f:
+                    f.write('''#!/usr/bin/env python
+"""Enhanced AutoMode Launcher"""
+import asyncio
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+
+from startup_enhanced import ApplicationManager
+
+async def main():
+    manager = ApplicationManager()
+    
+    if not manager.setup_environment():
+        return 1
+    
+    if not manager.check_dependencies():
+        return 1
+    
+    if not await manager.start_application():
+        return 1
+    
+    await manager.run_forever()
+    return 0
+
+if __name__ == "__main__":
+    try:
+        exit_code = asyncio.run(main())
+        sys.exit(exit_code)
+    except KeyboardInterrupt:
+        print("\\nShutdown requested")
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+''')
+                print(f"{Colors.GREEN}✓ Created enhanced startup script{Colors.END}")
+        
+        if enhanced_mode:
+            print(f"\n{Colors.GREEN}{Colors.BOLD}Enhanced AutoMode setup completed!{Colors.END}")
+            print("You can now run with long-running capabilities:")
+            print(f"  {Colors.BOLD}python start_enhanced.py{Colors.END}")
+            print("Features enabled:")
+            print("  - Automatic process restart")
+            print("  - Health monitoring and self-healing")
+            print("  - Resource usage monitoring")
+            print("  - Graceful degradation")
+            print("  - State persistence and recovery")
+            print("  - Prometheus metrics export")
 
     # --- Advanced Features: Plugin hot-reload system ---
     print(f"\n{Colors.BLUE}Setting up plugin hot-reload system...{Colors.END}")

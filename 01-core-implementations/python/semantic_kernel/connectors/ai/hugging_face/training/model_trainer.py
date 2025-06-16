@@ -16,7 +16,7 @@ from peft import (
 )
 from transformers import (
     AutoConfig,
-    AutoModelForCausalLM,
+        AutoModelForCausalLM,
     AutoModelForMaskedLM,
     AutoModelForQuestionAnswering,
     AutoModelForSequenceClassification,
