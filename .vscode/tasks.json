@@ -4,27 +4,23 @@
     {
       "label": "clean (functions)",
       "command": "dotnet",
+      "type": "process",
       "args": [
         "clean",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-       {
-      "label": "Create PR with MCP",
-      "type": "shell",
-      "command": "python scripts/create_pr_with_mcp.py", // Or your script path
-      "problemMatcher": []
-    },
-      "detail": "Install ReSharper Global Tools",
-      "group": "build",
-      "dependsOn": [
-        "new tool-manifest",
-        "R# Setup"
-      ],
-      "dependsOrder": "sequence"
+      "group": "build"
     },
     {
-      "label": "new tool-manifest",
+      "label": "Create PR with MCP",
+      "type": "shell",
+      "command": "python scripts/create_pr_with_mcp.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Install ReSharper Global Tools",
+      "type": "process",
       "command": "dotnet",
       "type": "process",
       "args": [

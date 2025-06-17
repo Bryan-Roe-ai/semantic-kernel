@@ -197,9 +197,6 @@ async def test_call_to_container_fails_raises_exception(
 
 
 @pytest.mark.asyncio
-async def test_empty_call_to_container_fails_raises_exception(
-    aca_python_sessions_unit_test_env,
-):
 async def test_empty_call_to_container_fails_raises_exception(aca_python_sessions_unit_test_env):
     plugin = SessionsPythonTool(auth_callback=auth_callback_test)
     with pytest.raises(FunctionExecutionException):
@@ -208,9 +205,6 @@ async def test_empty_call_to_container_fails_raises_exception(aca_python_session
 
 @patch("httpx.AsyncClient.get")
 @patch("httpx.AsyncClient.post")
-async def test_upload_file_with_local_path(
-    mock_post, aca_python_sessions_unit_test_env
-):
 async def test_upload_file_with_local_path(mock_post, mock_get, aca_python_sessions_unit_test_env):
     """Test upload_file when providing a local file path."""
 
@@ -224,10 +218,6 @@ async def test_upload_file_with_local_path(mock_post, mock_get, aca_python_sessi
         ),
         patch("builtins.open", mock_open(read_data=b"file data")),
     ):
-        mock_request = httpx.Request(
-            method="POST", url="https://example.com/files/upload?identifier=None"
-        )
-
         mock_request = httpx.Request(method="POST", url="https://example.com/files/upload?identifier=None")
         mock_response = httpx.Response(
             status_code=200,

@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "clean (functions)",
+      "command": "python",
+      "args": ["scripts/create_pr_with_mcp.py", "clean"],
+      "type": "shell",
+      "group": "build",
+      "problemMatcher": [],
+      "detail": "Clean build artifacts using MCP script"
+    },
+    {
+      "label": "build (dotnet)",
+      "command": "dotnet",
+      "args": ["build"],
+      "type": "shell",
+      "group": "build",
+      "problemMatcher": "$msCompile",
+      "detail": "Build .NET projects"
+    },
+    {
+      "label": "test (dotnet)",
+      "command": "dotnet",
+      "args": ["test"],
+      "type": "shell",
+      "group": "test",
+      "problemMatcher": "$msCompile",
+      "detail": "Run .NET tests"
+    },
+    {
+      "label": "setup python environment",
+      "command": "python",
+      "args": ["-m", "pip", "install", "-r", "requirements.txt"],
+      "type": "shell",
+      "group": "build",
+      "detail": "Install Python dependencies"
+    }
+  ]
+}
