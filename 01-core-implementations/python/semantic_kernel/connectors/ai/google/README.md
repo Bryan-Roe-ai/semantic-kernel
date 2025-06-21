@@ -12,20 +12,19 @@ Once you have an API key, you can start using Gemini models in SK using the `goo
 
 ```Python
 kernel = Kernel()
-kernel.add_service(
-    GoogleAIChatCompletion(
-        gemini_model_id="gemini-1.5-flash",
-        api_key="...",
-    )
-)
-...
-```
+  kernel.add_service(
+      GoogleAIChatCompletion(
+          gemini_model_id="gemini-1.5-flash",
+          api_key="...",
+      )
+  )
+  ```
 
 > Alternatively, you can use an .env file to store the model id and api key.
 
 ## Vertex AI
 
-Google also offers access to Gemini through its Vertex AI platform. Vertex AI provides a more complete solution to build your enterprise AI applications end-to-end. You can read more about it [here](https://cloud.google.com/vertex-ai/generative-ai/docs/migrate/migrate-google-ai).
+Google also offers access to Gemini through its Vertex AI platform. Vertex AI provides a more complete solution to build your enterprise AI applications end-to-end. You can read more about it in the [Google Cloud documentation on Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/migrate/migrate-google-ai).
 
 This mode of access requires a Google Cloud service account. Follow these [instructions](https://cloud.google.com/vertex-ai/generative-ai/docs/migrate/migrate-google-ai) to create a Google Cloud project if you don't have one already. Remember the `project id` as it is required to access the models.
 

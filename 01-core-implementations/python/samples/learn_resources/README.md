@@ -6,6 +6,7 @@ This project contains a collection of examples used in documentation on [learn.m
 
 - [Python](https://www.python.org/downloads/) 3.10 and above
 - Install Semantic Kernel through PyPi:
+
   ```bash
   pip install semantic-kernel
   ```
@@ -20,7 +21,7 @@ Make sure you have an
 
 Copy the `.env.example` file to a new file named `.env`. Then, copy those keys into the `.env` file:
 
-```
+```env
 GLOBAL_LLM_SERVICE="OpenAI" # Toggle between "OpenAI" or "AzureOpenAI"
 
 OPENAI_CHAT_MODEL_ID="gpt-3.5-turbo-0125"
@@ -42,6 +43,6 @@ _Note: if running the examples with VSCode, it will look for your .env file at t
 To run the console application within Visual Studio Code, just hit `F5`.
 Otherwise the sample can be run via the command line:
 
-```
+```bash
 python.exe <absolute_path_to_sk_code>/python/samples/learn_resources/plugin.py
 ```

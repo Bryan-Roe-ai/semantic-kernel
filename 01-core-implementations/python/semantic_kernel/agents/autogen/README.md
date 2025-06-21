@@ -1,8 +1,8 @@
-## AutoGen Conversable Agent (v0.2.X)
+# AutoGen Conversable Agent (v0.2.X)
 
 Semantic Kernel Python supports running AutoGen Conversable Agents provided in the 0.2.X package.
 
-### Limitations
+## Limitations
 
 Currently, there are some limitations to note:
 

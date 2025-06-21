@@ -317,9 +317,6 @@ class SessionsPythonTool(KernelBaseModel):
 
         url = self._build_url_with_version(
             base_url=str(self.pool_management_endpoint),
-            endpoint="files",
-            params={"identifier": self.settings.session_id},
-            base_url=self.pool_management_endpoint,
             endpoint="python/files",
             params={"identifier": self.settings.session_id},
         )
@@ -374,15 +371,11 @@ class SessionsPythonTool(KernelBaseModel):
 
         url = self._build_url_with_version(
             base_url=str(self.pool_management_endpoint),
-            endpoint=f"files/content/{remote_file_name}",
-            params={"identifier": self.settings.session_id},
-            base_url=self.pool_management_endpoint,
             endpoint="python/downloadFile",
-            params={"identifier": self.settings.session_id, "filename": remote_file_path},
-        )
-
-        response = await self.http_client.get(
-            url=url,
+            params={
+                "identifier": self.settings.session_id,
+                "filename": remote_file_name
+            },
         )
 
         try:
@@ -398,9 +391,12 @@ class SessionsPythonTool(KernelBaseModel):
             return BytesIO(response.content)
         except HTTPStatusError as e:
             error_message = (
-                e.response.text if e.response.text else e.response.reason_phrase
+                e.response.text
+                if e.response.text
+                else e.response.reason_phrase
             )
             raise FunctionExecutionException(
-                f"Download failed with status code {e.response.status_code} and error: {error_message}"
+                f"Download failed with status code {e.response.status_code} "
+                f"and error: {error_message}"
             ) from e
         # endregion
