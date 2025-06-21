@@ -12,9 +12,20 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
-    from 06-backend-services.backend-starter import BackendStarterHandler, run_server
+    # Import from backend-starter module - note that filenames with hyphens need special handling
+    import importlib.util
+    import os
+    backend_starter_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'backend-starter.py')
+    if os.path.exists(backend_starter_path):
+        spec = importlib.util.spec_from_file_location("backend_starter", backend_starter_path)
+        backend_starter = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(backend_starter)
+        BackendStarterHandler = getattr(backend_starter, 'BackendStarterHandler', None)
+        run_server = getattr(backend_starter, 'run_server', lambda *args, **kwargs: None)
+    else:
+        raise ImportError("backend-starter.py not found")
 except ImportError as e:
-    print(f"Warning: Could not import from 06-backend-services.backend-starter: {e}")
+    print(f"Warning: Could not import from backend-starter module: {e}")
     # Define mock classes/functions as fallbacks
 
 class BackendStarterHandler:
@@ -26,8 +37,8 @@ def run_server(*args, **kwargs):
     return None
 
 
-class TestBackend-Starter(unittest.TestCase):
-    """Test cases for Backend-Starter"""
+class TestBackendStarter(unittest.TestCase):
+    """Test cases for Backend Starter"""
     
     def setUp(self):
         """Set up test fixtures before each test method."""

@@ -12,10 +12,15 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 try:
-    from 06-backend-services.simple_llm_demo import main
+    # Import from simple_llm_demo module
+    import sys
+    import os
+    sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+    import simple_llm_demo
+    main = getattr(simple_llm_demo, 'main', lambda *args, **kwargs: None)
 except ImportError as e:
-    print(f"Warning: Could not import from 06-backend-services.simple_llm_demo: {e}")
-    # Define mock classes/functions as fallbacks
+    print(f"Warning: Could not import from simple_llm_demo module: {e}")
+    # Define mock functions as fallbacks
 
 def main(*args, **kwargs):
     """Mock main function"""

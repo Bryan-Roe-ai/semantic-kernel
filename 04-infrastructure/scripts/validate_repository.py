@@ -8,32 +8,34 @@ import sys
 import yaml
 from pathlib import Path
 
+
 def validate_github_actions():
     """Validate GitHub Actions workflows."""
-    print("🔍 Validating GitHub Actions...")
+    print("🔍 Validating GitHub Actions workflows...")
 
-    workflow_dir = Path(".github/workflows")
-    if not workflow_dir.exists():
-        print("❌ No .github/workflows directory found")
+    # Discover all GitHub Actions workflow files recursively
+    workflow_files = list(Path('.').glob('**/.github/workflows/*.yml'))
+    if not workflow_files:
+        print("❌ No GitHub Actions workflows found")
         return False
 
     valid_workflows = 0
-    total_workflows = 0
+    total_workflows = len(workflow_files)
 
-    for workflow_file in workflow_dir.glob("*.yml"):
-        total_workflows += 1
+    for workflow_file in workflow_files:
         try:
-            with open(workflow_file, 'r') as f:
+            with open(workflow_file, 'r', encoding='utf-8') as f:
                 yaml.safe_load(f)
-            print(f"✅ {workflow_file.name}")
+            print(f"✅ {workflow_file.relative_to(Path('.'))}")
             valid_workflows += 1
-        except yaml.YAMLError as e:
-            print(f"❌ {workflow_file.name}: {e}")
-        except Exception as e:
-            print(f"⚠️  {workflow_file.name}: {e}")
+        except yaml.YAMLError as err:
+            print(f"❌ {workflow_file.relative_to(Path('.'))}: {err}")
+        except Exception as err:  # noqa: E722
+            print(f"⚠️  {workflow_file.relative_to(Path('.'))}: {err}")
 
     print(f"📊 {valid_workflows}/{total_workflows} workflows valid")
     return valid_workflows == total_workflows
+
 
 def validate_ai_workspace():
     """Validate AI workspace structure."""
@@ -47,14 +49,25 @@ def validate_ai_workspace():
     # Check required structure
     required_items = {
         "directories": [
-            "scripts", "01-notebooks", "02-agents", "03-models-training",
-            "04-plugins", "05-samples-demos", "06-backend-services",
-            "07-data-resources", "08-documentation", "09-deployment", "10-config"
+            "scripts",
+            "01-notebooks",
+            "02-agents",
+            "03-models-training",
+            "04-plugins",
+            "05-samples-demos",
+            "06-backend-services",
+            "07-data-resources",
+            "08-documentation",
+            "09-deployment",
+            "10-config",
         ],
         "files": [
-            "README.md", "Dockerfile", "docker-compose.yml",
-            "ai_workspace_control.py", "requirements-ci.txt"
-        ]
+            "README.md",
+            "Dockerfile",
+            "docker-compose.yml",
+            "ai_workspace_control.py",
+            "requirements-ci.txt",
+        ],
     }
 
     missing_items = []
@@ -82,7 +95,7 @@ def validate_ai_workspace():
         "scripts/ai_workspace_optimizer.py",
         "scripts/ai_workspace_monitor.py",
         "scripts/deployment_automator.py",
-        "scripts/ai_model_manager.py"
+        "scripts/ai_model_manager.py",
     ]
 
     for script in critical_scripts:
@@ -106,6 +119,7 @@ def validate_ai_workspace():
     print("✅ AI Workspace structure validated")
     return True
 
+
 def validate_python_syntax():
     """Validate Python syntax in key files."""
     print("\n🐍 Validating Python syntax...")
@@ -114,7 +128,7 @@ def validate_python_syntax():
     python_files = [
         "ai_workspace_control.py",
         "06-backend-services/simple_api_server.py",
-        "scripts/health_check.py"
+        "scripts/health_check.py",
     ]
 
     syntax_errors = []
@@ -137,6 +151,7 @@ def validate_python_syntax():
 
     print("✅ Python syntax validated")
     return True
+
 
 def validate_docker_files():
     """Validate Docker configuration."""
@@ -165,6 +180,7 @@ def validate_docker_files():
 
     return valid_docker
 
+
 def main():
     """Main validation function."""
     print("🔍 AI Workspace Repository Validation")
@@ -174,7 +190,7 @@ def main():
         ("GitHub Actions", validate_github_actions),
         ("AI Workspace Structure", validate_ai_workspace),
         ("Python Syntax", validate_python_syntax),
-        ("Docker Files", validate_docker_files)
+        ("Docker Files", validate_docker_files),
     ]
 
     passed = 0
@@ -186,12 +202,12 @@ def main():
                 passed += 1
             else:
                 print(f"❌ {name} validation failed")
-        except Exception as e:
+        except Exception as e:  # noqa: E722
             print(f"❌ {name} validation error: {e}")
 
-    print(f"\n📊 Validation Summary")
+    print("\n📊 Validation Summary")
     print("=" * 30)
-    print(f"Passed: {passed}/{total}")
+    print('Passed: {}/{}'.format(passed, total))
 
     if passed == total:
         print("✅ All validations passed!")
@@ -201,6 +217,7 @@ def main():
         print(f"❌ {total - passed} validations failed")
         print("🔧 Please fix the issues above")
         return False
+
 
 if __name__ == "__main__":
     success = main()

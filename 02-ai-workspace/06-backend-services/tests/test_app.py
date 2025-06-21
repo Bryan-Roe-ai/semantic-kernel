@@ -4,58 +4,69 @@ Generated on: 2025-06-15 21:55:22
 """
 
 import unittest
-from unittest.mock import Mock, patch, MagicMock
 import sys
+import os
 from pathlib import Path
 
 # Add the module path to sys.path for importing
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+# Try to import the actual modules, fall back to mocks if not available
 try:
-    from 06-backend-services.app import TaskRequest, TaskResponse, LLMRequest, LLMResponse, greet_json, generate_tasks, test_model, run_ai, interact_llm, update_webpage
+    import app
+    TaskRequest = getattr(app, 'TaskRequest', None)
+    TaskResponse = getattr(app, 'TaskResponse', None)
+    LLMRequest = getattr(app, 'LLMRequest', None)
+    LLMResponse = getattr(app, 'LLMResponse', None)
+    greet_json = getattr(app, 'greet_json', lambda *args, **kwargs: None)
+    generate_tasks = getattr(app, 'generate_tasks', lambda *args, **kwargs: None)
+    test_model = getattr(app, 'test_model', lambda *args, **kwargs: None)
+    run_ai = getattr(app, 'run_ai', lambda *args, **kwargs: None)
+    interact_llm = getattr(app, 'interact_llm', lambda *args, **kwargs: None)
+    update_webpage = getattr(app, 'update_webpage', lambda *args, **kwargs: None)
 except ImportError as e:
-    print(f"Warning: Could not import from 06-backend-services.app: {e}")
+    print(f"Warning: Could not import from app module: {e}")
     # Define mock classes/functions as fallbacks
+    
+    class TaskRequest:
+        """Mock TaskRequest class"""
+        pass
 
-class TaskRequest:
-    """Mock TaskRequest class"""
-    pass
+    class TaskResponse:
+        """Mock TaskResponse class"""
+        pass
 
-class TaskResponse:
-    """Mock TaskResponse class"""
-    pass
+    class LLMRequest:
+        """Mock LLMRequest class"""
+        pass
 
-class LLMRequest:
-    """Mock LLMRequest class"""
-    pass
+    class LLMResponse:
+        """Mock LLMResponse class"""
+        pass
 
-class LLMResponse:
-    """Mock LLMResponse class"""
-    pass
+    def greet_json(*args, **kwargs):
+        """Mock greet_json function"""
+        return None
 
-def greet_json(*args, **kwargs):
-    """Mock greet_json function"""
-    return None
+    def generate_tasks(*args, **kwargs):
+        """Mock generate_tasks function"""
+        return None
 
-def generate_tasks(*args, **kwargs):
-    """Mock generate_tasks function"""
-    return None
+    def test_model(*args, **kwargs):
+        """Mock test_model function"""
+        return None
 
-def test_model(*args, **kwargs):
-    """Mock test_model function"""
-    return None
+    def run_ai(*args, **kwargs):
+        """Mock run_ai function"""
+        return None
 
-def run_ai(*args, **kwargs):
-    """Mock run_ai function"""
-    return None
+    def interact_llm(*args, **kwargs):
+        """Mock interact_llm function"""
+        return None
 
-def interact_llm(*args, **kwargs):
-    """Mock interact_llm function"""
-    return None
-
-def update_webpage(*args, **kwargs):
-    """Mock update_webpage function"""
-    return None
+    def update_webpage(*args, **kwargs):
+        """Mock update_webpage function"""
+        return None
 
 
 class TestApp(unittest.TestCase):
