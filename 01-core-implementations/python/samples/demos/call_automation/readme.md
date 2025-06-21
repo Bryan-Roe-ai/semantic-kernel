@@ -47,16 +47,16 @@ Copy the `.env.example` file to `.env` and update the following values:
    - execute `uv run --env-file .env call_automation.py` directly in your terminal (this uses `uv`, which will then install the requirements in a temporary virtual environment, see [uv docs](https://docs.astral.sh/uv/guides/scripts) for more info).
 2. Browser should pop up with a simple page. If not navigate it to `http://localhost:8080/` or your dev tunnel url.
 3. Register an EventGrid Webhook for the IncomingCall(`https://<devtunnelurl>/api/incomingCall`) event that points to your devtunnel URI. Instructions [here](https://learn.microsoft.com/en-us/azure/communication-services/concepts/call-automation/incoming-call-notification).
-  - To register the event, navigate to your ACS resource in the Azure Portal (follow the Microsoft Learn Docs if you prefer to use the CLI). 
-  - On the left menu bar click "Events."
-  - Click on "+Event Subscription."
-    - Provide a unique name for the event subscription details, for example, "IncomingCallWebhook"
-    - Leave the "Event Schema" as "Event Grid Schema"
-    - Provide a unique "System Topic Name"
-    - For the "Event Types" select "Incoming Call"
-    - For the "Endpoint Details" select "Webhook" from the drop down
-      - Once "Webhook" is selected, you will need to configure the URI for the incoming call webhook, as mentioned above: `https://<devtunnelurl>/api/incomingCall`.
-    - **Important**: before clicking on "Create" to create the event subscription, the `call_automation.py` script must be running, as well as your devtunnel. ACS sends a verification payload to the app to make sure that the communication is configured properly. The event subscription will not succeed in the portal without the script running. If you see an error, this is most likely the root cause.
+    - To register the event, navigate to your ACS resource in the Azure Portal (follow the Microsoft Learn Docs if you prefer to use the CLI).
+    - On the left menu bar click "Events."
+    - Click on "+Event Subscription."
+        - Provide a unique name for the event subscription details, for example, "IncomingCallWebhook"
+        - Leave the "Event Schema" as "Event Grid Schema"
+        - Provide a unique "System Topic Name"
+        - For the "Event Types" select "Incoming Call"
+        - For the "Endpoint Details" select "Webhook" from the drop down
+            - Once "Webhook" is selected, you will need to configure the URI for the incoming call webhook, as mentioned above: `https://<devtunnelurl>/api/incomingCall`.
+        - **Important**: before clicking on "Create" to create the event subscription, the `call_automation.py` script must be running, as well as your devtunnel. ACS sends a verification payload to the app to make sure that the communication is configured properly. The event subscription will not succeed in the portal without the script running. If you see an error, this is most likely the root cause.
 
 
 Once that's completed you should have a running application. The way to test this is to place a call to your ACS phone number and talk to your intelligent agent!

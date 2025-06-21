@@ -74,17 +74,25 @@ This will tell Pydantic settings to also load the `.env` file instead of just tr
 ### Create Or Use a Booking Service and Business
 
 1. Go to the [Bookings Homepage](https://outlook.office.com/bookings) website.
+
 2. Create a new Booking Page and add a Service to the Booking (Skip if you don't ).
+
 3. Access [Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer)
+
 4. Run the following query to get the Booking Business Id:
+
    ```http
    GET https://graph.microsoft.com/v1.0/solutions/bookingBusinesses
    ```
+
 5. Copy the **Booking Business Id** for later use.
+
 6. Run the following query and replace it with your **Booking Business Id** to get the Booking Service Id
+
    ```http
    GET https://graph.microsoft.com/v1.0/solutions/bookingBusinesses/{bookingBusiness-id}/services
    ```
+
 7. Copy the **Booking Service Id** for later use.
 
 ## Running the sample
@@ -106,7 +114,7 @@ Either run the sample in an IDE, like VSCode, or via the command line.
 >
 > Once I have all this information, I will proceed with the booking.
 
-> **User** > I would like to book a table at the restaurant "The French Laundry" on the 15th of March at 7:00 PM for 4 people. My name is John Doe, my email address is john@internet.com, and my phone number is 123-456-7890.
+> **User** > I would like to book a table at the restaurant "The French Laundry" on the 15th of March at 7:00 PM for 4 people. My name is John Doe, my email address is <john@internet.com>, and my phone number is 123-456-7890.
 
 > **System** > Do you want to book a table at The French Laundry on 15/03/2023 19:00:00 for 4 people?
 

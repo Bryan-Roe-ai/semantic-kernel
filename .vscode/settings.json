@@ -174,7 +174,7 @@
     "editor.defaultFormatter": "Google.cros-ide"
   },
   "[python]": {
-    "editor.defaultFormatter": "Google.cros-ide"
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "[pip-requirements]": {
     "editor.defaultFormatter": "Google.cros-ide"

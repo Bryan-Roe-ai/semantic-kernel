@@ -28,7 +28,7 @@ Right now, there is no support with the `AzureResponsesAgent` for:
 
 Please visit the following [link](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/responses?tabs=python-secure) to view region availability, model support, and further details.
 
-#### Environment Variables / Config
+#### Azure Environment Variables / Config
 
 `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=""`
 

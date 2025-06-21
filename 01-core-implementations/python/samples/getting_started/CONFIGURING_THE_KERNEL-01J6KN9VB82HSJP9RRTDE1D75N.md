@@ -7,13 +7,13 @@ runme:
     updated: 2024-08-31 07:46:27Z
 ---
 
-## Configuring the Kernel
+# Configuring the Kernel
 
 As covered in the notebooks, we require a `.env` file with the proper settings for the model you use. A `.env` file must be placed in the `getting_started` directory. Copy the contents of the `.env.example` file from this directory and paste it into the `.env` file that you just created.
 
 If interested, as you learn more about Semantic Kernel, there are a few other ways to make sure your secrets, keys, and settings are used:
 
-### 1. Environment Variables
+## 1. Environment Variables
 
 Set the keys/secrets/endpoints as environment variables in your system. In Semantic Kernel, we leverage Pydantic Settings. If using Environment Variables, it isn't required to pass in explicit arguments to class constructors.
 

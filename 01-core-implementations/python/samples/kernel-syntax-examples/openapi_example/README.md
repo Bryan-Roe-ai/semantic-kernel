@@ -1,3 +1,5 @@
+# OpenAPI Example
+
 ### Running the OpenAPI syntax example
 
 1. In a terminal, navigate to `semantic_kernel/python/samples/kernel-syntax-examples/openapi_example`.

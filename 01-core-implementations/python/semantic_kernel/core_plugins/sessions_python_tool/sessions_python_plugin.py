@@ -285,6 +285,7 @@ class SessionsPythonTool(KernelBaseModel):
                 response_json = response.json()
                 return SessionsRemoteFileMetadata.from_dict(
                     response_json["value"][0]["properties"]
+                )
                 uploaded_files = await self.list_files()
                 return next(
                     file_metadata for file_metadata in uploaded_files if file_metadata.full_path == remote_file_path
