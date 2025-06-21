@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGI Chat Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 800px;
+            height: 80vh;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .chat-header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .agent-selector {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message.assistant {
+            text-align: left;
+        }
+
+        .message-content {
+            display: inline-block;
+            max-width: 70%;
+            padding: 12px 18px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .message.assistant .message-content {
+            background: white;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+
+        .message-meta {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        .reasoning {
+            background: #f3f4f6;
+            border-left: 4px solid #4f46e5;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #4f46e5;
+        }
+
+        .send-button {
+            margin-left: 10px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .send-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 10px 18px;
+            background: white;
+            border-radius: 18px;
+            border: 1px solid #e5e7eb;
+            max-width: 70%;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #6b7280;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        .status-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-online {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-offline {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="status-indicator" id="statusIndicator">🔴 Offline</div>
+            <h1>🤖 AGI Chat Assistant</h1>
+            <p>Neural-Symbolic AI with Semantic Kernel</p>
+            <select class="agent-selector" id="agentSelector">
+                <option value="neural-symbolic">🧠 Neural-Symbolic</option>
+                <option value="reasoning">🤔 Reasoning</option>
+                <option value="creative">🎨 Creative</option>
+                <option value="analytical">📊 Analytical</option>
+                <option value="general">💬 General</option>
+            </select>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message assistant">
+                <div class="message-content">
+                    👋 Hello! I'm your AGI assistant powered by Semantic Kernel. I can help you with complex reasoning, creative tasks, analysis, and more. What would you like to explore today?
+                </div>
+                <div class="message-meta">AGI System • Ready</div>
+            </div>
+        </div>
+
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <div class="chat-input">
+            <input type="text" class="input-field" id="messageInput" placeholder="Ask your AGI assistant anything..." />
+            <button class="send-button" id="sendButton">Send</button>
+        </div>
+    </div>
+
+    <script>
+        class AGIChatApp {
+            constructor() {
+                this.endpoint = 'http://localhost:8000';
+                this.currentAgent = 'neural-symbolic';
+                this.messageInput = document.getElementById('messageInput');
+                this.sendButton = document.getElementById('sendButton');
+                this.chatMessages = document.getElementById('chatMessages');
+                this.agentSelector = document.getElementById('agentSelector');
+                this.typingIndicator = document.getElementById('typingIndicator');
+                this.statusIndicator = document.getElementById('statusIndicator');
+
+                this.initializeEventListeners();
+                this.checkServerStatus();
+            }
+
+            initializeEventListeners() {
+                this.sendButton.addEventListener('click', () => this.sendMessage());
+                this.messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.sendMessage();
+                });
+                this.agentSelector.addEventListener('change', (e) => {
+                    this.currentAgent = e.target.value;
+                    this.addMessage('system', `Switched to ${e.target.value} agent`);
+                });
+            }
+
+            async checkServerStatus() {
+                try {
+                    const response = await fetch(`${this.endpoint}/health`);
+                    if (response.ok) {
+                        this.statusIndicator.textContent = '🟢 Online';
+                        this.statusIndicator.className = 'status-indicator status-online';
+                    } else {
+                        throw new Error('Server not responding');
+                    }
+                } catch (error) {
+                    this.statusIndicator.textContent = '🔴 Offline';
+                    this.statusIndicator.className = 'status-indicator status-offline';
+                }
+            }
+
+            async sendMessage() {
+                const message = this.messageInput.value.trim();
+                if (!message) return;
+
+                // Add user message
+                this.addMessage('user', message);
+                this.messageInput.value = '';
+                this.sendButton.disabled = true;
+                this.showTypingIndicator();
+
+                try {
+                    const response = await fetch(`${this.endpoint}/agi/chat`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: message,
+                            agent_type: this.currentAgent,
+                            history: [],
+                            capabilities: []
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    this.hideTypingIndicator();
+                    this.addMessage('assistant', data.content, {
+                        reasoning: data.reasoning,
+                        confidence: data.confidence,
+                        agent: this.currentAgent
+                    });
+
+                } catch (error) {
+                    this.hideTypingIndicator();
+                    this.addMessage('assistant',
+                        `❌ Sorry, I encountered an error: ${error.message}\\n\\nPlease make sure the AGI backend server is running at ${this.endpoint}`,
+                        { agent: 'error' }
+                    );
+                } finally {
+                    this.sendButton.disabled = false;
+                }
+            }
+
+            addMessage(role, content, metadata = {}) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${role}`;
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.textContent = content;
+
+                const metaDiv = document.createElement('div');
+                metaDiv.className = 'message-meta';
+
+                if (role === 'assistant' && metadata.confidence) {
+                    metaDiv.textContent = `${metadata.agent || 'AGI'} Agent • Confidence: ${(metadata.confidence * 100).toFixed(1)}%`;
+                } else if (role === 'user') {
+                    metaDiv.textContent = 'You';
+                } else if (role === 'system') {
+                    metaDiv.textContent = 'System';
+                }
+
+                messageDiv.appendChild(contentDiv);
+                messageDiv.appendChild(metaDiv);
+
+                // Add reasoning if available
+                if (metadata.reasoning) {
+                    const reasoningDiv = document.createElement('div');
+                    reasoningDiv.className = 'reasoning';
+                    reasoningDiv.textContent = `Reasoning: ${metadata.reasoning}`;
+                    contentDiv.appendChild(reasoningDiv);
+                }
+
+                this.chatMessages.appendChild(messageDiv);
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            showTypingIndicator() {
+                this.typingIndicator.style.display = 'block';
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            hideTypingIndicator() {
+                this.typingIndicator.style.display = 'none';
+            }
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new AGIChatApp();
+        });
+    </script>
+</body>
+</html>

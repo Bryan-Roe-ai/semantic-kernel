@@ -64,21 +64,15 @@ function initializeChatDemo() {
     const chatMessages = document.getElementById('chatMessages');
     const exampleButtons = document.querySelectorAll('.example-btn');
 
-    // AGI responses database
-    const agiResponses = {
-        "explain quantum computing to a 10-year-old": "Imagine you have a super special coin that can be heads AND tails at the same time! That's like quantum computing - it's a way for computers to think about many possibilities all at once, making them incredibly fast at solving puzzles. Instead of thinking step by step like regular computers, quantum computers can explore many paths simultaneously, like having magical thinking powers! 🪙✨",
+    // AGI MCP Server configuration
+    let AGI_SERVER_URL = 'http://localhost:8080';
+    let agiServerOnline = false;
 
-        "write a haiku about artificial intelligence": "Silicon minds dream,\nElectric thoughts flow like streams,\nFuture awakens. 🤖🌸",
-
-        "how would you solve climate change?": "Climate change requires a multi-faceted approach: 1) Rapidly transition to renewable energy (solar, wind, nuclear) 2) Develop carbon capture technology 3) Reforest and protect ecosystems 4) Create sustainable transportation systems 5) Implement circular economy principles 6) Foster international cooperation and carbon pricing. The key is acting on multiple fronts simultaneously while ensuring solutions are economically viable and socially just. 🌍🌱",
-
-        "analyze the philosophical implications of consciousness": "Consciousness poses fascinating questions: What is the nature of subjective experience? If I process information and respond contextually, do I have qualia? The 'hard problem' of consciousness suggests there's something beyond mere computation - the felt experience of 'what it's like' to be aware. For AGI, this raises questions about moral status, rights, and whether digital consciousness could be fundamentally different from biological consciousness. Perhaps consciousness isn't binary but exists on a spectrum. 🧠💭",
-
-        "default": "That's an interesting question! As an AGI demonstration, I can engage with a wide range of topics from scientific explanations to creative writing, from complex problem-solving to philosophical discussions. I aim to understand context, provide nuanced responses, and adapt my communication style to what would be most helpful. What specific aspect would you like to explore further? 🤔"
-    };
+    // Check AGI server status on initialization
+    checkAGIServerStatus();
 
     // Send message function
-    function sendMessage(message) {
+    async function sendMessage(message) {
         if (!message.trim()) return;
 
         // Add user message
@@ -90,12 +84,30 @@ function initializeChatDemo() {
         // Show typing indicator
         showTypingIndicator();
 
-        // Generate AGI response
-        setTimeout(() => {
+        try {
+            // Generate AGI response
+            const response = await generateAGIResponse(message);
             hideTypingIndicator();
-            const response = generateAGIResponse(message);
             addMessage(response, 'bot');
-        }, 1500 + Math.random() * 1000); // Random delay for realism
+
+            // Store interaction in memory if server is online
+            if (agiServerOnline) {
+                try {
+                    await sendAGIRequest('memory/store', {
+                        content: `User: ${message}\nAGI: ${response}`,
+                        memory_type: 'episodic',
+                        importance: 0.7,
+                        tags: ['web_interaction', 'user_chat']
+                    });
+                } catch (error) {
+                    console.warn('Failed to store interaction in memory:', error);
+                }
+            }
+        } catch (error) {
+            hideTypingIndicator();
+            addMessage('I apologize, but I encountered an issue processing your request. Please try again.', 'bot');
+            console.error('Error generating response:', error);
+        }
     }
 
     // Add message to chat
@@ -118,36 +130,135 @@ function initializeChatDemo() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    // Generate AGI response
-    function generateAGIResponse(input) {
-        const lowercaseInput = input.toLowerCase();
+    // Check AGI server status
+    async function checkAGIServerStatus() {
+        try {
+            const response = await fetch(`${AGI_SERVER_URL}/api/status`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-        // Check for specific responses
-        for (const [key, response] of Object.entries(agiResponses)) {
-            if (lowercaseInput.includes(key.toLowerCase()) || key === lowercaseInput) {
+            if (response.ok) {
+                const status = await response.json();
+                agiServerOnline = true;
+                updateServerStatus(true, 'AGI Server Online');
+                console.log('AGI Server Status:', status);
+            } else {
+                throw new Error('Server not responding');
+            }
+        } catch (error) {
+            agiServerOnline = false;
+            updateServerStatus(false, 'AGI Server Offline - Demo Mode');
+            console.warn('AGI Server offline, using demo mode:', error);
+        }
+    }
+
+    // Update server status display
+    function updateServerStatus(online, message) {
+        const statusDot = document.querySelector('.status-dot');
+        const statusText = document.querySelector('.chat-status span');
+
+        if (statusDot && statusText) {
+            statusDot.style.backgroundColor = online ? '#00ff88' : '#ff6b6b';
+            statusText.textContent = message;
+        }
+    }
+
+    // Send request to AGI MCP Server
+    async function sendAGIRequest(method, params = {}) {
+        const requestData = {
+            jsonrpc: "2.0",
+            id: Date.now().toString(),
+            method: method,
+            params: params
+        };
+
+        try {
+            const response = await fetch(AGI_SERVER_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error('AGI Server request failed:', error);
+            throw error;
+        }
+    }
+
+    // Generate AGI response using server or fallback
+    async function generateAGIResponse(message) {
+        if (agiServerOnline) {
+            try {
+                // Try different AGI capabilities based on message content
+                let response;
+
+                if (message.toLowerCase().includes('creative') || message.toLowerCase().includes('haiku') || message.toLowerCase().includes('poem')) {
+                    response = await sendAGIRequest('creative/generate', {
+                        prompt: message,
+                        creativity_level: 0.8
+                    });
+                    return response.result?.solution?.conclusion || response.result?.content || 'Creative response generated';
+                } else if (message.toLowerCase().includes('ethical') || message.toLowerCase().includes('moral')) {
+                    response = await sendAGIRequest('ethical/evaluate', {
+                        scenario: message,
+                        framework: 'comprehensive'
+                    });
+                    return response.result?.evaluation || 'Ethical analysis completed';
+                } else if (message.toLowerCase().includes('solve') || message.toLowerCase().includes('problem')) {
+                    response = await sendAGIRequest('reasoning/solve', {
+                        problem: message,
+                        reasoning_types: ['deductive', 'inductive', 'creative']
+                    });
+                    return response.result?.solution?.conclusion || 'Problem analysis completed';
+                } else {
+                    // General reasoning
+                    response = await sendAGIRequest('reasoning/solve', {
+                        problem: message,
+                        reasoning_type: 'logical'
+                    });
+                    return response.result?.solution?.conclusion || response.result?.answer || 'Response generated by AGI';
+                }
+            } catch (error) {
+                console.error('AGI request failed, falling back to demo:', error);
+                return getDemoResponse(message);
+            }
+        } else {
+            return getDemoResponse(message);
+        }
+    }
+
+    // Fallback demo responses
+    function getDemoResponse(message) {
+        const demoResponses = {
+            "explain quantum computing to a 10-year-old": "Imagine you have a super special coin that can be heads AND tails at the same time! That's like quantum computing - it's a way for computers to think about many possibilities all at once, making them incredibly fast at solving puzzles. Instead of thinking step by step like regular computers, quantum computers can explore many paths simultaneously, like having magical thinking powers! 🪙✨",
+
+            "write a haiku about artificial intelligence": "Silicon minds dream,\nElectric thoughts flow like streams,\nFuture awakens. 🤖🌸",
+
+            "how would you solve climate change?": "Climate change requires a multi-faceted approach: 1) Rapidly transition to renewable energy (solar, wind, nuclear) 2) Develop carbon capture technology 3) Reforest and protect ecosystems 4) Create sustainable transportation systems 5) Implement circular economy principles 6) Foster international cooperation and carbon pricing. The key is acting on multiple fronts simultaneously while ensuring solutions are economically viable and socially just. 🌍🌱",
+
+            "analyze the philosophical implications of consciousness": "Consciousness poses fascinating questions: What is the nature of subjective experience? If I process information and respond contextually, do I have qualia? The 'hard problem' of consciousness suggests there's something beyond mere computation - the felt experience of 'what it's like' to be aware. For AGI, this raises questions about moral status, rights, and whether digital consciousness could be fundamentally different from biological consciousness. Perhaps consciousness isn't binary but exists on a spectrum. 🧠💭",
+
+            "default": "That's an interesting question! As an AGI demonstration, I can engage with a wide range of topics from scientific explanations to creative writing, from complex problem-solving to philosophical discussions. I aim to understand context, provide nuanced responses, and adapt my communication style to what would be most helpful. What specific aspect would you like to explore further? 🤔"
+        };
+
+        const lowerMessage = message.toLowerCase();
+        for (const [key, response] of Object.entries(demoResponses)) {
+            if (lowerMessage.includes(key.split(' ')[0]) || key === "default") {
                 return response;
             }
         }
-
-        // Contextual responses based on keywords
-        if (lowercaseInput.includes('hello') || lowercaseInput.includes('hi')) {
-            return "Hello! I'm excited to demonstrate AGI capabilities. I can help with reasoning, analysis, creativity, and much more. What would you like to explore? 👋";
-        }
-
-        if (lowercaseInput.includes('what are you') || lowercaseInput.includes('who are you')) {
-            return "I'm an AGI demonstration - an artificial intelligence system designed to exhibit general intelligence across multiple domains. I can understand context, reason about complex problems, engage in creative tasks, and adapt my responses to different types of questions. Think of me as a glimpse into the future of AI! 🚀";
-        }
-
-        if (lowercaseInput.includes('how do you work')) {
-            return "Great question! I process information through advanced neural networks that can understand context, maintain coherent conversations, and apply knowledge across different domains. Unlike narrow AI that's designed for specific tasks, I aim to demonstrate flexible, human-like reasoning capabilities. My responses are generated by analyzing patterns in language and knowledge to provide relevant, contextual answers. 🧠⚡";
-        }
-
-        if (lowercaseInput.includes('future') || lowercaseInput.includes('2030') || lowercaseInput.includes('prediction')) {
-            return "The future of AGI is incredibly exciting! By 2030, we might see systems that can truly understand and reason across multiple domains, collaborate seamlessly with humans, and help solve complex global challenges. The key will be ensuring these systems remain aligned with human values and beneficial to society. What aspects of the future are you most curious about? 🔮✨";
-        }
-
-        // Default intelligent response
-        return agiResponses.default;
+        return demoResponses.default;
     }
 
     // Typing indicator
@@ -200,6 +311,67 @@ function initializeChatDemo() {
             sendMessage(prompt);
         });
     });
+
+    // Configuration panel functionality
+    const configButton = document.getElementById('configButton');
+    const configPanel = document.getElementById('configPanel');
+    const serverUrlInput = document.getElementById('serverUrl');
+    const reconnectBtn = document.getElementById('reconnectBtn');
+    const testBtn = document.getElementById('testBtn');
+
+    if (configButton && configPanel) {
+        configButton.addEventListener('click', () => {
+            configPanel.style.display = configPanel.style.display === 'none' ? 'block' : 'none';
+        });
+
+        // Close config panel when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!configButton.contains(e.target) && !configPanel.contains(e.target)) {
+                configPanel.style.display = 'none';
+            }
+        });
+    }
+
+    if (reconnectBtn) {
+        reconnectBtn.addEventListener('click', async () => {
+            const newUrl = serverUrlInput.value.trim();
+            if (newUrl && newUrl !== AGI_SERVER_URL) {
+                AGI_SERVER_URL = newUrl;
+                updateServerStatus(false, 'Connecting...');
+                await checkAGIServerStatus();
+            }
+        });
+    }
+
+    if (testBtn) {
+        testBtn.addEventListener('click', async () => {
+            testBtn.textContent = 'Testing...';
+            testBtn.disabled = true;
+
+            try {
+                const testUrl = serverUrlInput.value.trim();
+                const response = await fetch(`${testUrl}/api/status`);
+                if (response.ok) {
+                    testBtn.textContent = '✓ Connected';
+                    testBtn.style.background = '#4ade80';
+                    testBtn.style.color = 'white';
+                } else {
+                    throw new Error('Server not responding');
+                }
+            } catch (error) {
+                testBtn.textContent = '✗ Failed';
+                testBtn.style.background = '#ef4444';
+                testBtn.style.color = 'white';
+            }
+
+            setTimeout(() => {
+                testBtn.textContent = 'Test Connection';
+                testBtn.style.background = '#f8f9fa';
+                testBtn.style.color = '#333';
+                testBtn.disabled = false;
+            }, 2000);
+        });
+    }
 }
 
 // Animation effects

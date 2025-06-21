@@ -1,0 +1,145 @@
+{
+  "name": "agi-chat-assistant",
+  "displayName": "AGI Chat Assistant",
+  "description": "Neural-Symbolic AGI Chat Interface for VS Code",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning",
+    "Chat"
+  ],
+  "keywords": [
+    "agi",
+    "ai",
+    "chat",
+    "assistant",
+    "semantic-kernel",
+    "neural-symbolic"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "agiChat.openChat",
+        "title": "Open AGI Chat",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "agiChat.newConversation",
+        "title": "New AGI Conversation",
+        "icon": "$(add)"
+      },
+      {
+        "command": "agiChat.clearHistory",
+        "title": "Clear Chat History",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "agiChat.exportConversation",
+        "title": "Export Conversation",
+        "icon": "$(export)"
+      },
+      {
+        "command": "agiChat.switchAgent",
+        "title": "Switch AGI Agent",
+        "icon": "$(person)"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "agiChatView",
+          "name": "AGI Chat Assistant",
+          "when": "true"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "agi-chat",
+          "title": "AGI Chat",
+          "icon": "$(robot)"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "agiChatView",
+        "contents": "Welcome to AGI Chat Assistant!\n\n[Open Chat Window](command:agiChat.openChat)\n[Configure Agents](command:agiChat.configure)\n\nTo get started, configure your AGI agents and start chatting."
+      }
+    ],
+    "configuration": {
+      "title": "AGI Chat",
+      "properties": {
+        "agiChat.defaultAgent": {
+          "type": "string",
+          "default": "neural-symbolic",
+          "description": "Default AGI agent to use"
+        },
+        "agiChat.maxHistoryLength": {
+          "type": "number",
+          "default": 100,
+          "description": "Maximum number of messages to keep in history"
+        },
+        "agiChat.autoSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically save conversations"
+        },
+        "agiChat.semanticKernelEndpoint": {
+          "type": "string",
+          "default": "http://localhost:8000",
+          "description": "Semantic Kernel API endpoint"
+        },
+        "agiChat.enableReasoning": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable symbolic reasoning capabilities"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "agiChat.openChat",
+        "key": "ctrl+shift+a",
+        "mac": "cmd+shift+a"
+      },
+      {
+        "command": "agiChat.newConversation",
+        "key": "ctrl+shift+n",
+        "mac": "cmd+shift+n"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.4",
+    "@vscode/test-electron": "^2.2.0",
+    "vsce": "^2.15.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "ws": "^8.14.0",
+    "uuid": "^9.0.0"
+  }
+}

@@ -1,0 +1,11 @@
+/* AGI Chat Assistant Styles */
+
+:root {
+    --agi-primary: #007acc;
+    --agi-secondary: #6c757d;
+    --agi-success: #28a745;
+    --agi-warning: #ffc107;
+    --agi-danger: #dc3545;
+    --agi-neural: #8e44ad;
+    --agi-symbolic: #e67e22;
+}

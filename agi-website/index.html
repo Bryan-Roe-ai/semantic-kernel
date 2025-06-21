@@ -212,7 +212,24 @@
             <div class="chat-header">
               <div class="chat-status">
                 <div class="status-dot"></div>
-                <span>AGI Assistant Online</span>
+                <span>Connecting to AGI Server...</span>
+              </div>
+              <div class="server-config">
+                <button id="configButton" class="config-btn">⚙️ Config</button>
+                <div id="configPanel" class="config-panel" style="display: none;">
+                  <div class="config-item">
+                    <label for="serverUrl">Server URL:</label>
+                    <input type="text" id="serverUrl" value="http://localhost:8080" />
+                  </div>
+                  <div class="config-item">
+                    <label for="autoReconnect">Auto Reconnect:</label>
+                    <input type="checkbox" id="autoReconnect" checked />
+                  </div>
+                  <div class="config-actions">
+                    <button id="reconnectBtn" class="reconnect-btn">Reconnect</button>
+                    <button id="testBtn" class="test-btn">Test Connection</button>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="chat-messages" id="chatMessages">
