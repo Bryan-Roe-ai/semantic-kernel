@@ -35,13 +35,13 @@ except ImportError:
     print("⚠️  Warning: Could not import existing AI monitor. Will create standalone system.")
     AIActivityMonitor = None
 
-# Set up comprehensive logging  
+# Set up comprehensive logging
 def setup_logging():
     """Setup logging with proper path handling"""
     monitoring_dir = Path(__file__).parent
     log_file = monitoring_dir / 'logs' / 'universal_monitor.log'
     log_file.parent.mkdir(exist_ok=True)
-    
+
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -97,38 +97,38 @@ class UniversalAIMonitor:
     - Decision trees
     - Learning behaviors
     """
-    
+
     def __init__(self, workspace_root: Path):
         self.workspace_root = Path(workspace_root)
         self.monitoring_dir = self.workspace_root / '.ai-monitoring'
         self.monitoring_dir.mkdir(exist_ok=True)
-        
+
         # Create subdirectories
         for subdir in ['logs', 'reports', 'config', 'agents', 'dashboards']:
             (self.monitoring_dir / subdir).mkdir(exist_ok=True)
-        
+
         # Enhanced database
         self.db_path = self.monitoring_dir / 'logs' / 'universal_ai_events.db'
         self._init_database()
-        
+
         # Active monitoring
         self.active_agents: Set[str] = set()
         self.event_queue = deque(maxlen=10000)
         self.event_cache = {}
         self.agent_relationships = defaultdict(set)
         self.performance_metrics = defaultdict(dict)
-        
+
         # Real-time streams
         self.event_streams = defaultdict(list)
         self.subscribers = []
-        
+
         # Monitoring state
         self.is_monitoring = True
         self.start_time = datetime.now()
-        
+
         # Start background processors
         self._start_background_services()
-        
+
         logger.info("🔍 Universal AI Monitor initialized")
         self.log_system_event("monitor_started", "Universal AI monitoring system activated")
 
@@ -157,7 +157,7 @@ class UniversalAIMonitor:
                     FOREIGN KEY (parent_event_id) REFERENCES ai_events (id)
                 )
             """)
-            
+
             # Enhanced indexes for fast querying
             indexes = [
                 "CREATE INDEX IF NOT EXISTS idx_timestamp ON ai_events (timestamp)",
@@ -166,10 +166,10 @@ class UniversalAIMonitor:
                 "CREATE INDEX IF NOT EXISTS idx_success ON ai_events (success)",
                 "CREATE INDEX IF NOT EXISTS idx_parent_child ON ai_events (parent_event_id, id)",
             ]
-            
+
             for index in indexes:
                 conn.execute(index)
-            
+
             # Agent relationship tracking
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS agent_interactions (
@@ -181,7 +181,7 @@ class UniversalAIMonitor:
                     details TEXT NOT NULL
                 )
             """)
-            
+
             # Performance metrics
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS performance_metrics (
@@ -198,34 +198,34 @@ class UniversalAIMonitor:
         """Start all background monitoring services"""
         # Event processor
         threading.Thread(target=self._process_event_queue, daemon=True).start()
-        
+
         # Performance monitor
         threading.Thread(target=self._monitor_performance, daemon=True).start()
-        
+
         # File system watcher
         threading.Thread(target=self._monitor_file_system, daemon=True).start()
-        
+
         # Agent discovery
         threading.Thread(target=self._discover_agents, daemon=True).start()
-        
+
         # Report generator
         threading.Thread(target=self._generate_periodic_reports, daemon=True).start()
 
-    def log_ai_event(self, 
+    def log_ai_event(self,
                      agent_name: str,
                      event_type: str,
                      description: str,
                      details: Dict[str, Any] = None,
                      **kwargs) -> str:
         """Log any AI event with full context capture"""
-        
+
         event_id = self._generate_event_id(agent_name, event_type, description)
-        
+
         # Capture stack trace for debugging
         stack_trace = None
         if kwargs.get('capture_stack', False):
             stack_trace = traceback.format_stack()
-        
+
         event = AIEvent(
             id=event_id,
             timestamp=datetime.now().isoformat(),
@@ -236,23 +236,23 @@ class UniversalAIMonitor:
             stack_trace=stack_trace,
             **{k: v for k, v in kwargs.items() if k != 'capture_stack'}
         )
-        
+
         # Add to processing queue
         self.event_queue.append(event)
-        
+
         # Cache for real-time access
         self.event_cache[event_id] = event
-        
+
         # Track active agents
         self.active_agents.add(agent_name)
-        
+
         # Real-time streaming
         for subscriber in self.subscribers:
             try:
                 subscriber(event)
             except Exception as e:
                 logger.error(f"Error notifying subscriber: {e}")
-        
+
         return event_id
 
     def log_ai_thought(self, agent_name: str, thought: str, context: Dict[str, Any] = None):
@@ -265,7 +265,7 @@ class UniversalAIMonitor:
             tags=["reasoning", "cognitive"]
         )
 
-    def log_ai_decision(self, agent_name: str, decision: str, reasoning: str, 
+    def log_ai_decision(self, agent_name: str, decision: str, reasoning: str,
                        options: List[str] = None, confidence: float = None):
         """Log AI decisions with full context"""
         return self.log_ai_event(
@@ -281,11 +281,11 @@ class UniversalAIMonitor:
             tags=["decision", "reasoning"]
         )
 
-    def log_ai_action(self, agent_name: str, action: str, 
+    def log_ai_action(self, agent_name: str, action: str,
                      file_path: str = None, **action_details):
         """Log AI actions with performance tracking"""
         start_time = time.time()
-        
+
         event_id = self.log_ai_event(
             agent_name=agent_name,
             event_type="action",
@@ -294,21 +294,21 @@ class UniversalAIMonitor:
             file_path=file_path,
             tags=["action", "execution"]
         )
-        
+
         return event_id, start_time
 
-    def complete_ai_action(self, event_id: str, start_time: float, 
+    def complete_ai_action(self, event_id: str, start_time: float,
                           success: bool = True, result: Any = None):
         """Complete an AI action with timing and results"""
         duration_ms = (time.time() - start_time) * 1000
-        
+
         if event_id in self.event_cache:
             event = self.event_cache[event_id]
             event.duration_ms = duration_ms
             event.success = success
             if result:
                 event.details['result'] = str(result)
-        
+
         # Log completion event
         self.log_ai_event(
             agent_name=self.event_cache[event_id].agent_name if event_id in self.event_cache else "Unknown",
@@ -325,15 +325,15 @@ class UniversalAIMonitor:
             success=success
         )
 
-    def log_agent_communication(self, source_agent: str, target_agent: str, 
+    def log_agent_communication(self, source_agent: str, target_agent: str,
                                message: str, communication_type: str = "message"):
         """Log inter-agent communications"""
         self.agent_relationships[source_agent].add(target_agent)
-        
+
         # Store in database
         with sqlite3.connect(self.db_path) as conn:
             conn.execute("""
-                INSERT INTO agent_interactions 
+                INSERT INTO agent_interactions
                 (id, timestamp, source_agent, target_agent, interaction_type, details)
                 VALUES (?, ?, ?, ?, ?, ?)
             """, (
@@ -344,7 +344,7 @@ class UniversalAIMonitor:
                 communication_type,
                 json.dumps({"message": message})
             ))
-        
+
         return self.log_ai_event(
             agent_name=f"{source_agent}→{target_agent}",
             event_type="communication",
@@ -361,7 +361,7 @@ class UniversalAIMonitor:
     def log_file_change(self, file_path: str, change_type: str, agent_context: str = None):
         """Log file changes with AI context"""
         rel_path = str(Path(file_path).relative_to(self.workspace_root))
-        
+
         return self.log_ai_event(
             agent_name=agent_context or "FileSystemMonitor",
             event_type="file_change",
@@ -414,9 +414,9 @@ class UniversalAIMonitor:
                     # Process in batches for efficiency
                     for _ in range(min(50, len(self.event_queue))):
                         events_to_process.append(self.event_queue.popleft())
-                    
+
                     self._persist_events(events_to_process)
-                
+
                 time.sleep(0.1)  # Small delay to prevent excessive CPU usage
             except Exception as e:
                 logger.error(f"Error processing event queue: {e}")
@@ -426,10 +426,10 @@ class UniversalAIMonitor:
         with sqlite3.connect(self.db_path) as conn:
             for event in events:
                 conn.execute("""
-                    INSERT OR REPLACE INTO ai_events 
+                    INSERT OR REPLACE INTO ai_events
                     (id, timestamp, agent_name, event_type, description, details,
-                     file_path, line_numbers, stack_trace, parent_event_id, 
-                     child_event_ids, duration_ms, success, confidence, 
+                     file_path, line_numbers, stack_trace, parent_event_id,
+                     child_event_ids, duration_ms, success, confidence,
                      impact_score, tags, metadata)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
@@ -460,7 +460,7 @@ class UniversalAIMonitor:
                 cpu_percent = psutil.cpu_percent()
                 memory_percent = psutil.virtual_memory().percent
                 disk_usage = psutil.disk_usage('/').percent
-                
+
                 self.log_system_event(
                     "performance_metrics",
                     f"System performance snapshot",
@@ -469,11 +469,11 @@ class UniversalAIMonitor:
                     disk_usage=disk_usage,
                     active_agents=len(self.active_agents)
                 )
-                
+
                 # Agent performance analysis
                 for agent_name in self.active_agents:
                     self._analyze_agent_performance(agent_name)
-                
+
                 time.sleep(30)  # Update every 30 seconds
             except Exception as e:
                 logger.error(f"Error monitoring performance: {e}")
@@ -483,23 +483,23 @@ class UniversalAIMonitor:
         # Get recent events for this agent
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("""
-                SELECT duration_ms, success, event_type 
-                FROM ai_events 
-                WHERE agent_name = ? 
+                SELECT duration_ms, success, event_type
+                FROM ai_events
+                WHERE agent_name = ?
                 AND timestamp > datetime('now', '-1 hour')
                 AND duration_ms IS NOT NULL
             """, (agent_name,))
-            
+
             events = cursor.fetchall()
-            
+
             if events:
                 durations = [e[0] for e in events if e[0] is not None]
                 success_rate = sum(1 for e in events if e[1]) / len(events) * 100
                 avg_duration = sum(durations) / len(durations) if durations else 0
-                
+
                 # Store performance metrics
                 conn.execute("""
-                    INSERT INTO performance_metrics 
+                    INSERT INTO performance_metrics
                     (id, timestamp, agent_name, metric_type, metric_value, metadata)
                     VALUES (?, ?, ?, ?, ?, ?)
                 """, (
@@ -521,33 +521,33 @@ class UniversalAIMonitor:
         try:
             from watchdog.observers import Observer
             from watchdog.events import FileSystemEventHandler
-            
+
             class AIFileHandler(FileSystemEventHandler):
                 def __init__(self, monitor):
                     self.monitor = monitor
-                
+
                 def on_modified(self, event):
                     if not event.is_directory:
                         self.monitor.log_file_change(event.src_path, "modified")
-                
+
                 def on_created(self, event):
                     if not event.is_directory:
                         self.monitor.log_file_change(event.src_path, "created")
-                
+
                 def on_deleted(self, event):
                     if not event.is_directory:
                         self.monitor.log_file_change(event.src_path, "deleted")
-            
+
             observer = Observer()
             observer.schedule(AIFileHandler(self), str(self.workspace_root), recursive=True)
             observer.start()
-            
+
             while self.is_monitoring:
                 time.sleep(1)
-            
+
             observer.stop()
             observer.join()
-            
+
         except ImportError:
             logger.warning("Watchdog not available. File system monitoring disabled.")
 
@@ -559,7 +559,7 @@ class UniversalAIMonitor:
                 for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
                     try:
                         cmdline = proc.info['cmdline']
-                        if cmdline and any('ai' in arg.lower() or 'agent' in arg.lower() 
+                        if cmdline and any('ai' in arg.lower() or 'agent' in arg.lower()
                                          for arg in cmdline):
                             agent_name = f"Process_{proc.info['pid']}"
                             if agent_name not in self.active_agents:
@@ -571,7 +571,7 @@ class UniversalAIMonitor:
                                 )
                     except (psutil.NoSuchProcess, psutil.AccessDenied):
                         pass
-                
+
                 time.sleep(60)  # Check every minute
             except Exception as e:
                 logger.error(f"Error discovering agents: {e}")
@@ -589,17 +589,17 @@ class UniversalAIMonitor:
     def generate_activity_report(self, hours: int = 24, save_to_file: bool = False) -> Dict[str, Any]:
         """Generate comprehensive activity report"""
         since = (datetime.now() - timedelta(hours=hours)).isoformat()
-        
+
         with sqlite3.connect(self.db_path) as conn:
             # Get all events in time period
             cursor = conn.execute("""
-                SELECT * FROM ai_events 
-                WHERE timestamp > ? 
+                SELECT * FROM ai_events
+                WHERE timestamp > ?
                 ORDER BY timestamp DESC
             """, (since,))
-            
+
             events = cursor.fetchall()
-            
+
             # Generate comprehensive report
             report = {
                 "report_generated": datetime.now().isoformat(),
@@ -613,13 +613,13 @@ class UniversalAIMonitor:
                 "error_analysis": self._analyze_errors(events),
                 "trends": self._analyze_trends(events)
             }
-            
+
             if save_to_file:
                 report_file = self.monitoring_dir / 'reports' / f'activity_report_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
                 with open(report_file, 'w') as f:
                     json.dump(report, f, indent=2)
                 logger.info(f"📊 Activity report saved: {report_file}")
-            
+
             return report
 
     def get_real_time_dashboard_data(self) -> Dict[str, Any]:
@@ -638,15 +638,15 @@ class UniversalAIMonitor:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("""
                 SELECT agent_name, event_type, description, timestamp, success
-                FROM ai_events 
-                ORDER BY timestamp DESC 
+                FROM ai_events
+                ORDER BY timestamp DESC
                 LIMIT ?
             """, (limit,))
-            
+
             return [
                 {
                     "agent_name": row[0],
-                    "event_type": row[1], 
+                    "event_type": row[1],
                     "description": row[2],
                     "timestamp": row[3],
                     "success": row[4]
@@ -658,11 +658,11 @@ class UniversalAIMonitor:
         """Get recent AI activities"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("""
-                SELECT * FROM ai_events 
-                ORDER BY timestamp DESC 
+                SELECT * FROM ai_events
+                ORDER BY timestamp DESC
                 LIMIT ?
             """, (limit,))
-            
+
             events = []
             for row in cursor.fetchall():
                 event = AIEvent(
@@ -685,19 +685,19 @@ class UniversalAIMonitor:
                     metadata=json.loads(row[16]) if row[16] else {}
                 )
                 events.append(event)
-            
+
             return events
 
     def get_agent_activities(self, agent_name: str, limit: int = 50) -> List[AIEvent]:
         """Get activities for a specific agent"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("""
-                SELECT * FROM ai_events 
+                SELECT * FROM ai_events
                 WHERE agent_name = ?
-                ORDER BY timestamp DESC 
+                ORDER BY timestamp DESC
                 LIMIT ?
             """, (agent_name, limit))
-            
+
             events = []
             for row in cursor.fetchall():
                 event = AIEvent(
@@ -720,7 +720,7 @@ class UniversalAIMonitor:
                     metadata=json.loads(row[16]) if row[16] else {}
                 )
                 events.append(event)
-            
+
             return events
 
     def stop_monitoring(self):
@@ -744,18 +744,18 @@ class UniversalAIMonitor:
     def _analyze_agent_performance_summary(self, events) -> Dict[str, Dict[str, Any]]:
         """Analyze agent performance from events"""
         agent_stats = defaultdict(lambda: {"count": 0, "success": 0, "durations": []})
-        
+
         for event in events:
             agent_name = event[2]
             success = event[12]
             duration = event[11]
-            
+
             agent_stats[agent_name]["count"] += 1
             if success:
                 agent_stats[agent_name]["success"] += 1
             if duration:
                 agent_stats[agent_name]["durations"].append(duration)
-        
+
         summary = {}
         for agent, stats in agent_stats.items():
             summary[agent] = {
@@ -763,23 +763,23 @@ class UniversalAIMonitor:
                 "success_rate": (stats["success"] / stats["count"] * 100) if stats["count"] > 0 else 0,
                 "avg_duration_ms": sum(stats["durations"]) / len(stats["durations"]) if stats["durations"] else 0
             }
-        
+
         return summary
 
     def _analyze_file_changes(self, events) -> Dict[str, Any]:
         """Analyze file change patterns"""
         file_events = [e for e in events if e[3] == "file_change"]  # event_type
-        
+
         change_types = defaultdict(int)
         file_extensions = defaultdict(int)
-        
+
         for event in file_events:
             details = json.loads(event[5])  # details
             change_types[details.get("change_type", "unknown")] += 1
             ext = details.get("file_extension", "")
             if ext:
                 file_extensions[ext] += 1
-        
+
         return {
             "total_changes": len(file_events),
             "change_types": dict(change_types),
@@ -795,15 +795,15 @@ class UniversalAIMonitor:
                 WHERE timestamp > datetime('now', '-24 hours')
                 GROUP BY source_agent, target_agent, interaction_type
             """)
-            
+
             communications = cursor.fetchall()
-            
+
             return {
                 "total_interactions": len(communications),
                 "agent_pairs": [
                     {
                         "source": row[0],
-                        "target": row[1], 
+                        "target": row[1],
                         "type": row[2],
                         "count": row[3]
                     }
@@ -814,15 +814,15 @@ class UniversalAIMonitor:
     def _analyze_errors(self, events) -> Dict[str, Any]:
         """Analyze error patterns"""
         error_events = [e for e in events if e[3] == "error"]
-        
+
         error_types = defaultdict(int)
         agent_errors = defaultdict(int)
-        
+
         for event in error_events:
             details = json.loads(event[5])
             error_types[details.get("error_type", "Unknown")] += 1
             agent_errors[event[2]] += 1  # agent_name
-        
+
         return {
             "total_errors": len(error_events),
             "error_types": dict(error_types),
@@ -833,16 +833,16 @@ class UniversalAIMonitor:
         """Analyze activity trends"""
         # Group events by hour
         hourly_activity = defaultdict(int)
-        
+
         for event in events:
             timestamp = datetime.fromisoformat(event[1].replace('Z', '+00:00'))
             hour_key = timestamp.strftime("%Y-%m-%d %H:00")
             hourly_activity[hour_key] += 1
-        
+
         return {
             "hourly_activity": dict(hourly_activity),
             "peak_hour": max(hourly_activity.items(), key=lambda x: x[1])[0] if hourly_activity else None,
-            "activity_trend": "increasing" if len(hourly_activity) > 1 and 
+            "activity_trend": "increasing" if len(hourly_activity) > 1 and
                             list(hourly_activity.values())[-1] > list(hourly_activity.values())[0] else "stable"
         }
 
@@ -860,14 +860,14 @@ class UniversalAIMonitor:
         """Get performance summary"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("""
-                SELECT agent_name, COUNT(*) as event_count, 
+                SELECT agent_name, COUNT(*) as event_count,
                        AVG(CASE WHEN success = 1 THEN 1.0 ELSE 0.0 END) as success_rate,
                        AVG(duration_ms) as avg_duration
-                FROM ai_events 
+                FROM ai_events
                 WHERE timestamp > datetime('now', '-1 hour')
                 GROUP BY agent_name
             """)
-            
+
             return {
                 row[0]: {
                     "event_count": row[1],
@@ -907,7 +907,7 @@ def track_ai_action(agent_name: str, action: str, **details):
     """Context manager for tracking AI actions"""
     monitor = get_universal_monitor()
     event_id, start_time = monitor.log_ai_action(agent_name, action, **details)
-    
+
     try:
         yield event_id
         monitor.complete_ai_action(event_id, start_time, success=True)
@@ -920,19 +920,19 @@ def track_ai_action(agent_name: str, action: str, **details):
 if __name__ == "__main__":
     # Test the universal monitor
     monitor = get_universal_monitor()
-    
+
     # Test various event types
     monitor.log_ai_thought("TestAgent", "Analyzing repository structure for optimization opportunities")
-    monitor.log_ai_decision("TestAgent", "Reorganize repository", "Current structure is inefficient", 
+    monitor.log_ai_decision("TestAgent", "Reorganize repository", "Current structure is inefficient",
                            ["reorganize", "keep_current", "partial_cleanup"], confidence=0.85)
-    
+
     with track_ai_action("TestAgent", "file_analysis") as action_id:
         time.sleep(0.1)  # Simulate work
-        
+
     monitor.log_agent_communication("TestAgent", "FileSystemMonitor", "Request file scan", "request")
-    
+
     # Generate test report
     report = monitor.generate_activity_report(hours=1)
     print("📊 Generated test report with", report["total_events"], "events")
-    
+
     print("🔍 Universal AI Monitor test completed successfully!")

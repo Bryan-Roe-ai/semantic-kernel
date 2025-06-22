@@ -7,27 +7,33 @@ You now have a **comprehensive AI activity monitoring system** that captures and
 ## 🚀 Quick Start Commands
 
 ### 1. **Real-Time Dashboard** (Recommended)
+
 ```bash
 cd 02-ai-workspace/scripts
 ./monitor.sh dashboard
 ```
+
 or
+
 ```bash
 python ai_monitor_launcher.py dashboard
 ```
 
 ### 2. **Live Activity Feed**
+
 ```bash
 ./monitor.sh feed
 ```
 
 ### 3. **Generate Reports**
+
 ```bash
 ./monitor.sh report 24    # Last 24 hours
 ./monitor.sh report 168   # Last week
 ```
 
 ### 4. **Test the System**
+
 ```bash
 ./monitor.sh test
 ```
@@ -35,6 +41,7 @@ python ai_monitor_launcher.py dashboard
 ## 📊 What Gets Monitored
 
 ### ✅ **Automatic Monitoring** (No Code Changes Required)
+
 - **All existing AI agents** in your workspace
 - **File changes** in real-time
 - **Agent actions** and executions
@@ -42,6 +49,7 @@ python ai_monitor_launcher.py dashboard
 - **Performance metrics**
 
 ### 🎯 **Captured Activity Types**
+
 - **🎯 Actions**: Every AI operation and execution
 - **💭 Thoughts**: AI reasoning and decision-making processes
 - **🤔 Decisions**: Choices made with reasoning explanations
@@ -107,6 +115,7 @@ When you run the dashboard, you'll see:
 ## 🔧 Advanced Usage
 
 ### Manual Logging in Your Code
+
 ```python
 from ai_monitoring_integration import get_logger
 
@@ -121,6 +130,7 @@ logger.analysis("performance_test", cpu_usage=45.2)
 ```
 
 ### Track Actions with Context
+
 ```python
 from ai_monitoring_integration import track_ai_action
 
@@ -133,21 +143,25 @@ async def my_ai_function():
 ## 🎯 What You Can Do Now
 
 ### 1. **Debug AI Behavior**
+
 - See exactly what decisions your AI agents are making
 - Trace the reasoning behind actions
 - Identify bottlenecks and performance issues
 
 ### 2. **Monitor Performance**
+
 - Track agent execution times
 - Identify slow or failing operations
 - See success rates over time
 
 ### 3. **Understand AI Activity**
+
 - Real-time dashboard for development
 - Historical reporting for analysis
 - Track file changes as they happen
 
 ### 4. **Generate Reports**
+
 - Comprehensive activity reports
 - Agent performance analytics
 - File change tracking
@@ -197,6 +211,7 @@ async def my_ai_function():
 Your AI activity monitoring system is now **fully operational**. Every AI action, thought, and change in your repository will be automatically captured and displayed in the real-time dashboard.
 
 **Start watching your AI in action:**
+
 ```bash
 cd 02-ai-workspace/scripts
 ./monitor.sh dashboard

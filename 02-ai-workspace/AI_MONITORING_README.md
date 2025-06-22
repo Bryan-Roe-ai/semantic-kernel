@@ -7,14 +7,16 @@ This comprehensive monitoring system captures and displays all AI activities acr
 ## 🌟 Features
 
 ### 📊 Complete Activity Tracking
+
 - **Actions**: Every AI operation and execution
-- **Thoughts**: AI reasoning and decision-making processes  
+- **Thoughts**: AI reasoning and decision-making processes
 - **Decisions**: Choices made with reasoning explanations
 - **Analysis**: Results from AI analysis operations
 - **File Changes**: Real-time file system monitoring
 - **Errors**: Failed operations with detailed context
 
 ### 🎯 Real-Time Dashboard
+
 - Live updating display of AI activities
 - Agent performance metrics
 - Success rates and error tracking
@@ -22,12 +24,14 @@ This comprehensive monitoring system captures and displays all AI activities acr
 - Activity type breakdowns
 
 ### 💾 Comprehensive Storage
+
 - **SQLite Database**: Structured, queryable storage
 - **JSON Logs**: Human-readable daily activity logs
 - **Historical Reports**: Generate reports for any time period
 - **Search & Filter**: Find specific activities by agent, type, or time
 
 ### 🔌 Automatic Integration
+
 - **Zero-code Integration**: Automatically patches existing AI agents
 - **Async Support**: Works with both sync and async operations
 - **Error Resilience**: Continues monitoring even if agents fail
@@ -36,27 +40,32 @@ This comprehensive monitoring system captures and displays all AI activities acr
 ## 🚀 Quick Start
 
 ### 1. Setup the System
+
 ```bash
 cd 02-ai-workspace/scripts
 python setup_monitoring.py
 ```
 
 ### 2. Start Real-Time Dashboard
+
 ```bash
 python ai_monitor_launcher.py dashboard
 ```
 
-### 3. View Live Activity Feed  
+### 3. View Live Activity Feed
+
 ```bash
 python ai_monitor_launcher.py feed
 ```
 
 ### 4. Generate Activity Report
+
 ```bash
 python ai_monitor_launcher.py report --hours 24
 ```
 
 ### 5. Test the System
+
 ```bash
 python ai_monitor_launcher.py test
 ```
@@ -165,6 +174,7 @@ class MyAIAgent:
 ## 🎛️ Commands Reference
 
 ### Dashboard Commands
+
 ```bash
 # Start real-time dashboard (default)
 python ai_monitor_launcher.py dashboard
@@ -174,6 +184,7 @@ python ai_monitor_launcher.py dashboard --refresh 3
 ```
 
 ### Reporting Commands
+
 ```bash
 # Generate 24-hour report
 python ai_monitor_launcher.py report
@@ -186,6 +197,7 @@ python ai_activity_dashboard.py --export 24
 ```
 
 ### Monitoring Commands
+
 ```bash
 # Start monitoring system (background)
 python ai_monitor_launcher.py start
@@ -203,13 +215,16 @@ python ai_monitor_launcher.py test
 ## 🔍 Querying Activities
 
 ### Using the Dashboard
+
 The dashboard provides filtering and search capabilities:
+
 - Filter by agent name
 - Filter by activity type
 - Filter by time range
 - Search descriptions
 
 ### Direct Database Access
+
 ```python
 from ai_activity_monitor import get_monitor
 
@@ -228,6 +243,7 @@ activities = monitor.db.get_activities(since=since)
 ```
 
 ### Exporting Data
+
 ```python
 from ai_activity_dashboard import AIActivityDashboard
 
@@ -243,6 +259,7 @@ filepath = dashboard.save_report_to_file(hours=48)
 ## 🛠️ Configuration
 
 ### Environment Variables
+
 ```bash
 # Disable auto-monitoring of existing agents
 export DISABLE_AI_MONITORING=true
@@ -252,6 +269,7 @@ export AI_WORKSPACE_ROOT=/path/to/workspace
 ```
 
 ### Config File (`monitoring_config.json`)
+
 ```json
 {
   "workspace_root": "/home/user/semantic-kernel",
@@ -268,6 +286,7 @@ export AI_WORKSPACE_ROOT=/path/to/workspace
 ### Common Issues
 
 **Q: Dashboard shows no activities**
+
 ```bash
 # Test the system first
 python ai_monitor_launcher.py test
@@ -277,6 +296,7 @@ python ai_monitor_launcher.py status
 ```
 
 **Q: File watching not working**
+
 ```bash
 # Install watchdog dependency
 pip install watchdog
@@ -286,6 +306,7 @@ ls -la logs/
 ```
 
 **Q: Database errors**
+
 ```bash
 # Reset database
 rm logs/ai_activities.db
@@ -293,6 +314,7 @@ python setup_monitoring.py
 ```
 
 **Q: Import errors**
+
 ```bash
 # Make sure you're in the scripts directory
 cd 02-ai-workspace/scripts
@@ -302,6 +324,7 @@ python -c "import sys; print(sys.path)"
 ```
 
 ### Debug Mode
+
 ```python
 import logging
 logging.basicConfig(level=logging.DEBUG)
@@ -322,6 +345,7 @@ The monitoring system is designed to be **lightweight and non-intrusive**:
 ## 🤝 Integration Examples
 
 ### With Existing Improvement Loop
+
 ```python
 # The monitoring system automatically patches existing agents
 # No code changes needed!
@@ -333,68 +357,74 @@ class MyAgent(ImprovementAgent):
     def __init__(self):
         super().__init__()
         self.logger = get_logger(self.__class__.__name__)
-    
+
     async def analyze(self):
         self.logger.thought("Starting analysis phase")
-        
+
         # Your existing code
         metrics = await super().analyze()
-        
-        self.logger.analysis("metrics_calculated", 
+
+        self.logger.analysis("metrics_calculated",
                            metric_count=len(metrics),
                            avg_score=sum(m.score() for m in metrics) / len(metrics))
-        
+
         return metrics
 ```
 
 ### With Custom AI Scripts
+
 ```python
 from ai_monitoring_integration import track_ai_action, get_logger
 
 logger = get_logger("DataProcessor")
 
 async def process_large_dataset(data):
-    async with track_ai_action("DataProcessor", "dataset_processing", 
+    async with track_ai_action("DataProcessor", "dataset_processing",
                               records=len(data)):
-        
+
         logger.thought(f"Processing {len(data)} records")
-        
+
         for chunk in chunked_data(data):
             result = await process_chunk(chunk)
-            logger.analysis("chunk_processed", 
-                           records=len(chunk), 
+            logger.analysis("chunk_processed",
+                           records=len(chunk),
                            processing_time=result.duration)
-        
-        logger.decision("Use caching strategy", 
+
+        logger.decision("Use caching strategy",
                        "Repeated patterns detected",
                        ["cache", "recompute", "partial_cache"])
-        
+
         return final_result
 ```
 
 ## 🎯 Use Cases
 
 ### 1. **Debugging AI Behavior**
+
 - See exactly what decisions your AI agents are making
 - Trace the reasoning behind actions
 - Identify bottlenecks and performance issues
 
 ### 2. **Performance Optimization**
+
 - Monitor agent execution times
 - Identify slow or failing operations
 - Track success rates over time
 
 ### 3. **Development Insights**
+
 - Understand how agents interact with files
 - See which agents are most active
 - Track the impact of code changes
 
 ### 4. **System Monitoring**
+
 - Real-time dashboard for production environments
 - Historical reporting for analysis
 - Alert on unusual patterns or failures
 
 ### 5. **Research & Analysis**
+
 - Study AI agent behavior patterns
 - Generate datasets for ML research
 - Analyze decision-making processes
