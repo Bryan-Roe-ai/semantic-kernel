@@ -1,0 +1,8 @@
+{
+  "monitoring_enabled": true,
+  "dashboard_refresh_interval": 3,
+  "max_events_in_memory": 10000,
+  "file_watch_enabled": true,
+  "performance_monitoring": true,
+  "setup_completed": true
+}

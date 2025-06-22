@@ -1,10 +1,15 @@
 {
   "safe_directories": [
+    "/home/broe/semantic-kernel",
     "/home/broe/semantic-kernel/python",
     "/home/broe/semantic-kernel/dotnet",
     "/home/broe/semantic-kernel/samples",
     "/home/broe/semantic-kernel/notebooks",
-    "/home/broe/semantic-kernel/scripts"
+    "/home/broe/semantic-kernel/scripts",
+    "/home/broe/semantic-kernel/02-ai-workspace",
+    "/home/broe/semantic-kernel/configs",
+    "/home/broe/semantic-kernel/data",
+    "/home/broe/semantic-kernel/tests"
   ],
   "restricted_files": [
     ".git",
@@ -15,5 +20,22 @@
   ],
   "workspace_path": "/home/broe/semantic-kernel",
   "backup_path": "/home/broe/semantic-kernel/.agi_backups",
-  "last_updated": "2025-06-21T19:18:41.727104"
+  "performance_settings": {
+    "max_concurrent_tasks": 5,
+    "batch_size": 10,
+    "cache_ttl_seconds": 300,
+    "file_watch_debounce_ms": 500,
+    "memory_limit_mb": 512,
+    "enable_parallel_processing": true,
+    "use_file_hashing": true,
+    "lazy_load_models": true
+  },
+  "optimization_flags": {
+    "skip_duplicate_operations": true,
+    "compress_backups": true,
+    "batch_file_operations": true,
+    "cache_file_analysis": true,
+    "use_incremental_updates": true
+  },
+  "last_updated": "2025-06-21T19:20:00.000000"
 }
