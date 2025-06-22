@@ -97,24 +97,28 @@ python3 src/extended_monitoring_dashboard.py --plot
 ## 📋 Operation Modes
 
 ### Conservative Mode
+
 - **Ultra-stable operation** with minimal resource usage
 - **Longer monitoring intervals** to reduce system load
 - **Conservative thresholds** for maximum reliability
 - **Ideal for**: Production systems requiring maximum uptime
 
 ### Balanced Mode (Recommended)
+
 - **Balance between performance and stability**
 - **Adaptive monitoring** based on system health
 - **Moderate resource usage** with predictive optimization
 - **Ideal for**: General-purpose long-term operation
 
 ### Aggressive Mode
+
 - **Maximum performance** with active monitoring
 - **Shorter intervals** for rapid issue detection
 - **Higher resource usage** for better responsiveness
 - **Ideal for**: Development and testing environments
 
 ### Research Mode
+
 - **Long-term data collection** and analysis (1+ year)
 - **Comprehensive logging** of all system metrics
 - **Machine learning model training** for optimization
@@ -125,30 +129,35 @@ python3 src/extended_monitoring_dashboard.py --plot
 ### Core Components
 
 #### ExtendedAutoMode
+
 - Main orchestrator for ultra-long-term operation
 - Adaptive configuration management
 - Multi-threaded monitoring loops
 - Graceful shutdown with state preservation
 
 #### MetricsDatabase
+
 - SQLite-based storage for long-term metrics
 - Efficient data compression and archival
 - Query optimization for trend analysis
 - Automatic database maintenance
 
 #### PredictiveAnalytics
+
 - Machine learning-based trend analysis
 - Resource exhaustion prediction
 - Anomaly detection using statistical methods
 - Performance modeling and capacity planning
 
 #### ExtendedHealthMonitor
+
 - Comprehensive health assessment
 - Multi-factor health scoring
 - Trend-aware threshold adjustment
 - Deep system analysis with confidence intervals
 
 #### ExtendedMaintenanceManager
+
 - Scheduled maintenance routines
 - Automated log rotation and cleanup
 - Security scanning and dependency monitoring
@@ -181,34 +190,41 @@ python3 src/extended_monitoring_dashboard.py --plot
 ### Database Schema
 
 #### system_metrics
+
 - timestamp, cpu_percent, memory_percent, disk_percent
 - network_io_sent, network_io_recv, health_score, process_count
 
 #### process_metrics
+
 - timestamp, process_name, cpu_percent, memory_mb
 - status, restart_count
 
 #### events
+
 - timestamp, event_type, severity, message, metadata
 
 #### predictions
+
 - timestamp, metric_name, predicted_value, confidence, horizon_hours
 
 ### Analytics Features
 
 #### Trend Analysis
+
 - Linear regression on historical data
 - Confidence intervals for predictions
 - Seasonal pattern detection
 - Drift analysis for gradual changes
 
 #### Anomaly Detection
+
 - Statistical outlier detection (Z-score based)
 - Threshold-based alerting
 - Pattern recognition for unusual behavior
 - Confidence scoring for anomalies
 
 #### Predictive Analytics
+
 - Resource exhaustion forecasting
 - Performance degradation prediction
 - Maintenance scheduling optimization
@@ -219,6 +235,7 @@ python3 src/extended_monitoring_dashboard.py --plot
 ### Automated Maintenance Schedule
 
 #### Daily (02:00)
+
 - Log rotation and compression
 - Temporary file cleanup
 - Memory optimization (garbage collection)
@@ -226,6 +243,7 @@ python3 src/extended_monitoring_dashboard.py --plot
 - Database maintenance operations
 
 #### Weekly (Sunday 03:00)
+
 - System optimization based on learned patterns
 - Dependency update checking
 - Performance analysis and reporting
@@ -233,6 +251,7 @@ python3 src/extended_monitoring_dashboard.py --plot
 - Configuration optimization
 
 #### Monthly
+
 - Deep system analysis and health reporting
 - Capacity planning updates
 - Long-term trend analysis
@@ -242,18 +261,21 @@ python3 src/extended_monitoring_dashboard.py --plot
 ### Maintenance Operations
 
 #### Log Management
+
 - Automatic rotation based on size and age
 - Compression of archived logs
 - Intelligent retention policies
 - Performance impact monitoring
 
 #### Resource Cleanup
+
 - Temporary file removal
 - Cache optimization
 - Memory leak detection and mitigation
 - Disk space recovery
 
 #### Security Monitoring
+
 - Process anomaly detection
 - Network connection monitoring
 - File system integrity checks
@@ -262,72 +284,80 @@ python3 src/extended_monitoring_dashboard.py --plot
 ## ⚙️ Configuration Reference
 
 ### Core Settings
+
 ```json
 {
-  "check_interval": 45,                    // Base monitoring interval (seconds)
-  "health_check_interval": 60,             // Health check frequency (seconds)
-  "metrics_collection_interval": 30,       // Metrics collection interval (seconds)
-  "deep_analysis_interval": 3600           // Deep analysis frequency (seconds)
+  "check_interval": 45, // Base monitoring interval (seconds)
+  "health_check_interval": 60, // Health check frequency (seconds)
+  "metrics_collection_interval": 30, // Metrics collection interval (seconds)
+  "deep_analysis_interval": 3600 // Deep analysis frequency (seconds)
 }
 ```
 
 ### Resource Thresholds
+
 ```json
 {
-  "max_memory_percent": 75.0,              // Memory usage threshold for action
-  "max_cpu_percent": 80.0,                 // CPU usage warning threshold
-  "max_disk_percent": 85.0,                // Disk usage critical threshold
-  "memory_warning_threshold": 65.0,        // Memory warning level
-  "cpu_warning_threshold": 70.0            // CPU warning level
+  "max_memory_percent": 75.0, // Memory usage threshold for action
+  "max_cpu_percent": 80.0, // CPU usage warning threshold
+  "max_disk_percent": 85.0, // Disk usage critical threshold
+  "memory_warning_threshold": 65.0, // Memory warning level
+  "cpu_warning_threshold": 70.0 // CPU warning level
 }
 ```
 
 ### Analytics Configuration
+
 ```json
 {
-  "enable_predictive_analytics": true,     // Enable ML-based predictions
-  "enable_trend_analysis": true,           // Enable historical trend analysis
-  "enable_anomaly_detection": true,        // Enable statistical anomaly detection
-  "anomaly_threshold": 2.0,                // Standard deviations for anomalies
-  "drift_sensitivity": 0.1                 // Sensitivity for drift detection
+  "enable_predictive_analytics": true, // Enable ML-based predictions
+  "enable_trend_analysis": true, // Enable historical trend analysis
+  "enable_anomaly_detection": true, // Enable statistical anomaly detection
+  "anomaly_threshold": 2.0, // Standard deviations for anomalies
+  "drift_sensitivity": 0.1 // Sensitivity for drift detection
 }
 ```
 
 ### Maintenance Settings
+
 ```json
 {
-  "auto_cleanup_interval": 86400,          // Daily cleanup interval (seconds)
-  "metrics_retention_days": 365,           // Days to retain metrics data
-  "enable_security_scanning": true,        // Enable security monitoring
-  "enable_dependency_monitoring": true     // Monitor dependency updates
+  "auto_cleanup_interval": 86400, // Daily cleanup interval (seconds)
+  "metrics_retention_days": 365, // Days to retain metrics data
+  "enable_security_scanning": true, // Enable security monitoring
+  "enable_dependency_monitoring": true // Monitor dependency updates
 }
 ```
 
 ### Adaptive Configuration
+
 ```json
 {
-  "enable_adaptive_intervals": true,       // Enable dynamic interval adjustment
-  "adaptive_factor": 1.2,                  // Adjustment factor for intervals
-  "min_check_interval": 15,                // Minimum monitoring interval
-  "max_check_interval": 300                // Maximum monitoring interval
+  "enable_adaptive_intervals": true, // Enable dynamic interval adjustment
+  "adaptive_factor": 1.2, // Adjustment factor for intervals
+  "min_check_interval": 15, // Minimum monitoring interval
+  "max_check_interval": 300 // Maximum monitoring interval
 }
 ```
 
 ## 📈 Performance Optimization
 
 ### Adaptive Monitoring
+
 - **Health-based Intervals**: Adjust monitoring frequency based on system health
 - **Load-aware Scheduling**: Schedule tasks during low-CPU periods
 - **Resource-conscious Operations**: Scale monitoring based on available resources
 - **Predictive Optimization**: Use historical data to optimize parameters
 
 ### Memory Management
+
 - **Proactive Garbage Collection**: Scheduled memory cleanup
 - **Leak Detection**: Statistical analysis of memory growth patterns
 - **Cache Optimization**: Intelligent cache size management
 - **Process Restart**: Automatic restart of memory-hungry processes
 
 ### Database Optimization
+
 - **Query Optimization**: Efficient indexing and query patterns
 - **Data Compression**: Compressed storage for historical data
 - **Partitioning**: Time-based data partitioning for performance
@@ -338,18 +368,21 @@ python3 src/extended_monitoring_dashboard.py --plot
 ### Common Issues
 
 #### High Resource Usage
+
 - Check adaptive interval settings
 - Review recent trend analysis
 - Consider switching to conservative mode
 - Verify maintenance schedule execution
 
 #### Database Performance
+
 - Check database size and growth rate
 - Review retention policies
 - Consider data archival
 - Monitor query performance
 
 #### Prediction Accuracy
+
 - Verify sufficient historical data (>100 data points)
 - Check for system changes affecting patterns
 - Review confidence intervals
@@ -421,14 +454,14 @@ import requests
 def export_metrics_to_prometheus():
     dashboard = ExtendedMonitoringDashboard(Path.cwd())
     overview = dashboard.get_system_overview()
-    
+
     # Convert to Prometheus format
     metrics = [
         f"extended_cpu_percent {overview['cpu_percent']}",
         f"extended_memory_percent {overview['memory_percent']}",
         f"extended_disk_percent {overview['disk_percent']}"
     ]
-    
+
     # Send to Prometheus pushgateway
     requests.post('http://pushgateway:9091/metrics/job/extended_automode',
                  data='\n'.join(metrics))
@@ -452,30 +485,35 @@ automode.maintenance_manager.maintenance_scheduler.every().day.at("04:00").do(
 ## 🎯 Best Practices
 
 ### 1. **Operation Mode Selection**
+
 - Use **Conservative** for production systems requiring maximum uptime
 - Use **Balanced** for general-purpose long-term operation (recommended)
 - Use **Aggressive** only in development environments
 - Use **Research** for systems where data collection is more important than performance
 
 ### 2. **Resource Management**
+
 - Set conservative memory limits (75-80% max)
 - Monitor disk space growth and adjust retention policies
 - Use predictive analytics to plan capacity upgrades
 - Schedule intensive operations during low-usage periods
 
 ### 3. **Monitoring Strategy**
+
 - Review analytics reports weekly
 - Set up external alerting for critical predictions
 - Monitor trend confidence intervals
 - Use health dashboard for daily status checks
 
 ### 4. **Data Management**
+
 - Configure appropriate retention periods based on storage capacity
 - Regular backup of metrics database
 - Monitor database growth and performance
 - Use data compression for long-term storage
 
 ### 5. **Maintenance Planning**
+
 - Allow maintenance windows for system updates
 - Test configuration changes in staging environments
 - Document any custom modifications
@@ -495,17 +533,20 @@ The Extended Operation AutoMode is compatible with existing Enhanced AutoMode co
 ### Migration Steps
 
 1. **Install new dependencies**:
+
    ```bash
    pip3 install numpy scikit-learn schedule matplotlib
    ```
 
 2. **Update configuration**:
+
    ```bash
    cp auto_mode_config.json auto_mode_extended_config.json
    # Edit configuration as needed
    ```
 
 3. **Start extended mode**:
+
    ```bash
    ./launch_extended_automode.sh start balanced
    ```
@@ -521,6 +562,7 @@ The Extended Operation AutoMode is compatible with existing Enhanced AutoMode co
 ### ExtendedAutoMode Class
 
 #### Methods
+
 - `__init__(config, base_dir)` - Initialize extended automode
 - `run()` - Main execution loop
 - `graceful_shutdown()` - Perform graceful shutdown
@@ -530,6 +572,7 @@ The Extended Operation AutoMode is compatible with existing Enhanced AutoMode co
 ### PredictiveAnalytics Class
 
 #### Methods
+
 - `analyze_trends(metric, hours)` - Analyze metric trends
 - `predict_resource_exhaustion()` - Predict resource issues
 - `detect_anomalies(metric, threshold)` - Detect statistical anomalies
@@ -537,6 +580,7 @@ The Extended Operation AutoMode is compatible with existing Enhanced AutoMode co
 ### MetricsDatabase Class
 
 #### Methods
+
 - `record_system_metrics(metrics)` - Store system metrics
 - `get_trend_data(metric, hours)` - Retrieve trend data
 - `init_database()` - Initialize database schema
@@ -562,6 +606,7 @@ For issues and questions:
 ## 🔮 Future Enhancements
 
 ### Planned Features
+
 - **Machine Learning Models**: More sophisticated prediction algorithms
 - **Distributed Operation**: Multi-node coordination and load balancing
 - **Cloud Integration**: Native support for cloud monitoring services
@@ -570,6 +615,7 @@ For issues and questions:
 - **Automated Recovery**: More sophisticated self-healing capabilities
 
 ### Research Areas
+
 - **Quantum Computing Simulation**: Support for quantum workloads
 - **Edge Computing**: Optimization for edge environments
 - **Federated Learning**: Distributed model training across instances

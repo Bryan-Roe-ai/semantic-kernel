@@ -54,10 +54,10 @@ EOF
 
 discover_tests() {
     log_info "🔍 Discovering test projects in Semantic Kernel workspace..."
-    
+
     # Count .NET test projects
     dotnet_count=$(find 01-core-implementations/dotnet -name "*Tests.csproj" -type f 2>/dev/null | wc -l)
-    
+
     # Check Python tests
     python_dirs=()
     for dir in "python/tests/unit" "python/tests/integration" "python/tests/end-to-end"; do
@@ -65,11 +65,11 @@ discover_tests() {
             python_dirs+=("$dir")
         fi
     done
-    
+
     log_success "📊 Test Discovery Results:"
     echo "  🏗️  .NET Projects: $dotnet_count"
     echo "  🐍 Python Test Dirs: ${#python_dirs[@]}"
-    
+
     if [ $dotnet_count -gt 0 ]; then
         log_info "📦 Sample .NET Test Projects:"
         find 01-core-implementations/dotnet -name "*Tests.csproj" -type f | head -5 | while read project; do
@@ -77,7 +77,7 @@ discover_tests() {
             echo "  • $name"
         done
     fi
-    
+
     if [ ${#python_dirs[@]} -gt 0 ]; then
         log_info "🐍 Python Test Directories:"
         for dir in "${python_dirs[@]}"; do
@@ -89,39 +89,39 @@ discover_tests() {
 run_dotnet_tests() {
     local verbose=$1
     local coverage=$2
-    
+
     log_info "🏗️ Running .NET tests..."
-    
+
     # Find all .NET test projects
     local test_projects
     test_projects=$(find 01-core-implementations/dotnet -name "*Tests.csproj" -type f)
     local project_count
     project_count=$(echo "$test_projects" | wc -l)
-    
+
     if [ -z "$test_projects" ] || [ $project_count -eq 0 ]; then
         log_warning "⚠️ No .NET test projects found"
         return 0
     fi
-    
+
     log_info "📊 Found $project_count .NET test projects"
-    
+
     local passed=0
     local failed=0
     local start_time=$(date +%s)
-    
+
     echo "$test_projects" | while read -r project; do
         if [ -z "$project" ]; then continue; fi
-        
+
         local project_name=$(basename "$project" .csproj)
         log_info "▶️ Running: $project_name"
-        
+
         # Build test arguments
         local args=("test" "$project" "--configuration" "Release" "--logger" "console;verbosity=normal")
-        
+
         if [ "$coverage" = true ]; then
             args+=("--collect:XPlat Code Coverage")
         fi
-        
+
         # Run the test
         local project_start=$(date +%s)
         if dotnet "${args[@]}" > /tmp/dotnet_test_$$.log 2>&1; then
@@ -138,13 +138,13 @@ run_dotnet_tests() {
             fi
             ((failed++))
         fi
-        
+
         rm -f /tmp/dotnet_test_$$.log
     done
-    
+
     local end_time=$(date +%s)
     local total_duration=$((end_time - start_time))
-    
+
     log_info "📊 .NET Summary: $passed passed, $failed failed (${total_duration}s total)"
 }
 
@@ -152,26 +152,26 @@ run_python_tests() {
     local test_type=$1
     local verbose=$2
     local coverage=$3
-    
+
     if [ ! -d "python" ]; then
         log_warning "⚠️ Python directory not found"
         return 0
     fi
-    
+
     log_info "🐍 Running Python tests ($test_type)..."
-    
+
     cd python
-    
+
     # Check if poetry is available
     if ! command -v poetry &> /dev/null; then
         log_error "❌ Poetry not found. Please install poetry first."
         cd ..
         return 1
     fi
-    
+
     # Build test arguments
     local args=("run" "pytest" "-v")
-    
+
     case "$test_type" in
         "unit")
             args+=("tests/unit")
@@ -186,13 +186,13 @@ run_python_tests() {
             args+=("tests")
             ;;
     esac
-    
+
     if [ "$coverage" = true ]; then
         args+=("--cov=semantic_kernel" "--cov-report=xml" "--cov-report=html")
     fi
-    
+
     local start_time=$(date +%s)
-    
+
     if poetry "${args[@]}"; then
         local end_time=$(date +%s)
         local duration=$((end_time - start_time))
@@ -202,7 +202,7 @@ run_python_tests() {
         local duration=$((end_time - start_time))
         log_error "❌ Python tests ($test_type) FAILED (${duration}s)"
     fi
-    
+
     cd ..
 }
 

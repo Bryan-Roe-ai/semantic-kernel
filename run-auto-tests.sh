@@ -78,19 +78,19 @@ EOF
 # Function to check prerequisites
 check_prerequisites() {
     local missing_tools=()
-    
+
     if ! command -v dotnet &> /dev/null; then
         missing_tools+=("dotnet")
     fi
-    
+
     if ! command -v python3 &> /dev/null; then
         missing_tools+=("python3")
     fi
-    
+
     if ! command -v poetry &> /dev/null && [ -d "python" ]; then
         missing_tools+=("poetry")
     fi
-    
+
     if [ ${#missing_tools[@]} -gt 0 ]; then
         log_error "❌ Missing required tools: ${missing_tools[*]}"
         exit 1
@@ -101,7 +101,7 @@ check_prerequisites() {
 find_workspace_root() {
     local current_dir
     current_dir=$(pwd)
-    
+
     while [ "$current_dir" != "/" ]; do
         if [ -f "$current_dir/LICENSE" ] && [ -d "$current_dir/dotnet" ] && [ -d "$current_dir/python" ]; then
             echo "$current_dir"
@@ -109,7 +109,7 @@ find_workspace_root() {
         fi
         current_dir=$(dirname "$current_dir")
     done
-    
+
     echo "$(pwd)"
 }
 
@@ -117,66 +117,66 @@ find_workspace_root() {
 run_dotnet_tests() {
     local project_pattern="${1:-*}"
     local workspace_root="$2"
-    
+
     log_info "🔍 Discovering .NET test projects..."
-    
+
     local dotnet_root="$workspace_root/01-core-implementations/dotnet"
     if [ ! -d "$dotnet_root" ]; then
         log_warning "⚠️ .NET directory not found, skipping .NET tests"
         return 0
     fi
-    
+
     local test_projects
     test_projects=$(find "$dotnet_root" -name "*Tests.csproj" -type f)
-    
+
     if [ "$project_pattern" != "*" ]; then
         test_projects=$(echo "$test_projects" | grep -i "$project_pattern" || true)
     fi
-    
+
     local project_count
     project_count=$(echo "$test_projects" | wc -l)
     if [ -z "$test_projects" ]; then
         project_count=0
     fi
-    
+
     log_success "📊 Found $project_count .NET test projects"
-    
+
     local total_passed=0
     local total_failed=0
     local start_time
     start_time=$(date +%s)
-    
+
     while IFS= read -r project; do
         if [ -z "$project" ]; then
             continue
         fi
-        
+
         local project_name
         project_name=$(basename "$project" .csproj)
         log_info "▶️ Running: $project_name"
-        
+
         local args=(
-            "test" 
-            "$project" 
-            "--configuration" "Release" 
+            "test"
+            "$project"
+            "--configuration" "Release"
             "--logger" "console;verbosity=normal"
         )
-        
+
         if [ "$COVERAGE" = true ]; then
             args+=("--collect:XPlat Code Coverage")
         fi
-        
+
         if [ -n "$FILTER" ]; then
             args+=("--filter" "$FILTER")
         fi
-        
+
         if [ "$PARALLEL" = true ]; then
             args+=("--parallel")
         fi
-        
+
         local project_start
         project_start=$(date +%s)
-        
+
         if dotnet "${args[@]}" > /tmp/test_output.log 2>&1; then
             local project_end
             project_end=$(date +%s)
@@ -194,15 +194,15 @@ run_dotnet_tests() {
             fi
             ((total_failed++))
         fi
-        
+
         rm -f /tmp/test_output.log
-        
+
     done <<< "$test_projects"
-    
+
     local end_time
     end_time=$(date +%s)
     local total_duration=$((end_time - start_time))
-    
+
     log_info "📊 .NET Tests Summary: $total_passed passed, $total_failed failed ($(printf '%02d:%02d' $((total_duration/60)) $((total_duration%60))))"
 }
 
@@ -210,20 +210,20 @@ run_dotnet_tests() {
 run_python_tests() {
     local test_type="${1:-all}"
     local workspace_root="$2"
-    
+
     local python_path="$workspace_root/python"
-    
+
     if [ ! -d "$python_path" ]; then
         log_warning "⚠️ Python directory not found, skipping Python tests"
         return 0
     fi
-    
+
     log_info "🐍 Running Python tests..."
-    
+
     cd "$python_path"
-    
+
     local args=("run" "pytest" "-v")
-    
+
     case "$test_type" in
         "unit")
             args+=("tests/unit")
@@ -238,22 +238,22 @@ run_python_tests() {
             args+=("tests")
             ;;
     esac
-    
+
     if [ "$COVERAGE" = true ]; then
         args+=("--cov=semantic_kernel" "--cov-report=xml")
     fi
-    
+
     if [ -n "$FILTER" ]; then
         args+=("-k" "$FILTER")
     fi
-    
+
     if [ "$PARALLEL" = true ]; then
         args+=("-n" "auto")
     fi
-    
+
     local start_time
     start_time=$(date +%s)
-    
+
     if poetry "${args[@]}"; then
         local end_time
         end_time=$(date +%s)
@@ -265,16 +265,16 @@ run_python_tests() {
         local duration=$((end_time - start_time))
         log_error "❌ Python tests FAILED ($(printf '%02d:%02d' $((duration/60)) $((duration%60))))"
     fi
-    
+
     cd - > /dev/null
 }
 
 # Function to discover test projects
 discover_projects() {
     local workspace_root="$1"
-    
+
     log_info "🔍 Discovering test projects..."
-    
+
     # .NET Projects
     local dotnet_root="$workspace_root/01-core-implementations/dotnet"
     if [ -d "$dotnet_root" ]; then
@@ -285,7 +285,7 @@ discover_projects() {
         if [ -z "$dotnet_projects" ]; then
             dotnet_count=0
         fi
-        
+
         log_success "📦 .NET Test Projects ($dotnet_count):"
         while IFS= read -r project; do
             if [ -z "$project" ]; then
@@ -299,7 +299,7 @@ discover_projects() {
             echo "    $relative_path"
         done <<< "$dotnet_projects"
     fi
-    
+
     # Python Projects
     local python_path="$workspace_root/python"
     if [ -d "$python_path" ]; then
@@ -309,7 +309,7 @@ discover_projects() {
                 python_test_dirs+=("$dir")
             fi
         done
-        
+
         log_success "🐍 Python Test Projects (${#python_test_dirs[@]}):"
         for dir in "${python_test_dirs[@]}"; do
             local test_name
@@ -318,14 +318,14 @@ discover_projects() {
             echo "    python/$dir"
         done
     fi
-    
+
     # TypeScript Projects
     local ts_root="$workspace_root/typescript"
     if [ -d "$ts_root" ]; then
         local ts_projects
         ts_projects=$(find "$ts_root" -name "package.json" -type f 2>/dev/null || true)
         local ts_test_projects=()
-        
+
         while IFS= read -r package_file; do
             if [ -z "$package_file" ]; then
                 continue
@@ -336,7 +336,7 @@ discover_projects() {
                 ts_test_projects+=("$package_file")
             fi
         done <<< "$ts_projects"
-        
+
         log_success "📜 TypeScript Test Projects (${#ts_test_projects[@]}):"
         for project in "${ts_test_projects[@]}"; do
             local project_name
@@ -353,16 +353,16 @@ discover_projects() {
 run_tests() {
     local pattern="$1"
     local workspace_root="$2"
-    
+
     local start_time
     start_time=$(date +%s)
-    
+
     if [ -n "$pattern" ]; then
         log_info "🎯 Running tests matching pattern: $pattern"
-        
+
         # Run matching .NET tests
         run_dotnet_tests "$pattern" "$workspace_root"
-        
+
         # Run Python tests if pattern matches
         if [[ "$pattern" =~ python|unit|integration|end-to-end ]]; then
             local test_type="all"
@@ -377,14 +377,14 @@ run_tests() {
         fi
     else
         log_info "🚀 Running all tests..."
-        
+
         # Run all .NET tests
         run_dotnet_tests "*" "$workspace_root"
-        
+
         # Run all Python tests
         run_python_tests "all" "$workspace_root"
     fi
-    
+
     local end_time
     end_time=$(date +%s)
     local duration=$((end_time - start_time))
@@ -395,13 +395,13 @@ run_tests() {
 run_watch_mode() {
     local pattern="$1"
     local workspace_root="$2"
-    
+
     log_info "👀 Starting watch mode..."
     if [ -n "$pattern" ]; then
         log_warning "📍 Pattern: $pattern"
     fi
     log_debug "Press Ctrl+C to stop watching"
-    
+
     # Simple watch implementation using inotify if available
     if command -v inotifywait &> /dev/null; then
         while true; do
@@ -496,20 +496,20 @@ fi
 # Main execution
 main() {
     log_info "🧪 Semantic Kernel Auto Test Runner"
-    
+
     local workspace_root
     workspace_root=$(find_workspace_root)
     log_debug "Working Directory: $workspace_root"
-    
+
     # Check if we're in the right directory
     if [ ! -f "$workspace_root/LICENSE" ]; then
         log_error "❌ Not in Semantic Kernel workspace root. Please run from the correct directory."
         exit 1
     fi
-    
+
     # Check prerequisites
     check_prerequisites
-    
+
     # Execute command
     case "$COMMAND" in
         "discover")
@@ -529,7 +529,7 @@ main() {
             run_watch_mode "$PATTERN" "$workspace_root"
             ;;
     esac
-    
+
     log_success "✨ Auto test execution completed!"
 }
 

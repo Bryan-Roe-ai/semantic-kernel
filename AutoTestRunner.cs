@@ -36,7 +36,7 @@ public class AutoTestRunner
     public async Task<IEnumerable<TestProject>> DiscoverTestProjectsAsync()
     {
         this._logger.LogInformation("Discovering test projects in workspace: {WorkspaceRoot}", this._workspaceRoot);
-        
+
         var testProjects = new List<TestProject>();
 
         // Discover .NET test projects
@@ -60,7 +60,7 @@ public class AutoTestRunner
     public async Task<TestRunResults> RunAllTestsAsync(TestRunOptions? options = null)
     {
         options ??= new TestRunOptions();
-        
+
         if (!this._testProjects.Any())
         {
             await this.DiscoverTestProjectsAsync();
@@ -102,19 +102,19 @@ public class AutoTestRunner
     public async Task<TestRunResults> RunTestsAsync(string pattern, TestRunOptions? options = null)
     {
         options ??= new TestRunOptions();
-        
+
         if (!this._testProjects.Any())
         {
             await this.DiscoverTestProjectsAsync();
         }
 
-        var matchingProjects = this._testProjects.Where(p => 
+        var matchingProjects = this._testProjects.Where(p =>
             p.Name.Contains(pattern, StringComparison.OrdinalIgnoreCase) ||
             p.Path.Contains(pattern, StringComparison.OrdinalIgnoreCase) ||
             p.TestType.ToString().Contains(pattern, StringComparison.OrdinalIgnoreCase)
         ).ToList();
 
-        this._logger.LogInformation("Running {Count} test projects matching pattern '{Pattern}'", 
+        this._logger.LogInformation("Running {Count} test projects matching pattern '{Pattern}'",
             matchingProjects.Count, pattern);
 
         var results = new TestRunResults();
@@ -133,7 +133,7 @@ public class AutoTestRunner
     public async Task RunWatchModeAsync(string? pattern = null, CancellationToken cancellationToken = default)
     {
         this._logger.LogInformation("Starting test watch mode...");
-        
+
         var watcher = new FileSystemWatcher(this._workspaceRoot)
         {
             IncludeSubdirectories = true,
@@ -146,11 +146,11 @@ public class AutoTestRunner
             {
                 this._logger.LogInformation("File changes detected, running tests...");
                 await this.DiscoverTestProjectsAsync();
-                
-                var results = string.IsNullOrEmpty(pattern) 
+
+                var results = string.IsNullOrEmpty(pattern)
                     ? await this.RunAllTestsAsync(new TestRunOptions { Verbose = false })
                     : await this.RunTestsAsync(pattern, new TestRunOptions { Verbose = false });
-                
+
                 this._logger.LogInformation("Watch run completed. Passed: {Passed}, Failed: {Failed}",
                     results.PassedCount, results.FailedCount);
             }
@@ -167,7 +167,7 @@ public class AutoTestRunner
         watcher.EnableRaisingEvents = true;
 
         this._logger.LogInformation("Test watch mode started. Press Ctrl+C to stop.");
-        
+
         try
         {
             await Task.Delay(Timeout.Infinite, cancellationToken);
@@ -193,7 +193,7 @@ public class AutoTestRunner
         {
             var projectDir = Path.GetDirectoryName(projectFile)!;
             var projectName = Path.GetFileNameWithoutExtension(projectFile);
-            
+
             var testType = projectName.Contains("Integration") ? TestType.Integration :
                           projectName.Contains("Unit") ? TestType.Unit :
                           TestType.Mixed;
@@ -309,7 +309,7 @@ public class AutoTestRunner
             };
 
             using var process = new Process { StartInfo = processInfo };
-            
+
             var outputBuilder = new List<string>();
             var errorBuilder = new List<string>();
 
@@ -337,7 +337,7 @@ public class AutoTestRunner
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
 
-            var timeout = options.TimeoutMinutes > 0 
+            var timeout = options.TimeoutMinutes > 0
                 ? TimeSpan.FromMinutes(options.TimeoutMinutes)
                 : TimeSpan.FromMinutes(10); // Default timeout
 
@@ -382,7 +382,7 @@ public class AutoTestRunner
     private void ParseTestResults(TestProjectResult result)
     {
         var output = result.Output ?? string.Empty;
-        
+
         // Parse .NET test results
         if (result.Project.Framework == TestFramework.DotNet)
         {
@@ -465,19 +465,19 @@ public class AutoTestRunner
     private static string BuildDotNetArgs(TestProject project, TestRunOptions options)
     {
         var args = new List<string> { "test" };
-        
+
         if (!string.IsNullOrEmpty(project.ProjectFile))
             args.Add($"\"{project.ProjectFile}\"");
-            
+
         args.Add("--configuration Release");
         args.Add("--logger \"console;verbosity=normal\"");
-        
+
         if (options.CollectCoverage)
             args.Add("--collect:\"XPlat Code Coverage\"");
-            
+
         if (!string.IsNullOrEmpty(options.Filter))
             args.Add($"--filter \"{options.Filter}\"");
-            
+
         if (options.Parallel && project.SupportsParallel)
             args.Add("--parallel");
 
@@ -487,16 +487,16 @@ public class AutoTestRunner
     private static string BuildPythonArgs(TestProject project, TestRunOptions options)
     {
         var args = new List<string> { "run", "pytest" };
-        
+
         args.Add($"\"{project.Path}\"");
         args.Add("-v");
-        
+
         if (options.CollectCoverage)
             args.Add("--cov=semantic_kernel --cov-report=xml");
-            
+
         if (!string.IsNullOrEmpty(options.Filter))
             args.Add($"-k \"{options.Filter}\"");
-            
+
         if (options.Parallel && project.SupportsParallel)
             args.Add("-n auto");
 

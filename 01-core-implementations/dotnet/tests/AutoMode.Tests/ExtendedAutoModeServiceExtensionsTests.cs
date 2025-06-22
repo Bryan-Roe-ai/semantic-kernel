@@ -375,7 +375,7 @@ public class ExtendedAutoModeAgentFactoryTests
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddSingleton<IConfiguration>(new ConfigurationBuilder().Build());
-        
+
         var serviceProvider = services.BuildServiceProvider();
         var factory = new ExtendedAutoModeAgentFactory(serviceProvider);
         var kernel = Kernel.CreateBuilder().Build();
@@ -394,7 +394,7 @@ public class ExtendedAutoModeAgentFactoryTests
         var services = new ServiceCollection();
         services.AddLogging();
         services.AddSingleton<IConfiguration>(new ConfigurationBuilder().Build());
-        
+
         var serviceProvider = services.BuildServiceProvider();
         var factory = new ExtendedAutoModeAgentFactory(serviceProvider);
         var kernel = Kernel.CreateBuilder().Build();

@@ -108,7 +108,7 @@ public class ExamplePlugin
     {
         // Simulate some processing
         Thread.Sleep(Random.Shared.Next(50, 200));
-        
+
         return $"Processed: {input} (at {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC)";
     }
 

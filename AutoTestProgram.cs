@@ -47,7 +47,7 @@ public class Program
 
             var results = await runner.RunAllTestsAsync(options);
             DisplayResults(results);
-            
+
             Environment.ExitCode = results.AllPassed ? 0 : 1;
         }, new VerboseBinder(), new ParallelBinder(), new CoverageBinder(), new FilterBinder(), new TimeoutBinder());
 
@@ -78,7 +78,7 @@ public class Program
 
             var results = await runner.RunTestsAsync(pattern, options);
             DisplayResults(results);
-            
+
             Environment.ExitCode = results.AllPassed ? 0 : 1;
         }, new PatternBinder(), new VerboseBinder(), new ParallelBinder(), new CoverageBinder(), new FilterBinder(), new TimeoutBinder());
 
@@ -94,7 +94,7 @@ public class Program
             var runner = host.Services.GetRequiredService<AutoTestRunner>();
 
             var projects = await runner.DiscoverTestProjectsAsync();
-            
+
             Console.WriteLine($"Discovered {projects.Count()} test projects:");
             foreach (var project in projects)
             {

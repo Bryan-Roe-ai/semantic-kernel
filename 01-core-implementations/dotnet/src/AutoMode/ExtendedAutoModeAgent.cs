@@ -33,7 +33,7 @@ public class ExtendedAutoModeAgent : IDisposable
     private readonly Timer _maintenanceTimer;
     private readonly SemaphoreSlim _operationSemaphore;
     private readonly ExtendedAutoModeOptions _options;
-    
+
     private bool _isRunning;
     private bool _disposed;
     private DateTime _lastHealthCheck;
@@ -58,28 +58,28 @@ public class ExtendedAutoModeAgent : IDisposable
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         _options = options ?? new ExtendedAutoModeOptions();
-        
+
         _cancellationTokenSource = new CancellationTokenSource();
         _state = new ConcurrentDictionary<string, object>();
         _operationSemaphore = new SemaphoreSlim(_options.MaxConcurrentOperations, _options.MaxConcurrentOperations);
-        
+
         _startTime = DateTime.UtcNow;
         _lastHealthCheck = DateTime.UtcNow;
-        
+
         // Initialize health check timer
         _healthCheckTimer = new Timer(
             PerformHealthCheck,
             null,
             TimeSpan.FromMinutes(1),
             TimeSpan.FromMinutes(_options.HealthCheckIntervalMinutes));
-            
+
         // Initialize maintenance timer
         _maintenanceTimer = new Timer(
             PerformMaintenance,
             null,
             TimeSpan.FromHours(1),
             TimeSpan.FromHours(_options.MaintenanceIntervalHours));
-            
+
         _logger.LogInformation("ExtendedAutoModeAgent initialized successfully");
     }
 
@@ -97,14 +97,14 @@ public class ExtendedAutoModeAgent : IDisposable
         }
 
         _logger.LogInformation("Starting ExtendedAutoModeAgent for long-term operation");
-        
+
         try
         {
             _isRunning = true;
-            
+
             // Initialize state
             await InitializeStateAsync(cancellationToken);
-            
+
             // Start main operation loop
             await RunMainLoopAsync(cancellationToken);
         }
@@ -136,23 +136,23 @@ public class ExtendedAutoModeAgent : IDisposable
         }
 
         _logger.LogInformation("Stopping ExtendedAutoModeAgent gracefully");
-        
+
         _cancellationTokenSource.Cancel();
-        
+
         // Wait for current operations to complete
         var timeout = TimeSpan.FromSeconds(30);
         var stopwatch = Stopwatch.StartNew();
-        
+
         while (_isRunning && stopwatch.Elapsed < timeout)
         {
             await Task.Delay(100);
         }
-        
+
         if (_isRunning)
         {
             _logger.LogWarning("ExtendedAutoModeAgent did not stop within timeout period");
         }
-        
+
         await SaveStateAsync();
         _logger.LogInformation("ExtendedAutoModeAgent stopped successfully");
     }
@@ -179,7 +179,7 @@ public class ExtendedAutoModeAgent : IDisposable
     private async Task InitializeStateAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Initializing ExtendedAutoModeAgent state");
-        
+
         try
         {
             // Load previous state if exists
@@ -188,7 +188,7 @@ public class ExtendedAutoModeAgent : IDisposable
             {
                 var stateJson = await File.ReadAllTextAsync(stateFile, cancellationToken);
                 var previousState = JsonSerializer.Deserialize<Dictionary<string, object>>(stateJson);
-                
+
                 if (previousState != null)
                 {
                     foreach (var kvp in previousState)
@@ -196,15 +196,15 @@ public class ExtendedAutoModeAgent : IDisposable
                         _state.TryAdd(kvp.Key, kvp.Value);
                     }
                 }
-                
+
                 _logger.LogInformation("Loaded {StateCount} state entries from previous session", _state.Count);
             }
-            
+
             // Initialize default state values
             _state.TryAdd("session_id", Guid.NewGuid().ToString());
             _state.TryAdd("initialized_at", DateTime.UtcNow);
             _state.TryAdd("kernel_plugins_count", _kernel.Plugins.Count);
-            
+
         }
         catch (Exception ex)
         {
@@ -216,13 +216,13 @@ public class ExtendedAutoModeAgent : IDisposable
     private async Task RunMainLoopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Starting main operation loop");
-        
+
         while (!cancellationToken.IsCancellationRequested && _isRunning)
         {
             try
             {
                 await _operationSemaphore.WaitAsync(cancellationToken);
-                
+
                 try
                 {
                     await ProcessOperationAsync(cancellationToken);
@@ -232,7 +232,7 @@ public class ExtendedAutoModeAgent : IDisposable
                 {
                     _operationSemaphore.Release();
                 }
-                
+
                 // Adaptive delay based on system load
                 var delay = CalculateAdaptiveDelay();
                 await Task.Delay(delay, cancellationToken);
@@ -245,7 +245,7 @@ public class ExtendedAutoModeAgent : IDisposable
             {
                 _logger.LogError(ex, "Error in main operation loop");
                 Interlocked.Increment(ref _errorCount);
-                
+
                 // Exponential backoff on errors
                 var errorDelay = Math.Min(TimeSpan.FromMinutes(1), TimeSpan.FromSeconds(Math.Pow(2, Math.Min(_errorCount, 10))));
                 await Task.Delay(errorDelay, cancellationToken);
@@ -257,10 +257,10 @@ public class ExtendedAutoModeAgent : IDisposable
     {
         // This is where the main semantic kernel operations would be performed
         // For now, we'll implement a basic operation that could be extended
-        
+
         var operationId = Guid.NewGuid().ToString();
         _logger.LogDebug("Processing operation {OperationId}", operationId);
-        
+
         try
         {
             // Example: Execute a kernel function
@@ -270,13 +270,13 @@ public class ExtendedAutoModeAgent : IDisposable
                 ["timestamp"] = DateTime.UtcNow,
                 ["state_count"] = _state.Count
             };
-            
+
             // Update state with operation info
             _state.AddOrUpdate($"last_operation_{operationId}", DateTime.UtcNow, (k, v) => DateTime.UtcNow);
-            
+
             // Simulate processing
             await Task.Delay(100, cancellationToken);
-            
+
             _logger.LogDebug("Completed operation {OperationId}", operationId);
         }
         catch (Exception ex)
@@ -292,7 +292,7 @@ public class ExtendedAutoModeAgent : IDisposable
         var baseDelay = _options.BaseOperationDelayMs;
         var currentMemory = GC.GetTotalMemory(false);
         var memoryPressure = currentMemory / (1024.0 * 1024.0 * 1024.0); // GB
-        
+
         // Increase delay if memory usage is high
         if (memoryPressure > 2.0)
         {
@@ -302,7 +302,7 @@ public class ExtendedAutoModeAgent : IDisposable
         {
             baseDelay = (int)(baseDelay * 1.5);
         }
-        
+
         return TimeSpan.FromMilliseconds(baseDelay);
     }
 
@@ -311,9 +311,9 @@ public class ExtendedAutoModeAgent : IDisposable
         try
         {
             _logger.LogDebug("Performing health check");
-            
+
             var status = GetStatus();
-            
+
             // Check memory usage
             if (status.MemoryUsageMB > _options.MaxMemoryUsageMB)
             {
@@ -322,16 +322,16 @@ public class ExtendedAutoModeAgent : IDisposable
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
             }
-            
+
             // Check error rate
             var errorRate = _operationCount > 0 ? (double)_errorCount / _operationCount : 0;
             if (errorRate > _options.MaxErrorRate)
             {
                 _logger.LogWarning("High error rate detected: {ErrorRate:P2}", errorRate);
             }
-            
+
             _lastHealthCheck = DateTime.UtcNow;
-            
+
             // Log health status
             _logger.LogInformation("Health check completed - Uptime: {Uptime}, Operations: {Operations}, Errors: {Errors}, Memory: {Memory}MB",
                 status.Uptime, status.OperationCount, status.ErrorCount, status.MemoryUsageMB);
@@ -347,18 +347,18 @@ public class ExtendedAutoModeAgent : IDisposable
         try
         {
             _logger.LogInformation("Performing system maintenance");
-            
+
             // Clean up old state entries
             await CleanupStateAsync();
-            
+
             // Save current state
             await SaveStateAsync();
-            
+
             // Force garbage collection
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
-            
+
             _logger.LogInformation("System maintenance completed");
         }
         catch (Exception ex)
@@ -371,7 +371,7 @@ public class ExtendedAutoModeAgent : IDisposable
     {
         var cutoffTime = DateTime.UtcNow.AddHours(-_options.StateRetentionHours);
         var keysToRemove = new List<string>();
-        
+
         foreach (var kvp in _state)
         {
             if (kvp.Key.StartsWith("last_operation_") && kvp.Value is DateTime operationTime)
@@ -382,17 +382,17 @@ public class ExtendedAutoModeAgent : IDisposable
                 }
             }
         }
-        
+
         foreach (var key in keysToRemove)
         {
             _state.TryRemove(key, out _);
         }
-        
+
         if (keysToRemove.Count > 0)
         {
             _logger.LogDebug("Cleaned up {Count} old state entries", keysToRemove.Count);
         }
-        
+
         await Task.CompletedTask;
     }
 
@@ -404,10 +404,10 @@ public class ExtendedAutoModeAgent : IDisposable
             {
                 Directory.CreateDirectory(_options.StateDirectory);
             }
-            
+
             var stateFile = Path.Combine(_options.StateDirectory, "extended_auto_mode_state.json");
             var stateJson = JsonSerializer.Serialize(_state.ToDictionary(kvp => kvp.Key, kvp => kvp.Value), new JsonSerializerOptions { WriteIndented = true });
-            
+
             await File.WriteAllTextAsync(stateFile, stateJson);
             _logger.LogDebug("State saved to {StateFile}", stateFile);
         }
@@ -428,13 +428,13 @@ public class ExtendedAutoModeAgent : IDisposable
         }
 
         _disposed = true;
-        
+
         _cancellationTokenSource?.Cancel();
         _healthCheckTimer?.Dispose();
         _maintenanceTimer?.Dispose();
         _operationSemaphore?.Dispose();
         _cancellationTokenSource?.Dispose();
-        
+
         // Save final state
         try
         {
@@ -444,7 +444,7 @@ public class ExtendedAutoModeAgent : IDisposable
         {
             _logger.LogError(ex, "Error saving final state during disposal");
         }
-        
+
         _logger.LogInformation("ExtendedAutoModeAgent disposed");
     }
 }

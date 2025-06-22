@@ -149,7 +149,7 @@ install-uv:
 ifdef UV_VERSION
 	echo "uv found $(UV_VERSION)"
 	echo "running uv update"
-	uv self update 
+	uv self update
 else
 	echo "uv could not be found"
 	echo "Installing uv"
@@ -173,7 +173,7 @@ install-sk:
 	uv venv --python $(PYTHON_VERSION)
 	echo "Installing Semantic Kernel and all dependencies"
 	uv sync --all-extras --dev
-	
+
 .ONESHELL:
 clean:
 	# Remove the virtualenv
@@ -223,7 +223,7 @@ install-uv:
 ifdef UV_VERSION
 	echo "uv found $(UV_VERSION)"
 	echo "running uv update"
-	uv self update 
+	uv self update
 else
 	echo "uv could not be found"
 	echo "Installing uv"
@@ -277,7 +277,7 @@ install-uv:
 ifdef UV_VERSION
 	echo "uv found $(UV_VERSION)"
 	echo "running uv update"
-	uv self update 
+	uv self update
 else
 	echo "uv could not be found"
 	echo "Installing uv"
@@ -301,7 +301,7 @@ install-sk:
 	uv venv --python $(PYTHON_VERSION)
 	echo "Installing Semantic Kernel and all dependencies"
 	uv sync --all-extras --dev
-	
+
 .ONESHELL:
 clean:
 	# Remove the virtualenv
@@ -351,7 +351,7 @@ install-uv:
 ifdef UV_VERSION
 	echo "uv found $(UV_VERSION)"
 	echo "running uv update"
-	uv self update 
+	uv self update
 else
 	echo "uv could not be found"
 	echo "Installing uv"
@@ -404,7 +404,7 @@ install:
 		echo "Poetry could not be found"
 		echo "Installing Poetry"
 		curl -sSL https://install.python-poetry.org | python3 -
-	fi 
+	fi
 
 	# Install the dependencies
 	poetry install
@@ -416,7 +416,7 @@ recreate-env:
 	(deactivate || exit 0)
 
 	# Remove all the files of the current environment of the folder we are in
-	export POETRY_LOCATION=$$(poetry env info -p) 
+	export POETRY_LOCATION=$$(poetry env info -p)
 	echo "Poetry is $${POETRY_LOCATION}"
 	rm -rf "$${POETRY_LOCATION}"
 
@@ -433,7 +433,7 @@ install-sk:
 	uv venv --python $(PYTHON_VERSION)
 	echo "Installing Semantic Kernel and all dependencies"
 	uv sync --all-extras --dev
-	
+
 .ONESHELL:
 clean:
 	# Remove the virtualenv

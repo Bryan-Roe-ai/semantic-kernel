@@ -35,9 +35,9 @@ show_available_tasks() {
 run_vscode_task() {
     local task_label="$1"
     local workspace_folder="/home/broe/semantic-kernel"
-    
+
     log_info "🎯 Running VS Code task: $task_label"
-    
+
     case "$task_label" in
         "test (Semantic-Kernel-Python)")
             cd "$workspace_folder/python"
@@ -75,7 +75,7 @@ run_vscode_task() {
 
 run_quick_command() {
     local command="$1"
-    
+
     case "$command" in
         "python-unit")
             run_vscode_task "test (Semantic-Kernel-Python)"

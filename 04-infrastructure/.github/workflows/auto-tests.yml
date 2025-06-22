@@ -2,28 +2,28 @@ name: 🧪 Automated Tests
 
 on:
   push:
-    branches: [ main, develop, feature/* ]
+    branches: [main, develop, feature/*]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
   schedule:
     # Run tests daily at 2 AM UTC
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
   workflow_dispatch:
     inputs:
       test_pattern:
-        description: 'Test pattern to run (leave empty for all tests)'
+        description: "Test pattern to run (leave empty for all tests)"
         required: false
-        default: ''
+        default: ""
       enable_coverage:
-        description: 'Enable code coverage collection'
+        description: "Enable code coverage collection"
         required: false
-        default: 'true'
+        default: "true"
         type: boolean
 
 env:
-  DOTNET_VERSION: '8.0.x'
-  PYTHON_VERSION: '3.11'
-  NODE_VERSION: '18.x'
+  DOTNET_VERSION: "8.0.x"
+  PYTHON_VERSION: "3.11"
+  NODE_VERSION: "18.x"
 
 jobs:
   discover:
@@ -43,14 +43,14 @@ jobs:
           # Discover .NET test projects
           dotnet_projects=$(find 01-core-implementations/dotnet -name "*Tests.csproj" -type f | jq -R -s -c 'split("\n") | map(select(length > 0))')
           echo "dotnet-projects=$dotnet_projects" >> $GITHUB_OUTPUT
-          
+
           # Discover Python test directories
           python_tests='["unit", "integration"]'
           if [ -d "python/tests/end-to-end" ]; then
             python_tests='["unit", "integration", "end-to-end"]'
           fi
           echo "python-tests=$python_tests" >> $GITHUB_OUTPUT
-          
+
           # Discover TypeScript projects (simplified)
           typescript_projects='[]'
           if [ -d "typescript" ]; then
@@ -118,7 +118,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ['3.10', '3.11', '3.12']
+        python-version: ["3.10", "3.11", "3.12"]
         test-type: ${{ fromJson(needs.discover.outputs.python-tests) }}
     steps:
       - name: 📥 Checkout
@@ -186,7 +186,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
           cache-dependency-path: ${{ dirname(matrix.project) }}/package-lock.json
 
       - name: 📦 Install dependencies
@@ -246,7 +246,7 @@ jobs:
         run: |
           # Run integration tests that require multiple components
           echo "Running cross-language integration tests..."
-          
+
           # Example: Test .NET and Python interoperability
           if [ -f "scripts/run-integration-tests.sh" ]; then
             ./scripts/run-integration-tests.sh
@@ -262,16 +262,16 @@ jobs:
       - name: 🔒 Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
 
       - name: 📤 Upload Trivy scan results
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
-          sarif_file: 'trivy-results.sarif'
+          sarif_file: "trivy-results.sarif"
 
   performance-tests:
     name: ⚡ Performance Tests
@@ -315,13 +315,13 @@ jobs:
           echo "" >> test-report.md
           echo "## Summary" >> test-report.md
           echo "" >> test-report.md
-          
+
           # Count test results
           dotnet_status="${{ needs.test-dotnet.result }}"
           python_status="${{ needs.test-python.result }}"
           typescript_status="${{ needs.test-typescript.result }}"
           integration_status="${{ needs.integration-tests.result }}"
-          
+
           echo "| Component | Status |" >> test-report.md
           echo "|-----------|--------|" >> test-report.md
           echo "| .NET Tests | $dotnet_status |" >> test-report.md
@@ -329,20 +329,20 @@ jobs:
           echo "| TypeScript Tests | $typescript_status |" >> test-report.md
           echo "| Integration Tests | $integration_status |" >> test-report.md
           echo "" >> test-report.md
-          
+
           # Add details for failed jobs
           if [ "$dotnet_status" != "success" ]; then
             echo "### .NET Test Failures" >> test-report.md
             echo "Please check the .NET test job logs for details." >> test-report.md
             echo "" >> test-report.md
           fi
-          
+
           if [ "$python_status" != "success" ]; then
             echo "### Python Test Failures" >> test-report.md
             echo "Please check the Python test job logs for details." >> test-report.md
             echo "" >> test-report.md
           fi
-          
+
           echo "## Artifacts" >> test-report.md
           echo "Test results and coverage reports are available in the workflow artifacts." >> test-report.md
 
@@ -359,7 +359,7 @@ jobs:
           script: |
             const fs = require('fs');
             const report = fs.readFileSync('test-report.md', 'utf8');
-            
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,

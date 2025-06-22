@@ -104,16 +104,16 @@ await agent.StopAsync();
 
 ### Options
 
-| Property | Default | Description |
-|----------|---------|-------------|
-| `MaxConcurrentOperations` | 5 | Maximum number of concurrent operations |
-| `BaseOperationDelayMs` | 1000 | Base delay between operations (milliseconds) |
-| `HealthCheckIntervalMinutes` | 5 | Health check interval (minutes) |
-| `MaintenanceIntervalHours` | 24 | Maintenance interval (hours) |
-| `MaxMemoryUsageMB` | 2048 | Memory usage threshold for warnings (MB) |
-| `MaxErrorRate` | 0.05 | Maximum acceptable error rate (0.0-1.0) |
-| `StateRetentionHours` | 168 | State retention time (hours, default 7 days) |
-| `StateDirectory` | "./state" | Directory for storing state files |
+| Property                     | Default   | Description                                  |
+| ---------------------------- | --------- | -------------------------------------------- |
+| `MaxConcurrentOperations`    | 5         | Maximum number of concurrent operations      |
+| `BaseOperationDelayMs`       | 1000      | Base delay between operations (milliseconds) |
+| `HealthCheckIntervalMinutes` | 5         | Health check interval (minutes)              |
+| `MaintenanceIntervalHours`   | 24        | Maintenance interval (hours)                 |
+| `MaxMemoryUsageMB`           | 2048      | Memory usage threshold for warnings (MB)     |
+| `MaxErrorRate`               | 0.05      | Maximum acceptable error rate (0.0-1.0)      |
+| `StateRetentionHours`        | 168       | State retention time (hours, default 7 days) |
+| `StateDirectory`             | "./state" | Directory for storing state files            |
 
 ### Configuration File
 
@@ -302,8 +302,8 @@ For monitoring systems, expose health status:
 app.MapGet("/health", (ExtendedAutoModeAgent agent) =>
 {
     var status = agent.GetStatus();
-    return status.IsRunning && status.ErrorRate < 0.1 
-        ? Results.Ok(status) 
+    return status.IsRunning && status.ErrorRate < 0.1
+        ? Results.Ok(status)
         : Results.Problem("Unhealthy");
 });
 ```

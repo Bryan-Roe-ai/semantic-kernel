@@ -7,6 +7,7 @@ This directory contains a comprehensive automated testing system for the Semanti
 ### Local Testing
 
 #### Using the Bash Script (Linux/macOS)
+
 ```bash
 # Make script executable (first time only)
 chmod +x ./run-auto-tests.sh
@@ -25,6 +26,7 @@ chmod +x ./run-auto-tests.sh
 ```
 
 #### Using PowerShell (Windows/Cross-platform)
+
 ```powershell
 # Discover all test projects
 ./run-auto-tests.ps1 discover
@@ -40,6 +42,7 @@ chmod +x ./run-auto-tests.sh
 ```
 
 ### Using the .NET Test Runner (Advanced)
+
 ```bash
 # Compile and run the test runner
 dotnet run --project AutoTestProgram.cs discover
@@ -49,23 +52,27 @@ dotnet run --project AutoTestProgram.cs run-all --verbose --coverage
 ## 📊 Features
 
 ### ✅ Multi-Framework Support
+
 - **🏗️ .NET**: xUnit, NUnit, MSTest projects with dotnet test
 - **🐍 Python**: pytest with poetry for dependency management
 - **📜 TypeScript/JavaScript**: Jest, Mocha, and other npm test runners
 
 ### ⚡ Performance Optimizations
+
 - **Parallel Execution**: Run tests concurrently across multiple cores
 - **Smart Discovery**: Automatic test project detection
 - **Incremental Testing**: Watch mode for development
 - **Caching**: Dependency and build artifact caching
 
 ### 📈 Coverage & Reporting
+
 - **Code Coverage**: Collect coverage for all supported frameworks
 - **Multiple Formats**: XML, HTML, JSON, and console reports
 - **Integration**: Codecov, SonarQube, and other platforms
 - **Trend Analysis**: Historical coverage tracking
 
 ### 🔄 CI/CD Integration
+
 - **GitHub Actions**: Complete workflow with matrix builds
 - **Cross-Platform**: Linux, Windows, and macOS support
 - **Scheduled Runs**: Daily automated test execution
@@ -74,6 +81,7 @@ dotnet run --project AutoTestProgram.cs run-all --verbose --coverage
 ## 🏗️ Architecture
 
 ### Test Project Discovery
+
 The system automatically discovers test projects using configurable patterns:
 
 ```
@@ -94,6 +102,7 @@ typescript/
 ```
 
 ### Execution Pipeline
+
 1. **Discovery Phase**: Scan workspace for test projects
 2. **Classification**: Categorize as Unit/Integration/E2E tests
 3. **Parallel Execution**: Run tests with optimal concurrency
@@ -101,6 +110,7 @@ typescript/
 5. **Reporting**: Generate comprehensive reports
 
 ### Configuration System
+
 Tests are configured via `auto-test-config.json`:
 
 ```json
@@ -128,15 +138,18 @@ Tests are configured via `auto-test-config.json`:
 ## 🔧 Configuration
 
 ### Environment Variables
+
 - `SK_TEST_MODE`: Set to `true` for test environment
 - `SK_TEST_TIMEOUT`: Override default test timeouts
 - `SK_COVERAGE_THRESHOLD`: Minimum coverage percentage
 - `SK_PARALLEL_TESTS`: Enable/disable parallel execution
 
 ### Test Categories
+
 Tests are organized by categories using attributes/decorators:
 
 #### .NET (xUnit)
+
 ```csharp
 [Fact]
 [Trait("Category", "Unit")]
@@ -148,6 +161,7 @@ public void IntegrationTest() { }
 ```
 
 #### Python (pytest)
+
 ```python
 import pytest
 
@@ -163,6 +177,7 @@ def test_integration():
 ## 📝 Test Writing Guidelines
 
 ### .NET Tests
+
 Follow Semantic Kernel testing patterns:
 
 ```csharp
@@ -194,6 +209,7 @@ public class MyServiceTests
 ```
 
 ### Python Tests
+
 Use pytest conventions:
 
 ```python
@@ -228,6 +244,7 @@ class TestSemanticKernel:
 ### Common Issues
 
 #### Tests Not Found
+
 ```bash
 # Check discovery
 ./run-auto-tests.sh discover
@@ -237,6 +254,7 @@ find . -name "*Tests.csproj" -o -name "pytest.ini" -o -name "package.json"
 ```
 
 #### Coverage Issues
+
 ```bash
 # .NET coverage
 dotnet test --collect:"XPlat Code Coverage"
@@ -246,11 +264,13 @@ poetry run pytest --cov=semantic_kernel --cov-report=html
 ```
 
 #### Performance Issues
+
 - Reduce parallelism: `--max-parallelism 2`
 - Increase timeouts: `--timeout 20`
 - Run specific categories: `--filter "Category=Unit"`
 
 ### Debug Mode
+
 Enable verbose logging for detailed output:
 
 ```bash
@@ -260,6 +280,7 @@ Enable verbose logging for detailed output:
 ## 🚀 CI/CD Pipeline
 
 ### GitHub Actions Workflow
+
 The automated pipeline includes:
 
 1. **🔍 Discovery Job**: Finds all test projects
@@ -272,12 +293,14 @@ The automated pipeline includes:
 8. **📋 Reporting**: Aggregate results and notifications
 
 ### Pipeline Triggers
+
 - **Push**: Feature branches and main/develop
 - **Pull Request**: Automatic test validation
 - **Schedule**: Daily comprehensive test runs
 - **Manual**: On-demand execution with parameters
 
 ### Artifacts
+
 - Test results (JUnit XML, TRX)
 - Coverage reports (Cobertura XML, HTML)
 - Performance benchmarks
@@ -286,13 +309,16 @@ The automated pipeline includes:
 ## 📊 Metrics & Monitoring
 
 ### Test Metrics
+
 - **Test Count**: Total, passed, failed, skipped
 - **Coverage**: Line, branch, and method coverage
 - **Performance**: Execution time trends
 - **Reliability**: Flaky test detection
 
 ### Dashboard Integration
+
 Results can be integrated with:
+
 - **Azure DevOps**: Test analytics and reporting
 - **GitHub**: Status checks and PR comments
 - **Codecov**: Coverage trending and insights
@@ -301,18 +327,21 @@ Results can be integrated with:
 ## 🔄 Best Practices
 
 ### Test Organization
+
 1. **Separate Concerns**: Unit, integration, and E2E tests
 2. **Naming Conventions**: Clear, descriptive test names
 3. **Test Data**: Use builders and fixtures
 4. **Mocking**: Isolate units under test
 
 ### Performance
+
 1. **Parallel Execution**: Enable for independent tests
 2. **Resource Management**: Clean up after tests
 3. **Test Isolation**: Avoid shared state
 4. **Efficient Assertions**: Use specific, fast assertions
 
 ### Maintainability
+
 1. **DRY Principle**: Extract common test utilities
 2. **Documentation**: Comment complex test scenarios
 3. **Regular Cleanup**: Remove obsolete tests

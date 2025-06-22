@@ -237,7 +237,7 @@ public class ExtendedAutoModeAgentFactory
     {
         var logger = _serviceProvider.GetRequiredService<ILogger<ExtendedAutoModeAgent>>();
         var configuration = _serviceProvider.GetRequiredService<IConfiguration>();
-        
+
         options ??= _serviceProvider.GetService<ExtendedAutoModeOptions>() ?? new ExtendedAutoModeOptions();
 
         return new ExtendedAutoModeAgent(kernel, logger, configuration, options);

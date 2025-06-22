@@ -91,11 +91,11 @@ async def sync_with_csharp_agent():
             'last_update': datetime.utcnow().isoformat(),
             'system_health': await get_system_health()
         }
-        
+
         shared_file = Path(config['shared_state_directory']) / 'python_state.json'
         async with aiofiles.open(shared_file, 'w') as f:
             await f.write(json.dumps(shared_state, indent=2))
-            
+
     except Exception as e:
         logger.error(f"Error syncing with C# agent: {e}")
 ```
@@ -111,7 +111,7 @@ private async Task SyncWithPythonSystemAsync()
         {
             var pythonState = await File.ReadAllTextAsync(sharedFile);
             var metrics = JsonSerializer.Deserialize<PythonMetrics>(pythonState);
-            
+
             // Update internal state with Python metrics
             _state.TryAdd("python_metrics", metrics);
             _logger.LogDebug("Synchronized with Python ultra-efficient system");
@@ -137,10 +137,10 @@ import aiohttp_cors
 async def create_integration_server():
     """Create HTTP server for C# integration"""
     app = web.Application()
-    
+
     # Enable CORS
     cors = aiohttp_cors.setup(app)
-    
+
     # Status endpoint
     async def get_status(request):
         status = {
@@ -150,12 +150,12 @@ async def create_integration_server():
             'cache_hit_ratio': performance_tracker.cache_hit_ratio
         }
         return web.json_response(status)
-    
+
     # Command endpoint
     async def execute_command(request):
         data = await request.json()
         command = data.get('command')
-        
+
         if command == 'optimize':
             result = await trigger_optimization()
             return web.json_response({'result': result})
@@ -164,14 +164,14 @@ async def create_integration_server():
             return web.json_response({'result': result})
         else:
             return web.json_response({'error': 'Unknown command'}, status=400)
-    
+
     app.router.add_get('/status', get_status)
     app.router.add_post('/command', execute_command)
-    
+
     # Configure CORS
     cors.add(app.router.add_get('/status', get_status))
     cors.add(app.router.add_post('/command', execute_command))
-    
+
     return app
 ```
 
@@ -197,7 +197,7 @@ public class PythonSystemClient
         {
             var response = await _httpClient.GetAsync($"{_baseUrl}/status", cancellationToken);
             response.EnsureSuccessStatusCode();
-            
+
             var content = await response.Content.ReadAsStringAsync(cancellationToken);
             return JsonSerializer.Deserialize<PythonSystemStatus>(content);
         }
@@ -214,7 +214,7 @@ public class PythonSystemClient
         {
             var payload = JsonSerializer.Serialize(new { command });
             var content = new StringContent(payload, Encoding.UTF8, "application/json");
-            
+
             var response = await _httpClient.PostAsync($"{_baseUrl}/command", content, cancellationToken);
             return response.IsSuccessStatusCode;
         }
@@ -232,7 +232,7 @@ public class PythonSystemClient
 ### Docker Compose
 
 ```yaml
-version: '3.8'
+version: "3.8"
 services:
   semantic-kernel-csharp:
     build:
@@ -281,33 +281,33 @@ spec:
         app: semantic-kernel
     spec:
       containers:
-      - name: csharp-agent
-        image: semantic-kernel/extended-auto-mode:latest
-        env:
-        - name: ExtendedAutoMode__StateDirectory
-          value: "/app/state"
-        volumeMounts:
-        - name: shared-state
-          mountPath: /app/shared-state
-        - name: csharp-state
-          mountPath: /app/state
-      - name: python-system
-        image: semantic-kernel/ultra-efficient:latest
-        env:
-        - name: STATE_DIRECTORY
-          value: "/app/state"
-        volumeMounts:
-        - name: shared-state
-          mountPath: /app/shared-state
-        - name: python-state
-          mountPath: /app/state
+        - name: csharp-agent
+          image: semantic-kernel/extended-auto-mode:latest
+          env:
+            - name: ExtendedAutoMode__StateDirectory
+              value: "/app/state"
+          volumeMounts:
+            - name: shared-state
+              mountPath: /app/shared-state
+            - name: csharp-state
+              mountPath: /app/state
+        - name: python-system
+          image: semantic-kernel/ultra-efficient:latest
+          env:
+            - name: STATE_DIRECTORY
+              value: "/app/state"
+          volumeMounts:
+            - name: shared-state
+              mountPath: /app/shared-state
+            - name: python-state
+              mountPath: /app/state
       volumes:
-      - name: shared-state
-        emptyDir: {}
-      - name: csharp-state
-        emptyDir: {}
-      - name: python-state
-        emptyDir: {}
+        - name: shared-state
+          emptyDir: {}
+        - name: csharp-state
+          emptyDir: {}
+        - name: python-state
+          emptyDir: {}
 ```
 
 ## Monitoring and Observability
@@ -342,10 +342,10 @@ def get_python_status():
 
 def main():
     st.title("Semantic Kernel Extended Auto Mode Dashboard")
-    
+
     # Create columns for side-by-side display
     col1, col2 = st.columns(2)
-    
+
     with col1:
         st.header("C# Extended Auto Mode Agent")
         csharp_status = get_csharp_status()
@@ -356,7 +356,7 @@ def main():
             st.metric("Memory Usage", f"{csharp_status.get('memoryUsageMB', 0)} MB")
         else:
             st.error("C# Agent not responding")
-    
+
     with col2:
         st.header("Python Ultra-Efficient System")
         python_status = get_python_status()
@@ -390,17 +390,17 @@ public class ExtendedAutoModeHealthCheck : IHealthCheck
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
         var status = _agent.GetStatus();
-        
+
         if (!status.IsRunning)
         {
             return Task.FromResult(HealthCheckResult.Unhealthy("Agent is not running"));
         }
-        
+
         if (status.ErrorRate > 0.1)
         {
             return Task.FromResult(HealthCheckResult.Degraded($"High error rate: {status.ErrorRate:P2}"));
         }
-        
+
         return Task.FromResult(HealthCheckResult.Healthy("Agent is running normally"));
     }
 }
@@ -417,7 +417,7 @@ async def distribute_workload(tasks: List[Task]) -> Dict[str, List[Task]]:
     """Distribute tasks between C# and Python systems based on task type"""
     csharp_tasks = []
     python_tasks = []
-    
+
     for task in tasks:
         if task.type in ['orchestration', 'agent_management', 'semantic_functions']:
             csharp_tasks.append(task)
@@ -426,7 +426,7 @@ async def distribute_workload(tasks: List[Task]) -> Dict[str, List[Task]]:
         else:
             # Default to Python for unknown task types
             python_tasks.append(task)
-    
+
     return {
         'csharp': csharp_tasks,
         'python': python_tasks
@@ -469,6 +469,7 @@ public class ResourceCoordinator
 ### Common Integration Issues
 
 1. **Port Conflicts**
+
    ```bash
    # Check if ports are available
    netstat -tuln | grep :8080
@@ -476,6 +477,7 @@ public class ResourceCoordinator
    ```
 
 2. **State Synchronization Issues**
+
    ```bash
    # Check shared state directory permissions
    ls -la /var/lib/semantic-kernel/shared/

@@ -78,7 +78,7 @@ public class ExtendedAutoModeHostedService : BackgroundService
         }
 
         await base.StopAsync(cancellationToken);
-        
+
         _logger.LogInformation("ExtendedAutoModeHostedService stopped");
     }
 

@@ -32,7 +32,7 @@ public class ExtendedAutoModeAgentTests : IDisposable
 
         var services = new ServiceCollection();
         services.AddLogging(builder => builder.AddConsole().SetMinimumLevel(LogLevel.Debug));
-        
+
         var configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
@@ -41,7 +41,7 @@ public class ExtendedAutoModeAgentTests : IDisposable
                 ["ExtendedAutoMode:BaseOperationDelayMs"] = "100"
             })
             .Build();
-        
+
         services.AddSingleton<IConfiguration>(configuration);
         services.AddSingleton<Kernel>(sp =>
         {
@@ -112,8 +112,8 @@ public class ExtendedAutoModeAgentTests : IDisposable
         // Arrange
         var logger = _serviceProvider.GetRequiredService<ILogger<ExtendedAutoModeAgent>>();
         var configuration = _serviceProvider.GetRequiredService<IConfiguration>();
-        var options = new ExtendedAutoModeOptions 
-        { 
+        var options = new ExtendedAutoModeOptions
+        {
             StateDirectory = _tempDirectory,
             BaseOperationDelayMs = 50
         };
@@ -123,15 +123,15 @@ public class ExtendedAutoModeAgentTests : IDisposable
 
         // Act
         var startTask = agent.StartAsync(cts.Token);
-        
+
         // Wait briefly to ensure it starts
         await Task.Delay(100);
-        
+
         var status = agent.GetStatus();
-        
+
         // Stop the agent
         await agent.StopAsync();
-        
+
         // Wait for start task to complete
         try
         {
@@ -244,7 +244,7 @@ public class ExtendedAutoModeAgentTests : IDisposable
     public void Dispose()
     {
         _serviceProvider?.Dispose();
-        
+
         if (Directory.Exists(_tempDirectory))
         {
             try
