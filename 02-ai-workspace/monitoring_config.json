@@ -1,0 +1,7 @@
+{
+  "workspace_root": "/home/broe/semantic-kernel",
+  "logs_directory": "/home/broe/semantic-kernel/02-ai-workspace/logs",
+  "auto_monitor": true,
+  "dashboard_refresh_interval": 5,
+  "max_activities_in_memory": 1000
+}

@@ -322,6 +322,51 @@
       },
       "group": "build",
       "detail": "Run npm setup to install dependencies and npm compile to build the project"
+    },
+    {
+      "label": "Start AGI Auto File Updates",
+      "type": "shell",
+      "command": "./launch_agi_auto.sh",
+      "args": ["--monitor"],
+      "group": "build",
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "runOptions": {
+        "instanceLimit": 1
+      }
+    },
+    {
+      "label": "AGI Auto File Updates - Daemon",
+      "type": "shell",
+      "command": "./launch_agi_auto.sh",
+      "args": ["--daemon"],
+      "group": "build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "AGI Auto File Updates - Single Run",
+      "type": "shell",
+      "command": "python3",
+      "args": ["agi_file_update_system.py"],
+      "group": "build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
     }
   ],
   "inputs": [
