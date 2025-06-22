@@ -1,7 +1,6 @@
 {
   "version": "0.2.0",
   "configurations": [
-  
     {
       "name": ".NET Core Launch (dotnet-kernel-syntax-examples)",
       "type": "coreclr",
@@ -9,15 +8,17 @@
       "preLaunchTask": "build (KernelSyntaxExamples)",
       "program": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples/bin/Debug/net6.0/KernelSyntaxExamples.dll",
       "args": [],
-      "cwd": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples"
+      "cwd": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples",
+      "stopAtEntry": false,
+      "console": "integratedTerminal"
+    },
+    {
       "name": "CAPs - Demo Sample",
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build (CopilotAgentPluginsDemoSample)",
       "program": "${workspaceFolder}/dotnet/samples/Demos/CopilotAgentPlugins/CopilotAgentPluginsDemoSample/bin/Debug/net8.0/CopilotAgentPluginsDemoSample.exe",
-      "args": [
-        "demo"
-      ],
+      "args": ["demo"],
       "cwd": "${workspaceFolder}/dotnet/samples/Demos/CopilotAgentPlugins/CopilotAgentPluginsDemoSample",
       "stopAtEntry": false,
       "console": "integratedTerminal"
@@ -42,15 +43,28 @@
     {
       "name": "RobotCode: Default",
       "type": "robotcode",
-      "request": "launch",
-      "presentation": {
-        "hidden": true
-      },
       "purpose": "default"
+    },
+    {
+      "name": "Python: Pytest",
+      "type": "debugpy",
+      "request": "launch",
       "module": "pytest",
-      "args": [
-        "${file}"
-      ]
+      "args": ["${file}"],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "C#: HuggingFace ImageToText",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build (HuggingFaceImageToText)",
+      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net8.0/HuggingFaceImageToText.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText",
+      "stopAtEntry": false,
+      "console": "integratedTerminal"
     },
     {
       "name": "Python: FastAPI",
@@ -61,8 +75,6 @@
       "console": "integratedTerminal",
       "justMyCode": true,
       "cwd": "${workspaceFolder}"
-      "projectPath": "${workspaceFolder}\\dotnet\\samples\\Demos\\HuggingFaceImageToText.csproj",
-      "launchConfigurationId": "TargetFramework=;HuggingFaceImageToText"
     },
     {
       "name": "C#: GettingStarted Samples",
