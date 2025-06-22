@@ -14,7 +14,7 @@ else
     echo "❌ Launch Script: NOT RUNNING"
 fi
 
-# Check if main process is running  
+# Check if main process is running
 if ps aux | grep -q "[a]gi_file_update_system.py"; then
     echo "✅ AGI File System: RUNNING"
 else

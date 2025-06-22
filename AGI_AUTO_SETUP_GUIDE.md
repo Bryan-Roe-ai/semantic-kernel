@@ -32,7 +32,7 @@ The AGI Auto File Updates system enables autonomous file modifications using the
 Available tasks in VS Code:
 
 - **Start AGI Auto File Updates** - Monitor mode with VS Code integration
-- **AGI Auto File Updates - Daemon** - Background daemon mode  
+- **AGI Auto File Updates - Daemon** - Background daemon mode
 - **AGI Auto File Updates - Single Run** - One-time execution
 
 Access via `Ctrl+Shift+P` → "Tasks: Run Task"
@@ -53,7 +53,9 @@ cat .agi_file_config.json
 ## 🔧 Configuration
 
 ### Safe Directories
+
 Currently configured safe directories:
+
 - `/home/broe/semantic-kernel` (root)
 - `/home/broe/semantic-kernel/python`
 - `/home/broe/semantic-kernel/dotnet`
@@ -66,7 +68,9 @@ Currently configured safe directories:
 - `/home/broe/semantic-kernel/tests`
 
 ### Restricted Patterns
+
 Files containing these patterns are protected:
+
 - `.git`
 - `.env`
 - `secrets`
@@ -76,18 +80,21 @@ Files containing these patterns are protected:
 ## 📋 Features
 
 ### Autonomous Operations
+
 - **File Creation**: Create new files with intelligent content
 - **Content Updates**: Modify existing file content
 - **Code Enhancement**: Improve code quality and documentation
 - **Structure Optimization**: Organize and optimize file structures
 
 ### Safety Features
+
 - **Automatic Backups**: All modified files are backed up before changes
 - **Safety Validation**: Multi-layer safety checks before any operation
 - **Permission Verification**: Checks file permissions before modifications
 - **Rollback Capability**: Ability to restore from backups if needed
 
 ### AGI Integration
+
 - **Neural-Symbolic Processing**: Advanced AI reasoning for file operations
 - **Semantic Understanding**: Context-aware file analysis and modifications
 - **Learning Capabilities**: Improves performance over time
@@ -96,12 +103,14 @@ Files containing these patterns are protected:
 ## 🛠️ Usage Examples
 
 ### Example 1: Create a New Python Module
+
 ```python
 # The AGI system can automatically create optimized Python modules
 # with proper documentation, type hints, and best practices
 ```
 
 ### Example 2: Enhance Existing Code
+
 ```python
 # The system can automatically:
 # - Add missing docstrings
@@ -111,22 +120,29 @@ Files containing these patterns are protected:
 ```
 
 ### Example 3: Documentation Updates
+
 ```markdown
 # Automatically generate and update:
+
 # - README files
+
 # - API documentation
+
 # - Code comments
+
 # - Configuration guides
 ```
 
 ## 📊 Monitoring and Logging
 
 ### Log Levels
+
 - **INFO**: Normal operations, task execution
 - **WARNING**: Non-critical issues, safety notifications
 - **ERROR**: Failed operations, safety violations
 
 ### Status Monitoring
+
 ```bash
 # Real-time log monitoring
 tail -f agi_file_updates.log
@@ -141,6 +157,7 @@ ls -la .agi_backups/
 ## 🔒 Security and Safety
 
 ### Multi-Layer Safety
+
 1. **Directory Whitelist**: Only approved directories can be modified
 2. **File Pattern Blacklist**: Sensitive files are automatically protected
 3. **Permission Checks**: Verifies write permissions before operations
@@ -148,6 +165,7 @@ ls -la .agi_backups/
 5. **Operation Validation**: Each operation is validated before execution
 
 ### Emergency Procedures
+
 ```bash
 # Stop all AGI processes
 pkill -f agi_file_update_system.py
@@ -163,17 +181,17 @@ rm .agi_file_config.json
 ## 🎯 Advanced Configuration
 
 ### Custom Safe Directories
+
 Edit `.agi_file_config.json`:
+
 ```json
 {
-  "safe_directories": [
-    "/your/custom/path",
-    "/another/safe/directory"
-  ]
+  "safe_directories": ["/your/custom/path", "/another/safe/directory"]
 }
 ```
 
 ### Integration with CI/CD
+
 ```yaml
 # GitHub Actions example
 - name: Run AGI Auto Updates
@@ -188,6 +206,7 @@ Edit `.agi_file_config.json`:
 ### Common Issues
 
 **Issue**: AGI backend not starting
+
 ```bash
 # Solution: Check port availability and dependencies
 netstat -tulpn | grep :8000
@@ -195,6 +214,7 @@ pip3 install -r requirements.txt
 ```
 
 **Issue**: Permission denied errors
+
 ```bash
 # Solution: Check file permissions
 chmod +x launch_agi_auto.sh
@@ -202,12 +222,14 @@ chmod 755 agi_file_update_system.py
 ```
 
 **Issue**: Safety check failures
+
 ```bash
 # Solution: Verify file paths are in safe directories
 echo "Check .agi_file_config.json for approved paths"
 ```
 
 ### Debug Mode
+
 ```bash
 # Run with verbose logging
 python3 -m pdb agi_file_update_system.py
@@ -219,13 +241,16 @@ grep "ERROR" agi_file_updates.log
 ## 📚 Integration Examples
 
 ### VS Code Extension Integration
+
 The system integrates with VS Code through:
+
 - Command palette tasks
 - Background monitoring
 - Real-time file watching
 - Intelligent suggestions
 
 ### Semantic Kernel Integration
+
 - Uses Semantic Kernel for AI operations
 - Leverages neural-symbolic reasoning
 - Integrates with knowledge graphs

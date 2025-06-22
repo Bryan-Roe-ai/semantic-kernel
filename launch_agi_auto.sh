@@ -144,18 +144,18 @@ fi
 # Start monitoring mode if requested
 if [ "$1" = "--monitor" ]; then
     print_status "Starting in monitoring mode..."
-    
+
     # Create monitoring loop
     while true; do
         sleep 300  # Check every 5 minutes
-        
+
         # Check if processes are still running
         if ! ps -p $AGI_FILE_PID > /dev/null; then
             print_warning "AGI Auto File Update System stopped, restarting..."
             python3 agi_file_update_system.py &
             AGI_FILE_PID=$!
         fi
-        
+
         # Log status
         echo "$(date): AGI Auto File Update System running (PID: $AGI_FILE_PID)" >> agi_auto_status.log
     done

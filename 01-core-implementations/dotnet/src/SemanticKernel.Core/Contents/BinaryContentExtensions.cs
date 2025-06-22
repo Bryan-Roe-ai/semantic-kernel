@@ -45,7 +45,7 @@ public static class BinaryContentExtensions
     /// <param name="overwrite">Whether to overwrite the file if it already exists.</param>
     /// <param name="createBackup">Whether to create a backup before overwriting.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public static async Task WriteToFileAsync(this BinaryContent content, string filePath, 
+    public static async Task WriteToFileAsync(this BinaryContent content, string filePath,
         bool overwrite = false, bool createBackup = true)
     {
         if (string.IsNullOrWhiteSpace(filePath))
@@ -80,11 +80,11 @@ public static class BinaryContentExtensions
     /// <param name="filePath">The path to the file to write to.</param>
     /// <param name="options">File writing options including AGI integration settings.</param>
     /// <returns>A task representing the asynchronous operation with AGI metadata.</returns>
-    public static async Task<FileWriteResult> WriteToFileWithAGIAsync(this BinaryContent content, 
+    public static async Task<FileWriteResult> WriteToFileWithAGIAsync(this BinaryContent content,
         string filePath, AGIFileWriteOptions? options = null)
     {
         options ??= new AGIFileWriteOptions();
-        
+
         var result = new FileWriteResult
         {
             FilePath = filePath,
@@ -130,10 +130,10 @@ public static class BinaryContentExtensions
 
             // Write the file
             await File.WriteAllBytesAsync(filePath, content.Data!.Value.ToArray());
-            
+
             result.Success = true;
             result.BytesWritten = content.Data!.Value.Length;
-            
+
             // Log to AGI system if enabled
             if (options.LogToAGI)
             {
@@ -146,18 +146,18 @@ public static class BinaryContentExtensions
         {
             result.Error = ex.Message;
             result.Exception = ex;
-            
+
             // Log error to AGI system if enabled
             if (options.LogToAGI)
             {
                 await LogToAGISystemAsync(filePath, "file_write_error", result);
             }
-            
+
             if (options.ThrowOnError)
             {
                 throw;
             }
-            
+
             return result;
         }
     }
