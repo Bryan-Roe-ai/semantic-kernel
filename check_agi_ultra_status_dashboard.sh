@@ -22,12 +22,12 @@ NC='\033[0m'
 get_ultra_metrics() {
     echo -e "${BOLD}${PURPLE}📊 Ultra-Performance Metrics${NC}"
     echo "============================"
-    
+
     # Check if ultra system is running
     if ps aux | grep -q "[a]gi_ultra_efficient_file_system.py"; then
         ultra_pid=$(ps aux | grep "[a]gi_ultra_efficient_file_system.py" | awk '{print $2}' | head -1)
         echo -e "${GREEN}✅ Ultra-Efficient System: RUNNING (PID: $ultra_pid)${NC}"
-        
+
         # Get detailed process metrics
         if command -v python3 &> /dev/null; then
             python3 << 'EOF'
@@ -42,12 +42,12 @@ try:
         try:
             if 'agi_ultra_efficient_file_system.py' in ' '.join(proc.info['cmdline']):
                 p = psutil.Process(proc.info['pid'])
-                
+
                 # CPU and memory metrics
                 cpu_percent = p.cpu_percent(interval=0.1)
                 memory_info = p.memory_info()
                 memory_mb = memory_info.rss / 1024 / 1024
-                
+
                 # I/O metrics
                 try:
                     io_counters = p.io_counters()
@@ -55,16 +55,16 @@ try:
                     write_mb = io_counters.write_bytes / 1024 / 1024
                 except:
                     read_mb = write_mb = 0
-                
+
                 # File descriptor count
                 try:
                     num_fds = p.num_fds()
                 except:
                     num_fds = 0
-                
+
                 # Thread count
                 num_threads = p.num_threads()
-                
+
                 print(f"   🖥️  CPU Usage: {cpu_percent:.1f}%")
                 print(f"   💾 Memory: {memory_mb:.1f} MB")
                 print(f"   📖 I/O Read: {read_mb:.1f} MB")
@@ -76,12 +76,12 @@ try:
             continue
     else:
         print("   ❌ Ultra-efficient process not found")
-        
+
 except ImportError:
     print("   ⚠️  psutil not available for detailed metrics")
 EOF
         fi
-        
+
     elif ps aux | grep -q "[a]gi_enhanced_file_update_system.py"; then
         enhanced_pid=$(ps aux | grep "[a]gi_enhanced_file_update_system.py" | awk '{print $2}' | head -1)
         echo -e "${YELLOW}⚡ Enhanced System: RUNNING (PID: $enhanced_pid) - Upgrade to Ultra recommended${NC}"
@@ -91,18 +91,18 @@ EOF
     else
         echo -e "${RED}❌ No AGI System: STOPPED${NC}"
     fi
-    
+
     echo ""
 }
 
 check_performance_logs() {
     echo -e "${BOLD}${CYAN}📈 Performance Analytics${NC}"
     echo "======================="
-    
+
     # Check ultra performance log
     if [ -f "agi_ultra_performance.log" ]; then
         echo -e "${GREEN}✅ Ultra Performance Log: ACTIVE${NC}"
-        
+
         # Get recent performance data
         if [ -s "agi_ultra_performance.log" ]; then
             echo -e "${DIM}   Recent Performance Data:${NC}"
@@ -112,7 +112,7 @@ check_performance_logs() {
                     ops_per_sec=$(echo "$line" | jq -r '.operations_per_second' 2>/dev/null)
                     memory_mb=$(echo "$line" | jq -r '.memory_mb' 2>/dev/null)
                     cache_ratio=$(echo "$line" | jq -r '.cache_hit_ratio' 2>/dev/null)
-                    
+
                     if [ "$timestamp" != "null" ] && [ "$ops_per_sec" != "null" ]; then
                         echo -e "   ${timestamp}: ${ops_per_sec} ops/s, ${memory_mb}MB, cache ${cache_ratio}"
                     fi
@@ -121,17 +121,17 @@ check_performance_logs() {
                 fi
             done
         fi
-        
+
         # Calculate average performance
         if command -v jq &> /dev/null && [ -s "agi_ultra_performance.log" ]; then
             avg_ops=$(tail -n 10 agi_ultra_performance.log | jq -r '.operations_per_second' 2>/dev/null | awk '{sum+=$1; count++} END {if(count>0) print sum/count; else print 0}')
             avg_memory=$(tail -n 10 agi_ultra_performance.log | jq -r '.memory_mb' 2>/dev/null | awk '{sum+=$1; count++} END {if(count>0) print sum/count; else print 0}')
-            
+
             if [ "$(echo "$avg_ops > 0" | bc -l 2>/dev/null)" = "1" ]; then
                 echo -e "   ${BOLD}📊 Average (last 10): ${avg_ops} ops/s, ${avg_memory} MB${NC}"
             fi
         fi
-        
+
     elif [ -f "agi_performance.log" ]; then
         echo -e "${YELLOW}⚡ Enhanced Performance Log: Available${NC}"
     elif [ -f "agi_file_updates.log" ]; then
@@ -139,14 +139,14 @@ check_performance_logs() {
     else
         echo -e "${RED}❌ No Performance Logs: No monitoring data${NC}"
     fi
-    
+
     echo ""
 }
 
 analyze_efficiency_gains() {
     echo -e "${BOLD}${PURPLE}🎯 Efficiency Analysis${NC}"
     echo "===================="
-    
+
     # Compare different system configurations
     if [ -f ".agi_file_config.json" ]; then
         if command -v jq &> /dev/null; then
@@ -156,48 +156,48 @@ analyze_efficiency_gains() {
             compression=$(jq -r '.optimization_flags.compress_backups // false' .agi_file_config.json 2>/dev/null)
             caching=$(jq -r '.optimization_flags.cache_file_analysis // false' .agi_file_config.json 2>/dev/null)
             batch_size=$(jq -r '.performance_settings.batch_size // 10' .agi_file_config.json 2>/dev/null)
-            
+
             efficiency_score=0
             max_score=6
-            
+
             if [ "$ultra_enabled" = "true" ]; then
                 echo -e "   🚀 Ultra-Performance Mode: ${GREEN}ENABLED${NC} (+40% performance)"
                 efficiency_score=$((efficiency_score + 2))
             else
                 echo -e "   🚀 Ultra-Performance Mode: ${RED}DISABLED${NC} (enable for 40% boost)"
             fi
-            
+
             if [ "$parallel_enabled" = "true" ]; then
                 echo -e "   ⚡ Parallel Processing: ${GREEN}ENABLED${NC} (+25% throughput)"
                 efficiency_score=$((efficiency_score + 1))
             else
                 echo -e "   ⚡ Parallel Processing: ${RED}DISABLED${NC} (enable for 25% boost)"
             fi
-            
+
             if [ "$compression" = "true" ]; then
                 echo -e "   🗜️  Backup Compression: ${GREEN}ENABLED${NC} (+60% disk efficiency)"
                 efficiency_score=$((efficiency_score + 1))
             else
                 echo -e "   🗜️  Backup Compression: ${RED}DISABLED${NC} (enable for 60% space savings)"
             fi
-            
+
             if [ "$caching" = "true" ]; then
                 echo -e "   💾 File Analysis Caching: ${GREEN}ENABLED${NC} (+50% analysis speed)"
                 efficiency_score=$((efficiency_score + 1))
             else
                 echo -e "   💾 File Analysis Caching: ${RED}DISABLED${NC} (enable for 50% faster analysis)"
             fi
-            
+
             if [ "$batch_size" -ge 20 ]; then
                 echo -e "   📦 Batch Processing: ${GREEN}OPTIMIZED${NC} (batch size: $batch_size)"
                 efficiency_score=$((efficiency_score + 1))
             else
                 echo -e "   📦 Batch Processing: ${YELLOW}SUBOPTIMAL${NC} (batch size: $batch_size, recommend 20+)"
             fi
-            
+
             # Calculate efficiency percentage
             efficiency_percent=$((efficiency_score * 100 / max_score))
-            
+
             if [ "$efficiency_percent" -ge 80 ]; then
                 color="${GREEN}"
                 status="EXCELLENT"
@@ -208,36 +208,36 @@ analyze_efficiency_gains() {
                 color="${RED}"
                 status="NEEDS IMPROVEMENT"
             fi
-            
+
             echo -e "   ${BOLD}📈 Efficiency Score: ${color}${efficiency_percent}% (${efficiency_score}/${max_score}) - ${status}${NC}"
-            
+
         else
             echo -e "   ⚠️  Install 'jq' for detailed efficiency analysis"
         fi
     else
         echo -e "   ❌ Configuration file not found"
     fi
-    
+
     echo ""
 }
 
 show_performance_recommendations() {
     echo -e "${BOLD}${BLUE}💡 Performance Recommendations${NC}"
     echo "=============================="
-    
+
     # System-level recommendations
     memory_usage=$(free | awk '/^Mem:/ {printf "%.0f", ($3/$2)*100}')
     cpu_load=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | tr -d ',')
-    
+
     recommendations=0
-    
+
     # Check if ultra system is available but not running
     if [ -f "agi_ultra_efficient_file_system.py" ] && ! ps aux | grep -q "[a]gi_ultra_efficient_file_system.py"; then
         echo -e "   🚀 ${BOLD}Switch to Ultra-Efficient System:${NC} ./launch_agi_ultra_efficient.sh --daemon"
         echo -e "      Expected gain: 300-500% performance improvement"
         recommendations=$((recommendations + 1))
     fi
-    
+
     # Memory optimization
     if [ "$memory_usage" -gt 80 ]; then
         echo -e "   💾 ${BOLD}Reduce Memory Usage:${NC} Current usage ${memory_usage}%"
@@ -245,7 +245,7 @@ show_performance_recommendations() {
         echo -e "      - Enable memory mapping for large files"
         recommendations=$((recommendations + 1))
     fi
-    
+
     # CPU optimization
     if command -v bc &> /dev/null && [ "$(echo "$cpu_load > 8.0" | bc -l)" = "1" ]; then
         echo -e "   🖥️  ${BOLD}High CPU Load:${NC} Load average $cpu_load"
@@ -253,14 +253,14 @@ show_performance_recommendations() {
         echo -e "      - Enable process pool for CPU-intensive tasks"
         recommendations=$((recommendations + 1))
     fi
-    
+
     # Disk optimization
     if [ ! -d ".agi_cache" ]; then
         echo -e "   💿 ${BOLD}Enable Disk Caching:${NC} mkdir .agi_cache"
         echo -e "      Expected gain: 40-60% faster repeated operations"
         recommendations=$((recommendations + 1))
     fi
-    
+
     # Configuration optimization
     if [ -f ".agi_file_config.json" ] && command -v jq &> /dev/null; then
         batch_size=$(jq -r '.performance_settings.batch_size // 10' .agi_file_config.json 2>/dev/null)
@@ -270,36 +270,36 @@ show_performance_recommendations() {
             recommendations=$((recommendations + 1))
         fi
     fi
-    
+
     if [ "$recommendations" -eq 0 ]; then
         echo -e "   ${GREEN}✅ System is optimally configured!${NC}"
         echo -e "   🏆 No additional performance recommendations at this time"
     fi
-    
+
     echo ""
 }
 
 display_quick_actions() {
     echo -e "${BOLD}${CYAN}⚡ Quick Actions${NC}"
     echo "==============="
-    
+
     echo -e "${GREEN}🚀 Ultra-Efficient System:${NC}"
     echo "   Start:     ./launch_agi_ultra_efficient.sh --daemon"
     echo "   Monitor:   ./launch_agi_ultra_efficient.sh --monitor"
     echo "   Benchmark: ./launch_agi_ultra_efficient.sh --benchmark"
     echo ""
-    
+
     echo -e "${YELLOW}⚡ Enhanced System:${NC}"
     echo "   Start:     ./launch_agi_enhanced_auto.sh --daemon"
     echo "   Monitor:   ./launch_agi_enhanced_auto.sh --monitor"
     echo ""
-    
+
     echo -e "${BLUE}📊 Monitoring:${NC}"
     echo "   Status:    ./check_agi_ultra_status_dashboard.sh"
     echo "   Logs:      tail -f agi_ultra_performance.log"
     echo "   Stop All:  pkill -f agi_.*_file_update_system"
     echo ""
-    
+
     echo -e "${PURPLE}🔧 Configuration:${NC}"
     echo "   Edit:      code .agi_file_config.json"
     echo "   Backup:    ls -la .agi_backups/"
@@ -311,19 +311,19 @@ display_quick_actions() {
 main() {
     # System overview
     get_ultra_metrics
-    
+
     # Performance analysis
     check_performance_logs
-    
+
     # Efficiency analysis
     analyze_efficiency_gains
-    
+
     # Recommendations
     show_performance_recommendations
-    
+
     # Quick actions
     display_quick_actions
-    
+
     # Footer
     echo -e "${DIM}Last updated: $(date)${NC}"
 }
