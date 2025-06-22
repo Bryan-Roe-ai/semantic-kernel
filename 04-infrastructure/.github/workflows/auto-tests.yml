@@ -1,0 +1,379 @@
+name: 🧪 Automated Tests
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      test_pattern:
+        description: 'Test pattern to run (leave empty for all tests)'
+        required: false
+        default: ''
+      enable_coverage:
+        description: 'Enable code coverage collection'
+        required: false
+        default: 'true'
+        type: boolean
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18.x'
+
+jobs:
+  discover:
+    name: 🔍 Discover Test Projects
+    runs-on: ubuntu-latest
+    outputs:
+      dotnet-projects: ${{ steps.discover.outputs.dotnet-projects }}
+      python-tests: ${{ steps.discover.outputs.python-tests }}
+      typescript-projects: ${{ steps.discover.outputs.typescript-projects }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔍 Discover test projects
+        id: discover
+        run: |
+          # Discover .NET test projects
+          dotnet_projects=$(find 01-core-implementations/dotnet -name "*Tests.csproj" -type f | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "dotnet-projects=$dotnet_projects" >> $GITHUB_OUTPUT
+          
+          # Discover Python test directories
+          python_tests='["unit", "integration"]'
+          if [ -d "python/tests/end-to-end" ]; then
+            python_tests='["unit", "integration", "end-to-end"]'
+          fi
+          echo "python-tests=$python_tests" >> $GITHUB_OUTPUT
+          
+          # Discover TypeScript projects (simplified)
+          typescript_projects='[]'
+          if [ -d "typescript" ]; then
+            typescript_projects=$(find typescript -name "package.json" -type f | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          fi
+          echo "typescript-projects=$typescript_projects" >> $GITHUB_OUTPUT
+
+  test-dotnet:
+    name: 🏗️ .NET Tests
+    runs-on: ${{ matrix.os }}
+    needs: discover
+    if: needs.discover.outputs.dotnet-projects != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        project: ${{ fromJson(needs.discover.outputs.dotnet-projects) }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 📦 Restore dependencies
+        run: dotnet restore "${{ matrix.project }}"
+
+      - name: 🏗️ Build
+        run: dotnet build "${{ matrix.project }}" --configuration Release --no-restore
+
+      - name: 🧪 Run tests
+        run: |
+          dotnet test "${{ matrix.project }}" \
+            --configuration Release \
+            --no-build \
+            --logger "trx;LogFileName=test-results.trx" \
+            --logger "console;verbosity=normal" \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./TestResults
+
+      - name: 📊 Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-dotnet-${{ matrix.os }}-${{ hashFiles(matrix.project) }}
+          path: |
+            ./TestResults/**/*.trx
+            ./TestResults/**/*.xml
+
+      - name: 📈 Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: matrix.os == 'ubuntu-latest' && (github.event.inputs.enable_coverage == 'true' || github.event_name != 'workflow_dispatch')
+        with:
+          files: ./TestResults/**/coverage.cobertura.xml
+          flags: dotnet
+          name: codecov-dotnet-${{ hashFiles(matrix.project) }}
+
+  test-python:
+    name: 🐍 Python Tests
+    runs-on: ${{ matrix.os }}
+    needs: discover
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.10', '3.11', '3.12']
+        test-type: ${{ fromJson(needs.discover.outputs.python-tests) }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: 📦 Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: 📦 Install dependencies
+        working-directory: ./python
+        run: |
+          poetry install --with dev
+
+      - name: 🧪 Run tests
+        working-directory: ./python
+        run: |
+          poetry run pytest tests/${{ matrix.test-type }} \
+            -v \
+            --junitxml=junit-${{ matrix.test-type }}.xml \
+            --cov=semantic_kernel \
+            --cov-report=xml:coverage-${{ matrix.test-type }}.xml \
+            --cov-report=html:htmlcov-${{ matrix.test-type }}
+
+      - name: 📊 Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-python-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.test-type }}
+          path: |
+            ./python/junit-*.xml
+            ./python/coverage-*.xml
+            ./python/htmlcov-*/
+
+      - name: 📈 Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11' && (github.event.inputs.enable_coverage == 'true' || github.event_name != 'workflow_dispatch')
+        with:
+          files: ./python/coverage-${{ matrix.test-type }}.xml
+          flags: python-${{ matrix.test-type }}
+          name: codecov-python-${{ matrix.test-type }}
+
+  test-typescript:
+    name: 📜 TypeScript Tests
+    runs-on: ubuntu-latest
+    needs: discover
+    if: needs.discover.outputs.typescript-projects != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.discover.outputs.typescript-projects) }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📜 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: ${{ dirname(matrix.project) }}/package-lock.json
+
+      - name: 📦 Install dependencies
+        working-directory: ${{ dirname(matrix.project) }}
+        run: npm ci
+
+      - name: 🏗️ Build
+        working-directory: ${{ dirname(matrix.project) }}
+        run: npm run build --if-present
+
+      - name: 🧪 Run tests
+        working-directory: ${{ dirname(matrix.project) }}
+        run: npm test
+
+      - name: 📊 Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-typescript-${{ hashFiles(matrix.project) }}
+          path: |
+            ${{ dirname(matrix.project) }}/test-results.xml
+            ${{ dirname(matrix.project) }}/coverage/
+
+  integration-tests:
+    name: 🔗 Integration Tests
+    runs-on: ubuntu-latest
+    needs: [test-dotnet, test-python]
+    if: always() && (needs.test-dotnet.result == 'success' || needs.test-python.result == 'success')
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: 📦 Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: 🧪 Run cross-language integration tests
+        run: |
+          # Run integration tests that require multiple components
+          echo "Running cross-language integration tests..."
+          
+          # Example: Test .NET and Python interoperability
+          if [ -f "scripts/run-integration-tests.sh" ]; then
+            ./scripts/run-integration-tests.sh
+          fi
+
+  security-scan:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔒 Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: 📤 Upload Trivy scan results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  performance-tests:
+    name: ⚡ Performance Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && contains(github.event.inputs.test_pattern, 'performance'))
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: ⚡ Run performance benchmarks
+        run: |
+          # Run performance tests if they exist
+          if [ -d "01-core-implementations/dotnet/src/PerformanceTests" ]; then
+            dotnet run --project 01-core-implementations/dotnet/src/PerformanceTests --configuration Release
+          fi
+
+      - name: 📊 Upload performance results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-results
+          path: ./BenchmarkDotNet.Artifacts/
+
+  report:
+    name: 📋 Test Report
+    runs-on: ubuntu-latest
+    needs: [test-dotnet, test-python, test-typescript, integration-tests]
+    if: always()
+    steps:
+      - name: 📥 Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: 📋 Generate test report
+        run: |
+          echo "# 🧪 Test Execution Report" > test-report.md
+          echo "" >> test-report.md
+          echo "## Summary" >> test-report.md
+          echo "" >> test-report.md
+          
+          # Count test results
+          dotnet_status="${{ needs.test-dotnet.result }}"
+          python_status="${{ needs.test-python.result }}"
+          typescript_status="${{ needs.test-typescript.result }}"
+          integration_status="${{ needs.integration-tests.result }}"
+          
+          echo "| Component | Status |" >> test-report.md
+          echo "|-----------|--------|" >> test-report.md
+          echo "| .NET Tests | $dotnet_status |" >> test-report.md
+          echo "| Python Tests | $python_status |" >> test-report.md
+          echo "| TypeScript Tests | $typescript_status |" >> test-report.md
+          echo "| Integration Tests | $integration_status |" >> test-report.md
+          echo "" >> test-report.md
+          
+          # Add details for failed jobs
+          if [ "$dotnet_status" != "success" ]; then
+            echo "### .NET Test Failures" >> test-report.md
+            echo "Please check the .NET test job logs for details." >> test-report.md
+            echo "" >> test-report.md
+          fi
+          
+          if [ "$python_status" != "success" ]; then
+            echo "### Python Test Failures" >> test-report.md
+            echo "Please check the Python test job logs for details." >> test-report.md
+            echo "" >> test-report.md
+          fi
+          
+          echo "## Artifacts" >> test-report.md
+          echo "Test results and coverage reports are available in the workflow artifacts." >> test-report.md
+
+      - name: 📤 Upload test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: test-report.md
+
+      - name: 💬 Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('test-report.md', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: report
+            });
+
+  notify:
+    name: 📢 Notify
+    runs-on: ubuntu-latest
+    needs: [test-dotnet, test-python, test-typescript, integration-tests]
+    if: failure() && github.event_name == 'schedule'
+    steps:
+      - name: 📧 Send notification
+        run: |
+          echo "Scheduled test run failed. Please check the workflow logs."
+          # Add notification logic here (Slack, Teams, email, etc.)
