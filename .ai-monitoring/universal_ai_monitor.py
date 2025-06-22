@@ -654,40 +654,74 @@ class UniversalAIMonitor:
                 for row in cursor.fetchall()
             ]
 
-    def _get_system_health(self) -> Dict[str, Any]:
-        """Get system health metrics"""
-        return {
-            "uptime_hours": (datetime.now() - self.start_time).total_seconds() / 3600,
-            "queue_size": len(self.event_queue),
-            "cache_size": len(self.event_cache),
-            "active_agents": len(self.active_agents),
-            "monitoring_status": "healthy" if self.is_monitoring else "stopped"
-        }
-
-    def _get_performance_summary(self) -> Dict[str, Any]:
-        """Get performance summary"""
+    def get_recent_activities(self, limit: int = 100) -> List[AIEvent]:
+        """Get recent AI activities"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("""
-                SELECT agent_name, COUNT(*) as event_count, 
-                       AVG(CASE WHEN success = 1 THEN 1.0 ELSE 0.0 END) as success_rate,
-                       AVG(duration_ms) as avg_duration
-                FROM ai_events 
-                WHERE timestamp > datetime('now', '-1 hour')
-                GROUP BY agent_name
-            """)
+                SELECT * FROM ai_events 
+                ORDER BY timestamp DESC 
+                LIMIT ?
+            """, (limit,))
             
-            return {
-                row[0]: {
-                    "event_count": row[1],
-                    "success_rate": row[2] * 100 if row[2] else 0,
-                    "avg_duration_ms": row[3] if row[3] else 0
-                }
-                for row in cursor.fetchall()
-            }
+            events = []
+            for row in cursor.fetchall():
+                event = AIEvent(
+                    id=row[0],
+                    timestamp=row[1],
+                    agent_name=row[2],
+                    event_type=row[3],
+                    description=row[4],
+                    details=json.loads(row[5]),
+                    file_path=row[6],
+                    line_numbers=json.loads(row[7]) if row[7] else None,
+                    stack_trace=row[8],
+                    parent_event_id=row[9],
+                    child_event_ids=json.loads(row[10]) if row[10] else [],
+                    duration_ms=row[11],
+                    success=row[12],
+                    confidence=row[13],
+                    impact_score=row[14],
+                    tags=json.loads(row[15]) if row[15] else [],
+                    metadata=json.loads(row[16]) if row[16] else {}
+                )
+                events.append(event)
+            
+            return events
 
-    def subscribe_to_events(self, callback):
-        """Subscribe to real-time event stream"""
-        self.subscribers.append(callback)
+    def get_agent_activities(self, agent_name: str, limit: int = 50) -> List[AIEvent]:
+        """Get activities for a specific agent"""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute("""
+                SELECT * FROM ai_events 
+                WHERE agent_name = ?
+                ORDER BY timestamp DESC 
+                LIMIT ?
+            """, (agent_name, limit))
+            
+            events = []
+            for row in cursor.fetchall():
+                event = AIEvent(
+                    id=row[0],
+                    timestamp=row[1],
+                    agent_name=row[2],
+                    event_type=row[3],
+                    description=row[4],
+                    details=json.loads(row[5]),
+                    file_path=row[6],
+                    line_numbers=json.loads(row[7]) if row[7] else None,
+                    stack_trace=row[8],
+                    parent_event_id=row[9],
+                    child_event_ids=json.loads(row[10]) if row[10] else [],
+                    duration_ms=row[11],
+                    success=row[12],
+                    confidence=row[13],
+                    impact_score=row[14],
+                    tags=json.loads(row[15]) if row[15] else [],
+                    metadata=json.loads(row[16]) if row[16] else {}
+                )
+                events.append(event)
+            
+            return events
 
     def stop_monitoring(self):
         """Stop all monitoring"""
@@ -811,6 +845,37 @@ class UniversalAIMonitor:
             "activity_trend": "increasing" if len(hourly_activity) > 1 and 
                             list(hourly_activity.values())[-1] > list(hourly_activity.values())[0] else "stable"
         }
+
+    def _get_system_health(self) -> Dict[str, Any]:
+        """Get system health metrics"""
+        return {
+            "uptime_hours": (datetime.now() - self.start_time).total_seconds() / 3600,
+            "queue_size": len(self.event_queue),
+            "cache_size": len(self.event_cache),
+            "active_agents": len(self.active_agents),
+            "monitoring_status": "healthy" if self.is_monitoring else "stopped"
+        }
+
+    def _get_performance_summary(self) -> Dict[str, Any]:
+        """Get performance summary"""
+        with sqlite3.connect(self.db_path) as conn:
+            cursor = conn.execute("""
+                SELECT agent_name, COUNT(*) as event_count, 
+                       AVG(CASE WHEN success = 1 THEN 1.0 ELSE 0.0 END) as success_rate,
+                       AVG(duration_ms) as avg_duration
+                FROM ai_events 
+                WHERE timestamp > datetime('now', '-1 hour')
+                GROUP BY agent_name
+            """)
+            
+            return {
+                row[0]: {
+                    "event_count": row[1],
+                    "success_rate": row[2] * 100 if row[2] else 0,
+                    "avg_duration_ms": row[3] if row[3] else 0
+                }
+                for row in cursor.fetchall()
+            }
 
 
 # Global monitor instance

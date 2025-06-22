@@ -50,14 +50,14 @@ class PerformanceMetrics:
 
 class FileCache:
     """High-performance file caching system"""
-    
+
     def __init__(self, max_size: int = 1000, ttl_seconds: int = 300):
         self.cache = {}
         self.access_times = {}
         self.max_size = max_size
         self.ttl_seconds = ttl_seconds
         self.lock = threading.RLock()
-        
+
     @lru_cache(maxsize=100)
     def get_file_hash(self, file_path: str) -> str:
         """Fast file hash calculation with caching"""
@@ -66,7 +66,7 @@ class FileCache:
                 return hashlib.sha256(f.read()).hexdigest()
         except:
             return ""
-    
+
     def get(self, key: str) -> Optional[Any]:
         """Get cached value with TTL check"""
         with self.lock:
@@ -80,23 +80,23 @@ class FileCache:
                     del self.cache[key]
                     del self.access_times[key]
             return None
-    
+
     def set(self, key: str, value: Any) -> None:
         """Set cached value with LRU eviction"""
         with self.lock:
             if len(self.cache) >= self.max_size:
                 # Remove oldest item
-                oldest_key = min(self.access_times.keys(), 
+                oldest_key = min(self.access_times.keys(),
                                key=lambda k: self.access_times[k])
                 del self.cache[oldest_key]
                 del self.access_times[oldest_key]
-            
+
             self.cache[key] = value
             self.access_times[key] = datetime.now()
 
 class OptimizedFileUpdateTask:
     """Enhanced file update task with optimization features"""
-    
+
     def __init__(self, file_path: str, operation: str, content: str = "",
                  target_line: Optional[int] = None, backup: bool = True,
                  priority: int = 0):
@@ -112,38 +112,38 @@ class OptimizedFileUpdateTask:
         self.result = None
         self.error = None
         self.execution_time = 0.0
-        
+
     def __lt__(self, other):
         """Priority queue ordering"""
         return self.priority > other.priority  # Higher priority first
 
 class EnhancedFileUpdater:
     """High-performance autonomous file update system"""
-    
+
     def __init__(self):
         self.workspace_path = Path("/home/broe/semantic-kernel")
         self.config_path = self.workspace_path / ".agi_file_config.json"
         self.load_configuration()
-        
+
         # Performance components
         self.file_cache = FileCache(
             max_size=self.config.get("performance_settings", {}).get("cache_size", 1000),
             ttl_seconds=self.config.get("performance_settings", {}).get("cache_ttl_seconds", 300)
         )
         self.metrics = PerformanceMetrics()
-        
+
         # Threading and async
         self.max_workers = self.config.get("performance_settings", {}).get("max_concurrent_tasks", 5)
         self.executor = ThreadPoolExecutor(max_workers=self.max_workers)
         self.task_queue = asyncio.PriorityQueue()
         self.batch_size = self.config.get("performance_settings", {}).get("batch_size", 10)
-        
+
         # Setup logger with performance tracking
         self.logger = self._setup_performance_logger()
-        
+
         # Optimization flags
         self.optimization_flags = self.config.get("optimization_flags", {})
-        
+
         print(f"🚀 Enhanced AGI File Updater initialized with {self.max_workers} workers")
         print(f"📊 Cache size: {self.file_cache.max_size}, Batch size: {self.batch_size}")
 
@@ -175,52 +175,52 @@ class EnhancedFileUpdater:
         """Setup logger with performance metrics"""
         logger = logging.getLogger("Enhanced_AGI_FileUpdater")
         logger.setLevel(logging.INFO)
-        
+
         # Create file handler with rotation
         from logging.handlers import RotatingFileHandler
         log_file = self.workspace_path / "agi_enhanced_updates.log"
         fh = RotatingFileHandler(log_file, maxBytes=10*1024*1024, backupCount=5)
         fh.setLevel(logging.INFO)
-        
+
         # Performance formatter
         formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - [%(process)d:%(thread)d] - %(message)s'
         )
         fh.setFormatter(formatter)
         logger.addHandler(fh)
-        
+
         return logger
 
     @lru_cache(maxsize=500)
     def is_safe_operation(self, file_path_str: str, operation: str) -> tuple[bool, str]:
         """Cached safety check for improved performance"""
         file_path = Path(file_path_str)
-        
+
         # Check safe directories
         file_str = str(file_path.absolute())
         safe_dirs = self.config.get("safe_directories", [])
         in_safe_dir = any(file_str.startswith(safe_dir) for safe_dir in safe_dirs)
-        
+
         if not in_safe_dir:
             return False, f"File {file_path} not in approved directories"
-        
+
         # Check restricted patterns
         restricted = self.config.get("restricted_files", [])
         for pattern in restricted:
             if pattern.lower() in str(file_path).lower():
                 return False, f"File contains restricted pattern: {pattern}"
-        
+
         return True, "Operation approved"
 
     async def optimized_backup(self, file_path: Path) -> Optional[Path]:
         """Optimized backup with compression"""
         if not file_path.exists():
             return None
-        
+
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         backup_dir = self.workspace_path / ".agi_backups"
         backup_dir.mkdir(exist_ok=True)
-        
+
         if self.optimization_flags.get("compress_backups", False):
             backup_file = backup_dir / f"{file_path.name}.{timestamp}.gz"
             try:
@@ -244,20 +244,20 @@ class EnhancedFileUpdater:
     async def batch_analyze_files(self, file_paths: List[Path]) -> Dict[str, Any]:
         """Batch file analysis for improved performance"""
         results = {}
-        
+
         if self.optimization_flags.get("enable_parallel_processing", False):
             # Parallel analysis
             loop = asyncio.get_event_loop()
             tasks = []
-            
+
             for file_path in file_paths:
                 task = loop.run_in_executor(
-                    self.executor, 
-                    self._analyze_single_file, 
+                    self.executor,
+                    self._analyze_single_file,
                     file_path
                 )
                 tasks.append((file_path, task))
-            
+
             for file_path, task in tasks:
                 try:
                     results[str(file_path)] = await task
@@ -267,19 +267,19 @@ class EnhancedFileUpdater:
             # Sequential analysis
             for file_path in file_paths:
                 results[str(file_path)] = self._analyze_single_file(file_path)
-        
+
         return results
 
     def _analyze_single_file(self, file_path: Path) -> Dict[str, Any]:
         """Optimized single file analysis with caching"""
         cache_key = f"analysis_{file_path}_{self.file_cache.get_file_hash(str(file_path))}"
-        
+
         # Check cache first
         if self.optimization_flags.get("cache_file_analysis", False):
             cached_result = self.file_cache.get(cache_key)
             if cached_result:
                 return cached_result
-        
+
         # Perform analysis
         try:
             # Use memory mapping for large files
@@ -290,7 +290,7 @@ class EnhancedFileUpdater:
             else:
                 with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
-            
+
             analysis = {
                 "exists": True,
                 "size": len(content),
@@ -298,19 +298,19 @@ class EnhancedFileUpdater:
                 "file_type": file_path.suffix,
                 "last_modified": datetime.fromtimestamp(file_path.stat().st_mtime).isoformat()
             }
-            
+
             # Language-specific analysis
             if file_path.suffix == ".py":
                 analysis.update(self._fast_python_analysis(content))
             elif file_path.suffix in [".cs", ".csx"]:
                 analysis.update(self._fast_csharp_analysis(content))
-            
+
             # Cache the result
             if self.optimization_flags.get("cache_file_analysis", False):
                 self.file_cache.set(cache_key, analysis)
-            
+
             return analysis
-            
+
         except Exception as e:
             return {"exists": True, "error": str(e)}
 
@@ -340,7 +340,7 @@ class EnhancedFileUpdater:
         """Process multiple tasks in optimized batches"""
         start_time = time.time()
         results = []
-        
+
         if self.optimization_flags.get("batch_file_operations", False):
             # Group tasks by directory for better I/O performance
             dir_groups = {}
@@ -349,7 +349,7 @@ class EnhancedFileUpdater:
                 if dir_key not in dir_groups:
                     dir_groups[dir_key] = []
                 dir_groups[dir_key].append(task)
-            
+
             # Process each directory group
             for directory, dir_tasks in dir_groups.items():
                 dir_results = await self._process_directory_batch(dir_tasks)
@@ -359,35 +359,35 @@ class EnhancedFileUpdater:
             for task in tasks:
                 result = await self._execute_single_task(task)
                 results.append(result)
-        
+
         # Update performance metrics
         execution_time = time.time() - start_time
         self.metrics.total_operations += len(tasks)
         self.metrics.successful_operations += sum(1 for r in results if r.get("success", False))
         self.metrics.average_execution_time = (
-            (self.metrics.average_execution_time * (self.metrics.total_operations - len(tasks)) + execution_time) 
+            (self.metrics.average_execution_time * (self.metrics.total_operations - len(tasks)) + execution_time)
             / self.metrics.total_operations
         )
-        
+
         return results
 
     async def _process_directory_batch(self, tasks: List[OptimizedFileUpdateTask]) -> List[Dict[str, Any]]:
         """Process tasks in same directory as a batch"""
         results = []
-        
+
         # Sort tasks by priority and operation type for optimal I/O
         sorted_tasks = sorted(tasks, key=lambda t: (t.priority, t.operation))
-        
+
         for task in sorted_tasks:
             result = await self._execute_single_task(task)
             results.append(result)
-        
+
         return results
 
     async def _execute_single_task(self, task: OptimizedFileUpdateTask) -> Dict[str, Any]:
         """Execute a single optimized task"""
         start_time = time.time()
-        
+
         try:
             # Skip duplicate operations if enabled
             if self.optimization_flags.get("skip_duplicate_operations", False):
@@ -399,7 +399,7 @@ class EnhancedFileUpdater:
                         "skipped": True,
                         "reason": "Duplicate operation skipped"
                     }
-            
+
             # Safety check
             safe, reason = self.is_safe_operation(str(task.file_path), task.operation)
             if not safe:
@@ -408,29 +408,29 @@ class EnhancedFileUpdater:
                     "success": False,
                     "error": f"Safety check failed: {reason}"
                 }
-            
+
             # Create backup if needed
             backup_file = None
             if task.backup and task.file_path.exists():
                 backup_file = await self.optimized_backup(task.file_path)
-            
+
             # Execute operation
             success = await self._execute_file_operation(task)
-            
+
             # Mark as executed to prevent duplicates
             if self.optimization_flags.get("skip_duplicate_operations", False):
                 duplicate_key = f"{task.file_path}_{task.operation}_{hash(task.content)}"
                 self.file_cache.set(f"executed_{duplicate_key}", True)
-            
+
             task.execution_time = time.time() - start_time
-            
+
             return {
                 "task_id": task.task_id,
                 "success": success,
                 "execution_time": task.execution_time,
                 "backup_file": str(backup_file) if backup_file else None
             }
-            
+
         except Exception as e:
             task.execution_time = time.time() - start_time
             self.logger.error(f"Task {task.task_id} failed: {e}")
@@ -458,10 +458,10 @@ class EnhancedFileUpdater:
         """Optimized file creation"""
         if task.file_path.exists():
             return False
-        
+
         # Ensure directory exists
         task.file_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # Write file with optimal buffer size
         loop = asyncio.get_event_loop()
         await loop.run_in_executor(
@@ -476,7 +476,7 @@ class EnhancedFileUpdater:
         """Optimized file update"""
         if not task.file_path.exists():
             return False
-        
+
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(
             self.executor,
@@ -500,9 +500,9 @@ class EnhancedFileUpdater:
         """Optimized content replacement"""
         if '|' not in task.content:
             return False
-        
+
         old_content, new_content = task.content.split('|', 1)
-        
+
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(
             self.executor,
@@ -522,7 +522,7 @@ class EnhancedFileUpdater:
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 lines = f.readlines()
-            
+
             if target_line is not None:
                 if 0 <= target_line <= len(lines):
                     lines.insert(target_line, content + '\n')
@@ -530,10 +530,10 @@ class EnhancedFileUpdater:
                     return False
             else:
                 lines = [content]
-            
+
             with open(file_path, 'w', encoding='utf-8', buffering=8192) as f:
                 f.writelines(lines)
-            
+
             return True
         except Exception:
             return False
@@ -554,12 +554,12 @@ class EnhancedFileUpdater:
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
-            
+
             updated_content = content.replace(old_content, new_content)
-            
+
             with open(file_path, 'w', encoding='utf-8', buffering=8192) as f:
                 f.write(updated_content)
-            
+
             return True
         except Exception:
             return False
@@ -567,22 +567,22 @@ class EnhancedFileUpdater:
     async def intelligent_task_generation(self) -> List[OptimizedFileUpdateTask]:
         """Intelligent task generation with performance optimizations"""
         tasks = []
-        
+
         # High-priority optimization tasks
         tasks.extend(await self._generate_performance_tasks())
-        
+
         # Documentation improvement tasks
         tasks.extend(await self._generate_documentation_tasks())
-        
+
         # Code quality enhancement tasks
         tasks.extend(await self._generate_quality_tasks())
-        
+
         return tasks
 
     async def _generate_performance_tasks(self) -> List[OptimizedFileUpdateTask]:
         """Generate performance optimization tasks"""
         tasks = []
-        
+
         # Create performance monitor
         tasks.append(OptimizedFileUpdateTask(
             file_path=str(self.workspace_path / "agi_performance_monitor.py"),
@@ -605,20 +605,20 @@ class AGIPerformanceMonitor:
         self.metrics = {}
         self.monitoring = False
         self.monitor_thread = None
-    
+
     def start_monitoring(self):
         '''Start performance monitoring'''
         self.monitoring = True
         self.monitor_thread = threading.Thread(target=self._monitor_loop)
         self.monitor_thread.daemon = True
         self.monitor_thread.start()
-    
+
     def stop_monitoring(self):
         '''Stop performance monitoring'''
         self.monitoring = False
         if self.monitor_thread:
             self.monitor_thread.join()
-    
+
     def _monitor_loop(self):
         '''Main monitoring loop'''
         while self.monitoring:
@@ -629,7 +629,7 @@ class AGIPerformanceMonitor:
                 'disk_io': psutil.disk_io_counters()._asdict() if psutil.disk_io_counters() else {},
             })
             time.sleep(1)
-    
+
     def get_current_metrics(self) -> Dict[str, Any]:
         '''Get current performance metrics'''
         return self.metrics.copy()
@@ -638,13 +638,13 @@ class AGIPerformanceMonitor:
 performance_monitor = AGIPerformanceMonitor()
 """
         ))
-        
+
         return tasks
 
     async def _generate_documentation_tasks(self) -> List[OptimizedFileUpdateTask]:
         """Generate documentation improvement tasks"""
         tasks = []
-        
+
         # Enhanced README for the enhanced system
         tasks.append(OptimizedFileUpdateTask(
             file_path=str(self.workspace_path / "AGI_ENHANCED_SYSTEM_README.md"),
@@ -694,13 +694,13 @@ python3 -c "from agi_performance_monitor import performance_monitor; performance
 Last updated: {datetime.now().isoformat()}
 """
         ))
-        
+
         return tasks
 
     async def _generate_quality_tasks(self) -> List[OptimizedFileUpdateTask]:
         """Generate code quality improvement tasks"""
         tasks = []
-        
+
         # Create optimized launcher script
         tasks.append(OptimizedFileUpdateTask(
             file_path=str(self.workspace_path / "launch_agi_enhanced.sh"),
@@ -764,38 +764,38 @@ fi
 print_success "Enhanced AGI Auto File Update System ready!"
 """
         ))
-        
+
         return tasks
 
     async def run_enhanced_cycle(self) -> Dict[str, Any]:
         """Run one enhanced autonomous cycle"""
         cycle_start = time.time()
-        
+
         print("🔄 Starting enhanced autonomous file update cycle...")
-        
+
         # Generate intelligent tasks
         tasks = await self.intelligent_task_generation()
         print(f"📋 Generated {len(tasks)} optimized tasks")
-        
+
         # Process tasks in optimized batches
         all_results = []
         for i in range(0, len(tasks), self.batch_size):
             batch = tasks[i:i + self.batch_size]
             batch_results = await self.process_task_batch(batch)
             all_results.extend(batch_results)
-            
+
             # Brief pause between batches to prevent resource exhaustion
             if i + self.batch_size < len(tasks):
                 await asyncio.sleep(0.1)
-        
+
         cycle_time = time.time() - cycle_start
-        
+
         # Update metrics
         self.metrics.cache_hit_ratio = len([r for r in all_results if r.get("skipped")]) / max(len(all_results), 1)
-        
+
         print(f"✅ Enhanced cycle completed in {cycle_time:.2f}s")
         print(f"📊 Performance: {len(all_results)} operations, {self.metrics.cache_hit_ratio:.2%} cache hit ratio")
-        
+
         return {
             "cycle_time": cycle_time,
             "total_tasks": len(tasks),
@@ -807,7 +807,7 @@ print_success "Enhanced AGI Auto File Update System ready!"
     def get_performance_report(self) -> Dict[str, Any]:
         """Get comprehensive performance report"""
         import psutil
-        
+
         return {
             "system_metrics": {
                 "total_operations": self.metrics.total_operations,
@@ -838,33 +838,33 @@ enhanced_file_updater = EnhancedFileUpdater()
 async def main():
     """Main function for enhanced AGI file update system"""
     import sys
-    
+
     print("🚀 Enhanced AGI Autonomous File Update System")
     print("=" * 60)
-    
+
     if "--monitor" in sys.argv:
         print("📊 Starting in monitoring mode...")
         while True:
             result = await enhanced_file_updater.run_enhanced_cycle()
             print(f"Cycle completed: {result}")
             await asyncio.sleep(300)  # 5 minutes between cycles
-    
+
     elif "--daemon" in sys.argv:
         print("🔄 Starting in daemon mode...")
         result = await enhanced_file_updater.run_enhanced_cycle()
         print(f"Daemon cycle completed: {result}")
-    
+
     else:
         # Single run
         result = await enhanced_file_updater.run_enhanced_cycle()
-        
+
         print("\\n📊 Performance Report:")
         report = enhanced_file_updater.get_performance_report()
         for category, metrics in report.items():
             print(f"  {category}:")
             for key, value in metrics.items():
                 print(f"    {key}: {value}")
-        
+
         print("\\n🌟 Enhanced AGI System: OPTIMIZED AND OPERATIONAL!")
 
 if __name__ == "__main__":

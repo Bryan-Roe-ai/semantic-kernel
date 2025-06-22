@@ -11,13 +11,7 @@
     "/home/broe/semantic-kernel/data",
     "/home/broe/semantic-kernel/tests"
   ],
-  "restricted_files": [
-    ".git",
-    ".env",
-    "secrets",
-    "credentials",
-    "password"
-  ],
+  "restricted_files": [".git", ".env", "secrets", "credentials", "password"],
   "workspace_path": "/home/broe/semantic-kernel",
   "backup_path": "/home/broe/semantic-kernel/.agi_backups",
   "performance_settings": {

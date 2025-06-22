@@ -30,12 +30,12 @@ get_process_cpu() {
 check_performance_status() {
     echo -e "${PURPLE}📊 Performance Metrics${NC}"
     echo "====================="
-    
+
     # Check if performance log exists
     if [ -f "agi_performance.log" ]; then
         local log_entries=$(wc -l < agi_performance.log 2>/dev/null || echo "0")
         echo -e "${GREEN}✅ Performance Log: $log_entries entries${NC}"
-        
+
         # Show recent performance data
         if [ "$log_entries" -gt 0 ]; then
             local last_entry=$(tail -n 1 agi_performance.log 2>/dev/null)
@@ -44,23 +44,23 @@ check_performance_status() {
     else
         echo -e "${YELLOW}⚠️  Performance Log: No data${NC}"
     fi
-    
+
     # Memory usage analysis
     local total_memory_mb=$(free -m | awk '/^Mem:/{print $2}')
     local available_memory_mb=$(free -m | awk '/^Mem:/{print $7}')
     local memory_usage_percent=$(( (total_memory_mb - available_memory_mb) * 100 / total_memory_mb ))
-    
+
     echo -e "${CYAN}   💾 System Memory: ${memory_usage_percent}% used (${available_memory_mb}MB available)${NC}"
-    
+
     # CPU load
     local cpu_load=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | tr -d ',')
     echo -e "${CYAN}   🖥️  CPU Load: $cpu_load${NC}"
-    
+
     # Disk space for workspace
     local disk_usage=$(df . | awk 'NR==2 {print $5}' | tr -d '%')
     local disk_available=$(df -h . | awk 'NR==2 {print $4}')
     echo -e "${CYAN}   💿 Disk Usage: ${disk_usage}% (${disk_available} available)${NC}"
-    
+
     echo ""
 }
 
@@ -101,7 +101,7 @@ echo "========================="
 
 if [ -f ".agi_file_config.json" ]; then
     echo -e "${GREEN}✅ Configuration: FOUND${NC}"
-    
+
     # Check for optimization settings
     if command -v jq &> /dev/null; then
         local safe_dirs=$(jq -r '.safe_directories | length' .agi_file_config.json 2>/dev/null || echo "unknown")
@@ -110,24 +110,24 @@ if [ -f ".agi_file_config.json" ]; then
         local parallel_enabled=$(jq -r '.performance_settings.enable_parallel_processing // "not set"' .agi_file_config.json 2>/dev/null)
         local compression=$(jq -r '.optimization_flags.compress_backups // "not set"' .agi_file_config.json 2>/dev/null)
         local caching=$(jq -r '.optimization_flags.cache_file_analysis // "not set"' .agi_file_config.json 2>/dev/null)
-        
+
         echo -e "   📁 Safe directories: $safe_dirs"
         echo -e "   🔧 Max concurrent tasks: $max_tasks"
         echo -e "   ⏱️  Cache TTL: ${cache_ttl}s"
         echo -e "   ⚡ Parallel processing: $parallel_enabled"
         echo -e "   🗜️  Backup compression: $compression"
         echo -e "   💾 File analysis caching: $caching"
-        
+
         # Configuration optimization score
         local opt_score=0
         [ "$max_tasks" != "not set" ] && opt_score=$((opt_score + 1))
         [ "$parallel_enabled" = "true" ] && opt_score=$((opt_score + 1))
         [ "$compression" = "true" ] && opt_score=$((opt_score + 1))
         [ "$caching" = "true" ] && opt_score=$((opt_score + 1))
-        
+
         local opt_percentage=$((opt_score * 25))
         echo -e "   📈 Optimization level: ${opt_percentage}% (${opt_score}/4 features enabled)"
-        
+
     else
         echo -e "   ⚠️  Install 'jq' for detailed configuration analysis"
     fi
@@ -145,7 +145,7 @@ if [ -d ".agi_backups" ]; then
     local backup_count=$(ls -1 .agi_backups/ 2>/dev/null | wc -l)
     local backup_size=$(du -sh .agi_backups/ 2>/dev/null | cut -f1 || echo "0B")
     echo -e "${GREEN}✅ Backup Directory: EXISTS ($backup_count files, $backup_size)${NC}"
-    
+
     # Check for compressed backups
     local compressed_count=$(ls -1 .agi_backups/*.gz 2>/dev/null | wc -l || echo "0")
     if [ "$compressed_count" -gt 0 ]; then
@@ -175,23 +175,23 @@ if [ -f "agi_file_updates.log" ]; then
     local total_lines=$(wc -l < agi_file_updates.log 2>/dev/null || echo "0")
     echo -e "   📝 Last activity: $last_entry"
     echo -e "   📊 Total entries: $total_lines"
-    
+
     # Analyze recent activity (last hour)
     local recent_activity=$(grep "$(date '+%Y-%m-%d %H:')" agi_file_updates.log 2>/dev/null | wc -l || echo "0")
     echo -e "   ⏰ Recent activity (last hour): $recent_activity entries"
-    
+
     # Error analysis
     local error_count=$(grep -c "ERROR" agi_file_updates.log 2>/dev/null || echo "0")
     local warning_count=$(grep -c "WARNING" agi_file_updates.log 2>/dev/null || echo "0")
-    
+
     if [ "$error_count" -gt 0 ]; then
         echo -e "   ${RED}❌ Errors found: $error_count${NC}"
     fi
-    
+
     if [ "$warning_count" -gt 0 ]; then
         echo -e "   ${YELLOW}⚠️  Warnings found: $warning_count${NC}"
     fi
-    
+
     if [ "$error_count" -eq 0 ] && [ "$warning_count" -eq 0 ]; then
         echo -e "   ${GREEN}✅ No errors or warnings${NC}"
     fi
@@ -210,7 +210,7 @@ echo "================"
 
 if curl -s http://localhost:8000/health > /dev/null 2>&1; then
     echo -e "${GREEN}✅ AGI Backend: ONLINE${NC}"
-    
+
     # Try to get backend info
     local backend_info=$(curl -s http://localhost:8000/api/status 2>/dev/null || echo "")
     if [ -n "$backend_info" ]; then
@@ -238,7 +238,7 @@ if [ -f ".agi_file_config.json" ] && command -v jq &> /dev/null; then
     if [ "$parallel_enabled" != "true" ]; then
         echo -e "${YELLOW}⚡ Enable parallel processing for better performance${NC}"
     fi
-    
+
     local compression=$(jq -r '.optimization_flags.compress_backups // false' .agi_file_config.json 2>/dev/null)
     if [ "$compression" != "true" ]; then
         echo -e "${YELLOW}🗜️  Enable backup compression to save disk space${NC}"

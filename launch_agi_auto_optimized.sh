@@ -48,11 +48,11 @@ monitor_performance() {
         # Monitor memory usage
         local memory_mb=$(ps -p $pid -o rss= | awk '{print $1/1024}')
         local cpu_percent=$(ps -p $pid -o %cpu= | tr -d ' ')
-        
+
         if (( $(echo "$memory_mb > $MAX_MEMORY_MB" | bc -l) )); then
             print_warning "Memory usage: ${memory_mb}MB (limit: ${MAX_MEMORY_MB}MB)"
         fi
-        
+
         echo "$(date): PID=$pid MEM=${memory_mb}MB CPU=${cpu_percent}%" >> agi_performance.log
         sleep 30
     done
@@ -61,7 +61,7 @@ monitor_performance() {
 # Optimize Python environment
 optimize_python_env() {
     print_perf "Optimizing Python environment..."
-    
+
     # Set performance environment variables
     export PYTHONDONTWRITEBYTECODE=1
     export PYTHONUNBUFFERED=1
@@ -69,17 +69,17 @@ optimize_python_env() {
     export TOKENIZERS_PARALLELISM=false
     export OMP_NUM_THREADS=${PARALLEL_WORKERS}
     export MKL_NUM_THREADS=${PARALLEL_WORKERS}
-    
+
     # Set memory limits
     ulimit -v $((MAX_MEMORY_MB * 1024)) 2>/dev/null || print_warning "Could not set memory limit"
-    
+
     print_success "Python environment optimized"
 }
 
 # Check system requirements
 check_system_requirements() {
     print_status "Checking system requirements for optimization..."
-    
+
     # Check available memory
     local available_memory_mb=$(free -m | awk '/^Mem:/{print $7}')
     if [ "$available_memory_mb" -lt 256 ]; then
@@ -87,17 +87,17 @@ check_system_requirements() {
     else
         print_success "Available memory: ${available_memory_mb}MB"
     fi
-    
+
     # Check CPU cores
     local cpu_cores=$(nproc)
     print_success "CPU cores available: $cpu_cores"
-    
+
     # Adjust workers based on CPU cores
     if [ "$PARALLEL_WORKERS" -gt "$cpu_cores" ]; then
         PARALLEL_WORKERS=$cpu_cores
         print_warning "Adjusted workers to match CPU cores: $PARALLEL_WORKERS"
     fi
-    
+
     # Check disk space
     local disk_space_gb=$(df . | awk 'NR==2 {print $4/1024/1024}')
     if (( $(echo "$disk_space_gb < 1" | bc -l) )); then
@@ -182,12 +182,12 @@ if [ -f ".agi_file_config.json" ]; then
     # Validate performance settings exist
     if jq -e '.performance_settings' .agi_file_config.json > /dev/null 2>&1; then
         print_success "Optimized AGI configuration found"
-        
+
         # Display performance settings
         local max_tasks=$(jq -r '.performance_settings.max_concurrent_tasks // 5' .agi_file_config.json)
         local cache_ttl=$(jq -r '.performance_settings.cache_ttl_seconds // 300' .agi_file_config.json)
         local parallel_enabled=$(jq -r '.performance_settings.enable_parallel_processing // true' .agi_file_config.json)
-        
+
         print_perf "Max concurrent tasks: $max_tasks"
         print_perf "Cache TTL: ${cache_ttl}s"
         print_perf "Parallel processing: $parallel_enabled"
@@ -202,16 +202,16 @@ fi
 cleanup() {
     print_status "Shutting down Optimized AGI Auto File Update System..."
     kill $(jobs -p) 2>/dev/null || true
-    
+
     # Kill any remaining AGI processes
     pkill -f "agi_file_update_system" 2>/dev/null || true
-    
+
     # Save performance summary
     if [ -f "agi_performance.log" ]; then
         local total_lines=$(wc -l < agi_performance.log)
         print_perf "Performance log saved: $total_lines entries"
     fi
-    
+
     exit 0
 }
 
@@ -227,7 +227,7 @@ if ! curl -s http://localhost:8000/health > /dev/null 2>&1; then
         BACKEND_PID=$!
         cd ..
         print_success "Optimized AGI backend started (PID: $BACKEND_PID)"
-        
+
         # Start performance monitoring for backend
         monitor_performance $BACKEND_PID &
     else
@@ -270,31 +270,31 @@ export AGI_MEMORY_LIMIT_MB=$MAX_MEMORY_MB
 # Start based on mode
 if [ "$1" = "--monitor" ]; then
     print_status "Starting in optimized monitoring mode..."
-    
+
     # Start AGI system
     python3 "$AGI_SCRIPT" &
     AGI_FILE_PID=$!
-    
+
     # Start performance monitoring
     monitor_performance $AGI_FILE_PID &
     MONITOR_PID=$!
-    
+
     # Create monitoring loop
     while true; do
         sleep 300  # Check every 5 minutes
-        
+
         # Check if processes are still running
         if ! ps -p $AGI_FILE_PID > /dev/null; then
             print_warning "Optimized AGI Auto File Update System stopped, restarting..."
             python3 "$AGI_SCRIPT" &
             AGI_FILE_PID=$!
-            
+
             # Restart monitoring
             kill $MONITOR_PID 2>/dev/null || true
             monitor_performance $AGI_FILE_PID &
             MONITOR_PID=$!
         fi
-        
+
         # Log status with performance metrics
         local memory_mb=$(ps -p $AGI_FILE_PID -o rss= 2>/dev/null | awk '{print $1/1024}' || echo "0")
         echo "$(date): Optimized AGI running (PID: $AGI_FILE_PID, MEM: ${memory_mb}MB)" >> agi_auto_status.log
@@ -305,42 +305,42 @@ elif [ "$1" = "--daemon" ]; then
     nohup python3 "$AGI_SCRIPT" > agi_auto_optimized_daemon.log 2>&1 &
     AGI_PID=$!
     print_success "Optimized AGI Auto File Update System running in daemon mode (PID: $AGI_PID)"
-    
+
     # Start background performance monitoring
     monitor_performance $AGI_PID > /dev/null 2>&1 &
-    
+
     echo $AGI_PID > .agi_optimized_daemon.pid
     exit 0
 
 elif [ "$1" = "--performance" ]; then
     print_status "Starting in performance analysis mode..."
-    
+
     # Enable detailed performance logging
     export AGI_PERFORMANCE_MODE=1
     export PYTHONPROFILE=1
-    
+
     python3 -m cProfile -o agi_performance_profile.prof "$AGI_SCRIPT" &
     AGI_FILE_PID=$!
-    
+
     print_success "Performance profiling enabled - results will be saved to agi_performance_profile.prof"
     monitor_performance $AGI_FILE_PID &
-    
+
     wait $AGI_FILE_PID
 
 else
     # Interactive optimized mode
     print_status "Starting in interactive optimized mode..."
-    
+
     python3 "$AGI_SCRIPT" &
     AGI_FILE_PID=$!
-    
+
     # Start performance monitoring
     monitor_performance $AGI_FILE_PID &
     MONITOR_PID=$!
-    
+
     # Wait a moment for startup
     sleep 3
-    
+
     # Check if the system started successfully
     if ps -p $AGI_FILE_PID > /dev/null; then
         print_success "Optimized AGI Auto File Update System started (PID: $AGI_FILE_PID)"
@@ -385,7 +385,7 @@ if [ "$1" != "--daemon" ]; then
     print_status "📖 For VS Code integration, see AGI_AUTO_SETUP_COMPLETE.md"
     print_status ""
     print_status "Press Ctrl+C to stop all services"
-    
+
     # Wait for background processes
     wait
 fi
