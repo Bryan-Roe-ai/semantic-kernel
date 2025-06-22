@@ -1,69 +1,57 @@
+
 # GPU Helper Functions for Semantic Kernel Workspace
 import torch
 import json
-import gc
-from contextlib import contextmanager
+import os
 
-def load_gpu_config(notebook_name="general"):
-    """Load GPU configuration for a specific notebook"""
-    try:
-        with open("/home/broe/semantic-kernel/workspace_gpu_configs.json", "r") as f:
-            configs = json.load(f)
-        return configs.get(notebook_name, configs["general"])
-    except FileNotFoundError:
-        print("GPU config file not found. Using defaults.")
-        return {"device": "cuda" if torch.cuda.is_available() else "cpu"}
+def load_gpu_config():
+    """Load GPU configuration for the workspace"""
+    config_path = "/home/broe/semantic-kernel/workspace_gpu_config.json"
+    if os.path.exists(config_path):
+        with open(config_path, 'r') as f:
+            return json.load(f)
+    return {"gpu_setup": {"cuda_available": False}}
 
-def setup_gpu_environment(config_name="general"):
-    """Set up GPU environment based on configuration"""
-    config = load_gpu_config(config_name)
+def get_optimal_device():
+    """Get the optimal device for computation"""
+    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    device = torch.device(config["gpu_settings"]["device"])
+def get_recommended_batch_size(component="default"):
+    """Get recommended batch size for different components"""
+    config = load_gpu_config()
+    component_config = config.get(component, {})
+    return component_config.get("recommended_batch_size", 4 if torch.cuda.is_available() else 1)
 
-    # Set memory management
+def setup_mixed_precision():
+    """Setup mixed precision training if available"""
     if torch.cuda.is_available():
-        torch.backends.cudnn.benchmark = True
-        torch.backends.cudnn.enabled = True
+        return torch.cuda.amp.GradScaler()
+    return None
 
-    return device, config
-
-@contextmanager 
-def gpu_memory_context():
-    """Context manager for GPU memory management"""
+def monitor_gpu_memory():
+    """Monitor GPU memory usage"""
     if torch.cuda.is_available():
-        torch.cuda.empty_cache()
-        initial_memory = torch.cuda.memory_allocated()
-
-    try:
-        yield
-    finally:
-        if torch.cuda.is_available():
-            final_memory = torch.cuda.memory_allocated()
-            print(f"Memory used: {(final_memory - initial_memory) / 1024**2:.2f} MB")
-            torch.cuda.empty_cache()
-
-def monitor_gpu_usage():
-    """Print current GPU usage"""
-    if torch.cuda.is_available():
-        allocated = torch.cuda.memory_allocated(0) / 1024**2
-        reserved = torch.cuda.memory_reserved(0) / 1024**2
-        total = torch.cuda.get_device_properties(0).total_memory / 1024**2
-
-        print(f"GPU Memory - Allocated: {allocated:.1f} MB, Reserved: {reserved:.1f} MB, Total: {total:.1f} MB")
-        print(f"Usage: {(allocated/total)*100:.1f}%")
-    else:
-        print("No GPU available")
+        allocated = torch.cuda.memory_allocated(0)
+        reserved = torch.cuda.memory_reserved(0)
+        total = torch.cuda.get_device_properties(0).total_memory
+        return {
+            "allocated_mb": allocated / 1024**2,
+            "reserved_mb": reserved / 1024**2,
+            "total_gb": total / 1024**3,
+            "free_mb": (total - allocated) / 1024**2
+        }
+    return {"message": "No GPU available"}
 
 def cleanup_gpu_memory():
     """Clean up GPU memory"""
     if torch.cuda.is_available():
-        gc.collect()
         torch.cuda.empty_cache()
         torch.cuda.synchronize()
-        print("GPU memory cleaned up")
+        return True
+    return False
 
-# Example usage:
-# device, config = setup_gpu_environment("neural_symbolic_agi")
-# with gpu_memory_context():
-#     # Your GPU operations here
-#     pass
+# Configuration constants
+DEVICE = get_optimal_device()
+GPU_CONFIG = load_gpu_config()
+
+print(f"GPU Helper functions loaded. Device: {DEVICE}")
