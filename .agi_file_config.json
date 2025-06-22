@@ -11,7 +11,13 @@
     "/home/broe/semantic-kernel/data",
     "/home/broe/semantic-kernel/tests"
   ],
-  "restricted_files": [".git", ".env", "secrets", "credentials", "password"],
+  "restricted_files": [
+    ".git",
+    ".env",
+    "secrets",
+    "credentials",
+    "password"
+  ],
   "workspace_path": "/home/broe/semantic-kernel",
   "backup_path": "/home/broe/semantic-kernel/.agi_backups",
   "performance_settings": {
@@ -31,5 +37,17 @@
     "cache_file_analysis": true,
     "use_incremental_updates": true
   },
-  "last_updated": "2025-06-21T19:20:00.000000"
+  "last_updated": "2025-06-21T19:20:00.000000",
+  "ultra_performance": {
+    "enable_memory_mapping": true,
+    "use_compression": "lzma",
+    "batch_size": 50,
+    "cache_size_mb": 1024,
+    "enable_process_pool": true,
+    "io_buffer_size": 131072,
+    "enable_prefetching": true,
+    "use_uvloop": true,
+    "atomic_writes": true,
+    "parallel_io_workers": 16
+  }
 }

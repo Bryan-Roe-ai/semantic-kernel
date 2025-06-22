@@ -68,27 +68,27 @@ check_performance_status() {
 echo -e "${BLUE}🔍 Process Status Check${NC}"
 echo "======================"
 
-if ps aux | grep -q "[l]aunch_agi_auto_optimized.sh"; then
-    local opt_pid=$(ps aux | grep "[l]aunch_agi_auto_optimized.sh" | awk '{print $2}' | head -1)
-    local opt_memory=$(get_process_memory $opt_pid)
-    local opt_cpu=$(get_process_cpu $opt_pid)
-    echo -e "${GREEN}✅ Optimized Launch Script: RUNNING (PID: $opt_pid)${NC}"
+if ps aux | grep -q "[l]aunch_agi_enhanced_auto.sh"; then
+    opt_pid=$(ps aux | grep "[l]aunch_agi_enhanced_auto.sh" | awk '{print $2}' | head -1)
+    opt_memory=$(get_process_memory $opt_pid)
+    opt_cpu=$(get_process_cpu $opt_pid)
+    echo -e "${GREEN}✅ Enhanced Launch Script: RUNNING (PID: $opt_pid)${NC}"
     echo -e "   📊 Memory: ${opt_memory}MB, CPU: ${opt_cpu}%"
 elif ps aux | grep -q "[l]aunch_agi_auto.sh"; then
-    echo -e "${YELLOW}⚠️  Standard Launch Script: RUNNING (consider upgrading to optimized)${NC}"
+    echo -e "${YELLOW}⚠️  Standard Launch Script: RUNNING (consider upgrading to enhanced)${NC}"
 else
     echo -e "${RED}❌ Launch Script: NOT RUNNING${NC}"
 fi
 
-# Check if optimized main process is running
-if ps aux | grep -q "[a]gi_file_update_system_optimized.py"; then
-    local main_pid=$(ps aux | grep "[a]gi_file_update_system_optimized.py" | awk '{print $2}' | head -1)
-    local main_memory=$(get_process_memory $main_pid)
-    local main_cpu=$(get_process_cpu $main_pid)
-    echo -e "${GREEN}✅ Optimized AGI System: RUNNING (PID: $main_pid)${NC}"
+# Check if enhanced main process is running
+if ps aux | grep -q "[a]gi_enhanced_file_update_system.py"; then
+    main_pid=$(ps aux | grep "[a]gi_enhanced_file_update_system.py" | awk '{print $2}' | head -1)
+    main_memory=$(get_process_memory $main_pid)
+    main_cpu=$(get_process_cpu $main_pid)
+    echo -e "${GREEN}✅ Enhanced AGI System: RUNNING (PID: $main_pid)${NC}"
     echo -e "   📊 Memory: ${main_memory}MB, CPU: ${main_cpu}%"
 elif ps aux | grep -q "[a]gi_file_update_system.py"; then
-    echo -e "${YELLOW}⚠️  Standard AGI System: RUNNING (consider upgrading to optimized)${NC}"
+    echo -e "${YELLOW}⚠️  Standard AGI System: RUNNING (consider upgrading to enhanced)${NC}"
 else
     echo -e "${RED}❌ AGI File System: STOPPED${NC}"
 fi
@@ -104,12 +104,12 @@ if [ -f ".agi_file_config.json" ]; then
 
     # Check for optimization settings
     if command -v jq &> /dev/null; then
-        local safe_dirs=$(jq -r '.safe_directories | length' .agi_file_config.json 2>/dev/null || echo "unknown")
-        local max_tasks=$(jq -r '.performance_settings.max_concurrent_tasks // "not set"' .agi_file_config.json 2>/dev/null)
-        local cache_ttl=$(jq -r '.performance_settings.cache_ttl_seconds // "not set"' .agi_file_config.json 2>/dev/null)
-        local parallel_enabled=$(jq -r '.performance_settings.enable_parallel_processing // "not set"' .agi_file_config.json 2>/dev/null)
-        local compression=$(jq -r '.optimization_flags.compress_backups // "not set"' .agi_file_config.json 2>/dev/null)
-        local caching=$(jq -r '.optimization_flags.cache_file_analysis // "not set"' .agi_file_config.json 2>/dev/null)
+        safe_dirs=$(jq -r '.safe_directories | length' .agi_file_config.json 2>/dev/null || echo "unknown")
+        max_tasks=$(jq -r '.performance_settings.max_concurrent_tasks // "not set"' .agi_file_config.json 2>/dev/null)
+        cache_ttl=$(jq -r '.performance_settings.cache_ttl_seconds // "not set"' .agi_file_config.json 2>/dev/null)
+        parallel_enabled=$(jq -r '.performance_settings.enable_parallel_processing // "not set"' .agi_file_config.json 2>/dev/null)
+        compression=$(jq -r '.optimization_flags.compress_backups // "not set"' .agi_file_config.json 2>/dev/null)
+        caching=$(jq -r '.optimization_flags.cache_file_analysis // "not set"' .agi_file_config.json 2>/dev/null)
 
         echo -e "   📁 Safe directories: $safe_dirs"
         echo -e "   🔧 Max concurrent tasks: $max_tasks"
@@ -119,13 +119,13 @@ if [ -f ".agi_file_config.json" ]; then
         echo -e "   💾 File analysis caching: $caching"
 
         # Configuration optimization score
-        local opt_score=0
+        opt_score=0
         [ "$max_tasks" != "not set" ] && opt_score=$((opt_score + 1))
         [ "$parallel_enabled" = "true" ] && opt_score=$((opt_score + 1))
         [ "$compression" = "true" ] && opt_score=$((opt_score + 1))
         [ "$caching" = "true" ] && opt_score=$((opt_score + 1))
 
-        local opt_percentage=$((opt_score * 25))
+        opt_percentage=$((opt_score * 25))
         echo -e "   📈 Optimization level: ${opt_percentage}% (${opt_score}/4 features enabled)"
 
     else
@@ -142,12 +142,12 @@ echo -e "${BLUE}💾 Storage Analysis${NC}"
 echo "=================="
 
 if [ -d ".agi_backups" ]; then
-    local backup_count=$(ls -1 .agi_backups/ 2>/dev/null | wc -l)
-    local backup_size=$(du -sh .agi_backups/ 2>/dev/null | cut -f1 || echo "0B")
+    backup_count=$(ls -1 .agi_backups/ 2>/dev/null | wc -l)
+    backup_size=$(du -sh .agi_backups/ 2>/dev/null | cut -f1 || echo "0B")
     echo -e "${GREEN}✅ Backup Directory: EXISTS ($backup_count files, $backup_size)${NC}"
 
     # Check for compressed backups
-    local compressed_count=$(ls -1 .agi_backups/*.gz 2>/dev/null | wc -l || echo "0")
+    compressed_count=$(ls -1 .agi_backups/*.gz 2>/dev/null | wc -l || echo "0")
     if [ "$compressed_count" -gt 0 ]; then
         echo -e "   🗜️  Compressed backups: $compressed_count (space optimized)"
     fi
@@ -157,7 +157,7 @@ fi
 
 # Cache directory
 if [ -d ".agi_cache" ]; then
-    local cache_size=$(du -sh .agi_cache/ 2>/dev/null | cut -f1 || echo "0B")
+    cache_size=$(du -sh .agi_cache/ 2>/dev/null | cut -f1 || echo "0B")
     echo -e "${GREEN}✅ Cache Directory: EXISTS ($cache_size)${NC}"
 else
     echo -e "${YELLOW}⚠️  Cache Directory: MISSING (performance may be reduced)${NC}"
@@ -171,18 +171,18 @@ echo "==============="
 
 if [ -f "agi_file_updates.log" ]; then
     echo -e "${GREEN}✅ Main Log File: ACTIVE${NC}"
-    local last_entry=$(tail -n 1 agi_file_updates.log 2>/dev/null | cut -d' ' -f1-2)
-    local total_lines=$(wc -l < agi_file_updates.log 2>/dev/null || echo "0")
+    last_entry=$(tail -n 1 agi_file_updates.log 2>/dev/null | cut -d' ' -f1-2)
+    total_lines=$(wc -l < agi_file_updates.log 2>/dev/null || echo "0")
     echo -e "   📝 Last activity: $last_entry"
     echo -e "   📊 Total entries: $total_lines"
 
     # Analyze recent activity (last hour)
-    local recent_activity=$(grep "$(date '+%Y-%m-%d %H:')" agi_file_updates.log 2>/dev/null | wc -l || echo "0")
+    recent_activity=$(grep "$(date '+%Y-%m-%d %H:')" agi_file_updates.log 2>/dev/null | wc -l || echo "0")
     echo -e "   ⏰ Recent activity (last hour): $recent_activity entries"
 
     # Error analysis
-    local error_count=$(grep -c "ERROR" agi_file_updates.log 2>/dev/null || echo "0")
-    local warning_count=$(grep -c "WARNING" agi_file_updates.log 2>/dev/null || echo "0")
+    error_count=$(grep -c "ERROR" agi_file_updates.log 2>/dev/null || echo "0")
+    warning_count=$(grep -c "WARNING" agi_file_updates.log 2>/dev/null || echo "0")
 
     if [ "$error_count" -gt 0 ]; then
         echo -e "   ${RED}❌ Errors found: $error_count${NC}"
@@ -227,33 +227,33 @@ echo -e "${PURPLE}🔧 Optimization Recommendations${NC}"
 echo "==============================="
 
 # Check if using optimized version
-if ! ps aux | grep -q "[a]gi_file_update_system_optimized.py"; then
+if ! ps aux | grep -q "[a]gi_enhanced_file_update_system.py"; then
     echo -e "${YELLOW}📈 Upgrade to optimized version:${NC}"
-    echo -e "   ./launch_agi_auto_optimized.sh --daemon"
+    echo -e "   ./launch_agi_enhanced_auto.sh --daemon"
 fi
 
 # Check configuration optimizations
 if [ -f ".agi_file_config.json" ] && command -v jq &> /dev/null; then
-    local parallel_enabled=$(jq -r '.performance_settings.enable_parallel_processing // false' .agi_file_config.json 2>/dev/null)
+    parallel_enabled=$(jq -r '.performance_settings.enable_parallel_processing // false' .agi_file_config.json 2>/dev/null)
     if [ "$parallel_enabled" != "true" ]; then
         echo -e "${YELLOW}⚡ Enable parallel processing for better performance${NC}"
     fi
 
-    local compression=$(jq -r '.optimization_flags.compress_backups // false' .agi_file_config.json 2>/dev/null)
+    compression=$(jq -r '.optimization_flags.compress_backups // false' .agi_file_config.json 2>/dev/null)
     if [ "$compression" != "true" ]; then
         echo -e "${YELLOW}🗜️  Enable backup compression to save disk space${NC}"
     fi
 fi
 
 # Memory usage check
-local memory_usage=$(free | awk '/^Mem:/ {printf "%.1f", ($3/$2)*100}')
-if (( $(echo "$memory_usage > 80" | bc -l) )); then
+memory_usage=$(free | awk '/^Mem:/ {printf "%.1f", ($3/$2)*100}')
+if command -v bc &> /dev/null && (( $(echo "$memory_usage > 80" | bc -l) )); then
     echo -e "${YELLOW}💾 High memory usage detected (${memory_usage}%) - consider reducing cache size${NC}"
 fi
 
 echo ""
 echo -e "${GREEN}🎯 Quick Actions:${NC}"
-echo "   Start Optimized:  ./launch_agi_auto_optimized.sh --monitor"
+echo "   Start Optimized:  ./launch_agi_enhanced_auto.sh --monitor"
 echo "   Stop System:      pkill -f agi_file_update_system"
 echo "   View Logs:        tail -f agi_file_updates.log"
 echo "   Performance:      tail -f agi_performance.log"
