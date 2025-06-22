@@ -155,7 +155,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[xml]": {
-    "editor.defaultFormatter": "esben.prettier-vscode"
+    "editor.defaultFormatter": "DotJoshJohnson.xml"
   },
   "editor.acceptSuggestionOnEnter": "on",
   "[toml]": {
@@ -185,5 +185,8 @@
   "[chatmode]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "git.ignoreLimitWarning": true
+  "git.ignoreLimitWarning": true,
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
