@@ -1,0 +1,8 @@
+{
+    "start_time": 1750561644,
+    "operation_mode": "research",
+    "target_uptime_days": 365,
+    "monitoring_enabled": true,
+    "analytics_enabled": true,
+    "predictive_alerts": true
+}

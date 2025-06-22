@@ -12,7 +12,7 @@ In Semantic Kernel, we don't currently support the Computer User Agent Tool. Thi
 
 ### Azure Responses Agent
 
-The Semantic Kernel Azure Responses Agent leverages Azure OpenAI's new stateful API. 
+The Semantic Kernel Azure Responses Agent leverages Azure OpenAI's new stateful API.
 It brings together the best capabilities from the chat completions and assistants API in one unified experience.
 
 Right now, there is no support with the `AzureResponsesAgent` for:

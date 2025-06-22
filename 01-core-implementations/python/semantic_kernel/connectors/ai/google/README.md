@@ -18,7 +18,7 @@ kernel = Kernel()
           api_key="...",
       )
   )
-  ```
+```
 
 > Alternatively, you can use an .env file to store the model id and api key.
 

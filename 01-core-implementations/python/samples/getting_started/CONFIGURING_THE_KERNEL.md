@@ -8,7 +8,7 @@ If interested, as you learn more about Semantic Kernel, there are a few other wa
 
 Set the keys/secrets/endpoints as environment variables in your system. In Semantic Kernel, we leverage Pydantic Settings. If using Environment Variables, it isn't required to pass in explicit arguments to class constructors.
 
-__NOTE: Please make sure to include `GLOBAL_LLM_SERVICE` set to either OpenAI, AzureOpenAI, or HuggingFace in your .env file or environment variables. If this setting is not included, the Service will default to AzureOpenAI.__
+**NOTE: Please make sure to include `GLOBAL_LLM_SERVICE` set to either OpenAI, AzureOpenAI, or HuggingFace in your .env file or environment variables. If this setting is not included, the Service will default to AzureOpenAI.**
 
 ### Option 1: using OpenAI
 

@@ -1,0 +1,359 @@
+name: Python Automated Testing
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+    paths:
+      - 'python/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'python/**'
+  workflow_dispatch:
+  schedule:
+    # Run tests daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+env:
+  UV_CACHE_DIR: /tmp/.uv-cache
+  PYTHON_VERSION: "3.10"
+
+jobs:
+  # Fast feedback - linting and basic checks
+  lint-and-format:
+    name: Lint and Format Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Restore uv cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.UV_CACHE_DIR }}
+          key: uv-${{ runner.os }}-${{ hashFiles('**/uv.lock') }}
+          restore-keys: |
+            uv-${{ runner.os }}-
+      
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      
+      - name: Run ruff linting
+        run: uv run ruff check semantic_kernel tests scripts
+      
+      - name: Check code formatting
+        run: uv run ruff format --check semantic_kernel tests scripts
+      
+      - name: Run type checking
+        run: uv run mypy semantic_kernel --strict --show-error-codes
+
+  # Security checks
+  security:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: uv sync --dev
+      
+      - name: Run bandit security analysis
+        run: |
+          uv run bandit -r semantic_kernel \
+            -f json \
+            -o security_report.json \
+            || true
+      
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: python/security_report.json
+
+  # Unit tests with coverage
+  unit-tests:
+    name: Unit Tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+        exclude:
+          # Reduce matrix size for faster feedback
+          - os: windows-latest
+            python-version: "3.11"
+          - os: macos-latest
+            python-version: "3.11"
+    
+    defaults:
+      run:
+        working-directory: python
+    
+    env:
+      UV_PYTHON: ${{ matrix.python-version }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      
+      - name: Restore uv cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.UV_CACHE_DIR }}
+          key: uv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/uv.lock') }}
+          restore-keys: |
+            uv-${{ runner.os }}-${{ matrix.python-version }}-
+            uv-${{ runner.os }}-
+      
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      
+      - name: Create test reports directory
+        run: mkdir -p test_reports
+      
+      - name: Run unit tests with coverage
+        run: |
+          uv run pytest tests/unit \
+            -v \
+            --tb=short \
+            --cov=semantic_kernel \
+            --cov-report=term-missing \
+            --cov-report=xml:test_reports/coverage.xml \
+            --cov-report=html:test_reports/htmlcov \
+            --junit-xml=test_reports/junit.xml \
+            --timeout=120 \
+            --maxfail=10
+      
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.10'
+        uses: codecov/codecov-action@v3
+        with:
+          file: python/test_reports/coverage.xml
+          flags: unit
+          name: unit-tests
+      
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-results-${{ matrix.os }}-${{ matrix.python-version }}
+          path: |
+            python/test_reports/
+            !python/test_reports/htmlcov/
+
+  # Integration tests (longer running)
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: [lint-and-format, unit-tests]
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'run-integration-tests')
+    
+    defaults:
+      run:
+        working-directory: python
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        test-group: [connectors, memory, agents, samples]
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      
+      - name: Create test reports directory
+        run: mkdir -p test_reports
+      
+      - name: Run integration tests
+        env:
+          # Add your API keys as repository secrets
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          case "${{ matrix.test-group }}" in
+            connectors)
+              uv run pytest tests/integration/connectors \
+                -v --tb=short --timeout=300 \
+                --junit-xml=test_reports/junit_integration_connectors.xml
+              ;;
+            memory)
+              uv run pytest tests/integration/memory \
+                -v --tb=short --timeout=300 \
+                --junit-xml=test_reports/junit_integration_memory.xml
+              ;;
+            agents)
+              uv run pytest tests/integration/agents \
+                -v --tb=short --timeout=300 \
+                --junit-xml=test_reports/junit_integration_agents.xml
+              ;;
+            samples)
+              uv run pytest tests/samples \
+                -v --tb=short --timeout=300 \
+                --junit-xml=test_reports/junit_samples.xml
+              ;;
+          esac
+      
+      - name: Upload integration test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-test-results-${{ matrix.test-group }}
+          path: python/test_reports/
+
+  # Performance benchmarks
+  benchmarks:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || contains(github.event.pull_request.labels.*.name, 'run-benchmarks')
+    
+    defaults:
+      run:
+        working-directory: python
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: uv sync --all-extras --dev
+      
+      - name: Run benchmarks
+        run: |
+          uv run pytest tests/unit \
+            -k "benchmark" \
+            --benchmark-only \
+            --benchmark-json=benchmark_results.json
+      
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: python/benchmark_results.json
+
+  # Comprehensive test report
+  test-report:
+    name: Generate Test Report
+    runs-on: ubuntu-latest
+    needs: [lint-and-format, security, unit-tests]
+    if: always()
+    
+    defaults:
+      run:
+        working-directory: python
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: uv sync --dev
+      
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: test_artifacts
+      
+      - name: Run comprehensive test suite
+        run: uv run python scripts/auto_test_runner.py --report-format json
+      
+      - name: Generate consolidated report
+        run: |
+          # Create a comprehensive test report
+          echo "# Test Results Summary" > test_summary.md
+          echo "Generated on: $(date)" >> test_summary.md
+          echo "" >> test_summary.md
+          
+          # Add test results from artifacts
+          if [ -d "test_artifacts" ]; then
+            find test_artifacts -name "*.xml" -o -name "*.json" | head -10 | while read file; do
+              echo "Found report: $file" >> test_summary.md
+            done
+          fi
+      
+      - name: Upload comprehensive report
+        uses: actions/upload-artifact@v4
+        with:
+          name: comprehensive-test-report
+          path: |
+            python/test_reports/
+            python/test_summary.md
+
+  # Notify on failure
+  notify-failure:
+    name: Notify on Failure
+    runs-on: ubuntu-latest
+    needs: [lint-and-format, security, unit-tests, integration-tests]
+    if: failure() && (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    
+    steps:
+      - name: Notify team
+        run: |
+          echo "Tests failed on main branch!"
+          echo "Job URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          # Add your notification logic here (Slack, Teams, email, etc.)
+
+# Add job summaries
+  job-summary:
+    name: Job Summary
+    runs-on: ubuntu-latest
+    needs: [lint-and-format, security, unit-tests]
+    if: always()
+    
+    steps:
+      - name: Create job summary
+        run: |
+          echo "## 🧪 Test Automation Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint & Format | ${{ needs.lint-and-format.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Security | ${{ needs.security.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ needs.unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ needs.integration-tests.result }}" != "skipped" ]; then
+            echo "| Integration Tests | ${{ needs.integration-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Coverage and Reports" >> $GITHUB_STEP_SUMMARY
+          echo "- Coverage reports available in job artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- Test reports uploaded for analysis" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Run ID:** ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
