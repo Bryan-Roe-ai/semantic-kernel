@@ -78,18 +78,26 @@
     },
     {
       "name": "C#: GettingStarted Samples",
-      "type": "dotnet",
+      "type": "coreclr",
       "request": "launch",
-      "projectPath": "${workspaceFolder}\\dotnet\\samples\\GettingStarted\\GettingStarted.csproj",
-      "launchConfigurationId": "TargetFramework=;GettingStarted"
+      "preLaunchTask": "build (GettingStarted)",
+      "program": "${workspaceFolder}/dotnet/samples/GettingStarted/bin/Debug/net8.0/GettingStarted.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/dotnet/samples/GettingStarted",
+      "stopAtEntry": false,
+      "console": "integratedTerminal"
     },
     {
       "name": "C#: Process with Dapr",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}\\dotnet\\samples\\Demos\\ProcessWithDapr\\bin\\Debug\\net8.0\\ProcessWithDapr.dll",
+      "program": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
       "preLaunchTask": "daprd-debug",
       "postDebugTask": "dapr-down",
+      "args": [],
+      "cwd": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr",
+      "stopAtEntry": false,
+      "console": "integratedTerminal",
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
