@@ -115,11 +115,6 @@ class FunctionResult(KernelBaseModel):
         ):
             return self.value[index].inner_content
 
-                logger.warning(f"Failed to convert value to string: {e}")
-                raise e
-        else:
-            return ""
-
     def get_inner_content(self, index: int = 0) -> Optional[Any]:
         """Get the inner content of the function result.
 

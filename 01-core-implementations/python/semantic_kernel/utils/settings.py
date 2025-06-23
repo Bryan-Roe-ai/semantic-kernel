@@ -14,53 +14,34 @@ def openai_settings_from_dot_env() -> Tuple[str, Optional[str]]:
         Tuple[str, str]: The OpenAI API key, the OpenAI organization ID
     """
 
-    api_key, org_id = None, None
-    with open(".env", "r") as f:
-        lines = f.readlines()
-    with open(".env", "r") as f:
-        lines = f.readlines()
     config = dotenv_values(".env")
     api_key = config.get("OPENAI_API_KEY", None)
     org_id = config.get("OPENAI_ORG_ID", None)
-    with open(".env", "r") as f:
-        lines = f.readlines()
-
-        for line in lines:
-            if line.startswith("OPENAI_API_KEY"):
-                parts = line.split("=")[1:]
-                api_key = "=".join(parts).strip().strip('"')
-                break
-                continue
-
-            if line.startswith("OPENAI_ORG_ID"):
-                parts = line.split("=")[1:]
-                org_id = "=".join(parts).strip().strip('"')
-                break
-                continue
-
     assert api_key is not None, "OpenAI API key not found in .env file"
 
     # It's okay if the org ID is not found (not required)
     return api_key, org_id
 
 
-def azure_openai_settings_from_dot_env() -> Tuple[str, str]:
-def azure_openai_settings_from_dot_env() -> Tuple[str, str]:
-    deployment, api_key, endpoint, api_version = None, None, None, None
+def azure_openai_settings_from_dot_env(
+    include_deployment: bool = True, include_api_version: bool = False
+) -> Union[Tuple[str, str], Tuple[str, str, str, str]]:
+    """
+    Reads the Azure OpenAI API key and endpoint from the .env file.
+
+    Returns:
+        Tuple[str, str]: The Azure OpenAI API key, the endpoint
+        Tuple[str, str, str, str]: The deployment name, API key, endpoint, and API version (if requested)
+    """
+
     config = dotenv_values(".env")
     deployment = config.get("AZURE_OPENAI_DEPLOYMENT_NAME", None)
     api_key = config.get("AZURE_OPENAI_API_KEY", None)
     endpoint = config.get("AZURE_OPENAI_ENDPOINT", None)
     api_version = config.get("AZURE_OPENAI_API_VERSION", None)
 
-    # Azure requires the deployment name, the API key and the endpoint URL.
-    if include_deployment:
-        assert deployment is not None, "Azure OpenAI deployment name not found in .env file"
-    if include_api_version:
-        assert api_version is not None, "Azure OpenAI API version not found in .env file"
-
-    assert api_key, "Azure OpenAI API key not found in .env file"
-    assert endpoint, "Azure OpenAI endpoint not found in .env file"
+    assert api_key is not None, "Azure OpenAI API key not found in .env file"
+    assert endpoint is not None, "Azure OpenAI endpoint not found in .env file"
 
     if include_api_version:
         return deployment or "", api_key, endpoint, api_version or ""
@@ -70,7 +51,6 @@ def azure_openai_settings_from_dot_env() -> Tuple[str, str]:
 def azure_openai_settings_from_dot_env_as_dict(
     include_deployment: bool = True, include_api_version: bool = False
 ) -> Dict[str, str]:
-def azure_openai_settings_from_dot_env(include_deployment=True) -> Tuple[str, str, str]:
     """
     Reads the Azure OpenAI API key and endpoint from the .env file.
 
@@ -79,196 +59,42 @@ def azure_openai_settings_from_dot_env(include_deployment=True) -> Tuple[str, st
     """
 
     api_key, endpoint = None, None
-        Tuple[str, str, str]: The deployment name (or empty), Azure OpenAI API key,
-            and the endpoint
-    """
-
-    deployment, api_key, endpoint = None, None, None
     with open(".env", "r") as f:
         lines = f.readlines()
 
         for line in lines:
             if line.startswith("AZURE_OPENAI_API_KEY"):
-            if line.startswith("AZURE_OPENAI_API_KEY"):
-            if line.startswith("OPENAI_API_KEY"):
-                parts = line.split("=")[1:]
-                api_key = "=".join(parts).strip().strip('"')
-                break
-
-            if line.startswith("OPENAI_ORG_ID"):
-                parts = line.split("=")[1:]
-                org_id = "=".join(parts).strip().strip('"')
-                break
-
-    assert api_key is not None, "OpenAI API key not found in .env file"
-
-    # It's okay if the org ID is not found (not required)
-    return api_key, org_id
-
-
-def azure_openai_settings_from_dot_env() -> Tuple[str, str]:
-    """
-    Reads the Azure OpenAI API key and endpoint from the .env file.
-
-    Returns:
-        Tuple[str, str]: The Azure OpenAI API key, the endpoint
-    """
-
-    api_key, endpoint = None, None
-            if line.startswith("PINECONE_API_KEY"):
                 parts = line.split("=")[1:]
                 api_key = "=".join(parts).strip().strip('"')
                 break
 
             if line.startswith("AZURE_OPENAI_ENDPOINT"):
                 parts = line.split("=")[1:]
-                endpoint = "=".join(parts).strip().strip('"')
-                break
                 endpoint = "=".join(parts).strip().strip('"')
                 break
                 environment = "=".join(parts).strip().strip('"')
                 continue
 
-    assert api_key, "Pinecone API key not found in .env file"
-    assert environment, "Pinecone environment not found in .env file"
+    assert api_key is not None, "Azure OpenAI API key not found in .env file"
+    assert endpoint is not None, "Azure OpenAI endpoint not found in .env file"
+
+    return api_key, endpoint
+
+
+def astradb_settings_from_dot_env() -> Tuple[str, Optional[str]]:
+    """
+    Reads the Astradb API key and Environment from the .env file.
+    Returns:
+        Tuple[str, str]: The Astradb API key, the environment
+    """
+
+    config = dotenv_values(".env")
+    api_key = config.get("ASTRADB_API_KEY", None)
+    environment = config.get("ASTRADB_ENV", None)
+
+    assert api_key is not None, "Astradb API key not found in .env file"
 
     return api_key, environment
-
-
-def astradb_settings_from_dot_env() -> Tuple[str, Optional[str]]:
-    """
-    Reads the Astradb API key and Environment from the .env file.
-    Returns:
-        Tuple[str, str]: The Astradb API key, the Astradb Environment
-    """
-
-    app_token, db_id, region, keyspace = None, None, None, None
-    with open(".env", "r") as f:
-        lines = f.readlines()
-
-        for line in lines:
-            if line.startswith("AZURE_OPENAI_API_KEY"):
-            if line.startswith("OPENAI_API_KEY"):
-                parts = line.split("=")[1:]
-                api_key = "=".join(parts).strip().strip('"')
-                break
-
-            if line.startswith("OPENAI_ORG_ID"):
-                parts = line.split("=")[1:]
-                org_id = "=".join(parts).strip().strip('"')
-                break
-
-    assert api_key is not None, "OpenAI API key not found in .env file"
-
-    # It's okay if the org ID is not found (not required)
-    return api_key, org_id
-
-
-def azure_openai_settings_from_dot_env() -> Tuple[str, str]:
-    """
-    Reads the Azure OpenAI API key and endpoint from the .env file.
-
-    Returns:
-        Tuple[str, str]: The Azure OpenAI API key, the endpoint
-    """
-
-    api_key, endpoint = None, None
-            if line.startswith("PINECONE_API_KEY"):
-                parts = line.split("=")[1:]
-                api_key = "=".join(parts).strip().strip('"')
-                break
-
-            if line.startswith("AZURE_OPENAI_ENDPOINT"):
-                parts = line.split("=")[1:]
-                endpoint = "=".join(parts).strip().strip('"')
-                break
-
-    # Azure requires both the API key and the endpoint URL.
-    assert api_key is not None, "Azure OpenAI API key not found in .env file"
-    assert endpoint is not None, "Azure OpenAI endpoint not found in .env file"
-
-    return api_key, endpoint
-            if line.startswith("ASTRADB_APP_TOKEN"):
-                parts = line.split("=")[1:]
-                app_token = "=".join(parts).strip().strip('"')
-                continue
-
-            if line.startswith("ASTRADB_ID"):
-                parts = line.split("=")[1:]
-                db_id = "=".join(parts).strip().strip('"')
-                continue
-
-            if line.startswith("ASTRADB_REGION"):
-                parts = line.split("=")[1:]
-                region = "=".join(parts).strip().strip('"')
-                continue
-
-            if line.startswith("ASTRADB_KEYSPACE"):
-                parts = line.split("=")[1:]
-                keyspace = "=".join(parts).strip().strip('"')
-                continue
-
-    assert app_token, "Astradb Application token not found in .env file"
-    assert db_id, "Astradb ID not found in .env file"
-    assert region, "Astradb Region not found in .env file"
-    assert keyspace, "Astradb Keyspace name not found in .env file"
-
-    return app_token, db_id, region, keyspace
-
-
-def astradb_settings_from_dot_env() -> Tuple[str, Optional[str]]:
-    """
-    Reads the Astradb API key and Environment from the .env file.
-    Returns:
-        Tuple[str, str]: The Astradb API key, the Astradb Environment
-    """
-
-    app_token, db_id, region, keyspace = None, None, None, None
-    with open(".env", "r") as f:
-        lines = f.readlines()
-
-        for line in lines:
-            if line.startswith("AZURE_OPENAI_API_KEY"):
-                parts = line.split("=")[1:]
-                api_key = "=".join(parts).strip().strip('"')
-                break
-
-            if line.startswith("AZURE_OPENAI_ENDPOINT"):
-                parts = line.split("=")[1:]
-                endpoint = "=".join(parts).strip().strip('"')
-                break
-
-    # Azure requires both the API key and the endpoint URL.
-    assert api_key is not None, "Azure OpenAI API key not found in .env file"
-    assert endpoint is not None, "Azure OpenAI endpoint not found in .env file"
-
-    return api_key, endpoint
-            if line.startswith("ASTRADB_APP_TOKEN"):
-                parts = line.split("=")[1:]
-                app_token = "=".join(parts).strip().strip('"')
-                continue
-
-            if line.startswith("ASTRADB_ID"):
-                parts = line.split("=")[1:]
-                db_id = "=".join(parts).strip().strip('"')
-                continue
-
-            if line.startswith("ASTRADB_REGION"):
-                parts = line.split("=")[1:]
-                region = "=".join(parts).strip().strip('"')
-                continue
-
-            if line.startswith("ASTRADB_KEYSPACE"):
-                parts = line.split("=")[1:]
-                keyspace = "=".join(parts).strip().strip('"')
-                continue
-
-    assert app_token, "Astradb Application token not found in .env file"
-    assert db_id, "Astradb ID not found in .env file"
-    assert region, "Astradb Region not found in .env file"
-    assert keyspace, "Astradb Keyspace name not found in .env file"
-
-    return app_token, db_id, region, keyspace
 
 
 def weaviate_settings_from_dot_env() -> Tuple[Optional[str], str]:
@@ -381,23 +207,6 @@ def azure_aisearch_settings_from_dot_env(
     assert api_key is not None, "Azure OpenAI API key not found in .env file"
     assert endpoint is not None, "Azure OpenAI endpoint not found in .env file"
 
-    return api_key, endpoint
-    return api_key, endpoint
-    if not include_index_name:
-        return api_key, url
-    else:
-        index_name = config.get("AZURE_AISEARCH_INDEX_NAME", None)
-        assert index_name is not None, "Azure AI Search index name not found in .env file"
-        return api_key, url, index_name
-
-
-def azure_aisearch_settings_from_dot_env_as_dict() -> Dict[str, str]:
-    """
-    Reads the Azure AI Search environment variables including index name from the .env file.
-
-    assert url is not None, "Azure AI Search URL not found in .env file"
-    assert api_key is not None, "Azure AI Search API key not found in .env file"
-
     if not include_index_name:
         return api_key, url
     else:
@@ -415,28 +224,3 @@ def azure_aisearch_settings_from_dot_env_as_dict() -> Dict[str, str]:
     """
     api_key, url, index_name = azure_aisearch_settings_from_dot_env(include_index_name=True)
     return {"key": api_key, "endpoint": url, "indexName": index_name}
-            if include_deployment and line.startswith("AZURE_OPENAI_DEPLOYMENT_NAME"):
-                parts = line.split("=")[1:]
-                deployment = "=".join(parts).strip().strip('"')
-                continue
-
-            if line.startswith("AZURE_OPENAI_API_KEY"):
-                parts = line.split("=")[1:]
-                api_key = "=".join(parts).strip().strip('"')
-                continue
-
-            if line.startswith("AZURE_OPENAI_ENDPOINT"):
-                parts = line.split("=")[1:]
-                endpoint = "=".join(parts).strip().strip('"')
-                continue
-
-    # Azure requires the deployment name, the API key and the endpoint URL.
-    if include_deployment:
-        assert (
-            deployment is not None
-        ), "Azure OpenAI deployment name not found in .env file"
-
-    assert api_key is not None, "Azure OpenAI API key not found in .env file"
-    assert endpoint is not None, "Azure OpenAI endpoint not found in .env file"
-
-    return deployment or "", api_key, endpoint

@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Semantic Kernel Auto Test Configuration",
+  "description": "Configuration for automated testing in the Semantic Kernel workspace",
+  "type": "object",
+  "properties": {
+    "testFrameworks": {
+      "type": "object",
+      "properties": {
+        "dotnet": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "version": { "type": "string", "default": "8.0.x" },
+            "configuration": { "type": "string", "default": "Release" },
+            "verbosity": { "type": "string", "default": "normal" },
+            "parallel": { "type": "boolean", "default": true },
+            "coverage": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": true },
+                "format": { "type": "string", "default": "cobertura" },
+                "threshold": { "type": "number", "default": 80 }
+              }
+            },
+            "filters": {
+              "type": "object",
+              "properties": {
+                "categories": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "default": ["Unit", "Integration"]
+                },
+                "exclude": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "default": ["Manual", "Slow"]
+                }
+              }
+            }
+          }
+        },
+        "python": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "versions": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["3.10", "3.11", "3.12"]
+            },
+            "testRunner": { "type": "string", "default": "pytest" },
+            "parallel": { "type": "boolean", "default": true },
+            "coverage": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": true },
+                "minCoverage": { "type": "number", "default": 80 },
+                "reportFormats": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "default": ["xml", "html"]
+                }
+              }
+            },
+            "markers": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["unit", "integration", "slow", "gpu"]
+            }
+          }
+        },
+        "javascript": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "nodeVersion": { "type": "string", "default": "18.x" },
+            "testRunner": { "type": "string", "default": "jest" },
+            "coverage": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": true },
+                "threshold": { "type": "number", "default": 80 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "maxParallelism": { "type": "integer", "default": 4 },
+        "timeout": {
+          "type": "object",
+          "properties": {
+            "unit": { "type": "integer", "default": 5 },
+            "integration": { "type": "integer", "default": 15 },
+            "endToEnd": { "type": "integer", "default": 30 }
+          }
+        },
+        "retries": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "maxAttempts": { "type": "integer", "default": 3 },
+            "flakyOnly": { "type": "boolean", "default": true }
+          }
+        }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "properties": {
+        "patterns": {
+          "type": "object",
+          "properties": {
+            "dotnet": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "**/*Tests.csproj",
+                "**/*.UnitTests.csproj",
+                "**/*.IntegrationTests.csproj"
+              ]
+            },
+            "python": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "tests/unit/**",
+                "tests/integration/**",
+                "tests/end-to-end/**"
+              ]
+            },
+            "javascript": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": [
+                "**/*.test.js",
+                "**/*.test.ts",
+                "**/test/**",
+                "**/tests/**"
+              ]
+            }
+          }
+        },
+        "exclusions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [
+            "**/node_modules/**",
+            "**/bin/**",
+            "**/obj/**",
+            "**/.git/**"
+          ]
+        }
+      }
+    },
+    "reporting": {
+      "type": "object",
+      "properties": {
+        "formats": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["console", "junit", "trx", "html"]
+        },
+        "outputDirectory": { "type": "string", "default": "./TestResults" },
+        "includeSystemInfo": { "type": "boolean", "default": true },
+        "notifications": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "channels": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["console"]
+            },
+            "onFailureOnly": { "type": "boolean", "default": true }
+          }
+        }
+      }
+    },
+    "integrationTests": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "services": {
+          "type": "object",
+          "properties": {
+            "redis": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": false },
+                "image": { "type": "string", "default": "redis:7-alpine" },
+                "port": { "type": "integer", "default": 6379 }
+              }
+            },
+            "postgresql": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": false },
+                "image": { "type": "string", "default": "postgres:15-alpine" },
+                "port": { "type": "integer", "default": 5432 },
+                "database": { "type": "string", "default": "testdb" },
+                "username": { "type": "string", "default": "testuser" },
+                "password": { "type": "string", "default": "testpass" }
+              }
+            },
+            "azurite": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": false },
+                "image": {
+                  "type": "string",
+                  "default": "mcr.microsoft.com/azure-storage/azurite"
+                }
+              }
+            }
+          }
+        },
+        "environment": {
+          "type": "object",
+          "properties": {
+            "variables": {
+              "type": "object",
+              "additionalProperties": { "type": "string" },
+              "default": {
+                "ASPNETCORE_ENVIRONMENT": "Testing",
+                "SK_TEST_MODE": "true"
+              }
+            }
+          }
+        }
+      }
+    },
+    "performanceTests": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "benchmarkDotNet": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "exporters": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["json", "html", "markdown"]
+            }
+          }
+        },
+        "loadTesting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "duration": { "type": "string", "default": "30s" },
+            "virtualUsers": { "type": "integer", "default": 10 }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "vulnerabilityScanning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "tools": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["trivy", "safety"]
+            }
+          }
+        },
+        "dependencyCheck": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "failOnHighSeverity": { "type": "boolean", "default": true }
+          }
+        }
+      }
+    },
+    "environments": {
+      "type": "object",
+      "properties": {
+        "ci": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "operatingSystems": {
+              "type": "array",
+              "items": { "type": "string" },
+              "default": ["ubuntu-latest", "windows-latest", "macos-latest"]
+            },
+            "schedule": { "type": "string", "default": "0 2 * * *" },
+            "artifacts": {
+              "type": "object",
+              "properties": {
+                "retention": { "type": "integer", "default": 30 },
+                "uploadOnFailure": { "type": "boolean", "default": true }
+              }
+            }
+          }
+        },
+        "local": {
+          "type": "object",
+          "properties": {
+            "watchMode": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": true },
+                "debounceMs": { "type": "integer", "default": 2000 },
+                "patterns": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "default": ["**/*.cs", "**/*.py", "**/*.js", "**/*.ts"]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

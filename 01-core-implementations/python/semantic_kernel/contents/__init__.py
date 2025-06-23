@@ -69,6 +69,7 @@ __all__ = [
     "StreamingFileReferenceContent",
     "StreamingTextContent",
     "TextContent",
+]
 
 from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.contents.kernel_content import KernelContent
@@ -84,5 +85,4 @@ __all__ = [
     "StreamingKernelContent",
     "StreamingChatMessageContent",
     "StreamingTextContent",
-
 ]

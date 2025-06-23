@@ -1,12 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="style.xsl"?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
-  <channel>
-    <title/>
-    <link>https://bryan-roe-ai.github.io/semantic-kernel/</link>
-    <description>Recent content on</description>
-    <generator>Hugo</generator>
-    <language>en</language>
-    <atom:link href="https://bryan-roe-ai.github.io/semantic-kernel/index.xml" rel="self" type="application/rss+xml"/>
-  </channel>
-</rss>
+/home/broe/semantic-kernel/15-web-ui/index.xml

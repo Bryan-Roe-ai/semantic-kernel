@@ -4,16 +4,18 @@ import base64
 import binascii
 import logging
 import re
+import sys
 from collections.abc import Mapping, MutableMapping, Sequence
 from typing import Any, TypeVar
 
-if sys.version < "3.11":
-    from typing_extensions import Self  # pragma: no cover
-else:
-    from typing import Self  # type: ignore # pragma: no cover
+import numpy as np
+from numpy import ndarray
 
 from pydantic import Field, ValidationError, field_validator, model_validator
 from pydantic_core import Url, PydanticCustomError
+
+from semantic_kernel.exceptions import ContentInitializationError
+from semantic_kernel.kernel_pydantic import KernelBaseModel
 
 class CustomUrl(Url):
     @classmethod
@@ -25,9 +27,6 @@ class CustomUrl(Url):
                 "Invalid URL provided. Please check the format and try again."
             )
 
-from semantic_kernel.exceptions import ContentInitializationError
-from semantic_kernel.kernel_pydantic import KernelBaseModel
-
 logger = logging.getLogger(__name__)
 
 _T = TypeVar("_T", bound="DataUri")
@@ -35,7 +34,7 @@ _T = TypeVar("_T", bound="DataUri")
 class DataUri(KernelBaseModel, validate_assignment=True):
     """A class to represent a data uri.
 
-    If a array is provided, that will be used as the data since it is the most efficient,
+    If an array is provided, that will be used as the data since it is the most efficient,
     otherwise the bytes will be used, or the string will be converted to bytes.
 
     When updating either array or bytes, the other will not be updated.
@@ -47,7 +46,6 @@ class DataUri(KernelBaseModel, validate_assignment=True):
         mime_type: The mime type of the data.
         parameters: Any parameters for the data.
         data_format: The format of the data (e.g. base64).
-
     """
 
     data_array: ndarray | None = None
@@ -55,13 +53,7 @@ class DataUri(KernelBaseModel, validate_assignment=True):
     mime_type: str | None = None
     parameters: MutableMapping[str, str] = Field(default_factory=dict)
     data_format: str | None = None
-
-    def update_data(self, value: str | bytes) -> None:
-        """Update the data, using either a string or bytes."""
-        if isinstance(value, str):
-            self.data_str = value
-        else:
-            self.data_bytes = value
+    data_str: str | None = None
 
     @model_validator(mode="before")
     @classmethod
@@ -73,28 +65,18 @@ class DataUri(KernelBaseModel, validate_assignment=True):
             )
         return values
 
-        Args:
-            data_bytes: The data as bytes.
-            data_str: The data as a string.
-            data_array: The data as a numpy array.
-            mime_type: The mime type of the data.
-            parameters: Any parameters for the data.
-            data_format: The format of the data (e.g. base64).
-            kwargs: Any additional arguments.
-        """
+    def __init__(self, data_bytes=None, data_str=None, data_array=None, mime_type=None, parameters=None, data_format=None, **kwargs):
         args: dict[str, Any] = {}
         if data_bytes is not None:
             args["data_bytes"] = data_bytes
         if data_array is not None:
             args["data_array"] = data_array
-
         if mime_type is not None:
             args["mime_type"] = mime_type
         if parameters is not None:
             args["parameters"] = parameters
         if data_format is not None:
             args["data_format"] = data_format
-
         if data_str is not None and not data_bytes:
             if data_format and data_format.lower() == "base64":
                 try:
@@ -108,31 +90,24 @@ class DataUri(KernelBaseModel, validate_assignment=True):
         super().__init__(**args, **kwargs)
 
     def update_data(self, value: str | bytes | ndarray) -> None:
-        """Update the data, using either a string or bytes."""
-        match value:
-            case ndarray():
-                self.data_array = value
-            case str():
-                if self.data_format and self.data_format.lower() == "base64":
-                    self.data_bytes = base64.b64decode(value, validate=True)
-                else:
-                    self.data_bytes = value.encode("utf-8")
-            case _:
-                self.data_bytes = value
+        """Update the data, using either a string, bytes, or ndarray."""
+        if isinstance(value, np.ndarray):
+            self.data_array = value
+        elif isinstance(value, str):
+            if self.data_format and self.data_format.lower() == "base64":
+                self.data_bytes = base64.b64decode(value, validate=True)
+            else:
+                self.data_bytes = value.encode("utf-8")
+        else:
+            self.data_bytes = value
 
     @field_validator("parameters", mode="before")
-
-    def _validate_parameters(
-        cls, value: list[str] | dict[str, str] | None = None
-    ) -> dict[str, str]:
-
+    @classmethod
     def _validate_parameters(cls, value: list[str] | dict[str, str] | None) -> dict[str, str]:
-
         if not value:
             return {}
         if isinstance(value, dict):
             return value
-
         new: dict[str, str] = {}
         for item in value:
             item = item.strip()

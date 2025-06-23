@@ -1,0 +1,74 @@
+# GPU-Accelerated Requirements for Semantic Kernel Workspace
+# Install with: pip install -r gpu_requirements.txt
+
+# Core GPU Frameworks
+torch>=2.0.0
+torchvision>=0.15.0
+torchaudio>=2.0.0
+tensorflow[and-cuda]>=2.13.0
+
+# Hugging Face Ecosystem
+transformers>=4.30.0
+accelerate>=0.20.0
+datasets>=2.10.0
+tokenizers>=0.13.0
+evaluate>=0.4.0
+
+# Semantic Kernel
+semantic-kernel>=0.6.0
+
+# AGI and Neural-Symbolic Computing
+networkx>=3.0
+sympy>=1.12
+networkx>=3.0
+
+# Scientific Computing (GPU-accelerated versions where available)
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.15.0
+
+# Jupyter and Development
+jupyter>=1.0.0
+ipywidgets>=8.0.0
+tqdm>=4.65.0
+
+# Deep Learning Utilities
+tensorboard>=2.13.0
+wandb>=0.15.0
+
+# Computer Vision (GPU-accelerated)
+opencv-python>=4.8.0
+pillow>=10.0.0
+
+# Natural Language Processing
+spacy>=3.6.0
+nltk>=3.8.0
+
+# Development and Testing
+pytest>=7.4.0
+black>=23.0.0
+flake8>=6.0.0
+
+# Memory and Performance
+psutil>=5.9.0
+py-cpuinfo>=9.0.0
+
+# Optional: Advanced GPU Libraries
+# cupy-cuda11x>=12.0.0  # CuPy for NumPy-compatible GPU arrays
+# rapids-cudf>=23.06.0  # GPU-accelerated DataFrame operations
+# rapids-cuml>=23.06.0  # GPU-accelerated machine learning
+
+# Azure AI Services (for Semantic Kernel integration)
+azure-cognitiveservices-language-textanalytics>=5.3.0
+azure-ai-textanalytics>=5.3.0
+openai>=0.27.0
+
+# Additional utilities for AGI development
+jsonschema>=4.17.0
+pyyaml>=6.0
+requests>=2.31.0

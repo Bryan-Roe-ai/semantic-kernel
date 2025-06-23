@@ -1,0 +1,15 @@
+{
+  "organization_date": "2025-06-15T22:45:17.779407",
+  "structure": {
+    "01-core-implementations": "Language-specific implementations (dotnet, python, java, typescript)",
+    "02-ai-workspace": "AI development workspace and tools",
+    "03-development-tools": "Development utilities (notebooks, samples, tests)",
+    "04-infrastructure": "Build, deployment, and configuration",
+    "05-documentation": "Documentation and guides",
+    "06-deployment": "Deployment scripts and Docker files",
+    "07-resources": "Data, models, and static resources",
+    "08-archived-versions": "Archived versions and legacy code"
+  },
+  "compatibility": "Symlinks created for backward compatibility",
+  "cleanup": "Temporary and duplicate files moved to .cleanup/"
+}

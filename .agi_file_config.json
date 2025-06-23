@@ -1,37 +1,11 @@
 {
-  "backup_path": "/home/broe/semantic-kernel/.agi_backups",
-  "last_updated": "2025-06-21T19:20:00.000000",
-  "optimization_flags": {
-    "batch_file_operations": true,
-    "cache_file_analysis": true,
-    "compress_backups": true,
-    "enable_fast_hashing": true,
-    "enable_parallel_processing": true,
-    "skip_duplicate_operations": true,
-    "use_incremental_updates": true,
-    "use_memory_mapping": true
-  },
-  "optimization_metadata": {
-    "last_optimized": "2025-06-21T19:48:14.007469",
-    "optimizations_applied": [
-      "CPU optimization: 32 max tasks, 50 batch size",
-      "Memory optimization: 1024MB cache, 65536 I/O buffer",
-      "Storage optimization: SSD-specific optimizations enabled",
-      "Network optimization: uvloop and batching enabled",
-      "Advanced features: all optimization flags enabled"
-    ],
-    "optimizer_version": "1.0"
-  },
-  "performance_settings": {
-    "batch_size": 50,
-    "cache_ttl_seconds": 600,
-    "enable_parallel_processing": true,
-    "file_watch_debounce_ms": 500,
-    "lazy_load_models": true,
-    "max_concurrent_tasks": 32,
-    "memory_limit_mb": 512,
-    "use_file_hashing": true
-  },
+  "safe_directories": [
+    "/home/broe/semantic-kernel/python",
+    "/home/broe/semantic-kernel/dotnet",
+    "/home/broe/semantic-kernel/samples",
+    "/home/broe/semantic-kernel/notebooks",
+    "/home/broe/semantic-kernel/scripts"
+  ],
   "restricted_files": [
     ".git",
     ".env",
@@ -39,29 +13,7 @@
     "credentials",
     "password"
   ],
-  "safe_directories": [
-    "/home/broe/semantic-kernel",
-    "/home/broe/semantic-kernel/python",
-    "/home/broe/semantic-kernel/dotnet",
-    "/home/broe/semantic-kernel/samples",
-    "/home/broe/semantic-kernel/notebooks",
-    "/home/broe/semantic-kernel/scripts",
-    "/home/broe/semantic-kernel/02-ai-workspace",
-    "/home/broe/semantic-kernel/configs",
-    "/home/broe/semantic-kernel/data",
-    "/home/broe/semantic-kernel/tests"
-  ],
-  "ultra_performance": {
-    "atomic_writes": true,
-    "batch_size": 50,
-    "cache_size_mb": 1024,
-    "enable_memory_mapping": true,
-    "enable_prefetching": true,
-    "enable_process_pool": true,
-    "io_buffer_size": 65536,
-    "parallel_io_workers": 16,
-    "use_compression": "lzma",
-    "use_uvloop": true
-  },
-  "workspace_path": "/home/broe/semantic-kernel"
+  "workspace_path": "/home/broe/semantic-kernel",
+  "backup_path": "/home/broe/semantic-kernel/.agi_backups",
+  "last_updated": "2025-06-23T02:02:05.927860"
 }

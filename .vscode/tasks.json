@@ -22,7 +22,6 @@
       "label": "Install ReSharper Global Tools",
       "type": "process",
       "command": "dotnet",
-      "type": "process",
       "args": [
         "new",
         "tool-manifest"

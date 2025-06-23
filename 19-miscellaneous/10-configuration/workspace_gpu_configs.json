@@ -1,0 +1,105 @@
+{
+  "neural_symbolic_agi": {
+    "notebook": "neural_symbolic_agi.ipynb",
+    "gpu_settings": {
+      "device": "cuda",
+      "mixed_precision": true,
+      "memory_efficient": true,
+      "batch_size": 8,
+      "gradient_accumulation": 4,
+      "max_sequence_length": 512
+    },
+    "model_settings": {
+      "use_fp16": true,
+      "gradient_checkpointing": true,
+      "pin_memory": true,
+      "num_workers": 2
+    },
+    "optimization": {
+      "learning_rate": 5e-05,
+      "warmup_steps": 100,
+      "weight_decay": 0.01,
+      "adam_epsilon": 1e-08
+    }
+  },
+  "consciousness_agi": {
+    "notebook": "consciousness_agi.ipynb",
+    "gpu_settings": {
+      "device": "cuda",
+      "mixed_precision": true,
+      "memory_efficient": true,
+      "batch_size": 4,
+      "gradient_accumulation": 8,
+      "max_sequence_length": 1024
+    },
+    "consciousness_specific": {
+      "attention_layers": "gpu_optimized",
+      "memory_networks": "fp16",
+      "symbolic_reasoning": "hybrid_gpu_cpu",
+      "consciousness_metrics": "gpu_accelerated"
+    },
+    "advanced_settings": {
+      "multi_head_attention": true,
+      "transformer_layers": 6,
+      "hidden_size": 512,
+      "use_flash_attention": false
+    }
+  },
+  "gpt2_finetune": {
+    "script": "finetune_gpt2_custom.py",
+    "gpu_settings": {
+      "device": "cuda",
+      "mixed_precision": true,
+      "dataloader_pin_memory": true,
+      "per_device_train_batch_size": 2,
+      "per_device_eval_batch_size": 4,
+      "gradient_accumulation_steps": 16,
+      "max_steps": 1000,
+      "save_steps": 100,
+      "logging_steps": 10
+    },
+    "training_args": {
+      "fp16": true,
+      "dataloader_num_workers": 2,
+      "remove_unused_columns": false,
+      "prediction_loss_only": true,
+      "report_to": "none"
+    }
+  },
+  "resnet_models": {
+    "model_path": "llm/huggingface_microsoft_resnet-50_v1/",
+    "gpu_settings": {
+      "device": "cuda",
+      "batch_size": 16,
+      "num_workers": 4,
+      "pin_memory": true,
+      "mixed_precision": true
+    },
+    "optimization": {
+      "use_amp": true,
+      "compile_model": false,
+      "channels_last": true
+    }
+  },
+  "general": {
+    "gpu_info": {
+      "name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+      "memory_gb": 5.99658203125,
+      "cuda_version": "12.1",
+      "pytorch_version": "2.5.1+cu121"
+    },
+    "memory_management": {
+      "cleanup_frequency": "after_each_epoch",
+      "cache_cleanup": true,
+      "memory_monitoring": true,
+      "oom_detection": true
+    },
+    "best_practices": [
+      "Always use torch.no_grad() for inference",
+      "Clear GPU cache between experiments",
+      "Use gradient accumulation for larger effective batch sizes",
+      "Enable mixed precision training",
+      "Monitor GPU memory usage regularly"
+    ]
+  }
+}

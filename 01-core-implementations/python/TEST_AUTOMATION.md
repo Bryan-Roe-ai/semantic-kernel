@@ -88,6 +88,7 @@ python scripts/auto_test_runner.py --verbose         # Verbose output
 ```
 
 Features:
+
 - ✅ Parallel test execution
 - ✅ Coverage reporting
 - ✅ Quality checks integration
@@ -109,6 +110,7 @@ python scripts/test_watcher.py
 ```
 
 Features:
+
 - 🔄 Automatic test execution on file changes
 - 🎯 Intelligent test selection
 - ⚡ Fast feedback loop
@@ -178,7 +180,7 @@ asyncio_mode = "auto"
 timeout = 120
 markers = [
     "unit: Unit tests",
-    "integration: Integration tests", 
+    "integration: Integration tests",
     "slow: Slow running tests",
     "azure: Tests requiring Azure services",
     # ... more markers
@@ -256,6 +258,7 @@ pre-commit run --all-files
 ```
 
 Hooks include:
+
 - 🔍 Linting with ruff
 - 🎨 Code formatting
 - 🔒 Security scanning
@@ -267,6 +270,7 @@ Hooks include:
 ### Writing Tests
 
 1. **Use descriptive test names**:
+
    ```python
    def test_kernel_function_should_execute_with_valid_arguments():
        """Test that kernel function executes successfully with valid arguments."""
@@ -274,6 +278,7 @@ Hooks include:
    ```
 
 2. **Organize tests by functionality**:
+
    ```
    tests/unit/connectors/openai/
    ├── test_openai_chat_completion.py
@@ -282,6 +287,7 @@ Hooks include:
    ```
 
 3. **Use appropriate markers**:
+
    ```python
    @pytest.mark.unit
    def test_unit_functionality():
@@ -303,6 +309,7 @@ Hooks include:
 ### Test Configuration
 
 1. **Environment Variables**:
+
    ```bash
    # .env.example
    AZURE_OPENAI_API_KEY=your_key_here
@@ -311,6 +318,7 @@ Hooks include:
    ```
 
 2. **Fixtures for Reusability**:
+
    ```python
    @pytest.fixture
    def kernel():
@@ -336,37 +344,41 @@ Hooks include:
 ### Common Issues
 
 1. **Tests are slow**:
+
    ```bash
    # Run fast subset
    make test-fast
-   
+
    # Use parallel execution
    make test-parallel
-   
+
    # Run specific tests
    pytest tests/unit/specific_test.py
    ```
 
 2. **Coverage is low**:
+
    ```bash
    # Check coverage report
    make coverage-html
-   
+
    # Identify untested code
    make coverage-report
    ```
 
 3. **Tests fail in CI but pass locally**:
+
    - Check environment variables
    - Verify dependencies
    - Check for timing issues
    - Review CI logs
 
 4. **Pre-commit hooks are slow**:
+
    ```bash
    # Skip hooks temporarily
    git commit --no-verify
-   
+
    # Run specific hooks
    pre-commit run ruff-check
    ```

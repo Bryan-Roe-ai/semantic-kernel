@@ -1,0 +1,14 @@
+{
+  "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+  "gpu_memory_gb": 5.99658203125,
+  "cuda_version": "12.1",
+  "pytorch_version": "2.5.1+cu121",
+  "fp16_supported": true,
+  "memory_management": "automatic",
+  "recommended_settings": {
+    "use_fp16": true,
+    "batch_size_small_models": 16,
+    "batch_size_large_models": 4,
+    "enable_memory_cleanup": true
+  }
+}
