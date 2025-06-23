@@ -1,2 +1,1 @@
-Requirement already satisfied: transformers in ./.venv/lib/python3.12/site-packages (4.52.4)
-Requirement already satisfied: accelerate in ./.venv/lib/python3.12/site-packages (1.8.1)
+/home/broe/semantic-kernel/19-miscellaneous/=4.30.0

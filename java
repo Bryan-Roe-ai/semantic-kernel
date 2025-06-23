@@ -1,1 +1,1 @@
-01-core-implementations/java
+/home/broe/semantic-kernel/19-miscellaneous/java
