@@ -188,5 +188,6 @@
   "git.ignoreLimitWarning": true,
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "python.analysis.autoImportCompletions": true
 }
