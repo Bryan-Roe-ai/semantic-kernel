@@ -1,0 +1,31 @@
+cells:
+  - kind: 2
+    languageId: sql
+    value: |
+      -- Simple query to select data from a table
+      SELECT * FROM Customers LIMIT 10;
+    metadata:
+      runme.dev/id: 01JYHX9PF4M4VNSMMFR3YX7P8M
+      id: 01JYHX9PF4M4VNSMMFR3YX7P8M
+  - kind: 2
+    languageId: sql
+    value: |
+      -- Get customer count by country with ordering
+      SELECT 
+      	Country,
+      	COUNT(*) AS CustomerCount
+      FROM 
+      	Customers
+      GROUP BY 
+      	Country
+      ORDER BY 
+      	CustomerCount DESC;
+    metadata:
+      runme.dev/id: 01JYHXAWA8NTA7J88MBK0P9TDV
+      id: 01JYHXAWA8NTA7J88MBK0P9TDV
+metadata:
+  conn:
+    id: 904ea1305c3d7903
+    name: agi_memory.db
+  database: main
+  schema: ""
