@@ -34,7 +34,10 @@
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.7"
   },
-  "author": "Bryan Roe",
+  "author": {
+    "name": "Bryan Roe",
+    "email": "bryan.roe@example.com"
+  },
   "license": "MIT",
   "copyright": "Copyright (c) 2025 Bryan Roe",
   "repository": {

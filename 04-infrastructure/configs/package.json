@@ -13,7 +13,10 @@
   "keywords": [
     "bryan-roe"
   ],
-  "author": "Bryan Roe",
+  "author": {
+    "name": "Bryan Roe",
+    "email": "bryan.roe@example.com"
+  },
   "license": "MIT",
   "dependencies": {
     "express": "^5.1.0",

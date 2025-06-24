@@ -1,97 +1,106 @@
----
-runme:
-  id: 01JYHZFZV2YBAGSNXBZDD7CEXB
-  version: v3
----
+# Semantic Kernel - Advanced AI Development Framework
 
-# 
-
-**Note:** This project represents original work by Bryan Roe. While it builds upon existing technologies and frameworks, significant original contributions and enhancements have been made. Please respect the copyright and attribution when using this work.
+**Copyright (c) 2025 Bryan Roe**  
+Licensed under the MIT License
 
 ---
 
-For questions, collaborations, or to learn more about this work, please contact Bryan Roe.
+## 🚀 Overview
 
-## 📞 Contact
+This is an advanced artificial intelligence development framework created by Bryan Roe. It represents significant original work building upon the semantic kernel paradigm with extensive enhancements and new capabilities.
 
-We welcome contributions to this project. Please ensure that any contributions respect the existing copyright and attribution structure.
+## ✨ Key Features
 
-## 🤝 Contributing
-
-[Installation and setup instructions to be added]
-
-## 🚀 Getting Started
-
-- `09-agi-development/` - Advanced AGI development components
-- `08-archived-versions/` - Historical versions and archives
-- `07-resources/` - Shared resources and assets
-- `06-deployment/` - Deployment scripts and configurations
-- `05-documentation/` - Project documentation
-- `04-infrastructure/` - Infrastructure and deployment configurations
-- `03-development-tools/` - Development utilities and samples
-- `02-ai-workspace/` - AI development workspace and tools
-- `01-core-implementations/` - Core semantic kernel implementations
-
-This repository is organized into several key areas:
+- **Advanced AI Integration**: Sophisticated AI and machine learning capabilities
+- **Semantic Computing**: Enhanced semantic kernel implementation
+- **Multi-Language Support**: Python, TypeScript, JavaScript, and .NET implementations
+- **Extensible Architecture**: Modular design for easy customization
+- **Comprehensive Tooling**: Development tools and utilities
+- **Production Ready**: Robust deployment and infrastructure support
 
 ## 📁 Project Structure
 
-- All contributors to the AI and machine learning ecosystem
-- The open-source community for various libraries and tools
-- Microsoft Corporation for the original Semantic Kernel framework
+This repository is organized into several key areas:
 
-This project builds upon the excellent work of the Microsoft Semantic Kernel team and the broader AI/ML community. While incorporating substantial original enhancements and modifications, we acknowledge the foundational contributions of:
+- `01-core-implementations/` - Core semantic kernel implementations
+- `02-ai-workspace/` - AI development workspace and tools
+- `03-development-tools/` - Development utilities and samples
+- `04-infrastructure/` - Infrastructure and deployment configurations
+- `05-documentation/` - Project documentation
+- `06-deployment/` - Deployment scripts and configurations
+- `07-resources/` - Shared resources and assets
+- `08-archived-versions/` - Historical versions and archives
+- `09-agi-development/` - Advanced AGI development components
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Python 3.8+
+- Node.js 16+
+- .NET 6.0+
+- Docker (optional)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd semantic-kernel
+
+# Install Python dependencies
+cd python && poetry install
+
+# Install Node.js dependencies
+cd ../01-core-implementations/typescript && npm install
+
+# Install .NET dependencies
+cd ../dotnet && dotnet restore
+```
+
+### Quick Start
+
+```python
+# Python example
+from semantic_kernel import Kernel
+kernel = Kernel()
+# Your AI code here
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see [CONTRIBUTORS.md](CONTRIBUTORS.md) for guidelines.
+
+**Important:** All contributions must respect the existing copyright and attribution structure.
+
+## 📜 License & Attribution
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### Attribution Requirements
+
+When using this software, please provide proper attribution:
+
+```
+Based on work by Bryan Roe
+Copyright (c) 2025 Bryan Roe
+Original project: Semantic Kernel - Advanced AI Development Framework
+```
 
 ## 🙏 Acknowledgments
 
-```md {"id":"01JYHZFZYFGA80ABHEV9BRA49Y"}
-SOFTWARE.
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+- Microsoft Corporation for the original Semantic Kernel framework
+- The open-source community for various libraries and tools
+- All contributors to the AI and machine learning ecosystem
 
-copies or substantial portions of the Software.
-The above copyright notice and this permission notice shall be included in all
+## 📞 Contact
 
-furnished to do so, subject to the following conditions:
-copies of the Software, and to permit persons to whom the Software is
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-in the Software without restriction, including without limitation the rights
-of this software and associated documentation files (the "Software"), to deal
-Permission is hereby granted, free of charge, to any person obtaining a copy
+For questions, collaborations, or to learn more about this work:
 
-Copyright (c) 2025 Bryan Roe
+- **Author:** Bryan Roe
+- **Project:** Semantic Kernel - Advanced AI Development Framework
+- **License:** MIT
 
-MIT License
-```
+---
 
-## 📄 License & Copyright
-
-- Advanced monitoring and optimization systems
-- Innovative approaches to semantic computing
-- Custom deployment and automation solutions
-- Novel AI workspace management tools
-- Enhanced multi-agent communication systems
-- Advanced AGI development frameworks and methodologies
-
-This project includes substantial original work by Bryan Roe, including:
-
-### Original Contributions
-
-**Year:** 2025  
-**Contact:** [Contact information to be added]  
-**Primary Author:** Bryan Roe
-
-## 👨‍💻 Author & Attribution
-
-This project represents significant original work by Bryan Roe in the field of artificial intelligence and semantic computing. While building upon the excellent foundation provided by Microsoft's Semantic Kernel, this implementation includes substantial original contributions, enhancements, and novel approaches to AI development.
-
-## 🌟 About This Project
-
-An advanced semantic kernel implementation and AI development framework that extends Microsoft's Semantic Kernel with enhanced capabilities for AGI development, multi-agent systems, and intelligent automation.
-
-**Created by Bryan Roe**
-Semantic Kernel - Advanced AI Development Framework
+**Note:** This project represents original work by Bryan Roe. While it builds upon existing technologies, significant original contributions and enhancements have been made. Please respect the copyright and attribution when using this work.

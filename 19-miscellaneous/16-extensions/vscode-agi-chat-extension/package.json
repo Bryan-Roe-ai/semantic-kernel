@@ -3,7 +3,10 @@
   "displayName": "AGI Chat Assistant",
   "description": "Neural-Symbolic AGI Chat Interface for VS Code - Created by Bryan Roe",
   "version": "0.1.0",
-  "author": "Bryan Roe",
+  "author": {
+    "name": "Bryan Roe",
+    "email": "bryan.roe@example.com"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",

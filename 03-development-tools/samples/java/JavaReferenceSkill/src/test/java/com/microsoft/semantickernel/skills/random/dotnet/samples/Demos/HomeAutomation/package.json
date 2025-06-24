@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "A XVBA App - Created by Bryan Roe",
   "main": "index.js",
-  "author": "Bryan Roe",
+  "author": {
+    "name": "Bryan Roe",
+    "email": "bryan.roe@example.com"
+  },
   "license": "MIT",
   "dependencies": {
     "excel-types": "1.0.0",

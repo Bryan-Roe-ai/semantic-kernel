@@ -77,7 +77,10 @@
       "last 1 safari version"
     ]
   },
-  "author": "Bryan Roe",
+  "author": {
+    "name": "Bryan Roe",
+    "email": "bryan.roe@example.com"
+  },
   "license": "MIT",
   "copyright": "Copyright (c) 2025 Bryan Roe",
   "repository": {

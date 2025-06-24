@@ -4,7 +4,10 @@
   "dependencies": {
     "node-api-dotnet": "^0.4.4"
   },
-  "author": "Bryan Roe",
+  "author": {
+    "name": "Bryan Roe",
+    "email": "bryan.roe@example.com"
+  },
   "license": "MIT",
   "copyright": "Copyright (c) 2025 Bryan Roe",
   "repository": {

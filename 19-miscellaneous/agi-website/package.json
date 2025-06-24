@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "A modern, interactive website showcasing Artificial General Intelligence concepts and capabilities - Created by Bryan Roe",
   "main": "index.html",
-  "author": "Bryan Roe",
+  "author": {
+    "name": "Bryan Roe",
+    "email": "bryan.roe@example.com"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
