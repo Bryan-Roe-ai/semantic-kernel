@@ -4,13 +4,13 @@ title: "Semantic Kernel Fork: AGI-Focused Enhancements and Research Tools"
 authors:
   - family-names: Roe
     given-names: Bryan
-    orcid: https://orcid.org/0000-0000-0000-0000
+    orcid: https://orcid.org/0009-0002-4171-1602
     affiliation: Independent Researcher
-    email: bryan.roe@example.com
+    email: bryanmroe@outlook.com
 version: 1.0.0
 date-released: "2025-06-24"
-url: https://github.com/bryankr22/semantic-kernel
-repository-code: https://github.com/bryankr22/semantic-kernel
+url: https://github.com/bryan-roe/semantic-kernel
+repository-code: https://github.com/bryan-roe/semantic-kernel
 abstract:
   "A research-focused fork of Microsoft's Semantic Kernel, enhanced with AGI\
   \ development tools, \n    performance optimizations, and experimental AI features.\
@@ -31,14 +31,14 @@ preferred-citation:
   authors:
     - family-names: Roe
       given-names: Bryan
-      orcid: https://orcid.org/0000-0000-0000-0000
+      orcid: https://orcid.org/0009-0002-4171-1602
   title: "Semantic Kernel Fork: AGI-Focused Enhancements and Research Tools"
   year: 2024
-  url: https://github.com/bryankr22/semantic-kernel
+  url: https://github.com/Bryan-Roe/semantic-kernel
   version: 1.0.0
 identifiers:
   - type: url
-    value: https://github.com/bryankr22/semantic-kernel
+    value: https://github.com/Bryan-Roe/semantic-kernel
 references:
   - type: software
     authors:
