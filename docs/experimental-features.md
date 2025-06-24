@@ -54,14 +54,16 @@ public class DeprecatedFeature
 #pragma warning restore SKEXP0020
 Assert.IsTrue(records.Any());
 
-        var records = await memoryStore.GetBatchAsync(testKeys, options, CancellationToken.None);
-        
-        var memoryStore = new AzureAISearchMemoryRecordService<TestRecord>(searchIndexClient);
-        #pragma warning disable SKEXP0020
-    {
-    public async Task TestEnhancedMemoryStore_WithExperimentalFeatures()
-    [TestCategory("Integration")]
-    [TestMethod]
+```ini {"id":"01JYJ23W7CDEZ1Z2YRJBJTJ91N"}
+    var records = await memoryStore.GetBatchAsync(testKeys, options, CancellationToken.None);
+    
+    var memoryStore = new AzureAISearchMemoryRecordService<TestRecord>(searchIndexClient);
+    #pragma warning disable SKEXP0020
+{
+public async Task TestEnhancedMemoryStore_WithExperimentalFeatures()
+[TestCategory("Integration")]
+[TestMethod]
+```
 
 {
 public class ExperimentalFeatureIntegrationTests
@@ -78,22 +80,24 @@ public class ExperimentalFeatureIntegrationTests
 public async Task TestAgentFramework_WhenDisabled_ShouldUseFallback()
 [TestMethod]
 
-    }
-        Assert.IsTrue(featureGate.IsEnabled("SKEXP0110"));
-        // Act & Assert
+```cs {"id":"01JYJ23W7CDEZ1Z2YRJD9P2MP0"}
+}
+    Assert.IsTrue(featureGate.IsEnabled("SKEXP0110"));
+    // Act & Assert
+    
+    var featureGate = new FeatureGate(configuration, Mock.Of<ILogger<FeatureGate>>());
         
-        var featureGate = new FeatureGate(configuration, Mock.Of<ILogger<FeatureGate>>());
-            
-            .Build();
-            })
-                new KeyValuePair<string, string?>("SemanticKernel:ExperimentalFeatures:Enabled:0", "SKEXP0110")
-            {
-            .AddInMemoryCollection(new[]
-        var configuration = new ConfigurationBuilder()
-        // Arrange
-    {
-    public async Task TestAgentFramework_WhenEnabled_ShouldExecuteSuccessfully()
-    [TestMethod]
+        .Build();
+        })
+            new KeyValuePair<string, string?>("SemanticKernel:ExperimentalFeatures:Enabled:0", "SKEXP0110")
+        {
+        .AddInMemoryCollection(new[]
+    var configuration = new ConfigurationBuilder()
+    // Arrange
+{
+public async Task TestAgentFramework_WhenEnabled_ShouldExecuteSuccessfully()
+[TestMethod]
+```
 
 {
 public class ExperimentalFeatureTests
@@ -121,20 +125,26 @@ var result = await action();
 {
 try
 
-        bool success = false;
-        var stopwatch = Stopwatch.StartNew();
-    {
-        Func<Task<T>> action)
-        string operation, 
-        string featureCode, 
-    public async Task<T> ExecuteAsync<T>(
-    
-    private readonly ExperimentalFeatureTelemetry _telemetry;
+```dart {"id":"01JYJ23W7DR3S7S2NT0JAPDSJS"}
+    bool success = false;
+    var stopwatch = Stopwatch.StartNew();
+{
+    Func<Task<T>> action)
+    string operation, 
+    string featureCode, 
+public async Task<T> ExecuteAsync<T>(
+
+private readonly ExperimentalFeatureTelemetry _telemetry;
+```
 
 {
 public class MonitoredFeatureExecutor
 
 ```csharp {"id":"01JYJ23W7DR3S7S2NT0K56DH3H"}
+
+```
+
+```csharp {"id":"01JYJ2CRYGDYM37QF73TXYPCGD"}
 
 ```
 
@@ -145,19 +155,21 @@ new KeyValuePair<string, object?>("feature", featureCode),
 .Record(duration.TotalMilliseconds,
 _metrics.CreateHistogram<double>("experimental_feature_duration")
 
-                     new KeyValuePair<string, object?>("success", success));
-                     new KeyValuePair<string, object?>("operation", operation),
-            .Add(1, new KeyValuePair<string, object?>("feature", featureCode),
-        _metrics.CreateCounter<int>("experimental_feature_usage")
-            
-            featureCode, operation, success, duration.TotalMilliseconds);
-            "Experimental feature usage: {FeatureCode}.{Operation} - Success: {Success}, Duration: {Duration}ms",
-        _logger.LogInformation(
-    {
-    public void TrackFeatureUsage(string featureCode, string operation, bool success, TimeSpan duration)
-    
-    private readonly IMetrics _metrics;
-    private readonly ILogger<ExperimentalFeatureTelemetry> _logger;
+```cs {"id":"01JYJ23W7DR3S7S2NT0Q1P9ZVY"}
+                 new KeyValuePair<string, object?>("success", success));
+                 new KeyValuePair<string, object?>("operation", operation),
+        .Add(1, new KeyValuePair<string, object?>("feature", featureCode),
+    _metrics.CreateCounter<int>("experimental_feature_usage")
+        
+        featureCode, operation, success, duration.TotalMilliseconds);
+        "Experimental feature usage: {FeatureCode}.{Operation} - Success: {Success}, Duration: {Duration}ms",
+    _logger.LogInformation(
+{
+public void TrackFeatureUsage(string featureCode, string operation, bool success, TimeSpan duration)
+
+private readonly IMetrics _metrics;
+private readonly ILogger<ExperimentalFeatureTelemetry> _logger;
+```
 
 {
 public class ExperimentalFeatureTelemetry
@@ -189,7 +201,9 @@ return await _featureGate.ExecuteIfEnabledAsync(
 {
 public async Task<SearchResults> SearchAsync(string query)
 
-    private readonly FeatureGate _featureGate;
+```sh {"id":"01JYJ23W7DR3S7S2NT0T3SFQ71"}
+private readonly FeatureGate _featureGate;
+```
 
 {
 public class EnhancedSearchService
@@ -202,47 +216,49 @@ public class EnhancedSearchService
 }
 return await fallbackAction();
 
+```cs {"id":"01JYJ23W7DR3S7S2NT0ZV3F704"}
+    }
         }
-            }
-                return await fallbackAction();
-                _logger.LogError(ex, "Experimental feature {FeatureCode} failed, falling back", featureCode);
-            {
-            catch (Exception ex)
-            }
-                return await enabledAction();
-            {
-            try
+            return await fallbackAction();
+            _logger.LogError(ex, "Experimental feature {FeatureCode} failed, falling back", featureCode);
         {
-        if (IsEnabled(featureCode))
+        catch (Exception ex)
+        }
+            return await enabledAction();
+        {
+        try
     {
-        Func<Task<T>> fallbackAction)
-        Func<Task<T>> enabledAction, 
-        string featureCode, 
-    public async Task<T> ExecuteIfEnabledAsync<T>(
-    
-    }
-        return isEnabled;
-            
-            isEnabled ? "enabled" : "disabled");
-            featureCode, 
-        _logger.LogDebug("Feature {FeatureCode} is {Status}", 
+    if (IsEnabled(featureCode))
+{
+    Func<Task<T>> fallbackAction)
+    Func<Task<T>> enabledAction, 
+    string featureCode, 
+public async Task<T> ExecuteIfEnabledAsync<T>(
+
+}
+    return isEnabled;
         
-        var isEnabled = enabledFeatures.Contains(featureCode);
-            
-            .Get<string[]>() ?? Array.Empty<string>();
-            .GetSection("SemanticKernel:ExperimentalFeatures:Enabled")
-        var enabledFeatures = _configuration
-    {
-    public bool IsEnabled(string featureCode)
+        isEnabled ? "enabled" : "disabled");
+        featureCode, 
+    _logger.LogDebug("Feature {FeatureCode} is {Status}", 
     
-    }
-        _logger = logger;
-        _configuration = configuration;
-    {
-    public FeatureGate(IConfiguration configuration, ILogger<FeatureGate> logger)
-    
-    private readonly ILogger<FeatureGate> _logger;
-    private readonly IConfiguration _configuration;
+    var isEnabled = enabledFeatures.Contains(featureCode);
+        
+        .Get<string[]>() ?? Array.Empty<string>();
+        .GetSection("SemanticKernel:ExperimentalFeatures:Enabled")
+    var enabledFeatures = _configuration
+{
+public bool IsEnabled(string featureCode)
+
+}
+    _logger = logger;
+    _configuration = configuration;
+{
+public FeatureGate(IConfiguration configuration, ILogger<FeatureGate> logger)
+
+private readonly ILogger<FeatureGate> _logger;
+private readonly IConfiguration _configuration;
+```
 
 {
 public class FeatureGate
@@ -348,21 +364,23 @@ services.AddScoped<IDistributedCoordinator, RedisDistributedCoordinator>();
 {
 if (settings.EnableDistributedCoordination)
 
-        services.AddScoped<IConflictResolver, PriorityBasedConflictResolver>();
-        services.AddScoped<IAgentCoordinator, EnhancedAgentCoordinator>();
-        services.AddSingleton(settings);
-    {
-        AgentSettings settings)
-        IServiceCollection services, 
-    public static void ConfigureAgentFramework(
-    
-    }
-        public bool EnableDistributedCoordination { get; set; } = false;
-        public ConflictResolutionStrategy ConflictResolution { get; set; } = ConflictResolutionStrategy.Priority;
-        public TimeSpan AgentTimeout { get; set; } = TimeSpan.FromSeconds(30);
-        public int MaxConcurrentAgents { get; set; } = 5;
-    {
-    public class AgentSettings
+```cs {"id":"01JYJ23W7DR3S7S2NT1BAK47XH"}
+    services.AddScoped<IConflictResolver, PriorityBasedConflictResolver>();
+    services.AddScoped<IAgentCoordinator, EnhancedAgentCoordinator>();
+    services.AddSingleton(settings);
+{
+    AgentSettings settings)
+    IServiceCollection services, 
+public static void ConfigureAgentFramework(
+
+}
+    public bool EnableDistributedCoordination { get; set; } = false;
+    public ConflictResolutionStrategy ConflictResolution { get; set; } = ConflictResolutionStrategy.Priority;
+    public TimeSpan AgentTimeout { get; set; } = TimeSpan.FromSeconds(30);
+    public int MaxConcurrentAgents { get; set; } = 5;
+{
+public class AgentSettings
+```
 
 {
 public class AgentFrameworkConfiguration
@@ -385,23 +403,25 @@ return new VectorStoreRecordDefinition
 {
 private static VectorStoreRecordDefinition CreateRecordDefinition<T>()
 
-    }
-        return new AzureAISearchMemoryRecordService<T>(searchIndexClient, options);
-        
-        };
-            VectorStoreRecordDefinition = CreateRecordDefinition<T>()
-        {
-        options ??= new AzureAISearchMemoryRecordServiceOptions
-        
-        );
-            new AzureKeyCredential(apiKey)
-            new Uri(endpoint), 
-        var searchIndexClient = new SearchIndexClient(
+```ts {"id":"01JYJ23W7DR3S7S2NT1G7HJQNC"}
+}
+    return new AzureAISearchMemoryRecordService<T>(searchIndexClient, options);
+    
+    };
+        VectorStoreRecordDefinition = CreateRecordDefinition<T>()
     {
-        AzureAISearchMemoryRecordServiceOptions? options = null) where T : class
-        string apiKey,
-        string endpoint, 
-    public static AzureAISearchMemoryRecordService<T> CreateService<T>(
+    options ??= new AzureAISearchMemoryRecordServiceOptions
+    
+    );
+        new AzureKeyCredential(apiKey)
+        new Uri(endpoint), 
+    var searchIndexClient = new SearchIndexClient(
+{
+    AzureAISearchMemoryRecordServiceOptions? options = null) where T : class
+    string apiKey,
+    string endpoint, 
+public static AzureAISearchMemoryRecordService<T> CreateService<T>(
+```
 
 {
 public class EnhancedAzureAISearchConfig
@@ -456,19 +476,21 @@ var featureConfig = new ExperimentalFeatureConfiguration();
 }
 return (T)Convert.ChangeType(value, typeof(T));
 
-            return defaultValue;
-        if (string.IsNullOrEmpty(value))
-        
-        var value = Environment.GetEnvironmentVariable(envVar);
-        var envVar = $"{featureCode}_{configKey}";
-    {
-    public T GetFeatureConfiguration<T>(string featureCode, string configKey, T defaultValue)
+```cs {"id":"01JYJ23W7DR3S7S2NT1NXVA114"}
+        return defaultValue;
+    if (string.IsNullOrEmpty(value))
     
-    }
-        return enabledFeatures?.Split(',').Contains(featureCode) ?? false;
-        var enabledFeatures = Environment.GetEnvironmentVariable("SEMANTIC_KERNEL_EXPERIMENTAL_FEATURES");
-    {
-    public bool IsFeatureEnabled(string featureCode)
+    var value = Environment.GetEnvironmentVariable(envVar);
+    var envVar = $"{featureCode}_{configKey}";
+{
+public T GetFeatureConfiguration<T>(string featureCode, string configKey, T defaultValue)
+
+}
+    return enabledFeatures?.Split(',').Contains(featureCode) ?? false;
+    var enabledFeatures = Environment.GetEnvironmentVariable("SEMANTIC_KERNEL_EXPERIMENTAL_FEATURES");
+{
+public bool IsFeatureEnabled(string featureCode)
+```
 
 {
 public class ExperimentalFeatureConfiguration
@@ -503,29 +525,31 @@ services.AddScoped<IOllamaConnector, OllamaConnector>();
 {
 if (Features.ThirdPartyConnectors)
 
-        }
-            #pragma warning restore SKEXP0110
-            services.AddScoped<IAgentOrchestrator, EnhancedAgentOrchestrator>();
-            #pragma warning disable SKEXP0110
-        {
-        if (Features.AgentFramework)
-    {
-    public static void ConfigureServices(IServiceCollection services)
-    
+```cs {"id":"01JYJ23W7DR3S7S2NT1VS9HN4T"}
     }
-        #endif
-        public const bool ThirdPartyConnectors = false;
-        #else
-        public const bool ThirdPartyConnectors = true;
-        #if ENABLE_SKEXP0070
-        
-        #endif
-        public const bool AgentFramework = false;
-        #else
-        public const bool AgentFramework = true;
-        #if ENABLE_SKEXP0110
+        #pragma warning restore SKEXP0110
+        services.AddScoped<IAgentOrchestrator, EnhancedAgentOrchestrator>();
+        #pragma warning disable SKEXP0110
     {
-    public static class Features
+    if (Features.AgentFramework)
+{
+public static void ConfigureServices(IServiceCollection services)
+
+}
+    #endif
+    public const bool ThirdPartyConnectors = false;
+    #else
+    public const bool ThirdPartyConnectors = true;
+    #if ENABLE_SKEXP0070
+    
+    #endif
+    public const bool AgentFramework = false;
+    #else
+    public const bool AgentFramework = true;
+    #if ENABLE_SKEXP0110
+{
+public static class Features
+```
 
 {
 public class FeatureManager
@@ -543,11 +567,13 @@ return await vectorStore.SearchAsync(query);
 var vectorStore = new AzureAISearchVectorStore(client);
 // Stable feature usage
 
-        #pragma warning restore SKEXP0110
-        var agentCoordinator = new AgentCoordinator();
-        #pragma warning disable SKEXP0110  // Agent framework
-    {
-    public async Task<IEnumerable<SearchResult>> SearchAsync(string query)
+```cs {"id":"01JYJ23W7DR3S7S2NT1WZEJSSK"}
+    #pragma warning restore SKEXP0110
+    var agentCoordinator = new AgentCoordinator();
+    #pragma warning disable SKEXP0110  // Agent framework
+{
+public async Task<IEnumerable<SearchResult>> SearchAsync(string query)
+```
 
 {
 public class EnhancedMemoryService
