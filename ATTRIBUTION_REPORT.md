@@ -1,6 +1,6 @@
 # COPYRIGHT AND ATTRIBUTION REPORT
 
-Generated: Tue Jun 24 15:24:51 PDT 2025
+Generated: Tue Jun 24 15:25:47 PDT 2025
 Workspace: /home/broe/semantic-kernel
 
 ## Summary
@@ -21,7 +21,7 @@ Semantic Kernel - Advanced AI Development Framework project.
 - JavaScript files: 3265
 - TypeScript files: 1141
 - JSON files: 1471
-- Markdown files: 1048
+- Markdown files: 1049
 
 ## Key Files Updated
 
