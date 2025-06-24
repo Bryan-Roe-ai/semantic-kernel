@@ -1,0 +1,24 @@
+import httpx
+
+async def _generate_content(self, content: str, file_path: Path) -> str:
+    \"\"\"Generate content using local Ollama LLM\"\"\"
+    prompt = content.strip()
+    payload = {
+        \"model\": \"llama2\",  # Çhëçk †hë ëxæç† møðël ñæmë løæðëð ïñ Ollama
+        \"messages\": [
+            {\"role\": \"user\", \"content\": prompt}
+        ],
+        \"stream\": False
+    }
+    try:
+        async with httpx.AsyncClient(timeout=30) as client:
+            response = await client.post(
+                \"http://localhost:11434/v1/chat/completions\", json=payload
+            )
+            response.raise_for_status()
+            data = response.json()
+            if \"choices\" in data and data[\"choices\"]:
+                return data[\"choices\"][0][\"message\"][\"content\"]
+            return f\"[ERROR] No choices in response: {data}\"
+    except Exception as e:
+        return f\"[ERROR] Failed to call Ollama LLM: {e}\"

@@ -189,5 +189,16 @@
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "python.analysis.autoImportCompletions": true
+  "python.analysis.autoImportCompletions": true,
+  "maven.view": "hierarchical",
+  "[instructions]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "mirrord.promptUsingDefaultConfigSingleFileNoFolder": false,
+  "[prompt]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features"
+  }
 }

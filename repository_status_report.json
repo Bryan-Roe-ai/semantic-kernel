@@ -1,11 +1,11 @@
 {
-  "timestamp": "2025-06-23 16:35:16",
+  "timestamp": "2025-06-24 11:24:37",
   "repository_root": "/home/broe/semantic-kernel",
-  "python_files": 47627,
-  "dotnet_files": 4471,
-  "javascript_files": 4400,
-  "config_files": 1735,
-  "shell_scripts": 94,
-  "total_directories": 23387,
-  "total_files": 157116
+  "python_files": 47684,
+  "dotnet_files": 4469,
+  "javascript_files": 4397,
+  "config_files": 1756,
+  "shell_scripts": 71,
+  "total_directories": 23427,
+  "total_files": 157332
 }
