@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYJ0Y49PYYWZRZ24EW6D8171
+  version: v3
+---
+
 # COPYRIGHT NOTICE
 
 Copyright (c) 2025 Bryan Roe  
@@ -35,12 +41,14 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 ## Third-Party Acknowledgments
 
 This project incorporates components from:
+
 - Microsoft Semantic Kernel (MIT License)
 - Various open-source libraries (see package.json files)
 
 ## Contact for Copyright Matters
 
 For copyright questions, licensing beyond MIT terms, or permission requests:
+
 - Bryan Roe
 - Semantic Kernel - Advanced AI Development Framework
 

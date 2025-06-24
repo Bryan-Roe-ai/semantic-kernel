@@ -14,9 +14,10 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
 
+
 class CopyrightAttributionSetup:
     """Complete copyright and attribution setup for Bryan Roe's Semantic Kernel project."""
-    
+
     def __init__(self, workspace_root: Path):
         self.workspace_root = workspace_root
         self.author_info = {
@@ -25,15 +26,15 @@ class CopyrightAttributionSetup:
             "copyright": "Copyright (c) 2025 Bryan Roe",
             "license": "MIT",
             "year": "2025",
-            "project": "Semantic Kernel - Advanced AI Development Framework"
+            "project": "Semantic Kernel - Advanced AI Development Framework",
         }
-    
+
     def create_master_attribution_file(self):
         """Create the master attribution file."""
         content = f"""# ATTRIBUTION AND CREDITS
 
-**{self.author_info['project']}**  
-{self.author_info['copyright']}  
+**{self.author_info['project']}**
+{self.author_info['copyright']}
 Licensed under the {self.author_info['license']} License
 
 ---
@@ -99,18 +100,18 @@ For attribution questions, licensing inquiries, or collaboration:
 
 **Important:** This attribution file must be preserved in any distribution or derivative work.
 """
-        
-        attribution_file = self.workspace_root / 'ATTRIBUTION.md'
-        with open(attribution_file, 'w', encoding='utf-8') as f:
+
+        attribution_file = self.workspace_root / "ATTRIBUTION.md"
+        with open(attribution_file, "w", encoding="utf-8") as f:
             f.write(content)
-        
+
         return attribution_file
-    
+
     def create_copyright_notice(self):
         """Create comprehensive copyright notice."""
         content = f"""# COPYRIGHT NOTICE
 
-{self.author_info['copyright']}  
+{self.author_info['copyright']}
 Licensed under the {self.author_info['license']} License
 
 ## Project Information
@@ -158,20 +159,20 @@ For copyright questions, licensing beyond MIT terms, or permission requests:
 
 **IMPORTANT:** This copyright notice must be preserved in any copy, modification, or distribution of this software. Removal or modification may violate copyright law.
 """
-        
-        copyright_file = self.workspace_root / 'COPYRIGHT.md'
-        with open(copyright_file, 'w', encoding='utf-8') as f:
+
+        copyright_file = self.workspace_root / "COPYRIGHT.md"
+        with open(copyright_file, "w", encoding="utf-8") as f:
             f.write(content)
-        
+
         return copyright_file
-    
+
     def update_main_readme(self):
         """Update the main README with proper attribution."""
-        readme_path = self.workspace_root / 'README.md'
-        
+        readme_path = self.workspace_root / "README.md"
+
         content = f"""# {self.author_info['project']}
 
-**{self.author_info['copyright']}**  
+**{self.author_info['copyright']}**
 Licensed under the {self.author_info['license']} License
 
 ---
@@ -276,12 +277,12 @@ For questions, collaborations, or to learn more about this work:
 
 **Note:** This project represents original work by {self.author_info['name']}. While it builds upon existing technologies, significant original contributions and enhancements have been made. Please respect the copyright and attribution when using this work.
 """
-        
-        with open(readme_path, 'w', encoding='utf-8') as f:
+
+        with open(readme_path, "w", encoding="utf-8") as f:
             f.write(content)
-        
+
         return readme_path
-    
+
     def create_notice_file(self):
         """Create NOTICE file for distribution."""
         content = f"""{self.author_info['project']}
@@ -311,13 +312,13 @@ For more information about licensing and attribution, see:
 - ATTRIBUTION.md (detailed attributions)
 - COPYRIGHT.md (copyright information)
 """
-        
-        notice_file = self.workspace_root / 'NOTICE'
-        with open(notice_file, 'w', encoding='utf-8') as f:
+
+        notice_file = self.workspace_root / "NOTICE"
+        with open(notice_file, "w", encoding="utf-8") as f:
             f.write(content)
-        
+
         return notice_file
-    
+
     def add_copyright_headers_to_files(self):
         """Add copyright headers to source files."""
         python_header = f'''#!/usr/bin/env python3
@@ -332,157 +333,167 @@ Author: {self.author_info['name']}
 """
 
 '''
-        
-        js_header = f'''/**
+
+        js_header = f"""/**
  * {{description}}
- * 
+ *
  * {self.author_info['copyright']}
  * Licensed under the {self.author_info['license']} License
- * 
+ *
  * Part of the {self.author_info['project']}
  * Author: {self.author_info['name']}
  */
 
-'''
-        
-        cs_header = f'''/*
+"""
+
+        cs_header = f"""/*
  * {{description}}
- * 
+ *
  * {self.author_info['copyright']}
  * Licensed under the {self.author_info['license']} License
- * 
+ *
  * Part of the {self.author_info['project']}
  * Author: {self.author_info['name']}
  */
 
-'''
-        
+"""
+
         # Count files that need headers
         python_files = []
         js_files = []
         cs_files = []
-        
-        for file_path in self.workspace_root.rglob('*.py'):
+
+        for file_path in self.workspace_root.rglob("*.py"):
             if not self._should_skip_file(file_path):
                 python_files.append(file_path)
-        
-        for file_path in self.workspace_root.rglob('*.js'):
+
+        for file_path in self.workspace_root.rglob("*.js"):
             if not self._should_skip_file(file_path):
                 js_files.append(file_path)
-        
-        for file_path in self.workspace_root.rglob('*.ts'):
+
+        for file_path in self.workspace_root.rglob("*.ts"):
             if not self._should_skip_file(file_path):
                 js_files.append(file_path)
-        
-        for file_path in self.workspace_root.rglob('*.cs'):
+
+        for file_path in self.workspace_root.rglob("*.cs"):
             if not self._should_skip_file(file_path):
                 cs_files.append(file_path)
-        
+
         return {
-            'python': len(python_files),
-            'javascript': len(js_files),
-            'csharp': len(cs_files)
+            "python": len(python_files),
+            "javascript": len(js_files),
+            "csharp": len(cs_files),
         }
-    
+
     def _should_skip_file(self, file_path: Path) -> bool:
         """Check if file should be skipped."""
-        skip_dirs = {'node_modules', '__pycache__', '.git', 'bin', 'obj', '08-archived-versions'}
-        skip_files = {'__init__.py', 'setup.py'}
-        
+        skip_dirs = {
+            "node_modules",
+            "__pycache__",
+            ".git",
+            "bin",
+            "obj",
+            "08-archived-versions",
+        }
+        skip_files = {"__init__.py", "setup.py"}
+
         # Skip if in excluded directory
         for part in file_path.parts:
             if part in skip_dirs:
                 return True
-        
+
         # Skip if excluded file
         if file_path.name in skip_files:
             return True
-        
+
         # Skip if already has copyright
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read(1000)
-                if f'Copyright (c) {self.author_info["year"]} {self.author_info["name"]}' in content:
+                if (
+                    f'Copyright (c) {self.author_info["year"]} {self.author_info["name"]}'
+                    in content
+                ):
                     return True
         except:
             return True
-        
+
         return False
-    
+
     def update_package_json_files(self):
         """Update package.json files with proper attribution."""
         count = 0
-        for package_file in self.workspace_root.rglob('package.json'):
-            if '08-archived-versions' in str(package_file):
+        for package_file in self.workspace_root.rglob("package.json"):
+            if "08-archived-versions" in str(package_file):
                 continue
-            
+
             try:
-                with open(package_file, 'r', encoding='utf-8') as f:
+                with open(package_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                
+
                 # Update author and license info
-                data['author'] = {
-                    'name': self.author_info['name'],
-                    'email': self.author_info['email']
+                data["author"] = {
+                    "name": self.author_info["name"],
+                    "email": self.author_info["email"],
                 }
-                data['license'] = self.author_info['license']
-                data['copyright'] = self.author_info['copyright']
-                
+                data["license"] = self.author_info["license"]
+                data["copyright"] = self.author_info["copyright"]
+
                 # Add repository info if not present
-                if 'repository' not in data:
-                    data['repository'] = {
-                        'type': 'git',
-                        'url': 'git+https://github.com/yourusername/semantic-kernel.git'
+                if "repository" not in data:
+                    data["repository"] = {
+                        "type": "git",
+                        "url": "git+https://github.com/yourusername/semantic-kernel.git",
                     }
-                
-                with open(package_file, 'w', encoding='utf-8') as f:
+
+                with open(package_file, "w", encoding="utf-8") as f:
                     json.dump(data, f, indent=2)
-                
+
                 count += 1
             except Exception as e:
                 print(f"Error updating {package_file}: {e}")
-        
+
         return count
-    
+
     def run_complete_setup(self):
         """Run the complete copyright and attribution setup."""
         print(f"🚀 Setting up copyright and attribution for {self.author_info['name']}")
         print(f"📁 Workspace: {self.workspace_root}")
         print(f"📋 Project: {self.author_info['project']}")
         print("=" * 70)
-        
+
         # Create main attribution file
         print("\n📝 Creating master attribution file...")
         attribution_file = self.create_master_attribution_file()
         print(f"  ✅ Created: {attribution_file}")
-        
+
         # Create copyright notice
         print("\n©️  Creating copyright notice...")
         copyright_file = self.create_copyright_notice()
         print(f"  ✅ Created: {copyright_file}")
-        
+
         # Update main README
         print("\n📖 Updating main README...")
         readme_file = self.update_main_readme()
         print(f"  ✅ Updated: {readme_file}")
-        
+
         # Create NOTICE file
         print("\n📋 Creating NOTICE file...")
         notice_file = self.create_notice_file()
         print(f"  ✅ Created: {notice_file}")
-        
+
         # Update package.json files
         print("\n📦 Updating package.json files...")
         package_count = self.update_package_json_files()
         print(f"  ✅ Updated {package_count} package.json files")
-        
+
         # Analyze files for headers
         print("\n🔍 Analyzing files for copyright headers...")
         file_counts = self.add_copyright_headers_to_files()
         print(f"  📊 Python files: {file_counts['python']}")
         print(f"  📊 JavaScript/TypeScript files: {file_counts['javascript']}")
         print(f"  📊 C# files: {file_counts['csharp']}")
-        
+
         print("\n🎉 Copyright and attribution setup complete!")
         print("\n📋 Summary of files created/updated:")
         print(f"  • {attribution_file.name}")
@@ -494,28 +505,32 @@ Author: {self.author_info['name']}
         print(f"  • Python files ready for headers: {file_counts['python']}")
         print(f"  • JS/TS files ready for headers: {file_counts['javascript']}")
         print(f"  • C# files ready for headers: {file_counts['csharp']}")
-        
-        print(f"\n✨ Your project is now properly attributed to {self.author_info['name']}!")
+
+        print(
+            f"\n✨ Your project is now properly attributed to {self.author_info['name']}!"
+        )
         print("🔗 Next steps:")
         print("  1. Review the generated files")
         print("  2. Update any placeholder URLs/emails")
         print("  3. Consider running copyright header tools for source files")
         print("  4. Commit these changes to preserve attribution")
 
+
 def main():
     """Main function."""
     workspace_root = Path(__file__).parent
     setup = CopyrightAttributionSetup(workspace_root)
-    
+
     print("Copyright and Attribution Setup Tool")
     print("for the Semantic Kernel Project")
     print("=" * 40)
-    
+
     response = input("\n❓ Set up complete copyright and attribution? (y/N): ")
-    if response.lower() == 'y':
+    if response.lower() == "y":
         setup.run_complete_setup()
     else:
         print("❌ Setup cancelled.")
+
 
 if __name__ == "__main__":
     main()

@@ -27,7 +27,7 @@ from typing import Dict, List, Any
 class EnhancedAIMarkdownRunner:
     """
     Enhanced AI Markdown Runner with better parsing
-    
+
     Original implementation by Bryan Roe
     Copyright (c) 2025 Bryan Roe
     """

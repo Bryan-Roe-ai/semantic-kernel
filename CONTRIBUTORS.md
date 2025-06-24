@@ -4,7 +4,7 @@ runme:
   version: v3
 ---
 
-# 
+#
 
 **Note:** This project was created and is primarily maintained by Bryan Roe. While we welcome contributions, the core vision, architecture, and implementation represent his original work and intellectual property.
 
@@ -19,7 +19,7 @@ For questions about contributing, please contact Bryan Roe or submit an issue in
 - Code quality standards
 - Architecture decisions
 - Project direction and roadmap
-   **Bryan Roe** maintains overall project leadership and final decision-making authority for:
+  **Bryan Roe** maintains overall project leadership and final decision-making authority for:
 
 ## Project Leadership
 
@@ -33,7 +33,7 @@ For questions about contributing, please contact Bryan Roe or submit an issue in
 - Legal clarity for the project
 - Proper attribution and recognition
 - Clear licensing of contributions
-   Significant contributors may be asked to sign a Contributor License Agreement to ensure:
+  Significant contributors may be asked to sign a Contributor License Agreement to ensure:
 
 ### Contributor License Agreement (CLA)
 
@@ -66,7 +66,7 @@ As this project grows, we will add contributors to this list with proper attribu
 - Academic research in artificial intelligence
 - Open source AI frameworks and tools
 - The broader AI/ML research community
-   This project draws inspiration from:
+  This project draws inspiration from:
 
 ### Inspiration and Influence
 
@@ -111,16 +111,17 @@ We welcome contributions to this project! However, please note:
 
 - **Years Active:** 2025-present
 - **Contact:** [To be added]
-   - Developed the enhanced semantic kernel extensions
-   - Authored all original documentation and guides
-   - Created custom deployment and automation tools
-   - Designed and implemented the multi-agent systems
-   - Developed all core AGI and AI workspace components
-   - Created the entire project architecture and framework
+
+  - Developed the enhanced semantic kernel extensions
+  - Authored all original documentation and guides
+  - Created custom deployment and automation tools
+  - Designed and implemented the multi-agent systems
+  - Developed all core AGI and AI workspace components
+  - Created the entire project architecture and framework
 
 - **Contributions:**
 - **Role:** Founder, Lead Developer, and Architect
-   **Bryan Roe** - Project Creator, Lead Architect, and Primary Contributor
+  **Bryan Roe** - Project Creator, Lead Architect, and Primary Contributor
 
 ## Primary Contributor and Project Creator
 

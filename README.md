@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYJ0Y49Q8865N5WZYRTWQCZ7
+  version: v3
+---
+
 # Semantic Kernel - Advanced AI Development Framework
 
 **Copyright (c) 2025 Bryan Roe**  
@@ -43,7 +49,7 @@ This repository is organized into several key areas:
 
 ### Installation
 
-```bash
+```bash {"id":"01JYJ0Y49H1P6BXMXV9F12Z6G3"}
 # Clone the repository
 git clone <repository-url>
 cd semantic-kernel
@@ -60,9 +66,10 @@ cd ../dotnet && dotnet restore
 
 ### Quick Start
 
-```python
+```python {"id":"01JYJ0Y49J0AB60P3EWFEZHSE3"}
 # Python example
 from semantic_kernel import Kernel
+
 kernel = Kernel()
 # Your AI code here
 ```
@@ -81,7 +88,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 When using this software, please provide proper attribution:
 
-```
+```sh {"id":"01JYJ0Y49KTTK5M6D1WYG28HAV"}
 Based on work by Bryan Roe
 Copyright (c) 2025 Bryan Roe
 Original project: Semantic Kernel - Advanced AI Development Framework
