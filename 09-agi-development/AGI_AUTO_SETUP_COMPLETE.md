@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYHSEJ5Y710YZTFQ1J02Z9G2
+  version: v3
+---
+
 # 🤖 AGI Auto File Updates - Setup Complete
 
 ## ✅ System Status: ACTIVE
@@ -6,16 +12,16 @@ The AGI Auto File Updates system has been successfully set up and is now running
 
 ### 📋 What's Working
 
-- **✅ Launch Script**: `./launch_agi_auto.sh` - Ready to start/stop the system
-- **✅ Configuration**: `.agi_file_config.json` - Properly configured with safe directories
-- **✅ Backup System**: `.agi_backups/` - Automatic backups of all modified files
-- **✅ Logging**: `agi_file_updates.log` - Complete operation logging
+- __✅ Launch Script__: `./launch_agi_auto.sh` - Ready to start/stop the system
+- __✅ Configuration__: `.agi_file_config.json` - Properly configured with safe directories
+- __✅ Backup System__: `.agi_backups/` - Automatic backups of all modified files
+- __✅ Logging__: `agi_file_updates.log` - Complete operation logging
 - **✅ Safety Checks**: Multi-layer validation before any file operations
 - **✅ VS Code Integration**: Tasks available in Command Palette
 
 ### 🚀 Quick Start Commands
 
-```bash
+```bash {"id":"01JYHSEJ5Y710YZTFQ19B6KWX4"}
 # Start the system (recommended)
 ./launch_agi_auto.sh --monitor
 
@@ -75,14 +81,14 @@ The system provides:
 
 ### 📊 Monitoring
 
-**Status Check**: `./check_agi_auto_status.sh`
-**Logs**: `tail -f agi_file_updates.log`
-**Configuration**: `.agi_file_config.json`
-**Backups**: `ls -la .agi_backups/`
+__Status Check__: `./check_agi_auto_status.sh`
+__Logs__: `tail -f agi_file_updates.log`
+__Configuration__: `.agi_file_config.json`
+__Backups__: `ls -la .agi_backups/`
 
 ### 🔧 Current System State
 
-```
+```ini {"id":"01JYHSEJ5Y710YZTFQ1BADHBTP"}
 🚀 System Status: ACTIVE
 📁 Configuration: CONFIGURED (10 safe directories)
 🤖 Process Status: RUNNING IN DAEMON MODE

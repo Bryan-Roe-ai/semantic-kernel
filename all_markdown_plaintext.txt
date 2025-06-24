@@ -221,11 +221,189 @@ If you need to locate a file:
 2. Use the directory structure above
 3. Check symlinks in the root directory
 
+# ./run_md_as_ai_demo.md
+runme:
+  id: 01JYHMSPS5DSTJC1FJJRZQP6RE
+  version: v3
+ai execute
+ Execution Commands
+ai {"id":"01JYHMA6Q5E1F47N4FAKZ8SCY4"}
+ Summary Request
+ai {"id":"01JYHMA6Q5E1F47N4FAPKRZNQY"}
+ Document Enhancement
+ai {"id":"01JYHMA6Q5E1F47N4FAQYSCDKF"}
+ Content Generation
+ai {"id":"01JYHMA6Q5E1F47N4FASNACW0F"}
+ Quick Analysis
+This demonstrates how to use the AI Markdown Runner to process markdown files with embedded AI instructions.
+ Demo: Running Markdown Files as AI
+
 # ./agi_optimization_test.md
 AGI Optimization Test
 This file demonstrates the optimized AGI file update system.
 
+# ./AI_MARKDOWN_GUIDE.md
+runme:
+  id: 01JYHMSPS7DWKFP13XMXF8K9ET
+  version: v3
+Use the enhanced AI runner to transform any markdown file into an intelligent, processingcapable document.
+🚀 Start running your markdown files as AIenhanced documents today!
+bash
+Add debug output to see what's happening:
+3. AI service errors: Check API keys and connectivity
+2. Processing errors: Verify file permissions
+1. No AI blocks found: Check markdown syntax
+ Troubleshooting
+ Cache AI responses when appropriate
+ Use async processing for multiple files
+ Process large files in chunks
+ Keep instructions focused and actionable
+ Place AI blocks strategically throughout content
+ Use consistent AI instruction types
+ Set expectations: Specify desired output format and length
+ Provide context: Include relevant background information
+ Be specific: "Analyze the technical accuracy" vs "Analyze this"
+ Tips and Best Practices
+bash {"id":"01JYHM37V8WABKVD9S0HRCSN5K"}
+ AGI MCP Server: Your custom intelligence
+ Local LLMs: Privacyfocused
+ Anthropic Claude: Excellent for analysis
+ OpenAI GPT4: Best for general tasks
+Choose your AI provider:
+bash {"id":"01JYHM37V8WABKVD9S0KRVR59B"}
+ Production Deployment
+sh {"id":"01JYHM37V8WABKVD9S0N67236X"}
+Make it beginnerfriendly but comprehensive.
+Include prerequisites, installation, and first examples.
+Create a stepbystep tutorial for new users.
+markdown
+ini {"id":"01JYHM37V8WABKVD9S0RW5X6HJ"}
+Focus on installation and configuration problems.
+Review common issues and provide solutions.
+Include examples, parameters, and return values.
+Generate comprehensive API documentation for this project.
+markdown
+Add AI blocks to enhance code documentation:
+bash {"id":"01JYHM37V8WABKVD9S0V9QT20Y"}
+ Practical Examples
+python {"id":"01JYHM37V8WABKVD9S127GWBHP"}
+Connect to your existing AGI MCP server:
+bash {"id":"01JYHM37V9YRWBY99G4WRFJQGN"}
+ Advanced Features
+python {"id":"01JYHM37V9YRWBY99G50R4GNQQ"}
+To connect with real AI services, modify the enhancedairunner.py:
+md {"id":"01JYHM37V9YRWBY99G522AA802"}
+3. Run setup
+2. Install dependencies
+1. Clone repo
+Basic installation steps:
+Include technical capabilities and user benefits.
+Generate a comprehensive features list based on the project context.
+Check for clarity, completeness, and technical accuracy.
+Analyze this project description and suggest improvements.
+markdown
+Example  enhancing README.md:
+3. Run the AI processor
+2. Add AI instruction blocks where you want processing
+1. Open any markdown file
+ Creating AIEnhanced Documentation
+bash {"id":"01JYHM37V9YRWBY99G57TSQD03"}
+Create a batch processor:
+bash {"id":"01JYHM37V9YRWBY99G5AW89SJR"}
+ Running Your Existing Markdown Files
+ai {"id":"01JYHM37V9YRWBY99G5C14Q6E3"}
+ Execute Commands
+ai {"id":"01JYHM37V9YRWBY99G5EKHJP3H"}
+ Enhance Existing Content
+ai {"id":"01JYHM37V9YRWBY99G5F2ZS6ND"}
+ Summarize Text
+ai {"id":"01JYHM37V9YRWBY99G5F6C5SJN"}
+ Generate New Content
+ai {"id":"01JYHM37V9YRWBY99G5GE6WYRY"}
+ Analyze Content
+Add these code blocks to any markdown file:
+bash {"id":"01JYHM37V9YRWBY99G5JQFKMPD"}
+ Quick Start
+The AI Markdown Runner allows you to run any markdown file with embedded AI processing instructions. It can analyze, generate, summarize, enhance, and execute AI commands directly within markdown documents.
+ Overview
+ 🤖 AI Markdown Runner  Complete Guide
+
+# ./demo_ai_types.md
+runme:
+  id: 01JYHMSPRT1VBBQP4N9CXT3AMK
+  version: v3
+Demonstrating AIenhanced markdown processing capabilities
+This will process all AI blocks and show the results for each type.
+bash
+ Usage Example
+ Execute: Run custom AI commands
+ Enhance: Improve existing content quality
+ Summarize: Extract key points and create summaries
+ Generate: Create new content from prompts  
+ Analyze: Deep content analysis with insights
+The AI Markdown Runner supports multiple processing types:
+ Technical Implementation
+ai {"id":"01JYHKSJADA76TP1HAZGJ8K0BD"}
+ 5. Command Execution
+ai {"id":"01JYHKSJADA76TP1HAZM8XR1T9"}
+ 4. Content Enhancement
+ai {"id":"01JYHKSJAEEEEA47RR96P8AGQT"}
+ 3. Content Summarization
+ai {"id":"01JYHKSJAEEEEA47RR99W3TC7A"}
+ 2. Content Generation
+ai {"id":"01JYHKSJAEEEEA47RR9CSRX5WX"}
+ 1. Content Analysis
+This demonstrates how to embed different types of AI instructions in markdown files.
+ 🤖 AIPowered Markdown Demo
+
+# ./ai_markdown_demo.md
+runme:
+  id: 01JYHMSPS4TJ4ZRVHM2F6CXZPV
+  version: v3
+ai summarize
+ai {"id":"01JYHMF7CEVNQQ5BQKK7W39NVY"}
+You can add more blocks with different types:
+ai generate
+Write a short summary about the importance of coding standards in software projects.
+ AI Markdown Runner Demo
+This file demonstrates a real AI block for local LLM processing.
+ Example
+
+# ./HOW_TO_RUN_MD_AS_AI.md
+runme:
+  id: 01JYHMSPSBS5WFHABH4258Q29F
+  version: v3
+This will show you how different AI block types are processed.
+bash
+Try running:
+ Semantic Kernel: Integrate with SK AI services
+ AGI MCP Server: Use your existing MCP setup
+ Local LLM: Connect to local language models 
+ OpenAI API: Add your API key and integrate OpenAI client
+Currently, the runner provides simulated results. To connect real AI:
+3. Any .md file  The runner will analyze it even without AI blocks
+2. aidemo.md  More complex AI processing examples
+1. simpleaidemo.md  Demonstrates all AI block types
+ai {"id":"01JYHMJK5ZP5ZTBKGN713FTMGE"}
+ 5. AI Execution
+ai {"id":"01JYHMJK5ZP5ZTBKGN72HWW8P8"}
+ 4. Content Enhancement
+ai {"id":"01JYHMJK5ZP5ZTBKGN73CPFX3T"}
+ 3. Summarization
+ai {"id":"01JYHMJK5ZP5ZTBKGN73E7RK2X"}
+ 2. Content Generation  
+ai {"id":"01JYHMJK5ZP5ZTBKGN777F38ZM"}
+ 1. Analysis
+The runner recognizes these AI block types:
+bash {"id":"01JYHMJK5ZP5ZTBKGN77JR179F"}
+Your workspace already has an AI Markdown Runner (aimarkdownrunner.py) that can process markdown files with embedded AI instructions.
+ How to Run Markdown Files as AI
+ AI Markdown Processing Example
+
 # ./ai_demo.md
+runme:
+  id: 01JYHMSPRS9K67746NMSWWRA8B
+  version: v3
 This demo shows how markdown files can become interactive AIpowered documents.
 ai execute
  Connect to Semantic Kernel
@@ -235,9 +413,9 @@ ai execute
 To connect with real AI services, update the processing methods in aimarkdownrunner.py:
  Real AI Integration
 3. View Results: The tool will process all AI blocks and show results
-bash
+bash {"id":"01JYHKH3JG51KAMJ655KMHTTGX"}
 2. Run the AI Markdown Runner:
-bash
+bash {"id":"01JYHKH3JG51KAMJ655QGDNKW5"}
 1. Install Dependencies:
  Usage Instructions
  Markdown Preservation: Original markdown structure maintained
@@ -246,23 +424,59 @@ bash
  Multiple AI Types: execute, analyze, generate, summarize, enhance
 The AI Markdown Runner supports:
  Technical Integration
-ai
+ai {"id":"01JYHKH3JG51KAMJ655RX0P29D"}
 Let's enhance this basic text:
  Content Enhancement
-ai
+ai {"id":"01JYHKH3JG51KAMJ655S51CM9Y"}
 Here's a longer text that we'll summarize:
  Summarization Example
-ai
+ai {"id":"01JYHKH3JG51KAMJ655SYSMQQ0"}
 We can generate new content based on prompts:
  Generate New Content
-ai
+ai {"id":"01JYHKH3JG51KAMJ655V55WYE5"}
 Let's analyze this section with AI:
  Content Analysis
-ai
+ai {"id":"01JYHKH3JG51KAMJ655XHZ36J6"}
 The AI Markdown Runner can process special code blocks that contain AI instructions:
  Overview
 This markdown file demonstrates how to embed AI processing instructions directly in markdown documents.
  🤖 AIEnhanced Documentation Demo
+
+# ./ai_types_demo.md
+runme:
+  id: 01JYHMSPRT1VBBQP4N9XJ2A1P2
+  version: v3
+Demonstrating AIenhanced markdown processing capabilities
+This will process all AI blocks and show the results for each type.
+bash
+ Usage Example
+ Execute: Run custom AI commands
+ Enhance: Improve existing content quality
+ Summarize: Extract key points and create summaries
+ Generate: Create new content from prompts  
+ Analyze: Deep content analysis with insights
+The AI Markdown Runner supports multiple processing types:
+ Technical Implementation
+ai {"id":"01JYHKVBQ8NH4CZAMD9H5D0HRN"}
+ 5. Command Execution
+ai {"id":"01JYHKVBQ8NH4CZAMD9N1MY7NW"}
+ 4. Content Enhancement
+ai {"id":"01JYHKVBQ8NH4CZAMD9NEX44NB"}
+ 3. Content Summarization
+ai {"id":"01JYHKVBQ8NH4CZAMD9R67JKSP"}
+ 2. Content Generation
+ai {"id":"01JYHKVBQ8NH4CZAMD9VWMK6R2"}
+ 1. Content Analysis
+This demonstrates how to embed different types of AI instructions in markdown files.
+ 🤖 AIPowered Markdown Demo
+
+# ./simple_ai_demo.md
+AI Markdown Demo
+ Analysis Test
+ Generation Test
+ Summary Test
+ Enhancement Test
+ Execution Test
 
 # ./08-archived-versions/vscode-azure-account/SECURITY.md
 <! BEGIN MICROSOFT SECURITY.MD V0.0.5 BLOCK 

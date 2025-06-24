@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYHSG6JP5BJYZW0DJZNCHNDP
+  version: v3
+---
+
 # AGI Chat Assistant for VS Code
 
 A comprehensive Neural-Symbolic AGI chat interface that integrates with VS Code, providing intelligent conversation capabilities through a hybrid AI system that combines neural networks with symbolic reasoning.
@@ -7,11 +13,11 @@ A comprehensive Neural-Symbolic AGI chat interface that integrates with VS Code,
 - **Neural-Symbolic Intelligence**: Combines deep learning with logical reasoning
 - **Multiple Agent Types**:
 
-  - 🧠 Neural-Symbolic: Pattern recognition + symbolic reasoning
-  - 🔍 Reasoning: Formal logical analysis
-  - 🎨 Creative: Analogical and divergent thinking
-  - 📊 Analytical: Data analysis and pattern detection
-  - 💭 General: Multi-domain intelligence
+   - 🧠 Neural-Symbolic: Pattern recognition + symbolic reasoning
+   - 🔍 Reasoning: Formal logical analysis
+   - 🎨 Creative: Analogical and divergent thinking
+   - 📊 Analytical: Data analysis and pattern detection
+   - 💭 General: Multi-domain intelligence
 
 - **VS Code Integration**: Native chat interface within VS Code
 - **Conversation Memory**: Persistent chat history and context
@@ -22,7 +28,7 @@ A comprehensive Neural-Symbolic AGI chat interface that integrates with VS Code,
 
 ### 1. Install the Backend Server
 
-```bash
+```bash {"id":"01JYHSG6JP5BJYZW0DJB6VMEGR"}
 cd /home/broe/semantic-kernel/agi-backend-server
 pip install -r requirements.txt
 python main.py
@@ -32,7 +38,7 @@ The server will start on `http://localhost:8000`
 
 ### 2. Install the VS Code Extension
 
-```bash
+```bash {"id":"01JYHSG6JP5BJYZW0DJCF61RZ8"}
 cd /home/broe/semantic-kernel/vscode-agi-chat-extension
 npm install
 npm run compile
@@ -46,7 +52,7 @@ Install the extension in VS Code:
 
 ### 3. Launch the AGI Integration
 
-```bash
+```bash {"id":"01JYHSG6JP5BJYZW0DJEB2G5ZX"}
 cd /home/broe/semantic-kernel
 python agi_chat_integration.py
 ```
@@ -63,7 +69,7 @@ python agi_chat_integration.py
 
 Open VS Code settings (`Ctrl+,`) and search for "AGI Chat":
 
-```json
+```json {"id":"01JYHSG6JP5BJYZW0DJEXPRBA6"}
 {
   "agiChat.defaultAgent": "neural-symbolic",
   "agiChat.maxHistoryLength": 100,
@@ -116,7 +122,7 @@ Edit `agi-backend-server/main.py` to customize:
 
 ## 🏗️ Architecture
 
-```
+```ini {"id":"01JYHSG6JP5BJYZW0DJF75RGRB"}
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   VS Code       │    │   Backend API    │    │   AGI System    │
 │   Extension     │◄──►│   FastAPI        │◄──►│   Neural-       │
@@ -132,7 +138,7 @@ Edit `agi-backend-server/main.py` to customize:
 
 ### Basic Conversation
 
-```
+```ini {"id":"01JYHSG6JP5BJYZW0DJHS8Z39G"}
 User: Hello, what can you do?
 AGI: 🧠 Neural-Symbolic AGI Activated
 
@@ -145,7 +151,7 @@ Hello! I'm your Neural-Symbolic AGI Assistant. I combine:
 
 ### Reasoning Task
 
-```
+```md {"id":"01JYHSG6JP5BJYZW0DJKN32972"}
 User: If all birds can fly, and penguins are birds, can penguins fly?
 Reasoning Agent: 🔍 Logical Reasoning Analysis
 
@@ -164,7 +170,7 @@ Reasoning Process:
 
 ### Creative Task
 
-```
+```ini {"id":"01JYHSG6JP5BJYZW0DJPCFK9E8"}
 User: Help me brainstorm innovative solutions for urban transportation
 Creative Agent: 🎨 Creative Exploration
 
@@ -180,7 +186,7 @@ Creative Associations:
 
 ### Building the Extension
 
-```bash
+```bash {"id":"01JYHSG6JP5BJYZW0DJQDEDXZV"}
 cd vscode-agi-chat-extension
 npm install
 npm run compile
@@ -189,7 +195,7 @@ npm run watch  # For development
 
 ### Running Tests
 
-```bash
+```bash {"id":"01JYHSG6JP5BJYZW0DJTRPH33G"}
 # Backend tests
 cd agi-backend-server
 python -m pytest tests/
@@ -211,7 +217,7 @@ npm test
 
 This system integrates with your existing Semantic Kernel setup:
 
-```python
+```python {"id":"01JYHSG6JP5BJYZW0DJWXNX12J"}
 # Connect to your AGI notebook
 from agi_chat_integration import agi_system
 
@@ -240,6 +246,7 @@ response = await agi_system.process_chat_message(
    - Verify endpoint configuration
 
 3. **AGI system errors**
+
    - Check Python dependencies
    - Verify Semantic Kernel installation
    - Review log files for detailed errors
@@ -248,7 +255,7 @@ response = await agi_system.process_chat_message(
 
 Enable debug logging:
 
-```bash
+```bash {"id":"01JYHSG6JP5BJYZW0DJY373N65"}
 # Backend
 LOG_LEVEL=DEBUG python main.py
 

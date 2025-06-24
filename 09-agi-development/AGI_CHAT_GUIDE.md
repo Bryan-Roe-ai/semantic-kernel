@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYHSFDH0R0VMN82B347J2YM2
+  version: v3
+---
+
 # 🤖 AGI Chat Assistant - Setup & Usage Guide
 
 Your Neural-Symbolic AGI Chat system is now ready! This guide shows you how to use it like GitHub Copilot in VS Code.
@@ -8,18 +14,19 @@ Your Neural-Symbolic AGI Chat system is now ready! This guide shows you how to u
 
 1. **Open the web interface:**
 
-   ```bash
-   cd /home/broe/semantic-kernel
-   ./launch_agi_chat.sh
-   ```
+```bash {"id":"01JYHSFDGZA7WJFP7RB5YM8QZD"}
+cd /home/broe/semantic-kernel
+./launch_agi_chat.sh
+```
 
-   This will:
+This will:
 
-   - Start the AGI backend server
-   - Launch the AGI integration
-   - Open a beautiful web chat interface in your browser
+- Start the AGI backend server
+- Launch the AGI integration
+- Open a beautiful web chat interface in your browser
 
 2. **Start chatting:**
+
    - Select your preferred agent type (Neural-Symbolic, Reasoning, Creative, etc.)
    - Type your questions and get intelligent responses
    - See reasoning explanations and confidence scores
@@ -28,12 +35,13 @@ Your Neural-Symbolic AGI Chat system is now ready! This guide shows you how to u
 
 1. **Install the simple VS Code extension:**
 
-   ```bash
-   cd /home/broe/semantic-kernel/vscode-agi-simple
-   # Install in VS Code: Ctrl+Shift+P -> "Extensions: Install from VSIX"
-   ```
+```bash {"id":"01JYHSFDGZA7WJFP7RB81ZQTNT"}
+cd /home/broe/semantic-kernel/vscode-agi-simple
+# Install in VS Code: Ctrl+Shift+P -> "Extensions: Install from VSIX"
+```
 
 2. **Use in VS Code Chat:**
+
    - Press `Ctrl+Shift+A` to open AGI Chat
    - Or use `@agi` in the VS Code chat panel
    - Example: `@agi reasoning What is the best approach to solve climate change?`
@@ -54,7 +62,7 @@ Your system includes 5 specialized agents:
 
 ### Web Interface
 
-```
+```yaml {"id":"01JYHSFDGZA7WJFP7RB96FTQM9"}
 Agent: Neural-Symbolic
 Question: "How can I optimize my machine learning model while ensuring ethical AI practices?"
 
@@ -63,7 +71,7 @@ Response: [Detailed neural-symbolic analysis with reasoning explanation]
 
 ### VS Code Chat
 
-```
+```sql {"id":"01JYHSFDGZA7WJFP7RB9TGY20B"}
 @agi creative Write a story about an AI that discovers consciousness
 @agi reasoning Prove that the square root of 2 is irrational
 @agi analytical Analyze the trend in this data: 1,3,5,8,13,21
@@ -81,7 +89,7 @@ Edit `agi-backend-server/main.py` to customize:
 
 ### VS Code Settings
 
-```json
+```json {"id":"01JYHSFDGZA7WJFP7RBB2W0P6H"}
 {
   "agiChat.endpoint": "http://localhost:8000",
   "agiChat.defaultAgent": "neural-symbolic"
@@ -90,7 +98,7 @@ Edit `agi-backend-server/main.py` to customize:
 
 ## 🏗️ Architecture
 
-```
+```ini {"id":"01JYHSFDGZA7WJFP7RBB7HPF8Q"}
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   VS Code       │    │   Web Interface  │    │  AGI Backend    │
 │   Extension     │───▶│   (Browser)      │───▶│   (FastAPI)     │
@@ -109,7 +117,7 @@ Edit `agi-backend-server/main.py` to customize:
 
 Run the test script:
 
-```bash
+```bash {"id":"01JYHSFDGZA7WJFP7RBD0KV8G4"}
 cd /home/broe/semantic-kernel
 python3 test_agi_chat.py
 ```
@@ -130,7 +138,7 @@ Your AGI system integrates with Microsoft Semantic Kernel:
 
 ### Backend Not Starting
 
-```bash
+```bash {"id":"01JYHSFDGZA7WJFP7RBG2FY425"}
 cd /home/broe/semantic-kernel/agi-backend-server
 pip3 install fastapi uvicorn requests semantic-kernel
 python3 main.py
@@ -153,7 +161,7 @@ python3 main.py
 
 Your system supports switching between agents mid-conversation:
 
-```
+```sql {"id":"01JYHSFDH0R0VMN82B2Y1SX4BK"}
 @agi creative Generate ideas for a new product
 @agi analytical Now analyze the market potential for these ideas
 @agi reasoning What are the logical steps to implement the best idea?

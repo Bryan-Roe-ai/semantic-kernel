@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYHSEPWFY493A99NJ1SAF3YP
+  version: v3
+---
+
 # AGI Auto File Updates Setup Guide
 
 ## 🤖 Overview
@@ -7,16 +13,16 @@ The AGI Auto File Updates system enables autonomous file modifications using the
 ## ✅ Setup Status
 
 - **Status**: ✅ ACTIVE AND CONFIGURED
-- **Launch Script**: `./launch_agi_auto.sh`
-- **Configuration**: `.agi_file_config.json`
-- **Backup Directory**: `.agi_backups/`
-- **Log File**: `agi_file_updates.log`
+- __Launch Script__: `./launch_agi_auto.sh`
+- __Configuration__: `.agi_file_config.json`
+- __Backup Directory__: `.agi_backups/`
+- __Log File__: `agi_file_updates.log`
 
 ## 🚀 Quick Start
 
 ### 1. Start the System
 
-```bash
+```bash {"id":"01JYHSEPWFY493A99NH66R7QC1"}
 # Monitor mode (recommended for development)
 ./launch_agi_auto.sh --monitor
 
@@ -39,7 +45,7 @@ Access via `Ctrl+Shift+P` → "Tasks: Run Task"
 
 ### 3. Verify System Status
 
-```bash
+```bash {"id":"01JYHSEPWFY493A99NH7Y17FCN"}
 # Check running processes
 ps aux | grep agi
 
@@ -104,14 +110,14 @@ Files containing these patterns are protected:
 
 ### Example 1: Create a New Python Module
 
-```python
+```python {"id":"01JYHSEPWFY493A99NHBMRAGRA"}
 # The AGI system can automatically create optimized Python modules
 # with proper documentation, type hints, and best practices
 ```
 
 ### Example 2: Enhance Existing Code
 
-```python
+```python {"id":"01JYHSEPWFY493A99NHDCS2QHM"}
 # The system can automatically:
 # - Add missing docstrings
 # - Improve type annotations
@@ -121,7 +127,7 @@ Files containing these patterns are protected:
 
 ### Example 3: Documentation Updates
 
-```markdown
+```markdown {"id":"01JYHSEPWFY493A99NHE2SNE7B"}
 # Automatically generate and update:
 
 # - README files
@@ -143,7 +149,7 @@ Files containing these patterns are protected:
 
 ### Status Monitoring
 
-```bash
+```bash {"id":"01JYHSEPWFY493A99NHF0Q9X7S"}
 # Real-time log monitoring
 tail -f agi_file_updates.log
 
@@ -166,7 +172,7 @@ ls -la .agi_backups/
 
 ### Emergency Procedures
 
-```bash
+```bash {"id":"01JYHSEPWFY493A99NHF9PQ7H6"}
 # Stop all AGI processes
 pkill -f agi_file_update_system.py
 
@@ -184,7 +190,7 @@ rm .agi_file_config.json
 
 Edit `.agi_file_config.json`:
 
-```json
+```json {"id":"01JYHSEPWFY493A99NHJ8BBSEK"}
 {
   "safe_directories": ["/your/custom/path", "/another/safe/directory"]
 }
@@ -192,7 +198,7 @@ Edit `.agi_file_config.json`:
 
 ### Integration with CI/CD
 
-```yaml
+```yaml {"id":"01JYHSEPWFY493A99NHJEX3VTV"}
 # GitHub Actions example
 - name: Run AGI Auto Updates
   run: |
@@ -207,7 +213,7 @@ Edit `.agi_file_config.json`:
 
 **Issue**: AGI backend not starting
 
-```bash
+```bash {"id":"01JYHSEPWFY493A99NHMPZKWK6"}
 # Solution: Check port availability and dependencies
 netstat -tulpn | grep :8000
 pip3 install -r requirements.txt
@@ -215,7 +221,7 @@ pip3 install -r requirements.txt
 
 **Issue**: Permission denied errors
 
-```bash
+```bash {"id":"01JYHSEPWFY493A99NHQQSJD4E"}
 # Solution: Check file permissions
 chmod +x launch_agi_auto.sh
 chmod 755 agi_file_update_system.py
@@ -223,14 +229,14 @@ chmod 755 agi_file_update_system.py
 
 **Issue**: Safety check failures
 
-```bash
+```bash {"id":"01JYHSEPWFY493A99NHV2V92P7"}
 # Solution: Verify file paths are in safe directories
 echo "Check .agi_file_config.json for approved paths"
 ```
 
 ### Debug Mode
 
-```bash
+```bash {"id":"01JYHSEPWFY493A99NHYWD24KS"}
 # Run with verbose logging
 python3 -m pdb agi_file_update_system.py
 

@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYHSCWR5BX8W9QTQ628N72DP
+  version: v3
+---
+
 # 🤖 Semantic Kernel AI Workspace
 
 **Advanced AI Development Platform with Comprehensive Automation**
@@ -13,7 +19,8 @@ Welcome to your fully organized AI development workspace! This structure has bee
 ### 🎯 Quick Start Options
 
 **🌱 Complete Beginner?**
-```bash
+
+```bash {"id":"01JYHSCWR4YT6HTJTTQ1E9PWRG"}
 # Start with our friendly getting started guide
 cat GETTING_STARTED.md
 
@@ -22,7 +29,8 @@ python scripts/ai_learning_journey.py --beginner
 ```
 
 **🚀 Want to See Something Cool?**
-```bash
+
+```bash {"id":"01JYHSCWR4YT6HTJTTQ1SQBEY1"}
 # See the AI agents in action (2-minute demo)
 python scripts/demo_showcase.py
 
@@ -31,7 +39,8 @@ python scripts/friendly_dashboard.py
 ```
 
 **🛠️ Ready to Build?**
-```bash
+
+```bash {"id":"01JYHSCWR4YT6HTJTTQ2TRFAY2"}
 # Create your first AI project with guided help
 python scripts/project_wizard.py
 
@@ -41,7 +50,7 @@ python scripts/ai_helper.py
 
 ## 🚀 Quick Start
 
-```bash
+```bash {"id":"01JYHSCWR4YT6HTJTTQ5ZK7PRB"}
 # Navigate to the AI workspace
 cd /workspaces/semantic-kernel/ai-workspace
 
@@ -68,13 +77,13 @@ The workspace includes a comprehensive **Master Control System** for managing al
 
 ### Interactive Dashboard
 
-```bash
+```bash {"id":"01JYHSCWR4YT6HTJTTQ9ZC6JAD"}
 python ai_workspace_control.py --interactive
 ```
 
 ### Command Line Interface
 
-```bash
+```bash {"id":"01JYHSCWR4YT6HTJTTQB0Q1JAQ"}
 # Optimize workspace
 python ai_workspace_control.py --tool optimizer --command optimize
 
@@ -184,7 +193,7 @@ python ai_workspace_control.py --tool model-manager --command list-models
 
 Complete lifecycle management for AI models:
 
-```bash
+```bash {"id":"01JYHSCWR4YT6HTJTTQB75BRNC"}
 # Download models from Hugging Face, URLs, or local files
 python scripts/ai_model_manager.py download --source "microsoft/DialoGPT-medium"
 
@@ -202,7 +211,7 @@ python scripts/ai_model_manager.py export --model-id my_model --path model.zip
 
 Comprehensive system monitoring with alerting:
 
-```bash
+```bash {"id":"01JYHSCWR4YT6HTJTTQBNDMZFP"}
 # Start real-time monitoring
 python scripts/ai_workspace_monitor.py
 
@@ -221,7 +230,7 @@ python scripts/ai_workspace_monitor.py --report 24
 
 Multi-environment deployment with rollback support:
 
-```bash
+```bash {"id":"01JYHSCWR4YT6HTJTTQD49S8GQ"}
 # Deploy to production
 python scripts/deployment_automator.py deploy --environment production --mode docker
 
@@ -243,7 +252,7 @@ python scripts/deployment_automator.py validate
 
 Automated optimization and cleanup:
 
-```bash
+```bash {"id":"01JYHSCWR4YT6HTJTTQGV0NDR9"}
 # Full optimization
 python scripts/ai_workspace_optimizer.py
 
@@ -263,7 +272,7 @@ python scripts/ai_workspace_optimizer.py --quick
 
 Automate complex workflows:
 
-```bash
+```bash {"id":"01JYHSCWR4YT6HTJTTQK6E50RH"}
 # Quick setup and validation
 python ai_workspace_control.py --batch batches/quick-setup.batch
 
@@ -283,7 +292,7 @@ Advanced tool interoperability with Model Context Protocol:
 - Multi-agent coordination
 - Real-time context sharing
 
-**See**: [MCP_INTEGRATION_GUIDE.md](MCP_INTEGRATION_GUIDE.md) for detailed setup
+__See__: [MCP_INTEGRATION_GUIDE.md](MCP_INTEGRATION_GUIDE.md) for detailed setup
 
 ## �🛠️ Development Environment
 
@@ -298,22 +307,23 @@ Advanced tool interoperability with Model Context Protocol:
 
 1. **Copy environment template:**
 
-   ```bash
-   cp .env.template .env
-   ```
+```bash {"id":"01JYHSCWR4YT6HTJTTQKW7DBE1"}
+cp .env.template .env
+```
 
 2. **Add your API keys to `.env`:**
 
-   ```env
-   OPENAI_API_KEY=your_key_here
-   AZURE_OPENAI_API_KEY=your_azure_key_here
-   AZURE_OPENAI_ENDPOINT=your_endpoint_here
-   ```
+```env {"id":"01JYHSCWR4YT6HTJTTQNTX7VRP"}
+OPENAI_API_KEY=your_key_here
+AZURE_OPENAI_API_KEY=your_azure_key_here
+AZURE_OPENAI_ENDPOINT=your_endpoint_here
+```
 
 3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+
+```bash {"id":"01JYHSCWR4YT6HTJTTQNYMYZ2D"}
+pip install -r requirements.txt
+```
 
 ## 🚀 Getting Started Workflows
 
@@ -363,7 +373,7 @@ Advanced tool interoperability with Model Context Protocol:
 
 ### Quick Start with Docker
 
-```bash
+```bash {"id":"01JYHSCWR4YT6HTJTTQS02DRND"}
 # One-command deployment
 ./scripts/docker_manager.sh deploy
 
@@ -384,7 +394,7 @@ Advanced tool interoperability with Model Context Protocol:
 
 ### Management Commands
 
-```bash
+```bash {"id":"01JYHSCWR4YT6HTJTTQV65A33S"}
 ./scripts/docker_manager.sh [command]
 # Commands: build, compose, stop, logs, exec, health, cleanup, dev, deploy
 ```
