@@ -1,0 +1,366 @@
+name: 🚀 Enhanced CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * 1' # Weekly dependency check
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+  JAVA_VERSION: '11'
+
+jobs:
+  detect-changes:
+    name: 🔍 Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      dotnet: ${{ steps.changes.outputs.dotnet }}
+      python: ${{ steps.changes.outputs.python }}
+      typescript: ${{ steps.changes.outputs.typescript }}
+      java: ${{ steps.changes.outputs.java }}
+      docs: ${{ steps.changes.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            dotnet:
+              - '01-core-implementations/dotnet/**'
+              - '.github/workflows/**'
+            python:
+              - '01-core-implementations/python/**'
+              - '.github/workflows/**'
+            typescript:
+              - '01-core-implementations/typescript/**'
+              - '.github/workflows/**'
+            java:
+              - '01-core-implementations/java/**'
+              - '.github/workflows/**'
+            docs:
+              - 'docs/**'
+              - '*.md'
+
+  # .NET Testing with Enhanced Coverage
+  dotnet-test:
+    name: 🔷 .NET Tests
+    runs-on: ${{ matrix.os }}
+    needs: detect-changes
+    if: needs.detect-changes.outputs.dotnet == 'true'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        configuration: [Debug, Release]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore 01-core-implementations/dotnet/SK-dotnet.sln
+
+      - name: Build
+        run: dotnet build 01-core-implementations/dotnet/SK-dotnet.sln --configuration ${{ matrix.configuration }} --no-restore
+
+      - name: Test with Coverage
+        run: |
+          dotnet test 01-core-implementations/dotnet/SK-dotnet.sln \
+            --configuration ${{ matrix.configuration }} \
+            --no-build \
+            --logger trx \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./TestResults
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./TestResults/**/coverage.cobertura.xml
+          flags: dotnet-${{ matrix.os }}-${{ matrix.configuration }}
+          name: dotnet-coverage
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: dotnet-test-results-${{ matrix.os }}-${{ matrix.configuration }}
+          path: ./TestResults/**/*.trx
+
+  # Python Testing with Enhanced Coverage
+  python-test:
+    name: 🐍 Python Tests
+    runs-on: ${{ matrix.os }}
+    needs: detect-changes
+    if: needs.detect-changes.outputs.python == 'true'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.8', '3.9', '3.10', '3.11']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: latest
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Load cached venv
+        uses: actions/cache@v3
+        with:
+          path: 01-core-implementations/python/.venv
+          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      - name: Install dependencies
+        run: |
+          cd 01-core-implementations/python
+          poetry install
+
+      - name: Run Tests with Coverage
+        run: |
+          cd 01-core-implementations/python
+          poetry run pytest tests/ \
+            --cov=semantic_kernel \
+            --cov-report=xml \
+            --cov-report=html \
+            --junit-xml=pytest.xml \
+            -v
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./01-core-implementations/python/coverage.xml
+          flags: python-${{ matrix.os }}-${{ matrix.python-version }}
+          name: python-coverage
+
+  # TypeScript Testing
+  typescript-test:
+    name: 📘 TypeScript Tests
+    runs-on: ${{ matrix.os }}
+    needs: detect-changes
+    if: needs.detect-changes.outputs.typescript == 'true'
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: ['16', '18', '20']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: 01-core-implementations/typescript/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd 01-core-implementations/typescript
+          npm ci
+
+      - name: Build
+        run: |
+          cd 01-core-implementations/typescript
+          npm run build
+
+      - name: Test with Coverage
+        run: |
+          cd 01-core-implementations/typescript
+          npm run test:coverage
+
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./01-core-implementations/typescript/coverage/lcov.info
+          flags: typescript-${{ matrix.os }}-${{ matrix.node-version }}
+          name: typescript-coverage
+
+  # Performance Benchmarks
+  performance-benchmarks:
+    name: ⚡ Performance Benchmarks
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Run Benchmarks
+        run: |
+          cd 01-core-implementations/dotnet/benchmarks
+          dotnet run -c Release --framework net8.0 -- --exporters json
+
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: 'benchmarkdotnet'
+          output-file-path: 01-core-implementations/dotnet/benchmarks/BenchmarkDotNet.Artifacts/results/*.json
+          external-data-json-path: ./cache/benchmark-data.json
+          fail-on-alert: true
+          alert-threshold: '200%'
+          comment-on-alert: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+
+  # Security Scan
+  security-scan:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # Integration Tests
+  integration-tests:
+    name: 🔄 Integration Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: --health-cmd redis-cli ping --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Run Integration Tests
+        env:
+          REDIS_CONNECTION_STRING: localhost:6379
+          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+        run: |
+          cd 01-core-implementations/dotnet
+          dotnet test tests/IntegrationTests/ \
+            --logger trx \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./IntegrationTestResults
+
+  # Documentation Build & Deploy
+  docs-build:
+    name: 📚 Documentation
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.docs == 'true' || github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          pip install -r docs/requirements.txt
+
+      - name: Build documentation
+        run: |
+          cd docs
+          mkdocs build
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/site
+
+  # Coverage Summary
+  coverage-summary:
+    name: 📊 Coverage Summary
+    runs-on: ubuntu-latest
+    needs: [dotnet-test, python-test, typescript-test]
+    if: always()
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Coverage Reports
+        uses: actions/download-artifact@v3
+
+      - name: Generate Coverage Summary
+        run: |
+          echo "## 📊 Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Language | Platform | Coverage |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|----------|----------|" >> $GITHUB_STEP_SUMMARY
+          echo "| .NET | Cross-platform | ![.NET Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=dotnet) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Python | Cross-platform | ![Python Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=python) |" >> $GITHUB_STEP_SUMMARY
+          echo "| TypeScript | Cross-platform | ![TypeScript Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=typescript) |" >> $GITHUB_STEP_SUMMARY
+
+  # Release Management
+  release:
+    name: 🚀 Release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [dotnet-test, python-test, typescript-test, performance-benchmarks, security-scan]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate Release Notes
+        id: release_notes
+        run: |
+          echo "## 🚀 What's New" > RELEASE_NOTES.md
+          echo "" >> RELEASE_NOTES.md
+          git log --pretty=format:"- %s" $(git describe --tags --abbrev=0)..HEAD >> RELEASE_NOTES.md
+
+      - name: Create Release
+        if: contains(github.event.head_commit.message, '[release]')
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: false
