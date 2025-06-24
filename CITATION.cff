@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: "Roe"
+    given-names: "Bryan"
+    orcid: "https://orcid.org/0009-0002-4171-1602"  # Replace with your actual ORCID ID
+title: "Semantic Kernel - Advanced AI Development Framework"
+version: 2.0.0
+date-released: 2025-01-24
+url: "https://github.com/bryan-roe/semantic-kernel"
+abstract: "An advanced artificial intelligence development framework with enhanced semantic kernel implementation, featuring custom Azure AI Search memory store improvements, experimental function calling capabilities, and cross-language support for .NET, Python, TypeScript, and Java."
+keywords:
+  - artificial-intelligence
+  - semantic-kernel
+  - machine-learning
+  - azure
+  - ai-search
+  - function-calling
+  - vector-search
+  - memory-store
+license: MIT
+repository-code: "https://github.com/bryan-roe/semantic-kernel"

@@ -214,5 +214,8 @@
       },
       "connectionType": "socket"
     }
-  ]
+  ],
+  "[sql]": {
+    "editor.defaultFormatter": "dbcode.dbcode"
+  }
 }
