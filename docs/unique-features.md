@@ -4,7 +4,7 @@ runme:
   version: v3
 ---
 
-# 
+#
 
 This comprehensive guide showcases the significant value and innovation this fork brings to the Semantic Kernel ecosystem. The enhancements address real production challenges while maintaining backward compatibility and adding powerful new capabilities.
 
@@ -73,7 +73,7 @@ if (featureManager.IsFeatureEnabled("SKEXP0110"))
 
 }
 }
-return Environment.GetEnvironmentVariable($"ENABLE_{feature}") == "true";
+return Environment.GetEnvironmentVariable($"ENABLE\_{feature}") == "true";
 {
 public bool IsFeatureEnabled(string feature)
 {
@@ -85,7 +85,7 @@ public class FeatureManager
 ```
 
 }
-_logger.LogError(ex, "Memory operation failed: {Operation} on {System}", operation, dbSystem);
+\_logger.LogError(ex, "Memory operation failed: {Operation} on {System}", operation, dbSystem);
 var operation = ex.Data["db.operation.name"];
 var dbSystem = ex.Data["db.system"];
 // Enhanced error information available
@@ -103,7 +103,7 @@ try
 
 ---
 
-- Comprehensive monitoring and observability
+-Comprehensive monitoring and observability
 - Enterprise deployment patterns
 - Advanced security and compliance
 #### **Q4 2025: Enterprise Features**
@@ -131,10 +131,10 @@ try
 ```
 
 );
-cancellationToken       // Better cancellation support
+cancellationToken // Better cancellation support
 arguments,
 prompt,
-jsonSerializerOptions,  // Enhanced JSON support
+jsonSerializerOptions, // Enhanced JSON support
 var result = await kernel.InvokePromptAsync(
 // Take advantage of improved InvokePromptAsync
 
@@ -156,9 +156,9 @@ var memoryStore = new AzureAISearchMemoryStore(endpoint, apiKey);
 
 ```
 
-#pragma warning disable SKEXP0110  // Agent framework
-#pragma warning disable SKEXP0020  // Memory connectors
-#pragma warning disable SKEXP0001  // Core features
+#pragma warning disable SKEXP0110 // Agent framework
+#pragma warning disable SKEXP0020 // Memory connectors
+#pragma warning disable SKEXP0001 // Core features
 // Configure experimental features you want to use
 
 ```csharp {"id":"01JYJ21KBP3ZVGZRH12PHKKZ3W"}
@@ -223,14 +223,16 @@ return await this.AggregateResponsesAsync(responses, task.Priority);
             var response = await agent.ProcessAsync(task, cancellationToken);
         {
         foreach (var agent in agents)
-        
+    
         var responses = new List<AgentResponse>();
         // Enhanced agent coordination with conflict resolution
+    
     {
-        CancellationToken cancellationToken)
-        AgentTask task,
-        IEnumerable<IAgent> agents,
+    CancellationToken cancellationToken)
+    AgentTask task,
+    IEnumerable<IAgent> agents,
     public async Task<AgentResponse> CoordinateAgentsAsync(
+    
 
 {
 public class EnhancedAgentFramework
@@ -289,12 +291,12 @@ internal SKFunction(
 
 ---
 
-| Index Creation | 2100 | 1400 | 33% faster |
-| Vector Search | 340 | 210 | 38% faster |
-| Batch Get | 450 | 280 | 38% faster |
-| Single Get | 120 | 85 | 29% faster |
-|---------------|---------------|---------------|-------------|
-| Operation Type | Original (ms) | Enhanced (ms) | Improvement |
+| Index Creation | 2100 | 1400 | 33 % faster |
+| Vector Search | 340 | 210 | 38 % faster |
+| Batch Get | 450 | 280 | 38 % faster |
+| Single Get | 120 | 85 | 29 % faster |
+| ---------------| ---------------| ---------------| -------------|
+| Operation Type | Original(ms) | Enhanced(ms) | Improvement |
 
 #### **Performance Metrics**
 
@@ -315,7 +317,7 @@ var searchClient = this.GetSearchClient(collectionName);
 public async Task<TDataModel> GetAsync(string key, GetRecordOptions? options = default, CancellationToken cancellationToken = default)
 
 ```csharp {"id":"01JYJ21KBQ50E5YTBNDZETMNGE"}
-**After (Enhanced Implementation):**
+**After(Enhanced Implementation):**
 
 ```
 
@@ -328,7 +330,7 @@ var client = GetSearchClient(collectionName);
 public async Task<MemoryRecord?> GetAsync(string collectionName, string key, bool withEmbedding = false)
 
 ```csharp {"id":"01JYJ21KBQ50E5YTBNE0FKYG9J"}
-**Before (Original Implementation):**
+**Before(Original Implementation):**
 
 #### **Before vs. After: Async Operations**
 
@@ -396,7 +398,6 @@ class FunctionInvokingEventArgs(KernelEventArgs):
 
 ```python {"id":"01JYJ21KBQ50E5YTBNEBQWM8ME"}
 #### **Python Event Management**
-
 ```
 
 }
@@ -443,7 +444,6 @@ def advanced_vector_search(query: str, options: SearchOptions) -> SearchResults:
 
 ```python {"id":"01JYJ21KBQ50E5YTBNEHTF8GJ1"}
 #### **Runtime Feature Detection**
-
 ```
 
 </PropertyGroup>
@@ -526,11 +526,11 @@ public static async Task InvokePrompt()
 ```
 
 }
-OutTask = 18                                         // Custom addition
-InStringAndContextOutTask = 17,                      // Custom addition
-InContextOutTask = 16,                               // Custom addition
-InStringOutTask = 15,                                // Custom addition
-ContextSwitchInStringAndContextOutTaskContext = 14,  // Custom addition
+OutTask = 18 // Custom addition
+InStringAndContextOutTask = 17, // Custom addition
+InContextOutTask = 16, // Custom addition
+InStringOutTask = 15, // Custom addition
+ContextSwitchInStringAndContextOutTaskContext = 14, // Custom addition
 InStringAndContextOutTaskString = 13,
 InStringAndContextOutString = 12,
 InStringAndContext = 11,
@@ -556,7 +556,7 @@ internal enum DelegateTypes
 
 ---
 
-- **Improved performance** through optimized async patterns
+-**Improved performance** through optimized async patterns
 - **Better production reliability** with comprehensive retry logic
 - **Enhanced debugging** with detailed error context
 - **40% reduction** in failed memory operations
@@ -635,7 +635,7 @@ private static async Task<T> RunOperationAsync<T>(Func<Task<T>> operation, strin
 
 #### **Our Solution**
 
-- Limited telemetry and debugging capabilities
+-Limited telemetry and debugging capabilities
 - Poor error handling and recovery
 - Inconsistent async behavior
 - Race conditions in vector operations

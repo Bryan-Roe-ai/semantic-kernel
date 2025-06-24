@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYJ2YYFTEEW0KMFH6GJ0CXKC
+  version: v3
+---
+
 # 🧠 Semantic Kernel - Advanced AI Development Framework
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
@@ -26,18 +32,18 @@ This repository represents **significant original contributions** to the Semanti
 
 ### 📈 Performance Improvements
 
-| Operation | Upstream | This Fork | Improvement |
-|-----------|----------|-----------|-------------|
-| Vector Search | 340ms | 210ms | **38% faster** |
-| Index Creation | 2100ms | 1400ms | **33% faster** |
-| Batch Operations | 450ms | 280ms | **38% faster** |
-| Memory Retrieval | 180ms | 120ms | **33% faster** |
+| Operation        | Upstream | This Fork | Improvement    |
+| ---------------- | -------- | --------- | -------------- |
+| Vector Search    | 340ms    | 210ms     | **38% faster** |
+| Index Creation   | 2100ms   | 1400ms    | **33% faster** |
+| Batch Operations | 450ms    | 280ms     | **38% faster** |
+| Memory Retrieval | 180ms    | 120ms     | **33% faster** |
 
 ## 🚀 Quick Start
 
 ### Installation
 
-```bash
+```bash {"id":"01JYJ2YYFTEEW0KMFH6A14HVK8"}
 # Clone with enhanced features
 git clone --recursive https://github.com/bryan-roe/semantic-kernel.git
 cd semantic-kernel
@@ -51,7 +57,7 @@ export SEMANTIC_KERNEL_EXPERIMENTAL_FEATURES="SKEXP0001,SKEXP0010,SKEXP0020"
 
 ### Basic Usage
 
-```python
+```python {"id":"01JYJ2YYFTEEW0KMFH6APMPBYF"}
 from semantic_kernel import Kernel
 from semantic_kernel.experimental import AdvancedMemoryStore
 
@@ -60,16 +66,14 @@ kernel = Kernel()
 
 # Use improved Azure AI Search integration
 memory_store = AdvancedMemoryStore.create_azure_ai_search(
-    endpoint="your-endpoint",
-    api_key="your-key",
-    enable_experimental_features=True
+    endpoint="your-endpoint", api_key="your-key", enable_experimental_features=True
 )
 
 # Advanced function calling with better context management
 result = await kernel.invoke_async(
     "MyPlugin",
     "MyFunction",
-    context_variables={"input": "Enhanced semantic processing"}
+    context_variables={"input": "Enhanced semantic processing"},
 )
 ```
 
@@ -84,26 +88,29 @@ result = await kernel.invoke_async(
 ## 🎯 Who Should Use This Fork
 
 ### ✅ Perfect For:
+
 - **Production Applications** requiring enhanced reliability and performance
 - **Research Projects** needing cutting-edge experimental features
 - **Enterprise Solutions** demanding better Azure integration
 - **Developers** seeking improved function calling and context management
 
 ### 🏢 Organizations Using This Fork
+
 - **Research Institutions**: Advanced experimental features for AI research
-- **Startups**: Rapid prototyping with robust, production-ready foundations  
+- **Startups**: Rapid prototyping with robust, production-ready foundations
 - **Enterprise Solutions**: Enhanced reliability for mission-critical applications
 
 ## 🔬 Research & Academic Use
 
 This work has been presented at:
+
 - AI Development Conference 2024
 - Microsoft Build 2024 (Community Session)
 - .NET Conf 2024
 
 ### Citation
 
-```bibtex
+```bibtex {"id":"01JYJ2YYFTEEW0KMFH6DBPNJVM"}
 @software{roe2025semantickernel,
   author = {Roe, Bryan},
   title = {Semantic Kernel - Advanced AI Development Framework},
@@ -119,6 +126,7 @@ This work has been presented at:
 We welcome contributions that advance the state of AI development. See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 
 ### 🎯 Current Focus Areas
+
 - Multi-agent orchestration improvements
 - Advanced vector search algorithms
 - Cross-platform performance optimization
@@ -135,4 +143,18 @@ We welcome contributions that advance the state of AI development. See [CONTRIBU
 
 **⭐ If this fork helps your project, please star the repository and consider citing our work!**
 
-*Built with ❤️ for the AI development community*
+_Built with ❤️ for the AI development community_
+
+## Fork Documentation
+
+This fork includes comprehensive documentation:
+
+- **[Fork Overview](docs/FORK-OVERVIEW.md)**: Detailed explanation of this fork's unique value proposition and differentiators
+- **[Contributing to Fork](docs/CONTRIBUTING-FORK.md)**: Guidelines for contributing to this research-focused fork
+- **[Research Impact](docs/RESEARCH-IMPACT.md)**: Academic usage, citations, and collaboration opportunities
+- **[Unique Features](docs/UNIQUE-FEATURES.md)**: Technical documentation of custom enhancements
+- **[Experimental Features](docs/EXPERIMENTAL-FEATURES-ENHANCED.md)**: Guide to experimental AGI and performance features
+
+## Academic Usage and Citation
+
+This fork is designed for AGI research and advanced AI development. When using in academic work, please cite appropriately using the information in [CITATION.cff](CITATION.cff) and [Research Impact documentation](docs/RESEARCH-IMPACT.md).

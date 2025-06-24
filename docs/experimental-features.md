@@ -4,7 +4,7 @@ runme:
   version: v3
 ---
 
-# 
+#
 
 This configuration guide provides comprehensive control over experimental features while maintaining production safety and enabling innovation. Use these patterns to gradually adopt new capabilities while maintaining system stability.
 
@@ -34,12 +34,12 @@ public static class MigrationHelpers
 public void OldMethod()
 {
 public class DeprecatedFeature
-[Experimental("SKEXP9999")]  // Special code for deprecated features
+[Experimental("SKEXP9999")] // Special code for deprecated features
 [Obsolete("This experimental feature has been deprecated. Use NewFeature instead.", false)]
 
 ```csharp {"id":"01JYJ23W7CDEZ1Z2YRJ8AV3S1N"}
 
-3. **Stable (🟢)**: Production ready, follows semantic versioning
+3. * *Stable(🟢) * *: Production ready, follows semantic versioning
 2. **Beta (🟡)**: Feature stabilizing, minor breaking changes possible
 1. **Alpha (🔴)**: Highly experimental, breaking changes expected
 
@@ -114,7 +114,7 @@ public class ExperimentalFeatureTests
 }
 }
 }
-_telemetry.TrackFeatureUsage(featureCode, operation, success, stopwatch.Elapsed);
+\_telemetry.TrackFeatureUsage(featureCode, operation, success, stopwatch.Elapsed);
 stopwatch.Stop();
 {
 finally
@@ -153,7 +153,7 @@ public class MonitoredFeatureExecutor
 new KeyValuePair<string, object?>("operation", operation));
 new KeyValuePair<string, object?>("feature", featureCode),
 .Record(duration.TotalMilliseconds,
-_metrics.CreateHistogram<double>("experimental_feature_duration")
+\_metrics.CreateHistogram<double>("experimental_feature_duration")
 
 ```cs {"id":"01JYJ23W7DR3S7S2NT0Q1P9ZVY"}
                  new KeyValuePair<string, object?>("success", success));
@@ -186,7 +186,7 @@ public class ExperimentalFeatureTelemetry
 }
 );
 }
-return await _basicSearchService.SearchAsync(query);
+return await \_basicSearchService.SearchAsync(query);
 {
 fallbackAction: async () =>
 },
@@ -197,7 +197,7 @@ var agentCoordinator = new AgentCoordinator();
 {
 enabledAction: async () =>
 "SKEXP0110",
-return await _featureGate.ExecuteIfEnabledAsync(
+return await \_featureGate.ExecuteIfEnabledAsync(
 {
 public async Task<SearchResults> SearchAsync(string query)
 
@@ -405,22 +405,24 @@ private static VectorStoreRecordDefinition CreateRecordDefinition<T>()
 
 ```ts {"id":"01JYJ23W7DR3S7S2NT1G7HJQNC"}
 }
-    return new AzureAISearchMemoryRecordService<T>(searchIndexClient, options);
-    
+return new AzureAISearchMemoryRecordService<T>(searchIndexClient, options);
+
     };
         VectorStoreRecordDefinition = CreateRecordDefinition<T>()
     {
     options ??= new AzureAISearchMemoryRecordServiceOptions
-    
+
     );
         new AzureKeyCredential(apiKey)
-        new Uri(endpoint), 
+        new Uri(endpoint),
     var searchIndexClient = new SearchIndexClient(
+
 {
-    AzureAISearchMemoryRecordServiceOptions? options = null) where T : class
-    string apiKey,
-    string endpoint, 
+AzureAISearchMemoryRecordServiceOptions? options = null) where T : class
+string apiKey,
+string endpoint,
 public static AzureAISearchMemoryRecordService<T> CreateService<T>(
+
 ```
 
 {
@@ -580,8 +582,8 @@ public class EnhancedMemoryService
 
 using Microsoft.SemanticKernel.Connectors.AzureAISearch;
 using Microsoft.SemanticKernel.Data;
-#pragma warning disable SKEXP0020  // Memory connectors
-#pragma warning disable SKEXP0001  // Core features
+#pragma warning disable SKEXP0020 // Memory connectors
+#pragma warning disable SKEXP0001 // Core features
 
 ```csharp {"id":"01JYJ23W7DR3S7S2NT20DSJ540"}
 #### **Granular Control**

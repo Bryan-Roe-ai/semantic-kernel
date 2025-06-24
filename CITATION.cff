@@ -1,23 +1,48 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
-type: software
+message: If you use this software, please cite it as below.
+title: "Semantic Kernel Fork: AGI-Focused Enhancements and Research Tools"
 authors:
-  - family-names: "Roe"
-    given-names: "Bryan"
-    orcid: "https://orcid.org/0009-0002-4171-1602"  # Replace with your actual ORCID ID
-title: "Semantic Kernel - Advanced AI Development Framework"
-version: 2.0.0
-date-released: 2025-01-24
-url: "https://github.com/bryan-roe/semantic-kernel"
-abstract: "An advanced artificial intelligence development framework with enhanced semantic kernel implementation, featuring custom Azure AI Search memory store improvements, experimental function calling capabilities, and cross-language support for .NET, Python, TypeScript, and Java."
+  - family-names: Roe
+    given-names: Bryan
+    orcid: https://orcid.org/0000-0000-0000-0000
+    affiliation: Independent Researcher
+    email: bryan.roe@example.com
+version: 1.0.0
+date-released: "2025-06-24"
+url: https://github.com/bryankr22/semantic-kernel
+repository-code: https://github.com/bryankr22/semantic-kernel
+abstract:
+  "A research-focused fork of Microsoft's Semantic Kernel, enhanced with AGI\
+  \ development tools, \n    performance optimizations, and experimental AI features.\
+  \ This fork provides a comprehensive framework \n    for AGI research, cognitive\
+  \ architecture development, and advanced AI system performance analysis."
 keywords:
   - artificial-intelligence
+  - artificial-general-intelligence
   - semantic-kernel
+  - cognitive-architecture
+  - performance-optimization
+  - ai-research
   - machine-learning
-  - azure
-  - ai-search
-  - function-calling
-  - vector-search
-  - memory-store
+  - experimental-ai
 license: MIT
-repository-code: "https://github.com/bryan-roe/semantic-kernel"
+preferred-citation:
+  type: software
+  authors:
+    - family-names: Roe
+      given-names: Bryan
+      orcid: https://orcid.org/0000-0000-0000-0000
+  title: "Semantic Kernel Fork: AGI-Focused Enhancements and Research Tools"
+  year: 2024
+  url: https://github.com/bryankr22/semantic-kernel
+  version: 1.0.0
+identifiers:
+  - type: url
+    value: https://github.com/bryankr22/semantic-kernel
+references:
+  - type: software
+    authors:
+      - name: Microsoft Corporation
+    title: Semantic Kernel
+    url: https://github.com/microsoft/semantic-kernel
+    notes: Original upstream repository that this fork is based on
