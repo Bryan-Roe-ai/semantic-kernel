@@ -1,8 +1,16 @@
+#!/usr/bin/env python3
 """
-Reasoning Engine for AGI Capabilities
+Engine module
 
-This module implements advanced reasoning capabilities including multi-step
-problem solving, autonomous goal planning, and self-reflection.
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import asyncio

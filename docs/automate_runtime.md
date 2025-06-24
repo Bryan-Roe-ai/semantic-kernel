@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYHXQMJ7WRPRWD4Y8D5701G5
+  version: v3
+---
+
 # Automating Tasks During Runtime
 
 This document explains how to automate tasks during runtime without using GitHub. It includes examples and use cases for runtime automation, as well as guidelines and best practices.
@@ -16,7 +22,7 @@ Cron jobs are a simple and effective way to schedule tasks to run at specific in
 
 To create a cron job that runs a script every day at midnight, add the following line to your crontab file:
 
-```bash
+```bash {"id":"01JYHXQMJ6GDVZK5XH7CWMD18R"}
 0 0 * * * /path/to/your/script.sh
 ```
 
@@ -26,11 +32,11 @@ Task schedulers like `node-schedule` or `agenda` can be used to automate tasks w
 
 #### Example using `node-schedule`
 
-```javascript
+```javascript {"id":"01JYHXQMJ6GDVZK5XH7D93S9WJ"}
 const schedule = require('node-schedule');
 
 // Schedule a task to run every day at midnight
-const job = schedule.scheduleJob('0 0 * * *', function(){
+const job = schedule.scheduleJob('0 0 * * *', function () {
   console.log('Running scheduled task...');
   // Add your task logic here
 });
@@ -38,7 +44,7 @@ const job = schedule.scheduleJob('0 0 * * *', function(){
 
 #### Example using `agenda`
 
-```javascript
+```javascript {"id":"01JYHXQMJ6GDVZK5XH7FQ83THW"}
 const Agenda = require('agenda');
 
 const agenda = new Agenda({ db: { address: 'mongodb://localhost/agenda' } });
@@ -48,7 +54,7 @@ agenda.define('daily task', async job => {
   // Add your task logic here
 });
 
-(async function() {
+(async function () {
   await agenda.start();
   await agenda.every('0 0 * * *', 'daily task');
 })();
@@ -62,15 +68,15 @@ Workflow automation tools like `n8n` or `Apache Airflow` can be used to create a
 
 1. Install `n8n`:
 
-   ```bash
-   npm install n8n -g
-   ```
+```bash {"id":"01JYHXQMJ6GDVZK5XH7G23VXDM"}
+npm install n8n -g
+```
 
 2. Start `n8n`:
 
-   ```bash
-   n8n start
-   ```
+```bash {"id":"01JYHXQMJ6GDVZK5XH7HAH9FZW"}
+n8n start
+```
 
 3. Open the `n8n` editor in your browser and create a new workflow. Add nodes to define the tasks and their dependencies.
 
@@ -78,22 +84,22 @@ Workflow automation tools like `n8n` or `Apache Airflow` can be used to create a
 
 1. Install `Apache Airflow`:
 
-   ```bash
-   pip install apache-airflow
-   ```
+```bash {"id":"01JYHXQMJ6GDVZK5XH7KGAGD4A"}
+pip install apache-airflow
+```
 
 2. Initialize the Airflow database:
 
-   ```bash
-   airflow db init
-   ```
+```bash {"id":"01JYHXQMJ6GDVZK5XH7MTGAZ07"}
+airflow db init
+```
 
 3. Start the Airflow web server and scheduler:
 
-   ```bash
-   airflow webserver --port 8080
-   airflow scheduler
-   ```
+```bash {"id":"01JYHXQMJ6GDVZK5XH7P4NQ577"}
+airflow webserver --port 8080
+airflow scheduler
+```
 
 4. Open the Airflow web interface in your browser and create a new DAG (Directed Acyclic Graph) to define your workflow.
 
@@ -114,13 +120,9 @@ Automate system maintenance tasks such as backups, updates, and monitoring to en
 ## Guidelines and Best Practices
 
 1. **Plan and Design**: Carefully plan and design your automated tasks to ensure they meet your requirements and are efficient.
-
 2. **Error Handling**: Implement robust error handling to ensure that tasks can recover from failures and continue running smoothly.
-
 3. **Monitoring and Logging**: Set up monitoring and logging to track the execution of automated tasks and identify any issues.
-
 4. **Security**: Ensure that automated tasks are secure and do not expose sensitive information or create vulnerabilities.
-
 5. **Documentation**: Document your automated tasks, including their purpose, schedule, and any dependencies, to ensure that they can be easily understood and maintained.
 
 By following these guidelines and best practices, you can effectively automate tasks during runtime and improve the efficiency and reliability of your workflows.

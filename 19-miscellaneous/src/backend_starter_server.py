@@ -1,9 +1,16 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
-Backend Starter Server
-----------------------
-This small HTTP server allows the web UI to start the backend server.
-Run this script in the background to enable the "Start Backend" button.
+Backend Starter Server module
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 from http.server import BaseHTTPRequestHandler, HTTPServer

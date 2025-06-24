@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+"""
+AI module for collect llm training data
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
+"""
+
 # This script collects text from selected files in your workspace for LLM fine-tuning.
 # It concatenates the contents of .py, .md, .txt, and .html files into a single training file.
 

@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """
-🧠 AI Learning Journey - Your Personal AI Tutor
-A step-by-step interactive learning experience for AI concepts.
+AI module for ai learning journey
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import os

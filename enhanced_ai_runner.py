@@ -1,6 +1,18 @@
 #!/usr/bin/env python3
 """
 Enhanced AI Markdown Runner with proper block parsing
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This module provides enhanced AI markdown processing capabilities with support for
+intelligent code block parsing, execution, and AI-powered content generation.
+This is original work by Bryan Roe as part of the Semantic Kernel - Advanced AI
+Development Framework.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import re
@@ -13,7 +25,12 @@ from typing import Dict, List, Any
 
 
 class EnhancedAIMarkdownRunner:
-    """Enhanced AI Markdown Runner with better parsing"""
+    """
+    Enhanced AI Markdown Runner with better parsing
+    
+    Original implementation by Bryan Roe
+    Copyright (c) 2025 Bryan Roe
+    """
 
     def __init__(self):
         # Pattern to match AI code blocks

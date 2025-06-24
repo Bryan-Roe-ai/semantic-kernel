@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """
-Neural-Symbolic AGI Integration Script
-Connects the notebook-based AGI system with the VS Code chat interface
+AGI module for agi chat integration
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import sys

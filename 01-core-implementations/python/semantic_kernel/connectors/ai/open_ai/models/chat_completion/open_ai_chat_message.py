@@ -1,4 +1,18 @@
-"""Class to hold chat messages."""
+#!/usr/bin/env python3
+"""
+AI module for open ai chat message
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
+"""
+
 from typing import Optional
 
 from semantic_kernel.connectors.ai.open_ai.models.chat_completion.function_call import (

@@ -1,7 +1,16 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
-Ultra Enhanced Startup Script for Long-Running AutoMode
-Provides maximum reliability and stability for 24/7 operation.
+Startup Ultra Enhanced module
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import os

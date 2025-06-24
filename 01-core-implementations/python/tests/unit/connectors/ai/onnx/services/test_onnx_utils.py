@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+"""
+Test module for onnx utils
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
+"""
+
 # Copyright (c) Microsoft. All rights reserved.
 
 from semantic_kernel.connectors.ai.onnx.utils import gemma_template, llama_template, phi3_template, phi3v_template

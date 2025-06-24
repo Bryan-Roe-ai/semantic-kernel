@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """
-Simple Local AGI Agent Demo
-Demonstrates a working local agent without requiring external API calls
+Demonstration of local AI agents and capabilities
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import asyncio

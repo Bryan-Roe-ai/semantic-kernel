@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """
-Local Agent Launcher for Semantic Kernel AGI Systems
-Comprehensive launcher for running various AGI agents and systems locally
+Local Agent Launcher for AI system management
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import os

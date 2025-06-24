@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYJ08PTP37K0EYJX14DQV2KG
+  version: v3
+---
+
 # What are Skills?
 
 ![image](https://user-images.githubusercontent.com/371009/221739773-cf43522f-c1e4-42f2-b73d-5ba84e21febb.png)
@@ -8,6 +14,7 @@ has prioritized maximum flexibility for the developer to be both lightweight and
 extensible.
 
 ## What is a Function?
+
 # What is a Function?
 
 ![image](https://user-images.githubusercontent.com/371009/221742673-3ee8abb8-fe10-4669-93e5-5096d3d09580.png)
@@ -26,20 +33,25 @@ capabilities. When they are represented as pure LLM AI prompts in semantic funct
 the word "function" and "prompt" can be used interchangeably.
 
 ## What is the relationship between semantic functions and skills?
+
 # What is the relationship between semantic functions and skills?
 
 A skill is the container in which functions live. You can think of a semantic skill
 as a directory of folders that contain multiple directories of semantic functions
 or a single directory as well.
 
-```plaintext
+```plaintext {"id":"01JYJ08PTNMNXRVHJXW2DYC7GP"}
+
 ```
+
 SkillName (directory name)
 │
 └─── Function1Name (directory name)
-│   
+│  
 └─── Function2Name (directory name)
-```plaintext
+
+```plaintext {"id":"01JYJ08PTNMNXRVHJXW5RBVPX0"}
+
 ```
 
 Each function directory will have an skprompt.txt file and a config.json file. There's
@@ -47,27 +59,29 @@ much more to learn about semantic functions in Building Semantic Functions if yo
 wish to go deeper.
 
 ## What is the relationship between native functions and skills?
+
 # What is the relationship between native functions and skills?
 
 Native functions are loosely inspired by Azure Functions and exist as individual
 native skill files as in MyNativeSkill.cs below:
 
-```plaintext
+```plaintext {"id":"01JYJ08PTP37K0EYJX0W0MP5TJ"}
 
 ```
+
 MyAppSource
 │
 └───MySkillsDirectory
-    │
-    └─── MySemanticSkill (a directory)
-    |   │
-    |   └─── MyFirstSemanticFunction (a directory)
-    |   └─── MyOtherSemanticFunction (a directory)
-    │
-    └─── MyNativeSkill.cs (a file)
-    └─── MyOtherNativeSkill.cs (a file)
+│
+└─── MySemanticSkill (a directory)
+|   │
+|   └─── MyFirstSemanticFunction (a directory)
+|   └─── MyOtherSemanticFunction (a directory)
+│
+└─── MyNativeSkill.cs (a file)
+└─── MyOtherNativeSkill.cs (a file)
 
-```
+```md {"id":"01JYJ08PTP37K0EYJX0XP4JB7K"}
 
 Each file will contain multiple native functions that are associated with a skill.
 
@@ -87,3 +101,4 @@ Skills are stored in one of three places:
 
 For more examples of skills, and the ones that we use in our sample apps, look inside
 the [/samples/skills](../samples/skills) folder.
+```

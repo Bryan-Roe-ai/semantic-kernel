@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
 """
-AGI MCP Client
+AGI module for mcp-agi-client
 
-Client for interacting with the AGI Model Context Protocol server.
-Provides a Python interface for accessing AGI capabilities.
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import asyncio

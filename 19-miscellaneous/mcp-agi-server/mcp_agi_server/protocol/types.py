@@ -1,8 +1,16 @@
+#!/usr/bin/env python3
 """
-MCP Protocol Types and Data Structures
+Types module
 
-This module defines the core types and data structures used in the
-Model Context Protocol implementation.
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 from dataclasses import dataclass, field

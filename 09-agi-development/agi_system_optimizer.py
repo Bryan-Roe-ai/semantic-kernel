@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """
-AGI System Auto-Optimizer
-Automatically applies performance optimizations based on system analysis
+AGI module for agi system optimizer
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import json

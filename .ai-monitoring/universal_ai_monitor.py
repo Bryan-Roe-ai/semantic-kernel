@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 """
-🔍 Universal AI Activity Monitor
-Complete tracking system for all AI actions, thoughts, and changes in the repository.
-Provides 100% visibility into AI behavior across all agents and systems.
+AI module for universal ai monitor
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import json

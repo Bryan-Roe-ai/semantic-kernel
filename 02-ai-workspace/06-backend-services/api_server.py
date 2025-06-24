@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 """
-Comprehensive API Server for Custom LLM Studio
-==============================================
-Backend API that integrates chat, model training, management, and inference.
+Api Server module
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import asyncio

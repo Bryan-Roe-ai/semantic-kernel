@@ -1,0 +1,64 @@
+NOTICE
+
+Semantic Kernel - Advanced AI Development Framework
+Copyright (c) 2025 Bryan Roe
+
+This product includes software developed by Bryan Roe.
+
+================================================================================
+
+THIRD-PARTY SOFTWARE NOTICES
+
+This software contains components from third-party sources. The following
+third-party software components are used under their respective licenses:
+
+================================================================================
+
+Microsoft Semantic Kernel
+Copyright (c) Microsoft Corporation
+Licensed under the MIT License
+
+.NET Runtime and Libraries
+Copyright (c) Microsoft Corporation and .NET Foundation
+Licensed under the MIT License
+
+Python Software and Libraries
+Copyright (c) Python Software Foundation and various contributors
+Licensed under various open source licenses
+
+================================================================================
+
+ATTRIBUTION REQUIREMENTS
+
+When redistributing this software or creating derivative works, you must:
+
+1. Retain all copyright notices
+2. Include this NOTICE file
+3. Provide attribution to Bryan Roe as the original author
+4. Comply with all third-party license requirements
+5. Include the full text of the MIT License
+
+================================================================================
+
+DISCLAIMER
+
+THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES ARISING IN ANY
+WAY OUT OF THE USE OF THIS SOFTWARE.
+
+================================================================================
+
+For more information about licensing and attribution, see:
+- LICENSE file for the full MIT License text
+- ATTRIBUTION.md for detailed attribution information
+- COPYRIGHT.md for comprehensive copyright information
+- CONTRIBUTORS.md for information about project contributors
+
+================================================================================
+
+Contact: Bryan Roe
+Project: Semantic Kernel - Advanced AI Development Framework
+Year: 2025

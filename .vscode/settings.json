@@ -200,5 +200,19 @@
   },
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
-  }
+  },
+  "dbcode.connections": [
+    {
+      "connectionId": "UghwzRZxWZ-eb6eHZ8OSA",
+      "name": "ai_data",
+      "driver": "sqlite",
+      "socket": "semantic-kernel/docs/AGI_MCP_Demo.ipynb",
+      "readOnly": false,
+      "role": "development",
+      "driverOptions": {
+        "extensions": ["sqlite-js", "sqlite-vec", "sqlean"]
+      },
+      "connectionType": "socket"
+    }
+  ]
 }

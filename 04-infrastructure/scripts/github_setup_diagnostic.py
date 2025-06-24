@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
-GitHub Pages Repository Setup Error Diagnostic
-=============================================
+Github Setup Diagnostic module
 
-Based on GitHub's official troubleshooting guides, this script diagnoses
-common repository setup errors that prevent GitHub Pages from working.
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
 
-Official References:
-- https://docs.github.com/en/pages/getting-started-with-github-pages/troubleshooting-404-errors-for-github-pages-sites
-- https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import subprocess

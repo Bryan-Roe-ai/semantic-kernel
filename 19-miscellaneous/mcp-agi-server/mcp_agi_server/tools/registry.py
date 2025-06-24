@@ -1,8 +1,16 @@
+#!/usr/bin/env python3
 """
-Tool Registry for MCP AGI Server
+Registry module
 
-This module manages the registration, execution, and lifecycle of tools
-available to the AGI system.
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import asyncio

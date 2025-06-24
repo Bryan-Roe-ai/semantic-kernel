@@ -1,6 +1,16 @@
+#!/usr/bin/env python3
 """
-Error handling utilities for the AI Chat backend system.
-Provides standardized error responses and logging functionality.
+Error Handling module
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import sys

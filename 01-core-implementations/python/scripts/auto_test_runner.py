@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
-Automated Test Runner for Semantic Kernel Python
+Test module for auto runner
 
-This script provides comprehensive test automation including:
-- Test discovery and execution
-- Coverage reporting
-- Test result analysis
-- Parallel test execution
-- Integration with CI/CD
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import argparse

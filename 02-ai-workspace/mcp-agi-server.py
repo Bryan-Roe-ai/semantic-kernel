@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """
-AGI Model Context Protocol Server
+AGI module for mcp-agi-server
 
-This MCP server provides Artificial General Intelligence capabilities
-through the Model Context Protocol, enabling advanced AI reasoning,
-multi-modal processing, and autonomous task execution.
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import asyncio

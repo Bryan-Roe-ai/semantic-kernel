@@ -1,3 +1,18 @@
+#!/usr/bin/env python3
+"""
+Finetune Gpt2 Custom module
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
+"""
+
 # Fine-tune GPT-2 on your custom data using Hugging Face Transformers and GPU
 # Make sure you have 'transformers', 'torch', and 'datasets' installed
 # Run: pip install transformers torch datasets

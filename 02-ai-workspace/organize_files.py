@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 """
-AI Workspace Organization Script
-Organizes all files in the semantic-kernel workspace for optimal AI development workflow.
+Organize Files module
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import os

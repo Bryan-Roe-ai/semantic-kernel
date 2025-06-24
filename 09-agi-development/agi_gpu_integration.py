@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 """
-GPU-Accelerated Neural-Symbolic AGI Integration
-Advanced AGI system combining neural networks, symbolic reasoning, and knowledge graphs
-All components optimized for GPU acceleration
+AGI module for agi gpu integration
+
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import os

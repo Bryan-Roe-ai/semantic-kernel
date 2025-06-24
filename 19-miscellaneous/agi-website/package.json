@@ -1,8 +1,16 @@
 {
   "name": "agi-website",
   "version": "1.0.0",
-  "description": "A modern, interactive website showcasing Artificial General Intelligence concepts and capabilities",
+  "description": "A modern, interactive website showcasing Artificial General Intelligence concepts and capabilities - Created by Bryan Roe",
   "main": "index.html",
+  "author": "Bryan Roe",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bryanroe/semantic-kernel"
+  },
+  "homepage": "https://github.com/bryanroe/semantic-kernel",
+  "copyright": "Copyright (c) 2025 Bryan Roe",
   "scripts": {
     "start": "python -m http.server 8000",
     "serve": "python -m http.server 8000",
@@ -18,15 +26,9 @@
     "chat",
     "demo",
     "website",
-    "frontend"
+    "frontend",
+    "bryan-roe"
   ],
-  "author": "Semantic Kernel Team",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/microsoft/semantic-kernel"
-  },
-  "homepage": ".",
   "engines": {
     "node": ">=14.0.0"
   },

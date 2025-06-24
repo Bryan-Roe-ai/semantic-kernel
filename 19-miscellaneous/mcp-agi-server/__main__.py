@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
 """
-MCP AGI Server - Advanced Model Context Protocol Server for AGI Applications
+AI module for   main  
 
-This is the main entry point for the MCP AGI Server, providing comprehensive
-AGI capabilities through the Model Context Protocol.
+Copyright (c) 2025 Bryan Roe
+Licensed under the MIT License
+
+This file is part of the Semantic Kernel - Advanced AI Development Framework.
+Original work by Bryan Roe.
+
+Author: Bryan Roe
+Created: 2025
+License: MIT
 """
 
 import argparse
