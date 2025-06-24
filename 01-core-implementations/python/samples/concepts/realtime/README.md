@@ -48,3 +48,15 @@ This sample uses the websocket api with Azure OpenAI to run a voice agent, capab
 ### [Chat with function calling WebRTC](./realtime_agent_with_function_calling_webrtc.py)
 
 This sample uses the WebRTC api with OpenAI to run a voice agent, capable of taking actions on your behalf.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

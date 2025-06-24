@@ -180,3 +180,15 @@ If you want to use a different instance of Weaviate, you can update the appsetti
 ```cli
 dotnet user-secrets set "VectorStores:Weaviate:Endpoint" "<yourweaviateurl>"
 ```
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

@@ -15,3 +15,15 @@ This a more complex version of the sample above, it uses Azure CosmosDB NoSQL to
 In order to do that a simple datamodel is defined. And then a class is created that extends ChatHistory, this class adds `store` and `read` methods, as well as a `create_collection` method that creates a collection in CosmosDB.
 
 This samples further uses the same chat service setup as the sample above, so the keys and other parameters for the chosen model should be in the environment. Next to that a AZURE_COSMOS_DB_NO_SQL_URL and optionally a AZURE_COSMOS_DB_NO_SQL_KEY should be set in the environment, you can also rely on Entra ID Auth instead of the key. The database name can also be put in the environment.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

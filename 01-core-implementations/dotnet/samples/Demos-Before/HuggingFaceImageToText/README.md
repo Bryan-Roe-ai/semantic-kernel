@@ -35,3 +35,15 @@ var imageContent = new ImageContent(imageBinary) { MimeType = "image/jpeg" };
 // Retrieves the image description
 var textContent = await service.GetTextContentAsync(imageContent);
 ```
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

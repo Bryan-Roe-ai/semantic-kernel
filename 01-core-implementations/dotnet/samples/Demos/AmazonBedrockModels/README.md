@@ -41,3 +41,15 @@ This demo program allows you to do any of the following:
 3. To exit chat completion or streaming chat completion, leave the prompt empty.
    - The available models for each task are listed before you make your selection. Note that some models do not support
    certain tasks, and they are skipped during the selection process.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

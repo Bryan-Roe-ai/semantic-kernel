@@ -14,3 +14,15 @@
 - The OpenAI models supported are:
   - `gpt-4o-mini-2024-07-18` and later
   - `gpt-4o-2024-08-06` and later
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

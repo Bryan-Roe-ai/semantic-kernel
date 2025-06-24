@@ -33,5 +33,13 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.7"
-  }
+  },
+  "author": "Bryan Roe",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2025 Bryan Roe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bryanroe/semantic-kernel"
+  },
+  "homepage": "https://github.com/bryanroe/semantic-kernel"
 }

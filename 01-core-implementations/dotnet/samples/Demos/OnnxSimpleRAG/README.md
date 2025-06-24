@@ -95,3 +95,15 @@ Ask to the Model any question you want, the AI will try to answer based on the f
 > **User** > When should I use Kernel Memory?
 
 > **Assistant** > Kernel Memory is best suited for tasks that involve large-scale continuous data, require efficient indexing and processing, and benefit from the integration of retrieval-based and generative models, synthetic memory, prompt engineering, and custom semantic memory processing.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

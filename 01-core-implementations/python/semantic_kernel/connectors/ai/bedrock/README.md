@@ -65,3 +65,15 @@ You can pass these parameters via the `extension_data` field in the `PromptExecu
 ## Unsupported features
 
 - [Guardrail](https://docs.aws.amazon.com/bedrock/latest/userguide/guardrails.html)
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

@@ -1,15 +1,21 @@
 {
-    "name": "xvba-app",
-    "version": "1.0.0",
-    "description": "A XVBA App",
-    "main": "index.js",
-    "author": "LocalSmart",
-    "license": "ISC",
-    "dependencies": {
-        "excel-types": "1.0.0",
-        "Xlog": "1.0.0"
-    },
-    "devDependencies": {
-        "@localsmart/xvba-cli": "^1.0.2"
-    }
+  "name": "xvba-app",
+  "version": "1.0.0",
+  "description": "A XVBA App - Created by Bryan Roe",
+  "main": "index.js",
+  "author": "Bryan Roe",
+  "license": "MIT",
+  "dependencies": {
+    "excel-types": "1.0.0",
+    "Xlog": "1.0.0"
+  },
+  "devDependencies": {
+    "@localsmart/xvba-cli": "^1.0.2"
+  },
+  "copyright": "Copyright (c) 2025 Bryan Roe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bryanroe/semantic-kernel"
+  },
+  "homepage": "https://github.com/bryanroe/semantic-kernel"
 }

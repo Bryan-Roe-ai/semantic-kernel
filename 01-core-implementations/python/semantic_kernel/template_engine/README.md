@@ -25,3 +25,15 @@ The Semantic Kernel uses the following grammar to parse prompt templates:
 [letter]         ::= "a" | "b" ... | "z" | "A" | "B" ... | "Z"
 [digit]          ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 ```
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

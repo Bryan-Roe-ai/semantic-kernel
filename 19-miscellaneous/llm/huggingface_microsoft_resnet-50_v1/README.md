@@ -18,3 +18,15 @@ The quantization uses 256 samples from train split of imagenet-1k dataset and th
 | --------------------- | ----------------- | ---------- | -------------- | ------------------- |
 | float32               | float32           | 97.3 MB    | -              | -                   |
 | QUInt16               | QUInt8            | 24.5MB     | 0.78515625     | 2.53724 ms          |
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

@@ -25,3 +25,15 @@ Bedrock Agents can leverage data saved on AWS to perform RAG tasks, this is refe
 ## Multi-agent
 
 Bedrock Agents support [multi-agent workflows](https://docs.aws.amazon.com/bedrock/latest/userguide/agents-multi-agent-collaboration.html) for more complex tasks. However, it employs a different pattern than what we have in Semantic Kernel, thus this is not supported in the current integration.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

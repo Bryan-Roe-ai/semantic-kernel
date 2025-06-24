@@ -95,3 +95,15 @@ You no longer need to manually configure the index or upload data via the Azure 
 If you encounter issues, ensure your Azure credentials and endpoints are correctly configured in your environment.
 
 ---
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

@@ -34,3 +34,15 @@
 | [`Concepts`](./Concepts/README.md)                                              | This section contains focused samples which illustrate all of the concepts included in the Semantic Kernel.                 |
 | [`Demos`](./Demos/README.md)                                                    | Look here to find a sample which demonstrate how to use many of Semantic Kernel features.                                   |
 | [`LearnResources`](./LearnResources/README.md)                                  | Code snippets that are related to online documentation sources like Microsoft Learn, DevBlogs and others                    |
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

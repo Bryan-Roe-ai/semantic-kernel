@@ -8,3 +8,15 @@ which case they are run in a regular CoreCLR application and not in Native-AOT o
 To run the tests in a Native-AOT application, first publish it using the following command: `dotnet publish -r win-x64`. Then, execute the application by running the following command in the terminal: `.\bin\Release\net8.0\win-x64\publish\AotCompatibility.TestApp.exe`.  
    
 Alternatively, the `.github\workflows\test-aot-compatibility.ps1` script can be used to publish the application and run the tests. Please ensure that this script is run in at least PowerShell 7.4. The script takes the version of the .NET Framework as an argument. For example, to run the tests with .NET 8.0, run the following command: `.github\workflows\test-aot-compatibility.ps1 8.0`.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

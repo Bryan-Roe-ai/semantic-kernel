@@ -73,3 +73,15 @@ except ValidationError as e:
 ## One final note:
 
 It is a convention that env settings are setup with all caps, and with underscores between words the loader that we use is case insensitive, so you can use any case you want in your env variables but it is a good practice to follow the convention and use all caps.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

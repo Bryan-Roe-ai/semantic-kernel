@@ -51,3 +51,15 @@ All base clients inherit from the [`AIServiceClientBase`](../../services/ai_serv
 |        | [`OllamaTextEmbedding`](./ollama/services/ollama_text_embedding.py) |
 | Onnx | [`OnnxGenAIChatCompletion`](./onnx/services/onnx_gen_ai_chat_completion.py) |
 |      | [`OnnxGenAITextCompletion`](./onnx/services/onnx_gen_ai_text_completion.py) |
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

@@ -46,3 +46,15 @@ Otherwise the sample can be run via the command line:
 ```bash
 python.exe <absolute_path_to_sk_code>/python/samples/learn_resources/plugin.py
 ```
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

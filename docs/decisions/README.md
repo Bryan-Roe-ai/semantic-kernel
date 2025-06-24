@@ -61,3 +61,15 @@ The MADR (Markdown Any Decision Records) template is used to document architectu
 * They support the use of templates, such as the MADR template, which ensures consistency and completeness in documenting decisions.
 * ADRs can be easily integrated into version control systems, making them accessible and maintainable alongside the project's codebase.
 * They help in managing technical debt by providing a clear record of decisions that may need to be revisited or revised in the future.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

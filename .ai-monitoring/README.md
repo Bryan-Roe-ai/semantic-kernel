@@ -264,3 +264,15 @@ The monitoring system is designed to be **lightweight**:
 **Every AI action, thought, and change is now tracked and visible in real-time.**
 
 Start with: `python ai_launcher.py dashboard`
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

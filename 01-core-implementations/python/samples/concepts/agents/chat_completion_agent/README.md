@@ -43,3 +43,15 @@ The combination of these parameters determines **when** history reduction occurs
 
 - **Iterative Experimentation:**
   - Start with default values (`reducer_msg_count = 10`, `reducer_threshold = 10`), and adjust according to the specific behavior and response quality required by your application.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

@@ -307,3 +307,15 @@ To successfully retrieve and use the Entra Auth Token, you need the `Cognitive S
 - **.env File Placement:** We highly recommend placing the `.env` file in the `semantic-kernel/python` root directory. This is a common practice when developing in the Semantic Kernel repository.
 
 By following these guidelines, you can ensure that your settings for various components are configured correctly, enabling seamless functionality and integration of Semantic Kernel in your Python projects.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

@@ -569,3 +569,15 @@ This project is licensed under the MIT License - see the [LICENSE](../LICENSE) f
 **Version**: 1.0.0
 **Last Updated**: June 22, 2025
 **Maintainer**: Semantic Kernel Team
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

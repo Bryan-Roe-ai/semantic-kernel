@@ -68,3 +68,15 @@ graph LR
 
 1. Run the server running the SK Process using a specific Cloud Event technology
 2. Launch the Client App to interact with the SK Process from a UI
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

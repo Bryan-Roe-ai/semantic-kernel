@@ -163,3 +163,15 @@ dotnet run
 > **Assistant** > I have successfully canceled your booking at "The French Laundry" on the 15th of March at 7:00 PM for 4 people.
 >
 > If you have any other questions or need further assistance, please let me know.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

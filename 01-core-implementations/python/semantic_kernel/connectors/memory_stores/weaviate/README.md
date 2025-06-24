@@ -15,3 +15,15 @@ There are a few ways you can deploy your Weaviate database:
 ## Using the Connector
 
 Once the Weaviate database is up and running, and the environment variables are set, you can use the connector in your Semantic Kernel application. Please refer to this sample to see how to use the connector: [Complex Connector Sample](../../../../samples/concepts/memory/complex_memory.py)
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

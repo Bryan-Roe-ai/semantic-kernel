@@ -11,3 +11,15 @@ For configuration details, refer to the comments in the sample script. For addit
 ### Requests and Rate Limits
 
 For information on configuring rate limits or adjusting polling, refer [here](../../../getting_started_with_agents/azure_ai_agent/README.md#requests-and-rate-limits)
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

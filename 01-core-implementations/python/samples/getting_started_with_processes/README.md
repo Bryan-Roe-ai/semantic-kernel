@@ -244,3 +244,15 @@ async with await start(
 
 Concept samples can be run in an IDE or via the command line. After setting up the required api key
 for your AI connector, the samples run without any extra command line arguments.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

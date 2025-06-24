@@ -10,3 +10,15 @@ Demonstration applications that leverage the usage of one or many SK features
 | Telemetry With Application Insights | Demo on how an application can be configured to send Semantic Kernel telemetry to Application Insights. |
 | Code Interpreter Plugin | A plugin that leverages Azure Container Apps service to execute python code. |
 | ModelContextProtocolClientServer | This sample demonstrates how to use Semantic Kernel with the Model Context Protocol (MCP) C# SDK to build an MCP server and client. |
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

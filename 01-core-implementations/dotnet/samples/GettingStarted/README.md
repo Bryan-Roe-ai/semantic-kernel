@@ -63,3 +63,15 @@ We have created a workflow to add labels to issues based on their content using 
 ### Adding Title Prefixes Based on Labels
 
 We have created a workflow to add title prefixes to issues based on their labels using the `actions/github-script` action. You can find the workflow configuration [here](../../.github/workflows/label-title-prefix.yml).
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

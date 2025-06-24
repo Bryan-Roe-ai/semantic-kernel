@@ -59,3 +59,15 @@ Go to [guided_conversation_agent.py](./guided_conversation/plugins/guided_conver
 
 ### Reusing Plugins
 We also encourage the open source community to pull in the artifact and agenda plugins to accelerate existing work. We believe that these plugins alone can improve goal-following in other agents.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

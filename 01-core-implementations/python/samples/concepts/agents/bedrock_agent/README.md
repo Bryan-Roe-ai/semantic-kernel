@@ -72,3 +72,15 @@ You need to make sure you have permission to access the foundation model. You ca
 7. On the right, you will be able to add an action. Find the service and search for `InvokeModelWithResponseStream`.
 8. Check the box next to the action and then scroll all the way down and click `Next`.
 9. Follow the prompts to save the changes.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

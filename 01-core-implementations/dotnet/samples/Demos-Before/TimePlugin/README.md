@@ -72,3 +72,15 @@ Ask questions to use the Time Plugin such as:
 
 **Assistant** > The current time is Sun, 12 May 2024 15:53:54 GMT.
 
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

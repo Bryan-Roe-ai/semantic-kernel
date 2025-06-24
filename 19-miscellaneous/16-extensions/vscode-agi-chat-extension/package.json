@@ -28,7 +28,8 @@
     "chat",
     "assistant",
     "semantic-kernel",
-    "neural-symbolic"
+    "neural-symbolic",
+    "bryan-roe"
   ],
   "activationEvents": [
     "onStartupFinished"

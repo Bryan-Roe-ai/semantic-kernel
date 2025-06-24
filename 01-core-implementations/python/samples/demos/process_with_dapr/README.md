@@ -178,3 +178,15 @@ asyncio.set_event_loop(loop)
 - Build and run a Process as you normally would. For this Demo we run a simple example process from with either a FastAPI or a Flask API method in response to a GET request. 
 - [See the FastAPI app here](./fastapi_app.py).
 - [See the Flask API app here](./flask_app.py)
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

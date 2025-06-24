@@ -11,3 +11,15 @@ Demonstration applications that leverage the usage of one or many SK features
 | guided_conversations | A sample showing a framework for a pattern of use cases referred to as guided conversations. |
 | processes_with_dapr | A sample showing the Semantic Kernel process framework used with the Python Dapr runtime. |
 | telemetry_with_application_insights | A sample project that shows how a Python application can be configured to send Semantic Kernel telemetry to Application Insights. |
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

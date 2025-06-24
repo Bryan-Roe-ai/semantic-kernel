@@ -120,3 +120,15 @@ To get started, follow this sample: [AspNetCoreSseServer](https://github.com/mod
 
 While details of native support for OAuth 2.1 are [still being discussed](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/284), you can consider a solution based on APIM 
 acting as an [AI Gateway](https://github.com/Azure-Samples/AI-Gateway). This approach is demonstrated by the sample: [Secure Remote Microsoft Graph MCP Servers using Azure API Management (Experimental)](https://github.com/Azure-Samples/remote-mcp-apim-appservice-dotnet).
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

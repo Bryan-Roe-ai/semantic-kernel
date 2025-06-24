@@ -258,3 +258,15 @@ For questions, issues, or contributions:
 - GitHub Issues: [Link to issues]
 - Documentation: [Link to docs]
 - Discord: [Link to Discord]
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

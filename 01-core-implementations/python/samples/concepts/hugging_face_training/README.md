@@ -121,3 +121,15 @@ metrics = trainer.create_fine_tuned_model(texts=my_texts)
 4. **Text generation**: Fine-tune a model to generate text in a specific style or domain
 
 For more information, see the [Hugging Face Transformers documentation](https://huggingface.co/docs/transformers/index) and the [Semantic Kernel documentation](https://learn.microsoft.com/semantic-kernel/).
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

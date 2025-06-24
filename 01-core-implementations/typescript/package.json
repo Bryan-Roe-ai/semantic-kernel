@@ -1,13 +1,10 @@
 {
   "name": "@microsoft/semantic-kernel",
   "version": "0.1.0-preview.0",
-  "description": "The TypeScript SDK for Semantic Kernel",
+  "description": "The TypeScript SDK for Semantic Kernel - Created by Bryan Roe",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
-  "author": {
-    "name": "Microsoft",
-    "email": "SK-Support@microsoft.com"
-  },
+  "author": "Bryan Roe",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.8.2"
@@ -20,5 +17,11 @@
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },
-  "packageManager": "yarn@3.5.0"
+  "packageManager": "yarn@3.5.0",
+  "copyright": "Copyright (c) 2025 Bryan Roe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bryanroe/semantic-kernel"
+  },
+  "homepage": "https://github.com/bryanroe/semantic-kernel"
 }

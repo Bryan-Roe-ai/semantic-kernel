@@ -43,3 +43,15 @@ This will generate a trace in the Aspire dashboard that looks like this:
 
 Additionally, the metrics for each agent can be monitored in the Metrics tab:
 ![Aspire Metrics](./docs/aspire-metrics.png)
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

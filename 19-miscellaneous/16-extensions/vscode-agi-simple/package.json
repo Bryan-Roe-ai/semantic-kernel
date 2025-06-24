@@ -1,7 +1,7 @@
 {
   "name": "agi-chat-simple",
   "displayName": "AGI Chat Simple",
-  "description": "Simple AGI Chat Integration for VS Code",
+  "description": "Simple AGI Chat Integration for VS Code - Created by Bryan Roe",
   "version": "0.1.0",
   "engines": {
     "vscode": "^1.90.0"
@@ -56,5 +56,13 @@
         }
       }
     }
-  }
+  },
+  "author": "Bryan Roe",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2025 Bryan Roe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bryanroe/semantic-kernel"
+  },
+  "homepage": "https://github.com/bryanroe/semantic-kernel"
 }

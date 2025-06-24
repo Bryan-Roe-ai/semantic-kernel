@@ -1,7 +1,7 @@
 {
   "name": "semantic-kernel",
   "version": "1.0.0",
-  "description": "This repository contains the semantic-kernel, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly.",
+  "description": "This repository contains the semantic-kernel, a powerful tool designed to facilitate seamless integration and interaction with various services. The API is built to be robust, efficient, and easy to use, providing developers with the necessary tools to build and deploy applications quickly. - Created by Bryan Roe",
   "main": "index.js",
   "directories": {
     "doc": "docs"
@@ -10,11 +10,19 @@
     "test": "npm test && pytest && dotnet test --verbosity normal && mvn test",
     "postinstall": "npm audit fix"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "bryan-roe"
+  ],
+  "author": "Bryan Roe",
+  "license": "MIT",
   "dependencies": {
     "express": "^5.1.0",
     "jquery": "^3.6.0"
-  }
+  },
+  "copyright": "Copyright (c) 2025 Bryan Roe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bryanroe/semantic-kernel"
+  },
+  "homepage": "https://github.com/bryanroe/semantic-kernel"
 }

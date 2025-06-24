@@ -18,3 +18,15 @@ pip install semantic-kernel[autogen]
 ```
 
 For an example of how to integrate an AutoGen Conversable Agent using the Semantic Kernel Agent abstraction, please refer to [`autogen_conversable_agent_simple_convo.py`](../../../samples/concepts/agents/autogen_conversable_agent/autogen_conversable_agent_simple_convo.py).
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

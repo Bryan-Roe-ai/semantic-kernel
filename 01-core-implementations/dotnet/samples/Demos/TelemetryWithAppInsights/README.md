@@ -188,3 +188,15 @@ with
 - [Telemetry docs](../../../docs/TELEMETRY.md)
 - [Planner telemetry improvement ADR](../../../../docs/decisions/0025-planner-telemetry-enhancement.md)
 - [OTel Semantic Conventions ADR](../../../../docs/decisions/0044-OTel-semantic-convention.md)
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

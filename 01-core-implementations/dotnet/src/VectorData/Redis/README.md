@@ -40,3 +40,15 @@ SemanticTextMemory textMemory = new(memoryStore, embeddingGenerator);
 var memoryPlugin = kernel.ImportPluginFromObject(new TextMemoryPlugin(textMemory));
 ```
 3. Use the [getting started instructions](https://learn.microsoft.com/semantic-kernel/concepts/vector-store-connectors/?pivots=programming-language-csharp#getting-started-with-vector-store-connectors) on the Microsoft Leearn site to learn more about using the vector store.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

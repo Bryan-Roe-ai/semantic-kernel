@@ -33,3 +33,15 @@ Please visit the following [link](https://learn.microsoft.com/en-us/azure/ai-ser
 `AZURE_OPENAI_RESPONSES_DEPLOYMENT_NAME=""`
 
 The other Azure OpenAI config values used for AzureAssistantAgent or AzureChatCompletion, like `AZURE_OPENAI_API_VERSION` or `AZURE_OPENAI_ENDPOINT` are still valid for the `AzureResponsesAgent`.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

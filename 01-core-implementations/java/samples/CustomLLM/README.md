@@ -120,3 +120,15 @@ Training data is represented as prompt-completion pairs, allowing the model to l
 - [Azure Machine Learning Documentation](https://learn.microsoft.com/en-us/azure/machine-learning/)
 - [Fine-tuning Models with Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/fine-tuning)
 - [Best Practices for ML Training on Azure](https://learn.microsoft.com/en-us/azure/architecture/data-guide/big-data/ai-machine-learning-training-optimization)
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

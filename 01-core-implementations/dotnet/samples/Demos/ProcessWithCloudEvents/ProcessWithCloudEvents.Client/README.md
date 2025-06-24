@@ -52,3 +52,15 @@ Alternatively, you can use the existing Visual Studio Code task:
 3. Set breakpoints in your code to inspect and debug as needed.
 
 For more details, refer to the official React documentation: [React Docs](https://reactjs.org/docs/getting-started.html).
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

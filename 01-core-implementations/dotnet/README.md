@@ -143,3 +143,15 @@ To further assist users, we have included more code snippets and usage examples 
 ## Repository Structure Explanation
 
 We have added a section that explains the structure of the repository and the purpose of each directory and file. This section helps users navigate the repository and understand the organization of the codebase.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

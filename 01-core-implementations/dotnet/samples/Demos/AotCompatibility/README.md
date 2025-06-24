@@ -46,3 +46,15 @@ However, because STJ v8 uses reflection to resolve certain metadata, such as nul
 it produces an incorrect JSON Schema in Native-AOT scenarios. For more details, see the following issue: [Incorrect type schema ...](https://github.com/eiriktsarpalis/stj-schema-mapper/issues/7).
 
 This issue can be worked around by disabling the `IlcTrimMetadata` property in the application's project; however, this may increase the size of the application.
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

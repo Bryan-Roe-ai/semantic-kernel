@@ -22,3 +22,15 @@ The deployment workflow copies content from `ai-workspace/05-samples-demos/` to 
 ## Access
 
 The site will be available at: `https://[username].github.io/semantic-kernel/`
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

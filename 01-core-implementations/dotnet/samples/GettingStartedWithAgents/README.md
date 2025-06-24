@@ -164,3 +164,15 @@ dotnet user-secrets set "AzureOpenAI:ApiKey" "..."
 ```sh {"id":"01J6KPX0GQCZXPP6FDQ68Q18B3"}
 protected override bool ForceOpenAI => true;
 ```
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.

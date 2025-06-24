@@ -29,3 +29,15 @@ docker run -d --name redis-stack-server -p 6379:6379 redis/redis-stack-server:la
     redis_connection_string = sk.redis_settings_from_dot_env()
     kernel.use_memory(storage=RedisMemoryStore(connection_string=redis_connection_string), embeddings_generator=embedding_generator)
 ```
+
+
+---
+
+## 👨‍💻 Author & Attribution
+
+**Created by Bryan Roe**  
+Copyright (c) 2025 Bryan Roe  
+Licensed under the MIT License
+
+This is part of the Semantic Kernel - Advanced AI Development Framework.
+For more information, see the main project repository.
