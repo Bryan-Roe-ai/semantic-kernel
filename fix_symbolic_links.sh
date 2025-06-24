@@ -108,6 +108,23 @@ organize_remaining_symlinks() {
     log "Moved $moved non-essential symlinks"
 }
 
+organize_root_files() {
+    log "Organizing remaining root files..."
+    # Move non-essential regular files (not directories or symlinks) from root into a subfolder
+    local dir="$REPO_ROOT/19-miscellaneous/root_files"
+    mkdir -p "$dir"
+    local moved=0
+    while IFS= read -r -d '' file; do
+        name=$(basename "$file")
+        # Skip hidden files and this script itself
+        if [[ "$name" == ".*" ]] || [[ "$name" == "fix_symbolic_links.sh" ]]; then
+            continue
+        fi
+        mv "$file" "$dir/" && success "Moved file: $name" && ((moved++))
+    done < <(find "$REPO_ROOT" -maxdepth 1 -type f -print0)
+    log "Moved $moved non-essential files"
+}
+
 verify_symlinks() {
     log "Verifying symlinks..."
     local broken=0 total=0
@@ -118,14 +135,39 @@ verify_symlinks() {
     if (( broken==0 )); then success "All $total symlinks OK"; else error "$broken broken out of $total" && return 1; fi
 }
 
+enforce_root_limit() {
+    log "Ensuring root has no more than 12 items..."
+    local entries=()
+    while IFS= read -r -d '' entry; do
+        entries+=("$entry")
+    done < <(find "$REPO_ROOT" -maxdepth 1 -mindepth 1 -print0 | sort -z)
+    local total=${#entries[@]}
+    if (( total <= 12 )); then
+        success "Root contains $total items, within limit"
+        return
+    fi
+    local dir="$REPO_ROOT/19-miscellaneous/excess_root"
+    mkdir -p "$dir"
+    for ((i=12; i<total; i++)); do
+        local entry="${entries[$i]}"
+        local name="$(basename "$entry")"
+        mv "$entry" "$dir/" && success "Moved excess item: $name"
+    done
+    log "Root reduced to 12 items"
+}
+
 main() {
     log "Starting symlink cleanup..."
     mkdir -p ".symlink_backup_$(date +%Y%m%d_%H%M%S)"
     remove_broken_symlinks
     remove_unnecessary_symlinks
     organize_remaining_symlinks
+    organize_root_files
     create_essential_symlinks
+    enforce_root_limit
     verify_symlinks && log "Cleanup complete!"
 }
 
 main "$@"
+
+

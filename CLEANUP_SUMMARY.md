@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/12-documentation/CLEANUP_SUMMARY.md

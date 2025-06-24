@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/11-automation-scripts/launch_extended_automode.sh

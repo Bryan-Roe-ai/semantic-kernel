@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/11-automation-scripts/run-auto-tests.sh

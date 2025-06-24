@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/09-agi-development/check_agi_auto_status.sh

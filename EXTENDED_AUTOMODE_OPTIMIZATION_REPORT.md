@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/12-documentation/EXTENDED_AUTOMODE_OPTIMIZATION_REPORT.md

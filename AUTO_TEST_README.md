@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/12-documentation/AUTO_TEST_README.md

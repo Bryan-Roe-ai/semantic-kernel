@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/09-agi-development/AGI_ULTRA_IMPLEMENTATION_SUMMARY.md

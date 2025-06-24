@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/09-agi-development/setup_agi_chat.sh

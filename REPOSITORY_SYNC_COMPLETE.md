@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/12-documentation/REPOSITORY_SYNC_COMPLETE.md

@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/11-automation-scripts/test-automation-guide.sh

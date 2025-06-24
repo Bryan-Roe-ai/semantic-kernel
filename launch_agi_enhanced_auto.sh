@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/09-agi-development/launch_agi_enhanced_auto.sh

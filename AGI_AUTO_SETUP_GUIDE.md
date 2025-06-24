@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/09-agi-development/AGI_AUTO_SETUP_GUIDE.md

@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/12-documentation/CUSTOM_DOMAIN_GUIDE.md

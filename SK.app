@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/14-runtime/SK.app

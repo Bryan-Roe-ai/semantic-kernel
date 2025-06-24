@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/12-documentation/EXTENDED_AUTOMODE_INTEGRATION_GUIDE.md

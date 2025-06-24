@@ -1,1 +1,0 @@
-/home/broe/semantic-kernel/12-documentation/ERROR_HANDLING_IMPROVEMENTS.md
