@@ -203,5 +203,18 @@
   },
   "[sql]": {
     "editor.defaultFormatter": "dbcode.dbcode"
-  }
+  },
+  "dbcode.connections": [
+    {
+      "connectionId": "0HbwakgyDfso5n8ignzQt",
+      "name": "inmemory",
+      "driver": "sqlite",
+      "color": "#BD0014",
+      "connectionType": "memory",
+      "readOnly": false,
+      "driverOptions": {
+        "extensions": ["sqlite-js", "sqlite-vec", "sqlean"]
+      }
+    }
+  ]
 }
