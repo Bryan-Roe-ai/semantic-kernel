@@ -218,21 +218,23 @@ public class AdvancedVectorSearch : ITextSearch
 return await this.AggregateResponsesAsync(responses, task.Priority);
 // Advanced response aggregation and conflict resolution
 
-        }
-            responses.Add(response);
-            var response = await agent.ProcessAsync(task, cancellationToken);
-        {
-        foreach (var agent in agents)
-    
-        var responses = new List<AgentResponse>();
-        // Enhanced agent coordination with conflict resolution
-    
+```ts {"id":"01JYJ43S1MN9BB7KJMPQKG0T9Y"}
+    }
+        responses.Add(response);
+        var response = await agent.ProcessAsync(task, cancellationToken);
     {
-    CancellationToken cancellationToken)
-    AgentTask task,
-    IEnumerable<IAgent> agents,
-    public async Task<AgentResponse> CoordinateAgentsAsync(
-    
+    foreach (var agent in agents)
+
+    var responses = new List<AgentResponse>();
+    // Enhanced agent coordination with conflict resolution
+
+{
+CancellationToken cancellationToken)
+AgentTask task,
+IEnumerable<IAgent> agents,
+public async Task<AgentResponse> CoordinateAgentsAsync(
+
+```
 
 {
 public class EnhancedAgentFramework
@@ -256,19 +258,21 @@ this.IsSemantic = isSemantic;
 this.Parameters = parameters;
 // Enhanced parameter management
 
-    this._promptTemplate = promptTemplate;
-    this._function = delegateFunction;
-    this._delegateType = delegateType;
-    this._log = log ?? NullLogger.Instance;
-    this._kernel = kernel;
-    // Better lifecycle management
-    
-    Verify.ParametersUniqueness(parameters);
-    Verify.ValidFunctionName(functionName);
-    Verify.ValidSkillName(skillName);
-    Verify.NotNull(delegateFunction);
-    Verify.NotNull(kernel);
-    // Enhanced validation and setup
+```matlab {"id":"01JYJ43S1MN9BB7KJMPR5V1TB2"}
+this._promptTemplate = promptTemplate;
+this._function = delegateFunction;
+this._delegateType = delegateType;
+this._log = log ?? NullLogger.Instance;
+this._kernel = kernel;
+// Better lifecycle management
+
+Verify.ParametersUniqueness(parameters);
+Verify.ValidFunctionName(functionName);
+Verify.ValidSkillName(skillName);
+Verify.NotNull(delegateFunction);
+Verify.NotNull(kernel);
+// Enhanced validation and setup
+```
 
 {
 ILogger? log = null)
@@ -307,11 +311,13 @@ return await this.GetDocumentAndMapToDataModelAsync(searchClient, collectionName
 var searchClient = this.GetSearchClient(collectionName);
 // Enhanced error handling and telemetry
 
-    var collectionName = this.ChooseCollectionName(options?.CollectionName);
-    var innerOptions = this.ConvertGetDocumentOptions(options);
-    // Create Options with enhanced configuration
-    
-    Verify.NotNullOrWhiteSpace(key);
+```ini {"id":"01JYJ43S1MN9BB7KJMPVP0XSYZ"}
+var collectionName = this.ChooseCollectionName(options?.CollectionName);
+var innerOptions = this.ConvertGetDocumentOptions(options);
+// Create Options with enhanced configuration
+
+Verify.NotNullOrWhiteSpace(key);
+```
 
 {
 public async Task<TDataModel> GetAsync(string key, GetRecordOptions? options = default, CancellationToken cancellationToken = default)
@@ -385,11 +391,13 @@ public abstract class AbstractSkFunction implements SKFunction, RegistrableSkFun
 
 ```
 
-        self.is_skip_requested = True
-        """Skip the current function execution."""
-    def skip(self):
-    
-    is_skip_requested: bool = Field(default=False, init_var=False)
+```py {"id":"01JYJ43S1N4PSPQSCKM0KY6D9J"}
+    self.is_skip_requested = True
+    """Skip the current function execution."""
+def skip(self):
+
+is_skip_requested: bool = Field(default=False, init_var=False)
+```
 
 class FunctionInvokingEventArgs(KernelEventArgs):
 @experimental
@@ -434,8 +442,10 @@ if hasattr(advanced_vector_search, 'is_experimental'):
 
 # Check if feature is experimental
 
-    pass
-    """Enhanced vector search with experimental capabilities."""
+```sh {"id":"01JYJ43S1N4PSPQSCKM528NHY1"}
+pass
+"""Enhanced vector search with experimental capabilities."""
+```
 
 def advanced_vector_search(query: str, options: SearchOptions) -> SearchResults:
 @experimental
@@ -479,16 +489,18 @@ We've implemented a comprehensive experimental features system with fine-grained
 Verify.ParametersUniqueness(result.Parameters);
 // Enhanced uniqueness verification
 
-        .Cast<SKFunctionContextParameterAttribute>().ToList();
-        .GetCustomAttributes(typeof(SKFunctionContextParameterAttribute), true)
-    IList<SKFunctionContextParameterAttribute> skContextParams = methodSignature
-    // Context parameter handling with validation
-    
-        .FirstOrDefault();
-        .Cast<SKFunctionInputAttribute>()
-        .GetCustomAttributes(typeof(SKFunctionInputAttribute), true)
-    SKFunctionInputAttribute? skMainParam = methodSignature
-    // Enhanced parameter discovery
+```dart {"id":"01JYJ43S1N4PSPQSCKM7FGCCRQ"}
+    .Cast<SKFunctionContextParameterAttribute>().ToList();
+    .GetCustomAttributes(typeof(SKFunctionContextParameterAttribute), true)
+IList<SKFunctionContextParameterAttribute> skContextParams = methodSignature
+// Context parameter handling with validation
+
+    .FirstOrDefault();
+    .Cast<SKFunctionInputAttribute>()
+    .GetCustomAttributes(typeof(SKFunctionInputAttribute), true)
+SKFunctionInputAttribute? skMainParam = methodSignature
+// Enhanced parameter discovery
+```
 
 {
 ILogger? log = null)
@@ -507,13 +519,15 @@ private static MethodDetails GetMethodDetails(
 FunctionResult functionResult = await kernel.InvokePromptAsync(s_jsonSerializerOptions, prompt, arguments);
 // Enhanced invocation with JSON serialization options
 
-    KernelArguments arguments = new() { ["location"] = new Location("USA", "Boston") };
-    Kernel kernel = kernelBuilder.Build();
-    string prompt = "Is it suitable for hiking today? - {{weather_utils.GetCurrentWeather location=$location}}";
-    
-    kernelBuilder.Plugins.Add(KernelPluginFactory.CreateFromType<WeatherPlugin>(s_jsonSerializerOptions, "weather_utils"));
-    kernelBuilder.Services.AddSingleton<IChatCompletionService>(new PromptEchoChatCompletionService());
-    IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
+```lua {"id":"01JYJ43S1N4PSPQSCKM7HH1T66"}
+KernelArguments arguments = new() { ["location"] = new Location("USA", "Boston") };
+Kernel kernel = kernelBuilder.Build();
+string prompt = "Is it suitable for hiking today? - {{weather_utils.GetCurrentWeather location=$location}}";
+
+kernelBuilder.Plugins.Add(KernelPluginFactory.CreateFromType<WeatherPlugin>(s_jsonSerializerOptions, "weather_utils"));
+kernelBuilder.Services.AddSingleton<IChatCompletionService>(new PromptEchoChatCompletionService());
+IKernelBuilder kernelBuilder = Kernel.CreateBuilder();
+```
 
 {
 public static async Task InvokePrompt()
@@ -593,7 +607,9 @@ await Task.Delay(TimeSpan.FromMilliseconds(1000));
 // TODO: Investigate underlying cause and remove when upstream fixes it
 // Azure AI Search specific race condition mitigation
 
-    await base.WaitForDataAsync(collection, recordCount, filter, vectorSize, dummyVector);
+```csv {"id":"01JYJ43S1PF4N24TNJJA20XJWV"}
+await base.WaitForDataAsync(collection, recordCount, filter, vectorSize, dummyVector);
+```
 
 {
 object? dummyVector = null)
@@ -613,18 +629,20 @@ public override async Task WaitForDataAsync<TKey, TRecord>(
 }
 throw wrapperException;
 
-        wrapperException.Data.Add("db.operation.name", operationName);
-        wrapperException.Data.Add("db.collection.name", collectionName);
-        wrapperException.Data.Add("db.system", "AzureAISearch");
-        // Using Open Telemetry standard for naming
-    
-        var wrapperException = new MemoryServiceCommandExecutionException("Call to memory service failed.", ex);
-    {
-    catch (RequestFailedException ex)
-    }
-        return await operation.Invoke().ConfigureAwait(false);
-    {
-    try
+```cs {"id":"01JYJ43S1QETN4C69QN12V68M1"}
+    wrapperException.Data.Add("db.operation.name", operationName);
+    wrapperException.Data.Add("db.collection.name", collectionName);
+    wrapperException.Data.Add("db.system", "AzureAISearch");
+    // Using Open Telemetry standard for naming
+
+    var wrapperException = new MemoryServiceCommandExecutionException("Call to memory service failed.", ex);
+{
+catch (RequestFailedException ex)
+}
+    return await operation.Invoke().ConfigureAwait(false);
+{
+try
+```
 
 {
 private static async Task<T> RunOperationAsync<T>(Func<Task<T>> operation, string collectionName, string operationName)

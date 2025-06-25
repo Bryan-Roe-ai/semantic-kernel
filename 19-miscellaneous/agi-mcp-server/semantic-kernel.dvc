@@ -1,0 +1,6 @@
+outs:
+- md5: 008b9cddb1cf08404a2431c03080096c.dir
+  size: 45673678
+  nfiles: 5281
+  hash: md5
+  path: semantic-kernel

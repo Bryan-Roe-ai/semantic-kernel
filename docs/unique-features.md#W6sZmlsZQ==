@@ -1,0 +1,31 @@
+# Unique Features
+
+This document highlights the unique features of the Semantic Kernel project.
+
+## 1. Flexible Orchestration
+
+Semantic Kernel enables seamless orchestration of AI services, plugins, and traditional code, allowing developers to build complex workflows with ease.
+
+## 2. Native Plugin Support
+
+Easily integrate and manage plugins to extend functionality, including both AI-powered and conventional plugins.
+
+## 3. Multi-Language Support
+
+Semantic Kernel supports multiple programming languages, making it accessible for a wide range of developers.
+
+## 4. Memory and Context Management
+
+Built-in memory and context management features help maintain state and improve the quality of AI-driven interactions.
+
+## 5. Extensible Planner System
+
+The planner system allows for dynamic task decomposition and execution, adapting to changing requirements and user inputs.
+
+## 6. Integration with Popular AI Models
+
+Out-of-the-box support for popular AI models and services, enabling rapid prototyping and deployment.
+
+## 7. Open Source and Community Driven
+
+Semantic Kernel is open source, with active community contributions and transparent development practices.
