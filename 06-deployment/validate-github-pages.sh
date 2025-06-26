@@ -78,7 +78,7 @@ if [ -f "docs/index.html" ]; then
     else
         echo "⚠️  index.html missing DOCTYPE declaration"
     fi
-    
+
     if grep -q "<title>" docs/index.html; then
         title=$(grep -o '<title>[^<]*</title>' docs/index.html | sed 's/<[^>]*>//g')
         echo "✅ index.html has title: '$title'"
@@ -90,11 +90,11 @@ fi
 # Check for source files in ai-workspace
 if [ -d "ai-workspace/05-samples-demos" ]; then
     echo "✅ Found source files in ai-workspace/05-samples-demos"
-    
+
     if [ -f "ai-workspace/05-samples-demos/index.html" ]; then
         source_size=$(stat -c%s "ai-workspace/05-samples-demos/index.html" 2>/dev/null || stat -f%z "ai-workspace/05-samples-demos/index.html" 2>/dev/null)
         docs_size=$(stat -c%s "docs/index.html" 2>/dev/null || stat -f%z "docs/index.html" 2>/dev/null)
-        
+
         if [ "$source_size" = "$docs_size" ]; then
             echo "✅ Source and docs index.html files are in sync"
         else

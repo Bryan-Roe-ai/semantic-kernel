@@ -1,3 +1,7 @@
+import * as vscode from 'vscode';
+import { CodeFixMapping } from './common/codeFixMapping';
+import { FileVersion } from './common/fileVersion';
+
 export class DevSkimFixer implements vscode.CodeActionProvider {
     fixMapping = new Map<string, Map<number, CodeFixMapping[]>>();
     public static readonly providedCodeActionKinds = [
