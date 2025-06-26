@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYNBVMFNNJ8JSZ1PCQ1SHGTY
+  version: v3
+---
+
 # 🧹 Repository Cleanup & GitHub Actions Fix - Summary
 
 ## ✅ **CLEANUP COMPLETED!**
@@ -96,26 +102,29 @@ The repository has been thoroughly cleaned up and all GitHub Actions issues have
 
 ### **For Pull Requests:**
 
-```yaml
-trigger: pull_request on ai-workspace/** changes
+```yaml {"id":"01JYNBVMFMSDFDB1B2T0P2YSA5"}
+trigger: pull_request on ai-workspace/\*\* changes
 jobs: test + build (no deployment)
 validation: health_check.py + syntax validation
+
 ```
 
 ### **For Main Branch:**
 
-```yaml
-trigger: push to main with ai-workspace/** changes
+```yaml {"id":"01JYNBVMFMSDFDB1B2T0WFRMDX"}
+trigger: push to main with ai-workspace/\*\* changes
 jobs: test + build + deploy-pages + docker-build + notify
 validation: comprehensive validation + deployment
+
 ```
 
 ### **Manual Trigger:**
 
-```yaml
+```yaml {"id":"01JYNBVMFMSDFDB1B2T335M93J"}
 trigger: workflow_dispatch (manual)
 jobs: full deployment pipeline
 validation: complete validation suite
+
 ```
 
 ---
@@ -124,7 +133,7 @@ validation: complete validation suite
 
 The workflow can now be tested safely:
 
-```bash
+```bash {"id":"01JYNBVMFMSDFDB1B2T6E1HCN1"}
 # Test locally
 cd ai-workspace
 python scripts/health_check.py
@@ -180,7 +189,7 @@ The repository is now:
 
 ## 🛠️ **Maintenance Commands**
 
-```bash
+```bash {"id":"01JYNBVMFNNJ8JSZ1PCKWTA209"}
 # Weekly cleanup
 cd ai-workspace && ./scripts/repo_cleanup.sh
 

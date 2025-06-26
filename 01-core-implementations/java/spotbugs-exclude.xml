@@ -15,7 +15,7 @@
     <Field name="_storage"/>
     <Bug pattern="EI_EXPOSE_REP2"/>
   </Match>
-  
+
   <Match>
     <Class name="com.microsoft.semantickernel.Kernel$Builder"/>
     <Method name="withMemoryStore"/>

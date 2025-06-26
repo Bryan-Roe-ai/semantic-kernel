@@ -34,11 +34,11 @@ def main(*args, **kwargs):
 
 class TestSimpleLlmDemo(unittest.TestCase):
     """Test cases for SimpleLlmDemo"""
-    
+
     def setUp(self):
         """Set up test fixtures before each test method."""
         pass
-    
+
     def tearDown(self):
         """Tear down test fixtures after each test method."""
         pass

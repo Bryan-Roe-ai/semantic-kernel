@@ -35,19 +35,18 @@ class AIWorkspaceManager:
         }
 
         if not status["workspace_exists"]:
+            # TODO: Handle case where workspace does not exist
             return status
 
         for item in self.workspace_path.iterdir():
-            if item.is_dir() and item.name.startswith(('01-', '02-', '03-', '04-', '05-', '06-', '07-', '08-', '09-', '10-')):
-                dir_info = self._analyze_directory(item)
-                status["directories"][item.name] = dir_info
-                status["total_files"] += dir_info["file_count"]
-                status["total_notebooks"] += dir_info["notebook_count"]
+            # TODO: Analyze each item in the workspace directory
+            pass
 
         # Find environment files
         env_patterns = [".env*", "*.config", "appsettings*", "requirements*.txt"]
         for pattern in env_patterns:
-            status["environment_files"].extend(list(self.workspace_path.glob(f"**/{pattern}")))
+            # TODO: Search for environment files matching pattern
+            pass
 
         return status
 

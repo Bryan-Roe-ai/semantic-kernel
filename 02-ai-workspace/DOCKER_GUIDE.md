@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYNBWDZM1K9N1YHHACHS0FXP
+  version: v3
+---
+
 # 🐳 Docker Deployment Guide for AI Workspace
 
 This guide covers the complete Docker deployment and automation setup for your Semantic Kernel AI Workspace.
@@ -6,7 +12,7 @@ This guide covers the complete Docker deployment and automation setup for your S
 
 ### Option 1: Docker Compose (Recommended)
 
-```bash
+```bash {"id":"01JYNBWDZJ0TSHDNEV044DPHSB"}
 # Start all services with one command
 ./scripts/docker_manager.sh compose
 
@@ -16,7 +22,7 @@ docker-compose up -d
 
 ### Option 2: Single Container
 
-```bash
+```bash {"id":"01JYNBWDZJ0TSHDNEV076RBGHF"}
 # Build and run single container
 ./scripts/docker_manager.sh build
 ./scripts/docker_manager.sh run
@@ -37,7 +43,7 @@ ai-workspace/
 ├── cleanup_and_automate.sh # Workspace automation
 └── docker_manager.sh # Docker operations
 
-```
+```ini {"id":"01JYNBWDZJ0TSHDNEV07CB666Y"}
 ai-workspace/
 ├── Dockerfile                 # Multi-stage production build
 ├── docker-compose.yml         # Full orchestration
@@ -72,7 +78,7 @@ ai-workspace/
 
 ### Using Docker Manager Script
 
-```bash
+```bash {"id":"01JYNBWDZJ0TSHDNEV07JQX8JZ"}
 # Build image
 ./scripts/docker_manager.sh build
 
@@ -103,7 +109,7 @@ ai-workspace/
 
 ### Using Cleanup Script
 
-```bash
+```bash {"id":"01JYNBWDZJ0TSHDNEV0AYTY5NE"}
 # Run all automation tasks
 ./scripts/cleanup_and_automate.sh --all
 
@@ -118,24 +124,24 @@ ai-workspace/
 
 1. **Environment Configuration**
 
-   ```bash
-   # Copy template and configure
-   cp .env.template .env
-   # Edit .env with your API keys
-   ```
+```bash {"id":"01JYNBWDZJ0TSHDNEV0C7GG4B8"}
+# Copy template and configure
+cp .env.template .env
+# Edit .env with your API keys
+```
 
 2. **Cleanup Workspace**
 
-   ```bash
-   ./scripts/cleanup_and_automate.sh --all
-   ```
+```bash {"id":"01JYNBWDZJ0TSHDNEV0FP1WBDH"}
+./scripts/cleanup_and_automate.sh --all
+```
 
 3. **Build and Test**
 
-   ```bash
-   ./scripts/docker_manager.sh build
-   ./scripts/docker_manager.sh health
-   ```
+```bash {"id":"01JYNBWDZJ0TSHDNEV0GX4VFYP"}
+./scripts/docker_manager.sh build
+./scripts/docker_manager.sh health
+```
 
 ## 🏗️ Docker Build Stages
 
@@ -173,7 +179,7 @@ ai-workspace/
 
 ### Service Logs
 
-```bash
+```bash {"id":"01JYNBWDZKN7RFQ8KWF70MJ6KF"}
 # View all services
 docker-compose logs -f
 
@@ -200,7 +206,7 @@ docker-compose logs -f
 
 ### Enable Development Features
 
-```bash
+```bash {"id":"01JYNBWDZKN7RFQ8KWF874B5XH"}
 # Start in development mode
 ./scripts/docker_manager.sh dev
 
@@ -229,7 +235,7 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d
 
 ### Deployment Process
 
-```bash
+```bash {"id":"01JYNBWDZKN7RFQ8KWF8BF214D"}
 # One-command production deploy
 ./scripts/docker_manager.sh deploy
 ```
@@ -247,40 +253,40 @@ This will:
 
 1. **Port Conflicts**
 
-   ```bash
-   # Check what's using ports
-   netstat -tulpn | grep :8000
-   # Stop conflicting services
-   ```
+```bash {"id":"01JYNBWDZKN7RFQ8KWFBH1951Z"}
+# Check what's using ports
+netstat -tulpn | grep :8000
+# Stop conflicting services
+```
 
 2. **Permission Issues**
 
-   ```bash
-   # Fix permissions
-   sudo chown -R $USER:$USER .
-   chmod +x scripts/*.sh
-   ```
+```bash {"id":"01JYNBWDZKN7RFQ8KWFDHMS6PP"}
+# Fix permissions
+sudo chown -R $USER:$USER .
+chmod +x scripts/*.sh
+```
 
 3. **Docker Space Issues**
 
-   ```bash
-   # Clean up Docker
-   ./scripts/docker_manager.sh cleanup
-   docker system prune -a
-   ```
+```bash {"id":"01JYNBWDZKN7RFQ8KWFE7E36ZE"}
+# Clean up Docker
+./scripts/docker_manager.sh cleanup
+docker system prune -a
+```
 
 4. **Service Not Starting**
 
-   ```bash
-   # Check logs
-   ./scripts/docker_manager.sh logs [service]
-   # Check health
-   ./scripts/docker_manager.sh health
-   ```
+```bash {"id":"01JYNBWDZKN7RFQ8KWFGKMG9HG"}
+# Check logs
+./scripts/docker_manager.sh logs [service]
+# Check health
+./scripts/docker_manager.sh health
+```
 
 ### Debug Commands
 
-```bash
+```bash {"id":"01JYNBWDZKN7RFQ8KWFMJTWEPP"}
 # Enter container shell
 ./scripts/docker_manager.sh exec
 
@@ -328,7 +334,7 @@ All important data is stored in Docker volumes:
 
 ### Backup Strategy
 
-```bash
+```bash {"id":"01JYNBWDZKN7RFQ8KWFQ0WJK58"}
 # Backup volumes
 docker run --rm -v ai_data:/data -v $(pwd):/backup alpine tar czf /backup/ai_data_backup.tar.gz -C /data .
 
