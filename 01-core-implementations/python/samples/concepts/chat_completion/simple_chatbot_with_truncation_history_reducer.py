@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Simple Chatbot With Truncation History Reducer module
 
 Copyright (c) 2025 Bryan Roe

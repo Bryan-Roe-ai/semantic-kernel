@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+import re
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest

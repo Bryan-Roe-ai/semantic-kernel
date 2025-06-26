@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent declarative bing grounding
 
 Copyright (c) 2025 Bryan Roe
@@ -32,7 +33,7 @@ that require web search to answer correctly.
 Note: the `BingConnectionId` is in the format of:
 /subscriptions/<sub_id>/resourceGroups/<rg>/providers/Microsoft.MachineLearningServices/workspaces/<workspace>/connections/<bing_connection_id>
 
-It can either be configured as an env var `AZURE_AI_AGENT_BING_CONNECTION_ID` or passed in as an extra to 
+It can either be configured as an env var `AZURE_AI_AGENT_BING_CONNECTION_ID` or passed in as an extra to
 `create_from_yaml`: extras={"BingConnectionId": "<bing_connection_id>"}
 """
 
@@ -87,8 +88,8 @@ async def main():
         Sample output:
 
         # User: 'Who won the 2025 NCAA basketball championship?'
-        # BingAgent: The Florida Gators won the 2025 NCAA men's basketball championship, narrowly defeating the Houston 
-            Cougars 65-63 in the final game. This marked Florida's first national title since 
+        # BingAgent: The Florida Gators won the 2025 NCAA men's basketball championship, narrowly defeating the Houston
+            Cougars 65-63 in the final game. This marked Florida's first national title since
             2007【3:5†source】【3:9†source】.
         """
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for sessions python plugin
 
 Copyright (c) 2025 Bryan Roe

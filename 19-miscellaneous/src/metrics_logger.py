@@ -26,18 +26,18 @@ from pathlib import Path
 
 class MetricsLogger:
     """Logs system and application metrics"""
-    
+
     def __init__(self, base_dir):
         self.base_dir = Path(base_dir)
         self.metrics_dir = self.base_dir / "metrics"
         os.makedirs(self.metrics_dir, exist_ok=True)
-        
-        logging.basicConfig(level=logging.INFO, 
+
+        logging.basicConfig(level=logging.INFO,
                          format='%(asctime)s - %(levelname)s - %(message)s',
                          handlers=[logging.FileHandler(self.metrics_dir / "metrics.log"),
                                    logging.StreamHandler()])
         self.stop_event = threading.Event()
-        
+
     def collect_system_metrics(self):
         """Collect system-level metrics"""
         metrics = {
@@ -51,14 +51,14 @@ class MetricsLogger:
             }
         }
         return metrics
-    
+
     def collect_process_metrics(self):
         """Collect process-specific metrics"""
         metrics = {
             "timestamp": datetime.now().isoformat(),
             "processes": []
         }
-        
+
         # Look for Python processes related to our app
         for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
             if 'python' in proc.info['name'].lower():
@@ -75,39 +75,39 @@ class MetricsLogger:
                         metrics['processes'].append(proc_info)
                 except (psutil.NoSuchProcess, psutil.AccessDenied):
                     pass
-        
+
         return metrics
-    
+
     def log_metrics(self):
         """Log system and process metrics to file"""
         sys_metrics = self.collect_system_metrics()
         proc_metrics = self.collect_process_metrics()
-        
+
         # Log to JSON files with timestamp in filename
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-        
+
         with open(self.metrics_dir / f"system_metrics_{timestamp}.json", 'w') as f:
             json.dump(sys_metrics, f, indent=2)
-        
+
         with open(self.metrics_dir / f"process_metrics_{timestamp}.json", 'w') as f:
             json.dump(proc_metrics, f, indent=2)
-            
+
         # Also log summary to console/log file
         logging.info(f"System: CPU {sys_metrics['cpu_percent']}%, Memory {sys_metrics['memory_percent']}%")
         logging.info(f"Monitored {len(proc_metrics['processes'])} AI Chat processes")
-        
+
         # Clean up old metrics (keep last 100)
         self._cleanup_old_metrics()
-        
+
     def _cleanup_old_metrics(self):
         """Delete old metric files to prevent disk fill"""
         all_files = []
         for pattern in ["system_metrics_*.json", "process_metrics_*.json"]:
             all_files.extend(list(self.metrics_dir.glob(pattern)))
-        
+
         # Sort by modification time (oldest first)
         all_files.sort(key=lambda x: x.stat().st_mtime)
-        
+
         # Keep only the last 100 files
         if len(all_files) > 100:
             for old_file in all_files[:-100]:
@@ -115,7 +115,7 @@ class MetricsLogger:
                     old_file.unlink()
                 except:
                     pass
-    
+
     def run_periodic_logging(self, interval=300):
         """Run metrics logging at regular intervals"""
         logging.info(f"Metrics logger started, interval: {interval} seconds")
@@ -126,14 +126,14 @@ class MetricsLogger:
                 logging.error(f"Error logging metrics: {e}")
             # Wait for interval or until stop event
             self.stop_event.wait(interval)
-    
+
     def start(self, interval=300):
         """Start metrics logging in a background thread"""
         thread = threading.Thread(target=self.run_periodic_logging, args=(interval,))
         thread.daemon = True
         thread.start()
         return thread
-    
+
     def stop(self):
         """Stop the metrics logging"""
         self.stop_event.set()
@@ -141,7 +141,7 @@ class MetricsLogger:
 if __name__ == "__main__":
     base_dir = Path(__file__).parent
     logger = MetricsLogger(base_dir)
-    
+
     try:
         logging_thread = logger.start(interval=60)  # Log every minute
         logging_thread.join()

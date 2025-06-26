@@ -104,13 +104,13 @@ async def main():
 
     """
     Sample output:
-    DEBUG:semantic_kernel.agents.orchestration.sequential:Registered agent actor of type 
+    DEBUG:semantic_kernel.agents.orchestration.sequential:Registered agent actor of type
         FormatProofAgent_5efa69d39306414c91325ef82145ec19
     DEBUG:semantic_kernel.agents.orchestration.sequential:Registered agent actor of type
         WriterAgent_5efa69d39306414c91325ef82145ec19
     DEBUG:semantic_kernel.agents.orchestration.sequential:Registered agent actor of type
         ConceptExtractorAgent_5efa69d39306414c91325ef82145ec19
-    DEBUG:semantic_kernel.agents.orchestration.sequential:Sequential actor 
+    DEBUG:semantic_kernel.agents.orchestration.sequential:Sequential actor
         (Actor ID: ConceptExtractorAgent_5efa69d39306414c91325ef82145ec19/default; Agent name: ConceptExtractorAgent)
         started processing...
     The invocation was canceled before it could complete.

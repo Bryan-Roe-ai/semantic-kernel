@@ -40,6 +40,7 @@ except ImportError:
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class AIWorkspaceMCPServer:
     """MCP Server for AI Workspace functionality"""
 
@@ -61,10 +62,7 @@ class AIWorkspaceMCPServer:
         api_key = os.getenv("OPENAI_API_KEY")
         if api_key:
             self.kernel.add_service(
-                OpenAIChatCompletion(
-                    model_id="gpt-4o-mini",
-                    api_key=api_key
-                )
+                OpenAIChatCompletion(model_id="gpt-4o-mini", api_key=api_key)
             )
 
         # Register functions with the kernel
@@ -73,8 +71,7 @@ class AIWorkspaceMCPServer:
         logger.info("AI Workspace MCP Server initialized")
 
     @kernel_function(
-        name="list_models",
-        description="List available AI models in the workspace"
+        name="list_models", description="List available AI models in the workspace"
     )
     async def list_models(self) -> str:
         """List available AI models"""
@@ -86,11 +83,17 @@ class AIWorkspaceMCPServer:
             models = []
             for model_path in models_dir.iterdir():
                 if model_path.is_dir():
-                    models.append({
-                        "name": model_path.name,
-                        "path": str(model_path),
-                        "size": sum(f.stat().st_size for f in model_path.rglob('*') if f.is_file())
-                    })
+                    models.append(
+                        {
+                            "name": model_path.name,
+                            "path": str(model_path),
+                            "size": sum(
+                                f.stat().st_size
+                                for f in model_path.rglob("*")
+                                if f.is_file()
+                            ),
+                        }
+                    )
 
             return json.dumps({"models": models, "status": "success"})
         except Exception as e:
@@ -106,7 +109,7 @@ class AIWorkspaceMCPServer:
         dataset_path: str = "",
         learning_rate: float = 2e-4,
         num_epochs: int = 3,
-        batch_size: int = 4
+        batch_size: int = 4,
     ) -> str:
         """Start model training"""
         try:
@@ -120,7 +123,7 @@ class AIWorkspaceMCPServer:
                 "learning_rate": learning_rate,
                 "num_epochs": num_epochs,
                 "batch_size": batch_size,
-                "output_dir": f"./models/{model_name}-finetuned"
+                "output_dir": f"./models/{model_name}-finetuned",
             }
 
             # Start training (this would be async in a real implementation)
@@ -137,12 +140,11 @@ class AIWorkspaceMCPServer:
             "status": "training_started",
             "training_id": f"train_{config['model_name']}_{asyncio.get_event_loop().time()}",
             "config": config,
-            "message": "Training started successfully"
+            "message": "Training started successfully",
         }
 
     @kernel_function(
-        name="get_training_status",
-        description="Get the status of a training job"
+        name="get_training_status", description="Get the status of a training job"
     )
     async def get_training_status(self, training_id: str = "") -> str:
         """Get training status"""
@@ -155,7 +157,7 @@ class AIWorkspaceMCPServer:
                 "current_epoch": 2,
                 "total_epochs": 3,
                 "loss": 0.234,
-                "estimated_time_remaining": "15 minutes"
+                "estimated_time_remaining": "15 minutes",
             }
             return json.dumps(status)
         except Exception as e:
@@ -163,7 +165,7 @@ class AIWorkspaceMCPServer:
 
     @kernel_function(
         name="analyze_repository",
-        description="Analyze a GitHub repository structure and content"
+        description="Analyze a GitHub repository structure and content",
     )
     async def analyze_repository(self, repo_url: str, branch: str = "main") -> str:
         """Analyze a GitHub repository"""
@@ -174,9 +176,16 @@ class AIWorkspaceMCPServer:
                 if len(repo_parts) >= 2:
                     owner, repo = repo_parts[0], repo_parts[1]
                 else:
-                    return json.dumps({"error": "Invalid repository URL", "status": "error"})
+                    return json.dumps(
+                        {"error": "Invalid repository URL", "status": "error"}
+                    )
             else:
-                return json.dumps({"error": "Only GitHub repositories are supported", "status": "error"})
+                return json.dumps(
+                    {
+                        "error": "Only GitHub repositories are supported",
+                        "status": "error",
+                    }
+                )
 
             # Mock analysis - in reality this would use GitHub API
             analysis = {
@@ -189,15 +198,20 @@ class AIWorkspaceMCPServer:
                     "documentation_files": 23,
                     "test_files": 33,
                     "estimated_complexity": "High",
-                    "key_technologies": ["Python", "FastAPI", "Docker", "GitHub Actions"],
+                    "key_technologies": [
+                        "Python",
+                        "FastAPI",
+                        "Docker",
+                        "GitHub Actions",
+                    ],
                     "structure_quality": "Good",
-                    "documentation_coverage": "Moderate"
+                    "documentation_coverage": "Moderate",
                 },
                 "recommendations": [
                     "Consider adding more unit tests",
                     "API documentation could be expanded",
-                    "Good use of Docker for deployment"
-                ]
+                    "Good use of Docker for deployment",
+                ],
             }
 
             return json.dumps(analysis)
@@ -205,8 +219,7 @@ class AIWorkspaceMCPServer:
             return json.dumps({"error": str(e), "status": "error"})
 
     @kernel_function(
-        name="process_file",
-        description="Process and analyze a file from the workspace"
+        name="process_file", description="Process and analyze a file from the workspace"
     )
     async def process_file(self, file_path: str, analysis_type: str = "auto") -> str:
         """Process and analyze a file"""
@@ -221,7 +234,7 @@ class AIWorkspaceMCPServer:
                 "path": file_path,
                 "size": full_path.stat().st_size,
                 "extension": full_path.suffix,
-                "type": self._get_file_type(full_path.suffix)
+                "type": self._get_file_type(full_path.suffix),
             }
 
             # Analyze based on file type
@@ -230,11 +243,9 @@ class AIWorkspaceMCPServer:
 
             analysis = await self._analyze_file_content(full_path, analysis_type)
 
-            return json.dumps({
-                "file_info": file_info,
-                "analysis": analysis,
-                "status": "success"
-            })
+            return json.dumps(
+                {"file_info": file_info, "analysis": analysis, "status": "success"}
+            )
 
         except Exception as e:
             return json.dumps({"error": str(e), "status": "error"})
@@ -252,7 +263,7 @@ class AIWorkspaceMCPServer:
             ".yml": "YAML",
             ".yaml": "YAML",
             ".txt": "Text",
-            ".sh": "Shell Script"
+            ".sh": "Shell Script",
         }
         return type_map.get(extension.lower(), "Unknown")
 
@@ -267,7 +278,9 @@ class AIWorkspaceMCPServer:
         else:
             return "general"
 
-    async def _analyze_file_content(self, file_path: Path, analysis_type: str) -> Dict[str, Any]:
+    async def _analyze_file_content(
+        self, file_path: Path, analysis_type: str
+    ) -> Dict[str, Any]:
         """Analyze file content based on type"""
         try:
             content = file_path.read_text(encoding="utf-8")
@@ -277,9 +290,10 @@ class AIWorkspaceMCPServer:
                     "type": "code_analysis",
                     "lines": len(content.splitlines()),
                     "characters": len(content),
-                    "functions_detected": content.count("def ") + content.count("function "),
+                    "functions_detected": content.count("def ")
+                    + content.count("function "),
                     "classes_detected": content.count("class "),
-                    "complexity": "medium"  # Mock complexity
+                    "complexity": "medium",  # Mock complexity
                 }
             elif analysis_type == "text":
                 return {
@@ -287,20 +301,20 @@ class AIWorkspaceMCPServer:
                     "lines": len(content.splitlines()),
                     "words": len(content.split()),
                     "characters": len(content),
-                    "readability": "good"  # Mock readability
+                    "readability": "good",  # Mock readability
                 }
             elif analysis_type == "config":
                 return {
                     "type": "config_analysis",
                     "format": "valid",
                     "keys_found": len(content.split(":")),  # Rough estimate
-                    "structure": "nested"
+                    "structure": "nested",
                 }
             else:
                 return {
                     "type": "general_analysis",
                     "size": len(content),
-                    "format": "text"
+                    "format": "text",
                 }
 
         except Exception as e:
@@ -308,7 +322,7 @@ class AIWorkspaceMCPServer:
 
     @kernel_function(
         name="get_workspace_status",
-        description="Get overall workspace status and health"
+        description="Get overall workspace status and health",
     )
     async def get_workspace_status(self) -> str:
         """Get workspace status"""
@@ -326,16 +340,16 @@ class AIWorkspaceMCPServer:
                     "data": (self.workspace_root / "07-data-resources").exists(),
                     "docs": (self.workspace_root / "08-documentation").exists(),
                     "deployment": (self.workspace_root / "09-deployment").exists(),
-                    "config": (self.workspace_root / "10-config").exists()
+                    "config": (self.workspace_root / "10-config").exists(),
                 },
                 "services": {
                     "api_server": "available",
                     "trainer": "available" if self.trainer else "unavailable",
                     "docker": "configured",
-                    "github_actions": "configured"
+                    "github_actions": "configured",
                 },
                 "health": "good",
-                "last_updated": "2025-06-15"
+                "last_updated": "2025-06-15",
             }
 
             return json.dumps(status)
@@ -353,7 +367,7 @@ async def main():
     plugin = MCPStdioPlugin(
         name="ai_workspace",
         description="AI Workspace MCP Server for model training, GitHub integration, and file processing",
-        kernel=server.kernel
+        kernel=server.kernel,
     )
 
     # Start the MCP server

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent declarative templating
 
 Copyright (c) 2025 Bryan Roe
@@ -77,8 +78,8 @@ async def main():
     """
     Sample output:
 
-    # StoryAgent: Under the silvery moon, three mischievous cats tiptoed across the rooftop, chasing 
-      shadows and sharing secret whispers. By dawn, they curled up together, purring softly, dreaming 
+    # StoryAgent: Under the silvery moon, three mischievous cats tiptoed across the rooftop, chasing
+      shadows and sharing secret whispers. By dawn, they curled up together, purring softly, dreaming
       of adventures yet to come.
     """
 

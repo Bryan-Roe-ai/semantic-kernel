@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 In Process Runtime module
 
 Copyright (c) 2025 Bryan Roe

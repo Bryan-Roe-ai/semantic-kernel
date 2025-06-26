@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Function App module
 
 Copyright (c) 2025 Bryan Roe

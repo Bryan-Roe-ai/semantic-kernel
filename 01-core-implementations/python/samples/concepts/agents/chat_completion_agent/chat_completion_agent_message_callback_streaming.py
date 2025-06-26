@@ -106,7 +106,7 @@ async def main() -> None:
 
     # User: 'What is the special soup?'
     Function Call:> MenuPlugin-get_specials with arguments: {}
-    Function Result:> 
+    Function Result:>
             Special Soup: Clam Chowder
             Special Salad: Cobb Salad
             Special Drink: Chai Tea

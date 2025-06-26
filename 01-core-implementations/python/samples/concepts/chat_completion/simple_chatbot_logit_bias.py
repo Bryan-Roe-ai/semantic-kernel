@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import platform
 Simple Chatbot Logit Bias module
 
 Copyright (c) 2025 Bryan Roe

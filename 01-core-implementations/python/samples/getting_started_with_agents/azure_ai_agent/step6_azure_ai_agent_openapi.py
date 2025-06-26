@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for step6 azure ai agent openapi
 
 Copyright (c) 2025 Bryan Roe
@@ -112,11 +113,11 @@ async def main() -> None:
         Sample Output:
         # User: 'What is the name and population of the country that uses currency with abbreviation THB'
         # Agent: It seems I encountered an issue while trying to retrieve data about the country that uses the ...
-        
+
         As of the latest estimates, the population of Thailand is approximately 69 million people. If you ...
         # User: 'What is the current weather in the capital city of the country?'
         # Agent: The current weather in Bangkok, Thailand, the capital city, is as follows:
-        
+
         - **Temperature**: 24°C (76°F)
         - **Feels Like**: 26°C (79°F)
         - **Weather Description**: Light rain
@@ -125,7 +126,7 @@ async def main() -> None:
         - **Pressure**: 1017 hPa
         - **Wind Speed**: 8 km/h (5 mph) from the east-northeast (ENE)
         - **Visibility**: 10 km (approximately 6 miles)
-        
+
         This weather information reflects the current conditions as of the latest observation. If you need ...
         """
 

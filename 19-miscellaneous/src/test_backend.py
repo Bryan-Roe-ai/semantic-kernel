@@ -27,11 +27,11 @@ def main():
     print("  Backend Connection Tester  ")
     print("=============================")
     print()
-    
+
     # Get backend URL from .env file or use default
     backend_url = "http://localhost:8000"
     lm_studio_url = "http://localhost:1234"
-    
+
     # Check .env file for custom URLs
     base_dir = Path(__file__).parent.absolute()
     env_file = base_dir / ".env"
@@ -47,7 +47,7 @@ def main():
                         if "://" in value:
                             lm_studio_url = value.split("/v1/")[0]
                         print(f"Found LM Studio URL: {lm_studio_url}")
-    
+
     print("\nTesting backend connection...")
     backend_ok = False
     try:
@@ -63,7 +63,7 @@ def main():
         print("  - Try running: python -m uvicorn backend:app --reload")
     except Exception as e:
         print(f"✗ Error testing backend: {str(e)}")
-    
+
     print("\nTesting LM Studio connection...")
     lm_studio_ok = False
     try:
@@ -88,7 +88,7 @@ def main():
         print("  - Open LM Studio and start the server from the API tab")
     except Exception as e:
         print(f"✗ Error testing LM Studio: {str(e)}")
-    
+
     # Test chat functionality if both services are running
     if backend_ok and lm_studio_ok:
         print("\nTesting chat functionality...")
@@ -111,23 +111,23 @@ def main():
                 print(f"✗ Chat test failed with status code: {response.status_code}")
         except Exception as e:
             print(f"✗ Error testing chat: {str(e)}")
-    
+
     print("\nSummary:")
     if backend_ok:
         print("✓ Backend server: RUNNING")
     else:
         print("✗ Backend server: NOT RUNNING")
-        
+
     if lm_studio_ok:
         print("✓ LM Studio: RUNNING")
     else:
         print("✗ LM Studio: NOT RUNNING")
-    
+
     if backend_ok and lm_studio_ok:
         print("\n✅ All systems operational! You can use the chat application.")
     else:
         print("\n❌ Some components are not running correctly. Please fix the issues above.")
-    
+
     input("\nPress Enter to exit...")
 
 if __name__ == "__main__":

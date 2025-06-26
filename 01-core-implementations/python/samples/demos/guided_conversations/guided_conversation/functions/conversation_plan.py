@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Conversation Plan module
 
 Copyright (c) 2025 Bryan Roe
@@ -61,7 +62,7 @@ If you think medical history will take longer than asking for the name, then you
 Do NOT include items that have already been completed. \
 Items must always represent a conversation topic (corresponding to the "Send message to user" action). Updating the artifact (e.g. "update field X based on the discussion") or terminating the conversation is NOT a valid item.
 - The latest agenda was created in the previous turn of the conversation. \
-Even if the total turns in the latest agenda equals the remaining turns, you should still update the agenda if you think the current plan is suboptimal (e.g. the first item was completed, the order of items is not ideal, an item is too broad or not a conversation topic, etc.). 
+Even if the total turns in the latest agenda equals the remaining turns, you should still update the agenda if you think the current plan is suboptimal (e.g. the first item was completed, the order of items is not ideal, an item is too broad or not a conversation topic, etc.).
 - Each item must have a description and and your best guess for the number of turns required to complete it. Do not provide a range of turns. \
 It is EXTREMELY important that the total turns allocated across all items in the updated agenda (including the first item for the current turn) {{ total_resource_str }} \
 Everything in the agenda should be something you expect to complete in the remaining turns - there shouldn't be any optional "buffer" items. \

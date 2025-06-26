@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Local Kernel Process Context module
 
 Copyright (c) 2025 Bryan Roe

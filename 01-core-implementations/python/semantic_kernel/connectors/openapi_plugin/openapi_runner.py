@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Openapi Runner module
 
 Copyright (c) 2025 Bryan Roe

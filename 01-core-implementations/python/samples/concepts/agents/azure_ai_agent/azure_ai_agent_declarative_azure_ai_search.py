@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent declarative azure ai search
 
 Copyright (c) 2025 Bryan Roe
@@ -35,7 +36,7 @@ that required grounding context from the Azure AI Search index.
 Note: the `AzureAISearchConnectionId` is in the format of:
 /subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.MachineLearningServices/workspaces/<workspace>/connections/AzureAISearch
 
-It can either be configured as an env var `AZURE_AI_AGENT_BING_CONNECTION_ID` or passed in as an extra to 
+It can either be configured as an env var `AZURE_AI_AGENT_BING_CONNECTION_ID` or passed in as an extra to
 `create_from_yaml`: extras={
     "AzureAISearchConnectionId": "<azure_ai_search_connection_id>",
     "AzureAISearchIndexName": "<azure_ai_search_index_name>"

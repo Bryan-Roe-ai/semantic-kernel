@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+import asyncio
+import re
 AI module for azure ai channel
 
 Copyright (c) 2025 Bryan Roe

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure openai assistant declarative file search
 
 Copyright (c) 2025 Bryan Roe
@@ -24,7 +25,7 @@ from semantic_kernel.agents import AgentRegistry, AzureAssistantAgent
 The following sample demonstrates how to create an Azure Assistant Agent that answers
 user questions using the file search tool.
 
-The agent is used to answer user questions that require file search to help ground 
+The agent is used to answer user questions that require file search to help ground
 answers from the model.
 """
 

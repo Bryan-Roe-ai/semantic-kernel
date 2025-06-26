@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for open ai chat completion base
 
 Copyright (c) 2025 Bryan Roe
@@ -946,7 +947,7 @@ class OpenAIChatCompletionBase(OpenAIHandler, ChatCompletionClientBase):
             )
         if choice.delta and choice.delta.content is not None:
             items.append(StreamingTextContent(choice_index=choice.index, text=choice.delta.content))
-            
+
         return StreamingChatMessageContent(
             choice_index=choice.index,
             inner_content=chunk,

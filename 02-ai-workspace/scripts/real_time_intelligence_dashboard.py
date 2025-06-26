@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Real Time Intelligence Dashboard module
 
 Copyright (c) 2025 Bryan Roe

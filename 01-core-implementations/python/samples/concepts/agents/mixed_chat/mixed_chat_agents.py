@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Mixed Chat Agents module
 
 Copyright (c) 2025 Bryan Roe
@@ -25,7 +26,7 @@ from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.contents import AuthorRole
 
 """
-The following sample demonstrates how to create a Azure AI Foundry Agent, 
+The following sample demonstrates how to create a Azure AI Foundry Agent,
 a chat completion agent and have them participate in a group chat to work towards
 the user's requirement.
 

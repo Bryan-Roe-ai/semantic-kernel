@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 AI module for onnx gen ai completion base
 
 Copyright (c) 2025 Bryan Roe

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Kernel Process Step State Metadata module
 
 Copyright (c) 2025 Bryan Roe

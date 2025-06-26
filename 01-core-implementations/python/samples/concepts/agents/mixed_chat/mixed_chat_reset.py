@@ -56,8 +56,8 @@ async def main():
         kernel=_create_kernel_with_chat_completion("chat"),
         name="chat_agent",
         instructions="""
-            The user may either provide information or query on information previously provided. 
-            If the query does not correspond with information provided, inform the user that their query 
+            The user may either provide information or query on information previously provided.
+            If the query does not correspond with information provided, inform the user that their query
             cannot be answered.
             """,
     )
@@ -72,8 +72,8 @@ async def main():
         model=AzureOpenAISettings().chat_deployment_name,
         name="copywriter",
         instructions="""
-            The user may either provide information or query on information previously provided. 
-            If the query does not correspond with information provided, inform the user that their query 
+            The user may either provide information or query on information previously provided.
+            If the query does not correspond with information provided, inform the user that their query
             cannot be answered.
             """,
     )

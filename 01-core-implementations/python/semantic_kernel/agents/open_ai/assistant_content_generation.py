@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Assistant Content Generation module
 
 Copyright (c) 2025 Bryan Roe

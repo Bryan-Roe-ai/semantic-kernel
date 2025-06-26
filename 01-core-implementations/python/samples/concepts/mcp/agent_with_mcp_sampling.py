@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 The following sample demonstrates how to use a MCP Server that requires sampling
 to generate release notes from a list of issues.
 
-It uses the OpenAI service to create a agent, so make sure to 
+It uses the OpenAI service to create a agent, so make sure to
 set the required environment variables for the Azure AI Foundry service:
 - OPENAI_API_KEY
 - OPENAI_CHAT_MODEL_ID
@@ -105,11 +105,11 @@ async def main():
 
 Here’s a summary of the recent changes and contributions made to the Microsoft Semantic Kernel repository:
 
-1. **Integration Tests**: 
+1. **Integration Tests**:
    - Added integration tests for `ChatCompletionAgent` by @moonbox3 ([PR #11430](https://github.com/microsoft/semantic-kernel/pull/11430)).
    - Improved agent integration tests by @moonbox3 ([PR #11475](https://github.com/microsoft/semantic-kernel/pull/11475)).
 
-2. **Documentation and Demos**: 
+2. **Documentation and Demos**:
    - Updated the Doc Gen demo to align with the latest agent invocation API pattern by @moonbox3 ([PR #11426](https://github.com/microsoft/semantic-kernel/pull/11426)).
    - Small code improvements made in the code of the call automation sample by @eavanvalkenburg ([PR #11477](https://github.com/microsoft/semantic-kernel/pull/11477)).
 

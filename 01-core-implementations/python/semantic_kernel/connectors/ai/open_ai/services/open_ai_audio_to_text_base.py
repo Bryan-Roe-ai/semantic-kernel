@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 AI module for open ai audio to text base
 
 Copyright (c) 2025 Bryan Roe

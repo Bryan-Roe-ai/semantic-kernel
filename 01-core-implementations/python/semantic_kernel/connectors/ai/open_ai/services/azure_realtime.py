@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Azure Realtime module
 
 Copyright (c) 2025 Bryan Roe

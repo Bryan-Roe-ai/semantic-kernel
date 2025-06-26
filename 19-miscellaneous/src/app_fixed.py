@@ -1,3 +1,4 @@
+import asyncio
 import sys
 #!/usr/bin/env python3
 """
@@ -53,7 +54,7 @@ class TaskRequest(BaseModel):
     topic: str = Field(..., description="Topic for the tasks")
     difficulty: str = Field(..., description="Difficulty level")
     task_type: str = Field(..., description="Type of task")
-    
+
     class Config:
         schema_extra = {
             "example": {
@@ -104,7 +105,7 @@ async def generate_tasks(request: TaskRequest):
     except Exception as e:
         logger.error(f"Error generating tasks: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to generate tasks"
         )
 
@@ -120,7 +121,7 @@ async def test_model():
     except Exception as e:
         logger.error(f"Error testing model: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Model test failed"
         )
 
@@ -132,23 +133,23 @@ async def run_ai():
     try:
         logger.info("Running AI service")
         ai_service_url = os.environ.get("AI_SERVICE_URL", "https://your-ai-service-url.com/api/ai")
-        
+
         response = requests.get(ai_service_url, timeout=10)
         response.raise_for_status()
         ai_response = response.text
-        
+
         await update_webpage(ai_response)
         return {"ai_response": ai_response}
     except requests.exceptions.RequestException as e:
         logger.error(f"Error connecting to AI service: {e}")
         raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="AI service unavailable"
         )
     except Exception as e:
         logger.error(f"Unexpected error in run_ai: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to run AI"
         )
 
@@ -165,7 +166,7 @@ async def interact_llm(request: LLMRequest):
     except Exception as e:
         logger.error(f"Error interacting with LLM: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="LLM interaction failed"
         )
 
@@ -179,23 +180,23 @@ async def update_webpage(ai_response: str, html_path: Path = Depends(get_html_pa
         if not html_path.exists():
             with open(html_path, "w") as file:
                 file.write("<html><body><div id=\"ai-response\"></div></body></html>")
-        
+
         with open(html_path, "r") as file:
             content = file.read()
-            
+
         updated_content = content.replace(
-            "<div id=\"ai-response\"></div>", 
+            "<div id=\"ai-response\"></div>",
             f"<div id=\"ai-response\">{ai_response}</div>"
         )
-        
+
         with open(html_path, "w") as file:
             file.write(updated_content)
-            
+
         return {"status": "Webpage updated successfully"}
     except Exception as e:
         logger.error(f"Error updating webpage: {e}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to update webpage"
         )
 

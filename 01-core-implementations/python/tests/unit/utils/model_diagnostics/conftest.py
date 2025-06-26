@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+import asyncio
 import sys
 from collections.abc import AsyncGenerator
 from typing import Any, ClassVar

@@ -22,47 +22,47 @@ import uuid
 
 class AGIMCPClient:
     """Client for interacting with AGI MCP Server"""
-    
+
     def __init__(self, host: str = "localhost", port: int = 8080):
         self.host = host
         self.port = port
         self.base_url = f"http://{host}:{port}"
         self.session = None
-    
+
     async def __aenter__(self):
         self.session = aiohttp.ClientSession()
         return self
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         if self.session:
             await self.session.close()
-    
+
     async def send_request(self, method: str, params: Dict[str, Any] = None) -> Dict[str, Any]:
         """Send a request to the AGI MCP Server"""
         if params is None:
             params = {}
-        
+
         request_data = {
             "jsonrpc": "2.0",
             "id": str(uuid.uuid4()),
             "method": method,
             "params": params
         }
-        
+
         # For this example, we'll simulate the server response
         # In a real implementation, this would make an HTTP request
         print(f"Sending request: {method}")
         print(f"Parameters: {json.dumps(params, indent=2)}")
-        
+
         # Simulate server response
         response = await self._simulate_server_response(request_data)
         return response
-    
+
     async def _simulate_server_response(self, request: Dict[str, Any]) -> Dict[str, Any]:
         """Simulate server response for demonstration"""
         method = request["method"]
         params = request["params"]
-        
+
         # Simulate different responses based on method
         if method == "capabilities/list":
             return {
@@ -130,7 +130,7 @@ class AGIMCPClient:
                     "total_count": 7
                 }
             }
-        
+
         elif method == "reasoning/solve":
             return {
                 "jsonrpc": "2.0",
@@ -160,7 +160,7 @@ class AGIMCPClient:
                             "confidence": 0.7
                         },
                         {
-                            "type": "inductive", 
+                            "type": "inductive",
                             "result": {"conclusion": "Pattern identified through inductive reasoning", "confidence": 0.6},
                             "confidence": 0.6
                         },
@@ -175,7 +175,7 @@ class AGIMCPClient:
                     "used_memories": 8
                 }
             }
-        
+
         elif method == "memory/store":
             return {
                 "jsonrpc": "2.0",
@@ -185,7 +185,7 @@ class AGIMCPClient:
                     "memory_id": f"user_{uuid.uuid4()}"
                 }
             }
-        
+
         elif method == "memory/query":
             return {
                 "jsonrpc": "2.0",
@@ -201,7 +201,7 @@ class AGIMCPClient:
                             "tags": ["machine_learning", "regularization"]
                         },
                         {
-                            "id": "memory_456", 
+                            "id": "memory_456",
                             "content": "Feature selection improves model interpretability",
                             "type": "semantic",
                             "timestamp": time.time() - 7200,
@@ -212,7 +212,7 @@ class AGIMCPClient:
                     "count": 2
                 }
             }
-        
+
         elif method == "goals/create":
             return {
                 "jsonrpc": "2.0",
@@ -222,7 +222,7 @@ class AGIMCPClient:
                     "goal_id": str(uuid.uuid4())
                 }
             }
-        
+
         elif method == "goals/list":
             return {
                 "jsonrpc": "2.0",
@@ -260,7 +260,7 @@ class AGIMCPClient:
                     "completed_count": 1
                 }
             }
-        
+
         elif method == "system/status":
             return {
                 "jsonrpc": "2.0",
@@ -291,7 +291,7 @@ class AGIMCPClient:
                     }
                 }
             }
-        
+
         elif method == "creative/generate":
             return {
                 "jsonrpc": "2.0",
@@ -327,7 +327,7 @@ class AGIMCPClient:
                     "used_memories": 5
                 }
             }
-        
+
         elif method == "ethical/evaluate":
             return {
                 "jsonrpc": "2.0",
@@ -347,7 +347,7 @@ class AGIMCPClient:
                     "timestamp": time.time()
                 }
             }
-        
+
         else:
             return {
                 "jsonrpc": "2.0",
@@ -357,24 +357,24 @@ class AGIMCPClient:
                     "message": f"Method not found: {method}"
                 }
             }
-    
+
     # High-level methods for common operations
-    
+
     async def list_capabilities(self) -> List[Dict[str, Any]]:
         """List all AGI capabilities"""
         response = await self.send_request("capabilities/list")
         return response["result"]["capabilities"]
-    
+
     async def solve_problem(self, problem: str, reasoning_types: List[str] = None) -> Dict[str, Any]:
         """Solve a problem using AGI reasoning"""
         params = {"problem": problem}
         if reasoning_types:
             params["reasoning_types"] = reasoning_types
-        
+
         response = await self.send_request("reasoning/solve", params)
         return response["result"]
-    
-    async def store_memory(self, content: str, memory_type: str = "episodic", 
+
+    async def store_memory(self, content: str, memory_type: str = "episodic",
                           importance: float = 0.5, tags: List[str] = None) -> str:
         """Store information in AGI memory"""
         params = {
@@ -383,21 +383,21 @@ class AGIMCPClient:
             "importance": importance,
             "tags": tags or []
         }
-        
+
         response = await self.send_request("memory/store", params)
         return response["result"]["memory_id"]
-    
-    async def query_memory(self, query: str, memory_type: str = None, 
+
+    async def query_memory(self, query: str, memory_type: str = None,
                           limit: int = 10) -> List[Dict[str, Any]]:
         """Query AGI memory system"""
         params = {"query": query, "limit": limit}
         if memory_type:
             params["memory_type"] = memory_type
-        
+
         response = await self.send_request("memory/query", params)
         return response["result"]["memories"]
-    
-    async def create_goal(self, description: str, priority: int = 5, 
+
+    async def create_goal(self, description: str, priority: int = 5,
                          deadline: float = None) -> str:
         """Create a new goal for autonomous operation"""
         params = {
@@ -406,71 +406,71 @@ class AGIMCPClient:
         }
         if deadline:
             params["deadline"] = deadline
-        
+
         response = await self.send_request("goals/create", params)
         return response["result"]["goal_id"]
-    
+
     async def list_goals(self) -> Dict[str, Any]:
         """List all goals (active and completed)"""
         response = await self.send_request("goals/list")
         return response["result"]
-    
+
     async def get_system_status(self) -> Dict[str, Any]:
         """Get comprehensive system status"""
         response = await self.send_request("system/status")
         return response["result"]
-    
+
     async def generate_creative_ideas(self, prompt: str, creativity_level: float = 0.7) -> Dict[str, Any]:
         """Generate creative ideas using AGI"""
         params = {
             "prompt": prompt,
             "creativity_level": creativity_level
         }
-        
+
         response = await self.send_request("creative/generate", params)
         return response["result"]
-    
+
     async def evaluate_ethics(self, scenario: str, framework: str = "utilitarian") -> Dict[str, Any]:
         """Evaluate ethical implications of a scenario"""
         params = {
             "scenario": scenario,
             "framework": framework
         }
-        
+
         response = await self.send_request("ethical/evaluate", params)
         return response["result"]
 
 async def demonstrate_agi_capabilities():
     """Demonstrate the AGI MCP Server capabilities"""
-    
+
     print("🧠 AGI MCP Server Demonstration")
     print("=" * 50)
-    
+
     async with AGIMCPClient() as client:
-        
+
         print("\n1. 📋 Listing AGI Capabilities")
         print("-" * 30)
         capabilities = await client.list_capabilities()
         for cap in capabilities:
             print(f"• {cap['name']}: {cap['description']}")
             print(f"  Confidence: {cap['confidence']:.2f}, Usage: {cap['usage_count']}, Success Rate: {cap['success_rate']:.2f}")
-        
+
         print(f"\nTotal capabilities: {len(capabilities)}")
-        
+
         print("\n2. 🧮 Advanced Problem Solving")
         print("-" * 30)
         problem = "How can I optimize a machine learning model for better accuracy and efficiency?"
         result = await client.solve_problem(problem, ["deductive", "inductive", "creative"])
-        
+
         print(f"Problem: {problem}")
         print(f"Solution: {result['solution']['conclusion']}")
         print(f"Confidence: {result['confidence']:.2f}")
         print(f"Reasoning steps: {len(result['reasoning_steps'])}")
         print(f"Used {result['used_memories']} memories")
-        
+
         print("\n3. 🧠 Memory System Operations")
         print("-" * 30)
-        
+
         # Store some knowledge
         memory_id = await client.store_memory(
             "Deep learning models require careful hyperparameter tuning for optimal performance",
@@ -479,17 +479,17 @@ async def demonstrate_agi_capabilities():
             tags=["deep_learning", "optimization", "hyperparameters"]
         )
         print(f"Stored memory with ID: {memory_id}")
-        
+
         # Query memory
         memories = await client.query_memory("machine learning optimization", limit=5)
         print(f"Found {len(memories)} relevant memories:")
         for memory in memories:
             print(f"  • {memory['content'][:80]}...")
             print(f"    Type: {memory['type']}, Importance: {memory['importance']}")
-        
+
         print("\n4. 🎯 Goal Management")
         print("-" * 30)
-        
+
         # Create a goal
         goal_id = await client.create_goal(
             "Research and implement advanced neural architecture search techniques",
@@ -497,48 +497,48 @@ async def demonstrate_agi_capabilities():
             deadline=time.time() + 7 * 24 * 3600  # 7 days from now
         )
         print(f"Created goal with ID: {goal_id}")
-        
+
         # List goals
         goals = await client.list_goals()
         print(f"Active goals: {goals['active_count']}")
         for goal in goals['active_goals']:
             print(f"  • {goal['description']}")
             print(f"    Priority: {goal['priority']}, Progress: {goal['progress']:.1%}")
-        
+
         print(f"Completed goals: {goals['completed_count']}")
-        
+
         print("\n5. 🎨 Creative Idea Generation")
         print("-" * 30)
-        
+
         creative_result = await client.generate_creative_ideas(
             "How can AI be used to revolutionize education?",
             creativity_level=0.8
         )
-        
+
         print(f"Creative solutions:")
         print(f"• {creative_result['solution']['conclusion']}")
         print(f"Confidence: {creative_result['confidence']:.2f}")
         for step in creative_result['solution']['combined_steps']:
             if step.startswith("Creative ideas:"):
                 print(f"• {step}")
-        
+
         print("\n6. ⚖️ Ethical Reasoning")
         print("-" * 30)
-        
+
         ethical_result = await client.evaluate_ethics(
             "Should AI systems be allowed to make medical diagnoses without human oversight?",
             framework="utilitarian"
         )
-        
+
         print(f"Ethical evaluation:")
         print(f"• Scenario: {ethical_result['scenario'][:80]}...")
         print(f"• Framework: {ethical_result['framework']}")
         print(f"• Evaluation: {ethical_result['evaluation']}")
         print(f"• Confidence: {ethical_result['confidence']:.2f}")
-        
+
         print("\n7. 📊 System Status")
         print("-" * 30)
-        
+
         status = await client.get_system_status()
         print(f"Server ID: {status['server_id']}")
         print(f"Uptime: {status['uptime'] / 3600:.1f} hours")
@@ -550,7 +550,7 @@ async def demonstrate_agi_capabilities():
         print(f"CPU Usage: {status['metrics']['cpu_usage']:.1f}%")
         print(f"Active Goals: {status['goals']['active']}")
         print(f"Completed Goals: {status['goals']['completed']}")
-        
+
         print("\n🎉 Demonstration Complete!")
         print("\nThe AGI MCP Server showcases:")
         print("• Multi-type reasoning (deductive, inductive, creative, ethical)")
@@ -563,37 +563,37 @@ async def demonstrate_agi_capabilities():
 
 async def interactive_demo():
     """Interactive demonstration allowing user input"""
-    
+
     print("\n🔄 Interactive AGI Demo")
     print("Type 'quit' to exit")
     print("-" * 30)
-    
+
     async with AGIMCPClient() as client:
         while True:
             try:
                 user_input = input("\nEnter a problem to solve: ").strip()
-                
+
                 if user_input.lower() in ['quit', 'exit', 'q']:
                     print("Goodbye! 👋")
                     break
-                
+
                 if not user_input:
                     continue
-                
+
                 print(f"\n🧠 Processing: {user_input}")
-                
+
                 # Solve the problem
                 result = await client.solve_problem(user_input)
-                
+
                 print(f"\n💡 Solution: {result['solution']['conclusion']}")
                 print(f"📊 Confidence: {result['confidence']:.2f}")
                 print(f"🔍 Used {result['used_memories']} memories")
-                
+
                 # Show reasoning steps
                 print(f"\n🧩 Reasoning Process:")
                 for i, step in enumerate(result['reasoning_steps'], 1):
                     print(f"  {i}. {step['type'].title()} Reasoning (confidence: {step['confidence']:.2f})")
-                
+
                 # Store the interaction as memory
                 memory_id = await client.store_memory(
                     f"Problem: {user_input}\nSolution: {result['solution']['conclusion']}",
@@ -602,7 +602,7 @@ async def interactive_demo():
                     tags=["user_interaction", "problem_solving"]
                 )
                 print(f"💾 Stored interaction in memory: {memory_id}")
-                
+
             except KeyboardInterrupt:
                 print("\n\nGoodbye! 👋")
                 break
@@ -611,13 +611,13 @@ async def interactive_demo():
 
 async def main():
     """Main entry point for the client demo"""
-    
+
     print("🚀 AGI MCP Server Client Demo")
     print("=" * 40)
-    
+
     # Run the capabilities demonstration
     await demonstrate_agi_capabilities()
-    
+
     # Ask if user wants interactive demo
     try:
         choice = input("\nWould you like to try the interactive demo? (y/n): ").strip().lower()

@@ -25,7 +25,7 @@ from semantic_kernel.functions import kernel_function
 
 """
 The following sample demonstrates how to create a chat completion agent
-and use it with streaming responses. It also shows how to track token 
+and use it with streaming responses. It also shows how to track token
 usage during the streaming process.
 """
 
@@ -95,7 +95,7 @@ async def main() -> None:
     Hello! How can I help you with the menu today?
 
     # User: 'What is the special soup?'
-    The special soup today is Clam Chowder. Would you like more details or are you interested in something else from 
+    The special soup today is Clam Chowder. Would you like more details or are you interested in something else from
         the menu?
 
     # User: 'How much does that cost?'

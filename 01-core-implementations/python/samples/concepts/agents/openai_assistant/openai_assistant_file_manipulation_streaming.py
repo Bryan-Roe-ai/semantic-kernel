@@ -23,7 +23,7 @@ from semantic_kernel.connectors.ai.open_ai import AzureOpenAISettings
 from semantic_kernel.contents import ChatMessageContent, StreamingAnnotationContent
 
 """
-The following sample demonstrates how to create an Azure Assistant Agent 
+The following sample demonstrates how to create an Azure Assistant Agent
 to leverage the assistant's ability to have the code interpreter work with
 uploaded files. This sample uses streaming responses.
 """

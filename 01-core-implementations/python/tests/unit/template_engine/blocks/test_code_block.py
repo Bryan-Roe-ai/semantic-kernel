@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for code block
 
 Copyright (c) 2025 Bryan Roe
@@ -175,7 +176,7 @@ class TestCodeBlockRendering:
             content="$var",
         )
         result = await code_block.render_code(kernel, KernelArguments(var="foo"))
-        
+
 
     @mark.asyncio
     async def test_it_throws_if_a_function_doesnt_exist(self, kernel: Kernel):
@@ -296,7 +297,7 @@ class TestCodeBlockRendering:
         )
         result = await code_block.render_code(kernel, KernelArguments())
         u
-        
+
     async def test_it_renders_code_block_consisting_of_just_a_val_block1(self):
         code_block = CodeBlock(
             content="'ciao'",

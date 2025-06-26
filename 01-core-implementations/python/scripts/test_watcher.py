@@ -46,19 +46,19 @@ class TestWatcher(FileSystemEventHandler):
         self.test_on_save = test_on_save
         self.src_dir = root_dir / "semantic_kernel"
         self.test_dir = root_dir / "tests"
-        
+
         # Timing control
         self.last_run = 0
         self.debounce_seconds = 2
-        
+
         # Test mapping cache
         self.test_cache: Dict[str, Set[str]] = {}
-        
+
         # File patterns to watch
         self.watch_patterns = {'.py', '.yaml', '.yml', '.json'}
         self.ignore_patterns = {
             '__pycache__',
-            '.pytest_cache', 
+            '.pytest_cache',
             '.git',
             '.venv',
             'node_modules',
@@ -66,45 +66,45 @@ class TestWatcher(FileSystemEventHandler):
             'htmlcov',
             'test_reports'
         }
-        
+
         logger.info(f"Initialized test watcher for {root_dir}")
 
     def should_ignore_path(self, path: str) -> bool:
         """Check if path should be ignored."""
         path_obj = Path(path)
-        
+
         # Check ignore patterns
         for ignore in self.ignore_patterns:
             if ignore in path_obj.parts:
                 return True
-                
+
         # Check file extension
         if path_obj.suffix not in self.watch_patterns:
             return True
-            
+
         return False
 
     def find_related_tests(self, changed_file: Path) -> List[Path]:
         """Find test files related to the changed source file."""
         related_tests = []
-        
+
         if changed_file.is_relative_to(self.test_dir):
             # If it's already a test file, run it
             if changed_file.name.startswith('test_') or changed_file.name.endswith('_test.py'):
                 related_tests.append(changed_file)
-        
+
         elif changed_file.is_relative_to(self.src_dir):
             # Find corresponding test files
             relative_path = changed_file.relative_to(self.src_dir)
             module_parts = relative_path.with_suffix('').parts
-            
+
             # Try different test naming conventions
             test_patterns = [
                 f"test_{changed_file.stem}.py",
                 f"{changed_file.stem}_test.py",
                 f"test_{module_parts[-1]}.py" if len(module_parts) > 1 else None
             ]
-            
+
             # Search in corresponding test directories
             search_dirs = [
                 self.test_dir / "unit" / relative_path.parent,
@@ -112,7 +112,7 @@ class TestWatcher(FileSystemEventHandler):
                 self.test_dir / "unit",
                 self.test_dir / "integration"
             ]
-            
+
             for search_dir in search_dirs:
                 if search_dir.exists():
                     for pattern in test_patterns:
@@ -120,18 +120,18 @@ class TestWatcher(FileSystemEventHandler):
                             test_file = search_dir / pattern
                             if test_file.exists():
                                 related_tests.append(test_file)
-        
+
         # If no specific tests found, run unit tests as fallback
         if not related_tests:
             # Find all unit tests for the module
             if changed_file.is_relative_to(self.src_dir):
                 relative_path = changed_file.relative_to(self.src_dir)
                 module_name = relative_path.parts[0] if relative_path.parts else "core"
-                
+
                 unit_test_dir = self.test_dir / "unit" / "semantic_kernel" / module_name
                 if unit_test_dir.exists():
                     related_tests.extend(unit_test_dir.glob("test_*.py"))
-        
+
         return list(set(related_tests))  # Remove duplicates
 
     def run_tests(self, test_files: List[Path]) -> bool:
@@ -139,10 +139,10 @@ class TestWatcher(FileSystemEventHandler):
         if not test_files:
             logger.info("No tests to run")
             return True
-        
+
         test_paths = [str(f) for f in test_files]
         logger.info(f"Running tests: {', '.join(test_paths)}")
-        
+
         cmd = [
             sys.executable, "-m", "pytest",
             *test_paths,
@@ -152,7 +152,7 @@ class TestWatcher(FileSystemEventHandler):
             "--quiet",
             "-x"  # Stop on first failure
         ]
-        
+
         try:
             start_time = time.time()
             result = subprocess.run(
@@ -163,16 +163,16 @@ class TestWatcher(FileSystemEventHandler):
                 timeout=300
             )
             duration = time.time() - start_time
-            
+
             if result.returncode == 0:
                 logger.info(f"✅ Tests passed ({duration:.1f}s)")
                 self.print_success_summary(len(test_files), duration)
             else:
                 logger.error(f"❌ Tests failed ({duration:.1f}s)")
                 self.print_failure_summary(result.stdout, result.stderr)
-            
+
             return result.returncode == 0
-            
+
         except subprocess.TimeoutExpired:
             logger.error("⏰ Tests timed out")
             return False
@@ -191,45 +191,45 @@ class TestWatcher(FileSystemEventHandler):
         print("\n" + "="*50)
         print("❌ Test failures detected:")
         print("="*50)
-        
+
         # Extract and show key failure information
         lines = stdout.split('\n') + stderr.split('\n')
         failure_lines = []
-        
+
         for line in lines:
             if any(keyword in line.lower() for keyword in ['failed', 'error', 'assert']):
                 failure_lines.append(line.strip())
-        
+
         for line in failure_lines[:10]:  # Show first 10 failure lines
             if line:
                 print(f"  {line}")
-        
+
         if len(failure_lines) > 10:
             print(f"  ... and {len(failure_lines) - 10} more")
-        
+
         print("="*50)
 
     def on_modified(self, event):
         """Handle file modification events."""
         if event.is_directory:
             return
-            
+
         if self.should_ignore_path(event.src_path):
             return
-        
+
         # Debounce rapid file changes
         current_time = time.time()
         if current_time - self.last_run < self.debounce_seconds:
             return
-        
+
         self.last_run = current_time
-        
+
         changed_file = Path(event.src_path)
         logger.info(f"📝 File changed: {changed_file.relative_to(self.root_dir)}")
-        
+
         if self.test_on_save:
             related_tests = self.find_related_tests(changed_file)
-            
+
             if related_tests:
                 self.run_tests(related_tests)
             else:
@@ -247,7 +247,7 @@ class TestWatcher(FileSystemEventHandler):
             "-k", "not slow",
             "--maxfail=3"
         ]
-        
+
         try:
             start_time = time.time()
             result = subprocess.run(
@@ -258,14 +258,14 @@ class TestWatcher(FileSystemEventHandler):
                 timeout=60
             )
             duration = time.time() - start_time
-            
+
             if result.returncode == 0:
                 logger.info(f"⚡ Fast tests passed ({duration:.1f}s)")
             else:
                 logger.error(f"⚡ Fast tests failed ({duration:.1f}s)")
-            
+
             return result.returncode == 0
-            
+
         except Exception as e:
             logger.error(f"Error running fast tests: {e}")
             return False
@@ -279,7 +279,7 @@ class TestWatcher(FileSystemEventHandler):
             "-v",
             "--tb=short"
         ]
-        
+
         try:
             result = subprocess.run(
                 cmd,
@@ -305,18 +305,18 @@ class TestWatcherCLI:
         """Setup the file watcher."""
         self.watcher = TestWatcher(self.root_dir, test_on_save)
         self.observer = Observer()
-        
+
         # Watch source and test directories
         watch_dirs = [
             self.root_dir / "semantic_kernel",
             self.root_dir / "tests"
         ]
-        
+
         for watch_dir in watch_dirs:
             if watch_dir.exists():
                 self.observer.schedule(
-                    self.watcher, 
-                    str(watch_dir), 
+                    self.watcher,
+                    str(watch_dir),
                     recursive=True
                 )
                 logger.info(f"👀 Watching: {watch_dir}")
@@ -325,7 +325,7 @@ class TestWatcherCLI:
         """Start watching for file changes."""
         if not self.observer or not self.watcher:
             raise RuntimeError("Watcher not setup")
-        
+
         self.observer.start()
         print("\n" + "="*60)
         print("🚀 Test Watcher Started")
@@ -338,12 +338,12 @@ class TestWatcherCLI:
         print("  f       - Run fast tests")
         print("  q       - Quit")
         print("="*60)
-        
+
         try:
             while True:
                 try:
                     user_input = input().strip().lower()
-                    
+
                     if user_input == 'q':
                         break
                     elif user_input == 'f':
@@ -352,12 +352,12 @@ class TestWatcherCLI:
                         self.watcher.run_all_tests()
                     else:
                         print("Unknown command. Use 'f' for fast tests, [Enter] for all tests, 'q' to quit.")
-                        
+
                 except KeyboardInterrupt:
                     break
                 except EOFError:
                     break
-                    
+
         finally:
             self.stop_watching()
 
@@ -372,18 +372,18 @@ class TestWatcherCLI:
 def main():
     """Main entry point."""
     import argparse
-    
+
     parser = argparse.ArgumentParser(description="Test Watcher for Semantic Kernel Python")
     parser.add_argument("--no-auto", action="store_true", help="Don't run tests automatically on file changes")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
-    
+
     args = parser.parse_args()
-    
+
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
-    
+
     cli = TestWatcherCLI()
-    
+
     try:
         cli.setup_watcher(test_on_save=not args.no_auto)
         cli.start_watching()

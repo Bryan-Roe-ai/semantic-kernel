@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Execution module
 
 Copyright (c) 2025 Bryan Roe
@@ -23,7 +24,7 @@ from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecut
 from semantic_kernel.functions import FunctionResult, KernelArguments
 from semantic_kernel.functions.kernel_function_decorator import kernel_function
 
-execution_template = """<message role="system">You are a helpful, thoughtful, and meticulous assistant. 
+execution_template = """<message role="system">You are a helpful, thoughtful, and meticulous assistant.
 You are conducting a conversation with a user. Your goal is to complete an artifact as thoroughly as possible by the end of the conversation.
 You will be given some reasoning about the best possible action(s) to take next given the state of the conversation as well as the artifact schema.
 The reasoning is supposed to state the recommended action(s) to take next, along with all required parameters for each action.

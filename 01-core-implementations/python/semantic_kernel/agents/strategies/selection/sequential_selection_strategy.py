@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Sequential Selection Strategy module
 
 Copyright (c) 2025 Bryan Roe

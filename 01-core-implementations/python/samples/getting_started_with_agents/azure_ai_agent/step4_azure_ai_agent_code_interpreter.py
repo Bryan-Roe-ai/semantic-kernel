@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for step4 azure ai agent code interpreter
 
 Copyright (c) 2025 Bryan Roe
@@ -81,7 +82,7 @@ async def main() -> None:
         Sample Output:
         # User: 'Give me the code to calculate the total sales for all segments.'
 
-        # AuthorRole.ASSISTANT: Let me first load the uploaded file to understand its contents before providing 
+        # AuthorRole.ASSISTANT: Let me first load the uploaded file to understand its contents before providing
         tailored code.
 
         ```python
@@ -95,7 +96,7 @@ async def main() -> None:
         data.head(), data.info()
         ```
 
-        # AuthorRole.ASSISTANT: The file format couldn't be automatically determined. Let me attempt to load it as a 
+        # AuthorRole.ASSISTANT: The file format couldn't be automatically determined. Let me attempt to load it as a
         CSV or other type.
 
         ```python
@@ -109,11 +110,11 @@ async def main() -> None:
         # AuthorRole.ASSISTANT: <class 'pandas.core.frame.DataFrame'>
         RangeIndex: 700 entries, 0 to 699
         Data columns (total 14 columns):
-        #   Column        Non-Null Count  Dtype  
-        ---  ------        --------------  -----  
-        0   Segment       700 non-null    object 
-        1   Country       700 non-null    object 
-        2   Product       700 non-null    object 
+        #   Column        Non-Null Count  Dtype
+        ---  ------        --------------  -----
+        0   Segment       700 non-null    object
+        1   Country       700 non-null    object
+        2   Product       700 non-null    object
         3   Units Sold    700 non-null    float64
         4   Sale Price    700 non-null    float64
         5   Gross Sales   700 non-null    float64
@@ -121,13 +122,13 @@ async def main() -> None:
         7   Sales         700 non-null    float64
         8   COGS          700 non-null    float64
         9   Profit        700 non-null    float64
-        10  Date          700 non-null    object 
-        11  Month Number  700 non-null    int64  
-        12  Month Name    700 non-null    object 
-        13  Year          700 non-null    int64  
+        10  Date          700 non-null    object
+        11  Month Number  700 non-null    int64
+        12  Month Name    700 non-null    object
+        13  Year          700 non-null    int64
         dtypes: float64(7), int64(2), object(5)
         memory usage: 76.7+ KB
-        The dataset has been successfully loaded and contains information regarding sales, profits, and related metrics 
+        The dataset has been successfully loaded and contains information regarding sales, profits, and related metrics
         for various segments. To calculate the total sales across all segments, we can use the "Sales" column.
 
         Here's the code to calculate the total sales:
@@ -139,7 +140,7 @@ async def main() -> None:
         total_sales
         ```
 
-        # AuthorRole.ASSISTANT: The total sales for all segments amount to approximately **118,726,350.29**. Let me 
+        # AuthorRole.ASSISTANT: The total sales for all segments amount to approximately **118,726,350.29**. Let me
         know if you need additional analysis or code for manipulating this data!
         """
 

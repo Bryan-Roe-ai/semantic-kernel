@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Step5 Assistant Tool File Search module
 
 Copyright (c) 2025 Bryan Roe

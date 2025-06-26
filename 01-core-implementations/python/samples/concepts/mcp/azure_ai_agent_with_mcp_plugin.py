@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent with mcp plugin
 
 Copyright (c) 2025 Bryan Roe
@@ -27,7 +28,7 @@ from semantic_kernel.connectors.mcp import MCPStdioPlugin
 The following sample demonstrates how to create a AzureAIAgent that
 answers questions about Github using a Semantic Kernel Plugin from a MCP server.
 
-It uses the Azure AI Foundry Agent service to create a agent, so make sure to 
+It uses the Azure AI Foundry Agent service to create a agent, so make sure to
 set the required environment variables for the Azure AI Foundry service:
 - AZURE_AI_AGENT_PROJECT_CONNECTION_STRING
 - AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME
@@ -89,14 +90,14 @@ Once the first prompt is answered, you can further ask questions, use `exit` to 
 # User: Find the latest untriaged, unassigned issues and suggest new assignees.
 # GithubAgent: Here are the latest untriaged and unassigned issues that are tagged with Python:
 
-1. **[Issue #11459](https://github.com/microsoft/semantic-kernel/issues/11459)** 
+1. **[Issue #11459](https://github.com/microsoft/semantic-kernel/issues/11459)**
    - **Title:** Python: Bug: The provided example is incorrect
-   - **Description:** There are apparent mistakes in the provided Python examples concerning shared and 
+   - **Description:** There are apparent mistakes in the provided Python examples concerning shared and
    non-shared stateful configurations.
-   - **Assignee Suggestion:** Assign to **eavanvalkenburg** based on prior involvement with Python-related code and 
+   - **Assignee Suggestion:** Assign to **eavanvalkenburg** based on prior involvement with Python-related code and
    recent PRs focusing on bug fixes.
 
-2. **[Issue #11465](https://github.com/microsoft/semantic-kernel/issues/11465)** 
+2. **[Issue #11465](https://github.com/microsoft/semantic-kernel/issues/11465)**
    - **Title:** Python: sample using GitHub MCP Server and Azure AI Agent
    - **Description:** This adds a sample demonstrating how to use MCP tools with the Azure AI Agent.
    - **Assignee Suggestion:** Assign to **eavanvalkenburg** who is associated with the issue.
@@ -105,9 +106,9 @@ Once the first prompt is answered, you can further ask questions, use `exit` to 
 - **Issue #11459**: **eavanvalkenburg**
 - **Issue #11465**: **eavanvalkenburg**
 
-It seems that I cannot update the assignees directly due to authentication issues. You can use this information 
-as you see fit to assign these issues. If you need further assistance or specific context for each issue, 
-please let me know! 
+It seems that I cannot update the assignees directly due to authentication issues. You can use this information
+as you see fit to assign these issues. If you need further assistance or specific context for each issue,
+please let me know!
         """
 
 

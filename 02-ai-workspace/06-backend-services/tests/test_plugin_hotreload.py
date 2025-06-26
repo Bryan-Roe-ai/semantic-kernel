@@ -38,11 +38,11 @@ def start_watching(*args, **kwargs):
 
 class TestPluginHotreload(unittest.TestCase):
     """Test cases for PluginHotreload"""
-    
+
     def setUp(self):
         """Set up test fixtures before each test method."""
         pass
-    
+
     def tearDown(self):
         """Tear down test fixtures after each test method."""
         pass

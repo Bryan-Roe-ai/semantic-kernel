@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+from typing import Tuple
 Text Embedding Services module
 
 Copyright (c) 2025 Bryan Roe

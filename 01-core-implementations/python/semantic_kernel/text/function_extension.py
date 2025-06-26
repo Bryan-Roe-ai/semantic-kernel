@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from typing import List
+import asyncio
 Function Extension module
 
 Copyright (c) 2025 Bryan Roe

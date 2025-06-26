@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent as kernel function
 
 Copyright (c) 2025 Bryan Roe
@@ -31,8 +32,8 @@ from semantic_kernel.filters import FunctionInvocationContext
 
 """
 The following sample demonstrates how to create an Azure AI Agent Agent
-and a ChatCompletionAgent use them as tools available for a Triage Agent 
-to delegate requests to the appropriate agent. A Function Invocation Filter 
+and a ChatCompletionAgent use them as tools available for a Triage Agent
+to delegate requests to the appropriate agent. A Function Invocation Filter
 is used to show the function call content and the function result content so the caller
 can see which agent was called and what the response was.
 """
@@ -147,25 +148,25 @@ async def main() -> None:
 
     I canceled my subscription but I was still charged.
         Agent [BillingAgent] called with messages: I canceled my subscription but I was still charged.
-        Response from agent [BillingAgent]: I understand how concerning that can be. It's possible that the charge you 
-            received is for a billing cycle that was initiated before your cancellation was processed. Here are a few 
+        Response from agent [BillingAgent]: I understand how concerning that can be. It's possible that the charge you
+            received is for a billing cycle that was initiated before your cancellation was processed. Here are a few
             steps you can take:
 
-    1. **Check Cancellation Confirmation**: Make sure you received a confirmation of your cancellation. 
+    1. **Check Cancellation Confirmation**: Make sure you received a confirmation of your cancellation.
         This usually comes via email.
 
-    2. **Billing Cycle**: Review your billing cycle to confirm whether the charge aligns with your subscription terms. 
+    2. **Billing Cycle**: Review your billing cycle to confirm whether the charge aligns with your subscription terms.
         If your billing is monthly, charges can occur even if you cancel before the period ends.
 
-    3. **Contact Support**: If you believe the charge was made in error, please reach out to customer support for 
+    3. **Contact Support**: If you believe the charge was made in error, please reach out to customer support for
         further clarification and to rectify the situation.
 
-    If you can provide more details about the subscription and when you canceled it, I can help you further understand 
+    If you can provide more details about the subscription and when you canceled it, I can help you further understand
         the charges.
-    
-    Agent :> It's possible that the charge you received is for a billing cycle initiated before your cancellation was 
-        processed. Please check if you received a cancellation confirmation, review your billing cycle, and contact 
-        support for further clarification if you believe the charge was made in error. If you have more details, 
+
+    Agent :> It's possible that the charge you received is for a billing cycle initiated before your cancellation was
+        processed. Please check if you received a cancellation confirmation, review your billing cycle, and contact
+        support for further clarification if you believe the charge was made in error. If you have more details,
         I can help you understand the charges better.
     """
 

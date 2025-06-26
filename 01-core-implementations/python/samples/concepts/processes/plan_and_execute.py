@@ -37,27 +37,27 @@ from semantic_kernel.processes.kernel_process import (
 )
 from semantic_kernel.processes.local_runtime.local_kernel_process import start as start_local_process
 
-""" 
-The following code demonstrates a simple plan and execute process using the Semantic Kernel Process Framework. 
-It defines a multi-step workflow that leverages OpenAI's Responses API and integrated web search tools to generate, 
-refine, and execute a plan based on a user's query. An OpenAI api key is required to run this sample. The Azure OpenAI 
+"""
+The following code demonstrates a simple plan and execute process using the Semantic Kernel Process Framework.
+It defines a multi-step workflow that leverages OpenAI's Responses API and integrated web search tools to generate,
+refine, and execute a plan based on a user's query. An OpenAI api key is required to run this sample. The Azure OpenAI
 Responses API does not yet support the web search tool.
 
 The process is composed of several steps:
 
 - PlannerStep: Generates an initial plan (a set of tasks) in response to the user's request.
 - ReplanStep: Refines the plan when the initial tasks yield ambiguous or incomplete results.
-- ExecuteStep: Sequentially executes each task in the plan, incorporating previously gathered partial results to 
+- ExecuteStep: Sequentially executes each task in the plan, incorporating previously gathered partial results to
     provide context.
-- DecisionStep: Evaluates progress and decides whether to continue executing the remaining tasks or to replan 
+- DecisionStep: Evaluates progress and decides whether to continue executing the remaining tasks or to replan
     if necessary.
 - OutputStep: Aggregates and displays the final result or intermediate outputs to the user.
 
-Each step communicates via events within the Semantic Kernel framework, ensuring that state and context are maintained 
+Each step communicates via events within the Semantic Kernel framework, ensuring that state and context are maintained
 throughout the process. A helper function centralizes the setup of the OpenAIResponsesAgent.
 
-This example illustrates how to build an extensible, asynchronous processing pipeline capable of dynamically handling 
-user queries and providing detailed outputs. 
+This example illustrates how to build an extensible, asynchronous processing pipeline capable of dynamically handling
+user queries and providing detailed outputs.
 """
 
 
@@ -395,29 +395,29 @@ async def main():
 
     """
     Starting process with: 'Where was the quarterback of the winning team in the 2014 Super Bowl born?'
-    [PlannerStep] Created plan: ['Identify the Winning Team:** Find out which team won the 2014 Super Bowl. 
-        [NFL.com](https://www.nfl.com/)', 'Locate the Quarterback:** Determine who was the quarterback for the winning 
-        team during that game.', 'Research Birthplace:** Search for the birthplace of the identified quarterback. 
+    [PlannerStep] Created plan: ['Identify the Winning Team:** Find out which team won the 2014 Super Bowl.
+        [NFL.com](https://www.nfl.com/)', 'Locate the Quarterback:** Determine who was the quarterback for the winning
+        team during that game.', 'Research Birthplace:** Search for the birthplace of the identified quarterback.
         [Wikipedia](https://www.wikipedia.org/)'] (times_called=1)
 
     [DecisionStep] LLM decision: continue
     [DecisionStep] LLM decision: continue
     [DecisionStep] LLM decision: continue
-    [OutputStep] Storing final result: The Seattle Seahawks won Super Bowl XLVIII in 2014, defeating the Denver Broncos 
-        43-8. The Seahawks' defense dominated the game, forcing four turnovers and limiting the Broncos' high-scoring 
-        offense. Linebacker Malcolm Smith was named Super Bowl MVP after returning an interception 69 yards for a 
+    [OutputStep] Storing final result: The Seattle Seahawks won Super Bowl XLVIII in 2014, defeating the Denver Broncos
+        43-8. The Seahawks' defense dominated the game, forcing four turnovers and limiting the Broncos' high-scoring
+        offense. Linebacker Malcolm Smith was named Super Bowl MVP after returning an interception 69 yards for a
         touchdown. ([nfl.com](https://www.nfl.com/news/seattle-seahawks-d-dominates-manning-denver-broncos-to-win-supe-0ap2000000323056?utm_source=openai))
     The quarterback for the Seattle Seahawks during Super Bowl XLVIII was Russell Wilson.
-    Russell Wilson, the quarterback for the Seattle Seahawks during Super Bowl XLVIII, was born on November 29, 1988, 
+    Russell Wilson, the quarterback for the Seattle Seahawks during Super Bowl XLVIII, was born on November 29, 1988,
         in Cincinnati, Ohio. ([britannica.com](https://www.britannica.com/facts/Russell-Wilson?utm_source=openai))
 
     [Final State]:
-    The Seattle Seahawks won Super Bowl XLVIII in 2014, defeating the Denver Broncos 43-8. The Seahawks' defense 
-        dominated the game, forcing four turnovers and limiting the Broncos' high-scoring offense. Linebacker Malcolm 
-        Smith was named Super Bowl MVP after returning an interception 69 yards for a touchdown. 
+    The Seattle Seahawks won Super Bowl XLVIII in 2014, defeating the Denver Broncos 43-8. The Seahawks' defense
+        dominated the game, forcing four turnovers and limiting the Broncos' high-scoring offense. Linebacker Malcolm
+        Smith was named Super Bowl MVP after returning an interception 69 yards for a touchdown.
         ([nfl.com](https://www.nfl.com/news/seattle-seahawks-d-dominates-manning-denver-broncos-to-win-supe-0ap2000000323056?utm_source=openai))
     The quarterback for the Seattle Seahawks during Super Bowl XLVIII was Russell Wilson.
-    Russell Wilson, the quarterback for the Seattle Seahawks during Super Bowl XLVIII, was born on November 29, 1988, 
+    Russell Wilson, the quarterback for the Seattle Seahawks during Super Bowl XLVIII, was born on November 29, 1988,
         in Cincinnati, Ohio. ([britannica.com](https://www.britannica.com/facts/Russell-Wilson?utm_source=openai))
     """
 

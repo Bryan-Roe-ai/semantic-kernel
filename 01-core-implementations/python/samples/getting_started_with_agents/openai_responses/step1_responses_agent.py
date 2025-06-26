@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Step1 Responses Agent module
 
 Copyright (c) 2025 Bryan Roe
@@ -67,7 +68,7 @@ async def main():
     # User: 'Hi, my name is John Doe.'
     # Expert: Hello, John Doe! How can I assist you today?
     # User: 'Why is the sky blue?'
-    # Expert: The sky appears blue because of Rayleigh scattering, where shorter blue light wavelengths are scattered 
+    # Expert: The sky appears blue because of Rayleigh scattering, where shorter blue light wavelengths are scattered
         more than other colors by the gases in Earth's atmosphere.
     # User: 'What is the speed of light?'
     # Expert: The speed of light in a vacuum is approximately 299,792 kilometers per second (km/s).

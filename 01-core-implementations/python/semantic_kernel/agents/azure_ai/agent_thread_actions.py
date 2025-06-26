@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+import platform
+import re
 Agent Thread Actions module
 
 Copyright (c) 2025 Bryan Roe

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Test module for feature stage decorator
 
 Copyright (c) 2025 Bryan Roe

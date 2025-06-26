@@ -22,21 +22,21 @@ import logging
 import subprocess
 from pathlib import Path
 
-logging.basicConfig(level=logging.INFO, 
+logging.basicConfig(level=logging.INFO,
                    format='%(asctime)s - %(levelname)s - %(message)s',
                    handlers=[logging.FileHandler("self_heal.log"),
                              logging.StreamHandler()])
 
 class SelfHealer:
     """Monitors and restarts critical services when they fail"""
-    
+
     def __init__(self, base_dir):
         self.base_dir = Path(base_dir)
         self.backend_script = self.base_dir / "backend.py"
         self.backend_process = None
         self.max_memory_percent = 90  # Restart if memory usage > 90%
         self.max_failures = 0
-        
+
     def check_backend(self):
         """Check if backend is running, start if not"""
         if self.backend_process is None or not psutil.pid_exists(self.backend_process.pid):
@@ -65,7 +65,7 @@ class SelfHealer:
                     self.backend_process = None
             except Exception as e:
                 logging.error(f"Error monitoring backend: {e}")
-    
+
     def run_forever(self, check_interval=30):
         """Run continuous monitoring"""
         logging.info("Self-healer started...")

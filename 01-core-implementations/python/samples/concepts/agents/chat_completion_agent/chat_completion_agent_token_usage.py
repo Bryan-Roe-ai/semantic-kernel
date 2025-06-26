@@ -25,7 +25,7 @@ from semantic_kernel.functions import kernel_function
 
 """
 The following sample demonstrates how to create a chat completion agent
-and use it with non-streaming responses. It also shows how to track token 
+and use it with non-streaming responses. It also shows how to track token
 usage during agent invoke.
 """
 

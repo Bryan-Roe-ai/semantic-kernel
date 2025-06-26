@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+from typing import List
+from typing import Tuple
+import asyncio
 Redis Memory Store module
 
 Copyright (c) 2025 Bryan Roe

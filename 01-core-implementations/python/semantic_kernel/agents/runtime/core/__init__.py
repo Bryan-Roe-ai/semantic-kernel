@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+import re
 from semantic_kernel.agents.runtime.core.agent_id import AgentId, CoreAgentId
 from semantic_kernel.agents.runtime.core.agent_metadata import AgentMetadata, CoreAgentMetadata
 from semantic_kernel.agents.runtime.core.agent_type import AgentType, CoreAgentType

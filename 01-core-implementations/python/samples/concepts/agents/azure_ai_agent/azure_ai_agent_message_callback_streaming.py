@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent message callback streaming
 
 Copyright (c) 2025 Bryan Roe
@@ -129,7 +130,7 @@ async def main() -> None:
 
         # User: 'What is the price of the special drink and then special food item added together?'
         Function Call:> MenuPlugin-get_specials with arguments: {}
-        Function Result:> 
+        Function Result:>
                 Special Soup: Clam Chowder
                 Special Salad: Cobb Salad
                 Special Drink: Chai Tea
@@ -140,7 +141,7 @@ async def main() -> None:
         Function Result:> $9.99 for function: MenuPlugin-get_item_price
         Function Call:> MathPlugin-Add with arguments: {"input":9.99,"amount":9.99}
         Function Result:> 19.98 for function: MathPlugin-Add
-        # AuthorRole.ASSISTANT: The price of the special drink, Chai Tea, is $9.99 and the price of the special food 
+        # AuthorRole.ASSISTANT: The price of the special drink, Chai Tea, is $9.99 and the price of the special food
             item, Clam Chowder, is $9.99. Added together, the total price is $19.98.
         """
 

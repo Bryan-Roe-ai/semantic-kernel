@@ -27,7 +27,7 @@ def check_dependency(module_name):
 def install_dependency(module_name):
     """Install a Python module using pip."""
     print(f"Installing {module_name}...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", module_name], 
+    subprocess.check_call([sys.executable, "-m", "pip", "install", module_name],
                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     print(f"✓ {module_name} installed successfully")
 
@@ -36,7 +36,7 @@ def start_backend():
         print("=====================================")
         print("    Starting FastAPI Backend Server")
         print("=====================================")
-        
+
         # Check and install dependencies
         dependencies = ["fastapi", "uvicorn", "pydantic"]
         for dep in dependencies:
@@ -48,7 +48,7 @@ def start_backend():
                     print(f"pip install {dep}")
                     input("Press Enter to exit...")
                     return
-        
+
         # Check if .env file exists and create one if needed
         env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.env')
         if not os.path.exists(env_path):
@@ -56,29 +56,29 @@ def start_backend():
             with open(env_path, 'w') as env_file:
                 env_file.write('LM_STUDIO_URL="http://localhost:1234/v1/chat/completions"\n')
             print("Created .env file with default settings")
-        
+
         # Get the backend path
         backend_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'backend.py')
         cwd = os.path.dirname(backend_path)
-        
+
         # Check if backend.py exists
         if not os.path.exists(backend_path):
             print(f"Error: {backend_path} not found!")
             input("Press Enter to exit...")
             return
-            
+
         # Use subprocess to run the uvicorn command
         cmd = [sys.executable, "-m", "uvicorn", "backend:app", "--reload", "--host", "127.0.0.1", "--port", "8000"]
-        
+
         print("Starting backend server...")
         print(f"Command: {' '.join(cmd)}")
-        
+
         # Start the backend process
         process = subprocess.Popen(cmd, cwd=cwd)
-        
+
         # Wait a moment for the server to start
         time.sleep(2)
-        
+
         # Check if the process is still running
         if process.poll() is None:
             print("Backend server started successfully at http://127.0.0.1:8000")
@@ -90,7 +90,7 @@ def start_backend():
             else:
                 print(f"Warning: Chat UI file not found at {html_path}")
                 print("You can manually open any of the HTML files in your browser.")
-            
+
             print("\nServer is running. Press Ctrl+C to stop.")
             # Keep the script running until the user presses Ctrl+C
             process.wait()

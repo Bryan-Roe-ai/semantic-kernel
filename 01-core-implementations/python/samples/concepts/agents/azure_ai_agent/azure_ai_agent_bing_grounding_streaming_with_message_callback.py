@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent bing grounding streaming with message callback
 
 Copyright (c) 2025 Bryan Roe
@@ -115,7 +116,7 @@ async def main() -> None:
 
         """
         Sample Output:
-        
+
         # User: 'Which team won the 2025 NCAA basketball championship?'
         Function Call:> bing_grounding with arguments: {'requesturl': 'https://api.bing.microsoft.com/v7.0/search?q=search(query: 2025 NCAA basketball championship winner)'}
         Function Call:> bing_grounding with arguments: {'response_metadata': "{'market': 'en-US', 'num_docs_retrieved': 5, 'num_docs_actually_used': 5}"}

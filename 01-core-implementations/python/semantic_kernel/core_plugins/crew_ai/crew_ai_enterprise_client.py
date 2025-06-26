@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 AI module for crew ai enterprise client
 
 Copyright (c) 2025 Bryan Roe

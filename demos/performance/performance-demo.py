@@ -66,9 +66,9 @@ class PerformanceDemonstrator:
         x = np.arange(len(operations))
         width = 0.35
 
-        bars1 = ax1.bar(x - width/2, upstream_times, width, 
+        bars1 = ax1.bar(x - width/2, upstream_times, width,
                        label='Upstream', color='#ff6b6b', alpha=0.8)
-        bars2 = ax1.bar(x + width/2, enhanced_times, width, 
+        bars2 = ax1.bar(x + width/2, enhanced_times, width,
                        label='Enhanced Fork', color='#4ecdc4', alpha=0.8)
 
         ax1.set_xlabel('Operations')
@@ -135,7 +135,7 @@ class PerformanceDemonstrator:
                         ha='center', va='bottom', fontweight='bold')
 
         plt.tight_layout()
-        plt.savefig('/home/broe/semantic-kernel/demos/performance/performance-comparison.png', 
+        plt.savefig('/home/broe/semantic-kernel/demos/performance/performance-comparison.png',
                    dpi=300, bbox_inches='tight')
         plt.show()
 
@@ -252,7 +252,7 @@ class PerformanceDemonstrator:
         print("\n✅ Performance demonstration completed!")
         print("📁 Files generated:")
         print("   📊 performance-comparison.png")
-        print("   📋 performance-report.md") 
+        print("   📋 performance-report.md")
         print("   📈 benchmark-data.json")
 
         avg_improvement = statistics.mean([r.improvement_percent for r in results])

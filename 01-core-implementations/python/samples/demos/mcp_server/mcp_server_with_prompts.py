@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Mcp Server With Prompts module
 
 Copyright (c) 2025 Bryan Roe
@@ -55,12 +56,12 @@ Note: You might need to set the uv to it's full path.
 
 template = """{{$messages}}
 ---
-Group the following PRs into one of these buckets for release notes, keeping the same order: 
+Group the following PRs into one of these buckets for release notes, keeping the same order:
 
--New Features 
+-New Features
 -Enhancements and Improvements
 -Bug Fixes
--Python Package Updates 
+-Python Package Updates
 
 Include the output in raw markdown.
 """

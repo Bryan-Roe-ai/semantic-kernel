@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for step actor
 
 Copyright (c) 2025 Bryan Roe

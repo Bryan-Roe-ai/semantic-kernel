@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import time
 Azure Python Code Interpreter module
 
 Copyright (c) 2025 Bryan Roe

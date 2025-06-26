@@ -29,7 +29,7 @@ try:
 except ImportError as e:
     print(f"Warning: Could not import from simple_llm_demo module: {e}")
     # Define mock function as fallback
-    
+
     def main():
         """Mock main function"""
         return None
@@ -37,11 +37,11 @@ except ImportError as e:
 
 class TestSimpleLlmDemo(unittest.TestCase):
     """Test cases for SimpleLlmDemo"""
-    
+
     def setUp(self):
         """Set up test fixtures before each test method."""
         self.test_setup_complete = True
-    
+
     def tearDown(self):
         """Tear down test fixtures after each test method."""
         self.test_setup_complete = False
@@ -59,3 +59,7 @@ class TestSimpleLlmDemo(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+if __name__ == "__main__":
+    main()

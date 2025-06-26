@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for conversation summary plugin unit
 
 Copyright (c) 2025 Bryan Roe

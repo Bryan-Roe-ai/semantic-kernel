@@ -73,9 +73,9 @@ async def main():
 
     Because they make up everything!
     # User: 'Explain why this is funny.'
-    # Joker: The joke is funny because it plays on the double meaning of "make up." In one sense, atoms are the 
-        building blocks of all matter, so they literally "make up" everything. In another sense, "make up" can mean 
-        to fabricate or lie, humorously suggesting that atoms are untrustworthy because they "invent" or "fabricate" 
+    # Joker: The joke is funny because it plays on the double meaning of "make up." In one sense, atoms are the
+        building blocks of all matter, so they literally "make up" everything. In another sense, "make up" can mean
+        to fabricate or lie, humorously suggesting that atoms are untrustworthy because they "invent" or "fabricate"
         everything. This clever wordplay is what makes the joke amusing.
     # User: 'What have we been talking about?'
     # Joker: We've been discussing a joke about atoms and its humor, focusing on wordplay and double meanings.

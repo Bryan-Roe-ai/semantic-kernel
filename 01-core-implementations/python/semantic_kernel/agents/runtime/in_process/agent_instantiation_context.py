@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Agent Instantiation Context module
 
 Copyright (c) 2025 Bryan Roe

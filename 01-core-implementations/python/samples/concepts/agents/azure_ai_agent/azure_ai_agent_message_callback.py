@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent message callback
 
 Copyright (c) 2025 Bryan Roe
@@ -128,7 +129,7 @@ async def main() -> None:
     # Agent: Hi there! How can I assist you today?
     # User: 'What is the special soup?'
     Function Call:> MenuPlugin-get_specials with arguments: {}
-    Function Result:> 
+    Function Result:>
             Special Soup: Clam Chowder
             Special Salad: Cobb Salad
             Special Drink: Chai Tea

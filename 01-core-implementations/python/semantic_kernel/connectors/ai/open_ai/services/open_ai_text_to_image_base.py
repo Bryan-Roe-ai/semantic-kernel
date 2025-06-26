@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 AI module for open ai text to image base
 
 Copyright (c) 2025 Bryan Roe

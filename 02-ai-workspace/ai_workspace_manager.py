@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for ai workspace manager
 
 Copyright (c) 2025 Bryan Roe
@@ -19,6 +20,7 @@ import subprocess
 from pathlib import Path
 from typing import List, Dict, Any
 
+
 class AIWorkspaceManager:
     def __init__(self, workspace_path="/workspaces/semantic-kernel/ai-workspace"):
         self.workspace_path = Path(workspace_path)
@@ -31,7 +33,7 @@ class AIWorkspaceManager:
             "directories": {},
             "total_files": 0,
             "total_notebooks": 0,
-            "environment_files": []
+            "environment_files": [],
         }
 
         if not status["workspace_exists"]:
@@ -56,7 +58,7 @@ class AIWorkspaceManager:
             "file_count": 0,
             "notebook_count": 0,
             "subdirectories": [],
-            "key_files": []
+            "key_files": [],
         }
 
         try:
@@ -65,7 +67,13 @@ class AIWorkspaceManager:
                     info["file_count"] += 1
                     if item.suffix == ".ipynb":
                         info["notebook_count"] += 1
-                    if item.name in ["README.md", "requirements.txt", "setup.py", "main.py", "app.py"]:
+                    if item.name in [
+                        "README.md",
+                        "requirements.txt",
+                        "setup.py",
+                        "main.py",
+                        "app.py",
+                    ]:
                         info["key_files"].append(str(item.relative_to(directory)))
                 elif item.is_dir() and item.parent == directory:
                     info["subdirectories"].append(item.name)
@@ -168,13 +176,9 @@ ENVIRONMENT=development"""
             "python.testing.pytestEnabled": True,
             "jupyter.askForKernelRestart": False,
             "jupyter.interactiveWindow.creationMode": "perFile",
-            "files.associations": {
-                "*.ipynb": "jupyter-notebook"
-            },
+            "files.associations": {"*.ipynb": "jupyter-notebook"},
             "editor.formatOnSave": True,
-            "editor.codeActionsOnSave": {
-                "source.organizeImports": True
-            }
+            "editor.codeActionsOnSave": {"source.organizeImports": True},
         }
 
         vscode_dir = self.workspace_path / ".vscode"
@@ -197,8 +201,8 @@ ENVIRONMENT=development"""
                         "\n",
                         "## Environment Setup\n",
                         "\n",
-                        "First, let's check that everything is properly configured."
-                    ]
+                        "First, let's check that everything is properly configured.",
+                    ],
                 },
                 {
                     "cell_type": "code",
@@ -211,19 +215,19 @@ ENVIRONMENT=development"""
                         "import os\n",
                         "from pathlib import Path\n",
                         "\n",
-                        "print(f\"Python version: {sys.version}\")\n",
-                        "print(f\"Current working directory: {os.getcwd()}\")\n",
-                        "print(f\"Workspace path: {Path.cwd()}\")\n",
+                        'print(f"Python version: {sys.version}")\n',
+                        'print(f"Current working directory: {os.getcwd()}")\n',
+                        'print(f"Workspace path: {Path.cwd()}")\n',
                         "\n",
                         "# Check for required packages\n",
                         "required_packages = ['semantic_kernel', 'openai', 'numpy', 'pandas', 'matplotlib']\n",
                         "for package in required_packages:\n",
                         "    try:\n",
                         "        __import__(package)\n",
-                        "        print(f\"✅ {package} is available\")\n",
+                        '        print(f"✅ {package} is available")\n',
                         "    except ImportError:\n",
-                        "        print(f\"❌ {package} is not installed\")"
-                    ]
+                        '        print(f"❌ {package} is not installed")',
+                    ],
                 },
                 {
                     "cell_type": "markdown",
@@ -231,8 +235,8 @@ ENVIRONMENT=development"""
                     "source": [
                         "## Semantic Kernel Setup\n",
                         "\n",
-                        "Let's initialize Semantic Kernel and test basic functionality."
-                    ]
+                        "Let's initialize Semantic Kernel and test basic functionality.",
+                    ],
                 },
                 {
                     "cell_type": "code",
@@ -248,13 +252,13 @@ ENVIRONMENT=development"""
                         "    # Create kernel\n",
                         "    kernel = sk.Kernel()\n",
                         "    \n",
-                        "    print(\"🚀 Semantic Kernel initialized successfully!\")\n",
-                        "    print(f\"Kernel services: {len(kernel.services)}\")\n",
+                        '    print("🚀 Semantic Kernel initialized successfully!")\n',
+                        '    print(f"Kernel services: {len(kernel.services)}")\n',
                         "    \n",
                         "except Exception as e:\n",
-                        "    print(f\"❌ Error initializing Semantic Kernel: {e}\")\n",
-                        "    print(\"Please check your installation and API keys.\")"
-                    ]
+                        '    print(f"❌ Error initializing Semantic Kernel: {e}")\n',
+                        '    print("Please check your installation and API keys.")',
+                    ],
                 },
                 {
                     "cell_type": "markdown",
@@ -262,8 +266,8 @@ ENVIRONMENT=development"""
                     "source": [
                         "## Workspace Navigation\n",
                         "\n",
-                        "Explore the organized directory structure."
-                    ]
+                        "Explore the organized directory structure.",
+                    ],
                 },
                 {
                     "cell_type": "code",
@@ -275,21 +279,21 @@ ENVIRONMENT=development"""
                         "workspace_root = Path('..')\n",
                         "ai_workspace = Path('.')\n",
                         "\n",
-                        "print(\"🏗️ AI Workspace Structure:\")\n",
-                        "print(\"=\" * 40)\n",
+                        'print("🏗️ AI Workspace Structure:")\n',
+                        'print("=" * 40)\n',
                         "\n",
                         "for item in sorted(ai_workspace.glob('*')):\n",
                         "    if item.is_dir() and item.name.startswith(('01-', '02-', '03-', '04-', '05-', '06-', '07-', '08-', '09-', '10-')):\n",
-                        "        print(f\"📁 {item.name}\")\n",
+                        '        print(f"📁 {item.name}")\n',
                         "        readme_path = item / 'README.md'\n",
                         "        if readme_path.exists():\n",
                         "            with open(readme_path, 'r') as f:\n",
                         "                lines = f.readlines()\n",
                         "                if len(lines) > 2:\n",
                         "                    description = lines[2].strip()\n",
-                        "                    print(f\"   {description}\")\n",
-                        "        print()"
-                    ]
+                        '                    print(f"   {description}")\n',
+                        "        print()",
+                    ],
                 },
                 {
                     "cell_type": "markdown",
@@ -303,31 +307,28 @@ ENVIRONMENT=development"""
                         "4. **Create Plugins**: Develop custom functionality in `04-plugins/`\n",
                         "5. **Deploy Services**: Use `06-backend-services/` for production applications\n",
                         "\n",
-                        "Happy AI development! 🤖✨"
-                    ]
-                }
+                        "Happy AI development! 🤖✨",
+                    ],
+                },
             ],
             "metadata": {
                 "kernelspec": {
                     "display_name": "Python 3",
                     "language": "python",
-                    "name": "python3"
+                    "name": "python3",
                 },
                 "language_info": {
-                    "codemirror_mode": {
-                        "name": "ipython",
-                        "version": 3
-                    },
+                    "codemirror_mode": {"name": "ipython", "version": 3},
                     "file_extension": ".py",
                     "mimetype": "text/x-python",
                     "name": "python",
                     "nbconvert_exporter": "python",
                     "pygments_lexer": "ipython3",
-                    "version": "3.10.0"
-                }
+                    "version": "3.10.0",
+                },
             },
             "nbformat": 4,
-            "nbformat_minor": 4
+            "nbformat_minor": 4,
         }
 
         notebook_path = self.workspace_path / "01-notebooks" / "quick-start.ipynb"
@@ -357,15 +358,18 @@ ENVIRONMENT=development"""
         print(f"Jupyter notebooks: {status['total_notebooks']}")
         print()
 
-        if status['directories']:
+        if status["directories"]:
             print("📁 Directory Structure:")
-            for dir_name, info in status['directories'].items():
-                print(f"  {dir_name}: {info['file_count']} files, {info['notebook_count']} notebooks")
+            for dir_name, info in status["directories"].items():
+                print(
+                    f"  {dir_name}: {info['file_count']} files, {info['notebook_count']} notebooks"
+                )
 
         print()
         print("🔧 Environment files found:")
-        for env_file in status['environment_files']:
+        for env_file in status["environment_files"]:
             print(f"  {env_file}")
+
 
 if __name__ == "__main__":
     import argparse

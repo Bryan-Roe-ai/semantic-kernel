@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-AI module for   main  
+import re
+AI module for   main
 
 Copyright (c) 2025 Bryan Roe
 Licensed under the MIT License

@@ -49,11 +49,11 @@ def run_server(*args, **kwargs):
 
 class TestBackendStarter(unittest.TestCase):
     """Test cases for Backend Starter"""
-    
+
     def setUp(self):
         """Set up test fixtures before each test method."""
         pass
-    
+
     def tearDown(self):
         """Tear down test fixtures after each test method."""
         pass

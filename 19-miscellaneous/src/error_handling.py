@@ -35,26 +35,26 @@ logger = logging.getLogger("ai_chat")
 
 class ErrorResponse:
     """Standard error response formats"""
-    
+
     @staticmethod
     def not_found(message: str = "Resource not found") -> Dict[str, Any]:
         """Standard 404 error response"""
         return {"error": message, "status": "not_found"}
-    
+
     @staticmethod
     def bad_request(message: str = "Invalid request") -> Dict[str, Any]:
         """Standard 400 error response"""
         return {"error": message, "status": "bad_request"}
-    
+
     @staticmethod
-    def server_error(message: str = "Internal server error", 
+    def server_error(message: str = "Internal server error",
                      details: Optional[str] = None) -> Dict[str, Any]:
         """Standard 500 error response"""
         response = {"error": message, "status": "server_error"}
         if details:
             response["details"] = details
         return response
-    
+
     @staticmethod
     def service_unavailable(service: str, message: str) -> Dict[str, Any]:
         """Standard 503 error response for unavailable services"""
@@ -69,7 +69,7 @@ def log_error(error: Exception, context: str = ""):
     error_type = type(error).__name__
     error_message = str(error)
     error_trace = traceback.format_exc()
-    
+
     logger.error(
         f"Error in {context}: {error_type} - {error_message}\n"
         f"Traceback:\n{error_trace}"
@@ -84,7 +84,7 @@ def error_handler(func: Callable) -> Callable:
         except Exception as e:
             endpoint_name = func.__name__
             log_error(e, endpoint_name)
-            
+
             # Return appropriate error response
             if isinstance(e, FileNotFoundError):
                 return JSONResponse(

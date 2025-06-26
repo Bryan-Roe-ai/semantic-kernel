@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent prompt templating
 
 Copyright (c) 2025 Bryan Roe
@@ -28,7 +29,7 @@ The following sample demonstrates how to create an Azure AI
 agent using Azure OpenAI within Semantic Kernel.
 It uses parameterized prompts and shows how to swap between
 "semantic-kernel," "jinja2," and "handlebars" template formats,
-This sample highlights the agent's prompt templates are managed 
+This sample highlights the agent's prompt templates are managed
 and how kernel arguments are passed in and used.
 """
 

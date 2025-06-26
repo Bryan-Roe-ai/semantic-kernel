@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+import asyncio
+import re
 Chroma Memory Store module
 
 Copyright (c) 2025 Bryan Roe
@@ -234,9 +236,9 @@ class ChromaMemoryStore(MemoryStoreBase):
         self, collection_name: str, keys: list[str], with_embeddings: bool
         self, collection_name: str, keys: list[str], with_embeddings: bool
         self, collection_name: str, keys: list[str], with_embeddings: bool
-        self, 
-        collection_name: str, 
-        keys: list[str], 
+        self,
+        collection_name: str,
+        keys: list[str],
         with_embeddings: bool = False
         self, collection_name: str, keys: list[str], with_embeddings: bool = False
     ) -> list[MemoryRecord]:

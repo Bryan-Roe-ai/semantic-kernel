@@ -22,17 +22,17 @@ TEST_CONFIG = {
     # Directories
     "test_dirs": {
         "unit": "tests/unit",
-        "integration": "tests/integration", 
+        "integration": "tests/integration",
         "samples": "tests/samples"
     },
-    
+
     # Test patterns
     "test_patterns": {
         "default": "test_*.py",
         "integration": "test_*_integration.py",
         "unit": "test_*.py"
     },
-    
+
     # Timeouts (in seconds)
     "timeouts": {
         "unit": 60,
@@ -40,7 +40,7 @@ TEST_CONFIG = {
         "samples": 180,
         "default": 120
     },
-    
+
     # Coverage settings
     "coverage": {
         "min_percentage": 80,
@@ -55,14 +55,14 @@ TEST_CONFIG = {
             "*/__pycache__/*"
         ]
     },
-    
+
     # Parallel execution settings
     "parallel": {
         "enabled": True,
         "max_workers": None,  # None = auto-detect CPU cores
         "chunk_size": 10
     },
-    
+
     # Pytest options
     "pytest_options": {
         "unit": [
@@ -73,7 +73,7 @@ TEST_CONFIG = {
             "--disable-warnings"
         ],
         "integration": [
-            "-v", 
+            "-v",
             "--tb=short",
             "-ra",
             "--strict-markers",
@@ -82,23 +82,23 @@ TEST_CONFIG = {
         ],
         "samples": [
             "-v",
-            "--tb=short", 
+            "--tb=short",
             "-ra",
             "--strict-markers"
         ]
     },
-    
+
     # Environment variables for tests
     "env_vars": {
         "PYTHONPATH": ".",
         "PYTEST_CURRENT_TEST": "1",
         "SK_TEST_MODE": "1"
     },
-    
+
     # Test markers
     "markers": {
         "unit": "Unit tests",
-        "integration": "Integration tests", 
+        "integration": "Integration tests",
         "slow": "Slow running tests",
         "azure": "Tests requiring Azure services",
         "openai": "Tests requiring OpenAI API",
@@ -106,7 +106,7 @@ TEST_CONFIG = {
         "onnx": "Tests requiring ONNX runtime",
         "experimental": "Experimental feature tests"
     },
-    
+
     # Quality gates
     "quality_gates": {
         "coverage_threshold": 80,
@@ -114,11 +114,11 @@ TEST_CONFIG = {
         "max_failures": 5,
         "required_checks": [
             "unit_tests",
-            "linting", 
+            "linting",
             "type_checking"
         ]
     },
-    
+
     # Reporting
     "reporting": {
         "formats": ["json", "xml", "html"],
@@ -136,11 +136,11 @@ CI_CONFIG = {
         "timeout_minutes": 45,
         "retry_attempts": 2
     },
-    
+
     "pre_commit": {
         "hooks": [
             "ruff-check",
-            "ruff-format", 
+            "ruff-format",
             "mypy",
             "pytest-fast"
         ]
@@ -173,19 +173,19 @@ def get_ci_config(provider: str = "github_actions") -> Dict:
 def get_env_vars() -> Dict[str, str]:
     """Get environment variables for tests."""
     env_vars = TEST_CONFIG["env_vars"].copy()
-    
+
     # Add current environment variables
     for key, value in os.environ.items():
         if key.startswith(("AZURE_", "OPENAI_", "SK_")):
             env_vars[key] = value
-    
+
     return env_vars
 
 
 def get_pytest_args(test_type: str = "unit", include_coverage: bool = True) -> List[str]:
     """Get pytest arguments for test type."""
     args = TEST_CONFIG["pytest_options"].get(test_type, [])
-    
+
     if include_coverage and test_type in ["unit", "integration"]:
         coverage_args = [
             "--cov=semantic_kernel",
@@ -194,11 +194,11 @@ def get_pytest_args(test_type: str = "unit", include_coverage: bool = True) -> L
             f"--cov-report=html:test_reports/htmlcov_{test_type}"
         ]
         args.extend(coverage_args)
-    
+
     # Add timeout
     timeout = TEST_CONFIG["timeouts"].get(test_type, TEST_CONFIG["timeouts"]["default"])
     args.extend([f"--timeout={timeout}"])
-    
+
     return args
 
 
@@ -210,14 +210,14 @@ def get_test_markers() -> List[str]:
 def validate_config() -> bool:
     """Validate test configuration."""
     required_sections = ["test_dirs", "timeouts", "coverage"]
-    
+
     for section in required_sections:
         if section not in TEST_CONFIG:
             return False
-    
+
     # Validate paths exist
     for test_dir in TEST_CONFIG["test_dirs"].values():
         if not Path(test_dir).exists():
             print(f"Warning: Test directory {test_dir} does not exist")
-    
+
     return True

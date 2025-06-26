@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import platform
 Simple Chatbot Store Metadata module
 
 Copyright (c) 2025 Bryan Roe

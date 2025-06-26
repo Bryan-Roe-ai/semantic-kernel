@@ -46,11 +46,11 @@ def main(*args, **kwargs):
 
 class TestSetup(unittest.TestCase):
     """Test cases for Setup"""
-    
+
     def setUp(self):
         """Set up test fixtures before each test method."""
         pass
-    
+
     def tearDown(self):
         """Tear down test fixtures after each test method."""
         pass
@@ -99,3 +99,7 @@ class TestSetup(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+if __name__ == "__main__":
+    main()

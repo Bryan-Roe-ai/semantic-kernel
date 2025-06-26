@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+import re
 import asyncio
 import sys
 from collections.abc import AsyncIterable, Awaitable, Callable

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Bedrock Model Provider module
 
 Copyright (c) 2025 Bryan Roe

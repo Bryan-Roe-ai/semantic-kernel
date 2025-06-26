@@ -29,7 +29,7 @@ The following sample demonstrates how to create a chat completion agent
 and use it with functions. In order to answer user questions, the
 agent internally uses the functions. These internal steps are returned
 to the user as part of the agent's response. Thus, the invoke method
-configures a message callback to receive the agent's internal messages. 
+configures a message callback to receive the agent's internal messages.
 
 The agent is configured to use a plugin that provides a list of
 specials from the menu and the price of the requested menu item.
@@ -106,7 +106,7 @@ async def main() -> None:
     # AuthorRole.ASSISTANT: Hi there! How can I assist you today?
     # User: 'What is the special soup?'
     Function Call:> MenuPlugin-get_specials with arguments: {}
-    Function Result:> 
+    Function Result:>
             Special Soup: Clam Chowder
             Special Salad: Cobb Salad
             Special Drink: Chai Tea

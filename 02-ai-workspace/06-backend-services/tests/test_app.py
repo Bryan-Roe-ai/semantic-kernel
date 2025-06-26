@@ -37,7 +37,7 @@ try:
 except ImportError as e:
     print(f"Warning: Could not import from app module: {e}")
     # Define mock classes/functions as fallbacks
-    
+
     class TaskRequest:
         """Mock TaskRequest class"""
         pass
@@ -81,11 +81,11 @@ except ImportError as e:
 
 class TestApp(unittest.TestCase):
     """Test cases for App"""
-    
+
     def setUp(self):
         """Set up test fixtures before each test method."""
         pass
-    
+
     def tearDown(self):
         """Tear down test fixtures after each test method."""
         pass

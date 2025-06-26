@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+import asyncio
+import re
 Anthropic Chat Completion module
 
 Copyright (c) 2025 Bryan Roe
@@ -141,7 +143,7 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
     async_client: AsyncAnthropic
 
     async_client: AsyncAnthropic
-    
+
     MODEL_PROVIDER_NAME: ClassVar[str] = "anthropic"
 
     async_client: AsyncAnthropic
@@ -282,15 +284,15 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
         settings: PromptExecutionSettings,
         **kwargs: Any,
     ) -> AsyncGenerator[list[StreamingChatMessageContent], Any]:
-        return [self._create_chat_message_content(response, content_block, metadata) 
+        return [self._create_chat_message_content(response, content_block, metadata)
                 for content_block in response.content]
-        
+
     async def get_streaming_chat_message_contents(
         self,
         chat_history: ChatHistory,
-        settings: PromptExecutionSettings, 
+        settings: PromptExecutionSettings,
         **kwargs: Any,
-    ) -> AsyncGenerator[list[StreamingChatMessageContent], Any]: 
+    ) -> AsyncGenerator[list[StreamingChatMessageContent], Any]:
         settings: PromptExecutionSettings,
         **kwargs: Any,
         """Executes a streaming chat completion request and returns the result.
@@ -329,9 +331,9 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
                                 stream_event, content_block_idx, author_role, metadata
                             )
                         ]
-                        yield [self._create_streaming_chat_message_content(stream_event, 
-                                                                           content_block_idx, 
-                                                                           author_role, 
+                        yield [self._create_streaming_chat_message_content(stream_event,
+                                                                           content_block_idx,
+                                                                           author_role,
                                                                            metadata)]
         Yields:
             A stream of StreamingChatMessageContent.
@@ -366,13 +368,13 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
                                 stream_event, content_block_idx, author_role, metadata
                             )
                         ]
-                        yield [self._create_streaming_chat_message_content(stream_event, 
-                                                                           content_block_idx, 
-                                                                           author_role, 
+                        yield [self._create_streaming_chat_message_content(stream_event,
+                                                                           content_block_idx,
+                                                                           author_role,
                                                                            metadata)]
-                        yield [self._create_streaming_chat_message_content(stream_event, 
-                                                                           content_block_idx, 
-                                                                           author_role, 
+                        yield [self._create_streaming_chat_message_content(stream_event,
+                                                                           content_block_idx,
+                                                                           author_role,
                                                                            metadata)]
                     elif isinstance(stream_event, ContentBlockStopEvent):
                         content_block_idx += 1
@@ -475,14 +477,14 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
         items: list[CMC_ITEM_TYPES] = []
         items += self._get_tool_calls_from_message(response)
 
-        self, 
-        response: Message, 
-        content: TextBlock, 
+        self,
+        response: Message,
+        content: TextBlock,
         response_metadata: dict[str, Any]
     ) -> "ChatMessageContent":
         """Create a chat message content object."""
         items: list[ITEM_TYPES] = []
-        
+
         if content.text:
             items.append(TextContent(text=content.text))
         self, response: Message, content: TextBlock, response_metadata: dict[str, Any]
@@ -504,14 +506,14 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
         items: list[ITEM_TYPES] = []
         items += self._get_tool_calls_from_message(response)
 
-        self, 
-        response: Message, 
-        content: TextBlock, 
+        self,
+        response: Message,
+        content: TextBlock,
         response_metadata: dict[str, Any]
     ) -> "ChatMessageContent":
         """Create a chat message content object."""
         items: list[ITEM_TYPES] = []
-        
+
         if content.text:
             items.append(TextContent(text=content.text))
         self, response: Message, content: TextBlock, response_metadata: dict[str, Any]
@@ -556,20 +558,20 @@ class AnthropicChatCompletion(ChatCompletionClientBase):
 
         items: list[STREAMING_ITEM_TYPES] = [StreamingTextContent(choice_index=content_block_idx, text=text_content)]
 
-        self, 
-        stream_event: RawContentBlockDeltaEvent | RawMessageDeltaEvent, 
-        content_block_idx: int, 
-        role: str | None = None, 
+        self,
+        stream_event: RawContentBlockDeltaEvent | RawMessageDeltaEvent,
+        content_block_idx: int,
+        role: str | None = None,
         metadata: dict[str, Any] = {}
     ) -> StreamingChatMessageContent:
         """Create a streaming chat message content object from a choice."""
         text_content = ""
-            
+
         if stream_event.delta and hasattr(stream_event.delta, "text"):
             text_content = stream_event.delta.text
-        
+
         items: list[STREAMING_ITEM_TYPES] = [StreamingTextContent(choice_index=content_block_idx, text=text_content)]
-        
+
         finish_reason = None
         if isinstance(stream_event, RawMessageDeltaEvent):
             if stream_event.delta.stop_reason:

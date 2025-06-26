@@ -29,13 +29,13 @@ import numpy as np
 
 class ExtendedMonitoringDashboard:
     """Comprehensive monitoring dashboard for extended operation"""
-    
+
     def __init__(self, base_dir: Path):
         self.base_dir = base_dir
         self.state_dir = base_dir / ".extended_automode"
         self.db_path = self.state_dir / "metrics.db"
         self.reports_dir = self.state_dir / "analytics_reports"
-    
+
     def get_system_overview(self) -> Dict[str, Any]:
         """Get current system overview"""
         # Current system metrics
@@ -43,14 +43,14 @@ class ExtendedMonitoringDashboard:
         memory = psutil.virtual_memory()
         disk = psutil.disk_usage('/')
         boot_time = psutil.boot_time()
-        
+
         # Process information
         process_count = len(psutil.pids())
-        
+
         # Uptime calculation
         uptime_seconds = time.time() - boot_time
         uptime_days = uptime_seconds / (24 * 3600)
-        
+
         return {
             "timestamp": time.time(),
             "cpu_percent": cpu_percent,
@@ -63,7 +63,7 @@ class ExtendedMonitoringDashboard:
             "process_count": process_count,
             "uptime_days": uptime_days
         }
-    
+
     def get_automode_status(self) -> Dict[str, Any]:
         """Get Extended AutoMode status"""
         status = {
@@ -73,18 +73,18 @@ class ExtendedMonitoringDashboard:
             "uptime_days": 0,
             "startup_time": None
         }
-        
+
         # Check PID file
         pid_file = self.state_dir / "extended.pid"
         if pid_file.exists():
             try:
                 with open(pid_file) as f:
                     pid = int(f.read().strip())
-                
+
                 if psutil.pid_exists(pid):
                     status["running"] = True
                     status["pid"] = pid
-                    
+
                     # Get process start time
                     process = psutil.Process(pid)
                     start_time = process.create_time()
@@ -93,66 +93,66 @@ class ExtendedMonitoringDashboard:
                     status["uptime_days"] = status["uptime_seconds"] / (24 * 3600)
             except Exception as e:
                 print(f"Error reading PID file: {e}")
-        
+
         return status
-    
+
     def get_database_stats(self) -> Dict[str, Any]:
         """Get metrics database statistics"""
         if not self.db_path.exists():
             return {"available": False}
-        
+
         try:
             with sqlite3.connect(self.db_path) as conn:
                 # Count records in each table
                 tables = ['system_metrics', 'process_metrics', 'events', 'predictions']
                 stats = {"available": True, "tables": {}}
-                
+
                 for table in tables:
                     cursor = conn.execute(f"SELECT COUNT(*) FROM {table}")
                     count = cursor.fetchone()[0]
                     stats["tables"][table] = count
-                
+
                 # Get database size
                 stats["size_mb"] = self.db_path.stat().st_size / (1024 * 1024)
-                
+
                 # Get time range of data
                 cursor = conn.execute("SELECT MIN(timestamp), MAX(timestamp) FROM system_metrics")
                 min_time, max_time = cursor.fetchone()
-                
+
                 if min_time and max_time:
                     stats["data_range_days"] = (max_time - min_time) / (24 * 3600)
                     stats["earliest_record"] = datetime.fromtimestamp(min_time).isoformat()
                     stats["latest_record"] = datetime.fromtimestamp(max_time).isoformat()
-                
+
                 return stats
-                
+
         except Exception as e:
             return {"available": False, "error": str(e)}
-    
+
     def get_recent_trends(self, hours: int = 24) -> Dict[str, Any]:
         """Get recent system trends"""
         if not self.db_path.exists():
             return {}
-        
+
         try:
             cutoff = time.time() - (hours * 3600)
-            
+
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.execute("""
                     SELECT timestamp, cpu_percent, memory_percent, disk_percent, health_score
-                    FROM system_metrics 
-                    WHERE timestamp > ? 
+                    FROM system_metrics
+                    WHERE timestamp > ?
                     ORDER BY timestamp
                 """, (cutoff,))
-                
+
                 data = cursor.fetchall()
-                
+
                 if not data:
                     return {}
-                
+
                 # Calculate trends
                 timestamps, cpu_data, memory_data, disk_data, health_data = zip(*data)
-                
+
                 trends = {
                     "data_points": len(data),
                     "time_range_hours": (max(timestamps) - min(timestamps)) / 3600,
@@ -181,26 +181,26 @@ class ExtendedMonitoringDashboard:
                         "min": min(health_data)
                     }
                 }
-                
+
                 return trends
-                
+
         except Exception as e:
             return {"error": str(e)}
-    
+
     def get_recent_events(self, limit: int = 10) -> List[Dict[str, Any]]:
         """Get recent system events"""
         if not self.db_path.exists():
             return []
-        
+
         try:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.execute("""
                     SELECT timestamp, event_type, severity, message, metadata
-                    FROM events 
-                    ORDER BY timestamp DESC 
+                    FROM events
+                    ORDER BY timestamp DESC
                     LIMIT ?
                 """, (limit,))
-                
+
                 events = []
                 for row in cursor.fetchall():
                     timestamp, event_type, severity, message, metadata = row
@@ -211,23 +211,23 @@ class ExtendedMonitoringDashboard:
                         "message": message,
                         "metadata": json.loads(metadata) if metadata else None
                     })
-                
+
                 return events
-                
+
         except Exception as e:
             return [{"error": str(e)}]
-    
+
     def get_analytics_reports(self) -> List[Dict[str, Any]]:
         """Get recent analytics reports"""
         if not self.reports_dir.exists():
             return []
-        
+
         reports = []
         for report_file in sorted(self.reports_dir.glob("analytics_*.json"), reverse=True)[:5]:
             try:
                 with open(report_file) as f:
                     report_data = json.load(f)
-                    
+
                 reports.append({
                     "filename": report_file.name,
                     "timestamp": report_data.get("timestamp", 0),
@@ -240,9 +240,9 @@ class ExtendedMonitoringDashboard:
                     "filename": report_file.name,
                     "error": str(e)
                 })
-        
+
         return reports
-    
+
     def print_dashboard(self):
         """Print comprehensive dashboard to console"""
         print("=" * 80)
@@ -250,7 +250,7 @@ class ExtendedMonitoringDashboard:
         print("=" * 80)
         print(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print()
-        
+
         # System Overview
         print("📊 SYSTEM OVERVIEW")
         print("-" * 40)
@@ -261,7 +261,7 @@ class ExtendedMonitoringDashboard:
         print(f"Process Count:    {overview['process_count']:6d}")
         print(f"System Uptime:    {overview['uptime_days']:6.1f} days")
         print()
-        
+
         # AutoMode Status
         print("🤖 EXTENDED AUTOMODE STATUS")
         print("-" * 40)
@@ -273,7 +273,7 @@ class ExtendedMonitoringDashboard:
         else:
             print("Status:           ❌ NOT RUNNING")
         print()
-        
+
         # Database Statistics
         print("💾 METRICS DATABASE")
         print("-" * 40)
@@ -289,7 +289,7 @@ class ExtendedMonitoringDashboard:
             if "error" in db_stats:
                 print(f"Error:            {db_stats['error']}")
         print()
-        
+
         # Recent Trends
         print("📈 RECENT TRENDS (24 hours)")
         print("-" * 40)
@@ -305,7 +305,7 @@ class ExtendedMonitoringDashboard:
         else:
             print("No trend data available")
         print()
-        
+
         # Recent Events
         print("🚨 RECENT EVENTS")
         print("-" * 40)
@@ -321,7 +321,7 @@ class ExtendedMonitoringDashboard:
         else:
             print("No recent events")
         print()
-        
+
         # Analytics Reports
         print("📋 ANALYTICS REPORTS")
         print("-" * 40)
@@ -338,86 +338,86 @@ class ExtendedMonitoringDashboard:
         else:
             print("No analytics reports available")
         print()
-        
+
         print("=" * 80)
         print("💡 Use './launch_extended_automode.sh health' for quick status")
         print("💡 Use '--plot' flag to generate trend graphs")
         print("=" * 80)
-    
+
     def generate_plots(self, hours: int = 24):
         """Generate trend plots"""
         if not self.db_path.exists():
             print("❌ No database available for plotting")
             return
-        
+
         try:
             cutoff = time.time() - (hours * 3600)
-            
+
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.execute("""
                     SELECT timestamp, cpu_percent, memory_percent, disk_percent, health_score
-                    FROM system_metrics 
-                    WHERE timestamp > ? 
+                    FROM system_metrics
+                    WHERE timestamp > ?
                     ORDER BY timestamp
                 """, (cutoff,))
-                
+
                 data = cursor.fetchall()
-                
+
                 if not data:
                     print("❌ No data available for plotting")
                     return
-                
+
                 timestamps, cpu_data, memory_data, disk_data, health_data = zip(*data)
-                
+
                 # Convert timestamps to datetime objects
                 dates = [datetime.fromtimestamp(ts) for ts in timestamps]
-                
+
                 # Create plots
                 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(15, 10))
                 fig.suptitle(f'Extended AutoMode - System Trends (Last {hours} hours)', fontsize=16)
-                
+
                 # CPU Usage
                 ax1.plot(dates, cpu_data, 'b-', linewidth=2)
                 ax1.set_title('CPU Usage')
                 ax1.set_ylabel('Percentage (%)')
                 ax1.grid(True, alpha=0.3)
                 ax1.tick_params(axis='x', rotation=45)
-                
+
                 # Memory Usage
                 ax2.plot(dates, memory_data, 'g-', linewidth=2)
                 ax2.set_title('Memory Usage')
                 ax2.set_ylabel('Percentage (%)')
                 ax2.grid(True, alpha=0.3)
                 ax2.tick_params(axis='x', rotation=45)
-                
+
                 # Disk Usage
                 ax3.plot(dates, disk_data, 'r-', linewidth=2)
                 ax3.set_title('Disk Usage')
                 ax3.set_ylabel('Percentage (%)')
                 ax3.grid(True, alpha=0.3)
                 ax3.tick_params(axis='x', rotation=45)
-                
+
                 # Health Score
                 ax4.plot(dates, health_data, 'm-', linewidth=2)
                 ax4.set_title('Health Score')
                 ax4.set_ylabel('Score (0-1)')
                 ax4.grid(True, alpha=0.3)
                 ax4.tick_params(axis='x', rotation=45)
-                
+
                 plt.tight_layout()
-                
+
                 # Save plot
                 plot_path = self.state_dir / f"trends_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png"
                 plt.savefig(plot_path, dpi=300, bbox_inches='tight')
-                
+
                 print(f"📊 Trend plot saved: {plot_path}")
-                
+
                 # Try to display if possible
                 try:
                     plt.show()
                 except Exception:
                     print("💡 Plot saved but cannot display (no GUI available)")
-                
+
         except Exception as e:
             print(f"❌ Error generating plots: {e}")
 
@@ -432,11 +432,11 @@ def main():
                        help="Hours of data to analyze (default: 24)")
     parser.add_argument("--json", action="store_true",
                        help="Output in JSON format")
-    
+
     args = parser.parse_args()
-    
+
     dashboard = ExtendedMonitoringDashboard(args.base_dir)
-    
+
     if args.json:
         # Output JSON format for programmatic use
         data = {
@@ -451,7 +451,7 @@ def main():
     else:
         # Print human-readable dashboard
         dashboard.print_dashboard()
-    
+
     if args.plot:
         dashboard.generate_plots(args.hours)
 

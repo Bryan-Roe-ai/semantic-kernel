@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for bedrock agent integration
 
 Copyright (c) 2025 Bryan Roe
@@ -80,7 +81,7 @@ class TestBedrockAgentIntegration:
         input_text = """
 Create a bar chart for the following data:
 Panda   5
-Tiger   8 
+Tiger   8
 Lion    3
 Monkey  6
 Dolphin  2
@@ -101,7 +102,7 @@ Dolphin  2
         input_text = """
 Create a bar chart for the following data:
 Panda   5
-Tiger   8 
+Tiger   8
 Lion    3
 Monkey  6
 Dolphin  2

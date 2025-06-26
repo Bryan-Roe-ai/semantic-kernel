@@ -26,7 +26,7 @@ __all__ = [
     # Training module
     "DatasetConfig",
     "DatasetProcessor",
-    "HuggingFaceModelTrainer", 
+    "HuggingFaceModelTrainer",
     "ModelTrainer",
     "ModelTrainingConfig",
     "TrainingArgumentsConfig",

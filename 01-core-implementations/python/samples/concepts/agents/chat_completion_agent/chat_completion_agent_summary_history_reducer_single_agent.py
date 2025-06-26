@@ -23,8 +23,8 @@ from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.contents import ChatHistorySummarizationReducer
 
 """
-The following sample demonstrates how to implement a truncation chat 
-history reducer as part of the Semantic Kernel Agent Framework. For 
+The following sample demonstrates how to implement a truncation chat
+history reducer as part of the Semantic Kernel Agent Framework. For
 this sample, a single ChatCompletionAgent is used.
 """
 

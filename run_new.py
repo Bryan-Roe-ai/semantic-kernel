@@ -14,13 +14,13 @@ def main():
     """Quick entry point to unified launcher"""
     workspace_root = Path(__file__).parent.absolute()
     unified_launcher = workspace_root / "unified_launcher.py"
-    
+
     # Check if unified launcher exists
     if not unified_launcher.exists():
         print("❌ Unified launcher not found!")
         print("Please ensure unified_launcher.py exists in the workspace root.")
         return 1
-    
+
     try:
         # Run the unified launcher with all arguments passed through
         subprocess.run([sys.executable, str(unified_launcher)] + sys.argv[1:])
@@ -29,7 +29,7 @@ def main():
     except Exception as e:
         print(f"❌ Error: {e}")
         return 1
-        
+
     return 0
 
 if __name__ == "__main__":

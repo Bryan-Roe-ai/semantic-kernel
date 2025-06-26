@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+import asyncio
+import re
 Gp Text Completion module
 
 Copyright (c) 2025 Bryan Roe

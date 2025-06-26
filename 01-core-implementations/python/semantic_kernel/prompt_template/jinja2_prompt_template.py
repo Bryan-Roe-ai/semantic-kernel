@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Jinja2 Prompt Template module
 
 Copyright (c) 2025 Bryan Roe

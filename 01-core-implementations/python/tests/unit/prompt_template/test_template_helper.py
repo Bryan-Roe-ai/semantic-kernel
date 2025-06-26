@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for template helper
 
 Copyright (c) 2025 Bryan Roe

@@ -97,7 +97,7 @@ Sample output:
 
 Welcome to the chat bot!
   Type 'exit' to exit.
-  Try a math question to see function calling in action (e.g. 'what is 3+3?').  
+  Try a math question to see function calling in action (e.g. 'what is 3+3?').
   Your chat history will be saved in: <local working directory>/tmpq1n1f6qk.json
 Chat history file not found. Starting a new conversation.
 User:> Hello, how are you?

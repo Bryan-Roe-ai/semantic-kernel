@@ -80,8 +80,8 @@ async def main():
     Sample output:
 
     # User: 'Tell me a fun story.'
-    # StoryAgent: Late at night, a mischievous cat named Whiskers tiptoed across the piano keys, 
-      accidentally composing a tune so catchy that all the neighborhood felines gathered outside 
+    # StoryAgent: Late at night, a mischievous cat named Whiskers tiptoed across the piano keys,
+      accidentally composing a tune so catchy that all the neighborhood felines gathered outside
       to dance. By morning, the humans awoke to find a crowd of cats meowing for an encore performance.
     """
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for chat history
 
 Copyright (c) 2025 Bryan Roe
@@ -551,7 +552,7 @@ def test_chat_history_from_rendered_prompt():
 
 def test_chat_history_from_rendered_prompt_multi_line():
     rendered = """<message role="system">I am an AI assistant
-and I can do 
+and I can do
 stuff</message>
 <message role="user">What can you do?</message>"""
 

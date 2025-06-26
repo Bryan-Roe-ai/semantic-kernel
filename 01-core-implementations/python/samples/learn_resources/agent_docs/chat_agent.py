@@ -66,15 +66,15 @@ async def main():
         kernel=kernel,
         name="SampleAssistantAgent",
         instructions=f"""
-            You are an agent designed to query and retrieve information from a single GitHub repository in a read-only 
+            You are an agent designed to query and retrieve information from a single GitHub repository in a read-only
             manner.
             You are also able to access the profile of the active user.
 
             Use the current date and time to provide up-to-date details or time-sensitive responses.
-            
+
             The repository you are querying is a public repository with the following name: microsoft/semantic-kernel
 
-            The current date and time is: {current_time}. 
+            The current date and time is: {current_time}.
             """,
         arguments=KernelArguments(settings=settings),
     )

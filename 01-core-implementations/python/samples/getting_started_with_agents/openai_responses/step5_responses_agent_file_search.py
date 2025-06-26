@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Step5 Responses Agent File Search module
 
 Copyright (c) 2025 Bryan Roe

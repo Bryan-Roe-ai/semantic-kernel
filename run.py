@@ -14,13 +14,13 @@ def main():
     """Quick entry point to unified launcher"""
     workspace_root = Path(__file__).parent.absolute()
     unified_launcher = workspace_root / "unified_launcher.py"
-    
+
     # Check if unified launcher exists
     if not unified_launcher.exists():
         print("❌ Unified launcher not found!")
         print("Please ensure unified_launcher.py exists in the workspace root.")
         return 1
-    
+
     try:
         # Run the unified launcher with all arguments passed through
         subprocess.run([sys.executable, str(unified_launcher)] + sys.argv[1:])
@@ -29,10 +29,10 @@ def main():
     except Exception as e:
         print(f"❌ Error: {e}")
         return 1
-        
+
     return 0
             subprocess.run([sys.executable, str(master_launcher), "--list"])
-            
+
         elif command == "run":
             # Run specific script
             if len(sys.argv) > 2:
@@ -44,7 +44,7 @@ def main():
                 subprocess.run(cmd)
             else:
                 print("Usage: python run.py run <script_name> [args...]")
-                
+
         elif command == "category":
             # List scripts by category
             if len(sys.argv) > 2:
@@ -52,10 +52,10 @@ def main():
                 subprocess.run([sys.executable, str(master_launcher), "--category", category])
             else:
                 print("Usage: python run.py category <category_name>")
-                
+
         elif command == "help" or command == "-h" or command == "--help":
             print_help()
-            
+
         else:
             print(f"Unknown command: {command}")
             print_help()
@@ -70,12 +70,12 @@ def print_help():
 
 Commands:
   fix           Fix all Python files in the workspace
-  setup         Setup environment and dependencies  
+  setup         Setup environment and dependencies
   list          List all available scripts
   run <name>    Run a specific script by name
   category <c>  List scripts in a specific category
   help          Show this help message
-  
+
   (no args)     Start interactive menu
 
 Examples:
@@ -84,7 +84,7 @@ Examples:
   python run.py run ai_launcher
   python run.py category demos
   python run.py run main.py --debug
-  
+
 Categories: core, demos, tools, servers, tests, automation, monitoring, setup
 """)
 

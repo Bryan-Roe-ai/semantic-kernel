@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for step8 azure ai agent declarative
 
 Copyright (c) 2025 Bryan Roe

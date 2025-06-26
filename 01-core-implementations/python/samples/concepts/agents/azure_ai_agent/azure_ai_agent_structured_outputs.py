@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent structured outputs
 
 Copyright (c) 2025 Bryan Roe
@@ -32,7 +33,7 @@ from semantic_kernel.agents import (
 
 """
 The following sample demonstrates how to create an Azure AI Agent
-and leverage the agent's ability to return structured outputs, 
+and leverage the agent's ability to return structured outputs,
 based on a user-defined Pydantic model.
 """
 

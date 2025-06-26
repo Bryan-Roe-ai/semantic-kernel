@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Embedding Generator Base module
 
 Copyright (c) 2025 Bryan Roe

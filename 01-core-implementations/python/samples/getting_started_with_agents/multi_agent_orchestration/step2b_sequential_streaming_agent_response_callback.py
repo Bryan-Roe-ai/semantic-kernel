@@ -150,10 +150,10 @@ async def main():
     # FormatProofAgent
     Sip sustainably with our eco-friendly stainless steel water bottles, designed for the conscious consumer who values
     both performance and aesthetics. Our bottles utilize advanced insulation technology to keep your beverages icy cold
-    for up to 24 hours, making them perfect for outdoor adventures, gym sessions, or a busy day at the office. 
+    for up to 24 hours, making them perfect for outdoor adventures, gym sessions, or a busy day at the office.
 
     Choose from a variety of sizes and stunning colors to match your personal style while positively impacting the
-    planet. Each reusable bottle helps reduce single-use plastics, supporting a cleaner, greener world. 
+    planet. Each reusable bottle helps reduce single-use plastics, supporting a cleaner, greener world.
 
     Join the movement towards sustainability without compromising on style or functionality. Stay hydrated, look great,
     and make a difference—get your eco-friendly water bottle today!

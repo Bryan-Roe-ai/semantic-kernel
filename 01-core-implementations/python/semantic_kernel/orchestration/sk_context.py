@@ -153,7 +153,7 @@ class SKContext:
         Set the value of skills collection
         """
         self._skill_collection = value
-    
+
     @property
     def log(self) -> Logger:
         """

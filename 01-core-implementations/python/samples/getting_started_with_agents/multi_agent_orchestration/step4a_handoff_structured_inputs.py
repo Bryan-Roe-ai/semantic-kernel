@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Step4A Handoff Structured Inputs module
 
 Copyright (c) 2025 Bryan Roe

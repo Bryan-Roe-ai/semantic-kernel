@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+import re
 import datetime
 from collections.abc import AsyncGenerator, AsyncIterator
 from unittest.mock import MagicMock

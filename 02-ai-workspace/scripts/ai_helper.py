@@ -23,7 +23,7 @@ class AIHelper:
     def __init__(self):
         self.workspace_path = Path(__file__).parent.parent
         self.tips_shown = set()
-        
+
     def print_welcome(self):
         """Print a friendly welcome message."""
         greetings = [
@@ -35,13 +35,13 @@ class AIHelper:
         print("\n" + "="*60)
         print(random.choice(greetings))
         print("="*60)
-    
+
     def show_main_menu(self):
         """Show the main help menu."""
         print("\n🎯 How can I help you today?")
         print("-" * 30)
         print("1. 🚀 Quick Start Guide")
-        print("2. 🔧 Common Commands") 
+        print("2. 🔧 Common Commands")
         print("3. 🎓 Learning Resources")
         print("4. 🐛 Troubleshooting")
         print("5. 💡 Random AI Tip")
@@ -50,34 +50,34 @@ class AIHelper:
         print("8. ❓ Frequently Asked Questions")
         print("9. 🔗 Useful Links")
         print("10. 👋 Exit")
-    
+
     def quick_start_guide(self):
         """Provide a quick start guide."""
         print("\n🚀 Quick Start Guide")
         print("=" * 25)
-        
+
         print("\n🎯 For Complete Beginners:")
         print("   1. Start with: python scripts/ai_learning_journey.py --beginner")
         print("   2. Try the demo: python scripts/demo_showcase.py")
         print("   3. Create your first project: python scripts/project_wizard.py")
-        
+
         print("\n🔧 For Developers:")
         print("   1. Check the main control: python ai_workspace_control.py --interactive")
         print("   2. Run the dashboard: python scripts/friendly_dashboard.py")
         print("   3. Start AI evolution: python scripts/endless_improvement_loop.py")
-        
+
         print("\n⚡ For Power Users:")
         print("   1. Multi-agent coordination: python scripts/multi_agent_coordinator.py")
         print("   2. Quantum computing: python scripts/quantum_computing_agent.py")
         print("   3. Swarm intelligence: python scripts/swarm_intelligence_agent.py")
-        
+
         print("\n💡 Pro Tip: All scripts have --help flags for detailed options!")
-    
+
     def show_common_commands(self):
         """Show common commands and their usage."""
         print("\n🔧 Common Commands")
         print("=" * 20)
-        
+
         commands = [
             ("🎯 Interactive Master Control", "python ai_workspace_control.py --interactive"),
             ("📊 Real-time Dashboard", "python scripts/friendly_dashboard.py"),
@@ -90,44 +90,44 @@ class AIHelper:
             ("⚛️ Quantum Computing", "python scripts/quantum_computing_agent.py"),
             ("🐝 Swarm Intelligence", "python scripts/swarm_intelligence_agent.py")
         ]
-        
+
         for name, command in commands:
             print(f"\n{name}")
             print(f"   {command}")
-    
+
     def show_learning_resources(self):
         """Show learning resources."""
         print("\n🎓 Learning Resources")
         print("=" * 22)
-        
+
         print("\n📚 Built-in Learning:")
         print("   • Interactive AI Tutorial: python scripts/ai_learning_journey.py")
         print("   • Hands-on Projects: python scripts/project_wizard.py")
         print("   • Live Demonstrations: python scripts/demo_showcase.py")
-        
+
         print("\n📖 Documentation:")
         print("   • Getting Started: ./GETTING_STARTED.md")
         print("   • Main README: ./README.md")
         print("   • Advanced Features: ./ADVANCED_AI_ENHANCEMENT_REPORT.md")
-        
+
         print("\n🌐 External Resources:")
         print("   • Microsoft Semantic Kernel: https://github.com/microsoft/semantic-kernel")
         print("   • Machine Learning Basics: https://www.coursera.org/learn/machine-learning")
         print("   • Python for AI: https://www.python.org/about/apps/")
-        
+
         print("\n💡 Learning Path Suggestions:")
         print("   1. Start with basic concepts (ai_learning_journey.py)")
         print("   2. Build your first project (project_wizard.py)")
         print("   3. Explore advanced agents (demo_showcase.py)")
         print("   4. Contribute to the workspace improvement!")
-    
+
     def show_troubleshooting(self):
         """Show troubleshooting tips."""
         print("\n🐛 Troubleshooting")
         print("=" * 18)
-        
+
         print("\n❌ Common Issues & Solutions:")
-        
+
         issues = [
             {
                 "problem": "Script won't start / ImportError",
@@ -135,7 +135,7 @@ class AIHelper:
                 "details": "Make sure you have Python 3.7+ and all required packages"
             },
             {
-                "problem": "Permission denied errors", 
+                "problem": "Permission denied errors",
                 "solution": "Make scripts executable: chmod +x scripts/*.py",
                 "details": "Some scripts need execution permissions on Linux/Mac"
             },
@@ -155,17 +155,17 @@ class AIHelper:
                 "details": "All commands should be run from the ai-workspace folder"
             }
         ]
-        
+
         for i, issue in enumerate(issues, 1):
             print(f"\n{i}. 🔴 Problem: {issue['problem']}")
             print(f"   ✅ Solution: {issue['solution']}")
             print(f"   💡 Details: {issue['details']}")
-        
+
         print("\n🆘 Still need help?")
         print("   • Check logs: ls -la logs/")
         print("   • Run health check: python scripts/health_check.py")
         print("   • Contact support or check GitHub issues")
-    
+
     def show_random_tip(self):
         """Show a random AI tip."""
         tips = [
@@ -185,33 +185,33 @@ class AIHelper:
             "🎨 Tip: The workspace supports custom agent development - create your own AI helpers!",
             "📈 Tip: Monitor the evolution dashboard to see how your AI systems improve over time!"
         ]
-        
+
         # Show a tip that hasn't been shown recently
         available_tips = [tip for tip in tips if tip not in self.tips_shown]
         if not available_tips:
             self.tips_shown.clear()
             available_tips = tips
-        
+
         tip = random.choice(available_tips)
         self.tips_shown.add(tip)
-        
+
         print(f"\n💡 Random AI Tip")
         print("=" * 17)
         print(f"\n{tip}")
         print("\n🔄 Run this command again for another tip!")
-    
+
     def show_workspace_overview(self):
         """Show workspace overview."""
         print("\n📊 Workspace Overview")
         print("=" * 22)
-        
+
         print("\n🏗️ Architecture:")
         print("   • 🎛️ Master Control System (ai_workspace_control.py)")
         print("   • 🤖 14+ Specialized AI Agents")
         print("   • 📊 Real-time Monitoring Dashboard")
         print("   • 🔄 Endless Improvement Loop")
         print("   • 🧠 Learning and Adaptation Systems")
-        
+
         print("\n🤖 AI Agent Types:")
         print("   • 🎯 Performance Optimization")
         print("   • 🔒 Security and Safety")
@@ -220,7 +220,7 @@ class AIHelper:
         print("   • 🐝 Swarm Intelligence")
         print("   • 📊 Predictive Analytics")
         print("   • 🚀 Deployment Automation")
-        
+
         print("\n📈 Key Features:")
         print("   • ✨ Self-improving AI systems")
         print("   • 🎯 Interactive learning experiences")
@@ -228,13 +228,13 @@ class AIHelper:
         print("   • 📊 Real-time performance monitoring")
         print("   • 🔧 Intelligent optimization")
         print("   • 🌐 Multi-environment deployment")
-        
+
         # Get some basic stats
         try:
             scripts_dir = self.workspace_path / "scripts"
             total_scripts = len(list(scripts_dir.glob("*.py"))) if scripts_dir.exists() else 0
             agent_scripts = len(list(scripts_dir.glob("*agent*.py"))) if scripts_dir.exists() else 0
-            
+
             print(f"\n📊 Current Stats:")
             print(f"   • 🐍 Python Scripts: {total_scripts}")
             print(f"   • 🤖 AI Agents: {agent_scripts}")
@@ -242,12 +242,12 @@ class AIHelper:
             print(f"   • 💫 Improvement Level: Advanced")
         except:
             print(f"\n📊 Status: Ready for Action!")
-    
+
     def show_fun_experiments(self):
         """Show fun AI experiments to try."""
         print("\n🎮 Fun AI Experiments")
         print("=" * 23)
-        
+
         experiments = [
             {
                 "name": "🎯 AI vs AI Optimization Battle",
@@ -255,7 +255,7 @@ class AIHelper:
                 "description": "Watch different AI agents compete to solve the same problem!"
             },
             {
-                "name": "🧬 Evolution in Action", 
+                "name": "🧬 Evolution in Action",
                 "command": "python scripts/neural_evolution_agent.py --visualize",
                 "description": "See neural networks evolve and improve in real-time!"
             },
@@ -280,26 +280,26 @@ class AIHelper:
                 "description": "Let AI create beautiful visualizations of your code!"
             }
         ]
-        
+
         for i, exp in enumerate(experiments, 1):
             print(f"\n{i}. {exp['name']}")
             print(f"   Command: {exp['command']}")
             print(f"   Fun fact: {exp['description']}")
-        
+
         print("\n🎪 Pro Tip: Try running multiple experiments at once in different terminals!")
-    
+
     def show_faq(self):
         """Show frequently asked questions."""
         print("\n❓ Frequently Asked Questions")
         print("=" * 32)
-        
+
         faqs = [
             {
                 "q": "What makes this workspace special?",
                 "a": "It's a self-improving AI ecosystem! The AI agents continuously optimize themselves and the workspace, making it smarter over time."
             },
             {
-                "q": "Do I need to be an AI expert to use this?", 
+                "q": "Do I need to be an AI expert to use this?",
                 "a": "Not at all! We have beginner-friendly tutorials and the AI helper (that's me!) to guide you through everything."
             },
             {
@@ -323,48 +323,48 @@ class AIHelper:
                 "a": "The workspace has self-healing capabilities, plus comprehensive health checks and troubleshooting tools."
             }
         ]
-        
+
         for i, faq in enumerate(faqs, 1):
             print(f"\n{i}. ❓ {faq['q']}")
             print(f"   ✅ {faq['a']}")
-    
+
     def show_useful_links(self):
         """Show useful links and resources."""
         print("\n🔗 Useful Links")
         print("=" * 16)
-        
+
         print("\n📖 Documentation:")
         print("   • Main README: ./README.md")
-        print("   • Getting Started: ./GETTING_STARTED.md") 
+        print("   • Getting Started: ./GETTING_STARTED.md")
         print("   • Advanced Guide: ./ADVANCED_AI_ENHANCEMENT_REPORT.md")
-        
+
         print("\n🌐 External Resources:")
         print("   • Microsoft Semantic Kernel: https://github.com/microsoft/semantic-kernel")
         print("   • Python Documentation: https://docs.python.org/")
         print("   • Machine Learning Course: https://www.coursera.org/learn/machine-learning")
         print("   • AI Ethics Guidelines: https://www.microsoft.com/en-us/ai/responsible-ai")
-        
+
         print("\n🛠️ Developer Tools:")
         print("   • VS Code: https://code.visualstudio.com/")
         print("   • Jupyter Notebooks: https://jupyter.org/")
         print("   • TensorFlow: https://www.tensorflow.org/")
         print("   • PyTorch: https://pytorch.org/")
-        
+
         print("\n🎓 Learning Platforms:")
         print("   • Fast.ai: https://www.fast.ai/")
         print("   • Kaggle Learn: https://www.kaggle.com/learn")
         print("   • Google AI Education: https://ai.google/education/")
-    
+
     def run(self):
         """Main helper loop."""
         self.print_welcome()
-        
+
         while True:
             self.show_main_menu()
-            
+
             try:
                 choice = input("\n🤔 What would you like to explore? (1-10): ").strip()
-                
+
                 if choice == "1":
                     self.quick_start_guide()
                 elif choice == "2":
@@ -389,10 +389,10 @@ class AIHelper:
                     break
                 else:
                     print("\n❌ Invalid choice. Please enter a number from 1-10.")
-                
+
                 if choice != "10":
                     input("\n⏸️ Press Enter to continue...")
-                    
+
             except KeyboardInterrupt:
                 print("\n\n👋 AI Helper signing off! Have a great day!")
                 break

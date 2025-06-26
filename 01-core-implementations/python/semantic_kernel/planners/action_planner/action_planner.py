@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Action Planner module
 
 Copyright (c) 2025 Bryan Roe
@@ -217,7 +218,7 @@ class ActionPlanner:
         return dedent(
             """
             [EXAMPLE]
-            - List of functions:            
+            - List of functions:
             - List of functions:
             // Get the current time.
             TimePlugin.Time

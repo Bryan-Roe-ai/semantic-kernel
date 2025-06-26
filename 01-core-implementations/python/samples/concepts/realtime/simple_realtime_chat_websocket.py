@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import platform
 Simple Realtime Chat Websocket module
 
 Copyright (c) 2025 Bryan Roe

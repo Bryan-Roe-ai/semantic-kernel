@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+import asyncio
+import platform
 Test module for milvus
 
 Copyright (c) 2025 Bryan Roe

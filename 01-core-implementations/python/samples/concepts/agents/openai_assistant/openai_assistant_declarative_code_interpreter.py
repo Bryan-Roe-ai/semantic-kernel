@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for openai assistant declarative code interpreter
 
 Copyright (c) 2025 Bryan Roe
@@ -24,7 +25,7 @@ from semantic_kernel.agents import AgentRegistry, OpenAIAssistantAgent
 The following sample demonstrates how to create an OpenAI Assistant Agent that answers
 user questions using the code interpreter tool.
 
-The agent is then used to answer user questions that require code to be generated and 
+The agent is then used to answer user questions that require code to be generated and
 executed. The responses are handled in a streaming manner.
 """
 
@@ -113,7 +114,7 @@ async def main():
 
         # User: 'Give me the code to calculate the total sales for all segments.'
 
-        # AuthorRole.ASSISTANT: Let me first examine the contents of the uploaded file to determine its structure. This 
+        # AuthorRole.ASSISTANT: Let me first examine the contents of the uploaded file to determine its structure. This
             will allow me to create the appropriate code for calculating the total sales for all segments. Hang tight!
 
         ```python
@@ -127,7 +128,7 @@ async def main():
         data.head(), data.columns
         ```
 
-        # AuthorRole.ASSISTANT: The dataset contains several columns, including `Segment`, `Sales`, and others such as 
+        # AuthorRole.ASSISTANT: The dataset contains several columns, including `Segment`, `Sales`, and others such as
             `Country`, `Product`, and date-related information. To calculate the total sales for all segments, we will:
 
         1. Group the data by the `Segment` column.

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import platform
 AI module for open ai config
 
 Copyright (c) 2025 Bryan Roe

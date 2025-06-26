@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for vector store record collection
 
 Copyright (c) 2025 Bryan Roe

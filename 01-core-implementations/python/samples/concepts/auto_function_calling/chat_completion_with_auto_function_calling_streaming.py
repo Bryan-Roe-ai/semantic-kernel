@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Chat Completion With Auto Function Calling Streaming module
 
 Copyright (c) 2025 Bryan Roe

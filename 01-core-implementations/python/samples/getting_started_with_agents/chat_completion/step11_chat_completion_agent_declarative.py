@@ -25,7 +25,7 @@ from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
 from semantic_kernel.functions import kernel_function
 
 """
-The following sample demonstrates how to create a chat completion agent using a 
+The following sample demonstrates how to create a chat completion agent using a
 declarative approach. The Chat Completion Agent is created from a YAML spec,
 with a specific service and plugins. The agent is then used to answer user questions.
 """

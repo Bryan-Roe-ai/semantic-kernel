@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Github Pages Diagnostic module
 
 Copyright (c) 2025 Bryan Roe

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import platform
 Realtime Agent With Function Calling Websocket module
 
 Copyright (c) 2025 Bryan Roe

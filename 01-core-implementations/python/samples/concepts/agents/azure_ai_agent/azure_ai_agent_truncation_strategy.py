@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent truncation strategy
 
 Copyright (c) 2025 Bryan Roe
@@ -82,13 +83,13 @@ async def main() -> None:
     Sample Output:
 
     # User: Why is the sky blue?
-    # TruncateAgent: The sky appears blue because molecules in the Earth's atmosphere scatter sunlight in all 
+    # TruncateAgent: The sky appears blue because molecules in the Earth's atmosphere scatter sunlight in all
         directions, and blue light is scattered more than other colors due to its shorter wavelength.
     # User: What is the speed of light?
-    # TruncateAgent: The speed of light in a vacuum is approximately 299,792,458 meters per second 
+    # TruncateAgent: The speed of light in a vacuum is approximately 299,792,458 meters per second
         (or about 186,282 miles per second).
     # User: What have we been talking about?
-    # TruncateAgent: I'm sorry, but I don't have access to previous interactions. Could you remind me what 
+    # TruncateAgent: I'm sorry, but I don't have access to previous interactions. Could you remind me what
         we've been discussing?
     """
 

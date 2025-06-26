@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Sk Mcp Server module
 
 Copyright (c) 2025 Bryan Roe
@@ -57,7 +58,7 @@ with the following configuration:
 
 Note: You might need to set the uv to its full path.
 
-Alternatively, you can run this as a SSE server, by setting the same environment variables as above, 
+Alternatively, you can run this as a SSE server, by setting the same environment variables as above,
 and running the following command:
 ```bash
 uv --directory=<path to sk project>/semantic-kernel/python/samples/demos/mcp_server \

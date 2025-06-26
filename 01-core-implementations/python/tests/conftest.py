@@ -1,5 +1,7 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+import asyncio
+import re
 import logging
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -93,7 +95,7 @@ def enable_debug_mode():
         return
 
     return AIServiceClientBase(service_id="service", ai_model_id="ai_model_id")
-    
+
 @fixture(scope="session")
 def default_service() -> "AIServiceClientBase":
     from semantic_kernel.services.ai_service_client_base import AIServiceClientBase
@@ -438,10 +440,10 @@ def anthropic_unit_test_env(monkeypatch, exclude_list, override_env_param_dict):
     }
 
     env_vars = {"ANTHROPIC_CHAT_MODEL_ID": "test_chat_model_id", "ANTHROPIC_API_KEY": "test_api_key"}
-    
+
     env_vars = {"ANTHROPIC_CHAT_MODEL_ID": "test_chat_model_id", "ANTHROPIC_API_KEY": "test_api_key"}
 
-    env_vars = {"ANTHROPIC_CHAT_MODEL_ID": "test_chat_model_id", 
+    env_vars = {"ANTHROPIC_CHAT_MODEL_ID": "test_chat_model_id",
 
     env_vars.update(override_env_param_dict)
 

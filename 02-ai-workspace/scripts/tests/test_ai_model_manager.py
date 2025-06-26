@@ -38,11 +38,11 @@ def main(*args, **kwargs):
 
 class TestAiModelManager(unittest.TestCase):
     """Test cases for AiModelManager"""
-    
+
     def setUp(self):
         """Set up test fixtures before each test method."""
         pass
-    
+
     def tearDown(self):
         """Tear down test fixtures after each test method."""
         pass
@@ -159,3 +159,7 @@ class TestAiModelManager(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+if __name__ == "__main__":
+    main()

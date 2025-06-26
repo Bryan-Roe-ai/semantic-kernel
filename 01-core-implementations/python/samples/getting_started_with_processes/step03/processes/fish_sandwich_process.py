@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Fish Sandwich Process module
 
 Copyright (c) 2025 Bryan Roe

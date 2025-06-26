@@ -31,7 +31,7 @@ The sample shows how to have the agent answer questions about the provided image
 
 The interaction with the agent is via the `get_response` method, which sends a
 user input to the agent and receives a response from the agent. The conversation
-history is maintained by the chat history. Therefore, client code does need to 
+history is maintained by the chat history. Therefore, client code does need to
 maintain the conversation history if conversation context is desired.
 """
 

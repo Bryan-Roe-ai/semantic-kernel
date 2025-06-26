@@ -59,7 +59,7 @@ def check_lm_studio_status():
     """Check LM Studio connection status and get model info."""
     if not REQUESTS_AVAILABLE:
         return False, "Requests module not installed", []
-    
+
     try:
         response = requests.get("http://localhost:1234/v1/models", timeout=5)
         if response.status_code == 200:
@@ -80,7 +80,7 @@ def check_backend_status():
     """Check if the backend server is running."""
     if not REQUESTS_AVAILABLE:
         return False, "Requests module not installed"
-    
+
     try:
         response = requests.get("http://localhost:8000/ping", timeout=5)
         if response.status_code == 200:
@@ -121,11 +121,11 @@ def check_env_file():
     env_path = os.path.join(os.getcwd(), ".env")
     if not os.path.exists(env_path):
         return False, "File not found"
-    
+
     try:
         with open(env_path, 'r') as f:
             content = f.read()
-        
+
         if "LM_STUDIO_URL" in content:
             return True, "File found with LM_STUDIO_URL configured"
         else:
@@ -138,7 +138,7 @@ def print_component_status(name, status_ok, status_msg, indent=0):
     indent_str = "  " * indent
     status_color = Colors.GREEN if status_ok else Colors.RED
     status_symbol = "✓" if status_ok else "✗"
-    
+
     print(f"{indent_str}{status_color}{status_symbol}{Colors.END} {name}: {status_msg}")
 
 def print_header(title):
@@ -153,68 +153,68 @@ def run_diagnostic():
     print(f"Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"System: {platform.system()} {platform.version()}")
     print("=" * 50)
-    
+
     # Check Python environment
     print_header("Python Environment")
     python_ok, python_msg = check_python_version()
     print_component_status("Python version", python_ok, python_msg)
-    
+
     # Check dependencies
     dependencies = ["fastapi", "uvicorn", "pydantic", "requests", "python-multipart"]
     for dep in dependencies:
         dep_ok = check_dependency(dep)
         print_component_status(dep, dep_ok, "Installed" if dep_ok else "Not installed", indent=1)
-    
+
     # Check optional dependencies
     print("\nOptional dependencies:")
     opt_dependencies = ["Pillow", "python-docx", "openpyxl", "PyPDF2"]
     for dep in opt_dependencies:
         dep_ok = check_dependency(dep)
         print_component_status(dep, dep_ok, "Installed" if dep_ok else "Not installed", indent=1)
-    
+
     # Check configuration
     print_header("Configuration")
     env_ok, env_msg = check_env_file()
     print_component_status(".env file", env_ok, env_msg)
-    
+
     # Check backend files
     print_header("Required Files")
     backend_ok, backend_msg = check_file_exists("backend.py")
     print_component_status("backend.py", backend_ok, backend_msg)
-    
+
     unified_ok, unified_msg = check_file_exists("start_chat_unified.py")
     print_component_status("start_chat_unified.py", unified_ok, unified_msg)
-    
+
     # Check directories
     uploads_ok, uploads_msg = check_dir_exists("uploads")
     print_component_status("uploads directory", uploads_ok, uploads_msg)
-    
+
     plugins_ok, plugins_msg = check_dir_exists("plugins")
     print_component_status("plugins directory", plugins_ok, plugins_msg)
-    
+
     # Check services
     print_header("Services")
     lm_studio_ok, lm_studio_msg, models = check_lm_studio_status()
     print_component_status("LM Studio API", lm_studio_ok, lm_studio_msg)
-    
+
     if models:
         print("\nAvailable models:")
         for i, model in enumerate(models[:5]):
             print(f"  {i+1}. {model}")
         if len(models) > 5:
             print(f"  ... and {len(models)-5} more")
-    
+
     backend_ok, backend_msg = check_backend_status()
     print_component_status("Backend server", backend_ok, backend_msg)
-    
+
     # Check ports
     print_header("Network")
     port8000_ok = not check_port_available(8000)
     print_component_status("Port 8000 (Backend)", port8000_ok, "In use (service running)" if port8000_ok else "Available (service not running)")
-    
+
     port1234_ok = not check_port_available(1234)
     print_component_status("Port 1234 (LM Studio)", port1234_ok, "In use (service running)" if port1234_ok else "Available (service not running)")
-    
+
     # Overall status
     print_header("Overall Status")
     critical_components = [python_ok, backend_ok, env_ok, backend_ok]
@@ -224,7 +224,7 @@ def run_diagnostic():
             print(f"{Colors.YELLOW}⚠️  Warning: LM Studio is not running - Chat will have limited functionality{Colors.END}")
     else:
         print(f"{Colors.RED}{Colors.BOLD}✗ System has issues that need to be addressed{Colors.END}")
-        
+
         # Provide troubleshooting suggestions
         print("\nTroubleshooting suggestions:")
         if not python_ok:
@@ -240,17 +240,17 @@ def run_diagnostic():
             print("• Create a .env file with 'LM_STUDIO_URL=\"http://localhost:1234/v1/chat/completions\"'")
         if not lm_studio_ok:
             print("• Start LM Studio and enable the API server from the API tab")
-    
+
     print("\nFor detailed setup instructions, see SETUP_AND_USAGE.md")
     print("=" * 50)
-    
+
     user_action = input("\nWhat would you like to do next? (Enter a number)\n"
                        "1. Run setup script\n"
                        "2. Start AI Chat application\n"
                        "3. View setup documentation\n"
                        "4. Exit\n"
                        "> ")
-    
+
     if user_action == "1":
         print("\nRunning setup script...")
         subprocess.run([sys.executable, "setup.py"])
@@ -276,5 +276,5 @@ if __name__ == "__main__":
         print(f"\n{Colors.RED}Error running diagnostics: {str(e)}{Colors.END}")
         import traceback
         traceback.print_exc()
-        
+
     input("\nPress Enter to exit...")

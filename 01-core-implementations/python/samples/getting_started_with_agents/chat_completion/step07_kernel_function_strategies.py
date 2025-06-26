@@ -101,11 +101,11 @@ async def main():
         Determine which participant takes the next turn in a conversation based on the the most recent participant.
         State only the name of the participant to take the next turn.
         No participant should take more than one turn in a row.
-        
+
         Choose only from these participants:
         - {REVIEWER_NAME}
         - {COPYWRITER_NAME}
-        
+
         Always follow these rules when selecting the next participant:
         - After user input, it is {COPYWRITER_NAME}'s turn.
         - After {COPYWRITER_NAME} replies, it is {REVIEWER_NAME}'s turn.

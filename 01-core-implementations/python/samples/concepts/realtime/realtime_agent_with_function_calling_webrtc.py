@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+import platform
+import re
 Realtime Agent With Function Calling Webrtc module
 
 Copyright (c) 2025 Bryan Roe

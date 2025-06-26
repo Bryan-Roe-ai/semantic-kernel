@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import platform
 AI module for open ai audio to text
 
 Copyright (c) 2025 Bryan Roe

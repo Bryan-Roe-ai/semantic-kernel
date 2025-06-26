@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent bing grounding
 
 Copyright (c) 2025 Bryan Roe
@@ -105,15 +106,15 @@ async def main() -> None:
 
         """
         Sample Output:
-        
+
         # User: 'Which team won the 2025 NCAA basketball championship?'
-        Function Call:> bing_grounding with arguments: 
+        Function Call:> bing_grounding with arguments:
             {
-                'requesturl': 'https://api.bing.microsoft.com/v7.0/search?q=search(query:2025 NCAA basketball championship winner)', 
+                'requesturl': 'https://api.bing.microsoft.com/v7.0/search?q=search(query:2025 NCAA basketball championship winner)',
                 'response_metadata': "{'market': 'en-US', 'num_docs_retrieved': 5, 'num_docs_actually_used': 5}"
             }
-        # BingGroundingAgent: The team that won the 2025 NCAA men's basketball championship was the Florida Gators. They defeated the Houston Cougars with a final score of 65-63. 
-            The championship game took place in San Antonio, Texas, and the Florida team was coached by Todd Golden. This victory made Florida the national champion for the 2024-25 
+        # BingGroundingAgent: The team that won the 2025 NCAA men's basketball championship was the Florida Gators. They defeated the Houston Cougars with a final score of 65-63.
+            The championship game took place in San Antonio, Texas, and the Florida team was coached by Todd Golden. This victory made Florida the national champion for the 2024-25
             NCAA Division I men's basketball season【3:0†source】【3:1†source】【3:2†source】.
         Annotation :> https://en.wikipedia.org/wiki/2025_NCAA_Division_I_men%27s_basketball_championship_game, source=【3:0†source】, with start_index=357 and end_index=369
         Annotation :> https://www.ncaa.com/history/basketball-men/d1, source=【3:1†source】, with start_index=369 and end_index=381

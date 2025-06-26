@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for step7 azure ai agent retrieval
 
 Copyright (c) 2025 Bryan Roe

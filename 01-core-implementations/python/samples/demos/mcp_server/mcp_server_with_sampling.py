@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Mcp Server With Sampling module
 
 Copyright (c) 2025 Bryan Roe
@@ -34,7 +35,7 @@ from semantic_kernel.prompt_template import InputVariable, KernelPromptTemplate,
 logger = logging.getLogger(__name__)
 
 """
-This sample demonstrates how to expose your Semantic Kernel `kernel` instance as a MCP server, with the a function 
+This sample demonstrates how to expose your Semantic Kernel `kernel` instance as a MCP server, with the a function
 that uses sampling (see the docs: https://modelcontextprotocol.io/docs/concepts/sampling) to generate release notes.
 
 To run this sample, set up your MCP host (like Claude Desktop or VSCode Github Copilot Agents)
@@ -59,12 +60,12 @@ Note: You might need to set the uv to it's full path.
 
 template = """{{$messages}}
 ---
-Group the following PRs into one of these buckets for release notes, keeping the same order: 
+Group the following PRs into one of these buckets for release notes, keeping the same order:
 
--New Features 
+-New Features
 -Enhancements and Improvements
 -Bug Fixes
--Python Package Updates 
+-Python Package Updates
 
 Include the output in raw markdown.
 """

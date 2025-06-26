@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent declarative function calling from file
 
 Copyright (c) 2025 Bryan Roe
@@ -26,7 +27,7 @@ from semantic_kernel.functions.kernel_function_decorator import kernel_function
 
 """
 The following sample demonstrates how to create an Azure AI agent that answers
-user questions. The sample shows how to load a declarative spec from a file. 
+user questions. The sample shows how to load a declarative spec from a file.
 The plugins/functions must already exist in the kernel.
 They are not created declaratively via the spec.
 """

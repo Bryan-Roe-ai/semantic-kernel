@@ -69,12 +69,12 @@ async def main() -> None:
     Sample output:
 
     # User: Hello! Who are you? My name is John Doe.
-    # PhysicsAgent: Hello, John! I'm an AI assistant here to help you with any questions you might have. 
+    # PhysicsAgent: Hello, John! I'm an AI assistant here to help you with any questions you might have.
         How can I assist you today?
     AI-generated content may be incorrect
     # User: What is the speed of light?
-    # PhysicsAgent: The speed of light in a vacuum is approximately 299,792,458 meters per second (m/s). 
-        This is often rounded to 300,000 kilometers per second (km/s) for simplicity. If you have any more questions, 
+    # PhysicsAgent: The speed of light in a vacuum is approximately 299,792,458 meters per second (m/s).
+        This is often rounded to 300,000 kilometers per second (km/s) for simplicity. If you have any more questions,
         feel free to ask!
     AI-generated content may be incorrect
     # User: What have we been talking about?
@@ -82,7 +82,7 @@ async def main() -> None:
 
     1. You introduced yourself and asked who I am.
     2. I introduced myself as an AI assistant and asked how I could assist you.
-    3. You asked about the speed of light, and I provided the information that it is approximately 299,792,458 meters 
+    3. You asked about the speed of light, and I provided the information that it is approximately 299,792,458 meters
         per second in a vacuum.
 
     If you have any more questions or need further assistance, feel free to ask!

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """
+from typing import List
+from typing import Tuple
+import asyncio
+import re
 Azure Cosmos Db Store Api module
 
 Copyright (c) 2025 Bryan Roe

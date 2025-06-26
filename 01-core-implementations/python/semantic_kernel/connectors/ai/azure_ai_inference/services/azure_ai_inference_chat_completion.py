@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai inference chat completion
 
 Copyright (c) 2025 Bryan Roe

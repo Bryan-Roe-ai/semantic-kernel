@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for brave search
 
 Copyright (c) 2025 Bryan Roe
@@ -84,7 +85,7 @@ async def test_search_success(brave_unit_test_env, async_client_mock):
 
     mock_result = MagicMock()
     mock_result.text = """
-    {"query": {'original':'original',"altered": 
+    {"query": {'original':'original',"altered":
         "altered something","show_strict_warning":False,"spellcheck_off":False,'country':"us"},
     "results": [{"description": "Test snippet"}]}
     }"""
@@ -218,7 +219,7 @@ async def test_get_search_results_success(brave_unit_test_env, async_client_mock
     mock_result = MagicMock()
     mock_result.text = """
  { "results": [{"description": "Page snippet","title":"Result Name","url":"test"}] ,
-                    
+
 }"""
 
     async_client_mock.get.return_value = mock_result

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent declarative openapi
 
 Copyright (c) 2025 Bryan Roe
@@ -23,7 +24,7 @@ from semantic_kernel.agents import AgentRegistry, AzureAIAgent, AzureAIAgentSett
 
 """
 The following sample demonstrates how to create an Azure AI agent that answers
-user questions using the OpenAPI tool. The agent is then used to answer user 
+user questions using the OpenAPI tool. The agent is then used to answer user
 questions that leverage a free weather API.
 """
 
@@ -201,8 +202,8 @@ async def main():
         Sample output:
 
         # User: 'What is the current weather in Seoul?'
-        # WeatherAgent: The current weather in Seoul is 14°C (57°F) with "light drizzle." It feels like 13°C (55°F). 
-            The humidity is at 81%, and there is heavy cloud cover (99%). The visibility is reduced to 2 km (1 mile), 
+        # WeatherAgent: The current weather in Seoul is 14°C (57°F) with "light drizzle." It feels like 13°C (55°F).
+            The humidity is at 81%, and there is heavy cloud cover (99%). The visibility is reduced to 2 km (1 mile),
             and the wind is coming from the east at 11 km/h (7 mph)
         """
 

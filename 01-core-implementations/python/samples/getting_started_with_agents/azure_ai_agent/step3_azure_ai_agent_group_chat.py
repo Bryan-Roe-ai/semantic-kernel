@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for step3 azure ai agent group chat
 
 Copyright (c) 2025 Bryan Roe

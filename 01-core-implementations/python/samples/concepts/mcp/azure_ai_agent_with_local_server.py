@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai agent with local server
 
 Copyright (c) 2025 Bryan Roe
@@ -29,7 +30,7 @@ from semantic_kernel.functions import KernelArguments
 The following sample demonstrates how to create a chat completion agent that
 answers questions about Github using a Local Agent with two local MCP Servers.
 
-It uses the Azure AI Foundry Agent service to create a agent, so make sure to 
+It uses the Azure AI Foundry Agent service to create a agent, so make sure to
 set the required environment variables for the Azure AI Foundry service:
 - AZURE_AI_AGENT_PROJECT_CONNECTION_STRING
 - AZURE_AI_AGENT_MODEL_DEPLOYMENT_NAME
@@ -37,7 +38,7 @@ set the required environment variables for the Azure AI Foundry service:
 
 USER_INPUTS = [
     "list the latest 10 issues that have the label: triage and python and are open",
-    """generate release notes with this list:             
+    """generate release notes with this list:
 * Python: Add ChatCompletionAgent integration tests by @moonbox3 in https://github.com/microsoft/semantic-kernel/pull/11430
 * Python: Update Doc Gen demo based on latest agent invocation api pattern by @moonbox3 in https://github.com/microsoft/semantic-kernel/pull/11426
 * Python: Update Python min version in README by @moonbox3 in https://github.com/microsoft/semantic-kernel/pull/11428

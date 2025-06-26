@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 2 Use As A Plugin module
 
 Copyright (c) 2025 Bryan Roe

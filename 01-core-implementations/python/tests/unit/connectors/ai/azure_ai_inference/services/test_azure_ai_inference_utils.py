@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Test module for azure ai inference utils
 
 Copyright (c) 2025 Bryan Roe

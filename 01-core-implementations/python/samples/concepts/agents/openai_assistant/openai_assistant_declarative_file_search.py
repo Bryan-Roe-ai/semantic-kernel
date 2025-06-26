@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for openai assistant declarative file search
 
 Copyright (c) 2025 Bryan Roe
@@ -24,7 +25,7 @@ from semantic_kernel.agents import AgentRegistry, OpenAIAssistantAgent
 The following sample demonstrates how to create an OpenAI Assistant Agent that answers
 user questions using the file search tool.
 
-The agent is used to answer user questions that require file search to help ground 
+The agent is used to answer user questions that require file search to help ground
 answers from the model.
 """
 
@@ -99,7 +100,7 @@ async def main():
         Sample output:
 
         # User: 'Who can help me if I have a sales question?'
-        # FileSearchAgent: If you have a sales question, you can contact either Mariam Jaslyn or Angelino Embla, who 
+        # FileSearchAgent: If you have a sales question, you can contact either Mariam Jaslyn or Angelino Embla, who
           are both listed as Sales Representatives. Alternatively, you may also reach out to Hicran Bea,
           the Sales Manager【4:0†employees.pdf】.
         """

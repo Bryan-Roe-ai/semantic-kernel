@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """
+import asyncio
+import platform
+import re
 Copilot Studio Agent module
 
 Copyright (c) 2025 Bryan Roe

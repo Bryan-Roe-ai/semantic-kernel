@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for google ai text completion
 
 Copyright (c) 2025 Bryan Roe

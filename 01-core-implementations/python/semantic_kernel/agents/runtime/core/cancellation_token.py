@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Cancellation Token module
 
 Copyright (c) 2025 Bryan Roe

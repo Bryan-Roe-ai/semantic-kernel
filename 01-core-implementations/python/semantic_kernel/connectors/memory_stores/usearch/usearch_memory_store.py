@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 """
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
+import asyncio
+import re
 Usearch Memory Store module
 
 Copyright (c) 2025 Bryan Roe

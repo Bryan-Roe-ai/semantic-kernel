@@ -28,17 +28,17 @@ class MathFunctions:
     def calculate_square_root(self, input_str: str) -> str:
         """
         Calculate the square root of the input number.
-        
+
         Args:
             input_str: The input number as a string
-            
+
         Returns:
             The square root as a string
         """
         try:
             # Try to convert to a number
             input_num = float(input_str.strip())
-            
+
             # Handle negative numbers (complex square roots)
             if input_num < 0:
                 result = math.sqrt(abs(input_num))
@@ -50,7 +50,7 @@ class MathFunctions:
                 return str(result)
         except ValueError:
             return "Error: Input must be a valid number"
-            
+
     @kernel_function(
         description="Calculate the power of a number",
         name="power"
@@ -58,18 +58,18 @@ class MathFunctions:
     def calculate_power(self, base: str, exponent: str) -> str:
         """
         Calculate the power of a number.
-        
+
         Args:
             base: The base number
             exponent: The exponent
-            
+
         Returns:
             The result of base raised to the exponent
         """
         try:
             base_num = float(base.strip())
             exp_num = float(exponent.strip())
-            
+
             result = math.pow(base_num, exp_num)
             if result.is_integer():
                 return str(int(result))
@@ -86,10 +86,10 @@ class MathFunctions:
     def calculate_sin(self, angle: str) -> str:
         """
         Calculate the sine of an angle in degrees.
-        
+
         Args:
             angle: The angle in degrees
-            
+
         Returns:
             The sine value
         """

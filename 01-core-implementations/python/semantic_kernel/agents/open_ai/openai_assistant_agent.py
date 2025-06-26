@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+import asyncio
+import platform
 AI module for openai assistant agent
 
 Copyright (c) 2025 Bryan Roe

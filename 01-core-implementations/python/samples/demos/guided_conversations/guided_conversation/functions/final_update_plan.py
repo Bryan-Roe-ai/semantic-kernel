@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Final Update Plan module
 
 Copyright (c) 2025 Bryan Roe
@@ -20,7 +21,7 @@ from semantic_kernel.functions import FunctionResult, KernelArguments
 
 from guided_conversation.utils.conversation_helpers import Conversation
 
-final_update_template = """<message role="system">You are a helpful, thoughtful, and meticulous assistant. 
+final_update_template = """<message role="system">You are a helpful, thoughtful, and meticulous assistant.
 You just finished a conversation with a user.{{#if context}} Here is some additional context about the conversation:
 {{ context }}{{/if}}
 
@@ -33,7 +34,7 @@ You will be given the current state of the artifact as well as the conversation 
 Note that if the value for a field in the artifact is 'Unanswered', it means that the field was not completed. \
 Some fields may have already been completed during the conversation.
 
-Your need to determine whether there are any fields that need to be updated, and if so, update them. 
+Your need to determine whether there are any fields that need to be updated, and if so, update them.
 - You should only update a field if both of the following conditions are met: (a) the current state does NOT adequately reflect the conversation \
 and (b) you are able to submit a valid value for a field. \
 You are allowed to update completed fields, but you should only do so if the current state is inadequate, \
@@ -43,7 +44,7 @@ Do not submit a value that is identical to the current state of the field (e.g. 
 - Make sure the value adheres to the constraints of the field as specified in the artifact schema. \
 If it's not possible to update a field with a valid value (e.g., the user provided an invalid date of birth), you should not update the field.
 - If the artifact schema is open-ended (e.g. it asks you to rate how pressing the user's issue is, without specifying rules for doing so), \
-use your best judgment to determine whether you have enough information to complete the field based on the conversation. 
+use your best judgment to determine whether you have enough information to complete the field based on the conversation.
 - Prioritize accuracy over completion. You should never make up information or make assumptions in order to complete a field. \
 For example, if the field asks for a 10-digit phone number, and the user provided a 9-digit phone number, you should not add a digit to the phone number in order to complete the field.
 - If the user wasn't able to provide all of the information needed to complete a field, \
@@ -52,7 +53,7 @@ For example, if the field asks for a description of symptoms along with details 
 it's better to record the information they do have rather than to leave the field unanswered (and to indicate that the user was unsure about the start date).
 - It's possible to update multiple fields at once (assuming you're adhering to the above rules in all cases). It's also possible that no fields need to be updated.
 
-Your task is to state your step-by-step reasoning about what to update, followed by a final recommendation. 
+Your task is to state your step-by-step reasoning about what to update, followed by a final recommendation.
 Someone else will be responsible for executing the updates and they will only have access to your output \
 (not any of the conversation history, artifact schema, or other context) so make sure to specify exactly which \
 fields to update and the values to update them with, or to state that no fields need to be updated.

@@ -58,7 +58,7 @@ async def main():
     """
     Sample output:
     # User: Why is the sky blue?
-    # Assistant: The sky appears blue because molecules in the Earth's atmosphere scatter shorter wavelengths of 
+    # Assistant: The sky appears blue because molecules in the Earth's atmosphere scatter shorter wavelengths of
         sunlight, like blue, more than the longer wavelengths, causing the sky to look blue to our eyes.
     # User: What is the capital of France?
     # Assistant: The capital of France is Paris.

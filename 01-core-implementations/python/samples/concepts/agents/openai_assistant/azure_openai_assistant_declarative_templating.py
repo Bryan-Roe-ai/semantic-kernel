@@ -77,8 +77,8 @@ async def main():
     """
     Sample output:
 
-    # StoryAgent: Under the silvery moon, three mischievous cats tiptoed across the rooftop, chasing 
-      shadows and sharing secret whispers. By dawn, they curled up together, purring softly, dreaming 
+    # StoryAgent: Under the silvery moon, three mischievous cats tiptoed across the rooftop, chasing
+      shadows and sharing secret whispers. By dawn, they curled up together, purring softly, dreaming
       of adventures yet to come.
     """
 

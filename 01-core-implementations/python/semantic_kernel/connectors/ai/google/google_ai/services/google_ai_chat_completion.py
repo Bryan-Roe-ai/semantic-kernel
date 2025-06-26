@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 AI module for google ai chat completion
 
 Copyright (c) 2025 Bryan Roe

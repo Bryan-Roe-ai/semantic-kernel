@@ -25,11 +25,11 @@ from semantic_kernel.functions import kernel_function
 
 """
 The following sample demonstrates how to create an OpenAI
-Responses Agent using either Azure OpenAI or OpenAI. The 
+Responses Agent using either Azure OpenAI or OpenAI. The
 Responses Agent allow for function calling, the use of file search and a
 web search tool. Responses Agent Threads are used to manage the
 conversation state, similar to a Semantic Kernel Chat History.
-Additionally, the invoke configures a message callback 
+Additionally, the invoke configures a message callback
 to receive the conversation messages during invocation.
 """
 
@@ -107,7 +107,7 @@ async def main():
     # Host: Hi there! How can I assist you with the menu today?
     # AuthorRole.USER: 'What is the special soup?'
     Function Call:> MenuPlugin-get_specials with arguments: {}
-    Function Result:> 
+    Function Result:>
             Special Soup: Clam Chowder
             Special Salad: Cobb Salad
             Special Drink: Chai Tea

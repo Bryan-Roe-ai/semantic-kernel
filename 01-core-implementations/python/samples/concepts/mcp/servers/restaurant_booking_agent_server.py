@@ -55,7 +55,7 @@ with the following configuration:
     }
 }
 ```
-Alternatively, you can run this as a SSE server, by setting the same environment variables as above, 
+Alternatively, you can run this as a SSE server, by setting the same environment variables as above,
 and running the following command:
 ```bash
 uv --directory=<path to sk project>/semantic-kernel/python/samples/demos/mcp_server \

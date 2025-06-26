@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """
+from typing import List
+from typing import Tuple
+import asyncio
+import re
 Postgres Memory Store module
 
 Copyright (c) 2025 Bryan Roe

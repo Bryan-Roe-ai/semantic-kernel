@@ -35,7 +35,7 @@ def print_welcome_banner():
         "🤖 Where artificial intelligence meets human creativity 🧠".center(50),
         "🌟" * 50
     ]
-    
+
     print("\n")
     for line in banner_lines:
         animate_text(line, 0.03)
@@ -45,10 +45,10 @@ def show_workspace_features():
     """Show key workspace features with animation."""
     print("\n🚀 What makes this workspace special?")
     print("-" * 40)
-    
+
     features = [
         "🤖 14+ AI agents working together as your team",
-        "🧠 Interactive learning journey for all skill levels", 
+        "🧠 Interactive learning journey for all skill levels",
         "🎯 One-click project creation with the wizard",
         "📊 Real-time dashboard showing AI activity",
         "⚡ Self-improving system that gets smarter over time",
@@ -56,7 +56,7 @@ def show_workspace_features():
         "🎓 Built-in tutorials and friendly help system",
         "🚀 One-click deployment to production"
     ]
-    
+
     for feature in features:
         time.sleep(0.8)
         animate_text(f"   ✨ {feature}", 0.02)
@@ -65,7 +65,7 @@ def show_quick_start_options():
     """Show quick start options."""
     print("\n🎯 Ready to start? Choose your adventure:")
     print("=" * 45)
-    
+
     options = [
         ("🌱 Complete Beginner", "Start with interactive learning", "python scripts/ai_learning_journey.py --beginner"),
         ("🎮 Show Me Cool Stuff", "See AI agents in action", "python scripts/demo_showcase.py"),
@@ -74,7 +74,7 @@ def show_quick_start_options():
         ("📊 Monitor Everything", "Open real-time dashboard", "python scripts/friendly_dashboard.py"),
         ("🤖 Get Help Anytime", "Your friendly AI assistant", "python scripts/ai_helper.py")
     ]
-    
+
     for i, (title, description, command) in enumerate(options, 1):
         print(f"\n{i}. {title}")
         print(f"   💭 {description}")
@@ -84,14 +84,14 @@ def check_first_time():
     """Check if this is the first time running the workspace."""
     marker_file = Path.home() / ".ai_workspace_welcomed"
     is_first_time = not marker_file.exists()
-    
+
     if is_first_time:
         # Create marker file
         try:
             marker_file.touch()
         except:
             pass  # Silent fail if can't create file
-    
+
     return is_first_time
 
 def show_tips_and_tricks():
@@ -105,10 +105,10 @@ def show_tips_and_tricks():
         "🎮 Try running multiple tools at once in different terminals",
         "📚 Check GETTING_STARTED.md for the complete beginner guide"
     ]
-    
+
     print(f"\n💡 Pro Tips:")
     print("-" * 15)
-    
+
     # Show 3 random tips
     selected_tips = random.sample(tips, min(3, len(tips)))
     for tip in selected_tips:
@@ -118,25 +118,25 @@ def show_tips_and_tricks():
 def main():
     """Main welcome function."""
     is_first_time = check_first_time()
-    
+
     if is_first_time:
         print_welcome_banner()
         time.sleep(1)
-        
+
         print("\n🎊 This is your first time here! Let me show you around...")
         time.sleep(2)
-        
+
         show_workspace_features()
         time.sleep(2)
-        
+
         show_quick_start_options()
         time.sleep(1)
-        
+
         show_tips_and_tricks()
-        
+
         print(f"\n🌟 Your AI adventure starts now!")
         print(f"🚀 Tip: Run 'python launch.py' anytime for quick access to everything!")
-        
+
         choice = input(f"\n🤔 Want to start with the beginner learning journey? (y/n): ").strip().lower()
         if choice in ['y', 'yes', '']:
             print(f"\n🎓 Launching your learning journey...")
@@ -148,14 +148,14 @@ def main():
         # Not first time - show brief welcome
         greetings = [
             "👋 Welcome back to your AI workspace!",
-            "🤖 Your AI agents missed you! Ready for more adventures?", 
+            "🤖 Your AI agents missed you! Ready for more adventures?",
             "⚡ Welcome back! The workspace has been optimizing while you were away!",
             "🌟 Good to see you again! What AI magic shall we create today?"
         ]
-        
+
         print("\n" + random.choice(greetings))
         print("🚀 Quick access: python launch.py")
-        
+
         # Show if any improvements happened
         print("\n💫 While you were away:")
         print("   ✅ AI agents continued optimizing")

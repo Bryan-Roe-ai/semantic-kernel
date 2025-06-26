@@ -34,7 +34,7 @@ agent group chat that utilizes a Reviewer Chat Completion
 Agent along with a Writer Chat Completion Agent to
 complete a user's task.
 
-This is the full code sample for the Semantic Kernel Learn Site: How-To: Coordinate Agent Collaboration 
+This is the full code sample for the Semantic Kernel Learn Site: How-To: Coordinate Agent Collaboration
     using Agent Group Chat
 
 https://learn.microsoft.com/semantic-kernel/frameworks/agent/examples/example-agent-collaboration?pivots=programming-language-python

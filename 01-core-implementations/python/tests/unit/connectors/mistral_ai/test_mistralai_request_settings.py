@@ -152,4 +152,4 @@ def test_create_options_with_function_choice_behavior():
         },
     )
     assert settings.function_choice_behavior
-        
+

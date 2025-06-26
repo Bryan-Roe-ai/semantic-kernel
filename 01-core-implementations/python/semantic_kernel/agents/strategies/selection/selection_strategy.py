@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Selection Strategy module
 
 Copyright (c) 2025 Bryan Roe

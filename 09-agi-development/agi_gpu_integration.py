@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AGI module for agi gpu integration
 
 Copyright (c) 2025 Bryan Roe

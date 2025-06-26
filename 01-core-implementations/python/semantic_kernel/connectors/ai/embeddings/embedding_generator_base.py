@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from typing import List
+import asyncio
 Embedding Generator Base module
 
 Copyright (c) 2025 Bryan Roe

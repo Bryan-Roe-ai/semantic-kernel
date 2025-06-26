@@ -45,7 +45,7 @@ def install_dependency(module_name: str) -> bool:
     """Install a Python module using pip."""
     try:
         print(f"Installing {module_name}...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", module_name], 
+        subprocess.check_call([sys.executable, "-m", "pip", "install", module_name],
                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         print(f"{Colors.GREEN}✓ {module_name} installed successfully{Colors.END}")
         return True
@@ -66,20 +66,20 @@ def find_available_port(start_port: int, max_attempts: int = 10) -> int:
     """Find an available port starting from start_port."""
     port = start_port
     attempts = 0
-    
+
     while attempts < max_attempts:
         if check_port_available(port):
             return port
         port += 1
         attempts += 1
-    
+
     # If we couldn't find an available port, return the original
     # and let the application handle the error
     return start_port
 
 def check_lm_studio() -> Tuple[bool, str]:
     """Check if LM Studio API is running.
-    
+
     Returns:
         tuple: (is_running, error_message)
     """
@@ -102,7 +102,7 @@ def check_lm_studio() -> Tuple[bool, str]:
 def create_env_file(base_dir: Path, lm_studio_url: str) -> None:
     """Create or update .env file with LM Studio URL."""
     env_path = base_dir / ".env"
-    
+
     # Read existing content if file exists
     env_vars = {}
     if env_path.exists():
@@ -111,10 +111,10 @@ def create_env_file(base_dir: Path, lm_studio_url: str) -> None:
                 if '=' in line and not line.strip().startswith('#'):
                     key, value = line.strip().split('=', 1)
                     env_vars[key.strip()] = value.strip().strip('"').strip("'")
-    
+
     # Update LM_STUDIO_URL
     env_vars['LM_STUDIO_URL'] = lm_studio_url
-    
+
     # Write back to file
     with open(env_path, 'w') as f:
         for key, value in env_vars.items():
@@ -132,13 +132,13 @@ def terminate_process(process: Optional[subprocess.Popen]) -> None:
             else:
                 # On Unix, SIGTERM works better than SIGINT (CTRL+C)
                 process.terminate()
-            
+
             # Wait for a short time for graceful shutdown
             for _ in range(10):
                 if process.poll() is not None:
                     break
                 time.sleep(0.2)
-                
+
             # If it's still running, force kill
             if process.poll() is None:
                 if platform.system() == 'Windows':
@@ -151,25 +151,25 @@ def terminate_process(process: Optional[subprocess.Popen]) -> None:
 def start_backend_and_chat():
     """Start the FastAPI backend and open the chat interface."""
     process = None
-    
+
     try:
         print(f"{Colors.BOLD}========================================{Colors.END}")
         print(f"{Colors.BOLD}    AI Chat Interface - Quick Start    {Colors.END}")
         print(f"{Colors.BOLD}========================================{Colors.END}")
         print()
-        
-        # Get the base directory 
+
+        # Get the base directory
         base_dir = Path(__file__).parent.absolute()
-        
+
         # Check for required dependencies
         print(f"{Colors.BLUE}[1/5] Checking dependencies...{Colors.END}")
         dependencies = ["fastapi", "uvicorn", "pydantic", "requests"]
         missing_deps = []
-        
+
         for dep in dependencies:
             if not check_dependency(dep):
                 missing_deps.append(dep)
-        
+
         if missing_deps:
             print(f"Installing missing dependencies: {', '.join(missing_deps)}")
             for dep in missing_deps:
@@ -181,7 +181,7 @@ def start_backend_and_chat():
                     return
         else:
             print(f"{Colors.GREEN}✓ All dependencies are installed{Colors.END}")
-        
+
         # Check for backend.py
         print(f"\n{Colors.BLUE}[2/5] Checking backend files...{Colors.END}")
         backend_path = base_dir / "backend.py"
@@ -190,7 +190,7 @@ def start_backend_and_chat():
             input("Press Enter to exit...")
             return
         print(f"{Colors.GREEN}✓ Backend file found at {backend_path}{Colors.END}")
-        
+
         # Check for available port
         print(f"\n{Colors.BLUE}[3/5] Checking available port...{Colors.END}")
         preferred_port = 8000
@@ -205,19 +205,19 @@ def start_backend_and_chat():
         else:
             available_port = preferred_port
             print(f"{Colors.GREEN}✓ Port {available_port} is available{Colors.END}")
-        
+
         # Check or create .env file
         print(f"\n{Colors.BLUE}[4/5] Checking configuration...{Colors.END}")
         env_path = base_dir / ".env"
         lm_studio_url = "http://localhost:1234/v1/chat/completions"
-        
+
         if not env_path.exists():
             print("Creating .env file with default settings...")
             create_env_file(base_dir, lm_studio_url)
             print(f"{Colors.GREEN}✓ Created .env file with default settings{Colors.END}")
         else:
             print(f"{Colors.GREEN}✓ Found existing .env file{Colors.END}")
-        
+
         # Check LM Studio
         print(f"\n{Colors.BLUE}[5/5] Checking LM Studio...{Colors.END}")
         lm_studio_running, lm_studio_error = check_lm_studio()
@@ -230,38 +230,38 @@ def start_backend_and_chat():
             print("\nContinuing anyway... but chat functionality will be limited.")
         else:
             print(f"{Colors.GREEN}✓ LM Studio API server is running{Colors.END}")
-        
+
         # Start backend server
         print(f"\n{Colors.BLUE}Starting backend server...{Colors.END}")
         cmd = [sys.executable, "-m", "uvicorn", "backend:app", "--reload", "--host", "127.0.0.1", "--port", str(available_port)]
-        
+
         # Start backend
         process = subprocess.Popen(cmd, cwd=str(base_dir))
         print("Waiting for backend server to start...")
         time.sleep(2)
-        
+
         # Check if process is running
         if process.poll() is not None:
             print(f"{Colors.RED}Error: Failed to start backend server{Colors.END}")
             input("Press Enter to exit...")
             return
-            
+
         print(f"{Colors.GREEN}✓ Backend server started at http://127.0.0.1:{available_port}{Colors.END}")
-        
+
         # Open chat interface
         chat_options = [
             ("advanced-ai-chat.html", "Advanced Chat Interface"),
             ("simple-chat.html", "Simple Chat Interface"),
             ("ai-chat.html", "Standard Chat Interface")
         ]
-        
+
         # Filter to only available interfaces
         available_interfaces = []
         for filename, desc in chat_options:
             file_path = base_dir / filename
             if file_path.exists():
                 available_interfaces.append((filename, desc))
-        
+
         if not available_interfaces:
             print(f"{Colors.RED}Error: No chat interface HTML files found!{Colors.END}")
             print("Please make sure at least one of these files exists:")
@@ -270,15 +270,15 @@ def start_backend_and_chat():
             input("Press Enter to exit...")
             terminate_process(process)
             return
-            
+
         print(f"\n{Colors.BOLD}Available chat interfaces:{Colors.END}")
         for i, (filename, desc) in enumerate(available_interfaces):
             print(f"{i+1}. {desc} ({filename})")
-                
+
         choice = input(f"\n{Colors.BOLD}Enter interface number to open (default=1): {Colors.END}")
         if not choice:
             choice = "1"
-            
+
         try:
             idx = int(choice) - 1
             if 0 <= idx < len(available_interfaces):
@@ -291,15 +291,15 @@ def start_backend_and_chat():
                         try:
                             with open(file_path, 'r', encoding='utf-8') as f:
                                 content = f.read()
-                            
+
                             # Replace port in API URL
                             content = content.replace('http://localhost:8000', f'http://localhost:{available_port}')
-                            
+
                             # Write temporary file
                             temp_file = base_dir / f"temp_{selected}"
                             with open(temp_file, 'w', encoding='utf-8') as f:
                                 f.write(content)
-                            
+
                             # Open temporary file
                             webbrowser.open(f'file:///{temp_file.absolute()}')
                         except Exception as e:
@@ -319,10 +319,10 @@ def start_backend_and_chat():
             print("Invalid input. Opening default interface.")
             default_file = available_interfaces[0][0]
             webbrowser.open(f'file:///{(base_dir / default_file).absolute()}')
-        
+
         print(f"\n{Colors.GREEN}{Colors.BOLD}Server is running! Press Ctrl+C to stop.{Colors.END}")
         process.wait()
-        
+
     except KeyboardInterrupt:
         print(f"\n{Colors.YELLOW}Stopping server...{Colors.END}")
         terminate_process(process)

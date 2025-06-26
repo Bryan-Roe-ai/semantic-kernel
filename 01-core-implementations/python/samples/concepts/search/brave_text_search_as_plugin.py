@@ -26,8 +26,8 @@ from semantic_kernel.filters import FilterTypes, FunctionInvocationContext
 from semantic_kernel.functions import KernelArguments, KernelParameterMetadata
 
 """
-This project demonstrates how to integrate the Brave Search API as a plugin into the Semantic Kernel 
-framework to enable conversational AI capabilities with real-time web information. 
+This project demonstrates how to integrate the Brave Search API as a plugin into the Semantic Kernel
+framework to enable conversational AI capabilities with real-time web information.
 
 To use Brave Search, you need an API key, which can be obtained by login to
 https://api-dashboard.search.brave.com/ and creating a subscription key.

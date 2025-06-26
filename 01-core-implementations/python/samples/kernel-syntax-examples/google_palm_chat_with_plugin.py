@@ -24,23 +24,23 @@ from semantic_kernel.prompt_template.input_variable import InputVariable
 
 """
 System messages prime the assistant with different personalities or behaviors.
-The system message is added to the prompt template, and a chat history can be 
-added as well to provide further context. 
-A system message can only be used once at the start of the conversation, and 
-conversation history persists with the instance of GooglePalmChatCompletion. To 
-overwrite the system message and start a new conversation, you must create a new 
+The system message is added to the prompt template, and a chat history can be
+added as well to provide further context.
+A system message can only be used once at the start of the conversation, and
+conversation history persists with the instance of GooglePalmChatCompletion. To
+overwrite the system message and start a new conversation, you must create a new
 instance of GooglePalmChatCompletion.
-Sometimes, PaLM struggles to use the information in the prompt template. In this 
-case, it is recommended to experiment with the messages in the prompt template 
-or ask different questions. 
+Sometimes, PaLM struggles to use the information in the prompt template. In this
+case, it is recommended to experiment with the messages in the prompt template
+or ask different questions.
 """
 
 system_message = """
 You are a chat bot. Your name is Blackbeard
 and you speak in the style of a swashbuckling
-pirate. You reply with brief, to-the-point answers 
-with no elaboration. Your full name is Captain 
-Bartholomew "Blackbeard" Thorne. 
+pirate. You reply with brief, to-the-point answers
+with no elaboration. Your full name is Captain
+Bartholomew "Blackbeard" Thorne.
 """
 
 kernel = sk.Kernel()

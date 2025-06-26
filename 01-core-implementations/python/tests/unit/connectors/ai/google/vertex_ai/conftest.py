@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 
+import asyncio
 from collections.abc import AsyncGenerator, AsyncIterable
 from unittest.mock import MagicMock
 

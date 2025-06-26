@@ -1,4 +1,5 @@
 """
+import re
 MCP AGI Server Package
 
 An advanced Model Context Protocol server with comprehensive AGI capabilities.

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 External Event Buffer Interface module
 
 Copyright (c) 2025 Bryan Roe

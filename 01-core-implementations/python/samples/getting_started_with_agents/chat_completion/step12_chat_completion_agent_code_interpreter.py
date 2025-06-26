@@ -78,7 +78,7 @@ async def main():
             # Load the sales data
             file_path = '/mnt/data/sales.csv'
             sales_data = pd.read_csv(file_path)
-             
+
             # Calculate the total sum of sales
             # Assuming there's a column named 'Sales' which contains the sales amounts
             total_sales = sales_data['Sales'].sum()

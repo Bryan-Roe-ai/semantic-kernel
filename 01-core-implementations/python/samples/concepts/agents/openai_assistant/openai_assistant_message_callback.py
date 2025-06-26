@@ -24,9 +24,9 @@ from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.functions import kernel_function
 
 """
-This sample demonstrates how to create an AzureAssistantAgent/OpenAIAssistantAgent and invoke it using the 
-non-streaming `invoke()` method. While `invoke()` returns only the final assistant message, the agent can 
-optionally emit intermediate messages (e.g., function calls and results) via a callback by supplying 
+This sample demonstrates how to create an AzureAssistantAgent/OpenAIAssistantAgent and invoke it using the
+non-streaming `invoke()` method. While `invoke()` returns only the final assistant message, the agent can
+optionally emit intermediate messages (e.g., function calls and results) via a callback by supplying
 `on_intermediate_message`.
 
 In this example, the agent is configured with a plugin that provides menu specials and item pricing. As the user
@@ -120,22 +120,22 @@ async def main():
     # AuthorRole.ASSISTANT: Hello! How can I assist you today?
     # AuthorRole.USER: 'What is the special soup?'
     Function Call:> MenuPlugin-get_specials with arguments: {}
-    Function Result:> 
+    Function Result:>
             Special Soup: Clam Chowder
             Special Salad: Cobb Salad
             Special Drink: Chai Tea
             for function: MenuPlugin-get_specials
-    # AuthorRole.ASSISTANT: The special soup is Clam Chowder. Would you like to know more about the specials or 
+    # AuthorRole.ASSISTANT: The special soup is Clam Chowder. Would you like to know more about the specials or
         anything else?
     # AuthorRole.USER: 'What is the special drink?'
     # AuthorRole.ASSISTANT: The special drink is Chai Tea. If you have any more questions, feel free to ask!
     # AuthorRole.USER: 'How much is that?'
     Function Call:> MenuPlugin-get_item_price with arguments: {"menu_item":"Chai Tea"}
     Function Result:> $9.99 for function: MenuPlugin-get_item_price
-    # AuthorRole.ASSISTANT: The Chai Tea is priced at $9.99. If there's anything else you'd like to know, 
+    # AuthorRole.ASSISTANT: The Chai Tea is priced at $9.99. If there's anything else you'd like to know,
         just let me know!
     # AuthorRole.USER: 'Thank you'
-    # AuthorRole.ASSISTANT: You're welcome! If you have any more questions or need further assistance, feel free to 
+    # AuthorRole.ASSISTANT: You're welcome! If you have any more questions or need further assistance, feel free to
         ask. Enjoy your day!
     """
 

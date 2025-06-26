@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Responses Agent File Search Streaming module
 
 Copyright (c) 2025 Bryan Roe

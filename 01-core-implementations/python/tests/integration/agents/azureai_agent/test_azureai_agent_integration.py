@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+import asyncio
+import re
 Test module for azureai agent integration
 
 Copyright (c) 2025 Bryan Roe

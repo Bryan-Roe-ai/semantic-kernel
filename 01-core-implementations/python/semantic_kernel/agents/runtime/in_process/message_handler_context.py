@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Message Handler Context module
 
 Copyright (c) 2025 Bryan Roe

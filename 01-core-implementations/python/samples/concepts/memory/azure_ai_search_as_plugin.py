@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for azure ai search as plugin
 
 Copyright (c) 2025 Bryan Roe

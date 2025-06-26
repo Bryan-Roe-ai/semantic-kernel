@@ -131,7 +131,7 @@ async def main():
     # AuthorRole.USER: 'What is the special drink?'
     [TextContent] AuthorRole.ASSISTANT : 'The special drink is Chai Tea.'
     # AuthorRole.USER: 'Thank you'
-    [TextContent] AuthorRole.ASSISTANT : 'You're welcome! If you have any more questions or need assistance with 
+    [TextContent] AuthorRole.ASSISTANT : 'You're welcome! If you have any more questions or need assistance with
         anything else, feel free to ask!'
     ================================
     CHAT HISTORY
@@ -148,7 +148,7 @@ async def main():
     [TextContent] AuthorRole.USER : 'What is the special drink?'
     [TextContent] AuthorRole.ASSISTANT : 'The special drink is Chai Tea.'
     [TextContent] AuthorRole.USER : 'Thank you'
-    [TextContent] AuthorRole.ASSISTANT : 'You're welcome! If you have any more questions or need assistance with 
+    [TextContent] AuthorRole.ASSISTANT : 'You're welcome! If you have any more questions or need assistance with
         anything else, feel free to ask!'
     """
 

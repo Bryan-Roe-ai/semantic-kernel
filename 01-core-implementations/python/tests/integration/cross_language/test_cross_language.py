@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import time
 Test module for cross language
 
 Copyright (c) 2025 Bryan Roe

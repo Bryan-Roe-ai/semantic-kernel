@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Sk Function Base module
 
 Copyright (c) 2025 Bryan Roe

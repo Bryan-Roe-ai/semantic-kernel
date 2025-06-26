@@ -41,9 +41,9 @@ async def main():
 
     Previous information from chat:
     {{$chat_history}}
-    
+
     User: {{$request}}
-    Assistant: 
+    Assistant:
     """
 
     print("--- Rendered Prompt ---")

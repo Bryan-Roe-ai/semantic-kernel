@@ -55,10 +55,10 @@ async def main() -> None:
     Sample output:
 
     # User: Which team won the 2025 NCAA Basketball championship?
-    # WebSearchAgent: The Florida Gators won the 2025 NCAA Basketball championship by defeating the Houston Cougars 
+    # WebSearchAgent: The Florida Gators won the 2025 NCAA Basketball championship by defeating the Houston Cougars
         with a score of 65-63 [1].
 
-    [1]: https://www.ncaa.com/news/basketball-men/mml-official-bracket/2025-04-06/latest-bracket-schedule-and-scores-2025-ncaa-mens-tournament 
+    [1]: https://www.ncaa.com/news/basketball-men/mml-official-bracket/2025-04-06/latest-bracket-schedule-and-scores-2025-ncaa-mens-tournament
     "Latest bracket, schedule and scores for the 2025 NCAA men's tournament"
     """
 

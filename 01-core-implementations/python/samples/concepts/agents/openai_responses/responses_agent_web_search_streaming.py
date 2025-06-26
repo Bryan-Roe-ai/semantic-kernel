@@ -76,9 +76,9 @@ async def main():
     # User: 'Find me news articles about the latest technology trends.'
     # NewsSearcher: Recent developments in technology have highlighted several key trends shaping various industries:
 
-    **Artificial Intelligence (AI) Integration**: AI continues to revolutionize sectors by automating tasks, 
-        enhancing real-time analytics, and improving content delivery. At the 2025 NAB Show, AI's influence is 
-        evident across creator platforms, sports technology, streaming solutions, and cloud architectures. 
+    **Artificial Intelligence (AI) Integration**: AI continues to revolutionize sectors by automating tasks,
+        enhancing real-time analytics, and improving content delivery. At the 2025 NAB Show, AI's influence is
+        evident across creator platforms, sports technology, streaming solutions, and cloud architectures.
         ([tvtechnology.com](https://www.tvtechnology.com/news/nab-show-2025-exhibitor-insight-black-box?utm_source=openai))
     ...
     """

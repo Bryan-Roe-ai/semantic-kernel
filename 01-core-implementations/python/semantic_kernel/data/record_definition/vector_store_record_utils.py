@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Vector Store Record Utils module
 
 Copyright (c) 2025 Bryan Roe

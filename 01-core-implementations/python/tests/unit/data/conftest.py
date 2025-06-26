@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft. All rights reserved.
 
 
+import asyncio
+import re
 import ast
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass

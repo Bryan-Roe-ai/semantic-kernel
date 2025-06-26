@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+import asyncio
+import re
 Test module for azure cosmos db no sql collection
 
 Copyright (c) 2025 Bryan Roe

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import asyncio
 Test module for kernel prompt template
 
 Copyright (c) 2025 Bryan Roe
@@ -265,7 +266,7 @@ async def test_it_renders_code_using_input():
 
 @pytest.mark.asyncio
 async def test_it_renders_code_using_variables(kernel: Kernel):
-  
+
     arguments = KernelArguments()
 
     @kernel_function(name="function")

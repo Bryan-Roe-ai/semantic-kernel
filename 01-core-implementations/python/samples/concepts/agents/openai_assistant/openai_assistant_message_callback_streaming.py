@@ -24,9 +24,9 @@ from semantic_kernel.contents.chat_message_content import ChatMessageContent
 from semantic_kernel.functions import kernel_function
 
 """
-This sample demonstrates how to create an AzureAssistantAgent/OpenAIAssistantAgent and use it with the 
-streaming `invoke_stream()` method. The agent returns assistant messages as a stream of incremental chunks. 
-In addition, you can specify an `on_intermediate_message` callback to receive fully-formed tool-related 
+This sample demonstrates how to create an AzureAssistantAgent/OpenAIAssistantAgent and use it with the
+streaming `invoke_stream()` method. The agent returns assistant messages as a stream of incremental chunks.
+In addition, you can specify an `on_intermediate_message` callback to receive fully-formed tool-related
 messages — such as function calls and their results — while the assistant response is still being streamed.
 
 In this example, the agent is configured with a plugin that provides menu specials and item pricing.
@@ -126,23 +126,23 @@ async def main():
     # AuthorRole.ASSISTANT: Hello! How can I help you with the menu today?
     # AuthorRole.USER: 'What is the special soup?'
     Function Call:> MenuPlugin-get_specials with arguments: {}
-    Function Result:> 
+    Function Result:>
             Special Soup: Clam Chowder
             Special Salad: Cobb Salad
             Special Drink: Chai Tea
             for function: MenuPlugin-get_specials
-    # AuthorRole.ASSISTANT: The special soup today is Clam Chowder. Would you like to know more about it or see other 
+    # AuthorRole.ASSISTANT: The special soup today is Clam Chowder. Would you like to know more about it or see other
         specials?
     # AuthorRole.USER: 'What is the special drink?'
-    # AuthorRole.ASSISTANT: The special drink is Chai Tea. Would you like more information about it or the other 
+    # AuthorRole.ASSISTANT: The special drink is Chai Tea. Would you like more information about it or the other
         specials?
     # AuthorRole.USER: 'How much is that?'
     Function Call:> MenuPlugin-get_item_price with arguments: {"menu_item":"Chai Tea"}
     Function Result:> $9.99 for function: MenuPlugin-get_item_price
-    # AuthorRole.ASSISTANT: The special drink, Chai Tea, is $9.99. Would you like to order one or have questions about 
+    # AuthorRole.ASSISTANT: The special drink, Chai Tea, is $9.99. Would you like to order one or have questions about
         something else on the menu?
     # AuthorRole.USER: 'Thank you'
-    # AuthorRole.ASSISTANT: You're welcome! If you have any more questions or need help with the menu, just let me 
+    # AuthorRole.ASSISTANT: You're welcome! If you have any more questions or need help with the menu, just let me
         know. Enjoy your meal!
     """
 

@@ -32,21 +32,21 @@ class BackendStarterHandler(BaseHTTPRequestHandler):
             self.send_header('Content-type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
-            
+
             # Start the backend process in a new thread
             thread = threading.Thread(target=self.start_backend, daemon=True)
             thread.start()
-            
+
             self.wfile.write(b'{"status": "starting", "message": "Backend server is starting, please wait..."}')
         elif self.path == '/check':
             self.send_response(200)
             self.send_header('Content-type', 'application/json')
             self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
-            
+
             # Check if backend is already running
             backend_running = self.check_backend_running()
-            
+
             if backend_running:
                 self.wfile.write(b'{"status": "running", "message": "Backend server is already running"}')
             else:
@@ -86,24 +86,24 @@ class BackendStarterHandler(BaseHTTPRequestHandler):
                 return s.connect_ex(('localhost', 8000)) == 0
         except:
             return False
-    
+
     def start_backend(self):
         try:
             # Check if the backend is already running
             if self.check_backend_running():
                 print("Backend is already running on port 8000. Skipping startup.")
                 return
-                
+
             # Get the current directory
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            
+
             # Check if Python is available
             try:
                 subprocess.run([sys.executable, "--version"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             except (subprocess.SubprocessError, FileNotFoundError):
                 print("Error: Python interpreter not found or not working correctly.")
                 return
-                
+
             # Check if uvicorn is available
             uvicorn_available = False
             try:
@@ -118,32 +118,32 @@ class BackendStarterHandler(BaseHTTPRequestHandler):
                 except subprocess.SubprocessError:
                     print("Error: Failed to install uvicorn. Cannot start backend.")
                     return
-            
+
             # Check if backend.py exists
             backend_path = os.path.join(current_dir, 'backend.py')
             if not os.path.exists(backend_path):
                 print(f"Error: {backend_path} not found!")
                 return
-                
+
             # Check if .env file exists and create one if needed
             env_path = os.path.join(current_dir, '.env')
             if not os.path.exists(env_path):
                 print("Creating default .env file...")
                 with open(env_path, 'w') as env_file:
                     env_file.write('LM_STUDIO_URL="http://localhost:1234/v1/chat/completions"\n')
-            
+
             # Create uploads directory if it doesn't exist
             uploads_dir = os.path.join(current_dir, 'uploads')
             if not os.path.exists(uploads_dir):
                 os.makedirs(uploads_dir)
                 print(f"Created uploads directory: {uploads_dir}")
-                
+
             # Create plugins directory if it doesn't exist
             plugins_dir = os.path.join(current_dir, 'plugins')
             if not os.path.exists(plugins_dir):
                 os.makedirs(plugins_dir)
                 print(f"Created plugins directory: {plugins_dir}")
-                
+
             # Check if port 8000 is available
             backend_port = 8000
             if not check_port_available(backend_port):
@@ -158,16 +158,16 @@ class BackendStarterHandler(BaseHTTPRequestHandler):
                     print("Error: Could not find an available port for the backend server.")
                     print("Please close some applications and try again.")
                     return
-            
+
             # Construct the command to run the backend
             cmd = [sys.executable, "-m", "uvicorn", "backend:app", "--reload", "--host", "127.0.0.1", "--port", str(backend_port)]
-            
+
             # Start the process
             subprocess.Popen(cmd, cwd=current_dir)
             print(f"Backend server started successfully on port {backend_port}")
         except Exception as e:
             print(f"Error starting backend: {e}")
-    
+
     def log_message(self, format: str, *args: Any) -> None:
         """Override to suppress favicon and health check logs for quieter output."""
         if args and any('favicon' in str(arg) or 'health' in str(arg) for arg in args):
@@ -203,17 +203,17 @@ def run_server():
             return
     else:
         server_port = PORT
-    
+
     # Initialize httpd variable before the try block
     httpd = None
-    
+
     try:
         server_address = ('127.0.0.1', server_port)
         httpd = HTTPServer(server_address, BackendStarterHandler)
         print(f"Backend starter server running on http://127.0.0.1:{server_port}")
         print("This server allows the web UI to start the backend server.")
         print("Press Ctrl+C to stop.")
-        
+
         # Open the page in a browser if this is the first run
         first_run_flag = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".starter_shown")
         if not os.path.exists(first_run_flag):
@@ -222,7 +222,7 @@ def run_server():
             # Create flag file to prevent opening browser on subsequent runs
             with open(first_run_flag, "w") as f:
                 f.write("shown")
-        
+
         # Start the server
         httpd.serve_forever()
     except KeyboardInterrupt:
@@ -239,6 +239,6 @@ if __name__ == "__main__":
     current_dir = os.path.dirname(os.path.abspath(__file__))
     chat_path = os.path.join(current_dir, 'advanced-ai-chat.html')
     webbrowser.open(f'file:///{chat_path}')
-    
+
     # Run the starter server
     run_server()

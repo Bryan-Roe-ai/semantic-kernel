@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import platform
 Retry With Different Model module
 
 Copyright (c) 2025 Bryan Roe

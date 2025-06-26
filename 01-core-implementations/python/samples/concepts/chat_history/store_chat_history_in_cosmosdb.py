@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Store Chat History In Cosmosdb module
 
 Copyright (c) 2025 Bryan Roe

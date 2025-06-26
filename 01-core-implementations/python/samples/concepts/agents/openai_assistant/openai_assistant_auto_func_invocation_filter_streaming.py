@@ -85,10 +85,10 @@ async def auto_function_invocation_filter(context: AutoFunctionInvocationContext
     comment out the lines starting with `result = context.function_result` through `context.terminate = True`.
     context.terminate = True
     For this sample, simply setting `context.terminate = True` will return the unaltered function result:
-    
+
     Auto function invocation filter
     Function: get_specials
-    # Assistant: MenuPlugin-get_specials - 
+    # Assistant: MenuPlugin-get_specials -
             Special Soup: Clam Chowder
             Special Salad: Cobb Salad
             Special Drink: Chai Tea
@@ -167,25 +167,25 @@ async def main() -> None:
 
     """
     Sample Output:
-    
+
     # User: What's the special food on the menu?
 
     Auto function invocation filter
     Function: get_specials
     Altering the Menu plugin function result...
 
-    # Host: I'm sorry, but all the specials on the menu are currently sold out. If there's anything else you're 
+    # Host: I'm sorry, but all the specials on the menu are currently sold out. If there's anything else you're
         looking for, please let me know!
     # User: What should I do then?
-    # Host: You might consider ordering from the regular menu items instead. If you need any recommendations or 
+    # Host: You might consider ordering from the regular menu items instead. If you need any recommendations or
         information about specific items, such as prices or ingredients, feel free to ask!
 
     Intermediate Steps:
     Function Call:> MenuPlugin-get_specials with arguments: {}
     Function Result:> We are sold out, sorry! for function: MenuPlugin-get_specials
-    AuthorRole.ASSISTANT: I'm sorry, but all the specials on the menu are currently sold out. If there's anything 
+    AuthorRole.ASSISTANT: I'm sorry, but all the specials on the menu are currently sold out. If there's anything
         else you're looking for, please let me know!
-    AuthorRole.ASSISTANT: You might consider ordering from the regular menu items instead. If you need any 
+    AuthorRole.ASSISTANT: You might consider ordering from the regular menu items instead. If you need any
         recommendations or information about specific items, such as prices or ingredients, feel free to ask!
     """
 

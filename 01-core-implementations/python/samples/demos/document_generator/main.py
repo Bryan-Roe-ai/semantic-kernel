@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 AI module for main
 
 Copyright (c) 2025 Bryan Roe
@@ -47,7 +48,7 @@ The content of the blog post should include the following:
 1. What are AI connectors in Semantic Kernel?
 2. How do people use AI connectors in Semantic Kernel?
 3. How do devs create custom AI connectors in Semantic Kernel?
-    - Include a walk through of creating a custom AI connector. 
+    - Include a walk through of creating a custom AI connector.
       The connector may not connect to a real service, but should demonstrate the process.
     - Include a sample on how to use the connector.
     - If a reader follows the walk through and the sample, they should be able to run the connector.

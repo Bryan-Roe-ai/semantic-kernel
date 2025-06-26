@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+import re
 Agent With Mcp Agent module
 
 Copyright (c) 2025 Bryan Roe
@@ -26,12 +27,12 @@ from semantic_kernel.core_plugins.time_plugin import TimePlugin
 
 """
 The following sample demonstrates how to create a chat completion agent that
-answers questions about Github using a Semantic Kernel Plugin from a MCP server. 
+answers questions about Github using a Semantic Kernel Plugin from a MCP server.
 
-It uses the Azure OpenAI service to create a agent, so make sure to 
+It uses the Azure OpenAI service to create a agent, so make sure to
 set the required environment variables for the Azure AI Foundry service:
 - AZURE_OPENAI_CHAT_DEPLOYMENT_NAME
-- Optionally: AZURE_OPENAI_API_KEY 
+- Optionally: AZURE_OPENAI_API_KEY
 If this is not set, it will try to use DefaultAzureCredential.
 """
 
@@ -100,7 +101,7 @@ User: what restaurants can I choose from?
 2. **The Harbor**: A seafood restaurant with a view of the ocean.
 3. **The Joint**: A casual eatery with a diverse menu.
 
-Let me know if you would like to make a booking or need more information about any specific restaurant! 
+Let me know if you would like to make a booking or need more information about any specific restaurant!
 User: the farm sounds nice, what are the specials there?
 # PersonalAssistant: The specials at The Farm are:
 
@@ -108,23 +109,23 @@ User: the farm sounds nice, what are the specials there?
 - **Special Salad:** Caesar Salad
 - **Special Drink:** Old Fashioned
 
-Let me know if you'd like to make a booking or if you need any more information! 
+Let me know if you'd like to make a booking or if you need any more information!
 User: That entree sounds great, how much does it cost?
-# PersonalAssistant: The cost of the T-bone steak at The Farm is $9.99. Would you like to proceed with a booking? 
+# PersonalAssistant: The cost of the T-bone steak at The Farm is $9.99. Would you like to proceed with a booking?
 User: yes, for 2 people tomorrow
-# PersonalAssistant: I can confirm a booking for 2 people at The Farm for tomorrow, April 17, 2025. What time would you 
-like the reservation? 
+# PersonalAssistant: I can confirm a booking for 2 people at The Farm for tomorrow, April 17, 2025. What time would you
+like the reservation?
 User: at 2000
-# PersonalAssistant: I apologize, but the booking at The Farm for tomorrow at 20:00 has been denied. However, 
+# PersonalAssistant: I apologize, but the booking at The Farm for tomorrow at 20:00 has been denied. However,
 I was able to confirm bookings at the following restaurants:
 
 - **The Harbor**: Booking confirmed.
 - **The Joint**: Booking confirmed.
 
-If you'd like to book at one of these restaurants or try a different time or restaurant, just let me know! 
+If you'd like to book at one of these restaurants or try a different time or restaurant, just let me know!
 User: try 21.00
-# PersonalAssistant: Your table for 2 people at The Farm has been successfully booked for tomorrow, April 17, 2025, 
-at 21:00. Enjoy your meal! If you need anything else, feel free to ask. 
+# PersonalAssistant: Your table for 2 people at The Farm has been successfully booked for tomorrow, April 17, 2025,
+at 21:00. Enjoy your meal! If you need anything else, feel free to ask.
 User: exit
 """
 

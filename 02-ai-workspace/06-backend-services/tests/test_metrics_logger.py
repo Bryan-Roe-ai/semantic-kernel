@@ -34,11 +34,11 @@ class MetricsLogger:
 
 class TestMetricsLogger(unittest.TestCase):
     """Test cases for MetricsLogger"""
-    
+
     def setUp(self):
         """Set up test fixtures before each test method."""
         pass
-    
+
     def tearDown(self):
         """Tear down test fixtures after each test method."""
         pass

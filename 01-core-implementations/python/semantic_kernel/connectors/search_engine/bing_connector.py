@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from typing import List
+import asyncio
 Bing Connector module
 
 Copyright (c) 2025 Bryan Roe
@@ -29,7 +31,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 
 
 class BingConnector(ConnectorBase):
-  
+
 
     """
     A search engine connector that uses the Bing Search API to perform a web search

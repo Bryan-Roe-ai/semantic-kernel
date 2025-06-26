@@ -34,11 +34,11 @@ def check_workspace_health(*args, **kwargs):
 
 class TestHealthCheck(unittest.TestCase):
     """Test cases for HealthCheck"""
-    
+
     def setUp(self):
         """Set up test fixtures before each test method."""
         pass
-    
+
     def tearDown(self):
         """Tear down test fixtures after each test method."""
         pass

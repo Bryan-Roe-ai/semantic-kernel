@@ -24,20 +24,20 @@ class AGIPerformanceMonitor:
         self.metrics = {}
         self.monitoring = False
         self.monitor_thread = None
-    
+
     def start_monitoring(self):
         '''Start performance monitoring'''
         self.monitoring = True
         self.monitor_thread = threading.Thread(target=self._monitor_loop)
         self.monitor_thread.daemon = True
         self.monitor_thread.start()
-    
+
     def stop_monitoring(self):
         '''Stop performance monitoring'''
         self.monitoring = False
         if self.monitor_thread:
             self.monitor_thread.join()
-    
+
     def _monitor_loop(self):
         '''Main monitoring loop'''
         while self.monitoring:
@@ -48,7 +48,7 @@ class AGIPerformanceMonitor:
                 'disk_io': psutil.disk_io_counters()._asdict() if psutil.disk_io_counters() else {},
             })
             time.sleep(1)
-    
+
     def get_current_metrics(self) -> Dict[str, Any]:
         '''Get current performance metrics'''
         return self.metrics.copy()
