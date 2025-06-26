@@ -838,6 +838,7 @@ async def setup_openapi_function_call(kernel, function_name, arguments):
     )
 async def setup_openapi_function_call(kernel: Kernel, function_name, arguments):
     from semantic_kernel.connectors.openapi_plugin import OpenAPIFunctionExecutionParameters
+import asyncio
 
     openapi_spec_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json")
 

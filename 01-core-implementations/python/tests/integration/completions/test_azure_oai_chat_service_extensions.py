@@ -58,6 +58,7 @@ from semantic_kernel.prompt_template.prompt_template_config import PromptTemplat
 
 try:
     from semantic_kernel.connectors.memory_stores.azure_cognitive_search.azure_cognitive_search_memory_store import (
+import asyncio
         AzureCognitiveSearchMemoryStore,
     )
 

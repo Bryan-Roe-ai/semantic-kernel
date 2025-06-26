@@ -25,6 +25,7 @@ from semantic_kernel.agents.runtime import InProcessRuntime
 from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
 from semantic_kernel.contents import AuthorRole, ChatMessageContent
 from semantic_kernel.functions import kernel_function
+import json
 
 """
 The following sample demonstrates how to create a handoff orchestration that can triage

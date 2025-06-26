@@ -381,7 +381,6 @@ async def main():
     await manager.run_forever()
     return 0
 
-if __name__ == "__main__":
     try:
         exit_code = asyncio.run(main())
         sys.exit(exit_code)
@@ -476,7 +475,6 @@ def start_watching(plugins_dir):
         observer.stop()
     observer.join()
 
-if __name__ == "__main__":
     plugins_dir = Path(__file__).parent / "plugins"
     start_watching(plugins_dir)
 ''')
@@ -570,7 +568,6 @@ class SelfHealer:
                 logging.error(f"Error in self-healer: {e}")
                 time.sleep(check_interval)
 
-if __name__ == "__main__":
     base_dir = Path(__file__).parent
     healer = SelfHealer(base_dir)
     healer.run_forever()
@@ -748,7 +745,6 @@ class MetricsLogger:
         """Stop the metrics logging"""
         self.stop_event.set()
 
-if __name__ == "__main__":
     base_dir = Path(__file__).parent
     logger = MetricsLogger(base_dir)
 
@@ -1029,7 +1025,6 @@ def main():
     elif args.target == "docker":
         deployer.build_docker_image()
 
-if __name__ == "__main__":
     main()
 ''')
             print(f"{Colors.GREEN}✓ Created cloud deployment automation script{Colors.END}")

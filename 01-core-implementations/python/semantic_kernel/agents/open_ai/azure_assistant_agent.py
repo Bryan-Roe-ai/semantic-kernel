@@ -792,6 +792,7 @@ class AzureAssistantAgent(OpenAIAssistantAgent):
     ) -> str:
         """Substitute ${AzureOpenAI:Key} placeholders with fields from AzureOpenAIAgentSettings and extras."""
         import re
+import logging
 
         pattern = re.compile(r"\$\{([^}]+)\}")
 

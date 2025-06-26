@@ -1,3 +1,4 @@
+import sys
 #!/usr/bin/env python3
 """
 Comprehensive Copyright Management Tool

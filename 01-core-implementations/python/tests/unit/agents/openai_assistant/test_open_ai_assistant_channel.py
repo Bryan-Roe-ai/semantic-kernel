@@ -366,6 +366,7 @@ async def test_reset_channel_error_throws_exception(mock_thread_messages, mock_a
 
 async def test_channel_receive_fcc_skipped(openai_unit_test_env):
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
+from pathlib import Path
 
     message = ChatMessageContent(role=AuthorRole.ASSISTANT, items=[FunctionCallContent(function_name="test_function")])
 

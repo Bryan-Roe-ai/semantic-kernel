@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYN718W0GD57CQJWNVJJWQ43
+  version: v3
+---
+
 # Semantic Kernel C# Notebooks
 
 The current folder contains a few C# Jupyter Notebooks that demonstrate how to get started with
@@ -8,7 +14,7 @@ To run the notebooks, we recommend the following steps:
 - [Install .NET 8](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Install Visual Studio Code (VS Code)](https://code.visualstudio.com)
 - Launch VS Code and [install the "Polyglot" extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode).
-  Min version required: v1.0.4606021 (Dec 2023).
+   Min version required: v1.0.4606021 (Dec 2023).
 
 The steps above should be sufficient, you can now **open all the C# notebooks in VS Code**.
 
@@ -24,7 +30,7 @@ You can create the file manually or run [the Setup notebook](0-AI-settings.ipynb
 
 For Azure OpenAI:
 
-```json
+```json {"id":"01JYN718VZ7N3M8SS6KEDY3T2Q"}
 {
   "type": "azure",
   "model": "...", // Azure OpenAI Deployment Name
@@ -35,7 +41,7 @@ For Azure OpenAI:
 
 For OpenAI:
 
-```json
+```json {"id":"01JYN718VZ7N3M8SS6KFQQ2P36"}
 {
   "type": "openai",
   "model": "gpt-3.5-turbo", // OpenAI model name
@@ -72,18 +78,24 @@ should be sufficient to start:
 
 Install Python 3, Pip and .NET 8 in your system, then:
 
-    pip install jupyterlab
-    dotnet tool install -g Microsoft.dotnet-interactive
-    dotnet tool update -g Microsoft.dotnet-interactive
-    dotnet interactive jupyter install
+```sh {"id":"01JYN718W0GD57CQJWNEJ81G2G"}
+pip install jupyterlab
+dotnet tool install -g Microsoft.dotnet-interactive
+dotnet tool update -g Microsoft.dotnet-interactive
+dotnet interactive jupyter install
+```
 
 This command will confirm that Jupyter now supports C# notebooks:
 
-    jupyter kernelspec list
+```sh {"id":"01JYN718W0GD57CQJWNJ9PMWPC"}
+jupyter kernelspec list
+```
 
 Enter the notebooks folder, and run this to launch the browser interface:
 
-    jupyter-lab
+```sh {"id":"01JYN718W0GD57CQJWNKPM905Q"}
+jupyter-lab
+```
 
 ![image](https://user-images.githubusercontent.com/371009/216756924-41657aa0-5574-4bc9-9bdb-ead3db7bf93a.png)
 
@@ -93,13 +105,13 @@ Enter the notebooks folder, and run this to launch the browser interface:
 
 If you are unable to get the Nuget package, first list your Nuget sources:
 
-```sh
+```sh {"id":"01JYN718W0GD57CQJWNPS6Y6BN"}
 dotnet nuget list source
 ```
 
 If you see `No sources found.`, add the NuGet official package source:
 
-```sh
+```sh {"id":"01JYN718W0GD57CQJWNQ42N9FP"}
 dotnet nuget add source "https://api.nuget.org/v3/index.json" --name "nuget.org"
 ```
 
@@ -112,14 +124,13 @@ If somehow the notebooks don't work, run these commands:
 - Install .NET Interactive: `dotnet tool install -g Microsoft.dotnet-interactive`
 - Register .NET kernels into Jupyter: `dotnet interactive jupyter install` (this might return some errors, ignore them)
 - If you are still stuck, read the following pages:
-  - https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode
-  - https://devblogs.microsoft.com/dotnet/net-core-with-juypter-notebooks-is-here-preview-1/
-  - https://docs.servicestack.net/jupyter-notebooks-csharp
-  - https://developers.refinitiv.com/en/article-catalog/article/using--net-core-in-jupyter-notebook
+   - https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode
+   - https://devblogs.microsoft.com/dotnet/net-core-with-juypter-notebooks-is-here-preview-1/
+   - https://docs.servicestack.net/jupyter-notebooks-csharp
+   - https://developers.refinitiv.com/en/article-catalog/article/using--net-core-in-jupyter-notebook
 
 Note: ["Polyglot Notebooks" used to be called ".NET Interactive Notebooks"](https://devblogs.microsoft.com/dotnet/dotnet-interactive-notebooks-is-now-polyglot-notebooks/),
 so you might find online some documentation referencing the old name.
-
 
 ---
 

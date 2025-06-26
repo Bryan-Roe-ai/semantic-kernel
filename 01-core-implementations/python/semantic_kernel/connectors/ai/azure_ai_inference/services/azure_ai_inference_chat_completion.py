@@ -80,6 +80,7 @@ if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import PromptExecutionSettings
 from semantic_kernel.exceptions.service_exceptions import ServiceInitializationError
 from semantic_kernel.utils.experimental_decorator import experimental_class
+import asyncio
 
 _MESSAGE_CONVERTER: dict[AuthorRole, Any] = {
     AuthorRole.SYSTEM: SystemMessage,

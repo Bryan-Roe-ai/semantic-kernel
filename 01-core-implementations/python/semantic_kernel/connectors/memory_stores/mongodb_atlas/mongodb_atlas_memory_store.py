@@ -72,6 +72,7 @@ class MongoDBAtlasMemoryStore(MemoryStoreBase):
 
         """
         from semantic_kernel.connectors.mongodb import MongoDBAtlasSettings
+import asyncio
 
         try:
             mongodb_settings = MongoDBAtlasSettings(

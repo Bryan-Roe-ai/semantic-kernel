@@ -27,6 +27,7 @@ try:
     from azure.cosmos.aio import CosmosClient
 
     from semantic_kernel.connectors.memory.azure_cosmosdb_no_sql.azure_cosmosdb_no_sql_memory_store import (
+import asyncio
         AzureCosmosDBNoSQLMemoryStore,
     )
 

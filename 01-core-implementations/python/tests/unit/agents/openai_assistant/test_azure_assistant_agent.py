@@ -311,6 +311,7 @@ def mock_thread():
 
 async def test_open_ai_assistant_agent_create_channel(mock_thread):
     from semantic_kernel.agents.channels.open_ai_assistant_channel import OpenAIAssistantChannel
+from pathlib import Path
 
     client = AsyncMock(spec=AsyncOpenAI)
     definition = AsyncMock(spec=Assistant)

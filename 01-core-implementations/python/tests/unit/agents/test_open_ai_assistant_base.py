@@ -153,6 +153,7 @@ from semantic_kernel.functions.kernel_function_from_method import (
     KernelFunctionFromMethod,
 )
 from semantic_kernel.kernel import Kernel
+from pathlib import Path
 
 # region Test Fixtures
 

@@ -67,7 +67,6 @@ def generate_fibonacci(max_val):
         a, b = b, a + b
     return fibonacci_numbers
 
-if __name__ == "__main__":
     fib_numbers = generate_fibonacci(101)
     print(fib_numbers)
 ```

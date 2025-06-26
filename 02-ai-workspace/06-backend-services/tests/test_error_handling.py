@@ -25,6 +25,7 @@ from datetime import datetime
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from error_handling import (
+import logging
     ErrorResponse, ErrorSeverity, ErrorCategory, ErrorContext,
     AIWorkspaceException, ValidationError, AuthenticationError,
     AuthorizationError, ResourceNotFoundError, ServiceUnavailableError,

@@ -12,6 +12,7 @@ from openai.types.beta.threads.image_file import ImageFile
 from openai.types.beta.threads.image_file_content_block import ImageFileContentBlock
 from openai.types.beta.threads.text import Text
 from openai.types.beta.threads.text_content_block import TextContentBlock
+from pathlib import Path
 
 
 @pytest.fixture

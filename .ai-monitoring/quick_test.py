@@ -29,6 +29,7 @@ def quick_test():
     try:
         # Import and initialize
         from universal_ai_monitor import get_universal_monitor
+import logging
         print("✅ Successfully imported AI monitor")
 
         monitor = get_universal_monitor()

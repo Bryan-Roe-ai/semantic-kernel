@@ -1,3 +1,4 @@
+import sys
 #!/usr/bin/env python3
 """
 AGI module for mcp-agi-client

@@ -236,7 +236,6 @@ def main():
     
     print("👋 Thanks for using your AI!")
 
-if __name__ == "__main__":
     main()
 '''
         

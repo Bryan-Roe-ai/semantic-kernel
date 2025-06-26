@@ -22,6 +22,7 @@ from semantic_kernel.agents.runtime.core.agent_id import AgentId
 from semantic_kernel.agents.runtime.core.agent_metadata import AgentMetadata
 from semantic_kernel.agents.runtime.core.message_context import MessageContext
 from semantic_kernel.utils.feature_stage_decorator import experimental
+import asyncio
 
 
 @experimental

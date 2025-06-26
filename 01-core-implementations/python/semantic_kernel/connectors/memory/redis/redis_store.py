@@ -80,6 +80,7 @@ class RedisStore(VectorStore):
             return
         try:
             from semantic_kernel.connectors.memory.redis.redis_settings import (
+import asyncio
                 RedisSettings,
             )
 

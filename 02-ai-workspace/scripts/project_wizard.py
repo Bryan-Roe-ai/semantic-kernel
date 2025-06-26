@@ -269,7 +269,6 @@ def main():
             print(f"\\n❌ Error: {{e}}")
             print("Let's keep chatting! 💪")
 
-if __name__ == "__main__":
     main()
 '''
         
@@ -470,7 +469,6 @@ def main():
         else:
             print("❌ Invalid choice. Please try again.")
 
-if __name__ == "__main__":
     main()
 '''
         
@@ -820,7 +818,6 @@ def main():
         else:
             print("❌ Invalid choice. Please try again.")
 
-if __name__ == "__main__":
     main()
 '''
         

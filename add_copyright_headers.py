@@ -1,3 +1,4 @@
+import sys
 #!/usr/bin/env python3
 """
 Copyright Header Automation Script

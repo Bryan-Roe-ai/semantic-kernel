@@ -33,6 +33,7 @@ from semantic_kernel.connectors.postgres import (
     PostgresStore,
 )
 from semantic_kernel.data.vector import DistanceFunction, IndexKind, VectorStoreField, vectorstoremodel
+import asyncio
 
 
 @fixture(scope="function")

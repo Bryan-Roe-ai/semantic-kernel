@@ -375,6 +375,8 @@ async def test_create_index(collection_hash, mock_create_collection):
 
 async def test_create_index_manual(collection_hash, mock_create_collection):
     from redis.commands.search.indexDefinition import IndexDefinition, IndexType
+import asyncio
+import json
 
     fields = ["fields"]
     index_definition = IndexDefinition(prefix="test:", index_type=IndexType.HASH)

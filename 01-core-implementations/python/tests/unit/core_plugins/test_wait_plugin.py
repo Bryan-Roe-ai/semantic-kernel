@@ -31,6 +31,7 @@ import pytest
 
 from semantic_kernel.core_plugins.wait_plugin import WaitPlugin
 from semantic_kernel.exceptions import FunctionExecutionException
+import asyncio
 
 test_data_good = [
     0,

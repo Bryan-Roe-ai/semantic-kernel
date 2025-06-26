@@ -7,6 +7,7 @@ import pytest
 import pytest_asyncio
 from google.generativeai import protos
 from google.generativeai.types import AsyncGenerateContentResponse
+import asyncio
 
 
 @pytest.fixture()

@@ -65,6 +65,7 @@ from semantic_kernel.connectors.ai.open_ai.services._open_ai_realtime import Lis
 from semantic_kernel.connectors.ai.realtime_client_base import RealtimeClientBase
 from semantic_kernel.contents import AudioContent, RealtimeAudioEvent
 from semantic_kernel.functions import kernel_function
+import json
 
 # Callback events URI to handle callback events.
 CALLBACK_URI_HOST = os.environ["CALLBACK_URI_HOST"]

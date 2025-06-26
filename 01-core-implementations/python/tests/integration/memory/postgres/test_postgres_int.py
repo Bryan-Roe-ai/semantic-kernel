@@ -41,6 +41,7 @@ from semantic_kernel.exceptions.memory_connector_exceptions import (
 try:
     import psycopg  # noqa: F401
     import psycopg_pool  # noqa: F401
+import asyncio
 
     psycopg_pool_installed = True
 except ImportError:

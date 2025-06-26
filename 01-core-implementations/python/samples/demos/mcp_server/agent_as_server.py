@@ -147,6 +147,7 @@ async def run(transport: Literal["sse", "stdio"] = "stdio", port: int | None = N
             uvicorn.run(starlette_app, host="0.0.0.0", port=port)  # nosec
         elif transport == "stdio":
             from mcp.server.stdio import stdio_server
+import asyncio
 
             async def handle_stdin(stdin: Any | None = None, stdout: Any | None = None) -> None:
                 async with stdio_server() as (read_stream, write_stream):

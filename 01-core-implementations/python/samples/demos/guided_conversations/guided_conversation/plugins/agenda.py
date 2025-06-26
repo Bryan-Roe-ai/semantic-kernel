@@ -29,6 +29,7 @@ from guided_conversation.utils.conversation_helpers import Conversation, Convers
 from guided_conversation.utils.openai_tool_calling import ToolValidationResult
 from guided_conversation.utils.plugin_helpers import PluginOutput, fix_error, update_attempts
 from guided_conversation.utils.resources import ResourceConstraintMode, ResourceConstraintUnit, format_resource
+import json
 
 AGENDA_ERROR_CORRECTION_SYSTEM_TEMPLATE = """<message role="system">You are a helpful, thoughtful, and meticulous assistant.
 You are conducting a conversation with a user. You tried to update the agenda, but the update was invalid.

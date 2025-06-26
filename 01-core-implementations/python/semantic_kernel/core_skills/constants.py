@@ -1,3 +1,4 @@
+import json
 #!/usr/bin/env python3
 """
 Constants module

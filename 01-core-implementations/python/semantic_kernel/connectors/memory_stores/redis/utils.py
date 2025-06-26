@@ -24,6 +24,7 @@ from redis.asyncio.client import Redis
 from redis.commands.search.document import Document
 
 from semantic_kernel.memory.memory_record import MemoryRecord
+import asyncio
 
 
 def get_redis_key(collection_name: str, record_id: str) -> str:  # pragma: no cover

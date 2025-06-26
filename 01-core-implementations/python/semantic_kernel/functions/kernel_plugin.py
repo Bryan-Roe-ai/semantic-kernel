@@ -451,6 +451,7 @@ class KernelPlugin(KernelBaseModel):
             PluginInitializationError: if the plugin URL or plugin JSON/YAML is not provided
         """
         from semantic_kernel.connectors.openapi_plugin.openapi_manager import create_functions_from_openapi
+import json
 
         if not openapi_document_path and not openapi_parsed_spec:
             raise PluginInitializationError("Either the OpenAPI document path or a parsed OpenAPI spec is required.")

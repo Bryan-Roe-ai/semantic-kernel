@@ -613,7 +613,6 @@ async def main():
 
     return 0
 
-if __name__ == "__main__":
     try:
         exit_code = asyncio.run(main())
         sys.exit(exit_code)

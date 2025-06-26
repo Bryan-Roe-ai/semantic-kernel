@@ -45,6 +45,7 @@ pytestmark = pytest.mark.skipif(
 try:
 
     import psycopg_pool  # noqa: F401
+import time
 
     psycopg_pool_installed = True
 except ImportError:

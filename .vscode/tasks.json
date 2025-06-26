@@ -300,9 +300,10 @@
     },
     {
       "label": "func: host start",
-      "type": "func",
-      "command": "host start",
-      "problemMatcher": ["$func-dotnet-watch"]
+      "type": "process",
+      "command": "func",
+      "args": ["host", "start"],
+      "problemMatcher": ["$msCompile"]
     },
     {
       "label": "Rebuild: solution",

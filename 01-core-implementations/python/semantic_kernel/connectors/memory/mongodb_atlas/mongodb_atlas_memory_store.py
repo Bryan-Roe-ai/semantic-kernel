@@ -69,6 +69,7 @@ class MongoDBAtlasMemoryStore(MemoryStoreBase):
 
         """
         from semantic_kernel.connectors.memory.mongodb_atlas.mongodb_atlas_settings import (
+import asyncio
             MongoDBAtlasSettings,
         )
 

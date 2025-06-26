@@ -1,3 +1,4 @@
+import sys
 #!/usr/bin/env python3
 """
 Simple Api Server module

@@ -48,6 +48,7 @@ from semantic_kernel.utils.telemetry.model_diagnostics.decorators import trace_t
 
 if TYPE_CHECKING:
     from semantic_kernel.connectors.ai.prompt_execution_settings import (
+import json
         PromptExecutionSettings,
     )
 

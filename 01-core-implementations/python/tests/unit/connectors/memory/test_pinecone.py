@@ -31,6 +31,7 @@ from pytest import fixture, mark, raises
 
 from semantic_kernel.connectors.pinecone import PineconeCollection, PineconeStore
 from semantic_kernel.exceptions.vector_store_exceptions import VectorStoreInitializationException
+import asyncio
 
 BASE_PATH_ASYNCIO = "pinecone.PineconeAsyncio"
 BASE_PATH_INDEX_CLIENT_ASYNCIO = "pinecone.data.index_asyncio._IndexAsyncio"

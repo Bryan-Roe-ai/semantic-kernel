@@ -83,6 +83,7 @@ from semantic_kernel.functions.kernel_plugin import KernelPlugin
 from semantic_kernel.kernel import Kernel
 from semantic_kernel.prompt_template.kernel_prompt_template import KernelPromptTemplate
 from semantic_kernel.prompt_template.prompt_template_config import PromptTemplateConfig
+from pathlib import Path
 
 
 def mock_thread_run_step_completed():
