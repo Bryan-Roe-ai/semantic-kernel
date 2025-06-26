@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYNE1TDTGJWAJ2MVJ2Q9TNSE
+  version: v3
+---
+
 # Semantic Kernel
 
 [![License: MIT](https://img.shields.io/github/license/microsoft/semantic-kernel)](https://github.com/microsoft/semantic-kernel/blob/main/LICENSE)
@@ -48,7 +54,7 @@ in the history of computing.
 
 Install the Yarn package manager and create a project virtual environment.
 
-```bash
+```bash {"id":"01JYNE1TDGE6V5JSEJKHCFE766"}
 # Install yarn package
 npm install -g yarn
 # Use Yarn to install project deps
@@ -61,7 +67,7 @@ Make sure you have an
 
 Copy those keys into a `.env` file in this repo
 
-```
+```sh {"id":"01JYNE1TDNC7WAX36KKKW29S6M"}
 OPENAI_API_KEY=""
 OPENAI_ORG_ID=""
 AZURE_OPENAI_API_KEY=""
@@ -70,7 +76,7 @@ AZURE_OPENAI_ENDPOINT=""
 
 ### Quickstart ⚡
 
-```typescript
+```typescript {"id":"01JYNE1TDNC7WAX36KKNVNYVMH"}
 import { SemanticKernel as sk } from 'semantic-kernel';
 
 const kernel = sk.createKernel();
@@ -84,23 +90,23 @@ const skPrompt = `
 Give me the TLDR in 5 words.
 `;
 
-const textToSummarize = `
-    1) A robot may not injure a human being or, through inaction,
-    allow a human being to come to harm.
+const textToSummarize = ` 1) A robot may not injure a human being or, through inaction,
+allow a human being to come to harm.
 
     2) A robot must obey orders given it by human beings except where
     such orders would conflict with the First Law.
 
     3) A robot must protect its own existence as long as such protection
     does not conflict with the First or Second Law.
+
 `;
 
 const tldrFunction = sk.extensions.createSemanticFunction({
-  kernel,
-  skPrompt,
-  maxTokens: 200,
-  temperature: 0,
-  topP: 0.5,
+kernel,
+skPrompt,
+maxTokens: 200,
+temperature: 0,
+topP: 0.5,
 });
 
 const summary = await kernel.runOnStrAsync(textToSummarize, tldrFunction);
@@ -108,6 +114,7 @@ const output = summary?.variables?.trim();
 console.log(`Output: ${output}`);
 
 // Output: Protect humans, follow orders, survive.
+
 ```
 
 ## How does this compare to the main C# branch?
@@ -129,10 +136,10 @@ in a different direction, but also to consider the impact on the larger ecosyste
 
 To learn more and get started:
 
--   Read the [documentation](https://aka.ms/sk/learn)
--   Learn how to [contribute](https://github.com/microsoft/semantic-kernel/blob/main/CONTRIBUTING.md) to the project
--   Join the [Discord community](https://aka.ms/SKDiscord)
--   Hear from the team on our [blog](https://aka.ms/sk/blog)
+- Read the [documentation](https://aka.ms/sk/learn)
+- Learn how to [contribute](https://github.com/microsoft/semantic-kernel/blob/main/CONTRIBUTING.md) to the project
+- Join the [Discord community](https://aka.ms/SKDiscord)
+- Hear from the team on our [blog](https://aka.ms/sk/blog)
 
 ## Code of Conduct
 
@@ -148,7 +155,6 @@ with any additional questions or comments.
 Copyright (c) Microsoft Corporation. All rights reserved.
 
 Licensed under the [MIT](LICENSE) license.
-
 
 ---
 

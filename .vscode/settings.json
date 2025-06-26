@@ -212,6 +212,7 @@
       "color": "#BD0014",
       "connectionType": "memory",
       "readOnly": false,
+      "role": "development",
       "driverOptions": {
         "extensions": ["sqlite-js", "sqlite-vec", "sqlean"]
       }
