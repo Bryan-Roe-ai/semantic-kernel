@@ -43,6 +43,7 @@
     {
       "name": "RobotCode: Default",
       "type": "robotcode",
+      "request": "launch",
       "purpose": "default"
     },
     {
@@ -53,7 +54,8 @@
       "args": ["${file}"],
       "console": "integratedTerminal",
       "justMyCode": true,
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "python": "${command:python.interpreterPath}"
     },
     {
       "name": "C#: HuggingFace ImageToText",

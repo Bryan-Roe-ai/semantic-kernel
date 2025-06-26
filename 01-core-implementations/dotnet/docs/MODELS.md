@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYN8PKE1NMX2Q8ACNYXC8SX0
+  version: v3
+---
+
 # Models
 
 This document describes the planned models to be supported by Semantic Kernel along with their current status. If you are interested in contributing to the development of a model, please use the attached links to the GitHub issues and comment that you're wanting to help.
@@ -7,13 +13,9 @@ This document describes the planned models to be supported by Semantic Kernel al
 In the core Semantic Kernel repo, we plan on supporting up to four deployment types of each model:
 
 - Dedicated API endpoints (e.g., OpenAI's APIs, Mistral.AI, and Google Gemini)
-
 - Azure AI deployments via the [model catalog](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/model-catalog)
-
-- Azure AI deployments via the [model catalog][aiCatalogLink]
-
+- Azure AI deployments via the [model catalog](https://learn.microsoft.com/en-us/azure/ai-studio/how-to/model-catalog)
 - Local deployments via [Ollama](https://ollama.ai/library)
-
 - Hugging face deployment using the [Hugging Face inference API](https://huggingface.co/docs/api-inference/index)
 
 To support these different deployment types, we will follow a similar pattern to the Azure OpenAI and OpenAI connectors. Each connector uses the same underlying model and abstractions, but the connector constructors may take different parameters. For example, the Azure OpenAI connector expects an Azure endpoint and key, whereas the OpenAI connector expects an OpenAI organization ID and API key.
@@ -140,5 +142,3 @@ Please note that not all of the model interfaces are defined yet. As part of con
 | P2       | roberta-large                  | Not started | `IFillMask`          | Hugging Face    | TBD          | TBD       | TBD      |
 | P1       | stable-diffusion-xl-base-1.0   | Not started | `ITextToImage`       | Azure AI        | TBD          | TBD       | TBD      |
 | P1       | stable-diffusion-xl-base-1.0   | Not started | `ITextToImage`       | Hugging Face    | TBD          | TBD       | TBD      |
-
-[aiCatalogLink]: https://learn.microsoft.com/en-us/azure/ai-studio/how-to/model-catalog

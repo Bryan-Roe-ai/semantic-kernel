@@ -8,6 +8,6 @@
     "env": true
   },
   "target": {
-    "namespace": "default"
+    "deployment": "semantic-kernel"
   }
 }
