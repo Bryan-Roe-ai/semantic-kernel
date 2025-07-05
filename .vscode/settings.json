@@ -223,5 +223,6 @@
   },
   "[java]": {
     "editor.defaultFormatter": "georgewfraser.vscode-javac"
-  }
+  },
+  "python-envs.pythonProjects": []
 }

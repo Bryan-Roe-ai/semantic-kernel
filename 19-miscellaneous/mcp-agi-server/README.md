@@ -1,3 +1,9 @@
+---
+runme:
+  id: 01JYNKNWXJ8CHDRD1W3ZXNZDHM
+  version: v3
+---
+
 # MCP AGI Server
 
 An advanced Model Context Protocol (MCP) server designed for Artificial General Intelligence capabilities, featuring comprehensive tools for autonomous reasoning, learning, and adaptation.
@@ -39,22 +45,22 @@ An advanced Model Context Protocol (MCP) server designed for Artificial General 
 
 ## Quick Start
 
-```bash
+```bash {"id":"01JYNKNWXAECXW1D0T2DAC71BD"}
 # Install dependencies
-pip install -r requirements.txt
+%pip install -r requirements.txt
 
 # Start the MCP server
-python -m mcp_agi_server
+!python3 -m mcp_agi_server || python3 -m mcp_agi_server
 
 # Or with custom configuration
-python -m mcp_agi_server --config config/advanced.json
+!python3 -m mcp_agi_server --config config/advanced.json || python3 -m mcp_agi_server --config config/advanced.json
 ```
 
 ## Configuration
 
 The server supports extensive configuration options:
 
-```json
+```json {"id":"01JYNKNWXAECXW1D0T2EFDTVG7"}
 {
   "server": {
     "host": "localhost",
@@ -77,7 +83,7 @@ The server supports extensive configuration options:
 
 ## Architecture
 
-```
+```ini {"id":"01JYNKNWXCNXABGA924CGCWXHB"}
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   MCP Client    │◄──►│   MCP Protocol   │◄──►│   AGI Server    │
 │   (Claude, etc) │    │   Handler        │    │   Core          │
@@ -99,7 +105,7 @@ The server supports extensive configuration options:
 
 ### Basic Tool Execution
 
-```python
+```python {"id":"01JYNKNWXE5XJEM577YC4V5HFW"}
 # Execute code safely
 result = await server.execute_code("print('Hello, AGI!')", language="python")
 
@@ -113,7 +119,7 @@ result = await server.execute_plan(plan)
 
 ### Advanced AGI Features
 
-```python
+```python {"id":"01JYNKNWXE5XJEM577YEZ6TT9H"}
 # Autonomous problem solving
 solution = await server.solve_problem(
     "How can I optimize this neural network architecture?",
@@ -258,7 +264,6 @@ For questions, issues, or contributions:
 - GitHub Issues: [Link to issues]
 - Documentation: [Link to docs]
 - Discord: [Link to Discord]
-
 
 ---
 
