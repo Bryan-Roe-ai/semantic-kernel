@@ -324,7 +324,8 @@
       "detail": "Run npm setup to install dependencies and npm compile to build the project"
     },
     {
-      "label": "Start AGI Auto File Updates",
+      // Note: This task requires a Unix-like environment with executable permissions for launch_agi_auto.sh.
+      "label": "Start AGI Auto File Updates (Monitor Mode)",
       "type": "shell",
       "command": "./launch_agi_auto.sh",
       "args": ["--monitor"],
@@ -345,7 +346,30 @@
       "runOptions": {
         "instanceLimit": 1
       }
-    },
+    // Windows alternative (uncomment and adjust if needed)
+    // {
+    //   "label": "Start AGI Auto File Updates (Windows)",
+    //   "type": "shell",
+    //   "command": "powershell",
+    //   "args": ["-ExecutionPolicy", "Bypass", "-File", ".\\launch_agi_auto.ps1", "--monitor"],
+    //   "group": "build",
+    //   "isBackground": true,
+    //   "options": {
+    //     "cwd": "${workspaceFolder}"
+    //   },
+    //   "problemMatcher": [],
+    //   "presentation": {
+    //     "echo": true,
+    //     "reveal": "always",
+    //     "focus": false,
+    //     "panel": "new",
+    //     "showReuseMessage": true,
+    //     "clear": false
+    //   },
+    //   "runOptions": {
+    //     "instanceLimit": 1
+    //   }
+    // },
     {
       "label": "AGI Auto File Updates - Daemon",
       "type": "shell",
