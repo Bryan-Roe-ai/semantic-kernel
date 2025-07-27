@@ -23,8 +23,8 @@ class PersistentMemoryStore(VolatileMemoryStore):
             try:
                 with open(self._file_path, "rb") as f:
                     self._store = pickle.load(f)
-            except Exception as exc:  # pragma: no cover - corruption case
-                logger.warning("Failed to load memory store: %s", exc)
+            except (pickle.PickleError, FileNotFoundError, EOFError) as exc:  # pragma: no cover - corruption case
+                logger.warning("Failed to load memory store due to %s: %s", type(exc).__name__, exc)
         else:
             self._store = {}
 
