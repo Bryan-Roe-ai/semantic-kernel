@@ -580,11 +580,15 @@ class EnhancedAutoMode:
         finally:
             await runner.cleanup()
 
-    async def _external_trigger_loop(self) -> None:
-        """Process incoming external triggers"""
-        while self.is_running:
-            data = await self.external_trigger_queue.get()
-            logging.info(f"Received external trigger: {data}")
++    async def _external_trigger_loop(self) -> None:
++        """Process incoming external triggers"""
++        while self.is_running:
++            try:
++                data = await asyncio.wait_for(self.external_trigger_queue.get(), timeout=1.0)
++                logging.info(f"Received external trigger: {data}")
++            except asyncio.TimeoutError:
++                # Timeout allows periodic check of self.is_running for graceful shutdown
++                continue
             self.external_trigger_queue.task_done()
 
     async def _send_health_status(self, health_status: Dict[str, Any]) -> None:
