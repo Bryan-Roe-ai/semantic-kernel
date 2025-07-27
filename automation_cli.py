@@ -10,6 +10,9 @@ SCRIPTS_DIR = os.path.join(os.path.dirname(__file__), '19-miscellaneous', '11-au
 
 def list_scripts() -> None:
     """Print available automation scripts."""
+    if not os.path.isdir(SCRIPTS_DIR):
+        print(f"Scripts directory not found: {SCRIPTS_DIR}", file=sys.stderr)
+        sys.exit(1)
     for name in sorted(os.listdir(SCRIPTS_DIR)):
         if name.endswith(('.sh', '.py', '.ps1')):
             print(name)
