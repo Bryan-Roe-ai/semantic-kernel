@@ -109,6 +109,16 @@ php -S localhost:8000
 
 Then visit `http://localhost:8000` in your browser.
 
+### Option 3: Launch with AGI Backend
+
+Use the provided helper script to start both the website and the AGI MCP server automatically:
+
+```bash
+python ../11-automation-scripts/launch_agi_website.py
+```
+
+This opens the site in your browser once the backend is ready.
+
 ## 🎯 AGI Chat Demo Capabilities
 
 The interactive chat demo responds intelligently to various topics:
