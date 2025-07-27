@@ -139,9 +139,9 @@ class AgentThread(ABC):
             return self.id
 
         # Otherwise, create the thread.
-        logger.debug("Creating agent thread")
+        self.logger.debug("Creating agent thread")
         self._id = await self._create()
-        logger.debug("Created agent thread with id %s", self._id)
+        self.logger.debug("Created agent thread with id %s", self._id)
         return self.id
 
     async def delete(self) -> None:
