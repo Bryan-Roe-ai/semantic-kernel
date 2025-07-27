@@ -553,7 +553,11 @@ class EnhancedAutoMode:
                 data = await request.json()
             except Exception:
                 data = await request.post()
-            await self.external_trigger_queue.put(dict(data))
+                if isinstance(data, web.FormData):
+                    data_dict = {key: value for key, value in data.items()}
+                else:
+                    data_dict = dict(data)
+            await self.external_trigger_queue.put(data_dict)
             return web.json_response({"status": "accepted"})
 
         app.add_routes([web.post("/trigger", trigger)])
