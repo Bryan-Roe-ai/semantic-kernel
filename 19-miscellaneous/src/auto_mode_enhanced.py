@@ -568,8 +568,7 @@ class EnhancedAutoMode:
         await site.start()
 
         try:
-            while self.is_running:
-                await asyncio.sleep(1)
+            await self.shutdown_event.wait()
         finally:
             await runner.cleanup()
 
