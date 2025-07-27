@@ -565,7 +565,15 @@ class EnhancedAutoMode:
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, self.config.webhook_host, self.config.webhook_port)
-        await site.start()
+        try:
+            await site.start()
+        except OSError as e:
+            # Port binding failed, provide clear diagnostics
+            print(f"Failed to start webhook server on {self.config.webhook_host}:{self.config.webhook_port}: {e}")
+            # Optionally, you could add fallback behavior here, such as:
+            # raise
+            # or
+            # sys.exit(1)
 
         try:
             await self.shutdown_event.wait()
