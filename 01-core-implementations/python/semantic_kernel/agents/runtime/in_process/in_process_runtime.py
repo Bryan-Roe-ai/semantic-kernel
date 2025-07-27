@@ -22,7 +22,7 @@ import logging
 import sys
 import uuid
 import warnings
-from asyncio import CancelledError, Future, Queue, Task
+from asyncio import CancelledError, Future, Task
 from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, ParamSpec, TypeVar, cast
@@ -30,9 +30,9 @@ from typing import Any, ParamSpec, TypeVar, cast
 from semantic_kernel.utils.feature_stage_decorator import experimental
 
 if sys.version_info >= (3, 13):
-    from asyncio import Queue, QueueShutDown
+    from asyncio import PriorityQueue, Queue, QueueShutDown
 else:
-    from .queue import Queue, QueueShutDown  # type: ignore
+    from .queue import PriorityQueue, Queue, QueueShutDown  # type: ignore
 
 from opentelemetry.trace import TracerProvider
 
@@ -90,6 +90,7 @@ class PublishMessageEnvelope:
     topic_id: TopicId
     metadata: EnvelopeMetadata | None = None
     message_id: str
+    priority: int = 0
 
 
 @experimental
@@ -104,6 +105,7 @@ class SendMessageEnvelope:
     cancellation_token: CancellationToken
     metadata: EnvelopeMetadata | None = None
     message_id: str
+    priority: int = 0
 
 
 @experimental
@@ -116,6 +118,7 @@ class ResponseMessageEnvelope:
     sender: AgentId
     recipient: AgentId | None
     metadata: EnvelopeMetadata | None = None
+    priority: int = 0
 
 
 P = ParamSpec("P")
@@ -196,7 +199,9 @@ class InProcessRuntime(CoreRuntime):
     ) -> None:
         """Initialize the runtime."""
         self._tracer_helper = TraceHelper(tracer_provider, MessageRuntimeTracingConfig("InProcessRuntime"))
-        self._message_queue: Queue[PublishMessageEnvelope | SendMessageEnvelope | ResponseMessageEnvelope] = Queue()
+        self._message_queue: PriorityQueue[
+            PublishMessageEnvelope | SendMessageEnvelope | ResponseMessageEnvelope
+        ] = PriorityQueue()
         # (namespace, type) -> List[AgentId]
         self._agent_factories: dict[
             str, Callable[[], Agent | Awaitable[Agent]] | Callable[[CoreRuntime, AgentId], Agent | Awaitable[Agent]]
@@ -230,6 +235,7 @@ class InProcessRuntime(CoreRuntime):
         sender: AgentId | None = None,
         cancellation_token: CancellationToken | None = None,
         message_id: str | None = None,
+        priority: int = 0,
     ) -> Any:
         """Send a message to an agent and get a response."""
         if cancellation_token is None:
@@ -270,8 +276,9 @@ class InProcessRuntime(CoreRuntime):
                     sender=sender,
                     metadata=get_telemetry_envelope_metadata(),
                     message_id=message_id,
+                    priority=priority,
                 )
-            )
+            , priority=priority)
 
             cancellation_token.link_future(future)
 
@@ -285,6 +292,7 @@ class InProcessRuntime(CoreRuntime):
         sender: AgentId | None = None,
         cancellation_token: CancellationToken | None = None,
         message_id: str | None = None,
+        priority: int = 0,
     ) -> None:
         """Publish a message to all agents that are subscribed to the topic."""
         with self._tracer_helper.trace_block(
@@ -319,8 +327,9 @@ class InProcessRuntime(CoreRuntime):
                     topic_id=topic_id,
                     metadata=get_telemetry_envelope_metadata(),
                     message_id=message_id,
+                    priority=priority,
                 )
-            )
+            , priority=priority)
 
     async def save_state(self) -> Mapping[str, Any]:
         """Save the state of all instantiated agents.
@@ -437,8 +446,9 @@ class InProcessRuntime(CoreRuntime):
                     sender=message_envelope.recipient,
                     recipient=message_envelope.sender,
                     metadata=get_telemetry_envelope_metadata(),
+                    priority=message_envelope.priority,
                 )
-            )
+            , priority=message_envelope.priority)
             self._message_queue.task_done()
 
     async def _process_publish(self, message_envelope: PublishMessageEnvelope) -> None:
@@ -693,7 +703,7 @@ class InProcessRuntime(CoreRuntime):
             await self._run_context.stop()
         finally:
             self._run_context = None
-            self._message_queue = Queue()
+            self._message_queue = PriorityQueue()
 
     async def stop_when_idle(self) -> None:
         """Stop the runtime message processing loop when there is no outstanding message being processed or queued.
@@ -707,7 +717,7 @@ class InProcessRuntime(CoreRuntime):
             await self._run_context.stop_when_idle()
         finally:
             self._run_context = None
-            self._message_queue = Queue()
+            self._message_queue = PriorityQueue()
 
     async def stop_when(self, condition: Callable[[], bool]) -> None:
         """Stop the runtime message processing loop when the condition is met.
@@ -728,7 +738,7 @@ class InProcessRuntime(CoreRuntime):
         await self._run_context.stop_when(condition)
 
         self._run_context = None
-        self._message_queue = Queue()
+        self._message_queue = PriorityQueue()
 
     async def agent_metadata(self, agent: AgentId) -> AgentMetadata:
         """Get the metadata for an agent."""
