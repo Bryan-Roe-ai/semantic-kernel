@@ -313,7 +313,7 @@ class EnhancedAutoMode:
         self.event_loop = None
         self.tasks = []
         self.shutdown_event = asyncio.Event()
-        self.external_trigger_queue: asyncio.Queue = asyncio.Queue()
+        self.external_trigger_queue: asyncio.Queue = asyncio.Queue(maxsize=100)
 
         # Setup logging
         self._setup_logging()
