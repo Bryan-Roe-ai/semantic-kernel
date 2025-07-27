@@ -29,36 +29,39 @@ class PersistentMemoryStore(VolatileMemoryStore):
             self._store = {}
 
     def _persist(self) -> None:
-        """Write the current store to disk."""
-        with open(self._file_path, "wb") as f:
-            pickle.dump(self._store, f)
+        """Write the current store to disk if modified."""
+        if self._dirty:
+            with open(self._file_path, "wb") as f:
+                pickle.dump(self._store, f)
+            self._dirty = False  # Reset the dirty flag after persisting
 
     async def create_collection(self, collection_name: str) -> None:  # noqa: D401
         await super().create_collection(collection_name)
-        self._persist()
+        self._dirty = True  # Mark the store as modified
 
     async def delete_collection(self, collection_name: str) -> None:  # noqa: D401
         await super().delete_collection(collection_name)
-        self._persist()
+        self._dirty = True  # Mark the store as modified
 
     async def upsert(self, collection_name: str, record: MemoryRecord) -> str:  # noqa: D401
         key = await super().upsert(collection_name, record)
-        self._persist()
+        self._dirty = True  # Mark the store as modified
         return key
 
     async def upsert_batch(self, collection_name: str, records: List[MemoryRecord]) -> List[str]:  # noqa: D401
         keys = await super().upsert_batch(collection_name, records)
-        self._persist()
+        self._dirty = True  # Mark the store as modified
         return keys
 
     async def remove(self, collection_name: str, key: str) -> None:  # noqa: D401
         await super().remove(collection_name, key)
-        self._persist()
+        self._dirty = True  # Mark the store as modified
 
     async def remove_batch(self, collection_name: str, keys: List[str]) -> None:  # noqa: D401
         await super().remove_batch(collection_name, keys)
-        self._persist()
+        self._dirty = True  # Mark the store as modified
 
     async def close(self) -> None:  # noqa: D401
-        self._persist()
+        if self._dirty:
+            self._persist()  # Ensure changes are saved before closing
 
