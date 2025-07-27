@@ -521,6 +521,7 @@ class Agent(KernelBaseModel, ABC):
             thread = construct_thread()
             logger.debug("Created new thread for agent interaction")
             await thread.create()
+            logger.debug("New thread created with id %s", getattr(thread, "id", None))
 
         if not isinstance(thread, expected_type):
             raise AgentExecutionException(
