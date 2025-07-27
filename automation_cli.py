@@ -5,7 +5,8 @@ import os
 import subprocess
 import sys
 
-SCRIPTS_DIR = os.path.join(os.path.dirname(__file__), '19-miscellaneous', '11-automation-scripts')
+DEFAULT_SCRIPTS_DIR = os.path.join(os.path.dirname(__file__), '19-miscellaneous', '11-automation-scripts')
+SCRIPTS_DIR = os.getenv('SCRIPTS_DIR_ENV', DEFAULT_SCRIPTS_DIR)
 
 
 def list_scripts() -> None:
