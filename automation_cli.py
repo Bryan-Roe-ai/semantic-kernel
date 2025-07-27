@@ -30,7 +30,11 @@ def run_script(script: str, args: list[str]) -> None:
     elif script.endswith('.py'):
         cmd = [sys.executable, path]
     elif script.endswith('.ps1'):
-        cmd = ['pwsh', path]
+        pwsh_path = shutil.which('pwsh')
+        if pwsh_path:
+            cmd = [pwsh_path, path]
+        else:
+            cmd = ['powershell', '-File', path]
     else:
         cmd = [path]
     cmd.extend(args)
