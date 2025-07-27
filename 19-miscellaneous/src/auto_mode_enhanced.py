@@ -31,6 +31,7 @@ from dataclasses import dataclass, asdict
 from collections import deque
 import socket
 import requests
+from aiohttp import web
 
 
 @dataclass
@@ -60,6 +61,8 @@ class AutoModeConfig:
     # Network and external services
     health_check_urls: List[str] = None
     webhook_url: Optional[str] = None
+    webhook_host: str = "0.0.0.0"
+    webhook_port: int = 8081
 
     # Advanced features
     enable_graceful_degradation: bool = True
@@ -310,6 +313,7 @@ class EnhancedAutoMode:
         self.event_loop = None
         self.tasks = []
         self.shutdown_event = asyncio.Event()
+        self.external_trigger_queue: asyncio.Queue = asyncio.Queue()
 
         # Setup logging
         self._setup_logging()
@@ -540,6 +544,37 @@ class EnhancedAutoMode:
 
             await asyncio.sleep(self.config.check_interval)
 
+    async def _webhook_server(self) -> None:
+        """Lightweight webhook server for external triggers"""
+        app = web.Application()
+
+        async def trigger(request: web.Request):
+            try:
+                data = await request.json()
+            except Exception:
+                data = await request.post()
+            await self.external_trigger_queue.put(dict(data))
+            return web.json_response({"status": "accepted"})
+
+        app.add_routes([web.post("/trigger", trigger)])
+
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, self.config.webhook_host, self.config.webhook_port)
+        await site.start()
+
+        try:
+            while self.is_running:
+                await asyncio.sleep(1)
+        finally:
+            await runner.cleanup()
+
+    async def _external_trigger_loop(self) -> None:
+        """Process incoming external triggers"""
+        while self.is_running:
+            data = await self.external_trigger_queue.get()
+            logging.info(f"Received external trigger: {data}")
+
     async def _send_health_status(self, health_status: Dict[str, Any]) -> None:
         """Send health status to webhook"""
         try:
@@ -642,7 +677,8 @@ class EnhancedAutoMode:
             # Start core tasks
             self.tasks = [
                 asyncio.create_task(self.health_check_loop()),
-                # Add more background tasks as needed
+                asyncio.create_task(self._webhook_server()),
+                asyncio.create_task(self._external_trigger_loop()),
             ]
 
             # Start default managed processes
