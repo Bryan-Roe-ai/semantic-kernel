@@ -77,6 +77,7 @@ kernel = Kernel()
 ## 🤝 Contributing
 
 We welcome contributions! Please see [CONTRIBUTORS.md](CONTRIBUTORS.md) for guidelines.
+For a brief setup guide, see [docs/CONTRIBUTOR-QUICKSTART.md](docs/CONTRIBUTOR-QUICKSTART.md).
 
 **Important:** All contributions must respect the existing copyright and attribution structure.
 
