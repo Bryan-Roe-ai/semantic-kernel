@@ -585,6 +585,7 @@ class EnhancedAutoMode:
         while self.is_running:
             data = await self.external_trigger_queue.get()
             logging.info(f"Received external trigger: {data}")
+            self.external_trigger_queue.task_done()
 
     async def _send_health_status(self, health_status: Dict[str, Any]) -> None:
         """Send health status to webhook"""
