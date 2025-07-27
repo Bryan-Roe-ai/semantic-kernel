@@ -76,35 +76,41 @@ class AGICommandLine:
         ]
         return "\n".join(plan_steps)
 
-async def run_command(command: str, *args):
-    """Run an AGI command"""
+async def run_command(
+    command: str,
+    *args,
+    max_retries: int = 3,
+    retry_delay: float = 1.0,
+) -> bool:
+    """Run an AGI command with basic retry logic."""
     agi = AGICommandLine()
 
-    try:
-        if command == "reason":
-            query = " ".join(args) if args else "What is artificial general intelligence?"
-            function = agi.kernel.get_function("agi_cli", "reason")
-            result = await function.invoke(agi.kernel, query=query)
+    for attempt in range(1, max_retries + 1):
+        try:
+            if command == "reason":
+                query = " ".join(args) if args else "What is artificial general intelligence?"
+                function = agi.kernel.get_function("agi_cli", "reason")
+                result = await function.invoke(agi.kernel, query=query)
 
-        elif command == "file":
-            filename = args[0] if args else "example.txt"
-            operation = args[1] if len(args) > 1 else "analyze"
-            function = agi.kernel.get_function("agi_cli", "process_file")
-            result = await function.invoke(agi.kernel, filename=filename, operation=operation)
+            elif command == "file":
+                filename = args[0] if args else "example.txt"
+                operation = args[1] if len(args) > 1 else "analyze"
+                function = agi.kernel.get_function("agi_cli", "process_file")
+                result = await function.invoke(agi.kernel, filename=filename, operation=operation)
 
-        elif command == "code":
-            language = args[0] if args else "python"
-            description = " ".join(args[1:]) if len(args) > 1 else "Simple example function"
-            function = agi.kernel.get_function("agi_cli", "generate_code")
-            result = await function.invoke(agi.kernel, language=language, description=description)
+            elif command == "code":
+                language = args[0] if args else "python"
+                description = " ".join(args[1:]) if len(args) > 1 else "Simple example function"
+                function = agi.kernel.get_function("agi_cli", "generate_code")
+                result = await function.invoke(agi.kernel, language=language, description=description)
 
-        elif command == "plan":
-            goal = " ".join(args) if args else "Complete project tasks"
-            function = agi.kernel.get_function("agi_cli", "plan_task")
-            result = await function.invoke(agi.kernel, goal=goal)
+            elif command == "plan":
+                goal = " ".join(args) if args else "Complete project tasks"
+                function = agi.kernel.get_function("agi_cli", "plan_task")
+                result = await function.invoke(agi.kernel, goal=goal)
 
-        elif command == "help":
-            result = """
+            elif command == "help":
+                result = """
 🤖 AGI Command Line Interface
 
 Available commands:
@@ -119,16 +125,19 @@ Examples:
   python agi_cli.py file myfile.txt analyze
   python agi_cli.py code python "Create a web scraper"
   python agi_cli.py plan "Build a recommendation system"
-"""
-        else:
-            result = f"❌ Unknown command: {command}. Use 'help' for available commands."
+            """
+            else:
+                result = f"❌ Unknown command: {command}. Use 'help' for available commands."
 
-        print(result)
-        return True
+            print(result)
+            return True
 
-    except Exception as e:
-        print(f"❌ Error executing command: {e}")
-        return False
+        except Exception as e:
+            if attempt == max_retries:
+                print(f"❌ Error executing command after {max_retries} attempts: {e}")
+                return False
+            print(f"⚠️  Attempt {attempt} failed: {e}. Retrying in {retry_delay} seconds...")
+            await asyncio.sleep(retry_delay)
 
 def main():
     """Main CLI function"""
