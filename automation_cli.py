@@ -35,7 +35,7 @@ def run_script(script: str, args: list[str]) -> None:
         cmd = [path]
     cmd.extend(args)
 
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True, shell=False)
 
 
 def main() -> None:
