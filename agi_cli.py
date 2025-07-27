@@ -29,7 +29,7 @@ try:
     from semantic_kernel.functions import kernel_function
 except ModuleNotFoundError as e:  # pragma: no cover - dependency missing
     sys.stderr.write(
-        "Semantic Kernel package not found. Install dependencies to use agi_cli.\n"
+        f"Semantic Kernel package not found: {e}. Install dependencies to use agi_cli.\n"
     )
     sys.exit(1)
 
