@@ -26,6 +26,7 @@ from typing import Dict, List, Any
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import requests
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -438,9 +439,49 @@ class AIWorkspaceMonitor:
         # Log to file
         self.log_alert(alert)
 
-        # Could add email/Slack notifications here
-        # self.send_email_alert(alert)
-        # self.send_slack_alert(alert)
+        # Send optional notifications
+        self.send_email_alert(alert)
+        self.send_slack_alert(alert)
+
+    def send_email_alert(self, alert: Dict[str, Any]):
+        """Send alert via SMTP if configured."""
+        smtp_server = os.environ.get("ALERT_SMTP_SERVER")
+        from_addr = os.environ.get("ALERT_FROM_EMAIL")
+        to_addr = os.environ.get("ALERT_TO_EMAIL")
+        if not (smtp_server and from_addr and to_addr):
+            logger.debug("Email alert configuration not provided")
+            return
+
+        msg = MIMEText(alert["message"])
+        msg["Subject"] = f"AI Workspace Alert - {alert['severity']}"
+        msg["From"] = from_addr
+        msg["To"] = to_addr
+
+        try:
+            with smtplib.SMTP(smtp_server) as server:
+                server.sendmail(from_addr, [to_addr], msg.as_string())
+        except Exception as e:
+            logger.error(f"Failed to send email alert: {e}")
+
+    def send_slack_alert(self, alert: Dict[str, Any]):
+        """Send alert to Slack webhook if configured."""
+        webhook = os.environ.get("SLACK_WEBHOOK_URL")
+        if not webhook:
+            logger.debug("Slack webhook URL not configured")
+            return
+
+        payload = {
+            "text": f"🚨 {alert['message']} (severity: {alert['severity']})"
+        }
+
+        try:
+            response = requests.post(webhook, json=payload, timeout=5)
+            if response.status_code >= 400:
+                logger.error(
+                    f"Slack webhook failed: {response.status_code} {response.text}"
+                )
+        except Exception as e:
+            logger.error(f"Failed to send Slack alert: {e}")
 
     def log_alert(self, alert: Dict[str, Any]):
         """Log alert to file."""
