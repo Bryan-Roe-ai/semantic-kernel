@@ -18,7 +18,12 @@ License: MIT
 from typing import Optional, Tuple
 from typing import Dict, Optional, Tuple, Union
 
-from dotenv import dotenv_values
+try:
+    from dotenv import dotenv_values
+except ModuleNotFoundError:  # pragma: no cover - optional dependency
+    def dotenv_values(path: str) -> Dict[str, str]:
+        """Fallback if python-dotenv is not installed."""
+        return {}
 
 
 def openai_settings_from_dot_env() -> Tuple[str, Optional[str]]:
