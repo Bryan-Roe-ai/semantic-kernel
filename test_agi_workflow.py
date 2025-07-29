@@ -17,6 +17,11 @@ def stub_semantic_kernel(monkeypatch):
             self.plugins[plugin_name] = plugin
 
         def get_function(self, plugin_name, function_name):
+            if not hasattr(self.plugins[plugin_name], function_name):
+                class Func:
+                    async def invoke(self, kernel, **kwargs):
+                        raise AttributeError(f"Function '{function_name}' not found in plugin '{plugin_name}'.")
+                return Func()
             func = getattr(self.plugins[plugin_name], function_name)
 
             class Func:
