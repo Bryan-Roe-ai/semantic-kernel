@@ -72,7 +72,7 @@ def test_process_workflow_error():
     orchestrator = AGIWorkflowOrchestrator()
     orchestrator.add_agent("chat_agent", LocalAGIAgent("ChatAgent"))
 
-    workflow = [{"agent": "chat_agent", "function": "unknown_function"}]
+    workflow = [{"agent": "chat_agent", "function": "unknown_function", "params": {}}]
 
     results = asyncio.run(orchestrator.process_workflow(workflow))
 
