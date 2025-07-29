@@ -46,8 +46,14 @@ def main() -> int:
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
             result = json.load(resp)
-    except Exception as e:
-        print(f"Error calling OpenAI API: {e}", file=sys.stderr)
+    except urllib.error.HTTPError as e:
+        print(f"HTTP error occurred: {e.code} {e.reason}", file=sys.stderr)
+        return 1
+    except urllib.error.URLError as e:
+        print(f"URL error occurred: {e.reason}", file=sys.stderr)
+        return 1
+    except json.JSONDecodeError as e:
+        print(f"JSON decode error: {e.msg}", file=sys.stderr)
         return 1
 
     choices = result.get("choices")
