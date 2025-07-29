@@ -6,10 +6,11 @@ authors = [{ name = "Microsoft", email = "SK-Support@microsoft.com"}]
 readme = "pip/README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
-urls.homepage = "https://learn.microsoft.com/en-us/semantic-kernel/overview/"
-urls.source = "https://github.com/microsoft/semantic-kernel/tree/main/python"
-urls.release_notes = "https://github.com/microsoft/semantic-kernel/releases?q=tag%3Apython-1&expanded=true"
-urls.issues = "https://github.com/microsoft/semantic-kernel/issues"
+[project.urls]
+homepage = "https://learn.microsoft.com/en-us/semantic-kernel/overview/"
+source = "https://github.com/microsoft/semantic-kernel/tree/main/python"
+release_notes = "https://github.com/microsoft/semantic-kernel/releases?q=tag%3Apython-1&expanded=true"
+issues = "https://github.com/microsoft/semantic-kernel/issues"
 classifiers = [
     "License :: OSI Approved :: MIT License",
     "Development Status :: 5 - Production/Stable",
