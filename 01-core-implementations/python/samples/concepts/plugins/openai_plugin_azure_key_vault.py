@@ -256,12 +256,6 @@ async def handle_streaming(
         if (
             not execution_settings.function_choice_behavior.auto_invoke_kernel_functions
             and isinstance(message[0], StreamingChatMessageContent)
-        if not execution_settings.function_choice_behavior.auto_invoke_kernel_functions and isinstance(
-        if not execution_settings.function_call_behavior.auto_invoke_kernel_functions and isinstance(
-            message[0], StreamingChatMessageContent
-        if (
-            not execution_settings.function_choice_behavior.auto_invoke_kernel_functions
-            and isinstance(message[0], StreamingChatMessageContent)
             and message[0].role == AuthorRole.ASSISTANT
         ):
             streamed_chunks.append(message[0])

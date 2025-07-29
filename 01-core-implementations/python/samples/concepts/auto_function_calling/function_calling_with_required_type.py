@@ -182,8 +182,6 @@ async def handle_streaming(
         streaming_chat_message = reduce(
             lambda first, second: first + second, streamed_chunks
         )
-        if hasattr(streaming_chat_message, "content"):
-        streaming_chat_message = reduce(lambda first, second: first + second, streamed_chunks)
         if hasattr(streaming_chat_message, "content") and streaming_chat_message.content:
             print(streaming_chat_message.content)
         print("Printing returned tool calls...")
