@@ -11,8 +11,8 @@ import os
 import sys
 import urllib.request
 
-API_URL = "https://api.openai.com/v1/completions"
-MODEL = "davinci-codex"
+API_URL = "https://api.openai.com/v1/chat/completions"
+MODEL = "gpt-3.5-turbo"
 
 
 def main() -> int:
