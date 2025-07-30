@@ -476,7 +476,7 @@ class AIWorkspaceMonitor:
         }
 
         try:
-            response = requests.post(webhook, json=payload, timeout=5)
+            response = requests.post(webhook, json=payload, timeout=5, verify=True)
             if response.status_code >= 400:
                 logger.error(
                     f"Slack webhook failed: {response.status_code} {response.text}"
