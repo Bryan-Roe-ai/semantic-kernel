@@ -566,8 +566,12 @@ class EnhancedAutoMode:
         try:
             while self.is_running:
                 await asyncio.sleep(1)
-        finally:
+        except Exception as e:
+            logging.error(f"Exception in webhook server loop: {e}")
             await runner.cleanup()
+        finally:
+            if self.is_running:
+                await runner.cleanup()
 
     async def _external_trigger_loop(self) -> None:
         """Process incoming external triggers"""
