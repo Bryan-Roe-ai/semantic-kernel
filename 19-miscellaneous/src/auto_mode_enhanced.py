@@ -553,7 +553,7 @@ class EnhancedAutoMode:
                 data = await request.json()
             except Exception:
                 data = await request.post()
-            await self.external_trigger_queue.put(dict(data))
+            await self.external_trigger_queue.put(dict(data) if hasattr(data, 'items') else data)
             return web.json_response({"status": "accepted"})
 
         app.add_routes([web.post("/trigger", trigger)])
