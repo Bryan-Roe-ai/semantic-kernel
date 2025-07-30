@@ -13,7 +13,12 @@ import subprocess
 import time
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
+# Traverse up the directory tree to find the repository root by locating the `.git` folder.
+# This ensures the script works even if the directory structure changes.
+
+REPO_ROOT = Path(__file__).resolve().parent
+while not (REPO_ROOT / ".git").exists() and REPO_ROOT != REPO_ROOT.parent:
+    REPO_ROOT = REPO_ROOT.parent
 FIX_SCRIPT = REPO_ROOT / "04-infrastructure/scripts/deployment/fix-github-pages.sh"
 
 scheduler = sched.scheduler(time.time, time.sleep)
