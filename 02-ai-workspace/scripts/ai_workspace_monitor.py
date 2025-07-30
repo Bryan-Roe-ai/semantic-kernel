@@ -477,11 +477,8 @@ class AIWorkspaceMonitor:
 
         try:
             response = requests.post(webhook, json=payload, timeout=5, verify=True)
-            if response.status_code >= 400:
-                logger.error(
-                    f"Slack webhook failed: {response.status_code} {response.text}"
-                )
-        except Exception as e:
+            response.raise_for_status()
+        except requests.exceptions.RequestException as e:
             logger.error(f"Failed to send Slack alert: {e}")
 
     def log_alert(self, alert: Dict[str, Any]):
