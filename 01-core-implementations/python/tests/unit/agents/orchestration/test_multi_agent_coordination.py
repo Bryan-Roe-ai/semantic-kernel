@@ -25,13 +25,13 @@ async def test_multiple_orchestrations_run_concurrently():
     runtime.start()
 
     try:
-        result_a_future, result_b_future = await asyncio.gather(
+        result_a, result_b = await asyncio.gather(
             orchestration_a.invoke(task="message_a", runtime=runtime),
             orchestration_b.invoke(task="message_b", runtime=runtime),
         )
 
-        result_a = await result_a_future.get(1.0)
-        result_b = await result_b_future.get(1.0)
+        # Results are directly available, no need to call .get()
+        # result_a and result_b are already resolved
     finally:
         await runtime.stop_when_idle()
 
