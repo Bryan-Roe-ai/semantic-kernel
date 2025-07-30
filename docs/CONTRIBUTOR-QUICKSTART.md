@@ -9,7 +9,7 @@ This short guide helps new contributors set up their environment and submit a pu
 
 ```bash
 git clone <your-fork-url>
-cd semantic-kernel
+cd <repository-name>
 ```
 
 ## 2. Install Dependencies
