@@ -47,7 +47,7 @@ Run the relevant tests before submitting code:
 pytest
 
 # TypeScript
-yarn test
+npm test
 
 # .NET
 dotnet test
