@@ -14,7 +14,15 @@ def generate_dataset(directory: str, num_files: int = 50, lines_per_file: int = 
             f.write(content)
 
 def main() -> None:
-    dataset_dir = "stress_test_dataset"
+    parser = argparse.ArgumentParser(description="Stress test automation script.")
+    parser.add_argument(
+        "--dataset-dir",
+        type=str,
+        default="stress_test_dataset",
+        help="Directory to store the generated dataset (default: stress_test_dataset)."
+    )
+    args = parser.parse_args()
+    dataset_dir = args.dataset_dir
     print(f"Generating dataset in {dataset_dir}...")
     generate_dataset(dataset_dir)
     print("Processing markdown files...")
