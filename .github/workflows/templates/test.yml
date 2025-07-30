@@ -18,6 +18,9 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
+      - name: Build .NET project
+        if: inputs.dotnet == true
+        run: dotnet build 01-core-implementations/dotnet/SK-dotnet.sln --configuration Release
       - name: Run .NET tests
         if: inputs.dotnet == true
         run: dotnet test 01-core-implementations/dotnet/SK-dotnet.sln --configuration Release --no-build
