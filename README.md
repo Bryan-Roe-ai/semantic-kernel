@@ -46,7 +46,7 @@ This project includes an extensive set of GitHub Actions workflows to
 automatically maintain the repository and streamline development. Workflows cover
 maintenance tasks, intelligent issue management, security scanning, code quality
 analysis, release automation, and multi-environment deployment. See
-[`04-infrastructure/.github/workflows/README.md`](04-infrastructure/.github/workflows/README.md)
+[`04-infrastructure/.github/workflows/`](04-infrastructure/.github/workflows/)
 for full details.
 
 ## 🚀 Getting Started
