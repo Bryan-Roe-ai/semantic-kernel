@@ -14,7 +14,8 @@ def generate_dataset(directory: str, num_files: int = 50, lines_per_file: int = 
             f.write(content)
 
 def main() -> None:
-    dataset_dir = "stress_test_dataset"
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    dataset_dir = f"stress_test_dataset_{timestamp}"
     print(f"Generating dataset in {dataset_dir}...")
     generate_dataset(dataset_dir)
     print("Processing markdown files...")
