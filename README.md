@@ -22,6 +22,8 @@ This is an advanced artificial intelligence development framework created by Bry
 - **Multi-Language Support**: Python, TypeScript, JavaScript, and .NET implementations
 - **Extensible Architecture**: Modular design for easy customization
 - **Comprehensive Tooling**: Development tools and utilities
+- **Automation Workflows**: GitHub Actions for maintenance, issue management,
+  security scanning, code quality checks, releases, and deployment
 - **Production Ready**: Robust deployment and infrastructure support
 
 ## 📁 Project Structure
@@ -37,6 +39,15 @@ This repository is organized into several key areas:
 - `07-resources/` - Shared resources and assets
 - `08-archived-versions/` - Historical versions and archives
 - `09-agi-development/` - Advanced AGI development components
+
+## 🤖 Automation Features
+
+This project includes an extensive set of GitHub Actions workflows to
+automatically maintain the repository and streamline development. Workflows cover
+maintenance tasks, intelligent issue management, security scanning, code quality
+analysis, release automation, and multi-environment deployment. See
+[`04-infrastructure/.github/workflows/`](04-infrastructure/.github/workflows/)
+for full details.
 
 ## 🚀 Getting Started
 
