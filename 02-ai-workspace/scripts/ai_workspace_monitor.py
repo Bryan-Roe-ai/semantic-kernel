@@ -458,7 +458,8 @@ class AIWorkspaceMonitor:
         msg["To"] = to_addr
 
         try:
-            with smtplib.SMTP(smtp_server) as server:
+            with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
+                server.login(smtp_username, smtp_password)
                 server.sendmail(from_addr, [to_addr], msg.as_string())
         except Exception as e:
             logger.error(f"Failed to send email alert: {e}")
