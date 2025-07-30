@@ -26,7 +26,13 @@ def run_fix() -> None:
         return
     print(f"🔧 Running {FIX_SCRIPT} ...")
     try:
-        subprocess.run(["bash", str(FIX_SCRIPT)], check=False)
+        result = subprocess.run(["bash", str(FIX_SCRIPT)], capture_output=True, text=True)
+        if result.returncode != 0:
+            print(f"⚠️  Fix script failed with return code {result.returncode}")
+            print(f"⚠️  Error output: {result.stderr.strip()}")
+        else:
+            print(f"✅ Fix script completed successfully")
+            print(f"ℹ️  Output: {result.stdout.strip()}")
     except Exception as exc:
         print(f"⚠️  Failed to run fix script: {exc}")
 
