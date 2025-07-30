@@ -572,8 +572,12 @@ class EnhancedAutoMode:
     async def _external_trigger_loop(self) -> None:
         """Process incoming external triggers"""
         while self.is_running:
-            data = await self.external_trigger_queue.get()
-            logging.info(f"Received external trigger: {data}")
+            try:
+                data = await asyncio.wait_for(self.external_trigger_queue.get(), timeout=5)
+                logging.info(f"Received external trigger: {data}")
+            except asyncio.TimeoutError:
+                if not self.is_running:
+                    break
 
     async def _send_health_status(self, health_status: Dict[str, Any]) -> None:
         """Send health status to webhook"""
