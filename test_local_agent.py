@@ -60,7 +60,7 @@ async def run_status_test(kernel: Kernel, logger: logging.Logger) -> None:
     logger.info("Status test: %s", status_result)
 
 async def test_local_agent():
-    """Run all local agent tests and return ``True`` if successful."""
+    """Run all local agent tests and return True if successful."""
     logger = setup_logger()
     try:
         kernel = create_kernel()
