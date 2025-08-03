@@ -74,7 +74,7 @@ def print_dashboard(base_dir: Path):
         overview = {
             'cpu_percent': psutil.cpu_percent(interval=1),
             'memory_percent': psutil.virtual_memory().percent,
-            'disk_percent': psutil.disk_usage('/').percent,
+            'disk_percent': psutil.disk_usage(Path.cwd().anchor).percent,
         }
         status = {'running': False}
         pid_file = STATE_DIR / 'extended.pid'
