@@ -33,10 +33,10 @@ def get_dashboard_path(repo_root, args):
 dashboard_path = get_dashboard_path(repo_root, None)  # Placeholder for args
 if dashboard_path.exists():
     sys.path.append(str(dashboard_path))
-    try:
-        from extended_monitoring_dashboard import ExtendedMonitoringDashboard  # type: ignore
-    except Exception:
-        pass
++    try:
++        from extended_monitoring_dashboard import ExtendedMonitoringDashboard  # type: ignore
++    except (ImportError, ModuleNotFoundError):
++        pass
 
 STATE_DIR = Path('.extended_automode')
 
