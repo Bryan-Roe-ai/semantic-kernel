@@ -301,15 +301,20 @@ class PriorityQueue(Queue[T]):
         self._queue = []  # type: ignore[assignment]
         self._counter = itertools.count()
 
-    def _put(self, item: tuple[int, int, T]) -> None:  # type: ignore[override]
+    class PriorityQueueItem(NamedTuple):
+        priority: int
+        counter: int
+        item: T
+
+    def _put(self, item: PriorityQueueItem) -> None:  # type: ignore[override]
         heapq.heappush(self._queue, item)  # type: ignore[arg-type]
 
     def _get(self) -> T:  # type: ignore[override]
-        _, _, item = heapq.heappop(self._queue)
+        item = heapq.heappop(self._queue).item
         return item
 
     async def put(self, item: T, priority: int = 0) -> None:  # type: ignore[override]
-        await super().put((priority, next(self._counter), item))
+        await super().put(self.PriorityQueueItem(priority, next(self._counter), item))
 
     def put_nowait(self, item: T, priority: int = 0) -> None:  # type: ignore[override]
-        super().put_nowait((priority, next(self._counter), item))
+        super().put_nowait(self.PriorityQueueItem(priority, next(self._counter), item))
