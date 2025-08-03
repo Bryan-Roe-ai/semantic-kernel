@@ -231,18 +231,26 @@ async def demo_local_agents():
 
         elif choice == "6":
             # Run the same demo workflow in parallel
-            workflow = [
+            # Split workflow into two groups to avoid race conditions
+            initial_workflow = [
                 {"agent": "monitor_agent", "function": "monitor_performance"},
                 {"agent": "file_agent", "function": "file_operation", "params": {"operation": "create", "filename": "test.txt"}},
-                {"agent": "chat_agent", "function": "process_request", "params": {"request": "status"}},
+                {"agent": "chat_agent", "function": "process_request", "params": {"request": "status"}}
+            ]
+
+            dependent_workflow = [
                 {"agent": "file_agent", "function": "file_operation", "params": {"operation": "read", "filename": "test.txt"}}
             ]
 
-            print("🔄 Running workflow in parallel...")
-            results = await orchestrator.process_workflow_parallel(workflow)
-            for step, result in results.items():
+            print("🔄 Running initial workflow in parallel...")
+            initial_results = await orchestrator.process_workflow_parallel(initial_workflow)
+            for step, result in initial_results.items():
                 print(f"  ✅ {step}: {result}")
 
+            print("🔄 Running dependent workflow sequentially...")
+            dependent_results = await orchestrator.process_workflow(dependent_workflow)
+            for step, result in dependent_results.items():
+                print(f"  ✅ {step}: {result}")
         elif choice == "7":
             print("👋 Goodbye!")
             break
