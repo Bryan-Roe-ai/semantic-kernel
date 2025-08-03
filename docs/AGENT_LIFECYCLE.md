@@ -12,7 +12,7 @@ This document describes the typical lifecycle of a Semantic Kernel agent and how
 
 ## State Management
 
-`InProcessRuntime` exposes methods such as `SaveAgentStateAsync` and `LoadAgentStateAsync` to persist agent state between runs. Unit tests like `AgentStateLifecycleTest` demonstrate saving state from one runtime instance and restoring it in another.
+`InProcessRuntime` (defined in the `SemanticKernel.Runtime` namespace) exposes methods such as `SaveAgentStateAsync` and `LoadAgentStateAsync` to persist agent state between runs. Unit tests like `AgentStateLifecycleTest` (located in `tests/AgentStateLifecycleTest.cs`) demonstrate saving state from one runtime instance and restoring it in another.
 
 ## Runtime Start and Stop
 
