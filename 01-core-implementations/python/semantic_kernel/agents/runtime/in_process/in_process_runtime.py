@@ -329,7 +329,7 @@ class InProcessRuntime(CoreRuntime):
                     message_id=message_id,
                     priority=priority,
                 )
-            , priority=priority)
+            )
 
     async def save_state(self) -> Mapping[str, Any]:
         """Save the state of all instantiated agents.
