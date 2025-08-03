@@ -7,27 +7,27 @@
   },
   "agents": {
     "agi_file_system": {
-      "verbose_logging": true,
+      "verbose_logging": null,
       "auto_restart": true
     },
     "agi_optimized": {
-      "verbose_logging": false,
+      "verbose_logging": null,
       "auto_restart": true
     },
     "agi_ultra_efficient": {
-      "verbose_logging": false,
+      "verbose_logging": null,
       "auto_restart": true
     },
     "agi_chat": {
-      "verbose_logging": true,
+      "verbose_logging": null,
       "auto_restart": true
     },
     "performance_monitor": {
-      "verbose_logging": true,
+      "verbose_logging": null,
       "auto_restart": false
     },
     "semantic_kernel_agents": {
-      "verbose_logging": false,
+      "verbose_logging": null,
       "auto_restart": true
     }
   }
