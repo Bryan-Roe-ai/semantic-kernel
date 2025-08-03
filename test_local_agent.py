@@ -40,7 +40,7 @@ class TestAgent:
 
 
 def create_kernel() -> Kernel:
-    """Create a kernel instance with the :class:`TestAgent` plugin loaded."""
+    """Create a kernel instance with the TestAgent plugin loaded."""
     kernel = Kernel()
     kernel.add_plugin(TestAgent(), plugin_name="test_agent")
     return kernel
