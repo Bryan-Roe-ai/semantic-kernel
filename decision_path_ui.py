@@ -6,9 +6,8 @@ from pathlib import Path
 def load_decisions(db_path: Path):
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
-    rows = conn.execute(
-        "SELECT id, parent_activity_id, timestamp, description FROM ai_activities WHERE activity_type='decision' ORDER BY timestamp"
-    ).fetchall()
+    query = "SELECT id, parent_activity_id, timestamp, description FROM ai_activities WHERE activity_type=? ORDER BY timestamp"
+    rows = conn.execute(query, ('decision',)).fetchall()
     conn.close()
     return [dict(row) for row in rows]
 
