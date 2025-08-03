@@ -18,7 +18,7 @@ def build_tree(decisions):
     for d in decisions:
         pid = d['parent_activity_id']
         node = nodes[d['id']]
-        if pid and pid in nodes:
+        if pid is not None and pid in nodes:
             nodes[pid]['children'].append(node)
         else:
             roots.append(node)
