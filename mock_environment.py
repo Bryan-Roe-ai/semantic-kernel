@@ -11,7 +11,7 @@ def apply_env(env: Dict[str, str]) -> Iterator[None]:
     """Temporarily apply environment variables."""
     original = {key: os.environ.get(key) for key in env}
     try:
-        os.environ.update(env)
+        os.environ |= env
         yield
     finally:
         for key, value in original.items():
