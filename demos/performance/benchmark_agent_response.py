@@ -58,9 +58,7 @@ async def benchmark_scenario(agent: SimpleAGIAgent, method: str, **kwargs) -> fl
     func = getattr(agent, method)
 
     start = time.perf_counter()
-    result = func(**kwargs)
-    if asyncio.iscoroutine(result):
-        await result
+    func(**kwargs)
     end = time.perf_counter()
 
     return end - start
