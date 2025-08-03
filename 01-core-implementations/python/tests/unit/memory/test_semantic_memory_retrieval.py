@@ -16,11 +16,11 @@ class FakeEmbeddingGenerator(EmbeddingGeneratorBase):
         """
         vectors = []
         for text in texts:
-            ascii_sum = sum(ord(c) for c in text)
+            hash_digest = hashlib.sha256(text.encode('utf-8')).hexdigest()
             vec = np.array([
                 len(text),
-                ascii_sum % 10,
-                ascii_sum % 100,
+                int(hash_digest[:8], 16) % 10,
+                int(hash_digest[:16], 16) % 100,
             ], dtype=float)
             vectors.append(vec)
         return np.vstack(vectors)
