@@ -81,7 +81,6 @@ async def run_file_update(tmp_dir: Path):
     updater.safe_directories = [str(tmp_dir)]
     updater.restricted_files = []
     updater.backup_path.mkdir(exist_ok=True)
-    import logging
     updater.logger = logging.getLogger("AutonomousFileUpdaterTest")
 
     task = FileUpdateTask(str(tmp_dir / 'demo.txt'), 'create', content='sample', backup=False)
