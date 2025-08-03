@@ -103,7 +103,12 @@ def print_dashboard(base_dir: Path):
         if 'startup_time' in status:
             uptime = datetime.now().timestamp() - status['startup_time']
         print(f"Status:    RUNNING (PID {status.get('pid')})")
-        print(f"Uptime:    {uptime/3600:.1f} hours")
+        if uptime < 60:
+            print(f"Uptime:    {uptime:.0f} seconds")
+        elif uptime < 3600:
+            print(f"Uptime:    {uptime/60:.1f} minutes")
+        else:
+            print(f"Uptime:    {uptime/3600:.1f} hours")
     else:
         print("Status:    NOT RUNNING")
     print()
