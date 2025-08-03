@@ -448,7 +448,7 @@ class InProcessRuntime(CoreRuntime):
                     metadata=get_telemetry_envelope_metadata(),
                     priority=message_envelope.priority,
                 )
-            , priority=message_envelope.priority)
+            )
             self._message_queue.task_done()
 
     async def _process_publish(self, message_envelope: PublishMessageEnvelope) -> None:
