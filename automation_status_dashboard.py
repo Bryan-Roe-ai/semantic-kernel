@@ -38,12 +38,12 @@ if dashboard_path.exists():
     except Exception:
         pass
 
-LOG_FILE = Path('logs/extended/extended_automode.log')
 STATE_DIR = Path('.extended_automode')
 
 
-def load_recent_logs(log_path: Path, lines: int = 10):
+def load_recent_logs(base_dir: Path, lines: int = 10):
     """Return last *lines* from the log file."""
+    log_path = base_dir / 'logs/extended/extended_automode.log'
     if not log_path.exists():
         return []
     try:
