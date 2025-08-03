@@ -343,7 +343,7 @@ class AIMarkdownProcessor:
         self, content: str, instruction: AIInstruction, result: Dict[str, Any]
     ) -> str:
         """Replace AI instruction with its result in the content"""
-        # Regex to locate the original instruction block including its type
+        # Find the original instruction block including its type
         pattern = f"```ai(?:\\s+{instruction.type})?\\s*\\n.*?\\n```"
 
         # Create replacement content
