@@ -8,6 +8,12 @@ from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGene
 
 class FakeEmbeddingGenerator(EmbeddingGeneratorBase):
     async def generate_embeddings(self, texts, settings=None, **kwargs) -> np.ndarray:
+        """
+        Generate embeddings for a list of texts.
+        
+        Returns:
+            np.ndarray: A 2D array where each row is an embedding corresponding to a text.
+        """
         vectors = []
         for text in texts:
             ascii_sum = sum(ord(c) for c in text)
