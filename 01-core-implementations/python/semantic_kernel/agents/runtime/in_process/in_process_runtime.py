@@ -278,7 +278,7 @@ class InProcessRuntime(CoreRuntime):
                     message_id=message_id,
                     priority=priority,
                 )
-            , priority=priority)
+            )
 
             cancellation_token.link_future(future)
 
