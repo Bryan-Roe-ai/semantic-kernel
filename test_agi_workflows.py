@@ -25,7 +25,7 @@ def load_module(path: str, name: str, strip_instance: bool = False):
 
 
 async def run_chat_integration():
-    chat_mod = load_module('09-agi-development/agi_chat_integration.py', 'agi_chat_integration')
+    chat_mod = load_module(str(Path(__file__).parent / '09-agi-development' / 'agi_chat_integration.py'), 'agi_chat_integration')
     agi = chat_mod.NeuralSymbolicAGIIntegration()
 
     # Patch heavy methods with lightweight stubs
