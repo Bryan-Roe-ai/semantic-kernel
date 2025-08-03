@@ -38,8 +38,7 @@ def azure_openai_env(**overrides: str) -> Dict[str, str]:
         "AZURE_OPENAI_ENDPOINT": "https://example.azure.com",
         "AZURE_OPENAI_CHAT_DEPLOYMENT_NAME": "gpt-mock",
         "AZURE_OPENAI_API_VERSION": "2024-02-01",
-    }
-    env.update(overrides)
+    } | overrides
     return env
 
 
