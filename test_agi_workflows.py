@@ -83,12 +83,48 @@ async def run_file_update(tmp_dir: Path):
     updater.backup_path.mkdir(exist_ok=True)
     updater.logger = logging.getLogger("AutonomousFileUpdaterTest")
 
+    # Test file creation
     task = FileUpdateTask(str(tmp_dir / 'demo.txt'), 'create', content='sample', backup=False)
     success = await updater.execute_file_task(task)
     assert success
     assert (tmp_dir / 'demo.txt').exists()
 
+    # Test file update
+    update_task = FileUpdateTask(str(tmp_dir / 'demo.txt'), 'update', content='updated content', backup=False)
+    update_success = await updater.execute_file_task(update_task)
+    assert update_success
+    with open(tmp_dir / 'demo.txt', 'r') as f:
+        assert f.read() == 'updated content'
 
+    # Test file delete
+    delete_task = FileUpdateTask(str(tmp_dir / 'demo.txt'), 'delete', backup=False)
+    delete_success = await updater.execute_file_task(delete_task)
+    assert delete_success
+    assert not (tmp_dir / 'demo.txt').exists()
+
+    # Test file creation with backup
+    task_with_backup = FileUpdateTask(str(tmp_dir / 'demo2.txt'), 'create', content='backup test', backup=True)
+    backup_success = await updater.execute_file_task(task_with_backup)
+    assert backup_success
+    assert (tmp_dir / 'demo2.txt').exists()
+    # Now update with backup enabled and check backup exists
+    update_with_backup = FileUpdateTask(str(tmp_dir / 'demo2.txt'), 'update', content='backup updated', backup=True)
+    update_backup_success = await updater.execute_file_task(update_with_backup)
+    assert update_backup_success
+    backup_files = list(updater.backup_path.glob('demo2.txt*'))
+    assert len(backup_files) > 0
+
+    # Test restricted file scenario
+    restricted_file = tmp_dir / 'restricted.txt'
+    restricted_file.write_text('restricted')
+    updater.restricted_files = [str(restricted_file)]
+    restricted_task = FileUpdateTask(str(restricted_file), 'update', content='should not update', backup=False)
+    restricted_success = await updater.execute_file_task(restricted_task)
+    assert not restricted_success
+    # File content should remain unchanged
+    with open(restricted_file, 'r') as f:
+        assert f.read() == 'restricted'
+    updater.restricted_files = []
 def test_agi_workflow(tmp_path):
     asyncio.run(run_chat_integration())
     asyncio.run(run_file_update(tmp_path))
