@@ -74,9 +74,9 @@ async def main() -> None:
     agent = SimpleAGIAgent()
     results = []
     for name, func_name, params in scenarios:
-        duration = await benchmark_scenario(agent, func_name, **params)
+        duration = await benchmark_scenario(agent, func_name, iterations=10, **params)
         results.append((name, duration))
-        print(f"{name:15} : {duration*1000:.2f} ms")
+        print(f"{name:15} : {duration*1000:.2f} ms (average over 10 iterations)")
 
     avg_time = mean(d for _, d in results)
     print(f"\nAverage response time: {avg_time*1000:.2f} ms")
