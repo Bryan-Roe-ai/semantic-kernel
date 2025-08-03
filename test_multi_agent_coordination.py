@@ -44,7 +44,7 @@ class MultiAgentCoordinator:
         a, b = self.agents[0], self.agents[1]
         await a.send("ping", b)
         await b.send("pong", a)
-        return a.received[-1] == "B: pong" and b.received[-1] == "A: ping"
+        return a.received[-1] == f"{b.name}: pong" and b.received[-1] == f"{a.name}: ping"
 
     async def broadcast(self, message: str, sender: DummyAgent) -> bool:
         """Broadcast a message from one agent to all others."""
