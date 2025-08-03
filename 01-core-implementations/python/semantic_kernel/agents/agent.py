@@ -171,7 +171,7 @@ class AgentThread(ABC):
         if self.id is None:
             await self.create()
 
-        logger.debug("Thread %s received new message from role %s", self._id, new_message.role)
+        logger.debug("Thread %s received new message from role %s", self.id, new_message.role)
         await self._on_new_message(new_message)
 
     @abstractmethod
