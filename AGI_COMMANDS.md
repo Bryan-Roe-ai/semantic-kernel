@@ -4,7 +4,7 @@ This guide summarizes the main scripts used to interact with the AGI tooling in 
 
 ## AGI Command Line Interface
 
-The `agi_cli.py` script exposes several sub‑commands for performing reasoning and automation tasks.
+The `agi_cli.py` script exposes several sub-commands for performing reasoning and automation tasks.
 
 ```
 python agi_cli.py <command> [args]
