@@ -27,8 +27,7 @@ def openai_env(**overrides: str) -> Dict[str, str]:
         "OPENAI_API_KEY": "sk-test",
         "OPENAI_CHAT_MODEL_ID": "gpt-mock",
         "OPENAI_ORG_ID": "org-mock",
-    }
-    env.update(overrides)
+    } | overrides
     return env
 
 
