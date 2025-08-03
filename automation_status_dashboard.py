@@ -19,7 +19,18 @@ import sys
 
 ExtendedMonitoringDashboard = None
 repo_root = Path(__file__).resolve().parent
-dashboard_path = repo_root / "19-miscellaneous" / "src"
+import os
+
+def get_dashboard_path(repo_root, args):
+    """Determine the dashboard path from command-line arguments or environment variable."""
+    if args.dashboard_path:
+        return Path(args.dashboard_path)
+    env_path = os.getenv("DASHBOARD_PATH")
+    if env_path:
+        return Path(env_path)
+    return repo_root / "19-miscellaneous" / "src"
+
+dashboard_path = get_dashboard_path(repo_root, None)  # Placeholder for args
 if dashboard_path.exists():
     sys.path.append(str(dashboard_path))
     try:
