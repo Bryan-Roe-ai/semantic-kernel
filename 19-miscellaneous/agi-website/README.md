@@ -114,6 +114,7 @@ Then visit `http://localhost:8000` in your browser.
 Use the provided helper script to start both the website and the AGI MCP server automatically:
 
 ```bash
+# Ensure you are in the 'agi-website' directory before running this command
 python ../11-automation-scripts/launch_agi_website.py
 ```
 
