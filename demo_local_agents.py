@@ -126,7 +126,14 @@ class AGIWorkflowOrchestrator:
         return results
 
     async def process_workflow_parallel(self, workflow: list) -> dict:
-        """Process workflow tasks concurrently across agents"""
+        """
+        Process workflow tasks concurrently across agents.
+
+        Unlike sequential execution, tasks are executed concurrently without any dependency ordering.
+        This means that tasks are scheduled to run simultaneously, and their execution order is not guaranteed.
+        Developers should be aware of potential race conditions if tasks depend on shared resources or have interdependencies.
+        Ensure that workflows are designed to avoid conflicts and unintended behavior due to concurrency.
+        """
         results = {}
         tasks = []
         task_names = []
