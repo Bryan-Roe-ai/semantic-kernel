@@ -15,12 +15,23 @@ License: MIT
 
 import asyncio
 import logging
+import sys
+from pathlib import Path
+
+# Allow running tests without installing the package
+repo_root = Path(__file__).resolve().parent
+local_package = repo_root / "01-core-implementations" / "python"
+if local_package.exists():
+    sys.path.insert(0, str(local_package))
+
 from semantic_kernel import Kernel
 from semantic_kernel.functions import kernel_function
 
-# Setup logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+
+def setup_logger() -> logging.Logger:
+    """Configure and return a module logger."""
+    logging.basicConfig(level=logging.INFO)
+    return logging.getLogger(__name__)
 
 class TestAgent:
     """Simple test agent to verify setup"""
@@ -35,40 +46,46 @@ class TestAgent:
         """Returns system status"""
         return "🤖 AGI Agent System is running locally!"
 
+
+def create_kernel() -> Kernel:
+    """Create a kernel instance with the TestAgent plugin loaded."""
+    kernel = Kernel()
+    kernel.add_plugin(TestAgent(), plugin_name="test_agent")
+    return kernel
+
+
+async def run_echo_test(kernel: Kernel, logger: logging.Logger) -> None:
+    """Run the echo function test and log the result."""
+    echo_fn = kernel.get_function("test_agent", "test_function")
+    echo_result = await echo_fn.invoke(kernel, message="Hello AGI!")
+    logger.info("Echo test: %s", echo_result)
+
+
+async def run_status_test(kernel: Kernel, logger: logging.Logger) -> None:
+    """Run the status function test and log the result."""
+    status_fn = kernel.get_function("test_agent", "get_status")
+    status_result = await status_fn.invoke(kernel)
+    logger.info("Status test: %s", status_result)
+
 async def test_local_agent():
-    """Test the local agent setup"""
+    """Run all local agent tests and return True if successful."""
+    logger = setup_logger()
     try:
-        # Create kernel
-        kernel = Kernel()
+        kernel = create_kernel()
 
-        # Create test agent
-        test_agent = TestAgent()
-
-        # Add agent functions to kernel
-        kernel.add_plugin(test_agent, plugin_name="test_agent")
-
-        # Test the functions
         logger.info("🧪 Testing agent functions...")
-
-        # Test echo function
-        echo_function = kernel.get_function("test_agent", "test_function")
-        echo_result = await echo_function.invoke(kernel, message="Hello AGI!")
-        logger.info(f"Echo test: {echo_result}")
-
-        # Test status function
-        status_function = kernel.get_function("test_agent", "get_status")
-        status_result = await status_function.invoke(kernel)
-        logger.info(f"Status test: {status_result}")
-
-        logger.info("✅ Local agent test completed successfully!")
-        return True
+        await run_echo_test(kernel, logger)
+        await run_status_test(kernel, logger)
 
     except Exception as e:
-        logger.error(f"❌ Test failed: {e}")
+        logger.error("❌ Test failed: %s", e)
         return False
 
+    logger.info("✅ Local agent test completed successfully!")
+    return True
+
 async def main():
-    """Main test function"""
+    """Entry point for running the local agent tests."""
     print("🚀 Testing Local AGI Agent Setup...")
     print("=" * 50)
 

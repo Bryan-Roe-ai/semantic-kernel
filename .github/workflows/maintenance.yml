@@ -1,0 +1,20 @@
+name: Repository Maintenance
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  maintenance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run maintenance report
+        run: bash ./enhanced_maintenance.sh report
+      - name: Upload maintenance report
+        uses: actions/upload-artifact@v3
+        with:
+          name: maintenance-report
+          path: MAINTENANCE_REPORT.md
+
