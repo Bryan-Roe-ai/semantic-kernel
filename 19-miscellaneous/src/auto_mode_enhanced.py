@@ -310,10 +310,14 @@ class EnhancedAutoMode:
         self.managed_processes = {}
 
         # Async components
+    # Advanced features
+    enable_graceful_degradation: bool = True
+    external_trigger_queue_maxsize: int = 1000  # Configurable max size for the external trigger queue
+
         self.event_loop = None
         self.tasks = []
         self.shutdown_event = asyncio.Event()
-        self.external_trigger_queue: asyncio.Queue = asyncio.Queue()
+        self.external_trigger_queue: asyncio.Queue = asyncio.Queue(maxsize=self.external_trigger_queue_maxsize)
 
         # Setup logging
         self._setup_logging()
