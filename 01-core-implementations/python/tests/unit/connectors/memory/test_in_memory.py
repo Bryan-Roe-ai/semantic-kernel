@@ -181,6 +181,12 @@ async def test_malicious_filter_eval(collection):
         collection._get_filtered_records(type("opt", (), {"filter": "lambda x: eval('2+2')"})())
 
 
+async def test_malicious_filter_function_call(collection):
+    # Should not allow any function call
+    with raises(VectorStoreOperationException):
+        collection._get_filtered_records(type("opt", (), {"filter": "lambda x: int('5')"})())
+
+
 async def test_multiple_filters(collection):
     record1 = {"id": "1", "vector": [1, 2, 3, 4, 5]}
     record2 = {"id": "2", "vector": [5, 4, 3, 2, 1]}
