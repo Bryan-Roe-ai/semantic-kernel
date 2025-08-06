@@ -76,7 +76,66 @@ class AGICommandLine:
         ]
         return "\n".join(plan_steps)
 
-async def run_command(
+# 1) Move the help text to a module‐level constant
+HELP_TEXT = """
+🤖 AGI Command Line Interface
+Available commands:
+  reason <query>              - Perform AGI reasoning on a query
+  file <filename> [operation] - Process file (analyze, optimize, transform, summarize)
+  code <language> <description> - Generate code in specified language
+  plan <goal>                 - Create and execute a plan for a goal
+  help                        - Show this help message
+Examples:
+  python agi_cli.py reason "How does machine learning work?"
+  python agi_cli.py file myfile.txt analyze
+  python agi_cli.py code python "Create a web scraper"
+  python agi_cli.py plan "Build a recommendation system"
+"""
+
+# 2) Extract retry logic into a decorator
+def retry_async(max_retries: int = 3, retry_delay: float = 1.0):
+    def decorator(fn):
+        async def wrapper(*args, **kwargs):
+            for attempt in range(1, max_retries + 1):
+                try:
+                    return await fn(*args, **kwargs)
+                except Exception as e:
+                    if attempt == max_retries:
+                        print(f"❌ Error after {max_retries} attempts: {e}")
+                        return False
+                    print(f"⚠️  Attempt {attempt} failed: {e}. Retrying in {retry_delay} seconds…")
+                    await asyncio.sleep(retry_delay)
+        return wrapper
+    return decorator
+
+# 3) Define per‐command handlers, then dispatch via a map
+async def _handle_reason(agi, args):
+    query = " ".join(args) if args else "What is artificial general intelligence?"
+    fn = agi.kernel.get_function("agi_cli", "reason")
+    return await fn.invoke(agi.kernel, query=query)
+
+# … similarly define _handle_file, _handle_code, _handle_plan …
+
+COMMAND_HANDLERS = {
+    "reason": _handle_reason,
+    "file":   _handle_file,
+    "code":   _handle_code,
+    "plan":   _handle_plan,
+    "help":   lambda agi, args: HELP_TEXT,
+}
+
+# 4) Simplify run_command
+@retry_async()
+async def run_command(command: str, *args) -> bool:
+    agi = AGICommandLine()
+    handler = COMMAND_HANDLERS.get(command)
+    if not handler:
+        print(f"❌ Unknown command: {command}. Use 'help' for available commands.")
+        return False
+
+    result = await handler(agi, args)
+    print(result)
+    return True
     command: str,
     *args,
     max_retries: int = 3,
