@@ -31,6 +31,5 @@ def main() -> None:
     elapsed = time.time() - start
     print(f"Processed {len(result)} characters in {elapsed:.2f}s")
 
-
 if __name__ == "__main__":
     main()

@@ -109,6 +109,7 @@ class UnifiedLauncher:
         }
 
         for pattern in patterns:
+            # Search for scripts matching each pattern
             for script_path in self.workspace_root.glob(pattern):
                 if (
                     script_path.is_file()
@@ -127,9 +128,11 @@ class UnifiedLauncher:
                         "dependencies": self._get_dependencies(script_path),
                     }
 
+                    # Add script to its detected category list
                     categories[category].append(script_info)
 
         self.available_scripts = categories
+        # Compute the total number of discovered scripts across all categories
         total = sum(len(scripts) for scripts in categories.values())
         self.logger.info(
             f"Discovered {total} scripts across {len(categories)} categories"
@@ -246,8 +249,10 @@ class UnifiedLauncher:
         print(f"Found {total_files} Python files to fix...")
 
         with ThreadPoolExecutor(max_workers=4) as executor:
+            # Launch file fixes in parallel and keep track of each future
             futures = {executor.submit(self._fix_file, f): f for f in python_files}
 
+            # Iterate over completed futures to report progress
             for i, future in enumerate(as_completed(futures), 1):
                 file_path = futures[future]
                 try:

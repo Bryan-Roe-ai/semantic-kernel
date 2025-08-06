@@ -21,6 +21,8 @@ License: MIT
 
 import asyncio
 import collections
+import heapq
+import itertools
 import threading
 from typing import Generic, TypeVar
 
@@ -287,3 +289,32 @@ class Queue(_LoopBoundMixin, Generic[T]):
             putter = self._putters.popleft()
             if not putter.done():
                 putter.set_result(None)
+
+
+@experimental
+class PriorityQueue(Queue[T]):
+    """A priority queue where lower values have higher priority."""
+
+    def __init__(self, maxsize: int = 0) -> None:
+        """Initialize the priority queue."""
+        super().__init__(maxsize)
+        self._queue = []  # type: ignore[assignment]
+        self._counter = itertools.count()
+
+    class PriorityQueueItem(NamedTuple):
+        priority: int
+        counter: int
+        item: T
+
+    def _put(self, item: PriorityQueueItem) -> None:  # type: ignore[override]
+        heapq.heappush(self._queue, item)  # type: ignore[arg-type]
+
+    def _get(self) -> T:  # type: ignore[override]
+        item = heapq.heappop(self._queue).item
+        return item
+
+    async def put(self, item: T, priority: int = 0) -> None:  # type: ignore[override]
+        await super().put(self.PriorityQueueItem(priority, next(self._counter), item))
+
+    def put_nowait(self, item: T, priority: int = 0) -> None:  # type: ignore[override]
+        super().put_nowait(self.PriorityQueueItem(priority, next(self._counter), item))

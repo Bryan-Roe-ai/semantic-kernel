@@ -35,6 +35,7 @@ class DeploymentAutomator:
         self.deployment_dir = self.workspace_root / "09-deployment"
         self.config_dir = self.workspace_root / "10-config"
         self.backup_dir = self.workspace_root / "backups"
+        self.last_backup: Optional[str] = None
 
     def deploy(self, environment: str = "production", mode: str = "docker"):
         """Deploy the AI workspace to specified environment."""
@@ -54,6 +55,7 @@ class DeploymentAutomator:
 
             # Create backup
             self._step(deployment_plan, "Creating backup", self._create_backup)
+            deployment_plan["backup_name"] = self.last_backup
 
             # Build artifacts
             self._step(deployment_plan, "Building artifacts", lambda: self._build_artifacts(mode))
@@ -170,6 +172,7 @@ class DeploymentAutomator:
             json.dump(manifest, f, indent=2)
 
         print(f"📦 Backup created: {backup_name}")
+        self.last_backup = backup_name
         return backup_name
 
     def _build_artifacts(self, mode: str) -> Dict[str, Any]:
@@ -522,6 +525,39 @@ class DeploymentAutomator:
         with open(record_file, 'w') as f:
             json.dump(deployment_plan, f, indent=2)
 
+    def _restore_backup(self, backup_name: str):
+        """Restore workspace from a specific backup."""
+        backup_path = self.backup_dir / backup_name
+        if not backup_path.exists():
+            print(f"Backup not found: {backup_name}")
+            return
+
+        manifest_file = backup_path / "manifest.json"
+        if not manifest_file.exists():
+            print("Backup manifest missing, cannot restore")
+            return
+
+        with open(manifest_file, "r") as f:
+            manifest = json.load(f)
+
+        for rel_path in manifest.get("paths", []):
+            src = backup_path / rel_path
+            dest = self.workspace_root / rel_path
+
+            if dest.exists():
+                if dest.is_file():
+                    dest.unlink()
+                else:
+                    shutil.rmtree(dest)
+
+            if src.exists():
+                if src.is_file():
+                    shutil.copy2(src, dest)
+                else:
+                    shutil.copytree(src, dest)
+
+        print(f"✅ Restored backup {backup_name}")
+
     def _rollback_deployment(self, deployment_plan: Dict[str, Any]):
         """Rollback failed deployment."""
         print("🔄 Initiating rollback...")
@@ -532,8 +568,11 @@ class DeploymentAutomator:
         except Exception as e:
             print(f"Warning: Could not stop containers: {e}")
 
-        # Could restore from backup here
-        print("⚠️  Manual intervention may be required for complete rollback")
+        if self.last_backup:
+            deployment_plan["rollback_backup"] = self.last_backup
+            self._restore_backup(self.last_backup)
+        else:
+            print("No backup available for rollback")
 
     def list_deployments(self) -> List[Dict[str, Any]]:
         """List previous deployments."""
