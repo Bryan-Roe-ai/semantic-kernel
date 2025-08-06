@@ -95,6 +95,13 @@ jobs:
           name: dotnet-test-results-${{ matrix.os }}-${{ matrix.configuration }}
           path: ./TestResults/**/*.trx
 
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: dotnet-coverage-${{ matrix.os }}-${{ matrix.configuration }}
+          path: ./TestResults/**/coverage.cobertura.xml
+
   # Python Testing with Enhanced Coverage
   python-test:
     name: 🐍 Python Tests
@@ -150,6 +157,13 @@ jobs:
           flags: python-${{ matrix.os }}-${{ matrix.python-version }}
           name: python-coverage
 
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: python-coverage-${{ matrix.os }}-${{ matrix.python-version }}
+          path: ./01-core-implementations/python/coverage.xml
+
   # TypeScript Testing
   typescript-test:
     name: 📘 TypeScript Tests
@@ -193,6 +207,13 @@ jobs:
           files: ./01-core-implementations/typescript/coverage/lcov.info
           flags: typescript-${{ matrix.os }}-${{ matrix.node-version }}
           name: typescript-coverage
+
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: typescript-coverage-${{ matrix.os }}-${{ matrix.node-version }}
+          path: ./01-core-implementations/typescript/coverage/lcov.info
 
   # Performance Benchmarks
   performance-benchmarks:

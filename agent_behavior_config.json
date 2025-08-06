@@ -1,0 +1,34 @@
+{
+  "global": {
+    "enable_verbose_logging": true,
+    "enable_auto_restart": true,
+    "max_restart_retries": 3,
+    "retry_delay_sec": 10
+  },
+  "agents": {
+    "agi_file_system": {
+      "verbose_logging": null,
+      "auto_restart": true
+    },
+    "agi_optimized": {
+      "verbose_logging": null,
+      "auto_restart": true
+    },
+    "agi_ultra_efficient": {
+      "verbose_logging": null,
+      "auto_restart": true
+    },
+    "agi_chat": {
+      "verbose_logging": null,
+      "auto_restart": true
+    },
+    "performance_monitor": {
+      "verbose_logging": null,
+      "auto_restart": false
+    },
+    "semantic_kernel_agents": {
+      "verbose_logging": null,
+      "auto_restart": true
+    }
+  }
+}

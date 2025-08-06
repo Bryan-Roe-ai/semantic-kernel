@@ -15,6 +15,14 @@ License: MIT
 
 import asyncio
 import logging
+import sys
+from pathlib import Path
+
+# Allow running tests without installing the package
+repo_root = Path(__file__).resolve().parent
+local_package = repo_root / "01-core-implementations" / "python"
+if local_package.exists():
+    sys.path.insert(0, str(local_package))
 
 from semantic_kernel import Kernel
 from semantic_kernel.functions import kernel_function
