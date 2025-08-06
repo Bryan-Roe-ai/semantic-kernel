@@ -272,6 +272,8 @@ class InMemoryCollection(
             )
         # Walk the AST to look for forbidden names and attribute access
         for node in ast.walk(tree):
+            if isinstance(node, ast.Call):
+                raise VectorStoreOperationException("Function calls are not allowed in filter expressions.")
             if isinstance(node, ast.Name) and node.id in forbidden_names:
                 raise VectorStoreOperationException(f"Use of '{node.id}' is not allowed in filter expressions.")
             if isinstance(node, ast.Attribute) and node.attr in forbidden_names:

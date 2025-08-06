@@ -15,9 +15,17 @@ License: MIT
 
 import subprocess
 import json
-import psutil
+import sys
 from datetime import datetime
 from pathlib import Path
+
+try:
+    import psutil
+except ModuleNotFoundError:  # pragma: no cover - optional dependency
+    sys.stderr.write(
+        "psutil package not found. Install dependencies to use agi_status_dashboard.\n"
+    )
+    sys.exit(1)
 
 def get_running_processes():
     """Get running AGI-related processes"""

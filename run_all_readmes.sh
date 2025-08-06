@@ -36,6 +36,8 @@ process_readme() {
 export RUNNER
 export -f process_readme
 
+echo "$readmes" | xargs -r -n1 -P "$CONCURRENCY" bash -c 'process_readme "$0"'
+
 echo "$readmes" | xargs -r -n1 -P "$CONCURRENCY" bash -c 'process_readme "$@"' _
 wait
 echo "🎉 All README files have been processed!"
