@@ -24,8 +24,12 @@ from pathlib import Path
 # Configuration
 WEBSITE_PORT = 3000
 AGI_SERVER_PORT = 8080
-WEBSITE_DIR = Path(__file__).parent / "agi-website"
-AGI_SERVER_DIR = Path(__file__).parent / "agi-mcp-server"
+# Resolve paths relative to the repo root
+# This script lives in `19-miscellaneous/11-automation-scripts`. The
+# website and server directories are siblings of this folder, so move
+# one level up to locate them.
+WEBSITE_DIR = Path(__file__).resolve().parent.parent / "agi-website"
+AGI_SERVER_DIR = Path(__file__).resolve().parent.parent / "agi-mcp-server"
 
 class AGILauncher:
     def __init__(self):

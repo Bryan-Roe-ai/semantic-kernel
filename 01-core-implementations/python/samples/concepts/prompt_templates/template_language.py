@@ -30,14 +30,15 @@ from semantic_kernel.prompt_template import KernelPromptTemplate, PromptTemplate
 async def main():
     kernel = Kernel()
 
-SERVICE_ID = "template_language"
+    SERVICE_ID = "template_language"
 
-# ... other code ...
+    # ... other code ...
 
-kernel.add_service(
-    OpenAIChatCompletion(service_id=SERVICE_ID, ai_model_id=model),
     kernel.add_service(
-        OpenAIChatCompletion(service_id=service_id),
+        OpenAIChatCompletion(service_id=SERVICE_ID, ai_model_id=model)
+    )
+    kernel.add_service(
+        OpenAIChatCompletion(service_id=service_id)
     )
 
     kernel.add_plugin(TimePlugin(), "time")

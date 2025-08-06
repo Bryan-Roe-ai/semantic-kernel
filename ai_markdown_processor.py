@@ -151,9 +151,11 @@ class AIMarkdownProcessor:
         """Extract AI instructions from markdown content"""
         instructions = []
 
+        # Iterate over all ```ai``` code blocks in the markdown content
         for match in self.ai_instructions_pattern.finditer(content):
             instruction_type = match.group(1) or "execute"
             instruction_content = match.group(2).strip()
+            # Count newlines up to the match to get the original line number
             line_number = content[: match.start()].count("\n") + 1
 
             # Parse parameters from the instruction content
@@ -161,11 +163,13 @@ class AIMarkdownProcessor:
             lines = instruction_content.split("\n")
             content_lines = []
 
+            # Each line starting with '@' is treated as a parameter
             for line in lines:
                 if line.startswith("@") and ":" in line:
                     key, value = line[1:].split(":", 1)
                     parameters[key.strip()] = value.strip()
                 else:
+                    # Remaining lines are considered part of the prompt
                     content_lines.append(line)
 
             instructions.append(
@@ -339,7 +343,7 @@ class AIMarkdownProcessor:
         self, content: str, instruction: AIInstruction, result: Dict[str, Any]
     ) -> str:
         """Replace AI instruction with its result in the content"""
-        # Find the original instruction block
+        # Find the original instruction block including its type
         pattern = f"```ai(?:\\s+{instruction.type})?\\s*\\n.*?\\n```"
 
         # Create replacement content
@@ -394,6 +398,7 @@ ai_instructions_processed: {len(result.ai_outputs)}
             Path(output_directory) if output_directory else directory_path / "processed"
         )
 
+        # Gather all markdown files in the target directory
         markdown_files = list(directory_path.rglob("*.md"))
         results = []
 
@@ -401,6 +406,7 @@ ai_instructions_processed: {len(result.ai_outputs)}
             f"Processing {len(markdown_files)} markdown files from {directory_path}"
         )
 
+        # Process each markdown file individually
         for md_file in markdown_files:
             logger.info(f"Processing: {md_file}")
 
@@ -456,6 +462,7 @@ async def main():
         results = await processor.process_directory(input_path, args.output)
 
         print(f"Processed {len(results)} files")
+        # Display a short summary for each processed file
         for i, result in enumerate(results, 1):
             print(f"{i}. Status: {result.status}, Time: {result.execution_time:.2f}s")
 
