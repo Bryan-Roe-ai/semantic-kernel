@@ -139,9 +139,9 @@ class AgentThread(ABC):
             return self.id
 
         # Otherwise, create the thread.
-        self.logger.debug("Creating agent thread")
+        logger.debug("Creating agent thread")
         self._id = await self._create()
-        self.logger.debug("Created agent thread with id %s", self._id)
+        logger.debug("Created agent thread with id %s", self._id)
         return self.id
 
     async def delete(self) -> None:
@@ -171,7 +171,7 @@ class AgentThread(ABC):
         if self.id is None:
             await self.create()
 
-        logger.debug("Thread %s received new message from role %s", self._id, new_message.role)
+        logger.debug("Thread %s received new message from role %s", self.id, new_message.role)
         await self._on_new_message(new_message)
 
     @abstractmethod
@@ -540,9 +540,14 @@ class Agent(KernelBaseModel, ABC):
         new_message: ChatMessageContent,
     ) -> None:
         """Notify the thread of a new message."""
-        logger.debug(
-            "Notifying thread %s of new message from role %s", thread.id, new_message.role
-        )
+        if thread.id is None:
+            logger.debug(
+                "Notifying thread with no ID of new message from role %s", new_message.role
+            )
+        else:
+            logger.debug(
+                "Notifying thread %s of new message from role %s", thread.id, new_message.role
+            )
         await thread.on_new_message(new_message)
 
     # endregion
