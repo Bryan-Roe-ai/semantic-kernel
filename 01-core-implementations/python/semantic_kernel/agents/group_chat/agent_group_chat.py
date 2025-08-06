@@ -170,16 +170,7 @@ class AgentGroupChat(AgentChat):
 
             return
 
-        if self.agents is None:
-
-        if self.agents is None:
-
         if not self.agents:
-
-        if not self.agents:
-
-        if not self.agents:
-
             raise AgentChatException("No agents are available")
 
         if self.is_complete:
