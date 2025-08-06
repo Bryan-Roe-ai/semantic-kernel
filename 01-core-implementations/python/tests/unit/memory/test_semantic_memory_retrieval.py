@@ -7,23 +7,17 @@ from semantic_kernel.memory.semantic_text_memory import SemanticTextMemory
 from semantic_kernel.connectors.ai.embedding_generator_base import EmbeddingGeneratorBase
 
 class FakeEmbeddingGenerator(EmbeddingGeneratorBase):
-    async def generate_embeddings(self, texts, settings=None, **kwargs) -> np.ndarray:
-        """
-        Generate embeddings for a list of texts.
-        
-        Returns:
-            np.ndarray: A 2D array where each row is an embedding corresponding to a text.
-        """
+    async def generate_embeddings(self, texts, settings=None, **kwargs) -> List[List[float]]:
         vectors = []
         for text in texts:
-            hash_digest = hashlib.sha256(text.encode('utf-8')).hexdigest()
-            vec = np.array([
-                len(text),
-                int(hash_digest[:8], 16) % 10,
-                int(hash_digest[:16], 16) % 100,
-            ], dtype=float)
+            ascii_sum = sum(ord(c) for c in text)
+            vec = [
+                float(len(text)),
+                float(ascii_sum % 10),
+                float(ascii_sum % 100),
+            ]
             vectors.append(vec)
-        return np.vstack(vectors)
+        return vectors
 
 def create_memory() -> SemanticTextMemory:
     storage = VolatileMemoryStore()
