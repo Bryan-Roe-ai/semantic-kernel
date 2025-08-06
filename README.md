@@ -22,6 +22,8 @@ This is an advanced artificial intelligence development framework created by Bry
 - **Multi-Language Support**: Python, TypeScript, JavaScript, and .NET implementations
 - **Extensible Architecture**: Modular design for easy customization
 - **Comprehensive Tooling**: Development tools and utilities
+- **Automation Workflows**: GitHub Actions for maintenance, issue management,
+  security scanning, code quality checks, releases, and deployment
 - **Production Ready**: Robust deployment and infrastructure support
 
 ## 📁 Project Structure
@@ -34,9 +36,19 @@ This repository is organized into several key areas:
 - `04-infrastructure/` - Infrastructure and deployment configurations
 - `05-documentation/` - Project documentation
 - `06-deployment/` - Deployment scripts and configurations
+- `.github/workflows/templates/` - Reusable automation workflow templates
 - `07-resources/` - Shared resources and assets
 - `08-archived-versions/` - Historical versions and archives
 - `09-agi-development/` - Advanced AGI development components
+
+## 🤖 Automation Features
+
+This project includes an extensive set of GitHub Actions workflows to
+automatically maintain the repository and streamline development. Workflows cover
+maintenance tasks, intelligent issue management, security scanning, code quality
+analysis, release automation, and multi-environment deployment. See
+[`04-infrastructure/.github/workflows/`](04-infrastructure/.github/workflows/)
+for full details.
 
 ## 🚀 Getting Started
 
@@ -77,6 +89,7 @@ kernel = Kernel()
 ## 🤝 Contributing
 
 We welcome contributions! Please see [CONTRIBUTORS.md](CONTRIBUTORS.md) for guidelines.
+For details on the automation templates, refer to [Reusable Automation Templates](docs/REUSABLE_AUTOMATION_TEMPLATES.md).
 
 **Important:** All contributions must respect the existing copyright and attribution structure.
 

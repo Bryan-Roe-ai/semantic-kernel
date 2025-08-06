@@ -71,9 +71,14 @@ async def streaming_exception_handling(
         except Exception as e:
             yield [
                 StreamingChatMessageContent(
-                    role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}"
-                )
-                StreamingChatMessageContent(role=AuthorRole.ASSISTANT, content=f"Exception caught: {e}", choice_index=0)
+                    role=AuthorRole.ASSISTANT,
+                    content=f"Exception caught: {e}"
+                ),
+                StreamingChatMessageContent(
+                    role=AuthorRole.ASSISTANT,
+                    content=f"Exception caught: {e}",
+                    choice_index=0,
+                ),
             ]
 
     stream = context.result.value

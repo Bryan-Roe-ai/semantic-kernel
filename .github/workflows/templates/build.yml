@@ -1,0 +1,54 @@
+name: Reusable Build
+on:
+  workflow_call:
+    inputs:
+      dotnet: {required: false, type: boolean, default: false}
+      python: {required: false, type: boolean, default: false}
+      node: {required: false, type: boolean, default: false}
+    secrets: inherit
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        if: inputs.dotnet == true
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build .NET
+        if: inputs.dotnet == true
+        run: dotnet build 01-core-implementations/dotnet/SK-dotnet.sln --configuration Release
+
+      - name: Setup Python
+        if: inputs.python == true
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Python dependencies
+        if: inputs.python == true
+        run: |
+          cd 01-core-implementations/python
+          pip install -r requirements.txt
+      - name: Build Python wheel
+        if: inputs.python == true
+        run: |
+          cd 01-core-implementations/python
+          python setup.py bdist_wheel
+
+      - name: Setup Node
+        if: inputs.node == true
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install Node dependencies
+        if: inputs.node == true
+        run: |
+          cd 01-core-implementations/typescript
+          npm ci
+      - name: Build Node package
+        if: inputs.node == true
+        run: |
+          cd 01-core-implementations/typescript
+          npm run build

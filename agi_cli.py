@@ -15,8 +15,23 @@ License: MIT
 
 import asyncio
 import sys
-from semantic_kernel import Kernel
-from semantic_kernel.functions import kernel_function
+from pathlib import Path
+
+# Allow running this script directly from the repository root without
+# requiring semantic_kernel to be installed in the environment.
+repo_root = Path(__file__).resolve().parent
+local_package = repo_root / "01-core-implementations" / "python"
+if local_package.exists():
+    sys.path.insert(0, str(local_package))
+
+try:
+    from semantic_kernel import Kernel
+    from semantic_kernel.functions import kernel_function
+except ModuleNotFoundError as e:  # pragma: no cover - dependency missing
+    sys.stderr.write(
+        f"Semantic Kernel package not found: {e}. Install dependencies to use agi_cli.\n"
+    )
+    sys.exit(1)
 
 class AGICommandLine:
     """Command line interface for AGI agents"""
