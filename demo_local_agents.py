@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Demonstration of local AI agents and capabilities
+Demonstration of local AI agents and capabilities.
+Includes parallel workflow support.
 
 Copyright (c) 2025 Bryan Roe
 Licensed under the MIT License
@@ -124,6 +125,44 @@ class AGIWorkflowOrchestrator:
 
         return results
 
+    async def process_workflow_parallel(self, workflow: list) -> dict:
+        """
+        Process workflow tasks concurrently across agents.
+
+        Unlike sequential execution, tasks are executed concurrently without any dependency ordering.
+        This means that tasks are scheduled to run simultaneously, and their execution order is not guaranteed.
+        Developers should be aware of potential race conditions if tasks depend on shared resources or have interdependencies.
+        Ensure that workflows are designed to avoid conflicts and unintended behavior due to concurrency.
+        """
+        results = {}
+        tasks = []
+        task_names = []
+
+        for step in workflow:
+            agent_id = step.get("agent")
+            function_name = step.get("function")
+            params = step.get("params", {})
+
+            try:
+                function = self.kernel.get_function(agent_id, function_name)
+                tasks.append(asyncio.create_task(function.invoke(self.kernel, **params)))
+                task_names.append(f"{agent_id}_{function_name}")
+                logger.info(f"🚀 Scheduled: {agent_id}.{function_name}")
+            except Exception as e:
+                logger.error(f"❌ Failed to schedule {agent_id}.{function_name} - {e}")
+                results[f"{agent_id}_{function_name}"] = f"Error: {e}"
+
+        completed = await asyncio.gather(*tasks, return_exceptions=True)
+        for name, res in zip(task_names, completed):
+            if isinstance(res, Exception):
+                logger.error(f"❌ Failed: {name} - {res}")
+                results[name] = f"Error: {res}"
+            else:
+                logger.info(f"✅ Completed: {name}")
+                results[name] = str(res)
+
+        return results
+
 async def demo_local_agents():
     """Demonstrate local AGI agents"""
     print("🚀 Starting Local AGI Agent Demo")
@@ -150,10 +189,11 @@ async def demo_local_agents():
         print("2. File operations")
         print("3. System monitoring")
         print("4. Agent information")
-        print("5. Run workflow")
-        print("6. Exit")
+        print("5. Run workflow (sequential)")
+        print("6. Run workflow (parallel)")
+        print("7. Exit")
 
-        choice = input("\nSelect option (1-6): ").strip()
+        choice = input("\nSelect option (1-7): ").strip()
 
         if choice == "1":
             message = input("Enter message: ")
@@ -183,7 +223,7 @@ async def demo_local_agents():
                 print("❌ Agent not found")
 
         elif choice == "5":
-            # Demo workflow
+            # Demo workflow (sequential)
             workflow = [
                 {"agent": "monitor_agent", "function": "monitor_performance"},
                 {"agent": "file_agent", "function": "file_operation", "params": {"operation": "create", "filename": "test.txt"}},
@@ -191,12 +231,34 @@ async def demo_local_agents():
                 {"agent": "file_agent", "function": "file_operation", "params": {"operation": "read", "filename": "test.txt"}}
             ]
 
-            print("🔄 Running workflow...")
+            print("🔄 Running workflow sequentially...")
             results = await orchestrator.process_workflow(workflow)
             for step, result in results.items():
                 print(f"  ✅ {step}: {result}")
 
         elif choice == "6":
+            # Run the same demo workflow in parallel
+            # Split workflow into two groups to avoid race conditions
+            initial_workflow = [
+                {"agent": "monitor_agent", "function": "monitor_performance"},
+                {"agent": "file_agent", "function": "file_operation", "params": {"operation": "create", "filename": "test.txt"}},
+                {"agent": "chat_agent", "function": "process_request", "params": {"request": "status"}}
+            ]
+
+            dependent_workflow = [
+                {"agent": "file_agent", "function": "file_operation", "params": {"operation": "read", "filename": "test.txt"}}
+            ]
+
+            print("🔄 Running initial workflow in parallel...")
+            initial_results = await orchestrator.process_workflow_parallel(initial_workflow)
+            for step, result in initial_results.items():
+                print(f"  ✅ {step}: {result}")
+
+            print("🔄 Running dependent workflow sequentially...")
+            dependent_results = await orchestrator.process_workflow(dependent_workflow)
+            for step, result in dependent_results.items():
+                print(f"  ✅ {step}: {result}")
+        elif choice == "7":
             print("👋 Goodbye!")
             break
         else:
