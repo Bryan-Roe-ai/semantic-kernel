@@ -36,6 +36,7 @@ This repository is organized into several key areas:
 - `04-infrastructure/` - Infrastructure and deployment configurations
 - `05-documentation/` - Project documentation
 - `06-deployment/` - Deployment scripts and configurations
+- `.github/workflows/templates/` - Reusable automation workflow templates
 - `07-resources/` - Shared resources and assets
 - `08-archived-versions/` - Historical versions and archives
 - `09-agi-development/` - Advanced AGI development components
@@ -88,7 +89,7 @@ kernel = Kernel()
 ## 🤝 Contributing
 
 We welcome contributions! Please see [CONTRIBUTORS.md](CONTRIBUTORS.md) for guidelines.
-For a brief setup guide, see [docs/CONTRIBUTOR-QUICKSTART.md](docs/CONTRIBUTOR-QUICKSTART.md).
+For details on the automation templates, refer to [Reusable Automation Templates](docs/REUSABLE_AUTOMATION_TEMPLATES.md).
 
 **Important:** All contributions must respect the existing copyright and attribution structure.
 
