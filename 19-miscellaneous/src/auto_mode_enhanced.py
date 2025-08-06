@@ -310,10 +310,14 @@ class EnhancedAutoMode:
         self.managed_processes = {}
 
         # Async components
+    # Advanced features
+    enable_graceful_degradation: bool = True
+    external_trigger_queue_maxsize: int = 1000  # Configurable max size for the external trigger queue
+
         self.event_loop = None
         self.tasks = []
         self.shutdown_event = asyncio.Event()
-        self.external_trigger_queue: asyncio.Queue = asyncio.Queue(maxsize=100)
+        self.external_trigger_queue: asyncio.Queue = asyncio.Queue(maxsize=self.external_trigger_queue_maxsize)
 
         # Setup logging
         self._setup_logging()
@@ -553,11 +557,7 @@ class EnhancedAutoMode:
                 data = await request.json()
             except Exception:
                 data = await request.post()
-                if isinstance(data, web.FormData):
-                    data_dict = {key: value for key, value in data.items()}
-                else:
-                    data_dict = dict(data)
-            await self.external_trigger_queue.put(data_dict)
+            await self.external_trigger_queue.put(dict(data) if hasattr(data, 'items') else data)
             return web.json_response({"status": "accepted"})
 
         app.add_routes([web.post("/trigger", trigger)])
@@ -565,31 +565,27 @@ class EnhancedAutoMode:
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, self.config.webhook_host, self.config.webhook_port)
-        try:
-            await site.start()
-        except OSError as e:
-            # Port binding failed, provide clear diagnostics
-            print(f"Failed to start webhook server on {self.config.webhook_host}:{self.config.webhook_port}: {e}")
-            # Optionally, you could add fallback behavior here, such as:
-            # raise
-            # or
-            # sys.exit(1)
+        await site.start()
 
         try:
-            await self.shutdown_event.wait()
-        finally:
+            while self.is_running:
+                await asyncio.sleep(1)
+        except Exception as e:
+            logging.error(f"Exception in webhook server loop: {e}")
             await runner.cleanup()
+        finally:
+            if self.is_running:
+                await runner.cleanup()
 
-+    async def _external_trigger_loop(self) -> None:
-+        """Process incoming external triggers"""
-+        while self.is_running:
-+            try:
-+                data = await asyncio.wait_for(self.external_trigger_queue.get(), timeout=1.0)
-+                logging.info(f"Received external trigger: {data}")
-+            except asyncio.TimeoutError:
-+                # Timeout allows periodic check of self.is_running for graceful shutdown
-+                continue
-            self.external_trigger_queue.task_done()
+    async def _external_trigger_loop(self) -> None:
+        """Process incoming external triggers"""
+        while self.is_running:
+            try:
+                data = await asyncio.wait_for(self.external_trigger_queue.get(), timeout=5)
+                logging.info(f"Received external trigger: {data}")
+            except asyncio.TimeoutError:
+                if not self.is_running:
+                    break
 
     async def _send_health_status(self, health_status: Dict[str, Any]) -> None:
         """Send health status to webhook"""
