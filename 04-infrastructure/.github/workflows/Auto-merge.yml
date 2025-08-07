@@ -3,6 +3,7 @@ name: Auto-merge Dependabot Updates
 on:
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   pull-requests: write
@@ -17,7 +18,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Fetch Dependabot Metadata
         id: metadata
@@ -45,7 +46,9 @@ jobs:
       - name: Fix Errors Script
         # Execute error fixing script if a failure occurs
         if: failure()
-        run: ./fix-errors.sh
+        run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
 
       - name: Error Handling
         # Log an error message if the process fails

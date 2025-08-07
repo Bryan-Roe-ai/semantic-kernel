@@ -11,6 +11,7 @@ on:
     branches: [main]
   schedule:
     - cron: '29 21 * * 5' # Runs every Friday at 21:29 UTC. Adjust as needed.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -49,7 +50,7 @@ jobs:
         run: cat phpmd-results.sarif
 
       - name: Upload PHPMD results artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: phpmd-results
           path: phpmd-results.sarif

@@ -18,6 +18,7 @@ on:
   pull_request:
     types: [opened, reopened, synchronize]
     branches: [ "main" ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -38,7 +39,7 @@ jobs:
     steps:
       # This step checks out a copy of your repository.
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         continue-on-error: false
       # This step creates the Checkmarx One scan
       - name: Checkmarx One scan
@@ -57,7 +58,9 @@ jobs:
           sarif_file: cx_result.sarif
         continue-on-error: false
       - name: Fix Errors
-        run: ./fix-errors.sh
+        run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
       - name: Check fix-errors.sh script status
         if: failure()
         run: echo "Error: fix-errors.sh script failed." && exit 1

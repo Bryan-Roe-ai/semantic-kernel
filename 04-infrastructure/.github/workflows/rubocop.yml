@@ -10,10 +10,12 @@ on:
       - main
   schedule:
     - cron: '33 2 * * 3'
+  workflow_dispatch:
 
 jobs:
   rubocop:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -29,7 +31,7 @@ jobs:
         ruby-version: ${{ matrix.ruby-version }}
 
     - name: Cache Gems
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: vendor/bundle
         key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}

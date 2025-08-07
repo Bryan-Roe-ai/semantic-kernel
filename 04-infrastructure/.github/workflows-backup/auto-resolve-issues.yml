@@ -31,13 +31,13 @@ jobs:
           }
           issue_number=$(_jq '.number')
           issue_title=$(_jq '.title')
-          
+
           echo "Resolving issue #${issue_number}: ${issue_title}"
-          
+
           # Add your predefined solution logic here
           gh issue comment "${issue_number}" --body "Issue resolved by applying predefined solution."
           gh issue close "${issue_number}"
-          
+
           if [ $? -ne 0 ]; then
             echo "Failed to resolve issue #${issue_number}"
             exit 1
@@ -74,9 +74,9 @@ jobs:
           }
           issue_number=$(_jq '.number')
           issue_title=$(_jq '.title')
-          
+
           echo "Checking best practices adherence for issue #${issue_number}: ${issue_title}"
-          
+
           # Add your best practices adherence logic here
           gh issue comment "${issue_number}" --body "Issue adherence to best practices verified."
         done
@@ -98,9 +98,9 @@ jobs:
           }
           issue_number=$(_jq '.number')
           issue_title=$(_jq '.title')
-          
+
           echo "Notifying trusted people for issue #${issue_number}: ${issue_title}"
-          
+
           # Add your notification logic here
           gh issue comment "${issue_number}" --body "Trusted people notified for approval."
         done

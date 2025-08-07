@@ -20,6 +20,7 @@ on:
       - main
   schedule:
     - cron: '35 14 * * 1' # Adjusted for weekly schedule at 14:35 UTC on Mondays
+  workflow_dispatch:
 
 permissions:
   contents: read # Required for actions/checkout

@@ -33,7 +33,7 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Cache .NET packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
@@ -91,7 +91,9 @@ jobs:
 
       - name: Fix Errors
         if: failure()
-        run: ./fix-errors.sh
+        run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
 
       - name: Log Error Message
         if: failure()

@@ -1,10 +1,11 @@
 name: Labeler
 
-on: 
+on:
   pull_request_target:
     types: [opened, synchronize, reopened]
   schedule:
     - cron: '0 0 * * *' # Daily at midnight
+  workflow_dispatch:
 
 env:
   LABELER_CONFIG: .github/labeler.yml
@@ -32,7 +33,7 @@ jobs:
 
       # Step to checkout the repository
       - name: Checkout Repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v4.4.0
 
       # Step to apply labels based on the configuration in .github/labeler.yml
       - name: Apply Labeler

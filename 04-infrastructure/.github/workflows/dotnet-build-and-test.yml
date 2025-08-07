@@ -231,7 +231,9 @@ jobs:
 
       - name: Fix Errors
         if: failure()
-        run: ./fix-errors.sh
+        run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
 
       - name: Log Error Message
         if: failure()

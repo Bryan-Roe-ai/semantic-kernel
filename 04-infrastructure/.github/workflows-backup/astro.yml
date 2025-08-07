@@ -12,7 +12,7 @@ permissions:
   id-token: write # Token permissions for deployment
 
 concurrency:
-  group: "pages-deployment-${{ github.ref }}" 
+  group: "pages-deployment-${{ github.ref }}"
   cancel-in-progress: true # Prevent overlapping deployments
 
 env:

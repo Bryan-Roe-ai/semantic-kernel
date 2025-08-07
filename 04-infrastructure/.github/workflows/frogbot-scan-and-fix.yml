@@ -3,6 +3,7 @@ name: "Frogbot Scan and Fix"
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
 
 permissions:
   contents: write           # Needed for PR creation
@@ -32,7 +33,7 @@ jobs:
 
       # 4. Cache JFrog dependencies
       - name: Cache JFrog CLI configuration
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.jfrog
           key: ${{ runner.os }}-jfrog-cache
@@ -50,7 +51,9 @@ jobs:
       # 6. Error handling (runs only if previous steps failed)
       - name: Run custom error fix script if scan fails
         if: failure()
-        run: ./fix-errors.sh
+        run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
 
       - name: Log error message if scan fails
         if: failure()

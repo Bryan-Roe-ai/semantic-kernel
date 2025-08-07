@@ -12,10 +12,12 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     # Use a matrix to run the tests across multiple environments
     strategy:
@@ -28,7 +30,7 @@ jobs:
     steps:
       # Step 1: Check out the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Step 2: Run Datadog Synthetic tests
       - name: Run Datadog Synthetic tests

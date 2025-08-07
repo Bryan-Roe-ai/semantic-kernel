@@ -1,12 +1,13 @@
 name: Python Test Coverage
 
-on: 
+on:
   pull_request:
-    branches: 
+    branches:
       - "main"
       - "feature*"
     paths:
       - "python/**"
+  workflow_dispatch:
 
 jobs:
   python-tests-coverage:
@@ -18,12 +19,12 @@ jobs:
       actions: read
     strategy:
       matrix:
-        python-version: 
+        python-version:
           - "3.8"
           - "3.9"
           - "3.10"
           - "3.11"
-        os: 
+        os:
           - ubuntu-latest
           # Uncomment below for cross-platform testing
           # - windows-latest
@@ -41,7 +42,7 @@ jobs:
 
       # Cache dependencies
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}

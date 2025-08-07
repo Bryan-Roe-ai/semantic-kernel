@@ -1,5 +1,3 @@
-import re
-import sys
 #!/usr/bin/env python3
 """
 Comprehensive Copyright and Attribution Setup Script
@@ -12,6 +10,8 @@ This script sets up complete copyright and attribution for the Semantic Kernel p
 
 import os
 import json
+import re
+import sys
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any

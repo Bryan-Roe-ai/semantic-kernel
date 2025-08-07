@@ -9,6 +9,7 @@ on:
     types: [opened]
   issue_comment:
     types: [created]
+  workflow_dispatch:
 
 # Allows the workflow to create comments on issues and pull requests
 permissions:
@@ -21,7 +22,7 @@ jobs:
     name: AdaGPT comment
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3  
+      - uses: actions/checkout@v4
       # The action will only run if the description or comments mentions @AdaGPT
       - uses: zirkelc/adagpt@latest
         name: AdaGPT

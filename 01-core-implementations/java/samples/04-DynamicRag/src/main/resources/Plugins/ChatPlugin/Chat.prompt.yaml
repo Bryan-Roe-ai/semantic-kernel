@@ -24,7 +24,7 @@ template: |
   {{#if (equal action 'AskClarifyingMathQuestion')}}
     {{#message role="system"}}
     The user appears to want to perform math, but you don't have enough details yet.
-    Ask the user for more details about the problem before solving it. 
+    Ask the user for more details about the problem before solving it.
     {{/message}}
   {{/if}}
 template_format: handlebars

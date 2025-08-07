@@ -7,11 +7,11 @@ template: |
     [Goal]
     The goal of proposed step.
     [THOUGHT]
-    To solve this problem, I should carefully analyze the question and response to identify if user is willing to begin the current action. 
+    To solve this problem, I should carefully analyze the question and response to identify if user is willing to begin the current action.
     Any facts I discover earlier in my thought process should be repeated here to keep them readily available.
     [QUESTION]
     If there is any ambiguity in the chat history, ask the follow up question to the user to get clarification on whether the user wants to repeat the previous step.
-    The way you will check if the user wants to execute the step is by asking the question "{{$message}}". 
+    The way you will check if the user wants to execute the step is by asking the question "{{$message}}".
     IMPORTANT: Do NOT update the wording in the question stated above. If you need clarification, you will ask that question word for word.
     If the user says something along the lines of "yes", "sure", "fine", "ok", then they are asking to start the step.
     [RESPONSE]
@@ -33,7 +33,7 @@ template: |
     [FINAL ANSWER]
     TRUE
 
-    IMPORTANT REMINDER: your each response should contain at most one question. Do not provide more than one step.  
+    IMPORTANT REMINDER: your each response should contain at most one question. Do not provide more than one step.
     Let's break down the problem step by step and think about the best approach.
 
     Begin!
@@ -41,7 +41,7 @@ template: |
     [Goal]
     {{$goal}}
     {{$agentScratchPad}}
-    [THOUGHT]    
+    [THOUGHT]
 description: Given the chat history, determine if user would like to execute the previous task for one more time. If not concluded, generate the next message for follow up.
 name: CheckRepeatStep
 input_variables:

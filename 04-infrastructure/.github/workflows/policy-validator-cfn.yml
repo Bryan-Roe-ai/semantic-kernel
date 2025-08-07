@@ -16,6 +16,7 @@ on:
   pull_request:
     # The branches below must be a subset of the branches above
     branches: ["main"]
+  workflow_dispatch:
 env:
   AWS_ROLE: MY_ROLE # set this with the role ARN which has permissions to invoke access-analyzer:ValidatePolicy,access-analyzer:CheckNoNewAccess, access-analyzer:CheckAccessNotGranted and can be used in GitHub actions
   REGION: MY_AWS_REGION # set this to your preferred AWS region where you plan to deploy your policies, e.g. us-west-1

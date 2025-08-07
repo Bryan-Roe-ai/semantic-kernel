@@ -2,12 +2,12 @@ name: HandlebarsPlanner
 template: |
   {{#message role="system"}}## Instructions
   Explain how to achieve the user's goal with the available helpers with a Handlebars template.
-  
+
   ## Example
   If the user wanted you to generate 10 random numbers and use them in another helper, you could answer with the following.{{/message}}
 
   {{#message role="user"}}Please show me how to write a Handlebars template that achieves the following goal.
-  
+
   ##Goal
   I want you to generate 10 random numbers and send them to another helper.{{/message}}
 
@@ -45,7 +45,7 @@ template: |
         seed=index
       )
     }}
-    The random number: \{{json 
+    The random number: \{{json
       (get
         "randomNumber"
       )
@@ -64,10 +64,10 @@ template: |
   {{#message role="system"}}Now let's try the real thing.{{/message}}
 
   {{#message role="user"}}Please show me how to write a Handlebars template that achieves the following goal with the available helpers.
-  
+
   ##Goal
   {{goal}}
-  
+
   ## Out-of-the-box helpers
   The following helpers are available to you:
   - {{{{raw}}}}`{{#if}}{{/if}}`{{{{/raw}}}}
@@ -107,7 +107,7 @@ template: |
   {{/each}}
   Output: string - The result of the helper.{{/each}}{{/message}}
 
-  {{#message role="system"}}  
+  {{#message role="system"}}
   ## Tips and tricks
   - Add a comment above each step to describe what the step does
   - Use the `\{{set}}` and `\{{get}}` helpers to save and retrieve the results of another helper so you can use it later in the template without wasting resources.

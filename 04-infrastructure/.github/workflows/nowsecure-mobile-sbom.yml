@@ -18,6 +18,7 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '40 3 * * 6' # Adjust schedule as needed
+  workflow_dispatch:
 
 permissions:
   contents: read

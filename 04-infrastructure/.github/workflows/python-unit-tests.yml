@@ -5,6 +5,7 @@ on:
     branches: ["main", "feature*"]
     paths:
       - "python/**"
+  workflow_dispatch:
 env:
   UV_CACHE_DIR: /tmp/.uv-cache
 

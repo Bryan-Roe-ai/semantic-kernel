@@ -12,6 +12,7 @@ on:
 jobs:
   MSDO:
     runs-on: windows-latest # 'windows-latest' is currently supported
+    timeout-minutes: 30
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest] # Added cross-platform testing
@@ -28,7 +29,7 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-      
+
       # Step 3: Set up .NET environment
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
@@ -58,6 +59,7 @@ jobs:
   # Optional: Add support for testing on Ubuntu
   MSDO_Ubuntu:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       matrix:
         dotnet: [5.0.x, 6.0.x]

@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,7 +19,7 @@ jobs:
     steps:
     # Step 1: Checkout the code
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     # Step 2: Set up the necessary compiler and tools
     - name: Setup Compiler
@@ -31,7 +32,7 @@ jobs:
 
     # Step 3: Cache dependencies to speed up builds
     - name: Cache build dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.cache
         key: ${{ runner.os }}-${{ matrix.compiler }}-build-${{ hashFiles('**/Makefile') }}
@@ -63,7 +64,7 @@ jobs:
 
     # Step 9: Upload build artifacts
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-results
         path: ./build

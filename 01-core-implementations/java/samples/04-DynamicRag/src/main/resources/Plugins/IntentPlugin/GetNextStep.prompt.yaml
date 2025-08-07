@@ -30,7 +30,7 @@ template: |
   {{#message role="assistant"}}
   AskClarifyingMathQuestion
   {{/message}}
-  
+
 
   {{#message role="system"}}
   ### Examples 2

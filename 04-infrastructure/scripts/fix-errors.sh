@@ -82,20 +82,20 @@ log "Managing services: ${services[*]}"
 
 for service in "${services[@]}"; do
     log "Checking service: $service"
-    
+
     # Check if service exists
     if ! systemctl list-unit-files | grep -q "^$service"; then
         log "WARNING: Service $service not found, skipping..."
         continue
     fi
-    
+
     # Try to start the service
     if sudo systemctl start "$service" 2>/dev/null; then
         log "Service $service started successfully"
     else
         log "WARNING: Could not start service $service"
     fi
-    
+
     # Verify service status
     if sudo systemctl is-active --quiet "$service"; then
         log "Service $service is running"
@@ -118,19 +118,19 @@ log "Starting file cleanup process..."
 backup_and_delete() {
     local pattern=$1
     local description=$2
-    
+
     log "Processing $description files..."
-    
+
     # Find files and create backup
     find . -type f -name "$pattern" -print0 | while IFS= read -r -d '' file; do
         if [ -f "$file" ]; then
             # Create directory structure in backup
             backup_path="$BACKUP_DIR$(dirname "$file")"
             mkdir -p "$backup_path"
-            
+
             # Copy to backup before deletion
             cp "$file" "$backup_path/" 2>/dev/null || log "WARNING: Could not backup $file"
-            
+
             # Delete original
             rm -f "$file" && log "Deleted: $file"
         fi
@@ -158,7 +158,7 @@ $(du -sh "$BACKUP_DIR" 2>/dev/null || echo "Could not determine size")
 
 File Types Processed:
 - Binary files (*.bin)
-- Executable files (*.exe)  
+- Executable files (*.exe)
 - Dynamic libraries (*.dll)
 - Archive files (*.zip)
 EOF
@@ -211,7 +211,7 @@ log "Checking network connectivity..."
 check_connectivity() {
     local host=$1
     local retries=3
-    
+
     for i in $(seq 1 $retries); do
         if ping -c 1 -W 5 "$host" &> /dev/null; then
             log "Network connectivity to $host: OK"
@@ -219,7 +219,7 @@ check_connectivity() {
         fi
         sleep 2
     done
-    
+
     log "WARNING: Network connectivity to $host failed"
     return 1
 }
@@ -237,15 +237,15 @@ log "Required disk space: $(($required_space / 1024 / 1024))GB"
 
 if [ "$available_space" -lt "$required_space" ]; then
     log "WARNING: Insufficient disk space. Performing cleanup..."
-    
+
     # Clean package manager caches
     apt-get clean 2>/dev/null || true
     pip3 cache purge 2>/dev/null || true
     npm cache clean --force 2>/dev/null || true
-    
+
     # Clean old log files (older than 7 days)
     find /var/log -name "*.log" -mtime +7 -delete 2>/dev/null || true
-    
+
     # Check space again
     available_space=$(df / | tail -1 | awk '{print $4}')
     if [ "$available_space" -lt "$required_space" ]; then
@@ -316,7 +316,7 @@ log "Validating environment variables..."
 set_default_env_var() {
     local var_name=$1
     local default_value=$2
-    
+
     if [ -z "${!var_name:-}" ]; then
         export "$var_name"="$default_value"
         log "Set default value for $var_name"

@@ -6,7 +6,7 @@ from collect_md_for_ai import collect_md_files
 
 def generate_dataset(directory: str, num_files: int = 50, lines_per_file: int = 2000, repetitions_per_line: int = 50) -> None:
     """Generate a large set of markdown files for stress testing.
-    
+
     Args:
         directory (str): The directory to store the generated files.
         num_files (int): The number of files to generate.

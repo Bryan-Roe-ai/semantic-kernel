@@ -7,11 +7,11 @@ template: |
     [Goal]
     The goal of proposed step.
     [THOUGHT]
-    To solve this problem, I should carefully analyze the previous question and response to identify if user is willing to repeat the action again. 
+    To solve this problem, I should carefully analyze the previous question and response to identify if user is willing to repeat the action again.
     Any facts I discover earlier in my thought process should be repeated here to keep them readily available.
     [QUESTION]
     If there is any ambiguity in the chat history, ask the follow up question to the user to get clarification on whether the user wants to repeat the previous step.
-    The way you will check if the user wants to repeat the step is by asking the question "{{$transitionMessage}}". 
+    The way you will check if the user wants to repeat the step is by asking the question "{{$transitionMessage}}".
     IMPORTANT: Do NOT update the wording in the question stated above. If you need clarification, you will ask that question word for word.
     If the user says something along the lines of "yes", "sure", "fine", "ok", then they are asking to repeat the step.
     [RESPONSE]
@@ -41,7 +41,7 @@ template: |
     [Goal]
     {{$goal}}
     {{$agentScratchPad}}
-    [THOUGHT]    
+    [THOUGHT]
 description: Given the chat history, determine if user would like to execute the previous task for one more time. If not concluded, generate the next message for follow up.
 name: CheckRepeatStep
 input_variables:
@@ -60,7 +60,7 @@ execution_settings:
     frequency_penalty: 0.0
     max_tokens:        400
     stop_sequences:    ["[RESPONSE]"]
-  default:  
+  default:
     temperature:       0.0
     top_p:             1.0
     presence_penalty:  0.0

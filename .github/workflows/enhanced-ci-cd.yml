@@ -94,7 +94,7 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ env.NUGET_PACKAGES }}
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/Directory.Build.*') }}
@@ -129,7 +129,7 @@ jobs:
           fail_ci_if_error: true
 
       - name: Upload Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: dotnet-test-results-${{ matrix.os }}-${{ matrix.configuration }}
@@ -138,7 +138,7 @@ jobs:
           retention-days: 30
 
       - name: Upload Coverage Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: dotnet-coverage-${{ matrix.os }}-${{ matrix.configuration }}
@@ -163,7 +163,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
@@ -176,7 +176,7 @@ jobs:
           virtualenvs-in-project: true
           installer-parallel: true
       - name: Load cached venv
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: 01-core-implementations/python/.venv
           key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
@@ -206,7 +206,7 @@ jobs:
           name: python-coverage
           fail_ci_if_error: true
       - name: Upload Coverage Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: python-coverage-${{ matrix.os }}-${{ matrix.python-version }}
@@ -257,7 +257,7 @@ jobs:
           name: typescript-coverage
           fail_ci_if_error: true
       - name: Upload Coverage Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: typescript-coverage-${{ matrix.os }}-${{ matrix.node-version }}
@@ -284,7 +284,7 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Cache NuGet packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ env.NUGET_PACKAGES }}
           key: ${{ runner.os }}-nuget-benchmarks-${{ hashFiles('**/Directory.Packages.props') }}
@@ -405,7 +405,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
@@ -437,7 +437,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Download Coverage Reports
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
       - name: Generate Coverage Summary
         run: |
           echo "## 📊 Test Coverage Summary" >> $GITHUB_STEP_SUMMARY

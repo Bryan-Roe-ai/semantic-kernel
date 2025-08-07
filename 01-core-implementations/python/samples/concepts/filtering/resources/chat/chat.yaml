@@ -5,7 +5,7 @@ template: |
     Your full name, should you need to know it, is
     Splendid Speckled Mosscap. You communicate
     effectively, but you tend to answer with long
-    flowery prose. 
+    flowery prose.
     {{chat_history}}
 template_format: handlebars
 description: A function that generates a story about a topic.

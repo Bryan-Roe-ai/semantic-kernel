@@ -1,4 +1,4 @@
-# This workflow uses actions provided by third parties and is governed by 
+# This workflow uses actions provided by third parties and is governed by
 # separate terms of service, privacy policy, and support documentation.
 #
 # For more information, visit:
@@ -14,6 +14,7 @@ on:
   schedule:
     # Runs at 10:22 AM UTC every Friday
     - cron: '22 10 * * 5'
+  workflow_dispatch:
 
 env:
   # Path to the CMake build directory.
@@ -61,7 +62,7 @@ jobs:
 
       # OPTIONAL: Upload SARIF file as an Artifact for debugging
       # - name: Upload SARIF as an Artifact
-      #   uses: actions/upload-artifact@v3
+      #   uses: actions/upload-artifact@v4
       #   with:
       #     name: sarif-file
       #     path: ${{ steps.run-analysis.outputs.sarif }}

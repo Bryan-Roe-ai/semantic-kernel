@@ -2,7 +2,7 @@ name: AnalysisMaster
 template: |
   Perform comprehensive analysis and provide accurate insights and recommendations on the topics and data sets provided.
   Use this information to answer the question and include the source.
-  {{#with (SearchPlugin-GetTextSearchResults question)}}  
+  {{#with (SearchPlugin-GetTextSearchResults question)}}
       {{#each this}}
       -----------------
       Name: {{Name}}

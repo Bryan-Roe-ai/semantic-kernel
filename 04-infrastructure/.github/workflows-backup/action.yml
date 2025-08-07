@@ -58,13 +58,13 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
-        
+
         # Count non-empty inputs
         count=0
         [[ -n "${{ inputs.subject-path }}" ]] && ((count++))
         [[ -n "${{ inputs.subject-digest }}" ]] && ((count++))
         [[ -n "${{ inputs.subject-checksums }}" ]] && ((count++))
-        
+
         if [[ $count -eq 0 ]]; then
           echo "::error::Must specify exactly one of: subject-path, subject-digest, or subject-checksums"
           exit 1
@@ -72,13 +72,13 @@ runs:
           echo "::error::Only one subject input type is allowed. Specified: $count inputs"
           exit 1
         fi
-        
+
         # Validate subject-digest requires subject-name
         if [[ -n "${{ inputs.subject-digest }}" && -z "${{ inputs.subject-name }}" ]]; then
           echo "::error::subject-name is required when using subject-digest"
           exit 1
         fi
-        
+
         # Validate push-to-registry requirements
         if [[ "${{ inputs.push-to-registry }}" == "true" ]]; then
           if [[ -z "${{ inputs.subject-name }}" || -z "${{ inputs.subject-digest }}" ]]; then
@@ -110,19 +110,19 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
-        
+
         echo "::notice title=Attestation Generated::Successfully created build provenance attestation"
         echo "Bundle Path: ${{ steps.attest.outputs.bundle-path }}"
         echo "Attestation ID: ${{ steps.attest.outputs.attestation-id }}"
         echo "Attestation URL: ${{ steps.attest.outputs.attestation-url }}"
-        
+
         # Add to job summary if available
         if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
           cat >> "$GITHUB_STEP_SUMMARY" << EOF
         ## 🛡️ Build Provenance Attestation
-        
+
         **Status:** ✅ Successfully generated
-        
+
         | Property | Value |
         |----------|-------|
         | Bundle Path | \`${{ steps.attest.outputs.bundle-path }}\` |

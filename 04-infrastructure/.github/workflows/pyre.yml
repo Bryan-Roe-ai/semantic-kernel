@@ -48,13 +48,14 @@ jobs:
 
       # Set up Python environment
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.9'  # Specify the Python version
+          cache: 'pip'
 
       # Cache Python dependencies
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
@@ -85,7 +86,7 @@ jobs:
 
       # Upload Pyre results
       - name: Upload Pyre results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: pyre-results
           path: ./pyre-results/

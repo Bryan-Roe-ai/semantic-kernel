@@ -40,24 +40,24 @@ print_performance() {
 # Performance optimization settings
 optimize_environment() {
     print_performance "Applying performance optimizations..."
-    
+
     # Python optimizations
     export PYTHONDONTWRITEBYTECODE=1
     export PYTHONUNBUFFERED=1
     export TOKENIZERS_PARALLELISM=false
     export PYTHONHASHSEED=0
-    
+
     # Memory optimizations
     export MALLOC_ARENA_MAX=2
     export MALLOC_MMAP_THRESHOLD_=131072
-    
+
     print_success "Environment optimized for performance"
 }
 
 # Check system requirements
 check_performance_requirements() {
     print_status "Checking performance requirements..."
-    
+
     # Check Python version
     python3 -c "
 import sys
@@ -67,7 +67,7 @@ if sys.version_info < (3.8):
 else:
     print('✅ Python version: {}.{}.{}'.format(*sys.version_info[:3]))
 "
-    
+
     # Check and install performance packages
     python3 -c "
 import sys
@@ -88,7 +88,7 @@ if missing_packages:
     print(f'📦 Installing missing packages: {missing_packages}')
     for package in missing_packages:
         try:
-            subprocess.run([sys.executable, '-m', 'pip', 'install', package], 
+            subprocess.run([sys.executable, '-m', 'pip', 'install', package],
                          check=True, capture_output=True)
             print(f'✅ {package} installed')
         except subprocess.CalledProcessError:
@@ -183,14 +183,14 @@ if [ "$DAEMON_MODE" = true ]; then
     ENHANCED_PID=$!
     echo $ENHANCED_PID > .agi_enhanced.pid
     print_success "Enhanced AGI system running in daemon mode (PID: $ENHANCED_PID)"
-    
+
 elif [ "$MONITOR_MODE" = true ]; then
     print_status "Starting in continuous monitoring mode..."
     while true; do
         python3 agi_enhanced_file_update_system.py --monitor
         sleep 300  # 5 minutes between cycles
     done
-    
+
 else
     # Single run mode
     print_status "Running single enhanced cycle..."

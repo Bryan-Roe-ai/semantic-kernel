@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       secrets:
         - hf_token
-    ports: 
+    ports:
       - "8080:80"
     environment:
       - COMPOSE_BAKE=true

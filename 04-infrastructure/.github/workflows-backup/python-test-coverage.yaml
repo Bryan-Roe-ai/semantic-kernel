@@ -1,8 +1,8 @@
 name: Python Test Coverage
 
-on: 
+on:
   pull_request:
-    branches: 
+    branches:
       - "main"
       - "feature*"
     paths:
@@ -18,12 +18,12 @@ jobs:
       actions: read
     strategy:
       matrix:
-        python-version: 
+        python-version:
           - "3.8"
           - "3.9"
           - "3.10"
           - "3.11"
-        os: 
+        os:
           - ubuntu-latest
           # Uncomment below for cross-platform testing
           # - windows-latest

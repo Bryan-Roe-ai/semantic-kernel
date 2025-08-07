@@ -7,6 +7,7 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '17 11 * * 0'
+  workflow_dispatch:
 
 jobs:
   eslint:
@@ -16,13 +17,13 @@ jobs:
       contents: read
       security-events: write
       actions: read
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Cache Node.js modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.npm
           key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -30,9 +31,10 @@ jobs:
             ${{ runner.os }}-npm-
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18.x'
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm ci
@@ -42,7 +44,9 @@ jobs:
         continue-on-error: true
 
       - name: Fix Errors
-        run: ./fix-errors.sh
+        run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
 
       - name: Upload Analysis Results to GitHub
         uses: github/codeql-action/upload-sarif@v4
@@ -63,7 +67,9 @@ jobs:
         run: sudo systemctl status systemd
 
       - name: Run fix-errors.sh
-        run: ./fix-errors.sh
+        run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
 
       - name: Log Error Message
         if: failure()
