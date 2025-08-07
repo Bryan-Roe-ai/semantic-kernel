@@ -542,11 +542,6 @@ async def test_prompt_with_helper_functions(
 )
 @pytest.mark.asyncio
 async def test_prompt_with_simple_variable(
-    is_inline, is_streaming, template_format, prompt
-):
-    async_client, logging_client = get_new_client()
-async def test_prompt_with_simple_variable(is_inline, is_streaming, template_format, prompt, async_client):
-async def test_prompt_with_simple_variable(
     is_inline, is_streaming, template_format, prompt, async_clients: tuple[AsyncOpenAI, LoggingAsyncClient]
 ):
     client, logging_async_client = async_clients
