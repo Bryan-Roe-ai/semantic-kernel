@@ -1,6 +1,4 @@
 // Copyright (c) Microsoft. All rights reserved.
-using System;
-// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +16,6 @@ namespace SemanticKernel.Agents.UnitTests;
 /// <summary>
 /// Mock definition of <see cref="Agent"/> with a <see cref="ChatHistoryAgent"/> contract.
 /// </summary>
-internal class MockAgent : ChatHistoryKernelAgent
 internal sealed class MockAgent : ChatHistoryAgent
 {
     public int InvokeCount { get; private set; }
@@ -45,8 +42,11 @@ internal sealed class MockAgent : ChatHistoryAgent
             if (options?.OnIntermediateMessage is not null)
             {
                 await options.OnIntermediateMessage(responseItem);
-                yield return responseItem;
             }
+
+
+
+                        yield return responseItem;
         }
     }
 
@@ -96,24 +96,6 @@ internal sealed class MockAgent : ChatHistoryAgent
         return this.Response.Select(m => new StreamingChatMessageContent(m.Role, m.Content)).ToAsyncEnumerable();
     }
 
-    /// <inheritdoc/>
-    protected internal override IEnumerable<string> GetChannelKeys()
-    {
-        yield return typeof(ChatHistoryChannel).FullName!;
-    }
-
-    /// <inheritdoc/>
-    protected internal override Task<AgentChannel> CreateChannelAsync(CancellationToken cancellationToken)
-    {
-        ChatHistoryChannel channel =
-            new()
-            {
-                Logger = this.LoggerFactory.CreateLogger<ChatHistoryChannel>()
-            };
-
-        return Task.FromResult<AgentChannel>(channel);
-    }
-
     protected internal override Task<AgentChannel> RestoreChannelAsync(string channelState, CancellationToken cancellationToken)
     {
         ChatHistory history =
@@ -123,68 +105,6 @@ internal sealed class MockAgent : ChatHistoryAgent
     }
 
     // Expose protected method for testing
-    public new KernelArguments? MergeArguments(KernelArguments? arguments)
-    {
-        return base.MergeArguments(arguments);
-    }
-}
-
-// Unit tests for MockAgent
-public class MockAgentTests
-{
-    [Fact]
-    public async Task InvokeAsync_ShouldIncrementInvokeCountAndReturnExpectedResponse()
-    {
-        // Arrange
-        var mockAgent = new MockAgent();
-        var expectedResponse = new List<ChatMessageContent>
-        {
-            new ChatMessageContent("user", "Hello"),
-            new ChatMessageContent("assistant", "Hi there!")
-        };
-        mockAgent.Response = expectedResponse;
-
-        // Act
-        var response = await mockAgent.InvokeAsync(new ChatHistory()).ToListAsync();
-
-        // Assert
-        Assert.Equal(1, mockAgent.InvokeCount);
-        Assert.Equal(expectedResponse, response);
-    }
-
-    [Fact]
-    public void MergeArguments_ShouldMergeKernelArgumentsCorrectly()
-    {
-        // Arrange
-        var mockAgent = new MockAgent();
-        var arguments1 = new KernelArguments
-        {
-            Parameters = new Dictionary<string, object>
-            {
-                { "param1", "value1" },
-                { "param2", "value2" }
-            }
-        };
-        var arguments2 = new KernelArguments
-        {
-            Parameters = new Dictionary<string, object>
-            {
-                { "param2", "new_value2" },
-                { "param3", "value3" }
-            }
-        };
-
-        // Act
-        var mergedArguments = mockAgent.MergeArguments(arguments1);
-        mergedArguments = mockAgent.MergeArguments(arguments2);
-
-        // Assert
-        Assert.NotNull(mergedArguments);
-        Assert.Equal(3, mergedArguments.Parameters.Count);
-        Assert.Equal("value1", mergedArguments.Parameters["param1"]);
-        Assert.Equal("new_value2", mergedArguments.Parameters["param2"]);
-        Assert.Equal("value3", mergedArguments.Parameters["param3"]);
-   } 
     public new Task<string?> RenderInstructionsAsync(Kernel kernel, KernelArguments? arguments, CancellationToken cancellationToken)
     {
         return base.RenderInstructionsAsync(kernel, arguments, cancellationToken);
