@@ -3,21 +3,32 @@ name: 🚀 Enhanced CI/CD Pipeline
 on:
   push:
     branches: [main, develop]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.github/ISSUE_TEMPLATE/**'
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened]
   schedule:
     - cron: '0 2 * * 1' # Weekly dependency check
+  workflow_dispatch:
 
 env:
   DOTNET_VERSION: '8.0.x'
   PYTHON_VERSION: '3.11'
-  NODE_VERSION: '18'
-  JAVA_VERSION: '11'
+  NODE_VERSION: '20'
+  JAVA_VERSION: '17'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  TZ: UTC
 
 jobs:
   detect-changes:
     name: 🔍 Detect Changes
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     outputs:
       dotnet: ${{ steps.changes.outputs.dotnet }}
       python: ${{ steps.changes.outputs.python }}
@@ -26,22 +37,32 @@ jobs:
       docs: ${{ steps.changes.outputs.docs }}
     steps:
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v2
+        with:
+          fetch-depth: 2
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: |
             dotnet:
               - '01-core-implementations/dotnet/**'
               - '.github/workflows/**'
+              - '**/Directory.Build.*'
+              - '**/Directory.Packages.props'
             python:
               - '01-core-implementations/python/**'
               - '.github/workflows/**'
+              - '**/pyproject.toml'
+              - '**/poetry.lock'
             typescript:
               - '01-core-implementations/typescript/**'
               - '.github/workflows/**'
+              - '**/package.json'
+              - '**/package-lock.json'
             java:
               - '01-core-implementations/java/**'
               - '.github/workflows/**'
+              - '**/pom.xml'
+              - '**/build.gradle'
             docs:
               - 'docs/**'
               - '*.md'
@@ -56,13 +77,24 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         configuration: [Debug, Release]
+    timeout-minutes: 30
+    concurrency:
+      group: dotnet-${{ matrix.os }}-${{ matrix.configuration }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.NUGET_PACKAGES }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/Directory.Build.*') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
       - name: Restore dependencies
         run: dotnet restore 01-core-implementations/dotnet/SK-dotnet.sln
       - name: Build
@@ -72,9 +104,12 @@ jobs:
           dotnet test 01-core-implementations/dotnet/SK-dotnet.sln \
             --configuration ${{ matrix.configuration }} \
             --no-build \
-            --logger trx \
+            --logger "trx;LogFileName=test-results.trx" \
             --collect:"XPlat Code Coverage" \
-            --results-directory ./TestResults
+            --results-directory ./TestResults \
+            --blame-hang-dump \
+            --blame-hang-timeout 15min \
+            --verbosity normal
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -82,18 +117,23 @@ jobs:
           files: ./TestResults/**/coverage.cobertura.xml
           flags: dotnet-${{ matrix.os }}-${{ matrix.configuration }}
           name: dotnet-coverage
+          fail_ci_if_error: true
       - name: Upload Test Results
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: dotnet-test-results-${{ matrix.os }}-${{ matrix.configuration }}
           path: ./TestResults/**/*.trx
-      - name: Upload Coverage Artifact
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload Coverage Artifact  
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: dotnet-coverage-${{ matrix.os }}-${{ matrix.configuration }}
           path: ./TestResults/**/coverage.cobertura.xml
+          if-no-files-found: error
+          retention-days: 30
 
   python-test:
     name: 🐍 Python Tests
@@ -105,6 +145,10 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         python-version: ['3.8', '3.9', '3.10', '3.11']
+    timeout-minutes: 30
+    concurrency:
+      group: python-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
     steps:
       - uses: actions/checkout@v4
@@ -112,24 +156,26 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          check-latest: true
       - name: Install Poetry
         uses: snok/install-poetry@v1
         with:
           version: 1.8.2
           virtualenvs-create: true
           virtualenvs-in-project: true
+          installer-parallel: true
       - name: Load cached venv
         uses: actions/cache@v3
         with:
           path: 01-core-implementations/python/.venv
-          key: venv-${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('**/poetry.lock') }}
           restore-keys: |
-            venv-${{ runner.os }}-${{ matrix.python-version }}-
-            venv-${{ runner.os }}-
+            venv-${{ runner.os }}-py${{ matrix.python-version }}-
       - name: Install dependencies
         run: |
           cd 01-core-implementations/python
-          poetry install --no-interaction --no-root --no-ansi
+          poetry install --no-interaction --no-root --no-ansi --with test
       - name: Run Tests with Coverage
         run: |
           cd 01-core-implementations/python
@@ -138,7 +184,9 @@ jobs:
             --cov-report=xml \
             --cov-report=html \
             --junit-xml=pytest.xml \
-            -v
+            -v \
+            --durations=10 \
+            --timeout=300
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -146,12 +194,15 @@ jobs:
           files: ./01-core-implementations/python/coverage.xml
           flags: python-${{ matrix.os }}-${{ matrix.python-version }}
           name: python-coverage
+          fail_ci_if_error: true
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: python-coverage-${{ matrix.os }}-${{ matrix.python-version }}
           path: ./01-core-implementations/python/coverage.xml
+          if-no-files-found: error
+          retention-days: 30
 
   typescript-test:
     name: 📘 TypeScript Tests
@@ -162,12 +213,16 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: ['16', '18', '20']
+        node-version: ['18', '20']
+    timeout-minutes: 30
+    concurrency:
+      group: typescript-${{ matrix.os }}-${{ matrix.node-version }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
@@ -175,7 +230,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd 01-core-implementations/typescript
-          npm ci --prefer-offline
+          npm ci --prefer-offline --no-audit --no-fund
       - name: Build
         run: |
           cd 01-core-implementations/typescript
@@ -191,29 +246,52 @@ jobs:
           files: ./01-core-implementations/typescript/coverage/lcov.info
           flags: typescript-${{ matrix.os }}-${{ matrix.node-version }}
           name: typescript-coverage
+          fail_ci_if_error: true
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: typescript-coverage-${{ matrix.os }}-${{ matrix.node-version }}
           path: ./01-core-implementations/typescript/coverage/lcov.info
+          if-no-files-found: error
+          retention-days: 30
 
   performance-benchmarks:
     name: ⚡ Performance Benchmarks
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 60
+    concurrency:
+      group: benchmarks-${{ github.ref }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.NUGET_PACKAGES }}
+          key: ${{ runner.os }}-nuget-benchmarks-${{ hashFiles('**/Directory.Packages.props') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-benchmarks-
       - name: Run Benchmarks
         run: |
           cd 01-core-implementations/dotnet/benchmarks
-          dotnet run -c Release --framework net8.0 -- --exporters json
+          dotnet run -c Release --framework net8.0 -- \
+            --exporters json \
+            --maxIterationCount 20 \
+            --minIterationCount 15 \
+            --warmupCount 3 \
+            --memoryRandomization \
+            --disableOptimizationsValidator
       - name: Store benchmark result
         uses: benchmark-action/github-action-benchmark@v1
         with:
@@ -229,40 +307,69 @@ jobs:
   security-scan:
     name: 🔒 Security Scan
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      security-events: write
+      contents: read
+      
     steps:
       - uses: actions/checkout@v4
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
+          scan-ref: '.'
           format: 'sarif'
           output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          timeout: '10m'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
       - name: Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy-results.sarif'
+          category: 'Trivy'
+      - name: Fail on critical vulnerabilities
+        run: |
+          if grep -q '"Severity": "CRITICAL"' trivy-results.sarif; then
+            echo "Critical vulnerabilities found!"
+            exit 1
+          fi
 
   integration-tests:
     name: 🔄 Integration Tests
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
+    timeout-minutes: 45
+    concurrency:
+      group: integration-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+      
     services:
       redis:
-        image: redis:latest
+        image: redis:7-alpine
         ports:
           - 6379:6379
-        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --health-start-period 30s
+
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Wait for Redis Service
+        timeout-minutes: 2
         run: |
-          for i in {1..10}; do
-            nc -z localhost 6379 && echo "Redis is up!" && break
-            echo "Waiting for Redis..." && sleep 5
+          until nc -z localhost 6379; do
+            echo "Waiting for Redis..."
+            sleep 1
           done
       - name: Run Integration Tests
         env:
@@ -272,39 +379,58 @@ jobs:
         run: |
           cd 01-core-implementations/dotnet
           dotnet test tests/IntegrationTests/ \
-            --logger trx \
+            --logger "trx;LogFileName=integration-tests.trx" \
             --collect:"XPlat Code Coverage" \
-            --results-directory ./IntegrationTestResults
+            --results-directory ./IntegrationTestResults \
+            --blame-hang-timeout 10min \
+            --blame-hang-dump \
+            -v normal
 
   docs-build:
     name: 📚 Documentation
     runs-on: ubuntu-latest
     needs: detect-changes
     if: needs.detect-changes.outputs.docs == 'true' || github.event_name == 'push'
+    timeout-minutes: 15
+    concurrency:
+      group: docs-${{ github.ref }}
+      cancel-in-progress: true
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          check-latest: true
       - name: Install dependencies
-        run: pip install --require-hashes -r docs/requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install --require-hashes -r docs/requirements.txt
       - name: Build documentation
         run: |
           cd docs
-          mkdocs build
+          mkdocs build --strict
       - name: Deploy to GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/site
+          full_commit_message: ${{ github.event.head_commit.message }}
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
 
   coverage-summary:
     name: 📊 Coverage Summary
     runs-on: ubuntu-latest
     needs: [dotnet-test, python-test, typescript-test]
     if: always()
+    timeout-minutes: 10
+
     steps:
       - uses: actions/checkout@v4
       - name: Download Coverage Reports
@@ -312,18 +438,26 @@ jobs:
       - name: Generate Coverage Summary
         run: |
           echo "## 📊 Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "Generated on $(date -u +'%Y-%m-%d %H:%M:%S') UTC" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Language | Platform | Coverage |" >> $GITHUB_STEP_SUMMARY
           echo "|----------|----------|----------|" >> $GITHUB_STEP_SUMMARY
-          echo "| .NET | Cross-platform | ![.NET Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=dotnet) |" >> $GITHUB_STEP_SUMMARY
-          echo "| Python | Cross-platform | ![Python Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=python) |" >> $GITHUB_STEP_SUMMARY
-          echo "| TypeScript | Cross-platform | ![TypeScript Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=typescript) |" >> $GITHUB_STEP_SUMMARY
+          echo "| .NET | Cross-platform | [![.NET Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=dotnet)](https://codecov.io/gh/bryan-roe/semantic-kernel) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Python | Cross-platform | [![Python Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=python)](https://codecov.io/gh/bryan-roe/semantic-kernel) |" >> $GITHUB_STEP_SUMMARY
+          echo "| TypeScript | Cross-platform | [![TypeScript Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=typescript)](https://codecov.io/gh/bryan-roe/semantic-kernel) |" >> $GITHUB_STEP_SUMMARY
 
   release:
     name: 🚀 Release
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [dotnet-test, python-test, typescript-test, performance-benchmarks, security-scan]
+    needs: [dotnet-test, python-test, typescript-test, performance-benchmarks, security-scan, integration-tests]
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    concurrency:
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -332,8 +466,16 @@ jobs:
         id: release_notes
         run: |
           echo "## 🚀 What's New" > RELEASE_NOTES.md
+          echo "Release generated on $(date -u +'%Y-%m-%d %H:%M:%S') UTC" >> RELEASE_NOTES.md
           echo "" >> RELEASE_NOTES.md
           git log --pretty=format:"- %s" $(git describe --tags --abbrev=0)..HEAD >> RELEASE_NOTES.md
+          
+          echo -e "\n\n## 📝 Commit Details" >> RELEASE_NOTES.md
+          git log --pretty=format:"- %h %s (%an)" $(git describe --tags --abbrev=0)..HEAD >> RELEASE_NOTES.md
+          
+          echo -e "\n\n## 📊 Statistics" >> RELEASE_NOTES.md
+          echo "- Commits since last release: $(git rev-list --count $(git describe --tags --abbrev=0)..HEAD)" >> RELEASE_NOTES.md
+          echo "- Contributors: $(git log $(git describe --tags --abbrev=0)..HEAD --format='%aN' | sort -u | wc -l)" >> RELEASE_NOTES.md
       - name: Create Release
         if: contains(github.event.head_commit.message, '[release]')
         uses: actions/create-release@v1
