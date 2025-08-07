@@ -11,9 +11,8 @@ jobs:
       issues: write
       pull-requests: write
     steps:
-      - name: Stale
-      - name: Stale
-      - uses: actions/stale@v9.0.0
+      - name: Check for stale issues
+        uses: actions/stale@v9.0.0
         with:
           days-before-issue-stale: 90
           days-before-issue-close: 14
@@ -26,21 +25,23 @@ jobs:
       - name: Run lint
         run: npm run lint
       - name: Check for best practices adherence
-        if: github.event.issue
+        if: github.event_name == 'issues'
         run: |
-          if ! grep -q "Best Practices Adherence: true" <<< "${{ github.event.issue.body }}"; then
+          if ! grep -q "Best Practices Adherence: true" <<< "${{ github.event.issue.body || '' }}"; then
             echo "Issue does not adhere to best practices. Skipping closure."
             exit 1
           fi
       - name: Verify approval status
-        if: github.event.issue
+        if: github.event_name == 'issues'
         run: |
-          if ! grep -q "Approval Status: Approved" <<< "${{ github.event.issue.body }}"; then
+          if ! grep -q "Approval Status: Approved" <<< "${{ github.event.issue.body || '' }}"; then
             echo "Issue has not been approved by a trusted person. Skipping closure."
             exit 1
+          fi
       - name: Check for related discussions
-        if: github.event.issue
+        if: github.event_name == 'issues'
         run: |
-          if ! grep -q "Check Discussions" <<< "${{ github.event.issue.body }}"; then
+          if ! grep -q "Check Discussions" <<< "${{ github.event.issue.body || '' }}"; then
             echo "Issue does not mention checking discussions. Skipping closure."
             exit 1
+          fi

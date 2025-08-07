@@ -149,7 +149,7 @@ CMD ["open", "http://localhost:3000"]
 
 # Add a new script to automatically fix errors within the docker container
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    && apt-get install -y --no-install-recommends \
+    curl wget \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && npm cache clean --force \
