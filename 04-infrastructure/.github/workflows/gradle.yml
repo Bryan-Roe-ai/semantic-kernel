@@ -44,7 +44,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      
+
       # Static Code Analysis (SpotBugs or Checkstyle)
       - name: Static Code Analysis
         run: ./gradlew check

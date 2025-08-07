@@ -13,10 +13,9 @@ jobs:
   maintenance:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Check maintenance script
         id: script_check
         run: |
@@ -27,15 +26,15 @@ jobs:
             echo "script_exists=false" >> $GITHUB_OUTPUT
             echo "Maintenance script not found, will create basic report"
           fi
-      
+
       - name: Make script executable
         if: steps.script_check.outputs.script_exists == 'true'
         run: chmod +x ./enhanced_maintenance.sh
-      
+
       - name: Run maintenance report
         if: steps.script_check.outputs.script_exists == 'true'
         run: bash ./enhanced_maintenance.sh report
-        
+
       - name: Create basic maintenance report
         if: steps.script_check.outputs.script_exists == 'false'
         run: |
@@ -53,7 +52,7 @@ jobs:
           echo "- Branch: $(git branch --show-current)" >> MAINTENANCE_REPORT.md
           echo "- Last commit: $(git log -1 --pretty=format:'%h - %s (%an, %ar)')" >> MAINTENANCE_REPORT.md
           echo "- Total commits: $(git rev-list --count HEAD)" >> MAINTENANCE_REPORT.md
-          
+
       - name: Upload maintenance report
         uses: actions/upload-artifact@v4
         with:
@@ -61,7 +60,7 @@ jobs:
           path: MAINTENANCE_REPORT.md
           if-no-files-found: error
           retention-days: 30
-          
+
       - name: Add job summary
         run: |
           echo "## 🔧 Maintenance Report Generated" >> $GITHUB_STEP_SUMMARY

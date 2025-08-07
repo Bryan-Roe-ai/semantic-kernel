@@ -51,7 +51,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: \'npm\'
+          cache: 'npm'
+          cache: 'npm'
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Setup Pages
         uses: actions/configure-pages@v5

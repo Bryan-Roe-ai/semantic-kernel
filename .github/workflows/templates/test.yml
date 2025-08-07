@@ -2,9 +2,9 @@ name: Reusable Tests
 on:
   workflow_call:
     inputs:
-      dotnet: {required: false, type: boolean, default: false}
-      python: {required: false, type: boolean, default: false}
-      node: {required: false, type: boolean, default: false}
+      dotnet: { required: false, type: boolean, default: false }
+      python: { required: false, type: boolean, default: false }
+      node: { required: false, type: boolean, default: false }
     secrets: inherit
 
 jobs:
@@ -18,8 +18,8 @@ jobs:
         if: inputs.dotnet == true
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-          
+          dotnet-version: "8.0.x"
+
       - name: Cache .NET packages
         if: inputs.dotnet == true
         uses: actions/cache@v4
@@ -28,7 +28,7 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-            
+
       - name: Restore .NET dependencies
         if: inputs.dotnet == true
         run: |
@@ -37,7 +37,7 @@ jobs:
           else
             echo "Solution file not found, skipping restore"
           fi
-          
+
       - name: Build .NET project
         if: inputs.dotnet == true
         run: |
@@ -46,7 +46,7 @@ jobs:
           else
             echo "Solution file not found, skipping build"
           fi
-          
+
       - name: Run .NET tests
         if: inputs.dotnet == true
         run: |
@@ -60,9 +60,9 @@ jobs:
         if: inputs.python == true
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'
-          
+          python-version: "3.11"
+          cache: "pip"
+
       - name: Install Python dependencies
         if: inputs.python == true
         run: |
@@ -77,7 +77,7 @@ jobs:
           else
             echo "No requirements.txt or pyproject.toml found"
           fi
-          
+
       - name: Run Python tests
         if: inputs.python == true
         run: |
@@ -92,10 +92,10 @@ jobs:
         if: inputs.node == true
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
           cache-dependency-path: 01-core-implementations/typescript/package-lock.json
-          
+
       - name: Install Node dependencies
         if: inputs.node == true
         run: |
@@ -105,7 +105,7 @@ jobs:
           else
             echo "No package.json found"
           fi
-          
+
       - name: Run Node tests
         if: inputs.node == true
         run: |

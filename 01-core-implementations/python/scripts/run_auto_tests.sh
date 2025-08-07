@@ -131,9 +131,9 @@ export PYTHONPATH="${PYTHONPATH}:."
 run_pytest() {
     local test_path="$1"
     local extra_args=("${@:2}")
-    
+
     local args=("$test_path" "-v" "--tb=short")
-    
+
     # Add coverage if enabled
     if [[ "$COVERAGE" == "true" ]]; then
         args+=(
@@ -143,28 +143,28 @@ run_pytest() {
             "--cov-report=html:test_reports/htmlcov"
         )
     fi
-    
+
     # Add parallel execution if enabled
     if [[ "$PARALLEL" == "true" ]]; then
         args+=("-n" "auto")
     fi
-    
+
     # Add verbose output if enabled
     if [[ "$VERBOSE" == "true" ]]; then
         args+=("--verbose")
     else
         args+=("-q")
     fi
-    
+
     # Add timeout
     args+=("--timeout=300")
-    
+
     # Add JUnit XML output
     args+=("--junit-xml=test_reports/junit.xml")
-    
+
     # Add extra arguments
     args+=("${extra_args[@]}")
-    
+
     print_status "Running: $PYTEST_CMD ${args[*]}"
     $PYTEST_CMD "${args[@]}"
 }
@@ -198,38 +198,38 @@ case "$TEST_TYPE" in
         ;;
     "all")
         print_status "Running all test suites..."
-        
+
         # Run unit tests
         print_status "1/3 Running unit tests..."
         run_pytest "tests/unit"
-        
+
         # Run integration tests (if they exist)
         if [[ -d "tests/integration" ]]; then
             print_status "2/3 Running integration tests..."
             run_pytest "tests/integration" "--timeout=600"
         fi
-        
+
         # Run sample tests (if they exist)
         if [[ -d "tests/samples" ]]; then
             print_status "3/3 Running sample tests..."
             run_pytest "tests/samples"
         fi
-        
+
         # Run quality checks
         print_status "Running quality checks..."
-        
+
         # Linting
         if command -v ruff &> /dev/null; then
             print_status "Running linting..."
             uv run ruff check semantic_kernel tests scripts || true
         fi
-        
+
         # Type checking
         if command -v mypy &> /dev/null; then
             print_status "Running type checking..."
             uv run mypy semantic_kernel --strict --show-error-codes || true
         fi
-        
+
         ;;
     *)
         print_error "Invalid test type: $TEST_TYPE"
@@ -241,15 +241,15 @@ esac
 # Check if tests passed
 if [[ $? -eq 0 ]]; then
     print_success "All tests completed successfully!"
-    
+
     # Show coverage summary if coverage was enabled
     if [[ "$COVERAGE" == "true" ]] && [[ -f "test_reports/coverage.xml" ]]; then
         print_status "Coverage report generated at test_reports/htmlcov/index.html"
     fi
-    
+
     # Show test reports location
     print_status "Test reports available in test_reports/"
-    
+
 else
     print_error "Some tests failed!"
     exit 1

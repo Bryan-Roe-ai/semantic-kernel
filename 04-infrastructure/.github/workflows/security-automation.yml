@@ -42,7 +42,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: \'pip\'
+          cache: 'pip'
+          cache: 'pip'
 
       - name: Install security tools
         run: |
@@ -163,7 +164,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: \'pip\'
+          cache: 'pip'
+          cache: 'pip'
 
       - name: Install license checker
         run: |
@@ -196,7 +198,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: \'npm\'
+          cache: 'npm'
+          cache: 'npm'
 
       - name: Check JavaScript/TypeScript licenses
         run: |

@@ -12,7 +12,7 @@ permissions:
   id-token: write # Token permissions for deployment
 
 concurrency:
-  group: "pages-deployment-${{ github.ref }}" 
+  group: "pages-deployment-${{ github.ref }}"
   cancel-in-progress: true # Prevent overlapping deployments
 
 env:
@@ -31,7 +31,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: \'npm\'
+          cache: 'npm'
+          cache: 'npm'
           cache: "npm"
 
       - name: Install Dependencies
@@ -73,7 +74,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: \'npm\'
+          cache: 'npm'
+          cache: 'npm'
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ env.BUILD_PATH }}/${{ steps.detect-package-manager.outputs.lockfile }}
 

@@ -23,7 +23,6 @@
 # EthicalCheck generates security test report that includes all the tested endpoints, coverage graph, exceptions, and vulnerabilities.
 # Vulnerabilities are fully triaged, it contains CVSS score, severity, endpoint information, and OWASP tagging.
 
-
 # This is a starter workflow to help you get started with EthicalCheck Actions
 
 name: EthicalCheck-Workflow

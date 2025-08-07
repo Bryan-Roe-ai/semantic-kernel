@@ -146,7 +146,6 @@
 #     - name: Get the output scan url
 #       run: echo "The scan was started on ${{ steps.start.outputs.url }}"
 
-
 name: "NeuraLegion"
 
 on:

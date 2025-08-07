@@ -11,7 +11,7 @@ template: |
   {{/message}}
 
   {{#message role="user"}}
-  No, I would like to solve the problem myself, but I need some help. Can you summarize the problem for me 
+  No, I would like to solve the problem myself, but I need some help. Can you summarize the problem for me
   before I answer it?
   {{/message}}
 

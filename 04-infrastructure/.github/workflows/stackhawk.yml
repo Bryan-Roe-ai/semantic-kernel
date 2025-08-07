@@ -26,7 +26,6 @@
 # 5.  Update the "Start your service" Step: Update the "Start your service" step in the StackHawk workflow below to
 #     start your service so that it can be scanned with the "Run HawkScan" step.
 
-
 name: "StackHawk"
 
 on:

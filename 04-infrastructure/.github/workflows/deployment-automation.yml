@@ -95,7 +95,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: \'pip\'
+          cache: 'pip'
+          cache: 'pip'
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -106,7 +107,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: \'npm\'
+          cache: 'npm'
+          cache: 'npm'
 
       - name: Install dependencies and run tests
         run: |

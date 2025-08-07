@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      
+
       # Checks the status of hyperlinks in all files
       - name: Run linkspector
         uses: umbrelladocs/action-linkspector@v1

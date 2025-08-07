@@ -65,4 +65,4 @@ repos:
       - id: bandit
         args: ["-c", "python/pyproject.toml"]
         additional_dependencies: [ "bandit[toml]" ]
-        
+

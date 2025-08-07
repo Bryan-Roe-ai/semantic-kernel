@@ -1,7 +1,7 @@
 name: SummarizationTask
 template: |
   <message role="system">
-  Summarize the following. 
+  Summarize the following.
   </message>
 
   <message role="user">

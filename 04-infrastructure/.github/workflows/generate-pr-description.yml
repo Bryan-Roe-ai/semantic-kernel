@@ -35,7 +35,7 @@ jobs:
           AZURE_OPENAI_CHAT_DEPLOYMENT_NAME: ${{ vars.AZUREOPENAI__CHAT__DEPLOYMENTNAME }}
           AZURE_OPENAI_API_ENDPOINT: ${{ secrets.AZUREOPENAI__ENDPOINT }}
           AZURE_OPENAI_API_KEY: ${{ secrets.AZUREOPENAI__APIKEY }}
-      
+
       - name: Set latest commit status as ${{ job.status }}
         uses: myrotvorets/set-commit-status-action@v2.0.1
         if: always()

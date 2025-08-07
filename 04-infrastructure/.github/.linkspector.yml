@@ -1,5 +1,5 @@
 # Directories to scan
-dirs: 
+dirs:
   - .
 
 # Patterns to ignore during the scan
@@ -20,7 +20,7 @@ ignorePatterns:
   - pattern: "https:\/\/outlook.office.com/bookings"
 excludedFiles:
   # Files that are temporarily excluded because they contain links that are temporarily unavailable.
-  - ./dotnet/src/Experimental/Process.IntegrationTestRunner.Dapr/README.md # Cannot reach https://docs.dapr.io/getting-started/install-dapr-selfhost/. Status: 404" location:{path:"dotnet/src/Experimental/Process.IntegrationTestRunner.Dapr/README.md" 
+  - ./dotnet/src/Experimental/Process.IntegrationTestRunner.Dapr/README.md # Cannot reach https://docs.dapr.io/getting-started/install-dapr-selfhost/. Status: 404" location:{path:"dotnet/src/Experimental/Process.IntegrationTestRunner.Dapr/README.md"
   - ./python/DEV_SETUP.md # "Cannot reach https://code.visualstudio.com/docs/editor/workspaces. Status: 404"
 excludedDirs:
   # Folders which include links to localhost, since it's not ignored with regular expressions
@@ -35,7 +35,7 @@ excludedDirs:
 baseUrl: https://github.com/microsoft/semantic-kernel/
 
 # Status codes that indicate the link is alive
-aliveStatusCodes: 
+aliveStatusCodes:
   - 200
   - 206
   - 429

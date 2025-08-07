@@ -30,7 +30,7 @@ jobs:
             java:
               - 'java/**'
               - '**/java/**'
- 
+
   # Builds and tests the Java project
       # run only if 'java' files were changed
       - name: java tests

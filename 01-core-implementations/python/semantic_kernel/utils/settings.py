@@ -24,10 +24,10 @@ except ModuleNotFoundError:  # pragma: no cover - optional dependency
     def dotenv_values(path: str) -> Dict[str, str]:
         """
         Fallback if python-dotenv is not installed.
-        
+
         Args:
             path (str): The path to the .env file. This parameter is ignored in the fallback implementation.
-        
+
         Returns:
             Dict[str, str]: An empty dictionary, as no .env file is processed.
         """

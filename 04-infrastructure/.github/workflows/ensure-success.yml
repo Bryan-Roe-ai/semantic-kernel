@@ -2,11 +2,11 @@ name: Ensure Success
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   schedule:
-    - cron: '0 0 * * *'
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        python-version: ['3.9', '3.10', '3.11']  # Test across multiple Python versions
+        python-version: ["3.9", "3.10", "3.11"] # Test across multiple Python versions
 
     steps:
       - name: Checkout
@@ -26,7 +26,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+          cache: "pip"
 
       - name: Check for requirements file
         id: requirements_check
