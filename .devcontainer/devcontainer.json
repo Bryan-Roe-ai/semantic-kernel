@@ -1,12 +1,15 @@
 {
 	"name": "Semantic Kernel DevContainer",
-	"image": "mcr.microsoft.com/devcontainers/universal:2",
+	"image": "mcr.microsoft.com/devcontainers/universal:2.1.0",
 	"features": {
 		"ghcr.io/devcontainers/features/node:1": {},
 		"ghcr.io/devcontainers/features/dotnet:1": {
 			"version": "8.0"
 		},
-		"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {}
+		"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {},
+		"ghcr.io/devcontainers/features/python:1": {
+			"version": "3.12"
+		}
 	},
 	"customizations": {
 		"vscode": {
@@ -23,8 +26,17 @@
 			}
 		}
 	},
+	"containerEnv": {
+		"DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+		"PYTHONUNBUFFERED": "1"
+	},
+	"runArgs": ["--init"],
 	"postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet",
 	"updateContentCommand": "dotnet workload restore || true",
-	"forwardPorts": [7071, 5000, 8000],
+	"forwardPorts": [
+		7071,
+		5000,
+		8000
+	],
 	"remoteUser": "vscode"
 }
