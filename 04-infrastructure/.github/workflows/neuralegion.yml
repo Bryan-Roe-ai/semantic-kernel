@@ -164,6 +164,7 @@ jobs:
     name: Run Nexploit Scan
     steps:
       - name: Checkout
+      - name: Checkout
       - uses: actions/checkout@v4.5.0
       - name: Start Nexploit Scan 🏁
         id: start

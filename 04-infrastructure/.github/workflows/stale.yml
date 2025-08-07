@@ -21,6 +21,7 @@ jobs:
 
     steps:
     - name: Stale
+    - name: Stale
     - uses: actions/stale@v5
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}

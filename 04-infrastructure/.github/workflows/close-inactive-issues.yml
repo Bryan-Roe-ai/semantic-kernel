@@ -12,6 +12,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Stale
+      - name: Stale
       - uses: actions/stale@v9.0.0
         with:
           days-before-issue-stale: 90
