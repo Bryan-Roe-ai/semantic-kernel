@@ -163,6 +163,7 @@ jobs:
     timeout-minutes: 30
     name: Run Nexploit Scan
     steps:
+      - name: Checkout
       - uses: actions/checkout@v4.5.0
       - name: Start Nexploit Scan 🏁
         id: start

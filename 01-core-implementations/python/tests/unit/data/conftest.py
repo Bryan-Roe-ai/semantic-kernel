@@ -19,7 +19,6 @@ from semantic_kernel.data.vector_store_model_definition import (
 from semantic_kernel.data.vector_store_record_collection import (
     VectorStoreRecordCollection,
 )
-from semantic_kernel.data.vector_store_record_fields import (
 from semantic_kernel.data import (
     VectorSearchBase,
     VectorSearchResult,
@@ -33,6 +32,7 @@ from semantic_kernel.data.text_search import KernelSearchResults
 from semantic_kernel.data.vector_search import (
     VectorizableTextSearchMixin,
     VectorizedSearchMixin,
+)
 from semantic_kernel.data.vector import (
     KernelSearchResults,
     SearchType,

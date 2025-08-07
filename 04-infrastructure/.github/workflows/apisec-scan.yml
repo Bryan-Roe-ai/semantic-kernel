@@ -59,7 +59,7 @@ jobs:
           # The APIsec username with which the scans will be executed
           apisec-username: ${{ secrets.apisec_username }}
           # The Password of the APIsec user with which the scans will be executed
-          apisec-password: ${{ secrets.apisec_password}}
+          apisec-password: ${{ secrets.apisec_password }}
           # The name of the project for security scan
           apisec-project: "VAmPI"
           # The name of the sarif format result file The file is written only if this property is provided.

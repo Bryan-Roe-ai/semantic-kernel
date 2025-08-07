@@ -20,7 +20,9 @@ jobs:
     outputs:
       javaChanges: ${{ steps.filter.outputs.java }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Paths Filter
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -63,6 +65,7 @@ jobs:
             echo "JDK_VERSION=$version" >> $GITHUB_OUTPUT
           fi
 
+      - name: Setup Java
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ steps.set-jdk.outputs.JDK_VERSION }}

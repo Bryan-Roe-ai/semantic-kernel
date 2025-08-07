@@ -22,7 +22,9 @@ jobs:
     outputs:
       javaChanges: ${{ steps.filter.outputs.java }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Paths Filter
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -68,6 +70,7 @@ jobs:
             echo "JDK_VERSION=$version" >> $GITHUB_OUTPUT
 
       # Sets up the specified JDK version from the matrix
+      - name: Setup Java
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ steps.set-jdk.outputs.JDK_VERSION }}
@@ -84,6 +87,7 @@ jobs:
         run: ./mvnw -B -Pbug-check -Pcompile-jdk${{ matrix.java-versions }} test --file pom.xml
         working-directory: java
       # Uploads test artifacts for each JDK version
+      - name: Upload Artifact
       - uses: actions/upload-artifact@v4
         if: always()
         with:

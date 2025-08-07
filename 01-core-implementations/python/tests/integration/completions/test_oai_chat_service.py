@@ -125,14 +125,12 @@ async def test_oai_chat_service_with_plugins(setup_tldr_function_for_oai_models,
     )
     assert plugin is not None
     assert plugin["TestFunctionHandlebars"] is not None
-    )
 
     plugin = kernel.add_plugin(
         parent_directory=plugins_directory, plugin_name="TestFunctionYamlJinja2"
     )
     assert plugin is not None
     assert plugin["TestFunctionJinja2"] is not None
-        sk_oai.OpenAIChatCompletion(service_id="chat-gpt", ai_model_id="gpt-3.5-turbo", api_key=api_key, org_id=org_id),
     )
 
     exec_settings = PromptExecutionSettings(
@@ -146,8 +144,6 @@ async def test_oai_chat_service_with_plugins(setup_tldr_function_for_oai_models,
     )
     assert plugin is not None
     assert plugin["TestFunctionJinja2"] is not None
-        sk_oai.OpenAIChatCompletion(service_id="chat-gpt", ai_model_id="gpt-3.5-turbo", api_key=api_key, org_id=org_id),
-    )
 
     exec_settings = PromptExecutionSettings(
         service_id="chat-gpt", extension_data={"max_tokens": 200, "temperature": 0, "top_p": 0.5}

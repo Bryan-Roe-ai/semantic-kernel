@@ -20,8 +20,10 @@ jobs:
         dart-version: [ "stable", "beta", "dev" ]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
+      - name: Setup Dart
       - uses: dart-lang/setup-dart@v2.3.0
         with:
           sdk: ${{ matrix.dart-version }}

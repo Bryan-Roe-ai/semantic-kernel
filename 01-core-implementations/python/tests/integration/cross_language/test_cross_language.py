@@ -134,11 +134,6 @@ class LoggingAsyncClient(httpx.AsyncClient):
 async def async_clients() -> AsyncGenerator[tuple[AsyncOpenAI, LoggingAsyncClient], None]:
     openai_settings = OpenAISettings()
     logging_async_client = LoggingAsyncClient()
-    async_client = AsyncOpenAI(
-        api_key=openai_settings.api_key.get_secret_value(),
-        http_client=logging_async_client,
-    )
-    return async_client, logging_async_client
     async with AsyncOpenAI(
         api_key=openai_settings.api_key.get_secret_value(), http_client=logging_async_client
     ) as client:
@@ -187,8 +182,6 @@ async def run_prompt(
 async def run_function(
     kernel: Kernel,
     is_streaming: bool = False,
-    function: KernelFunction = None,
-    arguments: KernelArguments = None,
     function: KernelFunction | None = None,
     arguments: KernelArguments | None = None,
 ):
@@ -703,61 +696,11 @@ async def test_yaml_prompt(
     is_streaming, prompt_path, expected_result_path, kernel: Kernel
 ):
     async_client, logging_client = get_new_client()
-        pytest.param(
-            False, "simple_prompt_test.yaml", "prompt_simple_expected.json", id="simple_prompt_test_non_streaming"
-        ),
-        pytest.param(True, "simple_prompt_test.yaml", "prompt_simple_expected.json", id="simple_prompt_test_streaming"),
-        pytest.param(
-            False,
-            "prompt_with_chat_roles_test_hb.yaml",
-            "prompt_with_chat_roles_expected.json",
-            id="prompt_with_chat_roles_test_hb_non_streaming",
-        ),
-        pytest.param(
-            True,
-            "prompt_with_chat_roles_test_hb.yaml",
-            "prompt_with_chat_roles_expected.json",
-            id="prompt_with_chat_roles_test_hb_streaming",
-        ),
-        pytest.param(
-            False,
-            "prompt_with_chat_roles_test_j2.yaml",
-            "prompt_with_chat_roles_expected.json",
-            id="prompt_with_chat_roles_test_j2_non_streaming",
-        ),
-        pytest.param(
-            True,
-            "prompt_with_chat_roles_test_j2.yaml",
-            "prompt_with_chat_roles_expected.json",
-            id="prompt_with_chat_roles_test_j2_streaming",
-        ),
-        pytest.param(
-            False,
-            "prompt_with_simple_variable_test.yaml",
-            "prompt_with_simple_variable_expected.json",
-            id="prompt_with_simple_variable_non_streaming",
-        ),
-        pytest.param(
-            True,
-            "prompt_with_simple_variable_test.yaml",
-            "prompt_with_simple_variable_expected.json",
-            id="prompt_with_simple_variable_streaming",
-        ),
-    ],
-)
-async def test_yaml_prompt(
-    is_streaming,
-    prompt_path,
-    expected_result_path,
-    kernel: Kernel,
-    async_clients: tuple[AsyncOpenAI, LoggingAsyncClient],
-):
-    client, logging_async_client = async_clients
 
     ai_service = OpenAIChatCompletion(
         service_id="default",
         ai_model_id=OPENAI_MODEL_ID,
-        async_client=client,
+        async_client=async_client,
     )
 
     kernel.add_service(ai_service)
@@ -801,13 +744,9 @@ async def test_yaml_prompt(
 # region Test OpenAPI Plugin Load
 
 
-async def setup_openapi_function_call(kernel, function_name, arguments):
-    openapi_spec_file = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json"
-    )
 async def setup_openapi_function_call(kernel: Kernel, function_name, arguments):
     from semantic_kernel.connectors.openapi_plugin import OpenAPIFunctionExecutionParameters
-import asyncio
+    import asyncio
 
     openapi_spec_file = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data", "light_bulb_api.json")
 

@@ -19,7 +19,8 @@ jobs:
 
     steps:
     # Step 1: Checkout repository
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     # Step 2: Cache Node.js modules
     - name: Cache Node.js modules

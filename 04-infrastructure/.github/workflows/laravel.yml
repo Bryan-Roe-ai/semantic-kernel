@@ -16,7 +16,8 @@ jobs:
         php: ['7.4', '8.0', '8.1']
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Set up PHP
       uses: shivammathur/setup-php@v2

@@ -45,12 +45,11 @@ jobs:
     outputs:
       dotnetChanges: ${{ steps.filter.outputs.dotnet }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: dorny/paths-filter@v3
-        with:
-          persist-credentials: false
-      - uses: dorny/paths-filter@v2
+      - name: Setup paths filter
+        uses: dorny/paths-filter@v2
         id: filter
         with:
           filters: |
@@ -87,18 +86,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     environment: ${{ matrix.environment }}
     steps:
-      - uses: actions/checkout@v4
-
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
+
       - name: Setup dotnet ${{ matrix.dotnet }}
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet }}
-
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v4.3.1
-        with:
           global-json-file: ${{ github.workspace }}/dotnet/global.json
 
       - name: Build dotnet solutions
@@ -152,7 +148,7 @@ jobs:
 
       - name: Azure CLI Login
         if: github.event_name != 'pull_request' && matrix.integration-tests
-        uses: azure/login@v4
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -206,14 +202,8 @@ jobs:
         with:
           reports: "./TestResults/Coverage/**/coverage.cobertura.xml"
           targetdir: "./TestResults/Reports"
-          reporttypes: "JsonSummary"
-          assemblyfilters: "+Microsoft.SemanticKernel.Abstractions;+Microsoft.SemanticKernel.Core;+Microsoft.SemanticKernel.PromptTemplates.Handlebars;+Microsoft.SemanticKernel.Connectors.OpenAI;+Microsoft.SemanticKernel.Connectors.AzureOpenAI;+Microsoft.SemanticKernel.Yaml;+Microsoft.SemanticKernel.Agents.Abstractions;+Microsoft.SemanticKernel.Agents.Core;+Microsoft.SemanticKernel.Agents.OpenAI"
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.4
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.4.7
-        with:
-          reports: "./TestResults/Coverage/**/coverage.cobertura.xml"
-          targetdir: "./TestResults/Reports"
           reporttypes: "HtmlInline;JsonSummary"
+          assemblyfilters: "+Microsoft.SemanticKernel.Abstractions;+Microsoft.SemanticKernel.Core;+Microsoft.SemanticKernel.PromptTemplates.Handlebars;+Microsoft.SemanticKernel.Connectors.OpenAI;+Microsoft.SemanticKernel.Connectors.AzureOpenAI;+Microsoft.SemanticKernel.Yaml;+Microsoft.SemanticKernel.Agents.Abstractions;+Microsoft.SemanticKernel.Agents.Core;+Microsoft.SemanticKernel.Agents.OpenAI"
 
       - name: Upload coverage report artifact
         uses: actions/upload-artifact@v4

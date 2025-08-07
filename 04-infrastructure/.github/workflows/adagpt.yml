@@ -22,8 +22,10 @@ jobs:
     name: AdaGPT comment
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       # The action will only run if the description or comments mentions @AdaGPT
+      - name: Adagpt
       - uses: zirkelc/adagpt@latest
         name: AdaGPT
         with:

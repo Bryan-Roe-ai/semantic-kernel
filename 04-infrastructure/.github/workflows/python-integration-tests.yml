@@ -82,7 +82,9 @@ jobs:
     outputs:
       pythonChanges: ${{ steps.filter.outputs.python }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Paths Filter
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -115,7 +117,8 @@ jobs:
       UV_PYTHON: ${{ matrix.python-version }}
       COMPLETIONS_CONCEPT_SAMPLE: "true"
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Set up uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -170,7 +173,8 @@ jobs:
     env:
       UV_PYTHON: ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Set up uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -211,7 +215,8 @@ jobs:
     env:
       UV_PYTHON: ${{ matrix.python-version }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Set up uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -260,7 +265,8 @@ jobs:
       UV_PYTHON: ${{ matrix.python-version }}
       COMPLETIONS_CONCEPT_SAMPLE: "true"
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Set up uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -325,7 +331,8 @@ jobs:
           - 8080:8080
           - 50051:50051
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Set up uv
         uses: astral-sh/setup-uv@v6
         with:
@@ -379,7 +386,8 @@ jobs:
           - 8080:8080
           - 50051:50051
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Set up uv
         if: ${{ matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest' }}
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -553,7 +561,7 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         with:
           webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
-          dry_run: ${{ env.run_type != 'Daily' && env.run_type != 'Manual'}}
+          dry_run: ${{ env.run_type != 'Daily' && env.run_type != 'Manual' }}
           job: ${{ toJson(job) }}
           steps: ${{ toJson(steps) }}
           title: "{title: ` ${{ env.run_type }}: ${{ env.date }} `, text: ` ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`}"
@@ -562,7 +570,7 @@ jobs:
         if: github.ref != 'refs/heads/main'
         with:
           webhook_url: NONE
-          dry_run: ${{ env.run_type != 'Daily' && env.run_type != 'Manual'}}
+          dry_run: ${{ env.run_type != 'Daily' && env.run_type != 'Manual' }}
           job: ${{ toJson(job) }}
           steps: ${{ toJson(steps) }}
           title: "{title: ` ${{ env.run_type }}: ${{ env.date }} `, text: ` ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`}"
