@@ -1,10 +1,13 @@
+Here is an improved version of your enhanced-ci-cd.yml file, addressing best practices for readability, maintainability, security, and CI efficiency:
+
+```yaml
 name: 🚀 Enhanced CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
   schedule:
     - cron: '0 2 * * 1' # Weekly dependency check
 
@@ -345,3 +348,4 @@ jobs:
           body_path: RELEASE_NOTES.md
           draft: false
           prerelease: false
+```
