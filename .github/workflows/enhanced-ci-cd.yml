@@ -23,8 +23,8 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
   TZ: UTC
-
-jobs:
+  
+  jobs:
   detect-changes:
     name: 🔍 Detect Changes
     runs-on: ubuntu-latest
