@@ -1,6 +1,1 @@
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-## [Unreleased]
-- Initial creation of changelog to track task updates.
+/workspaces/semantic-kernel/12-documentation/CHANGELOG.md

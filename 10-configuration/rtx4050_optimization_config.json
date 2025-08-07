@@ -1,0 +1,52 @@
+{
+  "hardware": {
+    "gpu_name": "NVIDIA GeForce RTX 4050 Laptop GPU",
+    "memory_gb": 6.0,
+    "compute_capability": "8.9",
+    "memory_bandwidth": "192 GB/s"
+  },
+  "memory_management": {
+    "reserved_buffer_percent": 10,
+    "cleanup_frequency": "every_10_batches",
+    "use_memory_pool": true,
+    "enable_memory_monitoring": true
+  },
+  "optimization_strategies": {
+    "always_use_fp16": true,
+    "gradient_checkpointing": true,
+    "activation_checkpointing": true,
+    "optimizer_state_offload": true,
+    "dynamic_batch_sizing": true
+  },
+  "workload_configs": {
+    "neural_symbolic_agi": {
+      "batch_size": 32,
+      "gradient_accumulation": 8,
+      "mixed_precision": true,
+      "gradient_checkpointing": true,
+      "max_sequence_length": 512
+    },
+    "consciousness_agi": {
+      "batch_size": 16,
+      "gradient_accumulation": 16,
+      "mixed_precision": true,
+      "attention_optimization": "flash_attention_light",
+      "max_sequence_length": 1024
+    },
+    "gpt2_finetuning": {
+      "batch_size": 16,
+      "gradient_accumulation": 32,
+      "mixed_precision": true,
+      "model_sharding": false,
+      "deepspeed_zero_stage": 1
+    },
+    "transformer_training": {
+      "batch_size": 16,
+      "gradient_accumulation": 16,
+      "mixed_precision": true,
+      "activation_checkpointing": true,
+      "optimizer_offload": true
+    }
+  },
+  "training_template": "\ndef memory_efficient_training_loop(model, dataloader, optimizer, scaler, device):\n    \"\"\"Memory-efficient training loop optimized for RTX 4050\"\"\"\n    model.train()\n\n    for batch_idx, (data, target) in enumerate(dataloader):\n        # Move data to GPU in chunks if needed\n        data, target = data.to(device, non_blocking=True), target.to(device, non_blocking=True)\n\n        # Use autocast for mixed precision\n        with torch.cuda.amp.autocast():\n            output = model(data)\n            loss = criterion(output, target)\n\n            # Scale loss for gradient accumulation\n            loss = loss / gradient_accumulation_steps\n\n        # Backward pass with scaled gradients\n        scaler.scale(loss).backward()\n\n        # Update weights every N steps\n        if (batch_idx + 1) % gradient_accumulation_steps == 0:\n            scaler.step(optimizer)\n            scaler.update()\n            optimizer.zero_grad()\n\n            # Memory cleanup every 10 batches\n            if (batch_idx + 1) % 10 == 0:\n                torch.cuda.empty_cache()\n\n        # Monitor memory usage\n        if batch_idx % 50 == 0:\n            memory_used = torch.cuda.memory_allocated(0) / 1024**2\n            print(f\"Batch {batch_idx}, Memory: {memory_used:.1f} MB\")\n    "
+}

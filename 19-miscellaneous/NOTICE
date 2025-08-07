@@ -1,0 +1,27 @@
+Semantic Kernel - Advanced AI Development Framework
+Copyright (c) 2025 Bryan Roe
+
+This product includes software developed by Bryan Roe.
+
+The original work is available at: <repository-url>
+
+This software is distributed under the MIT License.
+See LICENSE file for full license text.
+
+THIRD-PARTY SOFTWARE:
+
+This software incorporates components from third-party sources.
+See ATTRIBUTION.md for complete third-party acknowledgments.
+
+Microsoft Semantic Kernel
+Copyright (c) Microsoft Corporation
+Licensed under the MIT License
+
+Various other open-source components
+See individual package.json and requirements files for details
+
+For more information about licensing and attribution, see:
+
+- LICENSE (main license)
+- ATTRIBUTION.md (detailed attributions)
+- COPYRIGHT.md (copyright information)

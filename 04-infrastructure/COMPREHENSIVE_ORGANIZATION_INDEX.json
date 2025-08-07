@@ -1,0 +1,175 @@
+{
+  "organization_date": "2025-08-07T14:56:05.132416",
+  "total_directories": 15,
+  "total_files": 63,
+  "structure": {
+    "09-agi-development": {
+      "type": "directory",
+      "files": [
+        "README.md"
+      ],
+      "subdirectories": []
+    },
+    "10-configuration": {
+      "type": "directory",
+      "files": [
+        "README.md"
+      ],
+      "subdirectories": []
+    },
+    "11-automation-scripts": {
+      "type": "directory",
+      "files": [
+        "README.md"
+      ],
+      "subdirectories": []
+    },
+    "12-documentation": {
+      "type": "directory",
+      "files": [
+        "COPYRIGHT_NOTICE.md",
+        "README.md"
+      ],
+      "subdirectories": []
+    },
+    "13-testing": {
+      "type": "directory",
+      "files": [
+        "README.md"
+      ],
+      "subdirectories": []
+    },
+    "14-runtime": {
+      "type": "directory",
+      "files": [
+        "README.md"
+      ],
+      "subdirectories": []
+    },
+    "15-web-ui": {
+      "type": "directory",
+      "files": [
+        "README.md"
+      ],
+      "subdirectories": []
+    },
+    "16-extensions": {
+      "type": "directory",
+      "files": [
+        "README.md"
+      ],
+      "subdirectories": []
+    },
+    "17-temporary": {
+      "type": "directory",
+      "files": [
+        "README.md",
+        "organization.log"
+      ],
+      "subdirectories": []
+    },
+    "18-data": {
+      "type": "directory",
+      "files": [
+        "README.md"
+      ],
+      "subdirectories": []
+    },
+    "19-miscellaneous": {
+      "type": "directory",
+      "files": [],
+      "subdirectories": [
+        "10-configuration",
+        "11-automation-scripts",
+        "12-documentation",
+        "13-testing",
+        "14-runtime",
+        "15-web-ui",
+        "16-extensions",
+        "17-temporary",
+        "18-data",
+        "circleci",
+        "config",
+        "configs",
+        "scripts"
+      ]
+    },
+    "circleci": {
+      "type": "directory",
+      "files": [
+        "config.yml"
+      ],
+      "subdirectories": []
+    },
+    "config": {
+      "type": "directory",
+      "files": [
+        "appsettings.json",
+        "logging.json"
+      ],
+      "subdirectories": []
+    },
+    "configs": {
+      "type": "directory",
+      "files": [
+        "Code.prompt.yml",
+        "FastAPI.json",
+        "appsettings.Development.json",
+        "appsettings.json",
+        "astro.yml",
+        "azure-container-webapp.yml",
+        "azure-pipelines.yml",
+        "compose-dev.yaml",
+        "conda.yaml",
+        "config.json",
+        "devcontainer.json",
+        "docker-image.yml",
+        "dotnet-ci.yml",
+        "file-updater.prompt.yml",
+        "jsconfig.json",
+        "main.yml",
+        "mcp.json",
+        "npm-grunt.yml",
+        "npm-gulp.yml",
+        "package.json",
+        "python-app.yml",
+        "python-publish.yml",
+        "python-test-coverage.yml",
+        "robot.yaml",
+        "static-analysis.datadog.yml"
+      ],
+      "subdirectories": []
+    },
+    "scripts": {
+      "type": "directory",
+      "files": [
+        "check-workflow-status.sh",
+        "check_deployment_status.sh",
+        "comprehensive_file_organizer.py",
+        "demo.bat",
+        "domain_configuration_analyzer.py",
+        "dotnet-install.ps1",
+        "dotnet-install.sh",
+        "fastapi.sh",
+        "fix-codespace-startup.sh",
+        "fix-errors.sh",
+        "github_pages_diagnostic.py",
+        "github_setup_diagnostic.py",
+        "mcp_server.py",
+        "organize_repository.py",
+        "post_comments.py",
+        "start_ai_chat.bat",
+        "start_backend.bat",
+        "start_backend.ps1",
+        "start_chat.bat",
+        "start_chat.ps1",
+        "sync-ai-workspace.sh",
+        "validate_repository.py",
+        "verify_github_pages.py"
+      ],
+      "subdirectories": [
+        "deployment"
+      ]
+    }
+  }
+}

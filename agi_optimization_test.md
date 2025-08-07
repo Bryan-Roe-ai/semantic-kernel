@@ -1,3 +1,1 @@
-# AGI Optimization Test
-
-This file demonstrates the optimized AGI file update system.
+/workspaces/semantic-kernel/12-documentation/agi_optimization_test.md
