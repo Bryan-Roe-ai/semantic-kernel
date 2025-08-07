@@ -112,7 +112,6 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          cache: 'pip'
 
       - name: Build Python package
         if: matrix.platform == 'python'
@@ -165,7 +164,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 
@@ -285,7 +283,6 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          cache: 'pip'
 
       - name: Publish Python package
         if: matrix.platform == 'python'
@@ -322,7 +319,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
           cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
 

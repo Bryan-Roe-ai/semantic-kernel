@@ -24,7 +24,6 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          cache: 'pip'
 
       - name: Cache pip
         uses: actions/cache@v4

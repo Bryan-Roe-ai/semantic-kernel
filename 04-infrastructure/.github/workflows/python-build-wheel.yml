@@ -30,7 +30,6 @@ jobs:
       with:
         python-version: '3.10'
           cache: 'pip'
-          cache: 'pip'
         cache: "poetry"
         cache-dependency-path: "python/pyproject.toml"
 

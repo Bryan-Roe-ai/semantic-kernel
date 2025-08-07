@@ -328,14 +328,11 @@ async def test_prompt_with_chat_roles(
 @pytest.mark.parametrize(
     "is_inline, is_streaming, template_format, prompt",
     [
-        (
         pytest.param(
             False,
             False,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
-        ),
-        (
             id="hb_non_inline_non_streaming",
         ),
         pytest.param(
@@ -343,8 +340,6 @@ async def test_prompt_with_chat_roles(
             True,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
-        ),
-        (
             id="hb_non_inline_streaming",
         ),
         pytest.param(
@@ -352,8 +347,6 @@ async def test_prompt_with_chat_roles(
             False,
             "jinja2",
             "Can you help me tell the time in {{city.name}} right now?",
-        ),
-        (
             id="j2_non_inline_non_streaming",
         ),
         pytest.param(
@@ -361,8 +354,6 @@ async def test_prompt_with_chat_roles(
             True,
             "jinja2",
             "Can you help me tell the time in {{city.name}} right now?",
-        ),
-        (
             id="j2_non_inline_streaming",
         ),
         pytest.param(
@@ -370,8 +361,6 @@ async def test_prompt_with_chat_roles(
             False,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
-        ),
-        (
             id="hb_inline_non_streaming",
         ),
         pytest.param(
@@ -379,8 +368,6 @@ async def test_prompt_with_chat_roles(
             True,
             "handlebars",
             "Can you help me tell the time in {{city.name}} right now?",
-        ),
-        (
             id="hb_inline_streaming",
         ),
         pytest.param(
@@ -388,27 +375,18 @@ async def test_prompt_with_chat_roles(
             False,
             "jinja2",
             "Can you help me tell the time in {{city.name}} right now?",
+            id="j2_inline_non_streaming",
         ),
-        (
+        pytest.param(
             True,
             True,
             "jinja2",
             "Can you help me tell the time in {{city.name}} right now?",
+            id="j2_inline_streaming",
         ),
     ],
 )
 @pytest.mark.asyncio
-async def test_prompt_with_complex_objects(
-    is_inline, is_streaming, template_format, prompt
-):
-    async_client, logging_client = get_new_client()
-            id="j2_inline_non_streaming",
-        ),
-        pytest.param(
-            True, True, "jinja2", "Can you help me tell the time in {{city.name}} right now?", id="j2_inline_streaming"
-        ),
-    ],
-)
 async def test_prompt_with_complex_objects(
     is_inline, is_streaming, template_format, prompt, async_clients: tuple[AsyncOpenAI, LoggingAsyncClient]
 ):
@@ -484,11 +462,6 @@ async def test_prompt_with_complex_objects(
     ],
 )
 @pytest.mark.asyncio
-async def test_prompt_with_helper_functions(
-    is_inline, is_streaming, template_format, prompt
-):
-    async_client, logging_client = get_new_client()
-async def test_prompt_with_helper_functions(is_inline, is_streaming, template_format, prompt, async_client):
 async def test_prompt_with_helper_functions(
     is_inline, is_streaming, template_format, prompt, async_clients: tuple[AsyncOpenAI, LoggingAsyncClient]
 ):

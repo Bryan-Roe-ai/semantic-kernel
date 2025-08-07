@@ -28,7 +28,6 @@ jobs:
         with:
           python-version: ${{ env.UV_PYTHON }}
           cache: 'pip'
-          cache: 'pip'
 
       - name: Cache dependencies
         uses: actions/cache@v4

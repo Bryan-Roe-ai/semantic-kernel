@@ -38,7 +38,6 @@ jobs:
         with:
           node-version: "18"
           cache: 'npm'
-          cache: 'npm'
           cache: npm
 
       - name: Install markdown tools
@@ -77,7 +76,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "18"
-          cache: 'npm'
           cache: 'npm'
           cache: npm
 
@@ -147,7 +145,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: 'pip'
           cache: 'pip'
 
       - name: Generate Python API docs

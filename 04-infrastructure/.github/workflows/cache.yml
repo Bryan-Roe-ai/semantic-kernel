@@ -24,13 +24,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache: 'npm'
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
           cache: 'pip'
 
       # 2. Checkout code

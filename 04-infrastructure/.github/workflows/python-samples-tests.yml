@@ -31,7 +31,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
-          cache: 'pip'
           cache: "pip"
       - name: Install dependencies
         run: poetry install

@@ -45,14 +45,12 @@ jobs:
         with:
           node-version: "18"
           cache: 'npm'
-          cache: 'npm'
 
       - name: Setup Python
         if: matrix.language == 'python'
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: 'pip'
           cache: 'pip'
 
       - name: Setup Java

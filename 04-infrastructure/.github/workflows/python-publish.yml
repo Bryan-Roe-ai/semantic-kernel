@@ -30,7 +30,6 @@ jobs:
       with:
         python-version: '3.9'  # Specify a fixed Python version
           cache: 'pip'
-          cache: 'pip'
 
     - name: Cache pip
       uses: actions/cache@v4

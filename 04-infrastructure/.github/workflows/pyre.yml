@@ -52,7 +52,6 @@ jobs:
         with:
           python-version: '3.9'  # Specify the Python version
           cache: 'pip'
-          cache: 'pip'
 
       # Cache Python dependencies
       - name: Cache dependencies
