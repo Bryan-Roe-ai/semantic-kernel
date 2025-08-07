@@ -44,7 +44,7 @@ logger: logging.Logger = logging.getLogger(__name__)
 @dataclass
 class BatchProcessingMetrics:
     """Performance metrics for batch sequential processing."""
-    
+
     total_batches_processed: int = 0
     total_agents_processed: int = 0
     average_batch_size: float = 0.0
@@ -53,23 +53,23 @@ class BatchProcessingMetrics:
     cache_hits: int = 0
     cache_misses: int = 0
     batch_optimization_saves_ms: float = 0.0
-    
+
     def update_batch_metrics(self, batch_size: int, processing_time_ms: float):
         """Update metrics after processing a batch."""
         self.total_batches_processed += 1
         self.total_agents_processed += batch_size
         self.total_processing_time_ms += processing_time_ms
-        
+
         # Update averages
         self.average_batch_size = self.total_agents_processed / self.total_batches_processed
         self.average_agent_processing_time_ms = self.total_processing_time_ms / max(1, self.total_agents_processed)
-    
+
     @property
     def cache_hit_ratio(self) -> float:
         """Calculate cache hit ratio as percentage."""
         total_requests = self.cache_hits + self.cache_misses
         return (self.cache_hits / total_requests * 100) if total_requests > 0 else 0.0
-    
+
     def __str__(self) -> str:
         return (
             f"Batches: {self.total_batches_processed}, "
@@ -84,7 +84,7 @@ class BatchProcessingMetrics:
 class BatchSequentialSelectionStrategy(SelectionStrategy):
     """
     High-performance batch sequential selection strategy with intelligent optimization.
-    
+
     Features:
     - Batch processing for improved throughput
     - Intelligent agent grouping and caching
@@ -101,7 +101,7 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
     enable_caching: bool = Field(default=True, description="Enable result caching")
     cache_ttl_seconds: float = Field(default=300.0, description="Cache TTL in seconds")
     priority_boost_factor: float = Field(default=1.5, description="Priority boost factor for important agents")
-    
+
     # Private attributes
     _current_batch_size: int = PrivateAttr(default=5)
     _agent_cache: Dict[str, Any] = PrivateAttr(default_factory=dict)
@@ -110,7 +110,7 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
     _selection_history: Deque[str] = PrivateAttr(default_factory=lambda: deque(maxlen=100))
     _performance_tracker: Dict[str, List[float]] = PrivateAttr(default_factory=lambda: defaultdict(list))
     _index: int = PrivateAttr(default=-1)
-    
+
     # Metrics
     metrics: BatchProcessingMetrics = Field(default_factory=BatchProcessingMetrics)
 
@@ -126,20 +126,20 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
     ) -> "Agent":
         """
         Select the next agent using batch-optimized sequential strategy.
-        
+
         Args:
             agents: The list of agents to select from.
             history: The history of messages in the conversation.
-            
+
         Returns:
             The agent who takes the next turn.
         """
         start_time = time.time()
-        
+
         try:
             # Clean expired cache entries
             await self._cleanup_cache()
-            
+
             # Check cache first
             cache_key = self._generate_cache_key(agents, history)
             if self.enable_caching and cache_key in self._agent_cache:
@@ -151,56 +151,56 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
                     # Remove expired entry
                     del self._agent_cache[cache_key]
                     del self._cache_timestamps[cache_key]
-            
+
             self.metrics.cache_misses += 1
-            
+
             # Perform batch-optimized selection
             selected_agent = await self._select_agent_batch_optimized(agents, history)
-            
+
             # Cache the result
             if self.enable_caching:
                 self._agent_cache[cache_key] = selected_agent
                 self._cache_timestamps[cache_key] = time.time()
-            
+
             # Update performance metrics
             processing_time_ms = (time.time() - start_time) * 1000
             self.metrics.update_batch_metrics(1, processing_time_ms)
-            
+
             # Update selection history and priorities
             self._update_selection_tracking(selected_agent, processing_time_ms)
-            
+
             # Adaptive batch sizing
             if self.enable_adaptive_batching:
                 await self._adjust_batch_size(processing_time_ms)
-            
+
             logger.info(
                 f"Selected agent {selected_agent.name} (ID: {selected_agent.id}) "
                 f"in {processing_time_ms:.2f}ms using batch strategy"
             )
-            
+
             return selected_agent
-            
+
         except Exception as e:
             logger.error(f"Error in batch sequential selection: {e}")
             # Fallback to simple sequential selection
             return await self._fallback_selection(agents)
 
     async def _select_agent_batch_optimized(
-        self, 
-        agents: list["Agent"], 
+        self,
+        agents: list["Agent"],
         history: list["ChatMessageContent"]
     ) -> "Agent":
         """Perform batch-optimized agent selection."""
-        
+
         # Handle edge cases
         if not agents:
             raise AgentExecutionException("Agent Failure - No agents present to select.")
-        
+
         # Handle initial agent selection
         if not self.has_selected and self.initial_agent is not None:
             if self.initial_agent in agents:
                 return self.initial_agent
-        
+
         # Standard sequential selection with batch optimization
         if (
             self.has_selected
@@ -211,44 +211,44 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
         ):
             # Avoid selecting the same agent twice in a row
             self._increment_index(len(agents))
-        
+
         # Main index increment
         self._increment_index(len(agents))
-        
+
         # Apply priority-based adjustments
         selected_agent = await self._apply_priority_selection(agents)
-        
+
         return selected_agent
 
     async def _apply_priority_selection(self, agents: list["Agent"]) -> "Agent":
         """Apply priority-based selection within batch context."""
-        
+
         # Get base sequential selection
         base_agent = agents[self._index]
-        
+
         # Check if we should boost priority for certain agents
         current_priorities = [
             self._agent_priorities.get(agent.id, 1.0) for agent in agents
         ]
-        
+
         # If all priorities are equal, return base selection
         if all(p == current_priorities[0] for p in current_priorities):
             return base_agent
-        
+
         # Apply priority weighting with batch consideration
         max_priority = max(current_priorities)
         if self._agent_priorities.get(base_agent.id, 1.0) >= max_priority * 0.8:
             # Base agent has good priority, use it
             return base_agent
-        
+
         # Find higher priority agent near current index
         search_range = min(self._current_batch_size, len(agents))
         start_idx = max(0, self._index - search_range // 2)
         end_idx = min(len(agents), start_idx + search_range)
-        
+
         best_agent = base_agent
         best_priority = self._agent_priorities.get(base_agent.id, 1.0)
-        
+
         for i in range(start_idx, end_idx):
             agent = agents[i]
             priority = self._agent_priorities.get(agent.id, 1.0)
@@ -256,23 +256,23 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
                 best_agent = agent
                 best_priority = priority
                 self._index = i  # Update index to selected position
-        
+
         return best_agent
 
     def _increment_index(self, agent_count: int) -> None:
         """Increment the index in a circular manner with batch optimization."""
         # Standard circular increment
         self._index = (self._index + 1) % agent_count
-        
+
         # Apply batch-aware adjustments
         if self.enable_adaptive_batching and len(self._selection_history) > 0:
             # Avoid recently selected agents if we have alternatives
             recent_selections = set(list(self._selection_history)[-self._current_batch_size:])
             attempts = 0
             max_attempts = min(agent_count, 3)
-            
+
             while (
-                attempts < max_attempts and 
+                attempts < max_attempts and
                 agent_count > self._current_batch_size and
                 str(self._index) in recent_selections
             ):
@@ -281,17 +281,17 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
 
     def _update_selection_tracking(self, agent: "Agent", processing_time_ms: float) -> None:
         """Update selection history and performance tracking."""
-        
+
         # Update selection history
         self._selection_history.append(agent.id)
-        
+
         # Track performance per agent
         self._performance_tracker[agent.id].append(processing_time_ms)
-        
+
         # Keep only recent performance data
         if len(self._performance_tracker[agent.id]) > 20:
             self._performance_tracker[agent.id] = self._performance_tracker[agent.id][-20:]
-        
+
         # Update agent priorities based on performance
         if len(self._performance_tracker[agent.id]) >= 3:
             avg_time = sum(self._performance_tracker[agent.id]) / len(self._performance_tracker[agent.id])
@@ -306,28 +306,28 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
 
     async def _adjust_batch_size(self, processing_time_ms: float) -> None:
         """Dynamically adjust batch size based on performance."""
-        
+
         # Collect recent performance data
         if len(self._selection_history) < 5:
             return
-        
+
         # Calculate performance trend
         recent_times = []
         for agent_id in list(self._selection_history)[-5:]:
             if agent_id in self._performance_tracker:
                 recent_times.extend(self._performance_tracker[agent_id][-2:])
-        
+
         if not recent_times:
             return
-        
+
         avg_recent_time = sum(recent_times) / len(recent_times)
-        
+
         # Adjust batch size based on performance
         if avg_recent_time < 50 and self._current_batch_size < self.max_batch_size:
             # System is fast, increase batch size
             self._current_batch_size = min(self.max_batch_size, self._current_batch_size + 1)
             logger.debug(f"Increased batch size to {self._current_batch_size}")
-            
+
         elif avg_recent_time > 200 and self._current_batch_size > self.min_batch_size:
             # System is slow, decrease batch size
             self._current_batch_size = max(self.min_batch_size, self._current_batch_size - 1)
@@ -337,7 +337,7 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
         """Fallback to simple sequential selection in case of errors."""
         if not agents:
             raise AgentExecutionException("Agent Failure - No agents present to select.")
-        
+
         self._index = (self._index + 1) % len(agents)
         return agents[self._index]
 
@@ -351,7 +351,7 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
         """Check if a cache entry is still valid."""
         if cache_key not in self._cache_timestamps:
             return False
-        
+
         return (time.time() - self._cache_timestamps[cache_key]) < self.cache_ttl_seconds
 
     async def _cleanup_cache(self) -> None:
@@ -361,7 +361,7 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
             key for key, timestamp in self._cache_timestamps.items()
             if (current_time - timestamp) > self.cache_ttl_seconds
         ]
-        
+
         for key in expired_keys:
             self._agent_cache.pop(key, None)
             self._cache_timestamps.pop(key, None)
@@ -392,7 +392,7 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
     async def optimize_for_agents(self, agents: list["Agent"]) -> None:
         """Pre-optimize the strategy for a specific set of agents."""
         logger.info(f"Optimizing batch strategy for {len(agents)} agents")
-        
+
         # Pre-calculate optimal batch size based on agent count
         if len(agents) <= 3:
             self._current_batch_size = self.min_batch_size
@@ -400,10 +400,10 @@ class BatchSequentialSelectionStrategy(SelectionStrategy):
             self._current_batch_size = self.max_batch_size
         else:
             self._current_batch_size = min(self.max_batch_size, max(self.min_batch_size, len(agents) // 3))
-        
+
         # Initialize priorities for new agents
         for agent in agents:
             if agent.id not in self._agent_priorities:
                 self._agent_priorities[agent.id] = 1.0
-        
+
         logger.info(f"Batch strategy optimized: batch_size={self._current_batch_size}")
