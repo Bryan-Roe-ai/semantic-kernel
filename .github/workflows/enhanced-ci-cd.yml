@@ -137,8 +137,8 @@ jobs:
             --verbosity normal
 
       - name: Upload Coverage to Codecov
-        if: ${{ vars.ENABLE_CODECOV == 'true' }}
-        uses: codecov/codecov-action@v3
+        if: vars.ENABLE_CODECOV == 'true'
+        uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -218,8 +218,8 @@ jobs:
             --durations=10 \
             --timeout=300
       - name: Upload Coverage to Codecov
-        if: ${{ vars.ENABLE_CODECOV == 'true' }}
-        uses: codecov/codecov-action@v3
+        if: vars.ENABLE_CODECOV == 'true'
+        uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -272,8 +272,8 @@ jobs:
           cd 01-core-implementations/typescript
           npm run test:coverage
       - name: Upload Coverage to Codecov
-        if: ${{ vars.ENABLE_CODECOV == 'true' }}
-        uses: codecov/codecov-action@v3
+        if: vars.ENABLE_CODECOV == 'true'
+        uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -360,7 +360,7 @@ jobs:
           ignore-unfixed: true
           vuln-type: "os,library"
       - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: "trivy-results.sarif"
           category: "Trivy"
@@ -416,8 +416,6 @@ jobs:
       - name: Run Integration Tests
         env:
           REDIS_CONNECTION_STRING: localhost:6379
-          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
         run: |
           cd 01-core-implementations/dotnet
           dotnet test tests/IntegrationTests/ \
@@ -518,23 +516,33 @@ jobs:
           echo "## 🚀 What's New" > RELEASE_NOTES.md
           echo "Release generated on $(date -u +'%Y-%m-%d %H:%M:%S') UTC" >> RELEASE_NOTES.md
           echo "" >> RELEASE_NOTES.md
-          git log --pretty=format:"- %s" $(git describe --tags --abbrev=0)..HEAD >> RELEASE_NOTES.md
 
-          echo -e "\n\n## 📝 Commit Details" >> RELEASE_NOTES.md
-          git log --pretty=format:"- %h %s (%an)" $(git describe --tags --abbrev=0)..HEAD >> RELEASE_NOTES.md
+          # Handle case where there are no previous tags
+          if git describe --tags --abbrev=0 2>/dev/null; then
+            LAST_TAG=$(git describe --tags --abbrev=0)
+            git log --pretty=format:"- %s" $LAST_TAG..HEAD >> RELEASE_NOTES.md
+            echo -e "\n\n## 📝 Commit Details" >> RELEASE_NOTES.md
+            git log --pretty=format:"- %h %s (%an)" $LAST_TAG..HEAD >> RELEASE_NOTES.md
+            echo -e "\n\n## 📊 Statistics" >> RELEASE_NOTES.md
+            echo "- Commits since last release: $(git rev-list --count $LAST_TAG..HEAD)" >> RELEASE_NOTES.md
+            echo "- Contributors: $(git log $LAST_TAG..HEAD --format='%aN' | sort -u | wc -l)" >> RELEASE_NOTES.md
+          else
+            echo "This is the first release" >> RELEASE_NOTES.md
+            git log --pretty=format:"- %s" HEAD >> RELEASE_NOTES.md
+            echo -e "\n\n## 📝 Commit Details" >> RELEASE_NOTES.md
+            git log --pretty=format:"- %h %s (%an)" HEAD >> RELEASE_NOTES.md
+            echo -e "\n\n## 📊 Statistics" >> RELEASE_NOTES.md
+            echo "- Total commits: $(git rev-list --count HEAD)" >> RELEASE_NOTES.md
+            echo "- Contributors: $(git log --format='%aN' | sort -u | wc -l)" >> RELEASE_NOTES.md
+          fi
 
-          echo -e "\n\n## 📊 Statistics" >> RELEASE_NOTES.md
-          echo "- Commits since last release: $(git rev-list --count $(git describe --tags --abbrev=0)..HEAD)" >> RELEASE_NOTES.md
-          echo "- Contributors: $(git log $(git describe --tags --abbrev=0)..HEAD --format='%aN' | sort -u | wc -l)" >> RELEASE_NOTES.md
-      # Release will only be created if the commit message contains '[release]'
       - name: Create Release
         if: contains(github.event.head_commit.message, '[release]')
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ github.run_number }}
-          release_name: Release v${{ github.run_number }}
+          name: Release v${{ github.run_number }}
           body_path: RELEASE_NOTES.md
           draft: false
           prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
