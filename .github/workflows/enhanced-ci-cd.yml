@@ -30,111 +30,124 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      dotnet: ${{ steps.changes.outputs.dotnet }}
-      python: ${{ steps.changes.outputs.python }}
-      typescript: ${{ steps.changes.outputs.typescript }}
-      java: ${{ steps.changes.outputs.java }}
-      docs: ${{ steps.changes.outputs.docs }}
+      dotnet: ${{ steps.set.outputs.dotnet }}
+      python: ${{ steps.set.outputs.python }}
+      typescript: ${{ steps.set.outputs.typescript }}
+      java: ${{ steps.set.outputs.java }}
+      docs: ${{ steps.set.outputs.docs }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
-      - uses: dorny/paths-filter@v3
-        id: changes
+      - id: filter
+        uses: dorny/paths-filter@v3
         with:
           filters: |
             dotnet:
               - '01-core-implementations/dotnet/**'
-              - '.github/workflows/**'
               - '**/Directory.Build.*'
               - '**/Directory.Packages.props'
             python:
               - '01-core-implementations/python/**'
-              - '.github/workflows/**'
               - '**/pyproject.toml'
               - '**/poetry.lock'
             typescript:
               - '01-core-implementations/typescript/**'
-              - '.github/workflows/**'
               - '**/package.json'
               - '**/package-lock.json'
             java:
               - '01-core-implementations/java/**'
-              - '.github/workflows/**'
               - '**/pom.xml'
               - '**/build.gradle'
             docs:
               - 'docs/**'
               - '*.md'
-
-  dotnet-test:
-    name: 🔷 .NET Tests
-    runs-on: ${{ matrix.os }}
-    needs: detect-changes
-    if: needs.detect-changes.outputs.dotnet == 'true'
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        configuration: [Debug, Release]
-    timeout-minutes: 30
-    concurrency:
-      group: dotnet-${{ matrix.os }}-${{ matrix.configuration }}-${{ github.ref }}
-      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Cache NuGet packages
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.NUGET_PACKAGES }}
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/Directory.Build.*') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
-      - name: Restore dependencies
-        run: dotnet restore 01-core-implementations/dotnet/SK-dotnet.sln
-      - name: Build
-        run: dotnet build 01-core-implementations/dotnet/SK-dotnet.sln --configuration ${{ matrix.configuration }} --no-restore
-      - name: Test with Coverage
+      - id: set
         run: |
-          dotnet test 01-core-implementations/dotnet/SK-dotnet.sln \
-            --configuration ${{ matrix.configuration }} \
-            --no-build \
-            --logger "trx;LogFileName=test-results.trx" \
-            --collect:"XPlat Code Coverage" \
-            --results-directory ./TestResults \
-            --blame-hang-dump \
-            --blame-hang-timeout 15min \
-            --verbosity normal
-      - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./TestResults/**/coverage.cobertura.xml
-          flags: dotnet-${{ matrix.os }}-${{ matrix.configuration }}
-          name: dotnet-coverage
-          fail_ci_if_error: true
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: dotnet-test-results-${{ matrix.os }}-${{ matrix.configuration }}
-          path: ./TestResults/**/*.trx
-          if-no-files-found: error
-          retention-days: 30
-      - name: Upload Coverage Artifact  
-        uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: dotnet-coverage-${{ matrix.os }}-${{ matrix.configuration }}
-          path: ./TestResults/**/coverage.cobertura.xml
-          if-no-files-found: error
-          retention-days: 30
+          echo "dotnet=${{ steps.filter.outputs.dotnet }}" >> $GITHUB_OUTPUT
+          echo "python=${{ steps.filter.outputs.python }}" >> $GITHUB_OUTPUT
+          echo "typescript=${{ steps.filter.outputs.typescript }}" >> $GITHUB_OUTPUT
+          echo "java=${{ steps.filter.outputs.java }}" >> $GITHUB_OUTPUT
+          echo "docs=${{ steps.filter.outputs.docs }}" >> $GITHUB_OUTPUT
 
+# ... (rest of your workflow remains unchanged)
+   dotnet-test:
+  name: 🔷 .NET Tests
+  runs-on: ${{ matrix.os }}
+  needs: detect-changes
+  if: needs.detect-changes.outputs.dotnet == 'true'
+  strategy:
+    fail-fast: false
+    matrix:
+      os: [ubuntu-latest, windows-latest, macos-latest]
+      configuration: [Debug, Release]
+  timeout-minutes: 30
+  concurrency:
+    group: dotnet-${{ matrix.os }}-${{ matrix.configuration }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.NUGET_PACKAGES }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/Directory.Build.*') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
+    - name: Restore dependencies
+      run: dotnet restore 01-core-implementations/dotnet/SK-dotnet.sln
+
+    - name: Build
+      run: dotnet build 01-core-implementations/dotnet/SK-dotnet.sln --configuration ${{ matrix.configuration }} --no-restore
+
+    - name: Run Tests with Coverage
+      run: |
+        dotnet test 01-core-implementations/dotnet/SK-dotnet.sln \
+          --configuration ${{ matrix.configuration }} \
+          --no-build \
+          --logger "trx;LogFileName=test-results.trx" \
+          --collect:"XPlat Code Coverage" \
+          --results-directory ./TestResults \
+          --blame-hang-dump \
+          --blame-hang-timeout 15min \
+          --verbosity normal
+
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./TestResults/**/coverage.cobertura.xml
+        flags: dotnet-${{ matrix.os }}-${{ matrix.configuration }}
+        name: dotnet-coverage
+        fail_ci_if_error: true
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: dotnet-test-results-${{ matrix.os }}-${{ matrix.configuration }}
+        path: ./TestResults/**/*.trx
+        if-no-files-found: error
+        retention-days: 30
+
+    - name: Upload Coverage Artifact
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: dotnet-coverage-${{ matrix.os }}-${{ matrix.configuration }}
+        path: ./TestResults/**/coverage.cobertura.xml
+        if-no-files-found: error
+        retention-days: 30
+        
   python-test:
     name: 🐍 Python Tests
     runs-on: ${{ matrix.os }}
