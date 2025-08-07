@@ -82,19 +82,13 @@
     {
       "name": "Python: FastAPI",
       "type": "debugpy",
-      "args": [
-        "${file}"
-      ]
-    },
-    {
-      "name": "C#: HuggingFaceImageToText Demo",
-      "type": "dotnet",
       "request": "launch",
       "module": "uvicorn",
       "args": ["app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"],
       "console": "integratedTerminal",
       "justMyCode": true,
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "python": "${command:python.interpreterPath}"
     },
     {
       "name": "C#: GettingStarted Samples",
@@ -107,47 +101,37 @@
       "stopAtEntry": false,
       "console": "integratedTerminal"
     },
-        {
-            "name": "C#: Process with Dapr",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "daprd-debug",
-            "program": "${workspaceFolder}/dotnet/samples/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
-            "env": {
-                "DAPR_HTTP_PORT": "3500",
-                "DAPR_GRPC_PORT": "50001"
-            }
-        },
-        {
-            "name": "C/C++ Runner: Debug Session",
-            "type": "cppdbg",
-            "request": "launch",
-            "args": [],
-            "stopAtEntry": false,
-            "externalConsole": true,
-            "cwd": "c:/Users/Bryan/OneDrive/SK",
-            "program": "c:/Users/Bryan/OneDrive/SK/build/Debug/outDebug",
-            "MIMode": "gdb",
-            "miDebuggerPath": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
-        }
-    ]
     {
       "name": "C#: Process with Dapr",
       "type": "coreclr",
       "request": "launch",
-      "program": "${workspaceFolder}\\dotnet\\samples\\Demos\\ProcessWithDapr\\bin\\Debug\\net8.0\\ProcessWithDapr.dll",
       "preLaunchTask": "daprd-debug",
       "postDebugTask": "dapr-down",
+      "program": "${workspaceFolder}/dotnet/samples/Demos/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
       "env": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DAPR_HTTP_PORT": "3500",
+        "DAPR_GRPC_PORT": "50001"
       }
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "c:/Users/Bryan/OneDrive/SK",
+      "program": "c:/Users/Bryan/OneDrive/SK/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     }
   ]
 }
