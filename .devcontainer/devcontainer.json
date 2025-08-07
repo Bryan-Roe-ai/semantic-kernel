@@ -1,6 +1,6 @@
 {
 	"name": "Semantic Kernel DevContainer",
-	"image": "mcr.microsoft.com/devcontainers/universal:2.1.0",
+	"image": "mcr.microsoft.com/devcontainers/universal:2-linux",
 	"features": {
 		"ghcr.io/devcontainers/features/node:1": {},
 		"ghcr.io/devcontainers/features/dotnet:1": {
@@ -31,7 +31,8 @@
 		"PYTHONUNBUFFERED": "1"
 	},
 	"runArgs": ["--init"],
-	"postCreateCommand": "sudo chmod a+rwx /usr/share/dotnet",
+	"postCreateCommand": "sudo chown -R vscode:vscode /usr/share/dotnet && sudo chmod -R ug+rwX /usr/share/dotnet",
+	// '|| true' is used to prevent build failures if workload restore fails, which may be non-critical in some scenarios.
 	"updateContentCommand": "dotnet workload restore || true",
 	"forwardPorts": [
 		7071,
