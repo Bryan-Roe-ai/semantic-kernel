@@ -259,5 +259,6 @@
   "debugpy.showPythonInlineValues": true,
   "rainbow_csv.highlight_rows": true,
   "rainbow_csv.enable_debug_logging": true,
-  "remote-github.useSyncLoad": true
+  "remote-github.useSyncLoad": true,
+  "python-envs.defaultEnvManager": "ms-python.python:system"
 }
