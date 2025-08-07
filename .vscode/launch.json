@@ -1,26 +1,16 @@
 {
     "version": "0.2.0",
     "configurations": [
-
-        {
-            "name": "Python: Current File",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
-        }
-    ]
-}
     {
-      "name": "Python: Pytest",
-      "type": "debugpy",
-      "request": "launch",
-      "module": "pytest",
-      "args": ["${file}"],
-      "console": "integratedTerminal",
-      "justMyCode": true,
-      "cwd": "${workspaceFolder}",
-      "python": "${command:python.interpreterPath}"
+        "name": "Python: Pytest",
+        "type": "debugpy",
+        "request": "launch",
+        "module": "pytest",
+        "args": ["${file}"],
+        "console": "integratedTerminal",
+        "justMyCode": true,
+        "cwd": "${workspaceFolder}",
+        "python": "${command:python.interpreterPath}"
     },
     {
       "name": ".NET Core Launch (dotnet-kernel-syntax-examples)",
@@ -111,35 +101,34 @@
       "console": "integratedTerminal"
     },
         {
-      "name": "C#: Process with Dapr",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "daprd-debug",
-      "env": {
-        "DAPR_HTTP_PORT": "3500",
-        "DAPR_GRPC_PORT": "50001"
-      }
-    }
-  ]
-},
-    {
-      "name": "C/C++ Runner: Debug Session",
-      "type": "cppdbg",
-      "request": "launch",
-      "args": [],
-      "stopAtEntry": false,
-      "externalConsole": true,
-      "cwd": "c:/Users/Bryan/OneDrive/SK",
-      "program": "c:/Users/Bryan/OneDrive/SK/build/Debug/outDebug",
-      "MIMode": "gdb",
-      "miDebuggerPath": "gdb",
-      "setupCommands": [
+            "name": "C#: Process with Dapr",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "daprd-debug",
+            "program": "${workspaceFolder}/dotnet/samples/ProcessWithDapr/bin/Debug/net8.0/ProcessWithDapr.dll",
+            "env": {
+                "DAPR_HTTP_PORT": "3500",
+                "DAPR_GRPC_PORT": "50001"
+            }
+        },
         {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
+            "name": "C/C++ Runner: Debug Session",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [],
+            "stopAtEntry": false,
+            "externalConsole": true,
+            "cwd": "c:/Users/Bryan/OneDrive/SK",
+            "program": "c:/Users/Bryan/OneDrive/SK/build/Debug/outDebug",
+            "MIMode": "gdb",
+            "miDebuggerPath": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }
