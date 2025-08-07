@@ -3,6 +3,7 @@ name: Generate PR Description
 on:
   issue_comment:
     types: [created]
+  workflow_dispatch:
 
 jobs:
   generate-pr-description:

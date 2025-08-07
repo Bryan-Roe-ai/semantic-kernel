@@ -14,6 +14,7 @@ on:
     tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -26,6 +27,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
       contents: read
       packages: write

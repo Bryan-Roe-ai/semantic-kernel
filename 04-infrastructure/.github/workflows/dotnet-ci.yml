@@ -73,7 +73,9 @@ jobs:
 
     - name: Run fix-errors.sh
       if: failure()
-      run: ./fix-errors.sh
+      run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
 
     - name: Log Error Message
       if: failure()
@@ -142,7 +144,7 @@ jobs:
     - name: Upload dotnet test results
       uses: actions/upload-artifact@v4
     - name: Archive artifacts ${{ matrix.os }}-${{ matrix.configuration }}
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: drop-${{ matrix.os }}-dotnet${{matrix.dotnet}}-${{ matrix.configuration }}
         path: ./out
@@ -156,7 +158,9 @@ jobs:
 
     - name: Run fix-errors.sh
       if: failure()
-      run: ./fix-errors.sh
+      run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
 
     - name: Log Error Message
       if: failure()

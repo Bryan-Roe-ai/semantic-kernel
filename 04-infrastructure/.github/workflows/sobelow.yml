@@ -11,6 +11,7 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '30 19 * * 2' # Scheduled to run every Tuesday at 19:30 UTC
+  workflow_dispatch:
 
 permissions:
   contents: read

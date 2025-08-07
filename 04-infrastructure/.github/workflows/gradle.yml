@@ -10,10 +10,12 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     strategy:
       matrix:
         java: [8, 11, 17] # Test against multiple Java versions
@@ -34,7 +36,7 @@ jobs:
 
       # Cache Gradle dependencies
       - name: Cache Gradle dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -61,7 +63,7 @@ jobs:
 
       # Upload Build Artifacts
       - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: build/libs/*.jar

@@ -31,6 +31,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: \'npm\'
           cache: "npm"
 
       - name: Install Dependencies
@@ -72,6 +73,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: \'npm\'
           cache: ${{ steps.detect-package-manager.outputs.manager }}
           cache-dependency-path: ${{ env.BUILD_PATH }}/${{ steps.detect-package-manager.outputs.lockfile }}
 

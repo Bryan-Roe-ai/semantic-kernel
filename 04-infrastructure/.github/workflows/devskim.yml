@@ -12,6 +12,7 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '31 15 * * 1'
+  workflow_dispatch:
 
 jobs:
   lint:

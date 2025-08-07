@@ -2,19 +2,70 @@ name: Repository Maintenance
 
 on:
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: '0 0 * * 0'  # Weekly on Sunday
   workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
 
 jobs:
   maintenance:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Check maintenance script
+        id: script_check
+        run: |
+          if [ -f "./enhanced_maintenance.sh" ]; then
+            echo "script_exists=true" >> $GITHUB_OUTPUT
+            echo "Maintenance script found"
+          else
+            echo "script_exists=false" >> $GITHUB_OUTPUT
+            echo "Maintenance script not found, will create basic report"
+          fi
+      
+      - name: Make script executable
+        if: steps.script_check.outputs.script_exists == 'true'
+        run: chmod +x ./enhanced_maintenance.sh
+      
       - name: Run maintenance report
+        if: steps.script_check.outputs.script_exists == 'true'
         run: bash ./enhanced_maintenance.sh report
+        
+      - name: Create basic maintenance report
+        if: steps.script_check.outputs.script_exists == 'false'
+        run: |
+          echo "# Repository Maintenance Report" > MAINTENANCE_REPORT.md
+          echo "" >> MAINTENANCE_REPORT.md
+          echo "Generated on: $(date -u)" >> MAINTENANCE_REPORT.md
+          echo "" >> MAINTENANCE_REPORT.md
+          echo "## Repository Statistics" >> MAINTENANCE_REPORT.md
+          echo "- Total files: $(find . -type f | wc -l)" >> MAINTENANCE_REPORT.md
+          echo "- Python files: $(find . -name "*.py" | wc -l)" >> MAINTENANCE_REPORT.md
+          echo "- Markdown files: $(find . -name "*.md" | wc -l)" >> MAINTENANCE_REPORT.md
+          echo "- YAML files: $(find . -name "*.yml" -o -name "*.yaml" | wc -l)" >> MAINTENANCE_REPORT.md
+          echo "" >> MAINTENANCE_REPORT.md
+          echo "## Git Information" >> MAINTENANCE_REPORT.md
+          echo "- Branch: $(git branch --show-current)" >> MAINTENANCE_REPORT.md
+          echo "- Last commit: $(git log -1 --pretty=format:'%h - %s (%an, %ar)')" >> MAINTENANCE_REPORT.md
+          echo "- Total commits: $(git rev-list --count HEAD)" >> MAINTENANCE_REPORT.md
+          
       - name: Upload maintenance report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: maintenance-report
+          name: maintenance-report-${{ github.run_id }}
           path: MAINTENANCE_REPORT.md
+          if-no-files-found: error
+          retention-days: 30
+          
+      - name: Add job summary
+        run: |
+          echo "## 🔧 Maintenance Report Generated" >> $GITHUB_STEP_SUMMARY
+          echo "- Script Available: ${{ steps.script_check.outputs.script_exists }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Report Generated: ✅" >> $GITHUB_STEP_SUMMARY
+          echo "- Timestamp: $(date -u)" >> $GITHUB_STEP_SUMMARY
 

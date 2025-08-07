@@ -43,6 +43,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -66,7 +67,7 @@ jobs:
         fetch-depth: 0
 
     - name: Cache NuGet packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
@@ -94,7 +95,7 @@ jobs:
       run: dotnet test ${{ env.Test_Project_Path }} --configuration ${{ matrix.configuration }} --collect:"XPlat Code Coverage"
 
     - name: Upload coverage results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: code-coverage
         path: '**/TestResults/**/*.xml'
@@ -117,7 +118,7 @@ jobs:
       run: Remove-Item -path $env:Wap_Project_Directory\GitHubActionsWorkflow.pfx -ErrorAction SilentlyContinue
 
     - name: Upload MSIX package
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: MSIX Package
         path: ${{ env.Wap_Project_Directory }}\AppPackages

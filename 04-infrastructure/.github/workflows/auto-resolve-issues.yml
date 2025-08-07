@@ -3,6 +3,7 @@ name: Auto Resolve Issues
 on:
   schedule:
     - cron: "0 2 * * *"
+  workflow_dispatch:
 
 jobs:
   resolve-issues:
@@ -10,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Run lint
       run: npm run lint
@@ -46,7 +47,9 @@ jobs:
       shell: bash
 
     - name: Fix Errors
-      run: ./fix-errors.sh
+      run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
 
     - name: Log Error Message
       if: failure()

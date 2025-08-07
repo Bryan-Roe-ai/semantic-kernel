@@ -3,6 +3,7 @@ name: Python Build Assets
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -15,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9, 3.10]
+        python-version: ['3.8', '3.9', '3.10']
     permissions:
       contents: write
     env:
@@ -29,11 +30,12 @@ jobs:
           enable-cache: true
           cache-suffix: ${{ runner.os }}-${{ matrix.python-version }}
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: \'pip\'
       - name: Cache pip dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}

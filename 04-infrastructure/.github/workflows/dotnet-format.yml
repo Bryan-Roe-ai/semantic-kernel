@@ -9,6 +9,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   check-format:
@@ -16,7 +17,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     strategy:
       fail-fast: false
       matrix:
@@ -35,7 +36,7 @@ jobs:
           persist-credentials: false
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '7.0.x'
 

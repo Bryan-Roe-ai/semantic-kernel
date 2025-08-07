@@ -11,6 +11,7 @@ on:
   schedule:
     # Schedule: Every Thursday at 16:34 UTC
     - cron: '34 16 * * 4'
+  workflow_dispatch:
 
 env:
   # Mandatory environment variables for JFrog
@@ -33,9 +34,10 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '16.x'
+          cache: \'npm\'
 
     - name: Cache Node.js modules
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.npm
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}

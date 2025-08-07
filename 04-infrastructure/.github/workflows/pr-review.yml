@@ -3,10 +3,12 @@ name: MCP Automatic Code Review
 on:
   pull_request:
     types: [opened, synchronize]
+  workflow_dispatch:
 
 jobs:
   review:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Check out code
         uses: actions/checkout@v4

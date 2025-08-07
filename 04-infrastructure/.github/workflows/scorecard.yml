@@ -17,6 +17,7 @@ on:
   # Trigger on pull requests to validate changes before merging.
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 # Declare default permissions as read-only for security.
 permissions: read-all
@@ -43,7 +44,7 @@ jobs:
           publish_results: true # Set to true for public repositories.
 
       - name: "Upload artifact"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: SARIF file
           path: results.sarif

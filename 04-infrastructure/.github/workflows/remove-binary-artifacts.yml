@@ -5,6 +5,7 @@ on:
     branches: [ "*" ]
   pull_request:
     branches: [ "*" ]
+  workflow_dispatch:
 
 jobs:
   remove-binary-artifacts:
@@ -34,7 +35,7 @@ jobs:
           find . -type f -name '*.json' -delete
 
       - name: Upload report of deleted files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: deleted-files-report
           path: deleted-files-report.txt

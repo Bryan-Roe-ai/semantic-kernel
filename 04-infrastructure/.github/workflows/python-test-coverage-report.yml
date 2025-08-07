@@ -5,6 +5,7 @@ on:
     workflows: ["Python Test Coverage"]
     types:
       - completed
+  workflow_dispatch:
 
 permissions:
   contents: read

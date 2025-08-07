@@ -21,6 +21,7 @@ on:
     branches: [ "main" ]
   schedule:
     - cron: '38 22 * * 1'  # Adjust the schedule as needed
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -36,7 +37,7 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         continue-on-error: false
 
       # Run lint
@@ -69,7 +70,9 @@ jobs:
 
       # Fix Errors
       - name: Fix Errors
-        run: ./fix-errors.sh
+        run: |
+          chmod +x ./fix-errors.sh
+          ./fix-errors.sh
 
       # Log error message and exit with non-zero status if fix-errors.sh script fails
       - name: Check fix-errors.sh script status

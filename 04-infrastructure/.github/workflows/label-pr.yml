@@ -8,14 +8,16 @@ name: Label pull request
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   label:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Validate Labeler Configuration
         run: |
@@ -46,13 +48,14 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.gem
           key: ${{ runner.os }}-gem-cache

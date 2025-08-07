@@ -6,15 +6,18 @@ name: Node.js Package
 on:
   release:
     types: [created]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: \'npm\'
       - run: npm ci
       - run: npm test
 
@@ -26,6 +29,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: \'npm\'
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm publish

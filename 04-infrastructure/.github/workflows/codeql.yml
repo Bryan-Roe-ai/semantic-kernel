@@ -11,6 +11,7 @@ on:
       - 'release/*'
   schedule:
     - cron: '0 0 * * 0' # Weekly on Sundays
+  workflow_dispatch:
 
 jobs:
   analyze:
@@ -46,11 +47,11 @@ jobs:
     steps:
     # Checkout the repository
     - name: Checkout repository
-      uses: actions/checkout@v3.0.2
+      uses: actions/checkout@v4.0.2
 
     # Cache dependencies for Maven
     - name: Cache Maven dependencies
-      uses: actions/cache@v3.0.11
+      uses: actions/cache@v4.0.11
       with:
         path: ~/.m2/repository
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -59,7 +60,7 @@ jobs:
 
     # Cache npm dependencies
     - name: Cache npm dependencies
-      uses: actions/cache@v3.0.11
+      uses: actions/cache@v4.0.11
       with:
         path: ~/.npm
         key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
@@ -68,7 +69,7 @@ jobs:
 
     # Cache pip dependencies
     - name: Cache pip dependencies
-      uses: actions/cache@v3.0.11
+      uses: actions/cache@v4.0.11
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -77,7 +78,7 @@ jobs:
 
     # Cache NuGet dependencies
     - name: Cache NuGet packages
-      uses: actions/cache@v3.0.11
+      uses: actions/cache@v4.0.11
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
@@ -86,7 +87,7 @@ jobs:
 
     # Cache Gradle dependencies
     - name: Cache Gradle dependencies
-      uses: actions/cache@v3.0.11
+      uses: actions/cache@v4.0.11
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
@@ -140,7 +141,7 @@ jobs:
 
     # Upload CodeQL results
     - name: Upload CodeQL results
-      uses: actions/upload-artifact@v3.0.2
+      uses: actions/upload-artifact@v4.0.2
       with:
         name: codeql-results-${{ matrix.language }}
         path: ./results/${{ matrix.language }}
