@@ -5,31 +5,79 @@ on:
       registry: {required: false, type: string}
       image_name: {required: false, type: string, default: my-app}
       tag: {required: false, type: string, default: latest}
+      dockerfile_path: {required: false, type: string, default: './Dockerfile'}
+      context_path: {required: false, type: string, default: '.'}
     secrets:
-      AZURE_WEBAPP_PUBLISH_PROFILE: {}
-      GITHUB_TOKEN: {}
+      AZURE_WEBAPP_PUBLISH_PROFILE: {required: false}
+      REGISTRY_USERNAME: {required: false}
+      REGISTRY_PASSWORD: {required: false}
+      GITHUB_TOKEN: {required: true}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
       - name: Log in to registry
         if: inputs.registry != ''
         uses: docker/login-action@v3
         with:
           registry: ${{ inputs.registry }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ secrets.REGISTRY_USERNAME || github.actor }}
+          password: ${{ secrets.REGISTRY_PASSWORD || secrets.GITHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ inputs.registry && format('{0}/{1}', inputs.registry, inputs.image_name) || inputs.image_name }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+            type=raw,value=${{ inputs.tag }}
+
+      - name: Check if Dockerfile exists
+        id: dockerfile_check
         run: |
-          docker build -t ${{ inputs.registry && inputs.registry + '/' || '' }}${{ inputs.image_name }}:${{ inputs.tag }} .
-          docker push ${{ inputs.registry && inputs.registry + '/' || '' }}${{ inputs.image_name }}:${{ inputs.tag }}
+          if [ -f "${{ inputs.dockerfile_path }}" ]; then
+            echo "dockerfile_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "dockerfile_exists=false" >> $GITHUB_OUTPUT
+            echo "Warning: Dockerfile not found at ${{ inputs.dockerfile_path }}"
+          fi
+
+      - name: Build and push Docker image
+        if: steps.dockerfile_check.outputs.dockerfile_exists == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ inputs.context_path }}
+          file: ${{ inputs.dockerfile_path }}
+          push: ${{ inputs.registry != '' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+        if: secrets.AZURE_WEBAPP_PUBLISH_PROFILE != '' && steps.dockerfile_check.outputs.dockerfile_exists == 'true'
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ inputs.image_name }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          images: ${{ inputs.registry && inputs.registry + '/' || '' }}${{ inputs.image_name }}:${{ inputs.tag }}
+          images: ${{ steps.meta.outputs.tags }}
+
+      - name: Deployment Summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image**: ${{ inputs.image_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag**: ${{ inputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Registry**: ${{ inputs.registry || 'None' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dockerfile**: ${{ inputs.dockerfile_path }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Context**: ${{ inputs.context_path }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dockerfile Exists**: ${{ steps.dockerfile_check.outputs.dockerfile_exists }}" >> $GITHUB_STEP_SUMMARY

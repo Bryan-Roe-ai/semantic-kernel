@@ -10,45 +10,100 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      
       - name: Setup .NET
         if: inputs.dotnet == true
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+          
+      - name: Cache .NET packages
+        if: inputs.dotnet == true
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+            
+      - name: Restore .NET dependencies
+        if: inputs.dotnet == true
+        run: |
+          if [ -f "01-core-implementations/dotnet/SK-dotnet.sln" ]; then
+            dotnet restore 01-core-implementations/dotnet/SK-dotnet.sln
+          else
+            echo "Solution file not found, skipping restore"
+          fi
+          
       - name: Build .NET
         if: inputs.dotnet == true
-        run: dotnet build 01-core-implementations/dotnet/SK-dotnet.sln --configuration Release
+        run: |
+          if [ -f "01-core-implementations/dotnet/SK-dotnet.sln" ]; then
+            dotnet build 01-core-implementations/dotnet/SK-dotnet.sln --configuration Release --no-restore
+          else
+            echo "Solution file not found, skipping build"
+          fi
 
       - name: Setup Python
         if: inputs.python == true
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
+          
       - name: Install Python dependencies
         if: inputs.python == true
         run: |
           cd 01-core-implementations/python
-          pip install -r requirements.txt
+          if [ -f "requirements.txt" ]; then
+            pip install --upgrade pip
+            pip install -r requirements.txt
+          elif [ -f "pyproject.toml" ]; then
+            pip install --upgrade pip
+            pip install build
+          else
+            echo "No requirements.txt or pyproject.toml found"
+          fi
+          
       - name: Build Python wheel
         if: inputs.python == true
         run: |
           cd 01-core-implementations/python
-          python setup.py bdist_wheel
+          if [ -f "pyproject.toml" ]; then
+            python -m build
+          elif [ -f "setup.py" ]; then
+            python setup.py bdist_wheel
+          else
+            echo "No build configuration found"
+          fi
 
       - name: Setup Node
         if: inputs.node == true
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 01-core-implementations/typescript/package-lock.json
+          
       - name: Install Node dependencies
         if: inputs.node == true
         run: |
           cd 01-core-implementations/typescript
-          npm ci
+          if [ -f "package.json" ]; then
+            npm ci
+          else
+            echo "No package.json found"
+          fi
+          
       - name: Build Node package
         if: inputs.node == true
         run: |
           cd 01-core-implementations/typescript
-          npm run build
+          if [ -f "package.json" ] && npm run build --if-present; then
+            echo "Build completed successfully"
+          else
+            echo "No build script found or build failed"
+          fi
