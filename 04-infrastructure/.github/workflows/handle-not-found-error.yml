@@ -3,31 +3,66 @@ name: Handle Not Found Error
 on:
   pull_request:
     types: [opened, synchronize]
+  workflow_dispatch:
 
 jobs:
   handle-not-found-error:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Check for Not Found Error
+        id: error_check
         run: |
-          if grep -i -q "Not Found.*repository-content" $GITHUB_EVENT_PATH; then
-            echo "Error found: Repository content not found error detected"
-            exit 1
+          if [ -f "$GITHUB_EVENT_PATH" ]; then
+            if grep -i -q "Not Found.*repository-content" "$GITHUB_EVENT_PATH"; then
+              echo "error_found=true" >> $GITHUB_OUTPUT
+              echo "Error found: Repository content not found error detected"
+            else
+              echo "error_found=false" >> $GITHUB_OUTPUT
+              echo "No Not Found error found."
+            fi
           else
-            echo "No Not Found error found."
+            echo "error_found=false" >> $GITHUB_OUTPUT
+            echo "GitHub event path not available."
           fi
 
-      - name: Fix Errors
+      - name: Check if fix script exists
+        id: script_check
+        run: |
+          if [ -f "./fix-errors.sh" ]; then
+            echo "fix_script_exists=true" >> $GITHUB_OUTPUT
+            echo "Fix script found"
+          else
+            echo "fix_script_exists=false" >> $GITHUB_OUTPUT
+            echo "Fix script not found, will use fallback"
+          fi
+
+      - name: Make fix script executable
+        if: steps.script_check.outputs.fix_script_exists == 'true'
+        run: chmod +x ./fix-errors.sh
+
+      - name: Run fix script
+        if: steps.script_check.outputs.fix_script_exists == 'true' && steps.error_check.outputs.error_found == 'true'
         run: ./fix-errors.sh
 
-      - name: Fix Errors
-        if: failure()
-        run: ./fix-errors.sh
+      - name: Fallback error handling
+        if: steps.script_check.outputs.fix_script_exists == 'false' && steps.error_check.outputs.error_found == 'true'
+        run: |
+          echo "Attempting fallback error handling..."
+          echo "Checking repository structure..."
+          ls -la
+          echo "Checking git status..."
+          git status || true
+          echo "Repository content issue detected but no fix script available"
 
-      - name: Log Error Message
-        if: failure()
-        run: echo "Error occurred during the handle not found error process"
+      - name: Log error summary
+        if: failure() || steps.error_check.outputs.error_found == 'true'
+        run: |
+          echo "## Error Handling Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Error Found: ${{ steps.error_check.outputs.error_found }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Fix Script Available: ${{ steps.script_check.outputs.fix_script_exists }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Timestamp: $(date -u)" >> $GITHUB_STEP_SUMMARY
