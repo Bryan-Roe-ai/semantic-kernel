@@ -1,10 +1,5 @@
 name: 'Attest Build Provenance'
 description: 'Generate provenance attestations for build artifacts'
-author: 'Bryan Roe'
-
-branding:
-  color: 'blue'
-  icon: 'shield'
 
 inputs:
   subject-path:
