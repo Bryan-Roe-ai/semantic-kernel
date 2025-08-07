@@ -13,8 +13,8 @@ on:
   schedule:
     - cron: '0 2 * * 1' # Weekly dependency check
   workflow_dispatch:
-  
-  env:
+
+env:
   DOTNET_VERSION: '8.0.x'
   PYTHON_VERSION: '3.11'
   NODE_VERSION: '20'
@@ -23,8 +23,8 @@ on:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
   TZ: UTC
-  
-  jobs:
+
+jobs:
   detect-changes:
     name: 🔍 Detect Changes
     runs-on: ubuntu-latest
@@ -70,84 +70,82 @@ on:
           echo "java=${{ steps.filter.outputs.java }}" >> $GITHUB_OUTPUT
           echo "docs=${{ steps.filter.outputs.docs }}" >> $GITHUB_OUTPUT
 
-# ... (rest of your workflow remains unchanged)
-   dotnet-test:
-  name: 🔷 .NET Tests
-  runs-on: ${{ matrix.os }}
-  needs: detect-changes
-  if: needs.detect-changes.outputs.dotnet == 'true'
-  strategy:
-    fail-fast: false
-    matrix:
-      os: [ubuntu-latest, windows-latest, macos-latest]
-      configuration: [Debug, Release]
-  timeout-minutes: 30
-  concurrency:
-    group: dotnet-${{ matrix.os }}-${{ matrix.configuration }}-${{ github.ref }}
-    cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  dotnet-test:
+    name: 🔷 .NET Tests
+    runs-on: ${{ matrix.os }}
+    needs: detect-changes
+    if: needs.detect-changes.outputs.dotnet == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        configuration: [Debug, Release]
+    timeout-minutes: 30
+    concurrency:
+      group: dotnet-${{ matrix.os }}-${{ matrix.configuration }}-${{ github.ref }}
+      cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.NUGET_PACKAGES }}
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/Directory.Build.*') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
-    - name: Cache NuGet packages
-      uses: actions/cache@v3
-      with:
-        path: ${{ env.NUGET_PACKAGES }}
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/Directory.Build.*') }}
-        restore-keys: |
-          ${{ runner.os }}-nuget-
+      - name: Restore dependencies
+        run: dotnet restore 01-core-implementations/dotnet/SK-dotnet.sln
 
-    - name: Restore dependencies
-      run: dotnet restore 01-core-implementations/dotnet/SK-dotnet.sln
+      - name: Build
+        run: dotnet build 01-core-implementations/dotnet/SK-dotnet.sln --configuration ${{ matrix.configuration }} --no-restore
 
-    - name: Build
-      run: dotnet build 01-core-implementations/dotnet/SK-dotnet.sln --configuration ${{ matrix.configuration }} --no-restore
+      - name: Run Tests with Coverage
+        run: |
+          dotnet test 01-core-implementations/dotnet/SK-dotnet.sln \
+            --configuration ${{ matrix.configuration }} \
+            --no-build \
+            --logger "trx;LogFileName=test-results.trx" \
+            --collect:"XPlat Code Coverage" \
+            --results-directory ./TestResults \
+            --blame-hang-dump \
+            --blame-hang-timeout 15min \
+            --verbosity normal
 
-    - name: Run Tests with Coverage
-      run: |
-        dotnet test 01-core-implementations/dotnet/SK-dotnet.sln \
-          --configuration ${{ matrix.configuration }} \
-          --no-build \
-          --logger "trx;LogFileName=test-results.trx" \
-          --collect:"XPlat Code Coverage" \
-          --results-directory ./TestResults \
-          --blame-hang-dump \
-          --blame-hang-timeout 15min \
-          --verbosity normal
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./TestResults/**/coverage.cobertura.xml
+          flags: dotnet-${{ matrix.os }}-${{ matrix.configuration }}
+          name: dotnet-coverage
+          fail_ci_if_error: true
 
-    - name: Upload Coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./TestResults/**/coverage.cobertura.xml
-        flags: dotnet-${{ matrix.os }}-${{ matrix.configuration }}
-        name: dotnet-coverage
-        fail_ci_if_error: true
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: dotnet-test-results-${{ matrix.os }}-${{ matrix.configuration }}
+          path: ./TestResults/**/*.trx
+          if-no-files-found: error
+          retention-days: 30
 
-    - name: Upload Test Results
-      uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: dotnet-test-results-${{ matrix.os }}-${{ matrix.configuration }}
-        path: ./TestResults/**/*.trx
-        if-no-files-found: error
-        retention-days: 30
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: dotnet-coverage-${{ matrix.os }}-${{ matrix.configuration }}
+          path: ./TestResults/**/coverage.cobertura.xml
+          if-no-files-found: error
+          retention-days: 30
 
-    - name: Upload Coverage Artifact
-      uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: dotnet-coverage-${{ matrix.os }}-${{ matrix.configuration }}
-        path: ./TestResults/**/coverage.cobertura.xml
-        if-no-files-found: error
-        retention-days: 30
-        
   python-test:
     name: 🐍 Python Tests
     runs-on: ${{ matrix.os }}
@@ -162,7 +160,6 @@ on:
     concurrency:
       group: python-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.ref }}
       cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
@@ -231,7 +228,6 @@ on:
     concurrency:
       group: typescript-${{ matrix.os }}-${{ matrix.node-version }}-${{ github.ref }}
       cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
-
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js ${{ matrix.node-version }}
@@ -279,7 +275,6 @@ on:
       cancel-in-progress: false
     permissions:
       contents: write
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -324,7 +319,6 @@ on:
     permissions:
       security-events: write
       contents: read
-      
     steps:
       - uses: actions/checkout@v4
       - name: Run Trivy vulnerability scanner
@@ -358,7 +352,6 @@ on:
     concurrency:
       group: integration-${{ github.ref }}
       cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
-      
     services:
       redis:
         image: redis:7-alpine
@@ -370,7 +363,6 @@ on:
           --health-timeout 5s
           --health-retries 5
           --health-start-period 30s
-
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET
@@ -410,7 +402,6 @@ on:
       cancel-in-progress: true
     permissions:
       contents: write
-
     steps:
       - uses: actions/checkout@v4
       - name: Setup Python
@@ -443,7 +434,6 @@ on:
     needs: [dotnet-test, python-test, typescript-test]
     if: always()
     timeout-minutes: 10
-
     steps:
       - uses: actions/checkout@v4
       - name: Download Coverage Reports
@@ -455,9 +445,9 @@ on:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Language | Platform | Coverage |" >> $GITHUB_STEP_SUMMARY
           echo "|----------|----------|----------|" >> $GITHUB_STEP_SUMMARY
-          echo "| .NET | Cross-platform | [![.NET Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=dotnet)](https://codecov.io/gh/bryan-roe/semantic-kernel) |" >> $GITHUB_STEP_SUMMARY
-          echo "| Python | Cross-platform | [![Python Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=python)](https://codecov.io/gh/bryan-roe/semantic-kernel) |" >> $GITHUB_STEP_SUMMARY
-          echo "| TypeScript | Cross-platform | [![TypeScript Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=typescript)](https://codecov.io/gh/bryan-roe/semantic-kernel) |" >> $GITHUB_STEP_SUMMARY
+          echo "| .NET | Cross-platform | [![.NET Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=dotnet)](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main?flag=dotnet) |" >> $GITHUB_STEP_SUMMARY
+          echo "| Python | Cross-platform | [![Python Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=python)](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main?flag=python) |" >> $GITHUB_STEP_SUMMARY
+          echo "| TypeScript | Cross-platform | [![TypeScript Coverage](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main/graph/badge.svg?flag=typescript)](https://codecov.io/gh/bryan-roe/semantic-kernel/branch/main?flag=typescript) |" >> $GITHUB_STEP_SUMMARY
 
   release:
     name: 🚀 Release
@@ -470,7 +460,6 @@ on:
     concurrency:
       group: release-${{ github.ref }}
       cancel-in-progress: false
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -482,10 +471,10 @@ on:
           echo "Release generated on $(date -u +'%Y-%m-%d %H:%M:%S') UTC" >> RELEASE_NOTES.md
           echo "" >> RELEASE_NOTES.md
           git log --pretty=format:"- %s" $(git describe --tags --abbrev=0)..HEAD >> RELEASE_NOTES.md
-          
+
           echo -e "\n\n## 📝 Commit Details" >> RELEASE_NOTES.md
           git log --pretty=format:"- %h %s (%an)" $(git describe --tags --abbrev=0)..HEAD >> RELEASE_NOTES.md
-          
+
           echo -e "\n\n## 📊 Statistics" >> RELEASE_NOTES.md
           echo "- Commits since last release: $(git rev-list --count $(git describe --tags --abbrev=0)..HEAD)" >> RELEASE_NOTES.md
           echo "- Contributors: $(git log $(git describe --tags --abbrev=0)..HEAD --format='%aN' | sort -u | wc -l)" >> RELEASE_NOTES.md
