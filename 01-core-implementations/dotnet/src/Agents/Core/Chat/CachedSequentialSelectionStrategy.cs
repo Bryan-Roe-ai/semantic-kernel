@@ -86,7 +86,7 @@ public sealed class CachedSequentialSelectionStrategy : SelectionStrategy
         {
             // Performance optimization: Quick check for cached selection
             var cacheKey = GenerateCacheKey(agents, history);
-            if (_agentCache.TryGetValue(cacheKey, out var cachedSelection) && 
+            if (_agentCache.TryGetValue(cacheKey, out var cachedSelection) &&
                 cachedSelection.IsValid(_cacheEntryTtl))
             {
                 if (EnableMetrics)
@@ -131,10 +131,10 @@ public sealed class CachedSequentialSelectionStrategy : SelectionStrategy
             }
 
             this.Logger.LogSequentialSelectionStrategySelectedAgent(
-                nameof(SelectAgentAsync), 
-                this._index, 
-                agents.Count, 
-                selectedAgent.Id, 
+                nameof(SelectAgentAsync),
+                this._index,
+                agents.Count,
+                selectedAgent.Id,
                 selectedAgent.GetDisplayName());
 
             return selectedAgent;
@@ -159,10 +159,10 @@ public sealed class CachedSequentialSelectionStrategy : SelectionStrategy
     {
         // Generate a lightweight cache key based on agent composition and recent history
         var agentHash = string.Join("|", agents.Select(a => a.Id));
-        var historyHash = history.Count > 0 ? 
-            $"{history.Count}:{history.LastOrDefault()?.AuthorName ?? "unknown"}" : 
+        var historyHash = history.Count > 0 ?
+            $"{history.Count}:{history.LastOrDefault()?.AuthorName ?? "unknown"}" :
             "empty";
-        
+
         return $"{agentHash}#{historyHash}#{_index}";
     }
 
@@ -291,7 +291,7 @@ public sealed class CachedSelectionMetrics
         CacheEvictions = 0;
         CacheClears = 0;
         SelectionErrors = 0;
-        
+
         lock (_timingLock)
         {
             _totalSelectionTimeMs = 0;

@@ -1,0 +1,116 @@
+{
+    "version": {
+        "number": "0.0.1"
+    },
+    "tools": {
+        "available": [
+            "codebase",
+            "editFiles",
+            "search",
+            "runTests",
+            "problems",
+            "runCommands",
+            "runTasks",
+            "findTestFiles",
+            "testFailure",
+            "github",
+            "azure",
+            "database",
+            "cloudPlatforms",
+            "documentation",
+            "bestpractices",
+            "websearch"
+        ]
+    },
+    "toolsets": {
+        "definitions": [
+            {
+                "name": "Web Development",
+                "tools": [
+                    "codebase",
+                    "editFiles",
+                    "search",
+                    "runTests",
+                    "problems"
+                ]
+            },
+            {
+                "name": "Backend Development",
+                "tools": [
+                    "codebase",
+                    "editFiles",
+                    "runTests",
+                    "problems",
+                    "documentation"
+                ]
+            },
+            {
+                "name": "DevOps & Infrastructure",
+                "tools": [
+                    "runCommands",
+                    "runTasks",
+                    "github",
+                    "azure",
+                    "bestpractices"
+                ]
+            },
+            {
+                "name": "Database Management",
+                "tools": [
+                    "database",
+                    "search",
+                    "problems",
+                    "documentation"
+                ]
+            },
+            {
+                "name": "Testing & Quality Assurance",
+                "tools": [
+                    "runTests",
+                    "findTestFiles",
+                    "problems",
+                    "testFailure"
+                ]
+            },
+            {
+                "name": "Cloud Platforms",
+                "tools": [
+                    "azure",
+                    "cloudPlatforms",
+                    "bestpractices",
+                    "documentation"
+                ]
+            },
+            {
+                "name": "Research & Documentation",
+                "tools": [
+                    "websearch",
+                    "documentation",
+                    "search",
+                    "codebase"
+                ]
+            },
+            {
+                "name": "AGI Development",
+                "tools": [
+                    "codebase",
+                    "editFiles",
+                    "search",
+                    "runTests",
+                    "problems",
+                    "runCommands",
+                    "runTasks",
+                    "github",
+                    "azure",
+                    "database",
+                    "cloudPlatforms",
+                    "documentation",
+                    "bestpractices",
+                    "websearch",
+                    "findTestFiles",
+                    "testFailure"
+                ]
+            }
+        ]
+    }
+}
