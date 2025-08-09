@@ -1,23 +1,19 @@
 {
-  // Primary custom LLM endpoint configuration (local adapter / proxy)
   "custom_llm_url": "http://localhost:5000/generate",
   "custom_llm_payload_template": "{\"prompt\": \"{prompt}\"}",
   "custom_llm_response_path": "response.text",
-  // Ordered preferred chat model list. First available wins.
-  // Added gpt-5-preview (placeholder) to proactively enable clients that opt-in.
   "preferred_chat_models": [
-    "gpt-5-preview", // Preview (will fallback if not accessible)
-    "gpt-4.1", // Example next-gen GA
-    "gpt-4o", // Current mainstream
-    "gpt-4o-mini", // Cost efficient
-    "gpt-4", // Legacy
-    "gpt-3.5-turbo" // Final fallback
+    "gpt-5-preview",
+    "gpt-4.1",
+    "gpt-4o",
+    "gpt-4o-mini",
+    "gpt-4",
+    "gpt-3.5-turbo"
   ],
-  // Explicit model metadata (can be expanded by tooling).
   "models": {
     "gpt-5-preview": {
       "status": "preview",
-      "enabled": true,
+      "enabled": false,
       "fallback": "gpt-4.1",
       "notes": "Auto-enabled preview entry. If unavailable, client code should attempt fallback chain."
     },

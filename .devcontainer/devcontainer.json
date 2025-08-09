@@ -1,43 +1,56 @@
 {
-	"name": "Semantic Kernel DevContainer",
-	"image": "mcr.microsoft.com/devcontainers/universal:2-linux",
-	"features": {
-		"ghcr.io/devcontainers/features/node:1": {},
-		"ghcr.io/devcontainers/features/dotnet:1": {
-			"version": "8.0"
-		},
-		"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {},
-		"ghcr.io/devcontainers/features/python:1": {
-			"version": "3.12"
-		}
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"ms-dotnettools.dotnet-interactive-vscode",
-				"ms-semantic-kernel.semantic-kernel",
-				"esbenp.prettier-vscode",
-				"ms-python.python",
-				"ms-azuretools.vscode-docker"
-			],
-			"settings": {
-				"editor.formatOnSave": true,
-				"python.defaultInterpreterPath": "/usr/bin/python3"
-			}
-		}
-	},
-	"containerEnv": {
-		"DOTNET_CLI_TELEMETRY_OPTOUT": "1",
-		"PYTHONUNBUFFERED": "1"
-	},
-	"runArgs": ["--init"],
-	"postCreateCommand": "sudo chown -R vscode:vscode /usr/share/dotnet && sudo chmod -R ug+rwX /usr/share/dotnet",
-	// '|| true' is used to prevent build failures if workload restore fails, which may be non-critical in some scenarios.
-	"updateContentCommand": "dotnet workload restore || true",
-	"forwardPorts": [
-		7071,
-		5000,
-		8000
-	],
-	"remoteUser": "vscode"
+  "name": "semantic-kernel",
+  "image": "mcr.microsoft.com/devcontainers/base:alpine-3.20",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "8.0",
+      "additionalVersions": "7.0"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11",
+      "installJupyterlab": true
+    }
+  },
+  "updateContentCommand": "",
+  "postCreateCommand": "/bin/sh .devcontainer/postCreate.sh",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.analysis.typeCheckingMode": "strict",
+        "python.formatting.provider": "ruff",
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false,
+        "python.testing.pytestArgs": [
+          "python"
+        ],
+        "dotnet.server.useOmnisharp": false
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "charliermarsh.ruff",
+        "ms-dotnettools.csharp",
+        "ms-azuretools.vscode-docker",
+        "github.vscode-github-actions",
+        "tamasfe.even-better-toml",
+        "eamodio.gitlens"
+      ]
+    }
+  },
+  "remoteUser": "vscode",
+  "mounts": [
+    "source=${localWorkspaceFolder}/.git,target=/workspaces/semantic-kernel/.git,type=bind,consistency=cached"
+  ],
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "8gb"
+  },
+  "shutdownAction": "stopContainer"
 }
