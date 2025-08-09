@@ -35,7 +35,7 @@ class TestGenerator:
                 if not provided.
         """
         if workspace_root is None:
-            workspace_root = Path(__file__).resolve().parent.parent
+            workspace_root = get_default_workspace_root()
         self.workspace_root = Path(workspace_root)
         self.test_template = '''"""
 Auto-generated tests for {module_name}
