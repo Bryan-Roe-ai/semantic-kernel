@@ -1,0 +1,7 @@
+{
+  "model_path": "/root/.cache/huggingface/transformers",
+  "device_map": "auto",
+  "torch_dtype": "float32",
+  "trust_remote_code": true,
+  "use_fast_tokenizer": true
+}
