@@ -1,12 +1,8 @@
 name: 'Attest Build Provenance'
-description: 'Generate provenance attestations for build artifacts'
-author: 'Bryan Roe'
 
-branding:
-  color: 'blue'
-  icon: 'shield'
-
-inputs:
+on:
+  workflow_call:
+    inputs:
   subject-path:
     description: >
       Path(s) to artifacts to attest. Specify only one of 'subject-path', 'subject-digest', or 'subject-checksums'.
@@ -36,9 +32,8 @@ inputs:
   github-token:
     description: >
       GitHub token for API requests.
-    default: ${{ github.token }}
-    required: false
-
+required: false
+outputs:
 outputs:
   bundle-path:
     description: 'Path to the attestation bundle file.'
@@ -50,9 +45,10 @@ outputs:
     description: 'Attestation summary URL.'
     value: ${{ steps.attest.outputs.attestation-url }}
 
-runs:
-  using: 'composite'
-  steps:
+jobs:
+  attest-build-provenance:
+    runs-on: ubuntu-latest
+    steps:
     # Validate that only one subject input is set
     - name: Validate subject input
       shell: bash

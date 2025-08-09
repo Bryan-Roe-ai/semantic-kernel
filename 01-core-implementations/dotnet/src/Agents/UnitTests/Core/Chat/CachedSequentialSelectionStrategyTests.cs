@@ -57,11 +57,11 @@ public class CachedSequentialSelectionStrategyTests
         // Verify performance improvement through caching
         Assert.True(strategy.Metrics.CacheHits > 0, "Expected cache hits to be recorded");
         Assert.True(strategy.Metrics.TotalSelections > 0, "Expected total selections to be recorded");
-        
+
         // Continue the sequence
         await VerifyNextAgentAsync(agent3, agents, strategy, history);
         await VerifyNextAgentAsync(agent1, agents, strategy, history); // Wraps around
-        
+
         // Verify metrics
         var metrics = strategy.Metrics;
         Assert.True(metrics.CacheHitRatio > 0, "Expected positive cache hit ratio");
@@ -182,7 +182,7 @@ public class CachedSequentialSelectionStrategyTests
 
         // Act & Assert
         await Assert.ThrowsAsync<KernelException>(() => strategy.NextAsync(emptyAgents, history));
-        
+
         // Verify error metrics
         Assert.True(strategy.Metrics.SelectionErrors > 0, "Expected selection errors to be recorded");
     }
@@ -209,7 +209,7 @@ public class CachedSequentialSelectionStrategyTests
         await strategy.NextAsync(agents, history);
 
         var metricsBeforeReset = strategy.Metrics;
-        
+
         // Reset strategy
         strategy.Reset();
 
@@ -254,7 +254,7 @@ public class CachedSequentialSelectionStrategyTests
         // Assert
         Assert.Equal(10, results.Length);
         Assert.All(results, result => Assert.Contains(result, agents));
-        
+
         // Verify metrics show concurrent executions
         Assert.Equal(10, strategy.Metrics.TotalSelections);
     }
@@ -306,11 +306,11 @@ public class CachedSequentialSelectionStrategyTests
         var metrics = cachedStrategy.Metrics;
         Assert.True(metrics.CacheHits > 0, "Expected cache hits during benchmark");
         Assert.True(metrics.CacheHitRatio > 0, "Expected positive cache hit ratio");
-        
+
         // Log performance comparison
         var cachedAvgMs = cachedStopwatch.ElapsedMilliseconds / (double)iterations;
         var standardAvgMs = standardStopwatch.ElapsedMilliseconds / (double)iterations;
-        
+
         // The cached strategy might be slightly slower initially due to caching overhead,
         // but should show benefits in real-world scenarios with repeated patterns
         Assert.True(cachedAvgMs >= 0 && standardAvgMs >= 0, "Both strategies should have non-negative execution times");
@@ -345,7 +345,7 @@ public class CachedSequentialSelectionStrategyTests
         // Assert
         var metrics = strategy.Metrics;
         Assert.True(metrics.TotalSelections >= 3, "Expected at least 3 total selections");
-        
+
         var metricsString = metrics.ToString();
         Assert.Contains("Total:", metricsString);
         Assert.Contains("Hits:", metricsString);
@@ -354,16 +354,16 @@ public class CachedSequentialSelectionStrategyTests
     }
 
     private static async Task VerifyNextAgentAsync(
-        Agent expectedAgent, 
-        Agent[] agents, 
+        Agent expectedAgent,
+        Agent[] agents,
         CachedSequentialSelectionStrategy strategy,
         IReadOnlyList<ChatMessageContent>? history = null)
     {
         history ??= new List<ChatMessageContent>();
-        
+
         // Act
         Agent? nextAgent = await strategy.NextAsync(agents, history);
-        
+
         // Assert
         Assert.NotNull(nextAgent);
         Assert.Equal(expectedAgent.Id, nextAgent.Id);

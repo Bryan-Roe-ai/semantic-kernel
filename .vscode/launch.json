@@ -1,103 +1,36 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-
-        {
-            "name": "Python: Current File",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal"
-        }
-    ]
-}
-    {
-      "name": "Python: Pytest",
-      "type": "debugpy",
-      "request": "launch",
-      "module": "pytest",
-      "args": ["${file}"],
-      "console": "integratedTerminal",
-      "justMyCode": true,
-      "cwd": "${workspaceFolder}",
-      "python": "${command:python.interpreterPath}"
-    },
-    {
-      "name": ".NET Core Launch (dotnet-kernel-syntax-examples)",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "build (KernelSyntaxExamples)",
-      "program": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples/bin/Debug/net6.0/KernelSyntaxExamples.dll",
-      "args": [],
-      "cwd": "${workspaceFolder}/dotnet/samples/KernelSyntaxExamples",
-      "stopAtEntry": false,
-      "console": "integratedTerminal"
-    },
-    {
-      "name": "CAPs - Demo Sample",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "build (CopilotAgentPluginsDemoSample)",
-      "program": "${workspaceFolder}/dotnet/samples/Demos/CopilotAgentPlugins/CopilotAgentPluginsDemoSample/bin/Debug/net8.0/CopilotAgentPluginsDemoSample.exe",
-      "args": ["demo"],
-      "cwd": "${workspaceFolder}/dotnet/samples/Demos/CopilotAgentPlugins/CopilotAgentPluginsDemoSample",
-      "stopAtEntry": false,
-      "console": "integratedTerminal"
-    },
-    {
-      "name": "C#: Concept Samples",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "build (Concepts)",
-      "program": "${workspaceFolder}/dotnet/samples/Concepts/bin/Debug/net6.0/Concepts.dll",
-      "args": [],
-      "cwd": "${workspaceFolder}/dotnet/samples/Concepts",
-      "console": "internalConsole",
-      "stopAtEntry": false
-    },
-    {
-      "name": "Attach to .NET Functions",
-      "type": "coreclr",
-      "request": "attach",
-      "processId": "${command:azureFunctions.pickProcess}"
-    },
-    {
-      "name": "RobotCode: Default",
-      "type": "robotcode",
-      "request": "launch",
-      "purpose": "default"
-    },
-    {
-      "name": "Python: Pytest",
-      "type": "debugpy",
-      "request": "launch",
-      "module": "pytest",
-      "args": ["${file}"],
-      "console": "integratedTerminal",
-      "justMyCode": true,
-      "cwd": "${workspaceFolder}",
-      "python": "${command:python.interpreterPath}"
-    },
-    {
-      "name": "C#: HuggingFace ImageToText",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "build (HuggingFaceImageToText)",
-      "program": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText/bin/Debug/net8.0/HuggingFaceImageToText.dll",
-      "args": [],
-      "cwd": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText",
-      "stopAtEntry": false,
-      "console": "integratedTerminal"
-    },
+  "version": "0.2.0",
+  "configurations": [
     {
       "name": "Python: FastAPI",
       "type": "debugpy",
       "request": "launch",
       "module": "uvicorn",
-      "args": ["app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"],
+      "args": [
+        "app:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8000",
+        "--reload"
+      ],
       "console": "integratedTerminal",
       "justMyCode": true,
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "python": "${command:python.interpreterPath}"
+    },
+    {
+      "name": "Python: Pytest",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "${file}"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}",
+      "python": "${command:python.interpreterPath}"
     },
     {
       "name": "C#: GettingStarted Samples",
@@ -110,27 +43,89 @@
       "stopAtEntry": false,
       "console": "integratedTerminal"
     },
-        {
-      "name": "C#: Process with Dapr",
-      "type": "coreclr",
+    {
+      "name": "Java: Semantic Kernel Concepts",
+      "type": "java",
       "request": "launch",
-      "preLaunchTask": "daprd-debug",
-      "env": {
-        "DAPR_HTTP_PORT": "3500",
-        "DAPR_GRPC_PORT": "50001"
-      }
-    }
-  ]
-},
+      "mainClass": "com.microsoft.semantickernel.samples.syntaxexamples.Example01_NativeFunctions",
+      "projectName": "semantickernel-syntax-examples",
+      "cwd": "${workspaceFolder}/01-core-implementations/java/samples/semantickernel-concepts/semantickernel-syntax-examples",
+      "console": "integratedTerminal",
+      "args": []
+    },
+    {
+      "name": "Java: Run Current Java File",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/01-core-implementations/java"
+    },
+    {
+      "name": "Java: Maven Test",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "org.apache.maven.surefire.booter.ForkedBooter",
+      "cwd": "${workspaceFolder}/01-core-implementations/java",
+      "console": "integratedTerminal",
+      "preLaunchTask": "java: maven test compile"
+    },
+    {
+      "name": "Java: Gradle Run",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "org.gradle.wrapper.GradleWrapperMain",
+      "args": [
+        "run"
+      ],
+      "cwd": "${workspaceFolder}/01-core-implementations/java",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Java: Kernel Function Examples",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "com.microsoft.semantickernel.samples.KernelFunctionExample",
+      "cwd": "${workspaceFolder}/01-core-implementations/java/samples/semantickernel-concepts",
+      "console": "integratedTerminal",
+      "args": [],
+      "vmArgs": [
+        "-Djava.util.logging.config.file=${workspaceFolder}/01-core-implementations/java/logging.properties"
+      ]
+    },
+    {
+      "name": "Java: Debug Unit Tests",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "org.junit.platform.console.ConsoleLauncher",
+      "args": [
+        "--scan-classpath",
+        "--reports-dir=${workspaceFolder}/01-core-implementations/java/test-reports"
+      ],
+      "cwd": "${workspaceFolder}/01-core-implementations/java",
+      "console": "integratedTerminal",
+      "classPaths": [
+        "${workspaceFolder}/01-core-implementations/java/semantickernel-core/target/classes",
+        "${workspaceFolder}/01-core-implementations/java/semantickernel-core/target/test-classes"
+      ]
+    },
+    {
+      "name": "Java: Attach to Remote JVM",
+      "type": "java",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": 5005,
+      "timeout": 30000
+    },
     {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": true,
-      "cwd": "c:/Users/Bryan/OneDrive/SK",
-      "program": "c:/Users/Bryan/OneDrive/SK/build/Debug/outDebug",
+      "externalConsole": false,
+      "cwd": "/workspaces/semantic-kernel/agi-venv",
+      "program": "/workspaces/semantic-kernel/agi-venv/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

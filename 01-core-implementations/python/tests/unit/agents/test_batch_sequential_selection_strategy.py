@@ -30,7 +30,7 @@ from semantic_kernel.exceptions.agent_exceptions import AgentExecutionException
 
 class MockAgent:
     """Mock agent for testing purposes."""
-    
+
     def __init__(self, agent_id: str, name: str = None):
         self.id = agent_id
         self.name = name or f"Agent_{agent_id}"
@@ -94,7 +94,7 @@ class TestBatchSequentialSelectionStrategy:
     async def test_round_robin_behavior(self, strategy, mock_agents, sample_history):
         """Test that selection follows round-robin pattern."""
         selected_agents = []
-        
+
         # Select agents for a full cycle plus one
         for _ in range(len(mock_agents) + 1):
             agent = await strategy.next(mock_agents, sample_history)
@@ -107,7 +107,7 @@ class TestBatchSequentialSelectionStrategy:
         """Test caching improves performance for repeated selections."""
         # Enable metrics tracking
         strategy.enable_caching = True
-        
+
         # First selection (cache miss)
         start_time = time.time()
         await strategy.next(mock_agents, sample_history)
@@ -125,7 +125,7 @@ class TestBatchSequentialSelectionStrategy:
     async def test_adaptive_batching(self, strategy, mock_agents, sample_history):
         """Test adaptive batch sizing based on performance."""
         initial_batch_size = strategy._current_batch_size
-        
+
         # Simulate multiple selections to trigger adaptive behavior
         for _ in range(10):
             await strategy.next(mock_agents, sample_history)
@@ -141,7 +141,7 @@ class TestBatchSequentialSelectionStrategy:
         # Manually set priorities for some agents
         strategy._agent_priorities["agent-1"] = 2.0  # High priority
         strategy._agent_priorities["agent-3"] = 0.5  # Low priority
-        
+
         # Perform selections and verify priority influence
         selected_agents = []
         for _ in range(10):
@@ -152,7 +152,7 @@ class TestBatchSequentialSelectionStrategy:
         # This is probabilistic, so we check for general trend
         high_priority_count = selected_agents.count("agent-1")
         low_priority_count = selected_agents.count("agent-3")
-        
+
         # High priority agent should be selected at least as often as low priority
         assert high_priority_count >= low_priority_count
 
@@ -160,7 +160,7 @@ class TestBatchSequentialSelectionStrategy:
         """Test error handling with empty agent list."""
         with pytest.raises(AgentExecutionException) as exc_info:
             await strategy.next([], [])
-        
+
         assert "No agents present to select" in str(exc_info.value)
 
     async def test_initial_agent_selection(self, strategy, mock_agents, sample_history):
@@ -181,24 +181,24 @@ class TestBatchSequentialSelectionStrategy:
         """Test cache TTL and expiration behavior."""
         # Set very short cache TTL for testing
         strategy.cache_ttl_seconds = 0.1
-        
+
         # First selection
         await strategy.next(mock_agents, sample_history)
         cache_size_before = len(strategy._agent_cache)
-        
+
         # Wait for cache to expire
         await asyncio.sleep(0.2)
-        
+
         # Another selection should trigger cache cleanup
         await strategy.next(mock_agents, sample_history)
-        
+
         # Verify cache was cleaned up
         assert len(strategy._agent_cache) <= cache_size_before
 
     async def test_performance_tracking(self, strategy, mock_agents, sample_history):
         """Test performance metrics tracking."""
         initial_metrics = strategy.metrics
-        
+
         # Perform several selections
         for _ in range(5):
             await strategy.next(mock_agents, sample_history)
@@ -214,14 +214,14 @@ class TestBatchSequentialSelectionStrategy:
         # Use strategy to build up state
         await strategy.next(mock_agents, sample_history)
         await strategy.next(mock_agents, sample_history)
-        
+
         # Verify state exists
         assert strategy.has_selected
         assert len(strategy._selection_history) > 0
-        
+
         # Reset strategy
         strategy.reset()
-        
+
         # Verify state was cleared
         assert not strategy.has_selected
         assert len(strategy._selection_history) == 0
@@ -234,16 +234,16 @@ class TestBatchSequentialSelectionStrategy:
         # Test optimization with different agent set sizes
         small_agent_set = mock_agents[:2]
         large_agent_set = mock_agents + [MockAgent(f"extra-{i}") for i in range(10)]
-        
+
         # Optimize for small set
         await strategy.optimize_for_agents(small_agent_set)
         small_batch_size = strategy._current_batch_size
-        
+
         # Reset and optimize for large set
         strategy.reset()
         await strategy.optimize_for_agents(large_agent_set)
         large_batch_size = strategy._current_batch_size
-        
+
         # Verify batch size was adjusted appropriately
         assert strategy.min_batch_size <= small_batch_size <= strategy.max_batch_size
         assert strategy.min_batch_size <= large_batch_size <= strategy.max_batch_size
@@ -255,10 +255,10 @@ class TestBatchSequentialSelectionStrategy:
             strategy.next(mock_agents, sample_history)
             for _ in range(10)
         ]
-        
+
         # Execute concurrently
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        
+
         # Verify all selections completed successfully
         assert len(results) == 10
         for result in results:
@@ -270,10 +270,10 @@ class TestBatchSequentialSelectionStrategy:
         # Perform some operations
         for _ in range(3):
             await strategy.next(mock_agents, sample_history)
-        
+
         # Get performance summary
         summary = strategy.get_performance_summary()
-        
+
         # Verify summary structure
         assert "metrics" in summary
         assert "current_batch_size" in summary
@@ -281,7 +281,7 @@ class TestBatchSequentialSelectionStrategy:
         assert "tracked_agents" in summary
         assert "selection_history_length" in summary
         assert "agent_priorities" in summary
-        
+
         # Verify summary contains expected data
         assert summary["current_batch_size"] > 0
         assert summary["selection_history_length"] >= 0
@@ -290,14 +290,14 @@ class TestBatchSequentialSelectionStrategy:
         """Test error recovery mechanisms."""
         # Simulate an error condition by providing invalid data
         invalid_agents = [None]  # This should cause an error
-        
+
         try:
             # This should handle the error gracefully
             with pytest.raises(Exception):
                 await strategy.next(invalid_agents, sample_history)
         except Exception:
             pass  # Expected
-        
+
         # Verify strategy can still work with valid data after error
         valid_agent = await strategy.next(mock_agents, sample_history)
         assert valid_agent in mock_agents
@@ -311,23 +311,23 @@ class TestBatchSequentialSelectionStrategy:
             min_batch_size=batch_size,
             enable_adaptive_batching=False  # Disable adaptation for this test
         )
-        
+
         # Perform selections
         for _ in range(batch_size * 2):
             agent = await strategy.next(mock_agents, sample_history)
             assert agent in mock_agents
-        
+
         # Verify batch size remained constant
         assert strategy._current_batch_size == batch_size
 
     async def test_metrics_accuracy(self, strategy, mock_agents, sample_history):
         """Test accuracy of metrics collection."""
         initial_metrics = BatchProcessingMetrics()
-        
+
         # Manually update metrics to test calculation accuracy
         initial_metrics.update_batch_metrics(batch_size=3, processing_time_ms=150.0)
         initial_metrics.update_batch_metrics(batch_size=5, processing_time_ms=250.0)
-        
+
         # Verify calculations
         assert initial_metrics.total_batches_processed == 2
         assert initial_metrics.total_agents_processed == 8
@@ -339,10 +339,10 @@ class TestBatchSequentialSelectionStrategy:
         # Simulate cache hits and misses
         strategy.metrics.cache_hits = 7
         strategy.metrics.cache_misses = 3
-        
+
         # Calculate hit ratio
         hit_ratio = strategy.metrics.cache_hit_ratio
-        
+
         # Verify calculation
         expected_ratio = (7 / 10) * 100  # 70%
         assert hit_ratio == expected_ratio
@@ -353,13 +353,13 @@ class TestBatchSequentialSelectionStrategy:
         strategy.enable_adaptive_batching = True
         strategy.enable_caching = True
         strategy.enable_ml_optimization = True  # If available
-        
+
         # Create varied history contexts
         histories = [
             [ChatMessageContent(role="user", content=f"Task {i}")]
             for i in range(5)
         ]
-        
+
         # Perform selections with different contexts
         results = []
         for history in histories:
@@ -367,11 +367,11 @@ class TestBatchSequentialSelectionStrategy:
                 agent = await strategy.next(mock_agents, history)
                 results.append(agent)
                 await asyncio.sleep(0.001)  # Small delay
-        
+
         # Verify all selections were successful
         assert len(results) == 15  # 5 histories × 3 selections
         assert all(agent in mock_agents for agent in results)
-        
+
         # Verify strategy collected performance data
         assert strategy.metrics.total_agents_processed > 0
         summary = strategy.get_performance_summary()
