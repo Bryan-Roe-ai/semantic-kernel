@@ -36,13 +36,13 @@ public sealed class OptimizedSequentialOrchestration<TInput, TOutput> : IDisposa
     /// <param name="settings">Configuration settings for the orchestration.</param>
     /// <param name="logger">Logger instance for diagnostics.</param>
     public OptimizedSequentialOrchestration(
-        OrchestrationSettings? settings = null, 
+        OrchestrationSettings? settings = null,
         ILogger? logger = null)
     {
         _settings = settings ?? OrchestrationSettings.Default;
         _logger = logger ?? NullLogger.Instance;
         _executionSemaphore = new SemaphoreSlim(_settings.MaxConcurrentAgents, _settings.MaxConcurrentAgents);
-        
+
         _logger.LogInformation("Initialized OptimizedSequentialOrchestration with settings: {Settings}", _settings);
     }
 
@@ -94,8 +94,8 @@ public sealed class OptimizedSequentialOrchestration<TInput, TOutput> : IDisposa
 
         var stopwatch = Stopwatch.StartNew();
         var executionId = Guid.NewGuid().ToString("N")[..8];
-        
-        _logger.LogInformation("Starting orchestration execution {ExecutionId} with {AgentCount} agents", 
+
+        _logger.LogInformation("Starting orchestration execution {ExecutionId} with {AgentCount} agents",
             executionId, _agents.Count);
 
         try
@@ -104,7 +104,7 @@ public sealed class OptimizedSequentialOrchestration<TInput, TOutput> : IDisposa
             if (_settings.EnableCaching)
             {
                 var cacheKey = GenerateCacheKey(input);
-                if (_resultCache.TryGetValue(cacheKey, out var cachedResult) && 
+                if (_resultCache.TryGetValue(cacheKey, out var cachedResult) &&
                     cachedResult.IsValid(_settings.CacheTtl))
                 {
                     _performanceTracker.RecordCacheHit();
@@ -122,15 +122,15 @@ public sealed class OptimizedSequentialOrchestration<TInput, TOutput> : IDisposa
                 var cacheKey = GenerateCacheKey(input);
                 var cacheEntry = new OrchestrationCache(result, DateTimeOffset.UtcNow);
                 _resultCache.TryAdd(cacheKey, cacheEntry);
-                
+
                 // Cleanup old cache entries if necessary
                 await CleanupCacheIfNeeded();
             }
 
             stopwatch.Stop();
             _performanceTracker.RecordExecution(stopwatch.Elapsed, _agents.Count);
-            
-            _logger.LogInformation("Completed orchestration execution {ExecutionId} in {ElapsedMs}ms", 
+
+            _logger.LogInformation("Completed orchestration execution {ExecutionId} in {ElapsedMs}ms",
                 executionId, stopwatch.ElapsedMilliseconds);
 
             return result;
@@ -139,7 +139,7 @@ public sealed class OptimizedSequentialOrchestration<TInput, TOutput> : IDisposa
         {
             stopwatch.Stop();
             _performanceTracker.RecordError();
-            _logger.LogError(ex, "Error in orchestration execution {ExecutionId} after {ElapsedMs}ms", 
+            _logger.LogError(ex, "Error in orchestration execution {ExecutionId} after {ElapsedMs}ms",
                 executionId, stopwatch.ElapsedMilliseconds);
             throw;
         }
@@ -159,13 +159,13 @@ public sealed class OptimizedSequentialOrchestration<TInput, TOutput> : IDisposa
             try
             {
                 await _executionSemaphore.WaitAsync(cancellationToken);
-                
-                _logger.LogDebug("Executing agent {AgentId} ({AgentIndex}/{TotalAgents}) in execution {ExecutionId}", 
+
+                _logger.LogDebug("Executing agent {AgentId} ({AgentIndex}/{TotalAgents}) in execution {ExecutionId}",
                     agent.Id, i + 1, _agents.Count, executionId);
 
                 // Create appropriate input for the agent
                 var agentInput = CreateAgentInput(currentResult, agent, i);
-                
+
                 // Execute agent with timeout
                 var agentTask = ExecuteAgentWithTimeout(agent, agentInput, cancellationToken);
                 var agentResult = await agentTask;
@@ -174,22 +174,22 @@ public sealed class OptimizedSequentialOrchestration<TInput, TOutput> : IDisposa
                 currentResult = agentResult;
 
                 var executionResult = new AgentExecutionResult(
-                    agent.Id, 
-                    agentStopwatch.Elapsed, 
-                    true, 
+                    agent.Id,
+                    agentStopwatch.Elapsed,
+                    true,
                     null);
                 agentResults.Add(executionResult);
 
-                _logger.LogDebug("Agent {AgentId} completed in {ElapsedMs}ms", 
+                _logger.LogDebug("Agent {AgentId} completed in {ElapsedMs}ms",
                     agent.Id, agentStopwatch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
                 agentStopwatch.Stop();
                 var executionResult = new AgentExecutionResult(
-                    agent.Id, 
-                    agentStopwatch.Elapsed, 
-                    false, 
+                    agent.Id,
+                    agentStopwatch.Elapsed,
+                    false,
                     ex.Message);
                 agentResults.Add(executionResult);
 
@@ -210,7 +210,7 @@ public sealed class OptimizedSequentialOrchestration<TInput, TOutput> : IDisposa
 
         // Log execution summary
         _logger.LogInformation("Pipeline execution {ExecutionId} summary: {SuccessfulAgents}/{TotalAgents} agents successful",
-            executionId, 
+            executionId,
             agentResults.Count(r => r.Success),
             agentResults.Count);
 
@@ -254,7 +254,7 @@ public sealed class OptimizedSequentialOrchestration<TInput, TOutput> : IDisposa
     {
         // Default error handling - return the current result unchanged
         // This could be customized to provide fallback values or error indicators
-        _logger.LogWarning("Using error handling for agent {AgentId}: {ErrorMessage}", 
+        _logger.LogWarning("Using error handling for agent {AgentId}: {ErrorMessage}",
             agent.Id, exception.Message);
         return currentResult;
     }
@@ -314,7 +314,7 @@ public sealed class OptimizedSequentialOrchestration<TInput, TOutput> : IDisposa
     {
         var totalEntries = _resultCache.Count;
         var validEntries = _resultCache.Count(kvp => kvp.Value.IsValid(_settings.CacheTtl));
-        
+
         return new CacheStatistics(totalEntries, validEntries, Metrics.CacheHits, Metrics.CacheMisses);
     }
 
@@ -381,9 +381,9 @@ internal readonly record struct OrchestrationCache(object Result, DateTimeOffset
 /// Result of an individual agent execution.
 /// </summary>
 public readonly record struct AgentExecutionResult(
-    string AgentId, 
-    TimeSpan Duration, 
-    bool Success, 
+    string AgentId,
+    TimeSpan Duration,
+    bool Success,
     string? ErrorMessage);
 
 /// <summary>

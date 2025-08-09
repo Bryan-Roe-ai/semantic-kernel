@@ -11,8 +11,7 @@ jobs:
       pull-requests: write
     steps:
     - name: First Interaction
-    - name: First Interaction
-    - uses: actions/first-interaction@v1
+      uses: actions/first-interaction@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: "Message that will be displayed on users' first issue"

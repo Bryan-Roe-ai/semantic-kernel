@@ -44,11 +44,21 @@ if ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
+# Setup and activate virtual environment
+print_status "Setting up virtual environment..."
+if [ ! -d "/workspaces/semantic-kernel/agi-venv" ]; then
+    print_status "Creating virtual environment..."
+    python3 -m venv /workspaces/semantic-kernel/agi-venv
+fi
+
+print_status "Activating virtual environment..."
+source /workspaces/semantic-kernel/agi-venv/bin/activate
+
 # Check required packages
 print_status "Checking required packages..."
-python3 -c "
+python -c "
 import sys
-required_packages = ['torch', 'numpy', 'pathlib', 'asyncio']
+required_packages = ['numpy', 'pathlib', 'asyncio']
 missing = []
 for pkg in required_packages:
     try:
@@ -65,7 +75,7 @@ else:
 
 if [ $? -ne 0 ]; then
     print_warning "Installing missing packages..."
-    pip3 install torch numpy
+    pip install numpy
 fi
 
 # Check AGI system status
