@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Q&A / Usage Questions
+    url: https://github.com/Bryan-Roe-ai/semantic-kernel/discussions
+    about: Please ask and answer usage questions here.
