@@ -263,5 +263,13 @@
   "python-envs.defaultEnvManager": "ms-python.python:venv",
   "github-actions.workflows.pinned.workflows": [
     ".github/workflows/enhanced-ci-cd.yml"
-  ]
+  ],
+  "chat.agent.maxRequests": 50,
+  "gitlens.ai.largePromptWarningThreshold": 200000,
+  "js/ts.hover.maximumLength": 5000,
+  "testing.coverageBarThresholds": {
+    "red": 0,
+    "yellow": 60,
+    "green": 90
+  }
 }
