@@ -42,6 +42,99 @@
       "cwd": "${workspaceFolder}/dotnet/samples/GettingStarted",
       "stopAtEntry": false,
       "console": "integratedTerminal"
+    },
+    {
+      "name": "Java: Semantic Kernel Concepts",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "com.microsoft.semantickernel.samples.syntaxexamples.Example01_NativeFunctions",
+      "projectName": "semantickernel-syntax-examples",
+      "cwd": "${workspaceFolder}/01-core-implementations/java/samples/semantickernel-concepts/semantickernel-syntax-examples",
+      "console": "integratedTerminal",
+      "args": []
+    },
+    {
+      "name": "Java: Run Current Java File",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}/01-core-implementations/java"
+    },
+    {
+      "name": "Java: Maven Test",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "org.apache.maven.surefire.booter.ForkedBooter",
+      "cwd": "${workspaceFolder}/01-core-implementations/java",
+      "console": "integratedTerminal",
+      "preLaunchTask": "java: maven test compile"
+    },
+    {
+      "name": "Java: Gradle Run",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "org.gradle.wrapper.GradleWrapperMain",
+      "args": [
+        "run"
+      ],
+      "cwd": "${workspaceFolder}/01-core-implementations/java",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Java: Kernel Function Examples",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "com.microsoft.semantickernel.samples.KernelFunctionExample",
+      "cwd": "${workspaceFolder}/01-core-implementations/java/samples/semantickernel-concepts",
+      "console": "integratedTerminal",
+      "args": [],
+      "vmArgs": [
+        "-Djava.util.logging.config.file=${workspaceFolder}/01-core-implementations/java/logging.properties"
+      ]
+    },
+    {
+      "name": "Java: Debug Unit Tests",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "org.junit.platform.console.ConsoleLauncher",
+      "args": [
+        "--scan-classpath",
+        "--reports-dir=${workspaceFolder}/01-core-implementations/java/test-reports"
+      ],
+      "cwd": "${workspaceFolder}/01-core-implementations/java",
+      "console": "integratedTerminal",
+      "classPaths": [
+        "${workspaceFolder}/01-core-implementations/java/semantickernel-core/target/classes",
+        "${workspaceFolder}/01-core-implementations/java/semantickernel-core/target/test-classes"
+      ]
+    },
+    {
+      "name": "Java: Attach to Remote JVM",
+      "type": "java",
+      "request": "attach",
+      "hostName": "localhost",
+      "port": 5005,
+      "timeout": 30000
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "cwd": "/workspaces/semantic-kernel/agi-venv",
+      "program": "/workspaces/semantic-kernel/agi-venv/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
     }
   ]
 }
