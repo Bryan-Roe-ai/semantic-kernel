@@ -34,7 +34,16 @@ if command -v mongod &> /dev/null; then
     echo "🍃 Starting MongoDB..."
     sudo mkdir -p /data/db
     sudo chown -R mongodb:mongodb /data/db
-    sudo systemctl start mongod || sudo mongod --fork --logpath /var/log/mongod.log --dbpath /data/db || echo "⚠️  MongoDB start failed, continuing..."
+    if sudo systemctl start mongod; then
+        echo "✅ MongoDB started with systemctl."
+    else
+        echo "⚠️  systemctl failed to start MongoDB, attempting to start with mongod --fork..."
+        if sudo mongod --fork --logpath /var/log/mongod.log --dbpath /data/db; then
+            echo "✅ MongoDB started with mongod --fork."
+        else
+            echo "⚠️  MongoDB start failed with both systemctl and mongod --fork, continuing..."
+        fi
+    fi
 fi
 
 echo "✅ Container initialization complete!"
