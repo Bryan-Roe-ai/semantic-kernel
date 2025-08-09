@@ -31,8 +31,8 @@ RUN wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/package
     && rm -rf /var/lib/apt/lists/*
 
 # Install Azure Functions Core Tools
-RUN wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | apt-key add - \
-    && echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs)-prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/dotnetdev.list \
+RUN wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/repos/microsoft-ubuntu-$(lsb_release -cs)-prod $(lsb_release -cs) main" > /etc/apt/sources.list.d/dotnetdev.list \
     && apt-get update \
     && apt-get install -y azure-functions-core-tools-4 \
     && rm -rf /var/lib/apt/lists/*
