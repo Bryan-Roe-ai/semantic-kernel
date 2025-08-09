@@ -4,34 +4,14 @@ runme:
   version: v3
 ---
 
-#
+# Deprecated: AI Markdown Runner Demo
 
-```csv {"id":"01JYHMF7CEVNQQ5BQKK3X1Y3F1"}
-Coding standards help teams write consistent, maintainable, and high-quality code.
-Summarize the following text:
-```ai summarize
+This content was relocated and merged into the unified samples/markdown/ area.
 
-```
+See: samples/markdown/ (README + example files)
 
-What are the main topics covered in this document?
+Purpose of move: centralize AI markdown examples; enable validator-driven organization.
 
-```ai {"id":"01JYHMF7CEVNQQ5BQKK7W39NVY"}
+This stub will be removed after downstream references are updated.
 
-You can add more blocks with different types:
-
-```
-
-Write a short summary about the importance of coding standards in software projects.
-
-````ai generate
-Write a short summary about the importance of coding standards in software projects.
-
-# AI Markdown Runner Demo
-
-This file demonstrates a real AI block for local LLM processing.
-
-## Example
-
-```ai generate
-Write a short summary about the importance of coding standards in software projects.
-````
+<!-- DEPRECATION STUB: moved to samples/markdown/ -->

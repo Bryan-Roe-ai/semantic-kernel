@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+dist/
+build/
+
+# Dotnet
+bin/
+obj/
+TestResult*/
+*.user
+*.suo
+*.userprefs
+*.csproj.user
+
+# General
+*.log
+.DS_Store
