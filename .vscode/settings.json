@@ -1,6 +1,8 @@
 {
   "prettier.enable": true,
-  "css.lint.validProperties": ["composes"],
+  "css.lint.validProperties": [
+    "composes"
+  ],
   "editor.formatOnType": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
@@ -14,7 +16,9 @@
     }
   },
   "notebook.output.textLineLimit": 500,
-  "python.analysis.extraPaths": ["./python/src"],
+  "python.analysis.extraPaths": [
+    "./python/src"
+  ],
   "javascript.updateImportsOnFileMove.enabled": "always",
   "search.exclude": {
     "**/node_modules": true,
@@ -62,7 +66,6 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true
   },
-  // "cSpell.words" moved or removed due to unknown configuration setting
   "emeraldwalk.runonsave": {
     "commands": [
       {
@@ -74,7 +77,9 @@
   "java.debug.settings.onBuildFailureProceed": true,
   "java.compile.nullAnalysis.mode": "disabled",
   "dotnet.defaultSolution": "dotnet\\SK-dotnet.sln",
-  "python.testing.pytestArgs": ["python/tests"],
+  "python.testing.pytestArgs": [
+    "python/tests"
+  ],
   "python.testing.unittestEnabled": true,
   "python.testing.pytestEnabled": true,
   "azureFunctions.deploySubpath": "semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Release/net6.0/publish",
@@ -85,7 +90,7 @@
   "C_Cpp_Runner.debuggerPath": "gdb",
   "C_Cpp_Runner.cStandard": "",
   "C_Cpp_Runner.cppStandard": "",
-  "C_Cpp_Runner.msvcBatchPath": "C:/Program Files/Microsoft Visual Studio/VR_NR/Community/VC/Auxiliary/Build/vcvarsall.bat",
+  "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.useMsvc": false,
   "C_Cpp_Runner.warnings": [
     "-Wall",
@@ -119,7 +124,10 @@
   "C_Cpp_Runner.compilerArgs": [],
   "C_Cpp_Runner.linkerArgs": [],
   "C_Cpp_Runner.includePaths": [],
-  "C_Cpp_Runner.includeSearch": ["*", "**/*"],
+  "C_Cpp_Runner.includeSearch": [
+    "*",
+    "**/*"
+  ],
   "C_Cpp_Runner.excludeSearch": [
     "**/build",
     "**/build/**",
@@ -152,7 +160,7 @@
     "editor.defaultFormatter": "Google.cros-ide"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[xml]": {
     "editor.defaultFormatter": "DotJoshJohnson.xml"
@@ -190,7 +198,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "python.analysis.autoImportCompletions": true,
-  "maven.view": "hierarchical",
+  "maven.view": "flat",
   "[instructions]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -214,7 +222,11 @@
       "readOnly": false,
       "role": "development",
       "driverOptions": {
-        "extensions": ["sqlite-js", "sqlite-vec", "sqlean"]
+        "extensions": [
+          "sqlite-js",
+          "sqlite-vec",
+          "sqlean"
+        ]
       }
     }
   ],
@@ -245,6 +257,22 @@
   "github.copilot.chat.languageContext.inline.typescript.enabled": true,
   "github.copilot.chat.languageContext.typescript.enabled": true,
   "github.copilot.chat.notebook.followCellExecution.enabled": true,
+  "github.copilot.enable": {
+    "*": true,
+    "yaml": true,
+    "plaintext": true,
+    "markdown": true,
+    "python": true,
+    "csharp": true,
+    "javascript": true,
+    "typescript": true
+  },
+  "github.copilot.inlineSuggest.enable": true,
+  "github.copilot.advanced": {
+    "debug.overrideEngine": "codex",
+    "debug.testOverrideProxyUrl": "",
+    "debug.overrideProxyUrl": ""
+  },
   "githubPullRequests.codingAgent.uiIntegration": true,
   "githubPullRequests.experimental.useQuickChat": true,
   "githubPullRequests.neverIgnoreDefaultBranch": true,
@@ -263,5 +291,45 @@
   "python-envs.defaultEnvManager": "ms-python.python:system",
   "github-actions.workflows.pinned.workflows": [
     ".github/workflows/enhanced-ci-cd.yml"
+  ],
+  "chat.agent.maxRequests": 50,
+  "gitlens.ai.largePromptWarningThreshold": 200000,
+  "js/ts.hover.maximumLength": 5000,
+  "testing.coverageBarThresholds": {
+    "red": 0,
+    "yellow": 60,
+    "green": 90
+  },
+  "chat.mcp.autostart": "newAndOutdated",
+  "ai.chat.context.includeWorkspace": true,
+  "ai.chat.enableInlineChat": true,
+  "ai.suggestions.enabled": true,
+  "intellicode.modify.editor.acceptOnTab": true,
+  "intellicode.modify.editor.acceptOnSpace": false,
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "tabnine.experimentalAutoImports": true,
+  "continue.telemetryEnabled": false,
+  "continue.manuallyTriggerCompletion": false,
+  "[clojure]": {
+    "editor.defaultFormatter": "betterthantomorrow.calva"
+  },
+  "C_Cpp_Runner.cCompilerPath": "gcc",
+  "C_Cpp_Runner.cppCompilerPath": "g++",
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.shellIntegration.suggestEnabled": true,
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "path": "/bin/bash",
+      "args": [
+        "-l"
+      ],
+      "icon": "terminal-bash"
+    }
+  },
+  "terminal.integrated.scrollback": 20000,
+  "terminal.integrated.enablePersistentSessions": true,
+  "terminal.integrated.commandsToSkipShell": [
+    "language-julia.interrupt"
   ]
 }

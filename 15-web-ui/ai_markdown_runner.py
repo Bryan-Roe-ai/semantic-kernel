@@ -13,19 +13,21 @@ Created: 2025
 License: MIT
 """
 
-import httpx
 import os
-import re
-import asyncio
-import sys
+import httpx
+import json as _json
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
+from llm_config_loader import load_llm_config_with_preview_control
 
 LM_STUDIO_URL = os.environ.get(
     "LM_STUDIO_URL", "http://localhost:5272/v1/chat/completions"
 )
 LM_STUDIO_MODEL = os.environ.get("LM_STUDIO_MODEL", "mistral-7b-v02-int4-gpu")
+
+
+ # Removed local loader; using shared load_llm_config_with_preview_control
 
 
 class AIMarkdownRunner:
@@ -336,38 +338,22 @@ Result: Command processed successfully
             return f"[ERROR] Failed to call local LLM: {e}\nSet OPENAI_API_KEY for OpenAI, or start LM Studio."
 
     def _load_llm_config(self):
-        import json
-
-        config = {}
-        config_path = Path("llm_config.json")
-        if config_path.exists():
-            try:
-                with open(config_path, "r", encoding="utf-8") as f:
-                    config = json.load(f)
-            except Exception:
-                pass
-        # Fallback to env vars if not in config
+        config = load_llm_config_with_preview_control(Path("llm_config.json"))
         config.setdefault("custom_llm_url", os.environ.get("CUSTOM_LLM_URL"))
-        config.setdefault(
-            "custom_llm_payload_template", os.environ.get("CUSTOM_LLM_PAYLOAD_TEMPLATE")
-        )
-        config.setdefault(
-            "custom_llm_response_path", os.environ.get("CUSTOM_LLM_RESPONSE_PATH")
-        )
+        config.setdefault("custom_llm_payload_template", os.environ.get("CUSTOM_LLM_PAYLOAD_TEMPLATE"))
+        config.setdefault("custom_llm_response_path", os.environ.get("CUSTOM_LLM_RESPONSE_PATH"))
         return config
 
     async def _call_real_ai(self, prompt: str, purpose: str = "completion") -> str:
         import json
-
         config = self._load_llm_config()
         openai_api_key = os.environ.get("OPENAI_API_KEY")
-        lm_studio_url = os.environ.get(
-            "LM_STUDIO_URL", "http://localhost:5272/v1/chat/completions"
-        )
-        lm_studio_model = os.environ.get("LM_STUDIO_MODEL", "mistral-7b-v02-int4-gpu")
+        lm_studio_url = os.environ.get("LM_STUDIO_URL", LM_STUDIO_URL)
+        lm_studio_model = os.environ.get("LM_STUDIO_MODEL", LM_STUDIO_MODEL)
         custom_llm_url = config.get("custom_llm_url")
         custom_llm_payload_template = config.get("custom_llm_payload_template")
         custom_llm_response_path = config.get("custom_llm_response_path")
+        active_chat_model = config.get('active_chat_model') or 'gpt-3.5-turbo'
 
         # 1. Custom LLM
         if custom_llm_url and custom_llm_payload_template:

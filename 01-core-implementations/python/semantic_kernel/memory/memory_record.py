@@ -1,204 +1,143 @@
 #!/usr/bin/env python3
-"""
-Memory Record module
+"""Unified MemoryRecord implementation.
 
-Copyright (c) 2025 Bryan Roe
-Licensed under the MIT License
+This file consolidated multiple corrupted/duplicated versions into a
+single class. Goals:
+* Preserve backward compatibility for existing imports/factory usage.
+* Avoid hard dependency on numpy (embeddings typed as Any).
+* Provide minimal helper factories (reference_record/local_record).
 
-This file is part of the Semantic Kernel - Advanced AI Development Framework.
-Original work by Bryan Roe.
-
-Author: Bryan Roe
-Created: 2025
-License: MIT
+Public surface intentionally small; internal underscore attributes
+retained because existing memory store connectors reference them.
 """
 
-# Copyright (c) Microsoft. All rights reserved.
+from __future__ import annotations
 
-import sys
 from datetime import datetime
+from typing import Any, Optional
 
-from numpy import ndarray
+EmbeddingType = Any  # Flexible: list[float], numpy.ndarray, etc.
 
-if sys.version_info >= (3, 13):
-    from warnings import deprecated
-else:
-    from typing_extensions import deprecated
-
-
-@deprecated("This class will be removed in a future version.")
-class MemoryRecord:
-    """The in-built memory record."""
-
-    _key: str
-    _timestamp: datetime | None
-    _is_reference: bool
-    _external_source_name: str | None
-    _id: str
-    _description: str | None
-    _text: str | None
-    _additional_metadata: str | None
-from typing import Optional
-
-from numpy import ndarray
+__all__ = ["MemoryRecord", "EmbeddingType"]
 
 
 class MemoryRecord:
-    is_reference: bool
-    external_source_name: Optional[str]
-    id: str
-    description: Optional[str]
-    text: Optional[str]
-    _embedding: ndarray
+    """Represents a semantic memory entry.
+
+    Parameters mirror historical variants; prefer using factories.
+    """
 
     def __init__(
         self,
-        is_reference: bool,
-        external_source_name: str | None,
-        id: str,
-        description: str | None,
-        text: str | None,
-        additional_metadata: str | None,
-        embedding: ndarray | None,
-        key: str | None = None,
-        timestamp: datetime | None = None,
+        *,
+        record_id: Optional[str] = None,
+        # Alternate legacy signature fields (if provided together)
+        id: Optional[str] = None,  # noqa: A003 - legacy alias
+        text: Optional[str] = None,
+        description: Optional[str] = None,
+        additional_metadata: Optional[str] = None,
+        embedding: Optional[EmbeddingType] = None,
+        is_reference: bool = False,
+        external_source_name: Optional[str] = None,
+        key: Optional[str] = None,
+        timestamp: Optional[datetime] = None,
     ) -> None:
-        """Initialize a new instance of MemoryRecord.
+        # Choose id precedence: explicit record_id > legacy id
+        chosen_id = record_id or id
+        if chosen_id is None:
+            raise ValueError("record_id (or id) must be provided")
 
-        Args:
-            is_reference (bool): Whether the record is a reference record.
-            external_source_name (Optional[str]): The name of the external source.
-            id (str): A unique for the record.
-            description (Optional[str]): The description of the record.
-            text (Optional[str]): The text of the record.
-            additional_metadata (Optional[str]): Custom metadata for the record.
-            embedding (ndarray): The embedding of the record.
-            key (Optional[str]): The key of the record.
-            timestamp (Optional[datetime]): The timestamp of the record.
-        """
-        self._key = key
-        self._timestamp = timestamp
-        self._is_reference = is_reference
-        self._external_source_name = external_source_name
-        self._id = id
-        self._description = description
+        self._id = chosen_id
         self._text = text
+        self._description = description
         self._additional_metadata = additional_metadata
         self._embedding = embedding
+        self._is_reference = is_reference
+        self._external_source_name = external_source_name
+        self._key = key
+        self._timestamp = timestamp
 
-        external_source_name: Optional[str],
-        id: str,
-        description: Optional[str],
-        text: Optional[str],
-        embedding: ndarray,
-    ) -> None:
-        self.is_reference = is_reference
-        self.external_source_name = external_source_name
-        self.id = id
-        self.description = description
-        self.text = text
-        self._embedding = embedding
-
-    @property
-    def embedding(self) -> ndarray:
-        return self._embedding
-
+    # ---------- Factory helpers ---------- #
     @staticmethod
     def reference_record(
         external_id: str,
         source_name: str,
-        description: str | None,
-        additional_metadata: str | None,
-        embedding: ndarray,
-    ) -> "MemoryRecord":
-        """Create a reference record.
-
-        Args:
-            external_id (str): The external id of the record.
-            source_name (str): The name of the external source.
-            description (Optional[str]): The description of the record.
-            additional_metadata (Optional[str]): Custom metadata for the record.
-            embedding (ndarray): The embedding of the record.
-
-        Returns:
-            MemoryRecord: The reference record.
-        """
         description: Optional[str],
-        embedding: ndarray,
+        additional_metadata: Optional[str],
+        embedding: EmbeddingType,
     ) -> "MemoryRecord":
         return MemoryRecord(
-            is_reference=True,
-            external_source_name=source_name,
-            id=external_id,
+            record_id=external_id,
             description=description,
-            text=None,
             additional_metadata=additional_metadata,
             embedding=embedding,
+            is_reference=True,
+            external_source_name=source_name,
         )
 
     @staticmethod
     def local_record(
-        id: str,
+        record_id: str,
         text: str,
-        description: str | None,
-        additional_metadata: str | None,
-        embedding: ndarray,
-        timestamp: datetime | None = None,
-    ) -> "MemoryRecord":
-        """Create a local record.
-
-        Args:
-            id (str): A unique for the record.
-            text (str): The text of the record.
-            description (Optional[str]): The description of the record.
-            additional_metadata (Optional[str]): Custom metadata for the record.
-            embedding (ndarray): The embedding of the record.
-            timestamp (Optional[datetime]): The timestamp of the record.
-
-        Returns:
-            MemoryRecord: The local record.
-        """
-        id: str, text: str, description: Optional[str], embedding: ndarray
+        description: Optional[str],
+        additional_metadata: Optional[str],
+        embedding: EmbeddingType,
+        timestamp: Optional[datetime] = None,
     ) -> "MemoryRecord":
         return MemoryRecord(
-            is_reference=False,
-            external_source_name=None,
-            id=id,
-            description=description,
+            record_id=record_id,
             text=text,
+            description=description,
             additional_metadata=additional_metadata,
-            timestamp=timestamp,
             embedding=embedding,
+            timestamp=timestamp,
+            is_reference=False,
         )
 
+    # ---------- Properties ---------- #
     @property
-    def id(self):
-        """Get the unique identifier for the memory record."""
+    def id(self) -> str:  # noqa: D401
         return self._id
 
     @property
-    def embedding(self) -> ndarray:
-        """Get the embedding of the memory record."""
-        return self._embedding
-
-    @property
-    def text(self):
-        """Get the text of the memory record."""
+    def text(self) -> Optional[str]:  # noqa: D401
         return self._text
 
     @property
-    def additional_metadata(self):
-        """Get the additional metadata of the memory record."""
-        return self._additional_metadata
-
-    @property
-    def description(self):
-        """Get the description of the memory record."""
+    def description(self) -> Optional[str]:  # noqa: D401
         return self._description
 
     @property
-    def timestamp(self):
-        """Get the timestamp of the memory record."""
+    def additional_metadata(self) -> Optional[str]:  # noqa: D401
+        return self._additional_metadata
+
+    @property
+    def embedding(self) -> Optional[EmbeddingType]:  # noqa: D401
+        return self._embedding
+
+    @property
+    def timestamp(self) -> Optional[datetime]:  # noqa: D401
         return self._timestamp
-            embedding=embedding,
+
+    # ---------- Convenience ---------- #
+    def as_dict(self) -> dict[str, Any]:
+        return {
+            "id": self._id,
+            "text": self._text,
+            "description": self._description,
+            "additional_metadata": self._additional_metadata,
+            "is_reference": self._is_reference,
+            "external_source_name": self._external_source_name,
+            "timestamp": (self._timestamp.isoformat() if self._timestamp else None),
+        }
+
+    def update_embedding(self, embedding: EmbeddingType) -> None:
+        self._embedding = embedding
+
+    def __repr__(self) -> str:  # pragma: no cover
+        return (
+            "MemoryRecord("  # noqa: E501
+            f"id={self._id!r}, text={self._text!r}, "
+            f"is_reference={self._is_reference}, "
+            f"source={self._external_source_name!r})"
         )
