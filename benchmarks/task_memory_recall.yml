@@ -1,0 +1,7 @@
+id: memory_recall_001
+goal: "Recall stored fact about system architecture"
+category: memory
+expect_contains: "architecture"
+plan_hint:
+  - analyze_goal
+  - execute_action

@@ -1,0 +1,12 @@
+id: EXP-0001
+hypothesis: Semantic memory reduces planning iterations by >=20%
+change: Enable semantic_memory flag in planner propose()
+metrics:
+  - planning_iterations
+  - task_success_rate
+baseline: pending
+variant: pending
+result: pending
+decision: pending
+notes: |
+  Add any qualitative observations here.

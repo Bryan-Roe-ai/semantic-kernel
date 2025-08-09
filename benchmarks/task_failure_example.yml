@@ -1,0 +1,7 @@
+id: failure_example_001
+goal: "Perform transformation without keyword"
+category: deterministic
+expect_contains: "nonexistent_keyword"
+plan_hint:
+  - analyze_goal
+  - execute_action

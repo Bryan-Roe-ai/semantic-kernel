@@ -1,0 +1,8 @@
+id: deterministic_report_001
+goal: "Generate a project status report summarizing tasks"
+category: deterministic
+expect_contains: "report"
+plan_hint:
+  - analyze_goal
+  - collect_data
+  - generate_report
