@@ -524,14 +524,12 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
-      [
-        dotnet-test,
-        python-test,
-        typescript-test,
-        performance-benchmarks,
-        security-scan,
-        integration-tests,
-      ]
+      - dotnet-test
+      - python-test
+      - typescript-test
+      - performance-benchmarks
+      - security-scan
+      - integration-tests
     timeout-minutes: 15
     permissions:
       contents: write
