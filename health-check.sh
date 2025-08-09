@@ -44,11 +44,13 @@ else
     FAILED=1
 fi
 
-# Test basic HTTP connectivity
-if curl -s --max-time 5 http://httpbin.org/get > /dev/null 2>&1; then
-    echo "🌐 HTTP connectivity is working"
-else
-    echo "⚠️  HTTP connectivity test failed (might be network-related)"
+# Optionally test external HTTP connectivity (set EXTERNAL_HTTP_CHECK=1 to enable)
+if [ "${EXTERNAL_HTTP_CHECK}" = "1" ]; then
+    if curl -s --max-time 5 http://httpbin.org/get > /dev/null 2>&1; then
+        echo "🌐 External HTTP connectivity is working"
+    else
+        echo "⚠️  External HTTP connectivity test failed (might be network-related)"
+    fi
 fi
 
 if [ $FAILED -eq 0 ]; then
