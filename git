@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Git wrapper script
+# Provides common Git operations with enhanced functionality
+
+# Check if git is available
+if ! command -v git >/dev/null 2>&1; then
+    echo "Error: git is not installed or not in PATH" >&2
+    exit 1
+fi
+
+# If no arguments provided, show status
+if [ $# -eq 0 ]; then
+    git status
+    exit 0
+fi
+
+# Execute git with all provided arguments
+exec git "$@"

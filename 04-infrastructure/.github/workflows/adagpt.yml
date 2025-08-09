@@ -26,6 +26,7 @@ jobs:
         uses: actions/checkout@v4
       # The action will only run if the description or comments mentions @AdaGPT
       - name: Adagpt
+      - name: Adagpt
       - uses: zirkelc/adagpt@latest
         name: AdaGPT
         with:

@@ -5,13 +5,13 @@ name: Build Java Semantic Kernel
 on:
   workflow_dispatch:
   push:
-    branches: [ "main", "java-development" ]
+    branches: ["main", "java-development"]
     paths:
-      - 'java/**'
+      - "java/**"
   pull_request:
-    branches: [ "main", "java-development" ]
+    branches: ["main", "java-development"]
     paths:
-      - 'java/**'
+      - "java/**"
 permissions:
   contents: read
 
@@ -24,7 +24,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Paths Filter
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -33,7 +32,7 @@ jobs:
               - 'java/**'
               - '**/java/**'
 
-  # Builds and tests the Java project
+      # Builds and tests the Java project
       # run only if 'java' files were changed
       - name: java tests
         if: steps.filter.outputs.java == 'true'
@@ -70,7 +69,6 @@ jobs:
             echo "JDK_VERSION=$version" >> $GITHUB_OUTPUT
 
       # Sets up the specified JDK version from the matrix
-      - name: Setup Java
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ steps.set-jdk.outputs.JDK_VERSION }}
@@ -87,7 +85,6 @@ jobs:
         run: ./mvnw -B -Pbug-check -Pcompile-jdk${{ matrix.java-versions }} test --file pom.xml
         working-directory: java
       # Uploads test artifacts for each JDK version
-      - name: Upload Artifact
       - uses: actions/upload-artifact@v4
         if: always()
         with:
