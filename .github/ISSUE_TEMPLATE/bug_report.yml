@@ -1,0 +1,62 @@
+name: Bug Report
+description: Report a reproducible problem
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: A concise description of the issue.
+      placeholder: Crash when using XYZ connector
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction Steps
+      description: Provide minimal code / commands to reproduce.
+      placeholder: |
+        1. Configure ...
+        2. Run ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / Stack Trace
+      render: shell
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: semantic-kernel version(s) or commit SHA; runtime versions (Python/.NET/node).
+  - type: dropdown
+    id: languages
+    attributes:
+      label: Languages Affected
+      multiple: true
+      options:
+        - dotnet
+        - python
+        - typescript
+        - java
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues
+          required: true
+        - label: I can reproduce with latest main
+        - label: This is not a usage question (belongs in Discussions)

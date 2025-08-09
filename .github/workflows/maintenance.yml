@@ -2,7 +2,7 @@ name: Repository Maintenance
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Weekly on Sunday
+    - cron: "0 0 * * 0" # Weekly on Sunday
   workflow_dispatch:
 
 permissions:
@@ -55,6 +55,7 @@ jobs:
           echo "- Total commits: $(git rev-list --count HEAD)" >> MAINTENANCE_REPORT.md
 
       - name: Upload maintenance report
+        if: always() # <-- Bug fix: always try to upload if the file exists
         uses: actions/upload-artifact@v4
         with:
           name: maintenance-report-${{ github.run_id }}
@@ -68,4 +69,3 @@ jobs:
           echo "- Script Available: ${{ steps.script_check.outputs.script_exists }}" >> $GITHUB_STEP_SUMMARY
           echo "- Report Generated: ✅" >> $GITHUB_STEP_SUMMARY
           echo "- Timestamp: $(date -u)" >> $GITHUB_STEP_SUMMARY
-

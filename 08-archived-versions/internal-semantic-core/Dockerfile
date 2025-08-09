@@ -77,7 +77,7 @@ RUN --mount=type=secret,id=MONGODB_URL,mode=0444 \
 
 RUN curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
     gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
-   --dearmor
+    --dearmor
 
 RUN echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-7.0.list
 

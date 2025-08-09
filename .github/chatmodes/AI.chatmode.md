@@ -70,7 +70,7 @@ For optimal AI chat experience, configure these settings:
 This AI chat mode is specifically designed for the Semantic Kernel project and includes:
 
 - **Agent Framework**: Multi-agent conversation capabilities
-- **Plugin System**: Extensible functionality through SK plugins  
+- **Plugin System**: Extensible functionality through SK plugins
 - **Memory System**: Persistent conversation context using SK memory
 - **AI Services**: Integration with multiple AI providers
 - **Planning**: Complex task decomposition and execution
@@ -117,3 +117,89 @@ The AI assistant understands the project's development context:
 - Check the [Semantic Kernel documentation](https://learn.microsoft.com/en-us/semantic-kernel/)
 - Visit the [GitHub repository issues](https://github.com/microsoft/semantic-kernel/issues)
 - Review the AGI development guides in the `09-agi-development` folder for advanced features
+
+### Local LLM Integration
+
+You can use a locally hosted OpenAI-compatible server (e.g., Ollama, LM Studio, vLLM, text-generation-webui) as a drop-in chat/embeddings backend.
+
+#### 1. Start a Local Server
+
+Examples:
+
+- Ollama: `ollama run llama3`
+- LM Studio: enable OpenAI compatible HTTP server
+- vLLM: `python -m vllm.entrypoints.openai.api_server --model <model>`
+
+#### 2. Verify Endpoint
+
+```sh
+# List models (adjust port as needed)
+curl -s http://localhost:11434/v1/models | jq
+
+# Test chat completion
+curl -s http://localhost:11434/v1/chat/completions \
+ -H 'Content-Type: application/json' \
+ -d '{"model":"llama3","messages":[{"role":"user","content":"Hello"}]}' | jq '.choices[0].message.content'
+```
+
+Endpoint must expose standard paths like `/v1/chat/completions` (and optionally `/v1/embeddings`).
+
+#### 3. Python Usage
+
+```python
+from semantic_kernel.connectors.ai.openai import OpenAIChatCompletion, OpenAITextEmbedding
+import semantic_kernel as sk
+
+kernel = sk.Kernel()
+# Chat
+kernel.add_service(OpenAIChatCompletion(
+    service_id="local",
+    api_key="EMPTY",            # local server usually ignores auth
+    endpoint="http://localhost:11434/v1"
+))
+# (Optional) Embeddings
+kernel.add_service(OpenAITextEmbedding(
+    service_id="local-emb",
+    api_key="EMPTY",
+    endpoint="http://localhost:11434/v1"
+))
+```
+
+Use like any other registered service (no special flags required unless using experimental content types).
+
+#### 4. .NET Usage
+
+```csharp
+var builder = Kernel.CreateBuilder();
+builder.AddOpenAIChatCompletion(
+    serviceId: "local",
+    apiKey: "EMPTY",
+    endpoint: new Uri("http://localhost:11434/v1"));
+// Optional embeddings
+builder.AddOpenAITextEmbeddingGeneration(
+    serviceId: "local-emb",
+    apiKey: "EMPTY",
+    endpoint: new Uri("http://localhost:11434/v1"));
+var kernel = builder.Build();
+```
+
+#### 5. Streaming (Recommended)
+
+Enable streaming when invoking functions to reduce latency; the OpenAI-compatible connectors automatically map streamed tokens.
+
+#### 6. Testing (Deterministic)
+
+Mock HTTP in unit tests (Python: `responses`; .NET: custom `HttpMessageHandler`)—do not rely on a running local model in fast tests.
+
+#### 7. Security & Privacy
+
+Treat local endpoint as trusted; never send secrets or PII unless you control the model runtime. Do not hardcode real API keys.
+
+#### 8. Troubleshooting
+
+- 404: Endpoint not OpenAI-compatible or wrong base URL
+- Empty responses: Model not loaded (preload model in server)
+- Slow first reply: Initial model load / compile; subsequent calls faster
+- Streaming stalls: Server may buffer—check server flags for incremental output
+
+Minimal health check: if `curl <base>/v1/models` returns a JSON list, integration is ready.
