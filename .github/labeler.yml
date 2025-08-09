@@ -1,0 +1,14 @@
+dotnet:
+  - "01-core-implementations/dotnet/**"
+python:
+  - "01-core-implementations/python/**"
+typescript:
+  - "01-core-implementations/typescript/**"
+java:
+  - "01-core-implementations/java/**"
+docs:
+  - "docs/**"
+workflows:
+  - ".github/workflows/**"
+security:
+  - "**/security/**"

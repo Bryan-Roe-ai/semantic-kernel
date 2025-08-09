@@ -17,11 +17,9 @@ License: MIT
 
 import re
 import asyncio
-import os
-import httpx
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, List, Any
+def _load_llm_config_with_preview_control(config_path: Path) -> Dict[str, Any]:
+
+from llm_config_loader import load_llm_config_with_preview_control
 
 
 class EnhancedAIMarkdownRunner:
@@ -168,23 +166,10 @@ This would normally execute the AI instruction and return intelligent results.
 ━━━━━━━━━━━━━━━━━━━━━━━━━"""
 
     def _load_llm_config(self):
-        import json
-
-        config = {}
-        config_path = Path("llm_config.json")
-        if config_path.exists():
-            try:
-                with open(config_path, "r", encoding="utf-8") as f:
-                    config = json.load(f)
-            except Exception:
-                pass
+        config = load_llm_config_with_preview_control(Path("llm_config.json"))
         config.setdefault("custom_llm_url", os.environ.get("CUSTOM_LLM_URL"))
-        config.setdefault(
-            "custom_llm_payload_template", os.environ.get("CUSTOM_LLM_PAYLOAD_TEMPLATE")
-        )
-        config.setdefault(
-            "custom_llm_response_path", os.environ.get("CUSTOM_LLM_RESPONSE_PATH")
-        )
+        config.setdefault("custom_llm_payload_template", os.environ.get("CUSTOM_LLM_PAYLOAD_TEMPLATE"))
+        config.setdefault("custom_llm_response_path", os.environ.get("CUSTOM_LLM_RESPONSE_PATH"))
         return config
 
     async def _call_real_ai(self, prompt: str, purpose: str = "completion") -> str:
@@ -200,6 +185,7 @@ This would normally execute the AI instruction and return intelligent results.
         custom_llm_url = config.get("custom_llm_url")
         custom_llm_payload_template = config.get("custom_llm_payload_template")
         custom_llm_response_path = config.get("custom_llm_response_path")
+        active_chat_model = config.get("active_chat_model") or "gpt-3.5-turbo"
 
         # 1. Custom LLM
         if custom_llm_url and custom_llm_payload_template:
@@ -214,8 +200,8 @@ This would normally execute the AI instruction and return intelligent results.
                     # Traverse response path (dot notation)
                     if custom_llm_response_path:
                         val = data
-                        for part in custom_llm_response_path.split("."):
-                            val = val.get(part, None)
+                        for part in custom_llm_response_path.split('.'):
+                            val = val.get(part, None) if isinstance(val, dict) else None
                             if val is None:
                                 break
                         if val:
@@ -233,7 +219,7 @@ This would normally execute the AI instruction and return intelligent results.
                     "Content-Type": "application/json",
                 }
                 payload = {
-                    "model": "gpt-3.5-turbo",
+                    "model": active_chat_model,
                     "messages": [
                         {
                             "role": "system",
@@ -254,6 +240,29 @@ This would normally execute the AI instruction and return intelligent results.
                     data = response.json()
                     if "choices" in data and data["choices"]:
                         return data["choices"][0]["message"]["content"]
+                    # Fallback chain if preview model unsupported
+                    if active_chat_model.startswith("gpt-5"):
+                        # Attempt fallback chain defined in config
+                        metadata = config.get("models", {})
+                        attempted = set([active_chat_model])
+                        current = metadata.get(active_chat_model, {}).get("fallback")
+                        while current and current not in attempted:
+                            attempted.add(current)
+                            payload["model"] = current
+                            try:
+                                r2 = await client.post(
+                                    "https://api.openai.com/v1/chat/completions",
+                                    headers=headers,
+                                    json=payload,
+                                )
+                                if r2.status_code == 200:
+                                    d2 = r2.json()
+                                    if d2.get("choices"):
+                                        return d2["choices"][0]["message"]["content"]
+                            except Exception:
+                                pass
+                            current = metadata.get(current, {}).get("fallback")
+                        return f"[ERROR] No choices in OpenAI response (after fallbacks): {data}"
                     return f"[ERROR] No choices in OpenAI response: {data}"
             except Exception as e:
                 return f"[ERROR] Failed to call OpenAI API: {e}"

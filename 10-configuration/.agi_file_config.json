@@ -4,34 +4,19 @@
     "/workspaces/semantic-kernel/dotnet",
     "/workspaces/semantic-kernel/samples",
     "/workspaces/semantic-kernel/notebooks",
-    "/workspaces/semantic-kernel/11-automation-scripts",
-    "/workspaces/semantic-kernel/09-agi-development",
-    "/workspaces/semantic-kernel/19-miscellaneous"
+    "/workspaces/semantic-kernel/scripts",
+    "/workspaces/semantic-kernel/09-agi-development"
   ],
-  "restricted_files": [
-    ".git",
-    ".env",
-    "secrets",
-    "credentials",
-    "password"
-  ],
+  "restricted_files": [".git", ".env", "secrets", "credentials", "password"],
   "workspace_path": "/workspaces/semantic-kernel",
   "backup_path": "/workspaces/semantic-kernel/.agi_backups",
   "performance_settings": {
     "max_concurrent_tasks": 5,
     "cache_ttl_seconds": 300,
-    "enable_parallel_processing": true,
-    "batch_size": 10
+    "enable_parallel_processing": true
   },
   "optimization_flags": {
-    "enable_parallel_processing": true,
-    "cache_file_analysis": true,
-    "use_memory_mapping": true,
-    "enable_fast_hashing": true,
-    "use_incremental_updates": true,
-    "skip_duplicate_operations": true,
-    "batch_file_operations": true,
-    "compress_backups": true
-  },
-  "last_updated": "2025-08-07T15:48:00.000000"
+    "compress_backups": true,
+    "cache_file_analysis": true
+  }
 }
