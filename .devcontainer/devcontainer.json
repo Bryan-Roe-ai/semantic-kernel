@@ -44,7 +44,7 @@
       ]
     }
   },
-  "remoteUser": "vscode",
+  "remoteUser": "root",
   "mounts": [
     "source=${localWorkspaceFolder}/.git,target=/workspaces/semantic-kernel/.git,type=bind,consistency=cached"
   ],
