@@ -114,14 +114,17 @@ jobs:
       cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - name: Checkout code
+        # TODO(pin): Replace version tag with commit SHA for supply chain hardening
         uses: actions/checkout@v4
 
       - name: Setup .NET
+        # TODO(pin): Pin to commit SHA
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Cache NuGet packages
+        # TODO(pin): Pin to commit SHA
         uses: actions/cache@v4
         with:
           path: ${{ env.NUGET_PACKAGES }}
@@ -149,6 +152,7 @@ jobs:
 
       - name: Upload Coverage to Codecov
         if: ${{ secrets.CODECOV_TOKEN != '' }}
+        # TODO(pin): Pin to commit SHA
         uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
@@ -159,6 +163,7 @@ jobs:
           fail_ci_if_error: false
 
       - name: Upload Test Results
+        # TODO(pin): Pin to commit SHA
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -168,6 +173,7 @@ jobs:
           retention-days: 30
 
       - name: Upload Coverage Artifact
+        # TODO(pin): Pin to commit SHA
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -192,14 +198,17 @@ jobs:
       cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - name: Checkout repository
+        # TODO(pin): Pin to commit SHA
         uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
+        # TODO(pin): Pin to commit SHA
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
           check-latest: true
       - name: Install Poetry
+        # TODO(pin): Pin to commit SHA
         uses: snok/install-poetry@v1
         with:
           version: 1.8.2
@@ -207,6 +216,7 @@ jobs:
           virtualenvs-in-project: true
           installer-parallel: true
       - name: Load cached venv
+        # TODO(pin): Pin to commit SHA
         uses: actions/cache@v4
         with:
           path: 01-core-implementations/python/.venv
@@ -230,6 +240,7 @@ jobs:
             --timeout=300
       - name: Upload Coverage to Codecov
         if: ${{ secrets.CODECOV_TOKEN != '' }}
+        # TODO(pin): Pin to commit SHA
         uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
@@ -239,6 +250,7 @@ jobs:
           name: python-coverage
           fail_ci_if_error: false
       - name: Upload Coverage Artifact
+        # TODO(pin): Pin to commit SHA
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -263,8 +275,10 @@ jobs:
       cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - name: Checkout repository
+        # TODO(pin): Pin to commit SHA
         uses: actions/checkout@v4
       - name: Setup Node.js ${{ matrix.node-version }}
+        # TODO(pin): Pin to commit SHA
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
@@ -284,6 +298,7 @@ jobs:
           npm run test:coverage
       - name: Upload Coverage to Codecov
         if: ${{ secrets.CODECOV_TOKEN != '' }}
+        # TODO(pin): Pin to commit SHA
         uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
@@ -293,6 +308,7 @@ jobs:
           name: typescript-coverage
           fail_ci_if_error: false
       - name: Upload Coverage Artifact
+        # TODO(pin): Pin to commit SHA
         uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -313,14 +329,17 @@ jobs:
       contents: write
     steps:
       - name: Checkout repository
+        # TODO(pin): Pin to commit SHA
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Setup .NET
+        # TODO(pin): Pin to commit SHA
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Cache NuGet packages
+        # TODO(pin): Pin to commit SHA
         uses: actions/cache@v4
         with:
           path: ${{ env.NUGET_PACKAGES }}
@@ -358,6 +377,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
+        # TODO(pin): Pin to commit SHA
         uses: actions/checkout@v4
       - name: Run Trivy vulnerability scanner
         # TODO(pin): Replace version pin with commit SHA for defense-in-depth
@@ -413,6 +433,7 @@ jobs:
           --health-start-period 30s
     steps:
       - name: Checkout repository
+        # TODO(pin): Pin to commit SHA
         uses: actions/checkout@v4
       - name: Setup .NET
         uses: actions/setup-dotnet@v4

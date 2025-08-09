@@ -314,5 +314,22 @@
     "editor.defaultFormatter": "betterthantomorrow.calva"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
-  "C_Cpp_Runner.cppCompilerPath": "g++"
+  "C_Cpp_Runner.cppCompilerPath": "g++",
+  "terminal.integrated.shellIntegration.enabled": true,
+  "terminal.integrated.shellIntegration.suggestEnabled": true,
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "path": "/bin/bash",
+      "args": [
+        "-l"
+      ],
+      "icon": "terminal-bash"
+    }
+  },
+  "terminal.integrated.scrollback": 20000,
+  "terminal.integrated.enablePersistentSessions": true,
+  "terminal.integrated.commandsToSkipShell": [
+    "language-julia.interrupt"
+  ]
 }
