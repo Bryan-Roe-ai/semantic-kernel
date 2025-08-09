@@ -13,6 +13,7 @@ Created: 2025
 License: MIT
 """
 
+import argparse
 import os
 import sys
 import ast
@@ -25,7 +26,16 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class TestGenerator:
-    def __init__(self, workspace_root="/workspaces/semantic-kernel/ai-workspace"):
+    def __init__(self, workspace_root=None):
+        """Initialize the generator.
+
+        Args:
+            workspace_root (str | Path | None): Root directory to scan for
+                Python files. Defaults to the parent directory of this script
+                if not provided.
+        """
+        if workspace_root is None:
+            workspace_root = Path(__file__).resolve().parent.parent
         self.workspace_root = Path(workspace_root)
         self.test_template = '''"""
 Auto-generated tests for {module_name}
@@ -63,8 +73,13 @@ if __name__ == '__main__':
     unittest.main()
 '''
 
-    def generate_missing_tests(self):
-        """Generate tests for files without test coverage."""
+    def generate_missing_tests(self, dry_run: bool = False):
+        """Generate tests for files without test coverage.
+
+        Args:
+            dry_run (bool): If True, only show which tests would be generated
+                without writing files.
+        """
         print("🧪 Generating Missing Tests")
         print("=" * 40)
 
@@ -91,9 +106,12 @@ if __name__ == '__main__':
 
             try:
                 if self._should_generate_test(python_file):
-                    self._generate_test_file(python_file)
-                    generated_count += 1
-                    print(f"✅ Generated test for: {python_file.relative_to(self.workspace_root)}")
+                    if dry_run:
+                        print(f"✅ [Dry Run] Would generate test for: {python_file.relative_to(self.workspace_root)}")
+                    else:
+                        self._generate_test_file(python_file)
+                        generated_count += 1
+                        print(f"✅ Generated test for: {python_file.relative_to(self.workspace_root)}")
             except Exception as e:
                 print(f"❌ Failed to generate test for {python_file.name}: {e}")
 
@@ -272,10 +290,30 @@ def {func_name}(*args, **kwargs):
 
         return test_methods
 
-def main():
-    """Main function."""
-    generator = TestGenerator()
-    result = generator.generate_missing_tests()
+def parse_args() -> argparse.Namespace:
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Generate stub test files for Python modules without tests."
+    )
+    parser.add_argument(
+        "--workspace-root",
+        type=str,
+        default=str(Path(__file__).resolve().parent.parent),
+        help="Root directory to scan for Python files.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="List files that would receive tests without creating them.",
+    )
+    return parser.parse_args()
+
+
+def main() -> None:
+    """Main entry point."""
+    args = parse_args()
+    generator = TestGenerator(workspace_root=args.workspace_root)
+    result = generator.generate_missing_tests(dry_run=args.dry_run)
     print(f"\n📋 Test Generation Complete: {result}")
 
 if __name__ == "__main__":
