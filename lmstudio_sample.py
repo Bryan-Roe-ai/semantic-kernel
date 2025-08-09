@@ -32,6 +32,7 @@ HEADERS = {"Content-Type": "application/json"}
 if API_KEY:
     HEADERS["Authorization"] = f"Bearer {API_KEY}"
 
+
 async def list_models(session: aiohttp.ClientSession) -> List[str]:
     url = f"{BASE_URL}/v1/models"
     async with session.get(url) as r:
@@ -39,6 +40,7 @@ async def list_models(session: aiohttp.ClientSession) -> List[str]:
         data = await r.json()
     # LM Studio returns { data: [ {id: "model-id"}, ... ] }
     return [m.get("id") for m in data.get("data", [])]
+
 
 async def chat_once(
     session: aiohttp.ClientSession,
@@ -87,10 +89,11 @@ async def chat_stream(
             if chunk_line == "data: [DONE]":
                 break
             try:
-                obj = json.loads(chunk_line[len("data:"):].strip())
+                obj = json.loads(chunk_line[len("data:") :].strip())
             except json.JSONDecodeError:
                 continue
             yield obj
+
 
 async def main() -> None:
     print(f"🔗 Connecting to LM Studio at {BASE_URL}")
@@ -115,16 +118,18 @@ async def main() -> None:
         basic = await chat_once(
             session,
             [
-            {"role": "system", "content": "You are a concise assistant."},
-            {
-                "role": "user",
-                "content": "List three benefits of local LLM inference.",
-            },
+                {"role": "system", "content": "You are a concise assistant."},
+                {
+                    "role": "user",
+                    "content": "List three benefits of local LLM inference.",
+                },
             ],
             model,
         )
-        text = basic.get("choices", [{}])[0].get("message", {}).get(
-            "content", "<no content>"
+        text = (
+            basic.get("choices", [{}])[0]
+            .get("message", {})
+            .get("content", "<no content>")
         )
         print(text.strip())
 
@@ -152,10 +157,14 @@ async def main() -> None:
             [{"role": "user", "content": function_prompt}],
             model,
         )
-        pf_text = pf.get("choices", [{}])[0].get("message", {}).get(
-            "content", "<no content>"
-        ).strip()
+        pf_text = (
+            pf.get("choices", [{}])[0]
+            .get("message", {})
+            .get("content", "<no content>")
+            .strip()
+        )
         print(pf_text)
+
 
 if __name__ == "__main__":
     try:
