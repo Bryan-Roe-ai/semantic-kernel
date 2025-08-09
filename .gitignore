@@ -359,3 +359,5 @@ git-lfs.tar.gz
 **/agi-venv
 **/ai_env
 **/venv_poetry
+
+.fake

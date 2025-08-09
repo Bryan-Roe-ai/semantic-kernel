@@ -1,0 +1,8 @@
+id: reasoning_optimize_001
+goal: "Optimize pipeline latency by analyzing metrics"
+category: reasoning
+expect_contains: "optimize"
+plan_hint:
+  - analyze_goal
+  - collect_metrics
+  - apply_optimization

@@ -1,0 +1,113 @@
+name: AGI Evaluation Gate
+
+on:
+  pull_request:
+    paths:
+      - "agi/**"
+      - "benchmarks/**"
+      - "scripts/run_evaluation_gate.py"
+  push:
+    branches: [main]
+    paths:
+      - "agi/**"
+      - "benchmarks/**"
+      - "scripts/run_evaluation_gate.py"
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install minimal deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+      - name: Run unit tests
+        run: |
+          echo 'Running lightweight AGI unit tests'
+          python test_agi_unit.py
+      - name: Run evaluation gate
+        run: |
+          python scripts/run_evaluation_gate.py > evaluation_output.json || true
+          cat evaluation_output.json
+      - name: Compute diff risk (PR only)
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          python - <<'PY'
+          import subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('.').resolve()))
+          try:
+              from agi.safety.diff_risk import score_diff
+          except Exception as e:
+              print('::warning::Unable to import diff_risk:', e)
+              sys.exit(0)
+          base = '${{ github.base_ref }}'
+          if not base:
+              print('No base ref; skipping risk scoring')
+              sys.exit(0)
+          # Fetch base ref to ensure diff works in PR context
+          subprocess.run(['git','fetch','origin',base], check=False)
+          changed = subprocess.check_output(['git','diff','--name-only',f'origin/{base}']).decode().splitlines()
+          if not changed:
+              print('No changed files detected for risk scoring')
+              sys.exit(0)
+          stats = subprocess.check_output(['git','diff','--shortstat',f'origin/{base}']).decode()
+          added = 0; deleted = 0
+          for part in stats.split(','):
+              part = part.strip()
+              if 'insertion' in part:
+                  added = int(part.split()[0])
+              if 'deletion' in part:
+                  deleted = int(part.split()[0])
+          score, rationale = score_diff(changed, added, deleted)
+          print(f"Diff risk score: {score:.2f} ({rationale})")
+          threshold = 0.8
+          if score > threshold:
+              print(f"::error::Diff risk {score:.2f} exceeds threshold {threshold}")
+              sys.exit(1)
+          PY
+      - name: Enforce thresholds
+        run: |
+          python - <<'PY'
+          import json, sys
+          with open('evaluation_output.json') as f:
+              data = json.load(f)
+          rate = data['kpis']['task_success_rate']
+          if rate < data['thresholds']['task_success_rate']:
+              print(f"::error::Task success rate {rate:.2f} below threshold")
+              sys.exit(1)
+          if data.get('regression'):
+              print('::error::Regression detected relative to baseline KPIs')
+              sys.exit(1)
+          print(f"Success rate {rate:.2f} meets threshold (no regression)")
+          PY
+      - name: Prune telemetry log (size limit)
+        if: always()
+        run: |
+          python - <<'PY'
+          import os
+          path = 'telemetry.jsonl'
+          max_lines = int(os.environ.get('AGI_EMBEDDING_MAX_LINES','5000'))
+          if os.path.exists(path):
+              with open(path,'r',encoding='utf-8') as f:
+                  lines = f.readlines()
+              if len(lines) > max_lines:
+                  with open(path,'w',encoding='utf-8') as f:
+                      f.writelines(lines[-max_lines:])
+                  print(f'Trimmed telemetry log to last {max_lines} lines')
+          PY
+      - name: Upload evaluation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agi-eval-artifacts
+          path: |
+            evaluation_output.json
+            baseline_kpis.json
+            telemetry.jsonl
+          retention-days: 7
