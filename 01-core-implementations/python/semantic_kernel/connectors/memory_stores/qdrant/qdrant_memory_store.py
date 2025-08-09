@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """
-import re
 Qdrant Memory Store module
 
 Copyright (c) 2025 Bryan Roe
@@ -17,10 +16,8 @@ License: MIT
 # Copyright (c) Microsoft. All rights reserved.
 
 import asyncio
-import logging
 import sys
 import uuid
-
 from numpy import ndarray
 from qdrant_client import QdrantClient
 from qdrant_client import models as qdrant_models
@@ -39,10 +36,11 @@ if sys.version_info >= (3, 13):
 else:
     from typing_extensions import deprecated
 
-logger: logging.Logger = logging.getLogger(__name__)
 
-
-@deprecated("This class will be removed in a future version. Use QdrantStore and Collection instead.")
+@deprecated(
+    "This class will be removed in a future version. "
+    "Use QdrantStore and Collection instead."
+)
 class QdrantMemoryStore(MemoryStoreBase):
     """QdrantMemoryStore."""
 
@@ -72,7 +70,8 @@ class QdrantMemoryStore(MemoryStoreBase):
         self._qdrantclient.recreate_collection(
             collection_name=collection_name,
             vectors_config=qdrant_models.VectorParams(
-                size=self._default_vector_size, distance=qdrant_models.Distance.COSINE
+                size=self._default_vector_size,
+                distance=qdrant_models.Distance.COSINE,
             ),
         )
 
@@ -83,11 +82,14 @@ class QdrantMemoryStore(MemoryStoreBase):
         collection_info = self._qdrantclient.get_collections()
         return [collection.name for collection in collection_info.collections]
 
-    async def get_collection(self, collection_name: str) -> qdrant_models.CollectionInfo:
+    async def get_collection(
+        self, collection_name: str
+    ) -> qdrant_models.CollectionInfo:
         """Gets the collection based upon collection name.
 
         Returns:
-            CollectionInfo -- Collection Information from Qdrant about collection.
+            CollectionInfo:
+                Collection Information from Qdrant about collection.
         """
         return self._qdrantclient.get_collection(collection_name=collection_name)
 
@@ -116,17 +118,17 @@ class QdrantMemoryStore(MemoryStoreBase):
         raise ServiceResponseException("Upsert failed")
 
     @override
-    async def upsert_batch(self, collection_name: str, records: list[MemoryRecord]) -> list[str]:
-        tasks = []
-        for record in records:
-            tasks.append(
+    async def upsert_batch(
+        self, collection_name: str, records: list[MemoryRecord]
+    ) -> list[str]:
+        data_to_upsert = await asyncio.gather(
+            *[
                 self._convert_from_memory_record(
-                    collection_name=collection_name,
-                    record=record,
+                    collection_name=collection_name, record=record
                 )
-            )
-
-        data_to_upsert = await asyncio.gather(*tasks)
+                for record in records
+            ]
+        )
 
         result = self._qdrantclient.upsert(
             collection_name=collection_name,
@@ -138,7 +140,12 @@ class QdrantMemoryStore(MemoryStoreBase):
         raise ServiceResponseException("Batch upsert failed")
 
     @override
-    async def get(self, collection_name: str, key: str, with_embedding: bool = False) -> MemoryRecord | None:
+    async def get(
+        self,
+        collection_name: str,
+        key: str,
+        with_embedding: bool = False,
+    ) -> MemoryRecord | None:
         result = await self._get_existing_record_by_payload_id(
             collection_name=collection_name,
             payload_id=key,
@@ -166,16 +173,16 @@ class QdrantMemoryStore(MemoryStoreBase):
         keys: list[str],
         with_embeddings: bool = False,
     ) -> list[MemoryRecord]:
-        tasks = []
-        for key in keys:
-            tasks.append(
+        return await asyncio.gather(
+            *[
                 self.get(
                     collection_name=collection_name,
                     key=key,
                     with_embedding=with_embeddings,
                 )
-            )
-        return await asyncio.gather(*tasks)
+                for key in keys
+            ]
+        )
 
     @override
     async def remove(self, collection_name: str, key: str) -> None:
@@ -187,28 +194,31 @@ class QdrantMemoryStore(MemoryStoreBase):
 
         if existing_record:
             pointId = existing_record.id
-            result = self._qdrantclient.delete(collection_name=collection_name, points_selector=[pointId])
+            result = self._qdrantclient.delete(
+                collection_name=collection_name,
+                points_selector=[pointId],
+            )
             if result.status != qdrant_models.UpdateStatus.COMPLETED:
                 raise ServiceResponseException("Delete failed")
 
     @override
     async def remove_batch(self, collection_name: str, keys: list[str]) -> None:
-        tasks = []
-        for key in keys:
-            tasks.append(
+        existing_records = await asyncio.gather(
+            *[
                 self._get_existing_record_by_payload_id(
                     collection_name=collection_name,
                     payload_id=key,
                     with_embedding=False,
                 )
-            )
+                for key in keys
+            ]
+        )
 
-        existing_records = await asyncio.gather(*tasks)
-
-        if len(existing_records) > 0:
+        records_to_delete = [record.id for record in existing_records if record]
+        if records_to_delete:
             result = self._qdrantclient.delete(
                 collection_name=collection_name,
-                points_selector=[record.id for record in existing_records],
+                points_selector=records_to_delete,
             )
             if result.status != qdrant_models.UpdateStatus.COMPLETED:
                 raise ServiceResponseException("Delete failed")
@@ -276,10 +286,12 @@ class QdrantMemoryStore(MemoryStoreBase):
         Args:
             collection_name (str): The name of the collection.
             payload_id (str): The payload id to search for.
-            with_embedding (bool): If true, the embedding will be returned in the memory records.
+            with_embedding (bool):
+                If true, the embedding will be returned in the memory records.
 
         Returns:
-            Optional[ScoredPoint]: The existing record if found; otherwise, None.
+            Optional[ScoredPoint]:
+                The existing record if found; otherwise, None.
         """
         filter = qdrant_models.Filter(
             must=[
@@ -306,18 +318,19 @@ class QdrantMemoryStore(MemoryStoreBase):
     async def _convert_from_memory_record(
         self, collection_name: str, record: MemoryRecord
     ) -> qdrant_models.PointStruct:
-        if record._key is not None and record._key != "":
+        if record._key:
             pointId = record._key
-
         else:
             existing_record = await self._get_existing_record_by_payload_id(
                 collection_name=collection_name,
                 payload_id=record._id,
             )
-
             pointId = str(existing_record.id) if existing_record else str(uuid.uuid4())
 
         payload = record.__dict__.copy()
         embedding = payload.pop("_embedding")
-
-        return qdrant_models.PointStruct(id=pointId, vector=embedding.tolist(), payload=payload)
+        return qdrant_models.PointStruct(
+            id=pointId,
+            vector=embedding.tolist(),
+            payload=payload,
+        )

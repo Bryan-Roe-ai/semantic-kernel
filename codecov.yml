@@ -1,0 +1,54 @@
+codecov:
+  require_ci_to_pass: true
+  notify:
+    after_n_builds: 3
+    wait_for_ci: true
+
+coverage:
+  precision: 2
+  round: down
+  range: 60..95
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 2%
+        informational: false
+      dotnet:
+        flags: [dotnet]
+        target: auto
+        threshold: 2%
+      python:
+        flags: [python]
+        target: auto
+        threshold: 2%
+      typescript:
+        flags: [typescript]
+        target: auto
+        threshold: 2%
+    patch:
+      default:
+        target: 75%
+        threshold: 5%
+        informational: false
+
+flags:
+  dotnet:
+    paths:
+      - 01-core-implementations/dotnet/
+  python:
+    paths:
+      - 01-core-implementations/python/
+  typescript:
+    paths:
+      - 01-core-implementations/typescript/
+
+ignore:
+  - docs/
+  - "**/*.md"
+  - "**/samples/**"
+  - "**/examples/**"
+
+comment:
+  layout: reach, diff, flags, files
+  behavior: default

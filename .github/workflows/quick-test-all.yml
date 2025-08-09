@@ -1,0 +1,217 @@
+name: Quick Test All
+
+on:
+  workflow_dispatch:
+    inputs:
+      fail_dotnet:
+        description: "Fail on .NET test failures"
+        required: false
+        default: "true"
+      fail_python:
+        description: "Fail on Python test failures"
+        required: false
+        default: "true"
+  pull_request:
+    paths:
+      - "**/*.cs"
+      - "semantic_kernel/**"
+      - ".github/workflows/quick-test-all.yml"
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_VERSION: "8.0.x"
+  PYTHON_VERSION: "3.11"
+  ENABLE_CODECOV: "${{ vars.ENABLE_CODECOV || 'false' }}"
+
+jobs:
+  dotnet-tests:
+    name: .NET Tests
+    runs-on: ubuntu-latest
+    outputs:
+      dn_cov: ${{ steps.extract.outputs.dn_cov }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore dotnet/SK-dotnet.sln
+
+      - name: Test (.NET) with coverage
+        id: test
+        run: |
+          set -e
+          dotnet test dotnet/SK-dotnet.sln \
+            -c Release \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=cobertura \
+            /p:CoverletOutput=./TestResults/coverage/
+        continue-on-error: ${{ inputs.fail_dotnet != 'true' }}
+
+      - name: Collect coverage files
+        run: |
+          mkdir -p artifacts/dotnet
+          find . -path "*TestResults*/coverage.cobertura.xml" -exec cp {} artifacts/dotnet/ \; || true
+
+      - name: Upload .NET coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+            name: dotnet-coverage
+            path: artifacts/dotnet
+
+      - name: Extract .NET line rate
+        id: extract
+        run: |
+          python - <<'PY'
+import glob, xml.etree.ElementTree as ET, sys
+paths = glob.glob("artifacts/dotnet/*.xml")
+tot_lines=tot_covered=0
+for p in paths:
+    try:
+        root=ET.parse(p).getroot()
+        for cls in root.findall(".//class"):
+            lines=int(cls.attrib.get("lines-valid","0"))
+            covered=int(cls.attrib.get("lines-covered","0"))
+            tot_lines += lines
+            tot_covered += covered
+    except Exception: pass
+rate = (tot_covered/tot_lines*100) if tot_lines else 0.0
+print(f"DN_COV={rate:.2f}")
+open(os.environ["GITHUB_OUTPUT"],"a").write(f"dn_cov={rate:.2f}\n")
+PY
+
+      - name: Fail if tests failed (enforced)
+        if: ${{ steps.test.outcome == 'failure' && inputs.fail_dotnet == 'true' }}
+        run: exit 1
+
+  python-tests:
+    name: Python Tests
+    runs-on: ubuntu-latest
+    outputs:
+      py_cov: ${{ steps.extract.outputs.py_cov }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Configure Poetry
+        run: |
+          poetry config virtualenvs-create true
+          poetry config virtualenvs-in-project true
+
+      - name: Install deps
+        run: poetry install --no-interaction --with test
+
+      - name: PyTest with coverage
+        id: test
+        run: |
+            poetry run pytest --maxfail=1 --disable-warnings \
+              --cov=semantic_kernel --cov-report=xml:coverage.xml
+        continue-on-error: ${{ inputs.fail_python != 'true' }}
+
+      - name: Upload Python coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-coverage
+          path: coverage.xml
+
+      - name: Extract Python line rate
+        id: extract
+        run: |
+          python - <<'PY'
+import xml.etree.ElementTree as ET, sys, os
+try:
+    root=ET.parse("coverage.xml").getroot()
+    lines=int(root.attrib.get("lines-valid","0"))
+    covered=int(root.attrib.get("lines-covered","0"))
+    rate = (covered/lines*100) if lines else 0
+except Exception:
+    rate = 0.0
+print(f"PY_COV={rate:.2f}")
+open(os.environ["GITHUB_OUTPUT"],"a").write(f"py_cov={rate:.2f}\n")
+PY
+
+      - name: Fail if tests failed (enforced)
+        if: ${{ steps.test.outcome == 'failure' && inputs.fail_python == 'true' }}
+        run: exit 1
+
+  combine-report:
+    name: Combine & Summary
+    needs: [dotnet-tests, python-tests]
+    runs-on: ubuntu-latest
+    env:
+      DN_COV: ${{ needs.dotnet-tests.outputs.dn_cov }}
+      PY_COV: ${{ needs.python-tests.outputs.py_cov }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: List artifacts
+        run: find artifacts -maxdepth 4 -type f -print
+
+      - name: Build combined coverage summary markdown
+        id: summary
+        run: |
+          echo "### Quick Test Coverage Summary" >> summary.md
+          echo "" >> summary.md
+          echo "| Language | Line Coverage (%) |" >> summary.md
+            echo "|----------|-------------------|" >> summary.md
+          if [ -n "${DN_COV}" ]; then echo "| .NET | ${DN_COV} |" >> summary.md; fi
+          if [ -n "${PY_COV}" ]; then echo "| Python | ${PY_COV} |" >> summary.md; fi
+          cat summary.md
+          echo "summary_path=summary.md" >> $GITHUB_OUTPUT
+
+      - name: Append to GitHub Step Summary
+        run: cat summary.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Badges (JSON)
+        run: |
+          mkdir -p badges
+          printf '{"schemaVersion":1,"label":".NET cov","message":"%s%%","color":"%s"}\n' \
+            "${DN_COV:-0.00}" "$( [ "${DN_COV%%.*}" -ge 80 ] && echo 'green' || echo 'yellow' )" > badges/coverage-dotnet.json
+          printf '{"schemaVersion":1,"label":"python cov","message":"%s%%","color":"%s"}\n' \
+            "${PY_COV:-0.00}" "$( [ "${PY_COV%%.*}" -ge 80 ] && echo 'green' || echo 'yellow' )" > badges/coverage-python.json
+          ls -1 badges
+
+      - name: Upload badges
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-badges
+          path: badges
+
+      - name: Upload summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-summary
+          path: summary.md
+
+      - name: Upload to Codecov
+        if: ${{ env.ENABLE_CODECOV == 'true' && secrets.CODECOV_TOKEN != '' }}
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: |
+            artifacts/python-coverage/coverage.xml
+            artifacts/dotnet-coverage/*.xml
+          flags: combined
+          fail_ci_if_error: false
+          verbose:
