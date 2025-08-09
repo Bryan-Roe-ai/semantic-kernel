@@ -47,59 +47,61 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      dotnet: ${{ steps.changes.outputs.dotnet }}
-      python: ${{ steps.changes.outputs.python }}
-      typescript: ${{ steps.changes.outputs.typescript }}
-      java: ${{ steps.changes.outputs.java }}
-      docs: ${{ steps.changes.outputs.docs }}
+      dotnet: ${{ steps.set.outputs.dotnet }}
+      python: ${{ steps.set.outputs.python }}
+      typescript: ${{ steps.set.outputs.typescript }}
+      java: ${{ steps.set.outputs.java }}
+      docs: ${{ steps.set.outputs.docs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
-      - name: Detect changes
-        id: changes
+          fetch-depth: 0
+      - name: Filter paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            dotnet:
+              - '01-core-implementations/dotnet/**'
+              - '**/Directory.Build.*'
+              - '**/Directory.Packages.props'
+              - '**/*.csproj'
+            python:
+              - '01-core-implementations/python/**'
+              - '**/pyproject.toml'
+              - '**/poetry.lock'
+            typescript:
+              - '01-core-implementations/typescript/**'
+              - '**/package.json'
+              - '**/package-lock.json'
+            java:
+              - '01-core-implementations/java/**'
+              - '**/pom.xml'
+              - '**/build.gradle'
+            docs:
+              - 'docs/**'
+              - '**/*.md'
+      - name: Set outputs
+        id: set
+        env:
+          DOTNET_CHANGED: ${{ steps.filter.outputs.dotnet }}
+          PY_CHANGED: ${{ steps.filter.outputs.python }}
+          TS_CHANGED: ${{ steps.filter.outputs.typescript }}
+          JAVA_CHANGED: ${{ steps.filter.outputs.java }}
+          DOCS_CHANGED: ${{ steps.filter.outputs.docs }}
         run: |
-          # Check for .NET changes
-          if git diff --name-only HEAD~1 HEAD | grep -E '(01-core-implementations/dotnet/|\.csproj$|Directory\.Build\.|Directory\.Packages\.props)' > /dev/null; then
-            echo "dotnet=true" >> $GITHUB_OUTPUT
-          else
-            echo "dotnet=false" >> $GITHUB_OUTPUT
-          fi
-
-          # Check for Python changes
-          if git diff --name-only HEAD~1 HEAD | grep -E '(01-core-implementations/python/|pyproject\.toml$|poetry\.lock$)' > /dev/null; then
-            echo "python=true" >> $GITHUB_OUTPUT
-          else
-            echo "python=false" >> $GITHUB_OUTPUT
-          fi
-
-          # Check for TypeScript changes
-          if git diff --name-only HEAD~1 HEAD | grep -E '(01-core-implementations/typescript/|package\.json$|package-lock\.json$)' > /dev/null; then
-            echo "typescript=true" >> $GITHUB_OUTPUT
-          else
-            echo "typescript=false" >> $GITHUB_OUTPUT
-          fi
-
-          # Check for Java changes
-          if git diff --name-only HEAD~1 HEAD | grep -E '(01-core-implementations/java/|pom\.xml$|build\.gradle$)' > /dev/null; then
-            echo "java=true" >> $GITHUB_OUTPUT
-          else
-            echo "java=false" >> $GITHUB_OUTPUT
-          fi
-
-          # Check for docs changes
-          if git diff --name-only HEAD~1 HEAD | grep -E '(docs/|\.md$)' > /dev/null; then
-            echo "docs=true" >> $GITHUB_OUTPUT
-          else
-            echo "docs=false" >> $GITHUB_OUTPUT
-          fi
+          echo "dotnet=$DOTNET_CHANGED" >> $GITHUB_OUTPUT
+          echo "python=$PY_CHANGED" >> $GITHUB_OUTPUT
+          echo "typescript=$TS_CHANGED" >> $GITHUB_OUTPUT
+          echo "java=$JAVA_CHANGED" >> $GITHUB_OUTPUT
+          echo "docs=$DOCS_CHANGED" >> $GITHUB_OUTPUT
 
   dotnet-test:
     name: 🔷 .NET Tests
     runs-on: ${{ matrix.os }}
     needs: detect-changes
-    if: needs.detect-changes.outputs.dotnet == 'true'
+    if: ${{ needs.detect-changes.outputs.dotnet == 'true' && (github.event_name != 'pull_request' || (github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.configuration == 'Release')) }}
     strategy:
       fail-fast: false
       matrix:
@@ -177,7 +179,7 @@ jobs:
     name: 🐍 Python Tests
     runs-on: ${{ matrix.os }}
     needs: detect-changes
-    if: needs.detect-changes.outputs.python == 'true'
+    if: ${{ needs.detect-changes.outputs.python == 'true' && (github.event_name != 'pull_request' || (github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11')) }}
     strategy:
       fail-fast: false
       matrix:
@@ -248,7 +250,7 @@ jobs:
     name: 📘 TypeScript Tests
     runs-on: ${{ matrix.os }}
     needs: detect-changes
-    if: needs.detect-changes.outputs.typescript == 'true'
+    if: ${{ needs.detect-changes.outputs.typescript == 'true' && (github.event_name != 'pull_request' || (github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.node-version == '20')) }}
     strategy:
       fail-fast: false
       matrix:
@@ -357,7 +359,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        # TODO(pin): Replace version pin with commit SHA for defense-in-depth
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           scan-type: "fs"
           scan-ref: "."
