@@ -1,5 +1,13 @@
 name: 🚀 Enhanced CI/CD Pipeline
 
+concurrency:
+  group: enhanced-ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read
+  pull-requests: read
+
 # This workflow provides comprehensive CI/CD for the Semantic Kernel project
 # It includes testing, security scanning, performance benchmarks, and automated releases
 #
@@ -137,13 +145,11 @@ jobs:
             --verbosity normal
 
       - name: Upload Coverage to Codecov
-        if: ${{ env.ENABLE_CODECOV == 'true' && env.CODECOV_TOKEN != '' }}
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        if: ${{ secrets.CODECOV_TOKEN != '' }}
         uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
-          token: ${{ env.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./TestResults/**/coverage.cobertura.xml
           flags: dotnet-${{ matrix.os }}-${{ matrix.configuration }}
           name: dotnet-coverage
@@ -220,13 +226,11 @@ jobs:
             --durations=10 \
             --timeout=300
       - name: Upload Coverage to Codecov
-        if: ${{ env.ENABLE_CODECOV == 'true' && env.CODECOV_TOKEN != '' }}
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        if: ${{ secrets.CODECOV_TOKEN != '' }}
         uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
-          token: ${{ env.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./01-core-implementations/python/coverage.xml
           flags: python-${{ matrix.os }}-${{ matrix.python-version }}
           name: python-coverage
@@ -276,13 +280,11 @@ jobs:
           cd 01-core-implementations/typescript
           npm run test:coverage
       - name: Upload Coverage to Codecov
-        if: ${{ env.ENABLE_CODECOV == 'true' && env.CODECOV_TOKEN != '' }}
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        if: ${{ secrets.CODECOV_TOKEN != '' }}
         uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
-          token: ${{ env.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: ./01-core-implementations/typescript/coverage/lcov.info
           flags: typescript-${{ matrix.os }}-${{ matrix.node-version }}
           name: typescript-coverage

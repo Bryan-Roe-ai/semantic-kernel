@@ -1,0 +1,39 @@
+name: Feature Request
+description: Suggest an idea or improvement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Provide context and concrete value the feature brings.
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      placeholder: Add memory store for XYZ
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem / Motivation
+      description: What problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed Solution
+      description: Outline APIs, configuration, or behavior.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues / discussions
+          required: true
+        - label: I am willing to contribute implementation

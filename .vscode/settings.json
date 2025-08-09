@@ -66,7 +66,6 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true
   },
-  // "cSpell.words" moved or removed due to unknown configuration setting
   "emeraldwalk.runonsave": {
     "commands": [
       {
@@ -91,7 +90,7 @@
   "C_Cpp_Runner.debuggerPath": "gdb",
   "C_Cpp_Runner.cStandard": "",
   "C_Cpp_Runner.cppStandard": "",
-  "C_Cpp_Runner.msvcBatchPath": "C:/Program Files/Microsoft Visual Studio/VR_NR/Community/VC/Auxiliary/Build/vcvarsall.bat",
+  "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.useMsvc": false,
   "C_Cpp_Runner.warnings": [
     "-Wall",
@@ -313,5 +312,7 @@
   "continue.manuallyTriggerCompletion": false,
   "[clojure]": {
     "editor.defaultFormatter": "betterthantomorrow.calva"
-  }
+  },
+  "C_Cpp_Runner.cCompilerPath": "gcc",
+  "C_Cpp_Runner.cppCompilerPath": "g++"
 }
