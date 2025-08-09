@@ -1,0 +1,48 @@
+name: Multi Agent Sample CI
+
+on:
+  push:
+    paths:
+      - "multi_agent_sample/**"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "multi_agent_sample/**"
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        working-directory: multi_agent_sample/python
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[dev]
+      - name: Lint & Type Check
+        working-directory: multi_agent_sample/python
+        run: |
+          ruff check src
+          mypy src
+      - name: Tests
+        working-directory: multi_agent_sample/python
+        run: pytest -q
+
+  dotnet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Build
+        working-directory: multi_agent_sample/dotnet
+        run: dotnet build --nologo
+      - name: Test
+        working-directory: multi_agent_sample/dotnet
+        run: dotnet test --nologo --verbosity minimal

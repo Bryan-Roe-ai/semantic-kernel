@@ -1,0 +1,40 @@
+name: Repository Structure Validation
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run structure validator
+        run: |
+          python tools/quality/validate_structure.py --json > structure_report.json || true
+
+      - name: Upload structure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: structure-report
+          path: structure_report.json
+
+      - name: Human-readable summary
+        run: |
+          python tools/quality/validate_structure.py > structure_summary.txt || true
+          cat structure_summary.txt
+
+      - name: Upload summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: structure-summary
+          path: structure_summary.txt
