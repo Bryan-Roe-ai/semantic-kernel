@@ -17,7 +17,7 @@ if [ ! -d "/workspaces/semantic-kernel/venv" ]; then
     echo "📦 Setting up Python virtual environment..."
     python3.12 -m venv /workspaces/semantic-kernel/venv
     source /workspaces/semantic-kernel/venv/bin/activate
-    
+
     if [ -f "/workspaces/semantic-kernel/requirements.txt" ]; then
         echo "📥 Installing Python dependencies..."
         pip install --upgrade pip

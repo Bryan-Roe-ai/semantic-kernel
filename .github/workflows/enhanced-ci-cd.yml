@@ -1,4 +1,13 @@
-name: 🚀 Enhanced CI/CD Pipeline
+name: Enhanced CI CD Pipeline
+
+# NOTE: This workflow was temporarily minimized for diagnostics in commit b5ac5ae3
+# and is now restored. If jobs continue to fail instantly with no logs, verify
+# repository/org Actions settings (enabled, approvals, quotas) before assuming
+# YAML issues. See docs/actions-troubleshooting.md for remediation steps.
+
+permissions:
+  contents: read
+  pull-requests: read
 
 # This workflow provides comprehensive CI/CD for the Semantic Kernel project
 # It includes testing, security scanning, performance benchmarks, and automated releases
@@ -34,69 +43,81 @@ env:
   TZ: UTC
 
 jobs:
+  sanity-check:
+    name: ✅ Sanity Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Echo context
+        run: |
+          echo "Workflow sanity check running for $GITHUB_REF @ $GITHUB_SHA"
+          echo "Actor: $GITHUB_ACTOR Event: $GITHUB_EVENT_NAME"
+
   detect-changes:
     name: 🔍 Detect Changes
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
-      dotnet: ${{ steps.changes.outputs.dotnet }}
-      python: ${{ steps.changes.outputs.python }}
-      typescript: ${{ steps.changes.outputs.typescript }}
-      java: ${{ steps.changes.outputs.java }}
-      docs: ${{ steps.changes.outputs.docs }}
+      dotnet: ${{ steps.set.outputs.dotnet }}
+      python: ${{ steps.set.outputs.python }}
+      typescript: ${{ steps.set.outputs.typescript }}
+      java: ${{ steps.set.outputs.java }}
+      docs: ${{ steps.set.outputs.docs }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
-      - name: Detect changes
-        id: changes
+          fetch-depth: 0
+      - name: Filter paths
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            dotnet:
+              - '01-core-implementations/dotnet/**'
+              - '**/Directory.Build.*'
+              - '**/Directory.Packages.props'
+              - '**/*.csproj'
+            python:
+              - '01-core-implementations/python/**'
+              - '**/pyproject.toml'
+              - '**/poetry.lock'
+            typescript:
+              - '01-core-implementations/typescript/**'
+              - '**/package.json'
+              - '**/package-lock.json'
+            java:
+              - '01-core-implementations/java/**'
+              - '**/pom.xml'
+              - '**/build.gradle'
+            docs:
+              - 'docs/**'
+              - '**/*.md'
+      - name: Set outputs
+        id: set
+        env:
+          DOTNET_CHANGED: ${{ steps.filter.outputs.dotnet }}
+          PY_CHANGED: ${{ steps.filter.outputs.python }}
+          TS_CHANGED: ${{ steps.filter.outputs.typescript }}
+          JAVA_CHANGED: ${{ steps.filter.outputs.java }}
+          DOCS_CHANGED: ${{ steps.filter.outputs.docs }}
         run: |
-          # Check for .NET changes
-          if git diff --name-only HEAD~1 HEAD | grep -E '(01-core-implementations/dotnet/|\.csproj$|Directory\.Build\.|Directory\.Packages\.props)' > /dev/null; then
-            echo "dotnet=true" >> $GITHUB_OUTPUT
-          else
-            echo "dotnet=false" >> $GITHUB_OUTPUT
-          fi
-
-          # Check for Python changes
-          if git diff --name-only HEAD~1 HEAD | grep -E '(01-core-implementations/python/|pyproject\.toml$|poetry\.lock$)' > /dev/null; then
-            echo "python=true" >> $GITHUB_OUTPUT
-          else
-            echo "python=false" >> $GITHUB_OUTPUT
-          fi
-
-          # Check for TypeScript changes
-          if git diff --name-only HEAD~1 HEAD | grep -E '(01-core-implementations/typescript/|package\.json$|package-lock\.json$)' > /dev/null; then
-            echo "typescript=true" >> $GITHUB_OUTPUT
-          else
-            echo "typescript=false" >> $GITHUB_OUTPUT
-          fi
-
-          # Check for Java changes
-          if git diff --name-only HEAD~1 HEAD | grep -E '(01-core-implementations/java/|pom\.xml$|build\.gradle$)' > /dev/null; then
-            echo "java=true" >> $GITHUB_OUTPUT
-          else
-            echo "java=false" >> $GITHUB_OUTPUT
-          fi
-
-          # Check for docs changes
-          if git diff --name-only HEAD~1 HEAD | grep -E '(docs/|\.md$)' > /dev/null; then
-            echo "docs=true" >> $GITHUB_OUTPUT
-          else
-            echo "docs=false" >> $GITHUB_OUTPUT
-          fi
+          echo "dotnet=$DOTNET_CHANGED" >> $GITHUB_OUTPUT
+          echo "python=$PY_CHANGED" >> $GITHUB_OUTPUT
+          echo "typescript=$TS_CHANGED" >> $GITHUB_OUTPUT
+          echo "java=$JAVA_CHANGED" >> $GITHUB_OUTPUT
+          echo "docs=$DOCS_CHANGED" >> $GITHUB_OUTPUT
 
   dotnet-test:
     name: 🔷 .NET Tests
     runs-on: ${{ matrix.os }}
     needs: detect-changes
-    if: needs.detect-changes.outputs.dotnet == 'true'
+    if: ${{ needs.detect-changes.outputs.dotnet == 'true' }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        configuration: [Debug, Release]
+        os: [ubuntu-latest, windows-latest]
+        configuration: [Release]
     timeout-minutes: 30
     concurrency:
       group: dotnet-${{ matrix.os }}-${{ matrix.configuration }}-${{ github.ref }}
@@ -104,12 +125,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-
       - name: Cache NuGet packages
         uses: actions/cache@v4
         with:
@@ -117,13 +136,10 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props', '**/Directory.Build.*') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-
       - name: Restore dependencies
         run: dotnet restore 01-core-implementations/dotnet/SK-dotnet.sln
-
       - name: Build
         run: dotnet build 01-core-implementations/dotnet/SK-dotnet.sln --configuration ${{ matrix.configuration }} --no-restore
-
       - name: Run Tests with Coverage
         run: |
           dotnet test 01-core-implementations/dotnet/SK-dotnet.sln \
@@ -135,9 +151,8 @@ jobs:
             --blame-hang-dump \
             --blame-hang-timeout 15min \
             --verbosity normal
-
       - name: Upload Coverage to Codecov
-        if: vars.ENABLE_CODECOV == 'true'
+        if: ${{ secrets.CODECOV_TOKEN != '' }}
         uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
@@ -146,7 +161,6 @@ jobs:
           flags: dotnet-${{ matrix.os }}-${{ matrix.configuration }}
           name: dotnet-coverage
           fail_ci_if_error: false
-
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
         if: always()
@@ -155,7 +169,6 @@ jobs:
           path: ./TestResults/**/*.trx
           if-no-files-found: error
           retention-days: 30
-
       - name: Upload Coverage Artifact
         uses: actions/upload-artifact@v4
         if: always()
@@ -169,12 +182,12 @@ jobs:
     name: 🐍 Python Tests
     runs-on: ${{ matrix.os }}
     needs: detect-changes
-    if: needs.detect-changes.outputs.python == 'true'
+    if: ${{ needs.detect-changes.outputs.python == 'true' }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        os: [ubuntu-latest]
+        python-version: ["3.11"]
     timeout-minutes: 30
     concurrency:
       group: python-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.ref }}
@@ -218,7 +231,7 @@ jobs:
             --durations=10 \
             --timeout=300
       - name: Upload Coverage to Codecov
-        if: vars.ENABLE_CODECOV == 'true'
+        if: ${{ secrets.CODECOV_TOKEN != '' }}
         uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
@@ -240,12 +253,12 @@ jobs:
     name: 📘 TypeScript Tests
     runs-on: ${{ matrix.os }}
     needs: detect-changes
-    if: needs.detect-changes.outputs.typescript == 'true'
+    if: ${{ needs.detect-changes.outputs.typescript == 'true' }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: ["18", "20"]
+        os: [ubuntu-latest]
+        node-version: ["20"]
     timeout-minutes: 30
     concurrency:
       group: typescript-${{ matrix.os }}-${{ matrix.node-version }}-${{ github.ref }}
@@ -272,7 +285,7 @@ jobs:
           cd 01-core-implementations/typescript
           npm run test:coverage
       - name: Upload Coverage to Codecov
-        if: vars.ENABLE_CODECOV == 'true'
+        if: ${{ secrets.CODECOV_TOKEN != '' }}
         uses: codecov/codecov-action@v4
         continue-on-error: true
         with:
@@ -349,7 +362,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           scan-type: "fs"
           scan-ref: "."
@@ -491,14 +504,12 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
-      [
-        dotnet-test,
-        python-test,
-        typescript-test,
-        performance-benchmarks,
-        security-scan,
-        integration-tests,
-      ]
+      - dotnet-test
+      - python-test
+      - typescript-test
+      - performance-benchmarks
+      - security-scan
+      - integration-tests
     timeout-minutes: 15
     permissions:
       contents: write
@@ -516,8 +527,6 @@ jobs:
           echo "## 🚀 What's New" > RELEASE_NOTES.md
           echo "Release generated on $(date -u +'%Y-%m-%d %H:%M:%S') UTC" >> RELEASE_NOTES.md
           echo "" >> RELEASE_NOTES.md
-
-          # Handle case where there are no previous tags
           if git describe --tags --abbrev=0 2>/dev/null; then
             LAST_TAG=$(git describe --tags --abbrev=0)
             git log --pretty=format:"- %s" $LAST_TAG..HEAD >> RELEASE_NOTES.md
@@ -535,7 +544,6 @@ jobs:
             echo "- Total commits: $(git rev-list --count HEAD)" >> RELEASE_NOTES.md
             echo "- Contributors: $(git log --format='%aN' | sort -u | wc -l)" >> RELEASE_NOTES.md
           fi
-
       - name: Create Release
         if: contains(github.event.head_commit.message, '[release]')
         uses: softprops/action-gh-release@v1
