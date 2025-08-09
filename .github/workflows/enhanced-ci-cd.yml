@@ -1,8 +1,4 @@
-name: 🚀 Enhanced CI/CD Pipeline
-
-concurrency:
-  group: enhanced-ci-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+name: Enhanced CI CD Pipeline
 
 permissions:
   contents: read
@@ -42,6 +38,16 @@ env:
   TZ: UTC
 
 jobs:
+  sanity-check:
+    name: ✅ Sanity Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Echo context
+        run: |
+          echo "Workflow sanity check running for $GITHUB_REF @ $GITHUB_SHA"
+          echo "Actor: $GITHUB_ACTOR Event: $GITHUB_EVENT_NAME"
+
   detect-changes:
     name: 🔍 Detect Changes
     runs-on: ubuntu-latest
