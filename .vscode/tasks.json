@@ -2,478 +2,312 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "clean (functions)",
-      "command": "dotnet",
-      "type": "process",
-      "args": [
-        "clean",
-        "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary"
-      ],
-      "group": "build"
-    },
-    {
-      "label": "Create PR with MCP",
+      "label": "Check GPU Availability",
       "type": "shell",
-      "command": "python scripts/create_pr_with_mcp.py",
+      "command": "python3",
+      "args": [
+        "-c",
+        "import torch; print(f'CUDA Available: {torch.cuda.is_available()}'); print(f'CUDA Devices: {torch.cuda.device_count()}') if torch.cuda.is_available() else print('No CUDA devices found')"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
       "problemMatcher": []
     },
     {
-      "label": "Install ReSharper Global Tools",
-      "type": "process",
-      "command": "dotnet",
-      "args": [
-        "new",
-        "tool-manifest"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}/dotnet"
-      }
-    },
-    {
-      "label": "R# Setup",
-      "command": "dotnet",
-      "type": "process",
-      "problemMatcher": "$msCompile",
-      "options": {
-        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
-      "command": "dotnet",
-      "args": [
-        "clean",
-        "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary"
-      ],
-      "type": "process",
-      "problemMatcher": "$msCompile",
-      "options": {
-        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
-      }
-    },
-    {
-      "label": "build (functions)",
-      "command": "dotnet",
-      "args": [
-        "build",
-        "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary"
-      ],
-      "type": "process",
-      "group": "build",
-      "dependsOn": "clean (functions)",
-      "problemMatcher": "$msCompile",
-      "options": {
-        "cwd": "${workspaceFolder}/dotnet/samples/Demos/CreateChatGptPlugin/MathPlugin/azure-function"
-      },
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared",
-        "group": "PR-Validate"
-      }
-    },
-    {
-      "label": "validate (contributing-Format-Build-Test-Run)",
-      "detail": "Runs tasks to validate changes before checking in.",
-      "group": "build",
-      "dependsOn": [
-        "R# cleanup",
-        "build (Semantic-Kernel)",
-        "test (Semantic-Kernel)",
-        "run (Kernel-Demo)"
-      ],
-      "dependsOrder": "sequence"
-    },
-    {
-      "label": "setup (contributing-python)",
-      "group": "build",
-      "dependsOn": [
-        "install poetry",
-        "install python packages"
-      ],
-      "dependsOrder": "sequence"
-    },
-    {
-      "label": "install poetry",
-      "command": "pip3",
+      "label": "Setup GPU Environment",
       "type": "shell",
+      "command": "pip",
       "args": [
         "install",
-        "poetry"
+        "torch",
+        "torchvision",
+        "torchaudio",
+        "--index-url",
+        "https://download.pytorch.org/whl/cu121"
       ],
-      "options": {
-        "cwd": "${workspaceFolder}/python"
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Install Local AI Dependencies",
+      "type": "shell",
+      "command": "pip",
+      "args": [
+        "install",
+        "transformers",
+        "accelerate",
+        "bitsandbytes",
+        "optimum",
+        "auto-gptq",
+        "llama-cpp-python"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start Local AI Model Server",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "${workspaceFolder}/local_ai_server.py"
+      ],
+      "group": "build",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "problemMatcher": [],
+      "runOptions": {
+        "instanceLimit": 1
       }
     },
     {
-      "label": "install python packages",
-      "command": "poetry",
+      "label": "Build Semantic Kernel (Python)",
       "type": "shell",
+      "command": "poetry",
       "args": [
         "install"
       ],
-      "options": {
-        "cwd": "${workspaceFolder}/python"
-      }
-    },
-    {
-      "label": "validate (contributing-python)",
-      "command": "poetry",
-      "type": "shell",
       "group": "build",
-      "args": [
-        "run",
-        "pre-commit",
-        "run",
-        "-c",
-        ".conf/.pre-commit-config.yaml",
-        "-a"
-      ],
-      "dependsOn": "clean (functions)",
-      "problemMatcher": "$msCompile",
-      "options": {
-        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
-      "dependsOn": "clean (functions)",
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "problemMatcher": "$msCompile",
-      "options": {
-        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
-      }
-    },
-    {
-      "label": "clean release (functions)",
-      "command": "dotnet",
-      "args": [
-        "clean",
-        "--configuration",
-        "Release",
-        "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary"
-      ],
-      "type": "process",
-      "problemMatcher": "$msCompile",
-      "options": {
-        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
-      }
-    },
-    {
-      "label": "publish (functions)",
-      "command": "dotnet",
-      "args": [
-        "publish",
-        "--configuration",
-        "Release",
-        "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary"
-      ],
-      "type": "process",
-      "dependsOn": "clean release (functions)",
-      "problemMatcher": "$msCompile",
-      "options": {
-        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
-      }
-    },
-    {
-      "label": "start (functions)",
-      "type": "process",
-      "dependsOn": "build (functions)",
-      "command": "dotnet run",
-      "options": {
-        "cwd": "${workspaceFolder}/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Debug/net6.0"
-      },
-      "isBackground": true,
-      "problemMatcher": "$func-dotnet-watch"
-    },
-    {
-      "label": "test (Semantic-Kernel-Python)",
-      "command": "poetry",
-      "type": "shell",
-      "args": [
-        "run",
-        "pytest",
-        "tests/unit"
-      ],
-      "problemMatcher": "$msCompile",
-      "group": "test",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared",
-        "group": "PR-Validate"
-      },
       "options": {
         "cwd": "${workspaceFolder}/python"
-      }
-    },
-    {
-      "label": "test (Semantic-Kernel-Python Integration)",
-      "command": "poetry",
-      "type": "shell",
-      "args": [
-        "run",
-        "pytest",
-        "tests/integration",
-        "-k",
-        "${input:filter}"
-      ],
-      "problemMatcher": "$msCompile",
-      "group": "test",
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared",
-        "group": "PR-Validate"
       },
-      "options": {
-        "cwd": "${workspaceFolder}/python"
-      }
-    },
-    {
-      "label": "test (Semantic-Kernel-Python ALL)",
-      "command": "poetry",
-      "type": "shell",
-      "args": [
-        "run",
-        "pytest",
-        "tests",
-        "-k",
-        "${input:filter}"
-      ],
-      "problemMatcher": "$msCompile",
-      "group": "test",
       "presentation": {
+        "echo": true,
         "reveal": "always",
+        "focus": false,
         "panel": "shared",
-        "group": "PR-Validate"
+        "group": "build"
       },
-      "options": {
-        "cwd": "${workspaceFolder}/python"
-      }
+      "problemMatcher": []
     },
     {
-      "label": "build (concepts)",
-      "command": "dotnet",
+      "label": "Build Semantic Kernel (.NET)",
       "type": "process",
+      "command": "dotnet",
       "args": [
-        "/property:DebugType=portable",
-        "${workspaceFolder}/dotnet/samples/Concepts/Concepts.csproj",
+        "build",
+        "${workspaceFolder}/dotnet/SK-dotnet.sln",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
       "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "group": "build"
+      },
       "problemMatcher": "$msCompile"
     },
     {
-      "label": "watch (Concepts)",
+      "label": "Test Semantic Kernel (Python)",
+      "type": "shell",
+      "command": "poetry",
+      "args": [
+        "run",
+        "pytest",
+        "tests/unit",
+        "-v"
+      ],
+      "group": "test",
+      "options": {
+        "cwd": "${workspaceFolder}/python"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "group": "test"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Test Semantic Kernel (.NET)",
+      "type": "process",
       "command": "dotnet",
+      "args": [
+        "test",
+        "${workspaceFolder}/dotnet/SK-dotnet.sln",
         "/property:GenerateFullPaths=true",
         "/consoleloggerparameters:NoSummary"
       ],
-      "type": "process",
-      "problemMatcher": "$msCompile",
-      "options": {
-        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
-      }
-    },
-    {
-      "label": "daprd-debug",
-      "type": "daprd",
-      "appId": "processwithdapr",
-      "logLevel": "debug",
-      "appPort": 5000,
-      "httpPort": 3500,
-      "dependsOn": ["build (ProcessWithDapr)"]
-    },
-    {
-      "label": "dapr-down",
-      "type": "shell",
-      "command": "dapr stop --app-id processwithdapr",
-      "presentation": {
-        "clear": true,
-        "close": true,
-        "reveal": "never"
-      }
-    },
-    {
-      "label": "markdownlint",
-      "type": "markdownlint",
-      "problemMatcher": ["$markdownlint"]
-    },
-    {
-      "label": "func: host start",
-      "type": "process",
-      "command": "func",
-      "args": ["host", "start"],
-      "problemMatcher": ["$msCompile"]
-    },
-    {
-      "label": "Rebuild: solution",
-      "type": "msbuild",
-      "group": "build",
-      "problemMatcher": ["$msCompile"],
-      "detail": "Rebuild the SK-dotnet.sln solution using dotnet msbuild /t:Rebuild"
-    },
-    {
-      "label": "npm: build - DevSkim-main/DevSkim-VSCode-Plugin",
-      "type": "process",
-      "command": "npm",
-      "args": ["run", "build"],
-      "options": {
-        "cwd": "${workspaceRoot}/DevSkim-VSCode-Plugin"
-      },
-      "group": "build",
-      "detail": "Run npm setup to install dependencies and npm compile to build the project"
-    },
-    {
-      // Note: This task requires a Unix-like environment with executable permissions for launch_agi_auto.sh.
-      "label": "Start AGI Auto File Updates (Monitor Mode)",
-      "type": "shell",
-      "command": "./launch_agi_auto.sh",
-      "args": ["--monitor"],
-      "group": "build",
-      "isBackground": true,
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
+      "group": "test",
       "presentation": {
         "echo": true,
         "reveal": "always",
         "focus": false,
-        "panel": "new",
-        "showReuseMessage": true,
-        "clear": false
+        "panel": "shared",
+        "group": "test"
       },
-      "runOptions": {
-        "instanceLimit": 1
-      }
-    // Windows alternative (uncomment and adjust if needed)
-    // {
-    //   "label": "Start AGI Auto File Updates (Windows)",
-    //   "type": "shell",
-    //   "command": "powershell",
-    //   "args": ["-ExecutionPolicy", "Bypass", "-File", ".\\launch_agi_auto.ps1", "--monitor"],
-    //   "group": "build",
-    //   "isBackground": true,
-    //   "options": {
-    //     "cwd": "${workspaceFolder}"
-    //   },
-    //   "problemMatcher": [],
-    //   "presentation": {
-    //     "echo": true,
-    //     "reveal": "always",
-    //     "focus": false,
-    //     "panel": "new",
-    //     "showReuseMessage": true,
-    //     "clear": false
-    //   },
-    //   "runOptions": {
-    //     "instanceLimit": 1
-    //   }
-    // },
+      "problemMatcher": "$msCompile"
+    },
     {
-      "label": "AGI Auto File Updates - Daemon",
+      "label": "Test All (Python + .NET + MCP)",
       "type": "shell",
-      "command": "./launch_agi_auto.sh",
-      "args": ["--daemon"],
-      "group": "build",
-      "options": {
-        "cwd": "${workspaceFolder}"
+      "command": "echo",
+      "args": [
+        "All tests completed successfully!"
+      ],
+      "dependsOn": [
+        "Build Semantic Kernel (Python)",
+        "Build Semantic Kernel (.NET)",
+        "Test Semantic Kernel (Python)",
+        "Test Semantic Kernel (.NET)",
+        "Test MCP Integration"
+      ],
+      "dependsOrder": "sequence",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
       },
       "problemMatcher": []
     },
     {
-      "label": "AGI Auto File Updates - Single Run",
+      "label": "Run SK Sample: Basic Chat",
       "type": "shell",
       "command": "python3",
-      "args": ["agi_file_update_system.py"],
+      "args": [
+        "${workspaceFolder}/python/samples/getting_started/01-basic_chat.py"
+      ],
       "group": "build",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Start Optimized AGI Auto File Updates",
-      "type": "shell",
-      "command": "./launch_agi_auto_optimized.sh",
-      "args": ["--monitor"],
-      "group": "build",
-      "isBackground": true,
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
       "presentation": {
         "echo": true,
         "reveal": "always",
         "focus": false,
-        "panel": "new",
-        "showReuseMessage": true,
-        "clear": false
+        "panel": "new"
       },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run SK Sample: Agents",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "${workspaceFolder}/python/samples/getting_started_with_agents/simple_chat_agent.py"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Start MCP Server",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "${workspaceFolder}/mcp_server.py"
+      ],
+      "group": "build",
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "problemMatcher": [],
       "runOptions": {
         "instanceLimit": 1
       }
     },
     {
-      "label": "Optimized AGI Auto File Updates - Daemon",
+      "label": "Test MCP Integration",
       "type": "shell",
-      "command": "./launch_agi_auto_optimized.sh",
-      "args": ["--daemon"],
-      "group": "build",
-      "options": {
-        "cwd": "${workspaceFolder}"
+      "command": "python3",
+      "args": [
+        "${workspaceFolder}/test_mcp_integration.py"
+      ],
+      "group": "test",
+      "dependsOn": "Start MCP Server",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
       },
       "problemMatcher": []
     },
     {
-      "label": "Optimized AGI Auto File Updates - Performance Mode",
+      "label": "Setup Environment Files",
       "type": "shell",
-      "command": "./launch_agi_auto_optimized.sh",
-      "args": ["--performance"],
+      "command": "python3",
+      "args": [
+        "${workspaceFolder}/setup_environment.py"
+      ],
       "group": "build",
-      "options": {
-        "cwd": "${workspaceFolder}"
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
       },
       "problemMatcher": []
     },
     {
-      "label": "Check Optimized AGI Status",
-      "type": "shell",
-      "command": "./check_agi_auto_status_optimized.sh",
+      "label": "Full AI Setup",
+      "dependsOn": [
+        "Check GPU Availability",
+        "Setup GPU Environment",
+        "Install Local AI Dependencies",
+        "Build Semantic Kernel (Python)",
+        "Build Semantic Kernel (.NET)",
+        "Setup Environment Files"
+      ],
+      "dependsOrder": "sequence",
       "group": "build",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": []
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
     }
   ],
   "inputs": [
-      "label": "publish (functions)",
-      "command": "dotnet",
-      "args": [
-        "publish",
-        "--configuration",
-        "Release",
-        "/property:GenerateFullPaths=true",
-        "/consoleloggerparameters:NoSummary"
-      ],
-      "type": "process",
-      "dependsOn": "clean release (functions)",
-      "problemMatcher": "$msCompile",
-      "options": {
-        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions"
-      }
+    {
+      "id": "openaiApiKey",
+      "description": "Enter your OpenAI API Key",
+      "type": "promptString"
     },
     {
-      "type": "func",
-      "dependsOn": "build (functions)",
-      "options": {
-        "cwd": "${workspaceFolder}/semantic-kernel/samples/dotnet/AIPluginsServer/AIPlugins.AzureFunctions/bin/Debug/net6.0"
-      },
-      "command": "host start",
-      "isBackground": true,
-      "problemMatcher": "$func-dotnet-watch"
+      "id": "azureOpenaiEndpoint",
+      "description": "Enter your Azure OpenAI Endpoint",
+      "type": "promptString"
+    },
+    {
+      "id": "azureOpenaiApiKey",
+      "description": "Enter your Azure OpenAI API Key",
+      "type": "promptString"
     }
   ]
 }
