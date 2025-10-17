@@ -49,7 +49,7 @@
       "name": "C#: HuggingFaceImageToText Demo",
       "type": "dotnet",
       "request": "launch",
-      "projectPath": "${workspaceFolder}\\dotnet\\samples\\Demos\\HuggingFaceImageToText.csproj",
+      "projectPath": "${workspaceFolder}/dotnet/samples/Demos/HuggingFaceImageToText.csproj",
       "launchConfigurationId": "TargetFramework=;HuggingFaceImageToText"
     },
     {

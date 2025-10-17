@@ -83,7 +83,7 @@
       "dependsOn": [
         "R# cleanup",
         "build (Semantic-Kernel)",
-        "test (Semantic-Kernel",
+        "test (Semantic-Kernel)",
         "run (Kernel-Demo)"
       ],
       "dependsOrder": "sequence"
@@ -273,7 +273,7 @@
         "${input:filter}"
       ],
       "problemMatcher": "$msCompile",
-      "group": "test",
+      "group": "build",
       "presentation": {
         "reveal": "always",
         "panel": "shared",
@@ -306,7 +306,8 @@
     {
       "label": "dapr-down",
       "type": "shell",
-      "command": ["dapr stop --app-id processwithdapr"],
+      "command": "dapr",
+      "args": ["stop", "--app-id", "processwithdapr"],
       "presentation": {
         "clear": true,
         "close": true,
