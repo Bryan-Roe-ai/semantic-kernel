@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple AGI Web Interface - Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            color: white;
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-badge {
+            background: rgba(255, 193, 7, 0.9);
+            color: #212529;
+            padding: 0.25rem 1rem;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        
+        .agent-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .agent-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .agent-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .agent-btn.active {
+            background: rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .chat-container {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.95);
+            margin: 1rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-panel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.9);
+            margin: 1rem 1rem 1rem 0;
+            border-radius: 15px;
+            padding: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 20px;
+            word-wrap: break-word;
+        }
+        
+        .message.user .message-bubble {
+            background: #007bff;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message.agent .message-bubble {
+            background: #e9ecef;
+            color: #333;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-time {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+        
+        .chat-input-container {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #dee2e6;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .chat-input {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #dee2e6;
+            border-radius: 25px;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        .chat-input input:focus {
+            border-color: #007bff;
+        }
+        
+        .chat-input button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        .chat-input button:hover {
+            background: #0056b3;
+        }
+        
+        .chat-input button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        
+        .status-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .status-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .status-value {
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .control-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: #218838;
+        }
+        
+        .control-btn.github {
+            background: #6f42c1;
+        }
+        
+        .control-btn.github:hover {
+            background: #5a32a3;
+        }
+        
+        .thinking {
+            display: none;
+            color: #007bff;
+            font-style: italic;
+            margin: 0.5rem 0;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 0.75rem;
+            border-radius: 10px;
+            margin: 0.5rem 0;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 0.75rem;
+            border-radius: 10px;
+            margin: 0.5rem 0;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .logs {
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 0.5rem;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+        
+        .log-entry {
+            margin-bottom: 0.25rem;
+            padding: 0.25rem;
+            border-radius: 3px;
+        }
+        
+        .log-entry.INFO { background: #cce5ff; }
+        .log-entry.SUCCESS { background: #ccffcc; }
+        .log-entry.WARNING { background: #fff2cc; }
+        .log-entry.ERROR { background: #ffcccc; }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .status-panel {
+                margin: 0 1rem 1rem 1rem;
+            }
+            
+            .agent-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🤖 Simple AGI Web Interface</h1>
+        <div class="demo-badge">🚀 DEMO MODE - No external API required</div>
+        <div class="agent-selector">
+            <button class="agent-btn" onclick="selectAgent('enhanced')">Enhanced Demo Agent</button>
+            <button class="agent-btn" onclick="selectAgent('github')">GitHub Demo Agent</button>
+        </div>
+    </div>
+    
+    <div class="main-container">
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message agent">
+                    <div class="message-bubble">
+                        🎉 Welcome to the Simple AGI Web Interface! This is a demo version that works without external API keys. 
+                        Select an agent above to start chatting. Try asking about different topics to see various response patterns!
+                    </div>
+                </div>
+            </div>
+            <div class="thinking" id="thinking">🤔 Agent is thinking...</div>
+            <div class="chat-input-container">
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Type your message... (try 'hello', 'help', 'python', 'test')" disabled>
+                    <button onclick="sendMessage()" id="sendButton" disabled>Send</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-panel">
+            <div class="status-section">
+                <div class="status-title">Agent Status</div>
+                <div id="agentStatus">
+                    <div class="status-item">
+                        <span>Status:</span>
+                        <span class="status-value" id="agentStatusValue">Not Connected</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="status-section">
+                <div class="status-title">Performance Metrics</div>
+                <div id="metricsStatus"></div>
+            </div>
+            
+            <div class="status-section">
+                <div class="status-title">Recent Activity</div>
+                <div class="logs" id="activityLogs">No activity yet.</div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" onclick="exportSession()">Export Session</button>
+                <button class="control-btn github" onclick="githubCommit()" id="githubBtn" style="display:none;">Mock Commit</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const socket = io();
+        let currentAgent = null;
+        let isConnected = false;
+        
+        socket.on('connect', function() {
+            isConnected = true;
+            console.log('Connected to server');
+        });
+        
+        socket.on('disconnect', function() {
+            isConnected = false;
+            console.log('Disconnected from server');
+        });
+        
+        socket.on('agent_selected', function(data) {
+            currentAgent = data.agent_type;
+            document.getElementById('agentStatusValue').textContent = 'Connected to ' + data.agent_name;
+            document.getElementById('messageInput').disabled = false;
+            document.getElementById('sendButton').disabled = false;
+            
+            const githubBtn = document.getElementById('githubBtn');
+            if (data.agent_type === 'github') {
+                githubBtn.style.display = 'block';
+            } else {
+                githubBtn.style.display = 'none';
+            }
+            
+            addMessage('system', data.message);
+        });
+        
+        socket.on('message_response', function(data) {
+            hideThinking();
+            addMessage('user', data.user_message);
+            addMessage('agent', data.agent_response, data.agent_name);
+        });
+        
+        socket.on('thinking', function(data) {
+            showThinking();
+        });
+        
+        socket.on('status_update', function(data) {
+            updateStatus(data);
+        });
+        
+        socket.on('error', function(data) {
+            hideThinking();
+            showError(data.message);
+        });
+        
+        socket.on('session_exported', function(data) {
+            showSuccess(data.message);
+        });
+        
+        socket.on('github_operation', function(data) {
+            if (data.success) {
+                showSuccess(data.message);
+            } else {
+                showError(data.message);
+            }
+        });
+        
+        function selectAgent(agentType) {
+            if (!isConnected) {
+                showError('Not connected to server');
+                return;
+            }
+            
+            document.querySelectorAll('.agent-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            socket.emit('select_agent', {agent_type: agentType});
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message || !currentAgent) return;
+            
+            input.value = '';
+            socket.emit('send_message', {message: message});
+        }
+        
+        function addMessage(type, content, agentName = null) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            let displayName = '';
+            if (type === 'agent' && agentName) {
+                displayName = agentName;
+            } else if (type === 'user') {
+                displayName = 'You';
+            }
+            
+            messageDiv.innerHTML = `
+                <div class="message-bubble">
+                    ${type !== 'system' ? `<strong>${displayName}:</strong><br>` : ''}
+                    ${content}
+                    <div class="message-time">${new Date().toLocaleTimeString()}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function showThinking() {
+            document.getElementById('thinking').style.display = 'block';
+        }
+        
+        function hideThinking() {
+            document.getElementById('thinking').style.display = 'none';
+        }
+        
+        function updateStatus(data) {
+            const statusDiv = document.getElementById('agentStatus');
+            statusDiv.innerHTML = `
+                <div class="status-item">
+                    <span>Name:</span>
+                    <span class="status-value">${data.name}</span>
+                </div>
+                <div class="status-item">
+                    <span>Status:</span>
+                    <span class="status-value">${data.status}</span>
+                </div>
+                <div class="status-item">
+                    <span>Service:</span>
+                    <span class="status-value">${data.service_type}</span>
+                </div>
+                <div class="status-item">
+                    <span>Model:</span>
+                    <span class="status-value">${data.model}</span>
+                </div>
+            `;
+            
+            const metricsDiv = document.getElementById('metricsStatus');
+            if (data.metrics) {
+                metricsDiv.innerHTML = `
+                    <div class="status-item">
+                        <span>Interactions:</span>
+                        <span class="status-value">${data.metrics.total_interactions}</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Success Rate:</span>
+                        <span class="status-value">${data.metrics.success_rate}</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Avg Response:</span>
+                        <span class="status-value">${data.metrics.avg_response_time}</span>
+                    </div>
+                    <div class="status-item">
+                        <span>Errors:</span>
+                        <span class="status-value">${data.metrics.errors}</span>
+                    </div>
+                `;
+            }
+            
+            const logsDiv = document.getElementById('activityLogs');
+            if (data.recent_logs && data.recent_logs.length > 0) {
+                logsDiv.innerHTML = data.recent_logs.map(log => 
+                    `<div class="log-entry ${log.level}">
+                        [${log.timestamp.slice(-8)}] ${log.level}: ${log.message}
+                    </div>`
+                ).join('');
+            }
+        }
+        
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            const container = document.getElementById('chatMessages');
+            container.appendChild(errorDiv);
+            container.scrollTop = container.scrollHeight;
+            
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+        
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.textContent = message;
+            
+            const container = document.getElementById('chatMessages');
+            container.appendChild(successDiv);
+            container.scrollTop = container.scrollHeight;
+            
+            setTimeout(() => successDiv.remove(), 5000);
+        }
+        
+        function exportSession() {
+            if (!currentAgent) {
+                showError('No agent selected');
+                return;
+            }
+            socket.emit('export_session');
+        }
+        
+        function githubCommit() {
+            if (currentAgent !== 'github') {
+                showError('GitHub operations only available for GitHub agent');
+                return;
+            }
+            socket.emit('github_commit');
+        }
+        
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
