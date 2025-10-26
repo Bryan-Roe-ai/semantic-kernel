@@ -4,6 +4,7 @@ Demonstration applications that leverage the usage of one or many SK features
 
 | Type              | Description                                     |
 | ----------------- | ----------------------------------------------- |
+| ai_chat_app          | A console AI chat companion that auto-invokes Semantic Kernel plugins such as time and note taking. |
 | assistants_group_chat | A sample Agent demo that shows a chat functionality with an OpenAI Assistant agent. |
 | booking_restaurant | A sample chat bot that leverages the Microsoft Graph and Bookings API as a Semantic Kernel plugin to make a fake booking at a restaurant. |
 | copilot_studio_agent | A sample that shows how to invoke Microsoft Copilot Studio agents as first-party Agent in Semantic Kernel|
