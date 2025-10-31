@@ -155,7 +155,7 @@ async def main() -> None:
         OllamaChatCompletion(
             service_id=service_id,
             ai_model_id=args.model,
-            url=args.endpoint,
+            host=args.endpoint,
         )
     )
 
