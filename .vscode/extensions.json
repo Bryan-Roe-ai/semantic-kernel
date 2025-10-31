@@ -9,6 +9,7 @@
     "dbaeumer.vscode-eslint",
     "ms-semantic-kernel.semantic-kernel",
     "ms-java.vscode-java-pack",
-    "ms-azuretools.vscode-dapr"
+    "ms-azuretools.vscode-dapr",
+    "github.copilot-chat"
   ]
 }
