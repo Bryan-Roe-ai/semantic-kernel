@@ -191,7 +191,7 @@ jobs:
           reporttypes: "HtmlInline;JsonSummary"
 
       - name: Upload coverage report artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: CoverageReport-${{ matrix.os }}-${{ matrix.dotnet }}-${{ matrix.configuration }} # Artifact name
           path: ./TestResults/Reports # Directory containing files to upload
