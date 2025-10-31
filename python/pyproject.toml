@@ -28,7 +28,7 @@ dependencies = [
     "azure-ai-agents >= 1.2.0b3",
     "aiohttp ~= 3.8",
     "cloudevents ~=1.0",
-    "pydantic >=2.0,!=2.10.0,!=2.10.1,!=2.10.2,!=2.10.3,<2.12",
+    "pydantic >=2.0,!=2.10.0,!=2.10.1,!=2.10.2,!=2.10.3,<2.13",
     "pydantic-settings ~= 2.0",
     "defusedxml ~= 0.7",
     # azure identity
@@ -92,7 +92,7 @@ faiss = [
     "faiss-cpu>=1.10.0"
 ]
 google = [
-    "google-cloud-aiplatform == 1.120.0",
+    "google-cloud-aiplatform == 1.122.0",
     "google-generativeai ~= 0.8"
 ]
 hugging_face = [
@@ -115,7 +115,7 @@ mongo = [
     "motor >= 3.3.2,< 3.8.0"
 ]
 notebooks = [
-    "ipykernel ~= 6.29"
+    "ipykernel >= 6.29,< 8.0"
 ]
 ollama = [
     "ollama ~= 0.4"
@@ -149,7 +149,7 @@ sql = [
 ]
 usearch = [
     "usearch ~= 2.16",
-    "pyarrow >= 12.0,< 22.0"
+    "pyarrow >= 12.0,< 23.0"
 ]
 weaviate = [
     "weaviate-client>=4.10,<5.0,!=4.16.7",
@@ -159,7 +159,7 @@ weaviate = [
 prerelease = "if-necessary-or-explicit"
 dev-dependencies = [
     "pre-commit ~= 3.7",
-    "ipykernel ~= 6.29",
+    "ipykernel >= 6.29,< 8.0",
     "nbconvert ~= 7.16",
     "pytest ~= 8.2",
     "pytest-xdist[psutil] ~= 3.6",
